@@ -70,7 +70,9 @@ Use primary or near-primary sources first:
 17. https://kasmedia.com/article/theweeklyknight081725
 18. https://kasmedia.com/article/weeklyknightl12s-and-pows
 19. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-20. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
+20. https://docs-kasplex.gitbook.io/krc20/ - Kasplex/KRC-20 docs; use as an L2-style path to programmability/assets on Kaspa, separate from native vProgs/core smart-contract claims
+21. https://kaspa.org/kasplex-faq/ - Kasplex FAQ; useful for noting Kasplex as independent of the Kaspa core project
+22. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
 
 Active public technical accounts can be useful for discovery and replies:
 
