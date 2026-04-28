@@ -49,8 +49,8 @@ Do not point `www` to the repository name.
 
 Use primary or near-primary sources first:
 
-1. https://hashd.ag/
-2. https://hashd.ag/raw
+1. https://hashd.ag/ - Hashdag / Yonatan Sompolinsky's writing archive
+2. https://hashd.ag/raw - raw archive view
 3. https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c
 4. https://github.com/kaspanet/rusty-kaspa
 5. https://github.com/kaspanet/rusty-kaspa/releases
@@ -58,6 +58,7 @@ Use primary or near-primary sources first:
 7. https://qa.kas.pa/
 8. https://kasmedia.com/
 9. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript
+10. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
 
 ## Status discipline
 
@@ -65,8 +66,8 @@ Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments.
-- Architecture / roadmap: vProgs, Kaspa-native DeFi rails, monolithic-feeling developer experience, app-level verifiable programs.
-- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD/TangVM-style extensions, Proof of Useful Work, post-quantum migration.
+- Architecture / roadmap: vProgs as app-level verifiable programs, Kaspa-native DeFi rails, monolithic-feeling developer experience, synchronous composability.
+- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-style miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
 ## Local check
 

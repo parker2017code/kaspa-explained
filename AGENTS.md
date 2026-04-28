@@ -9,7 +9,7 @@
 ## Content Rules
 
 - Keep claims separated into Live, Near-term, Roadmap, and Research.
-- Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
+- Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-style attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
 - Preserve the Yonatan Sompolinsky podcast insights section and the primary-source stack.
 - Avoid price predictions, exchange rumors, or investment advice.
 
