@@ -60,6 +60,19 @@ Use primary or near-primary sources first:
 9. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript
 10. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
 
+Active public technical accounts can be useful for discovery and replies:
+
+- https://x.com/hashdag
+- https://x.com/michaelsuttonil
+- https://x.com/OriNewman
+- https://x.com/hus_qy
+- https://x.com/IzioDev
+- https://x.com/coderofstuff_
+- https://x.com/FreshAir08
+- https://x.com/eliottmea
+
+Read public replies as well as top-level posts. Do not use stale team pages, recycled handle lists, or X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
+
 ## Status discipline
 
 Do not flatten everything into "live."
