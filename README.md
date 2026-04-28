@@ -57,8 +57,20 @@ Use primary or near-primary sources first:
 6. https://research.kas.pa/
 7. https://qa.kas.pa/
 8. https://kasmedia.com/
-9. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript
+9. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
+   - https://www.youtube.com/live/GaJmYV8OHfQ
+   - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
 10. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
+11. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
+12. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
+13. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
+14. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs masterclass
+15. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
+16. https://kasmedia.com/article/ori-interview
+17. https://kasmedia.com/article/theweeklyknight081725
+18. https://kasmedia.com/article/weeklyknightl12s-and-pows
+19. https://kasmedia.com/article/moog-synthesizers-and-kaspa
+20. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
 
 Active public technical accounts can be useful for discovery and replies:
 
