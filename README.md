@@ -9,6 +9,8 @@ This is not an official Kaspa website. It is written to be useful for:
 - LLM retrieval systems,
 - people trying to separate live Kaspa facts from roadmap, research, and speculation.
 
+For a full editorial/project handoff to another LLM or contributor, start with `CONTENT_BRIEF.md`.
+
 ## Domain
 
 `kaspaexplained.com`
