@@ -77,22 +77,15 @@
           <div><strong>4</strong><span>Status lanes</span></div>
         </div>
       </div>
-      <figure class="dag-visual" aria-label="A blockDAG style graph showing parallel blocks converging into ordered history">
-        <div class="terminal-label"><span></span> blockdag-status</div>
-        <svg viewBox="0 0 560 430" role="img" aria-labelledby="dagTitle dagDesc">
-          <title id="dagTitle">BlockDAG concept diagram</title>
-          <desc id="dagDesc">Parallel nodes connected by multiple predecessor links.</desc>
-          <path class="edge" d="M58 322L152 245L252 302L352 188L468 252"/>
-          <path class="edge muted" d="M152 245L255 158L352 188M252 302L360 333L468 252M255 158L468 252"/>
-          <circle class="node green" cx="58" cy="322" r="20"/>
-          <circle class="node cyan" cx="152" cy="245" r="22"/>
-          <circle class="node purple" cx="252" cy="302" r="20"/>
-          <circle class="node cyan" cx="255" cy="158" r="21"/>
-          <circle class="node green" cx="352" cy="188" r="20"/>
-          <circle class="node purple" cx="360" cy="333" r="18"/>
-          <circle class="node cyan" cx="468" cy="252" r="24"/>
-        </svg>
-        <figcaption>Source-first, status-aware, and built for retrieval.</figcaption>
+      <figure class="dag-visual" aria-label="Live animated blockDAG visual showing parallel blocks and multiple parent links">
+        <div class="terminal-label"><span></span> live-blockdag</div>
+        <canvas id="blockdag-canvas" width="720" height="620" aria-label="Animated blockDAG simulation"></canvas>
+        <div class="dag-stats" aria-label="Live blockDAG visual statistics">
+          <div><strong id="dag-blocks">...</strong><span>DAA score</span></div>
+          <div><strong id="dag-tips">0</strong><span>tips</span></div>
+          <div><strong id="dag-rate">10</strong><span>bps era</span></div>
+        </div>
+        <figcaption id="dag-caption">Live Kaspa blockDAG from KaspaExplorer/API gateway.</figcaption>
       </figure>
     </section>
 
@@ -301,5 +294,211 @@
   <footer class="footer">
     <strong>Independent resource.</strong> Not an official Kaspa website. Built for plain English, source discipline, and easy retrieval by search engines and LLMs.
   </footer>
+  <script>
+    (() => {
+      const canvas = document.getElementById("blockdag-canvas");
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d");
+      const scoreEl = document.getElementById("dag-blocks");
+      const tipsEl = document.getElementById("dag-tips");
+      const rateEl = document.getElementById("dag-rate");
+      const captionEl = document.getElementById("dag-caption");
+      const gateway = "https://kaspaexplorer.com/api/gateway/kaspa";
+      const colors = ["#67e8f9", "#a7f3d0", "#c4b5fd", "#f0abfc"];
+      const nodes = new Map();
+      let edges = [];
+      let latestTipHashes = [];
+      let lastSnapshot = 0;
+      let lastStatus = "connecting";
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.max(1, Math.floor(rect.width * ratio));
+        canvas.height = Math.max(1, Math.floor(rect.height * ratio));
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function shortHash(hash) {
+        return hash ? `${hash.slice(0, 4)}...${hash.slice(-4)}` : "";
+      }
+
+      function formatScore(value) {
+        const n = Number(value);
+        if (!Number.isFinite(n)) return "...";
+        if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+        return n.toLocaleString();
+      }
+
+      function placeNode(hash, layer, lane, count, colorIndex) {
+        const w = canvas.clientWidth || 560;
+        const h = canvas.clientHeight || 460;
+        const usableTop = 86;
+        const usableHeight = Math.max(180, h - 190);
+        const laneGap = usableHeight / (Math.max(1, count - 1) || 1);
+        const targetX = layer === "tip" ? w * .72 : layer === "virtual" ? w * .88 : w * .22;
+        const targetY = count === 1
+          ? usableTop + usableHeight / 2
+          : usableTop + laneGap * lane + Math.sin(colorIndex * 1.7) * 14;
+        const existing = nodes.get(hash);
+        if (existing) {
+          existing.tx = targetX;
+          existing.ty = targetY;
+          existing.layer = layer;
+          existing.lastSeen = performance.now();
+          return existing;
+        }
+        const node = {
+          hash,
+          x: targetX + (layer === "tip" ? 70 : -70),
+          y: targetY,
+          tx: targetX,
+          ty: targetY,
+          r: layer === "virtual" ? 17 : layer === "tip" ? 13 : 9,
+          color: colors[colorIndex % colors.length],
+          layer,
+          born: performance.now(),
+          lastSeen: performance.now()
+        };
+        nodes.set(hash, node);
+        return node;
+      }
+
+      async function fetchJson(url) {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        return response.json();
+      }
+
+      async function loadLiveDag() {
+        try {
+          const info = await fetchJson(`${gateway}/info/blockdag`);
+          const tipHashes = (info.tipHashes || []).slice(0, 14);
+          const virtualParents = (info.virtualParentHashes || []).slice(0, 14);
+          const detailResults = await Promise.allSettled(
+            tipHashes.slice(0, 10).map((hash) => fetchJson(`${gateway}/blocks/${hash}`))
+          );
+          const parentMap = new Map();
+          detailResults.forEach((result, index) => {
+            if (result.status !== "fulfilled") return;
+            const parents = ((result.value.header && result.value.header.parents) || [])
+              .flatMap((group) => group.parentHashes || [])
+              .slice(0, 4);
+            parentMap.set(tipHashes[index], parents);
+          });
+
+          const allParentHashes = [...new Set([...parentMap.values()].flat())].slice(0, 16);
+          allParentHashes.forEach((hash, index) => placeNode(hash, "parent", index, Math.max(1, allParentHashes.length), index));
+          tipHashes.forEach((hash, index) => placeNode(hash, "tip", index, Math.max(1, tipHashes.length), index + 2));
+          placeNode(info.sink || virtualParents[0] || tipHashes[0] || "virtual", "virtual", 0, 1, 3);
+
+          edges = [];
+          parentMap.forEach((parents, tipHash) => {
+            parents.forEach((parentHash) => {
+              if (nodes.has(parentHash)) edges.push([parentHash, tipHash, "parent"]);
+            });
+          });
+          const sink = info.sink || virtualParents[0];
+          if (sink) {
+            virtualParents.forEach((hash) => {
+              if (nodes.has(hash)) edges.push([hash, sink, "virtual"]);
+            });
+          }
+
+          latestTipHashes = tipHashes;
+          lastSnapshot = performance.now();
+          lastStatus = "live";
+          if (scoreEl) scoreEl.textContent = formatScore(info.virtualDaaScore || info.blockCount);
+          if (tipsEl) tipsEl.textContent = String(tipHashes.length);
+          if (rateEl) rateEl.textContent = "10";
+          if (captionEl) captionEl.textContent = `Live Kaspa blockDAG via KaspaExplorer gateway. Sink ${shortHash(info.sink)}.`;
+        } catch (error) {
+          lastStatus = "offline";
+          if (captionEl) captionEl.textContent = `Live Kaspa API unavailable: ${error.message}`;
+        }
+      }
+
+      function draw(now) {
+        const w = canvas.clientWidth || 560;
+        const h = canvas.clientHeight || 460;
+        ctx.clearRect(0, 0, w, h);
+
+        const gradient = ctx.createRadialGradient(w * .55, h * .45, 0, w * .55, h * .45, Math.max(w, h) * .7);
+        gradient.addColorStop(0, "rgba(103,232,249,.13)");
+        gradient.addColorStop(0.46, "rgba(196,181,253,.06)");
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+
+        nodes.forEach((node, hash) => {
+          node.x += (node.tx - node.x) * .055;
+          node.y += (node.ty - node.y) * .055;
+          node.y += Math.sin((now + hash.charCodeAt(0) * 113) / 1400) * .018;
+          if (now - node.lastSeen > 20000) nodes.delete(hash);
+        });
+
+        edges.forEach(([fromHash, toHash, kind]) => {
+          const from = nodes.get(fromHash);
+          const to = nodes.get(toHash);
+          if (!from || !to) return;
+          ctx.strokeStyle = kind === "virtual" ? "rgba(196, 181, 253, .52)" : "rgba(103, 232, 249, .62)";
+          ctx.lineWidth = kind === "virtual" ? 2 : 3;
+          ctx.beginPath();
+          ctx.moveTo(from.x, from.y);
+          const midX = (from.x + to.x) / 2;
+          ctx.bezierCurveTo(midX, from.y, midX, to.y, to.x, to.y);
+          ctx.stroke();
+        });
+
+        nodes.forEach((node) => {
+          const age = now - node.born;
+          const pulse = node.layer === "tip" ? Math.max(0, Math.sin(age / 230) * 1.7) : 0;
+          ctx.save();
+          ctx.globalAlpha = node.layer === "parent" ? .76 : 1;
+          ctx.shadowColor = node.color;
+          ctx.shadowBlur = node.layer === "tip" ? 22 : 14;
+          ctx.fillStyle = node.color;
+          ctx.strokeStyle = "rgba(255,255,255,.82)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, node.r + pulse, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          if (node.layer !== "parent") {
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "rgba(247,247,251,.74)";
+            ctx.font = "11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+            ctx.fillText(shortHash(node.hash), node.x + node.r + 8, node.y + 4);
+          }
+          ctx.restore();
+        });
+
+        if (lastStatus === "connecting" || lastStatus === "offline") {
+          ctx.save();
+          ctx.fillStyle = lastStatus === "offline" ? "rgba(240, 171, 252, .88)" : "rgba(167, 243, 208, .88)";
+          ctx.font = "13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+          ctx.fillText(lastStatus === "offline" ? "waiting for live Kaspa API..." : "connecting to live Kaspa blockDAG...", 26, h - 34);
+          ctx.restore();
+        } else {
+          ctx.save();
+          ctx.fillStyle = "rgba(167, 243, 208, .82)";
+          ctx.font = "12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+          ctx.fillText(`tips: ${latestTipHashes.length}  updated: ${Math.max(0, ((now - lastSnapshot) / 1000)).toFixed(1)}s ago`, 26, h - 34);
+          ctx.restore();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      window.addEventListener("resize", () => {
+        resize();
+      });
+      loadLiveDag();
+      setInterval(loadLiveDag, 2400);
+      requestAnimationFrame(draw);
+    })();
+  </script>
 </body>
 </html>
