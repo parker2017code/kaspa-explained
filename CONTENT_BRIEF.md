@@ -12,7 +12,7 @@ The site should answer:
 - What is being implemented next?
 - What is roadmap architecture?
 - What is still research or speculation?
-- How does Kaspa fit next to Bitcoin, Ethereum, Solana, stablecoins, app chains, and L2 paths?
+- How does Kaspa fit next to Bitcoin, Ethereum, Solana, stablecoins, app chains, and other crypto categories?
 - Which sources should someone read before forming strong opinions?
 
 This is not an official Kaspa site and not investment advice.
@@ -73,6 +73,7 @@ Keep these categories separate.
 - Silverscript
 - ZK verification foundations
 - sequencing commitments
+- DAGKnight implementation work that appears further along than vProgs
 - vProgs groundwork
 
 ### Roadmap / Architecture
@@ -81,7 +82,7 @@ Keep these categories separate.
 - Kaspa-native DeFi rails
 - monolithic-feeling developer experience without global L1 execution of every app
 - synchronous composability across programs
-- Igra, Kasplex, and other L2-style programmability paths while native programmability matures
+- vProgs as a deeper application-architecture direction behind DAGKnight in implementation maturity
 
 ### Research / Speculative
 
@@ -106,7 +107,7 @@ The stronger comparison is not "faster Bitcoin." It is:
 
 Be careful with app-layer claims.
 
-Current L2-style efforts such as Igra and Kasplex are practical paths to programmability/assets on Kaspa while deeper native programmability matures. They should be mentioned as ecosystem paths, not as proof that native vProgs or core smart contracts are already live.
+DAGKnight should be framed as further along implementation-wise than vProgs, while neither should be described as already-live mainnet functionality unless primary sources confirm activation.
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
