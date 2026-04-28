@@ -66,7 +66,7 @@ Do not flatten everything into "live."
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments.
 - Architecture / roadmap: vProgs, Kaspa-native DeFi rails, monolithic-feeling developer experience, app-level verifiable programs.
-- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD/TangVM-style extensions, useful Proof of Work, post-quantum migration.
+- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD/TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
 ## Local check
 
