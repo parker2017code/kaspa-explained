@@ -523,6 +523,102 @@ li,
   max-width: 82ch;
 }
 
+.fit-page {
+  padding-top: 42px;
+}
+
+.fit-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+
+.fit-hero::after {
+  content: "";
+  position: absolute;
+  right: -12rem;
+  top: -14rem;
+  width: 34rem;
+  height: 34rem;
+  border: 1px solid rgba(103, 232, 249, .16);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(103, 232, 249, .13), transparent 64%);
+  pointer-events: none;
+}
+
+.fit-note {
+  max-width: 74ch;
+  margin-top: 24px;
+  border: 1px solid rgba(167, 243, 208, .28);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background:
+    linear-gradient(135deg, rgba(167, 243, 208, .12), rgba(103, 232, 249, .06)),
+    rgba(255, 255, 255, .035);
+  color: var(--muted);
+}
+
+.fit-note strong {
+  color: var(--green);
+}
+
+blockquote {
+  max-width: 78ch;
+  margin: 18px 0;
+  border-left: 3px solid var(--cyan);
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+  background: rgba(103, 232, 249, .075);
+  color: var(--text);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 900;
+  line-height: 1.32;
+}
+
+.fit-grid,
+.category-list {
+  display: grid;
+  gap: 18px;
+}
+
+.fit-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.fit-grid .section {
+  margin-top: 0;
+}
+
+.fit-grid ul,
+.category-list ul {
+  padding-left: 22px;
+}
+
+.fit-grid li {
+  margin: 8px 0;
+  color: var(--muted);
+}
+
+.category-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 22px;
+}
+
+.category-list article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  background:
+    linear-gradient(135deg, rgba(196, 181, 253, .08), transparent 48%),
+    rgba(255, 255, 255, .035);
+}
+
+.category-list h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
 .timeline {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 18px;
@@ -665,7 +761,9 @@ li,
   .timeline,
   .status-grid,
   .link-grid,
-  .insight-grid {
+  .insight-grid,
+  .fit-grid,
+  .category-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -734,6 +832,8 @@ li,
   .link-grid,
   .insight-grid,
   .claim-grid,
+  .fit-grid,
+  .category-list,
   .source-list {
     grid-template-columns: 1fr;
   }
