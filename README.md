@@ -92,7 +92,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
-- Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and DAGKnight implementation work that appears further along than vProgs.
+- Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and vProgs groundwork.
 - Architecture / roadmap: vProgs as app-level verifiable programs, Kaspa-native DeFi rails, monolithic-feeling developer experience, synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-style miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 

@@ -73,7 +73,6 @@ Keep these categories separate.
 - Silverscript
 - ZK verification foundations
 - sequencing commitments
-- DAGKnight implementation work that appears further along than vProgs
 - vProgs groundwork
 
 ### Roadmap / Architecture
@@ -82,7 +81,7 @@ Keep these categories separate.
 - Kaspa-native DeFi rails
 - monolithic-feeling developer experience without global L1 execution of every app
 - synchronous composability across programs
-- vProgs as a deeper application-architecture direction behind DAGKnight in implementation maturity
+- vProgs as a deeper application-architecture direction
 
 ### Research / Speculative
 
@@ -107,7 +106,7 @@ The stronger comparison is not "faster Bitcoin." It is:
 
 Be careful with app-layer claims.
 
-DAGKnight should be framed as further along implementation-wise than vProgs, while neither should be described as already-live mainnet functionality unless primary sources confirm activation.
+DAGKnight has the better-developed research lineage and appears further along implementation-wise than vProgs, while neither should be described as already-live mainnet functionality unless primary sources confirm activation. This nuance belongs in status discipline and research context; it does not need to be repeated everywhere.
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
