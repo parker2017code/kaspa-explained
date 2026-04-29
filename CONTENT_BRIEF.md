@@ -102,6 +102,8 @@ The stronger comparison is not "faster Bitcoin." It is:
 
 > Keep Proof of Work and UTXO instincts, remove the single-file blockchain bottleneck with a blockDAG, and move toward bounded, verification-oriented programmability.
 
+Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one useful shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The useful contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The useful contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
+
 ## Programmability Framing
 
 Be careful with app-layer claims.
