@@ -108,6 +108,17 @@ The stronger comparison is not "faster Bitcoin." It is:
 
 Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one useful shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The useful contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The useful contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
 
+## Fast Proof-of-Work Framing
+
+Keep the fast-PoW argument focused and careful. Fast inclusion and fast confirmations are different:
+
+- Fast inclusion: how quickly a transaction enters a block.
+- Fast confirmations: how quickly the system gives strong confidence that the transaction will not be reversed.
+
+Any high-rate block-producing system can improve inclusion. Kaspa's stronger argument is that fast Proof of Work changes the confirmation/decentralization tradeoff. PoW samples hash power through work done after the fact, without requiring the protocol to identify and collect explicit supermajority votes from miners before every confirmation. In PoS finality designs, confirmation speed is more directly tied to stake voting, validator coordination, stake distribution, committees, or related sampling assumptions.
+
+Do not overclaim this. Do not state that Kaspa has instant finality, that all PoS systems are equivalent, or that the site has fully modeled Ethereum/Solana engineering details. The durable, site-appropriate claim is narrower: fast PoW blockDAGs make the inclusion/confirmation/decentralization tradeoff different, and that is one reason Kaspa is worth studying.
+
 ## Crypto Reality-Check Framing
 
 The `what-crypto-is-good-for.html` page is a general-audience bridge for people who do not live inside crypto. It should make the rest of the site more credible by stating that crypto is not useful for everything.
@@ -246,6 +257,7 @@ Before changing claims:
 - Do not describe DAGKnight, vProgs, RTD-style attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation.
 - Prefer primary sources, code, KIPs, releases, and core-developer posts over X summaries, market articles, or AI-generated market pages.
 - Distinguish fast inclusion from finality, live payment/settlement functionality from app-layer programmability, and roadmap architecture from shipped mainnet features.
+- Do not reduce Kaspa's speed argument to block rate alone. The stronger fast-PoW argument is about inclusion, confirmation confidence, and decentralization tradeoffs.
 - Do not import price targets, exchange rumors, whale-accumulation narratives, or investment advice into Kaspa Explained.
 
 ## Publishing Notes
