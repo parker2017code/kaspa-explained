@@ -59,21 +59,22 @@ Use primary or near-primary sources first:
 5. https://github.com/kaspanet/rusty-kaspa/releases
 6. https://research.kas.pa/
 7. https://qa.kas.pa/
-8. https://kasmedia.com/
-9. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
+8. https://kasmedia.com/ - KASmedia articles, interviews, recaps, and theory posts; public Directus corpus scanned May 4, 2026: 144 published articles
+9. https://kaspa.com/learn-kaspa - Kaspa.com Learn Kaspa / Kaspa Facts intro and intermediate article library; all 49 public articles were scanned for the local source synthesis on May 4, 2026
+10. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
    - https://www.youtube.com/live/GaJmYV8OHfQ
    - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
-10. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
-11. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
-12. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
-13. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
-14. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs masterclass
-15. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
-16. https://kasmedia.com/article/ori-interview
-17. https://kasmedia.com/article/theweeklyknight081725
-18. https://kasmedia.com/article/weeklyknightl12s-and-pows
-19. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-20. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
+11. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
+12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
+13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
+14. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
+15. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs masterclass
+16. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
+17. https://kasmedia.com/article/ori-interview
+18. https://kasmedia.com/article/theweeklyknight081725
+19. https://kasmedia.com/article/weeklyknightl12s-and-pows
+20. https://kasmedia.com/article/moog-synthesizers-and-kaspa
+21. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
 
 Active public technical accounts can be useful for discovery and replies:
 
@@ -94,6 +95,8 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement and future RTD / coordination-market / vProgs thesis.
 - `/where-kaspa-fits.html` - comparison page for Kaspa's lane among Bitcoin, Ethereum, Solana, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
+- `/knowledge-map.html` - accessible synthesis of KASmedia and Learn Kaspa material for average crypto readers.
+- `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
 
 ## Status discipline
 

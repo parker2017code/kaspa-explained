@@ -14,6 +14,7 @@ The site should answer:
 - What is still research or speculation?
 - What is crypto actually useful for, and where is crypto being forced?
 - How does Kaspa fit next to Bitcoin, Ethereum, Solana, stablecoins, app chains, and other crypto categories?
+- Which public pages and LLM files should be crawlable?
 - Which sources should someone read before forming strong opinions?
 
 This is not an official Kaspa site and not investment advice.
@@ -139,6 +140,8 @@ Core frame:
 
 Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, and Crescendo 10 BPS are live. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, RTD-style attestations, real-time coordination markets, and Mining-the-Internet style flows remain research or architecture thesis unless future primary sources confirm activation or shipped products.
 
+The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page.
+
 ## Programmability Framing
 
 Be careful with app-layer claims.
@@ -156,11 +159,35 @@ Prefer primary or near-primary sources:
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
 3. Long-form context: Bitcoin Takeover, Oxford, KASmedia, full recordings, and transcripts.
-4. Discovery only: active public technical X accounts and replies.
+4. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but verify shipped-feature and activation claims against primary protocol/code sources.
+5. Discovery only: active public technical X accounts and replies.
 
 Use X cautiously. It is useful for current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
 
 Do not use stale team pages, recycled handle lists, or contributor pages to infer current involvement.
+
+External-source rule: credit outside sources by name and link near the relevant claim or through `sources.html`. Do not copy external articles into the site. Paraphrase, synthesize, and point readers to the original source.
+
+Kaspa.com Learn Kaspa status, last verified May 4, 2026: the public app/API exposes 49 Kaspa Facts posts across three rendered pages: 41 intro-level posts and 8 intermediate-level posts. All 49 article bodies were scanned for the local source update. Treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Do not plaster this source across the main pages or use it as the primary authority for status claims.
+
+The May 2026 Kaspa.com Smart Contracts article is useful because it separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
+
+## Public Crawl Map
+
+The sitemap should include public human pages and LLM/crawler files:
+
+- `/`
+- `/what-crypto-is-good-for.html`
+- `/why-kaspa-matters.html`
+- `/where-kaspa-fits.html`
+- `/knowledge-map.html`
+- `/sources.html`
+- `/llms.txt`
+- `/llms-full.txt`
+- `/CONTENT_BRIEF.md`
+- `/README.md`
+
+Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable as a repository file, but it is local agent guidance rather than a public content surface.
 
 ## Active Public Technical Accounts
 
@@ -227,6 +254,8 @@ Primary public pages:
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged inside crypto's real lane.
 - `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
+- `knowledge-map.html` - human-facing synthesis of accessible KASmedia and Learn Kaspa material for average crypto readers.
+- `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 
 LLM/source files:
 

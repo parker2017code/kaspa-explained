@@ -30,7 +30,8 @@
         <a href="/what-crypto-is-good-for.html">Crypto Reality</a>
         <a href="/why-kaspa-matters.html">Why Kaspa</a>
         <a href="/where-kaspa-fits.html">Where Kaspa Fits</a>
-        <a href="/#sources">Sources</a>
+        <a href="/knowledge-map.html">Knowledge Map</a>
+        <a href="/sources.html">Sources</a>
       </div>
       <a class="nav-cta" href="/">Home</a>
     </nav>
@@ -81,6 +82,7 @@
       <p>Bitcoin showed that strangers can coordinate around scarce digital money without a central operator. But Bitcoin also chooses a slow block interval partly because network latency has to remain small relative to block production. That is not a criticism of Bitcoin; it is a real tradeoff in Nakamoto-style systems.</p>
       <p>Kaspa comes from the research line that asks whether a Proof-of-Work network can include parallel honest blocks and still converge on ordering. The important point is not just "more speed." The important point is whether more honest work can participate in consensus instead of becoming wasted collision.</p>
       <p>That is why Kaspa's credible-shared-state argument is different from ordinary "faster chain" marketing. The architecture is about the block-rate and latency tradeoff itself.</p>
+      <p>In practical terms, that means the explanation has to include parents, mergesets, blue/red classification, blue work, and the virtual block. Parents describe direct block references. The mergeset captures the blocks being incorporated around a selected parent. Blue work gives the network a way to compare accumulated work across a DAG, while the virtual block gives nodes a current-state reference without pretending there is only one visible tip.</p>
     </section>
 
     <section class="section">
@@ -89,6 +91,7 @@
       <p>Any fast block-producing system can make a transaction appear quickly. That is fast inclusion: how quickly a transaction gets into a block. The harder question is fast confirmation: how quickly the network gives strong confidence that the transaction will not be reversed.</p>
       <p>This is where fast Proof of Work has a distinctive argument. In Proof of Stake, fast finality usually means rapidly collecting votes from stake, which ties confirmation speed to validator coordination and stake distribution. More decentralization around the security mechanism can make that coordination harder, or push the system toward committees and other sampling designs.</p>
       <p>Proof of Work samples security differently. A block is proof that the finder out-competed the network's hash power for that round; the protocol does not need to identify and collect explicit votes from a supermajority of miners before every confirmation. That helps decouple block-production speed from miner-count coordination.</p>
+      <p>Fast confirmations also depend on bounded DAG mechanics. K, finality depth, anticone finalization depth, merge depth, and BPS-scaled parameters are the safety rails that keep high block production from becoming unbounded parallelism. This is why "10 BPS" is not the whole claim.</p>
       <p>This should still be written carefully. It is not a claim that Kaspa has instant finality, or that Proof of Stake systems cannot be engineered well. The useful claim is narrower: fast PoW blockDAGs make the inclusion/confirmation/decentralization tradeoff different, and that difference is one reason Kaspa is worth studying.</p>
     </section>
 
@@ -170,6 +173,8 @@
       <p class="eyebrow">Future architecture</p>
       <h2>Programmability matters, but it should stay status-labeled.</h2>
       <p>The serious Kaspa app-layer path runs through Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and vProgs groundwork. Michael Sutton's April 2026 Toccata outlook and the Kaspa.org summary describe the delay from the original May 5 target to roughly June 5-20, 2026 as a deliberate step to finalize sequencing-commitment architecture before zk systems bind to it.</p>
+      <p>The useful technical detail is that this path is not simply "turn on an Ethereum VM." KIP-10-style introspection lets scripts inspect transaction context, KIP-20-style covenant identifiers help preserve covenant lineage through UTXOs, and KIP-21-style partitioned sequencing commitments aim to make ZK proving follow active application lanes rather than the entire transaction stream.</p>
+      <p>A helpful way to picture covenant-style apps is as controlled UTXO state machines. Kaspa.com Learn's smart-contract/chess walkthrough models an app with registration UTXOs, persistent player UTXOs, game-state UTXOs, move-routing transactions, move-application transactions, and final settlement. The important point is not that chess is the killer app; it is that state can be carried through constrained UTXO transitions without turning Kaspa L1 into a global account VM.</p>
       <p>That is where programmable assets, native-feeling DeFi, and app-level verifiable programs belong. It should not be described as full Ethereum-style smart contracts already live on mainnet.</p>
       <p>The useful distinction is that Kaspa is not trying to turn L1 into one global execution engine for every app. The stronger direction is L1 as sequencing, commitments, verification, and metadata, with app-level verifiable programs providing richer logic around it.</p>
       <p>This is why "Solana-like" should mean cohesive developer and user experience, not importing Solana execution as-is. It is also why vProgs should not be flattened into ordinary rollups.</p>
