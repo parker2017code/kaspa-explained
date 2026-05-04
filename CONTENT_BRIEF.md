@@ -210,6 +210,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/knowledge-map.html`
 - `/glossary.html`
 - `/sources.html`
+- `/about.html`
 - `/llms.txt`
 - `/llms-full.txt`
 - `/CONTENT_BRIEF.md`
@@ -286,6 +287,7 @@ Primary public pages:
 - `knowledge-map.html` - ordered concept map for average crypto readers, with supporting source context.
 - `glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
+- `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
 
 LLM/source files:
 

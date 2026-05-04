@@ -11,6 +11,7 @@ expected_pages=(
   "knowledge-map.html"
   "glossary.html"
   "sources.html"
+  "about.html"
 )
 expected_files=(
   "AGENTS.md"
@@ -58,6 +59,7 @@ done
 for page in "${expected_pages[@]}"; do
   grep -q "/status.html" "$page" || { echo "$page missing status nav/link" >&2; exit 1; }
   grep -q "/sources.html" "$page" || { echo "$page missing sources nav/link" >&2; exit 1; }
+  grep -q "/about.html" "$page" || { echo "$page missing about nav/link" >&2; exit 1; }
 done
 
 echo "Site checks passed."

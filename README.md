@@ -102,6 +102,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references.
 - `/glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
+- `/about.html` - editorial policy, disclosures, and correction process.
 
 ## Status discipline
 
