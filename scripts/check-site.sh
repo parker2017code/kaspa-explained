@@ -19,12 +19,16 @@ expected_files=(
   "AGENTS.md"
   "CONTENT_BRIEF.md"
   "README.md"
+  "LICENSE.md"
   "CLAIMS.yml"
+  "og-image.png"
+  "og-image.svg"
   "llms.txt"
   "llms-full.txt"
   "robots.txt"
   "sitemap.xml"
   "CNAME"
+  ".github/workflows/site-check.yml"
 )
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do
@@ -33,6 +37,11 @@ done
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2
+  exit 1
+}
+
+[[ -s og-image.png ]] || {
+  echo "og-image.png must exist and be non-empty" >&2
   exit 1
 }
 
@@ -57,6 +66,26 @@ for page in "${expected_pages[@]}"; do
     echo "$page missing canonical ${url}" >&2
     exit 1
   }
+
+  grep -q "class=\"skip-link\" href=\"#top\"" "$page" || {
+    echo "$page missing skip link" >&2
+    exit 1
+  }
+
+  grep -q "<main id=\"top\"" "$page" || {
+    echo "$page missing main#top target" >&2
+    exit 1
+  }
+
+  grep -q 'name="twitter:card" content="summary_large_image"' "$page" || {
+    echo "$page missing Twitter card metadata" >&2
+    exit 1
+  }
+
+  grep -q 'property="og:image" content="https://kaspaexplained.com/og-image.png"' "$page" || {
+    echo "$page missing PNG OpenGraph image" >&2
+    exit 1
+  }
 done
 
 for page in "${expected_pages[@]}"; do
@@ -65,15 +94,22 @@ for page in "${expected_pages[@]}"; do
   grep -q "/about.html" "$page" || { echo "$page missing about nav/link" >&2; exit 1; }
 done
 
-forbidden_patterns=(
-  "Toccata is live"
-  "DAGKnight is live"
-  "vProgs are live"
-  "Native DeFi is live"
-  "Kaspa has instant finality"
-  "TangVM is live"
-  "Kaspa oracle flows are live"
+mapfile -t forbidden_patterns < <(
+  awk '
+    /forbidden_copy:/ { in_forbidden = 1; next }
+    in_forbidden && /^[[:space:]]+- / {
+      sub(/^[[:space:]]+- /, "")
+      print
+      next
+    }
+    in_forbidden && /^[[:space:]]*[a-zA-Z0-9_]+:/ { in_forbidden = 0 }
+  ' CLAIMS.yml
 )
+
+[[ "${#forbidden_patterns[@]}" -gt 0 ]] || {
+  echo "CLAIMS.yml must define forbidden_copy phrases" >&2
+  exit 1
+}
 
 for pattern in "${forbidden_patterns[@]}"; do
   if grep -RIn --include='*.html' "$pattern" . >/tmp/kaspa-forbidden-match.txt; then

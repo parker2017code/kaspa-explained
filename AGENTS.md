@@ -20,6 +20,7 @@
 ## Validation
 
 - For HTML/CSS edits, check mobile and desktop layout.
+- Run `bash scripts/check-site.sh` before publishing.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
 - Review links and source references after content changes.
 

@@ -324,6 +324,7 @@ Before changing claims:
 5. Keep homepage copy general-audience friendly.
 6. Put dense technical detail in `llms-full.txt` or this brief.
 7. Run basic checks before publishing:
+   - `bash scripts/check-site.sh`
    - `git diff --check`
    - link check for new URLs
    - mobile/desktop layout check for HTML/CSS changes

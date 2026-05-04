@@ -108,6 +108,24 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/about.html` - editorial policy, disclosures, and correction process.
 - `/CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims.
 
+## Maintenance checks
+
+Run the static check before publishing:
+
+```sh
+bash scripts/check-site.sh
+```
+
+The check verifies the custom domain, sitemap/canonical links, public pages,
+skip-link targets, social-card metadata, the PNG OpenGraph image, and
+`CLAIMS.yml` forbidden-copy phrases. The same check runs in GitHub Actions on
+push, pull request, and a weekly schedule.
+
+## License
+
+Content is licensed under CC BY 4.0. Code, CSS, scripts, and workflow files are
+licensed under MIT. See `LICENSE.md`.
+
 ## Status discipline
 
 Do not flatten everything into "live."
