@@ -176,15 +176,22 @@ Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it 
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
+## North-Star Interview
+
+Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, is the north-star source for editorial framing. Use it for the shape of the explanation: Kaspa as a generalization of Nakamoto consensus, the blockDAG as a framework whose value depends on ordering, GHOSTDAG as current mainnet behavior, DAGKnight as future/adaptive consensus work, vProgs as native-feeling app architecture, and community context as part of decentralization.
+
+Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS is aspirational, pruning is not privacy, and Solana-like means cohesive developer/user experience rather than importing Solana execution into Kaspa L1.
+
 ## Source Hierarchy
 
 Prefer primary or near-primary sources:
 
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
-3. Community/context sources: Bitcoin Takeover, Oxford, KASmedia, Kaspa.com Learn Kaspa, Kaspa.org, full recordings, interviews, transcripts, recaps, and public portals. They are useful contributions, not protocol authority.
-4. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
-5. Discovery only: active public technical X accounts and replies.
+3. North-star framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance, but activation claims still need primary protocol/code or direct implementation evidence.
+4. Community/context sources: Oxford, KASmedia, Kaspa.com Learn Kaspa, Kaspa.org, full recordings, interviews, transcripts, recaps, and public portals. They are useful contributions, not protocol authority.
+5. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
+6. Discovery only: active public technical X accounts and replies.
 
 Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public/community resources are not official or authoritative protocol sources. They can orient readers and point into stronger material, but status-sensitive claims should come from code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
@@ -205,6 +212,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/`
 - `/what-crypto-is-good-for.html`
 - `/status.html`
+- `/faq.html`
 - `/why-kaspa-matters.html`
 - `/where-kaspa-fits.html`
 - `/knowledge-map.html`
@@ -215,6 +223,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/llms-full.txt`
 - `/CONTENT_BRIEF.md`
 - `/README.md`
+- `/CLAIMS.yml`
 
 Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable as a repository file, but it is local agent guidance rather than a public content surface.
 
@@ -282,12 +291,14 @@ Primary public pages:
 - `index.html` - general explainer, status lanes, high-signal sources.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
+- `faq.html` - direct search-friendly answers for common Kaspa status and concept questions.
 - `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
 - `knowledge-map.html` - ordered concept map for average crypto readers, with supporting source context.
 - `glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
+- `CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims and forbidden overclaims.
 
 LLM/source files:
 

@@ -66,6 +66,7 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 10. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
    - https://www.youtube.com/live/GaJmYV8OHfQ
    - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
+   - North-star interview for site framing: generalized Nakamoto consensus, current GHOSTDAG, future DAGKnight/vProgs, pruning nuance, and broader crypto context. Do not treat roadmap discussion as live activation evidence.
 11. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
 12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
 13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
@@ -97,12 +98,14 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, status lanes, and blockDAG visual.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/status.html` - compact shipped-vs-roadmap status page.
+- `/faq.html` - direct answers to common Kaspa status and concept questions.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs thesis.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
 - `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references.
 - `/glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
 - `/about.html` - editorial policy, disclosures, and correction process.
+- `/CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims.
 
 ## Status discipline
 
