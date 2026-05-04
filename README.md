@@ -121,6 +121,16 @@ skip-link targets, social-card metadata, the PNG OpenGraph image, and
 `CLAIMS.yml` forbidden-copy phrases. The same check runs in GitHub Actions on
 push, pull request, and a weekly schedule.
 
+External links are audited separately:
+
+```sh
+bash scripts/check-links.sh
+```
+
+That audit runs weekly and can be triggered manually in GitHub Actions. It is
+separate from the normal push check so temporary third-party outages do not
+block routine content fixes.
+
 ## License
 
 Content is licensed under CC BY 4.0. Code, CSS, scripts, and workflow files are

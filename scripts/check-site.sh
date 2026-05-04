@@ -29,6 +29,8 @@ expected_files=(
   "sitemap.xml"
   "CNAME"
   ".github/workflows/site-check.yml"
+  ".github/workflows/link-check.yml"
+  "scripts/check-links.sh"
 )
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do

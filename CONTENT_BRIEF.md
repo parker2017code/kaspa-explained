@@ -325,6 +325,7 @@ Before changing claims:
 6. Put dense technical detail in `llms-full.txt` or this brief.
 7. Run basic checks before publishing:
    - `bash scripts/check-site.sh`
+   - `bash scripts/check-links.sh` when source/reference URLs change
    - `git diff --check`
    - link check for new URLs
    - mobile/desktop layout check for HTML/CSS changes

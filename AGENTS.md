@@ -21,6 +21,7 @@
 
 - For HTML/CSS edits, check mobile and desktop layout.
 - Run `bash scripts/check-site.sh` before publishing.
+- Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
 - Review links and source references after content changes.
 

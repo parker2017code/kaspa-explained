@@ -1,0 +1,16 @@
+name: External link audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "31 10 * * 1"
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run external link audit
+        run: bash scripts/check-links.sh
