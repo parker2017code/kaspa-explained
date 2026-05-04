@@ -154,6 +154,27 @@ main:focus {
   gap: 8px;
 }
 
+.nav-menu-button {
+  display: none;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-bright);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--cyan);
+  background: rgba(103, 232, 249, .07);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.nav-menu-button:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, .08);
+}
+
 .nav-links a,
 .nav-cta {
   min-height: 38px;
@@ -1542,6 +1563,7 @@ blockquote {
 
   .nav {
     min-height: 0;
+    grid-template-columns: 1fr auto;
     padding: 14px 0;
   }
 
@@ -1553,11 +1575,24 @@ blockquote {
     display: none;
   }
 
+  .nav-menu-button {
+    display: inline-flex;
+  }
+
   .nav-links {
+    grid-column: 1 / -1;
     flex-wrap: wrap;
     overflow: visible;
     gap: 4px;
     padding-bottom: 0;
+  }
+
+  .nav.nav-enhanced .nav-links {
+    display: none;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    display: flex;
   }
 
   .nav-links a {

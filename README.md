@@ -118,8 +118,9 @@ bash scripts/check-site.sh
 
 The check verifies the custom domain, sitemap/canonical links, public pages,
 skip-link targets, social-card metadata, the PNG OpenGraph image, and
-`CLAIMS.yml` forbidden-copy phrases. The same check runs in GitHub Actions on
-push, pull request, and a weekly schedule.
+`CLAIMS.yml` forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh`
+so the duplicated static nav does not drift between pages. The same check runs
+in GitHub Actions on push, pull request, and a weekly schedule.
 
 External links are audited separately:
 

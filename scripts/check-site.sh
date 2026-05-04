@@ -31,11 +31,15 @@ expected_files=(
   ".github/workflows/site-check.yml"
   ".github/workflows/link-check.yml"
   "scripts/check-links.sh"
+  "scripts/check-nav-sync.sh"
+  "nav.js"
 )
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do
   [[ -f "$file" ]] || { echo "Missing $file" >&2; exit 1; }
 done
+
+bash scripts/check-nav-sync.sh
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2
@@ -86,6 +90,21 @@ for page in "${expected_pages[@]}"; do
 
   grep -q 'property="og:image" content="https://kaspaexplained.com/og-image.png"' "$page" || {
     echo "$page missing PNG OpenGraph image" >&2
+    exit 1
+  }
+
+  grep -q '<script defer src="nav.js"></script>' "$page" || {
+    echo "$page missing nav.js script tag" >&2
+    exit 1
+  }
+
+  grep -q 'class="nav-menu-button"' "$page" || {
+    echo "$page missing nav menu button" >&2
+    exit 1
+  }
+
+  grep -q 'id="primary-links" class="nav-links"' "$page" || {
+    echo "$page missing canonical nav-links container" >&2
     exit 1
   }
 done
