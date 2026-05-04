@@ -91,11 +91,11 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 
 ## Site pages
 
-- `/` - Kaspa overview, status lanes, source stack, and high-signal interview notes.
+- `/` - audience-routed Kaspa overview, status lanes, chain-vs-blockDAG visual, source stack, and high-signal interview notes.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement and future RTD / coordination-market / vProgs thesis.
-- `/where-kaspa-fits.html` - comparison page for Kaspa's lane among Bitcoin, Ethereum, Solana, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
-- `/knowledge-map.html` - accessible synthesis of KASmedia and Learn Kaspa material for average crypto readers.
+- `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
+- `/knowledge-map.html` - one-hour learning path and accessible synthesis of KASmedia and Learn Kaspa material for average crypto readers.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
 
 ## Status discipline

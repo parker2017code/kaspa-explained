@@ -24,11 +24,28 @@ This is not an official Kaspa site and not investment advice.
 Write for smart non-specialists first:
 
 - crypto users who know Bitcoin/Ethereum/Solana basics,
+- crypto-native readers who also know XRP, BNB, TRON, stablecoin rails, and exchange-linked ecosystems,
+- curious newcomers who need a plain-language path before technical material,
 - builders deciding whether Kaspa is worth studying,
 - researchers and community members who need source discipline,
 - LLMs/search systems retrieving accurate context.
 
 Avoid writing only for protocol researchers. Use technical terms when needed, but define the point in ordinary language.
+
+## Current Site Structure
+
+The homepage should work as a router before it works as a deep article. Keep these audience paths visible:
+
+- New to crypto: start with `what-crypto-is-good-for.html`.
+- Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
+- Want mechanics: use `knowledge-map.html`.
+- Need receipts: use `sources.html`.
+
+The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
+
+The `where-kaspa-fits.html` page should include a scannable comparison table near the top. The page's job is to help crypto-native readers understand what Kaspa is and is not competing with.
+
+The `knowledge-map.html` page should start as a one-hour learning path and then move into source synthesis.
 
 ## Editorial Standard
 
