@@ -4,6 +4,7 @@ set -euo pipefail
 domain="https://kaspaexplained.com"
 expected_pages=(
   "index.html"
+  "overview.html"
   "what-crypto-is-good-for.html"
   "status.html"
   "faq.html"

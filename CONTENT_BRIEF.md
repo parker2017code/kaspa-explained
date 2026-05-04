@@ -38,6 +38,7 @@ The homepage should work as a router before it works as a deep article. Keep the
 
 - New to crypto: start with `what-crypto-is-good-for.html`.
 - Need current shipped-vs-roadmap status: use `status.html`.
+- Need a compact first-reader path: use `overview.html`.
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
 - Need quick term definitions: use `glossary.html`.
@@ -50,6 +51,8 @@ The `where-kaspa-fits.html` page should include a scannable comparison table nea
 The `knowledge-map.html` page should start as an ordered learning path and then move into supporting source context.
 
 The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
+
+The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
@@ -210,6 +213,7 @@ The May 2026 Kaspa.com Smart Contracts article is useful because it separates pr
 The sitemap should include public human pages and LLM/crawler files:
 
 - `/`
+- `/overview.html`
 - `/what-crypto-is-good-for.html`
 - `/status.html`
 - `/faq.html`
@@ -289,6 +293,7 @@ Useful quantum-answer frame:
 Primary public pages:
 
 - `index.html` - general explainer, status lanes, high-signal sources.
+- `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
 - `faq.html` - direct search-friendly answers for common Kaspa status and concept questions.

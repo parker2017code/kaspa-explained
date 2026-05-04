@@ -98,6 +98,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, status lanes, and blockDAG visual.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/status.html` - compact shipped-vs-roadmap status page.
+- `/overview.html` - 90-second first-reader overview.
 - `/faq.html` - direct answers to common Kaspa status and concept questions.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs thesis.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
