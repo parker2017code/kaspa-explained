@@ -148,7 +148,7 @@ Be careful with app-layer claims.
 
 DAGKnight has the better-developed research lineage and appears further along implementation-wise than vProgs, while neither should be described as already-live mainnet functionality unless primary sources confirm activation. This nuance belongs in status discipline and research context; it does not need to be repeated everywhere.
 
-"Kaspa DAGKnight is WWIII-resistant" can be used as a concise one-liner for DAGKnight's adversarial-latency resilience thesis. Keep it clearly framed as a research/implementation goal, not as a live-mainnet guarantee.
+Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
