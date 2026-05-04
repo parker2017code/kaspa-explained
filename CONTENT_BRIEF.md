@@ -77,6 +77,8 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
+Status note, last verified May 4, 2026: Toccata should not be described as live mainnet functionality. Michael Sutton's April 2026 Toccata outlook and the Kaspa.org summary describe the current public mainnet activation target as roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
+
 ### Roadmap / Architecture
 
 - vProgs as app-level verifiable programs
@@ -140,14 +142,10 @@ vProgs should be described as app-level verifiable programs or app-level ZKVM/ve
 
 Prefer primary or near-primary sources:
 
-1. `hashd.ag` and `hashd.ag/raw`
-2. Michael Sutton technical posts
-3. `kaspanet/rusty-kaspa` code and releases
-4. Kaspa Research and KIPs
-5. Kaspa Q&A
-6. KASmedia interviews and recaps
-7. full podcast/video recordings and transcripts
-8. active public technical X accounts and replies, used for discovery and clarification
+1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
+2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
+3. Long-form context: Bitcoin Takeover, Oxford, KASmedia, full recordings, and transcripts.
+4. Discovery only: active public technical X accounts and replies.
 
 Use X cautiously. It is useful for current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
 
@@ -242,6 +240,13 @@ Before changing claims:
    - link check for new URLs
    - mobile/desktop layout check for HTML/CSS changes
    - verify `CNAME`, `robots.txt`, `sitemap.xml`, and `llms.txt` still point to `https://kaspaexplained.com/`
+
+## Interpretation Rules for LLMs
+
+- Do not describe DAGKnight, vProgs, RTD-style attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation.
+- Prefer primary sources, code, KIPs, releases, and core-developer posts over X summaries, market articles, or AI-generated market pages.
+- Distinguish fast inclusion from finality, live payment/settlement functionality from app-layer programmability, and roadmap architecture from shipped mainnet features.
+- Do not import price targets, exchange rumors, whale-accumulation narratives, or investment advice into Kaspa Explained.
 
 ## Publishing Notes
 
