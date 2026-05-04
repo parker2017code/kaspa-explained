@@ -61,8 +61,8 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 5. https://github.com/kaspanet/rusty-kaspa/releases
 6. https://research.kas.pa/
 7. https://qa.kas.pa/
-8. https://kasmedia.com/ - KASmedia articles, interviews, recaps, and theory posts; public Directus corpus scanned May 4, 2026: 144 published articles
-9. https://kaspa.com/learn-kaspa - Kaspa.com Learn Kaspa / Kaspa Facts intro and intermediate article library; all 49 public articles were scanned for the local source synthesis on May 4, 2026
+8. https://kasmedia.com/ - KASmedia articles, interviews, recaps, and theory posts; useful community context, not primary activation evidence
+9. https://kaspa.com/learn-kaspa - Kaspa.com Learn Kaspa / Kaspa Facts intro and intermediate learning library
 10. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
    - https://www.youtube.com/live/GaJmYV8OHfQ
    - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
@@ -70,7 +70,7 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
 13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
 14. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
-15. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs masterclass
+15. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs talk
 16. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
 17. https://kasmedia.com/article/ori-interview
 18. https://kasmedia.com/article/theweeklyknight081725
@@ -94,11 +94,13 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 
 ## Site pages
 
-- `/` - audience-routed Kaspa overview, status lanes, chain-vs-blockDAG visual, source stack, and high-signal interview notes.
+- `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, status lanes, and blockDAG visual.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
-- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement and future RTD / coordination-market / vProgs thesis.
+- `/status.html` - compact shipped-vs-roadmap status page.
+- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs thesis.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
-- `/knowledge-map.html` - one-hour learning path and accessible synthesis of KASmedia and Learn Kaspa material for average crypto readers.
+- `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references.
+- `/glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
 
 ## Status discipline
@@ -108,7 +110,7 @@ Do not flatten everything into "live."
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and vProgs groundwork.
 - Architecture / roadmap: vProgs as app-level verifiable programs, Kaspa-native DeFi rails, monolithic-feeling developer experience, synchronous composability.
-- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-style miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
+- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-derived miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
 ## Local check
 

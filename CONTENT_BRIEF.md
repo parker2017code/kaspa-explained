@@ -37,15 +37,21 @@ Avoid writing only for protocol researchers. Use technical terms when needed, bu
 The homepage should work as a router before it works as a deep article. Keep these audience paths visible:
 
 - New to crypto: start with `what-crypto-is-good-for.html`.
+- Need current shipped-vs-roadmap status: use `status.html`.
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
-- Need receipts: use `sources.html`.
+- Need quick term definitions: use `glossary.html`.
+- Need sources: use `sources.html`.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
 The `where-kaspa-fits.html` page should include a scannable comparison table near the top. The page's job is to help crypto-native readers understand what Kaspa is and is not competing with.
 
-The `knowledge-map.html` page should start as a one-hour learning path and then move into source synthesis.
+The `knowledge-map.html` page should start as an ordered learning path and then move into supporting source context.
+
+The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
+
+The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
 ## Editorial Standard
 
@@ -83,6 +89,7 @@ Keep these categories separate.
 - UTXO model
 - GHOSTDAG consensus
 - Crescendo 10 BPS era
+- real-time decentralization as the core fast-PoW value proposition: Bitcoin-style PoW security and censorship-resistance goals with seconds-scale confirmation feel under normal network conditions
 - pruning and UTXO commitments
 - public wallets, explorers, visualizers, nodes, mining ecosystem
 
@@ -109,7 +116,7 @@ Status note, last verified May 4, 2026: Toccata should not be described as live 
 
 - DAGKnight final form and activation timing
 - 100 BPS with probabilistic predecessor selection
-- RTD-style miner attestation and oracle designs
+- RTD-derived miner attestation, oracle, TangVM, and coordination-market designs
 - TangVM-style reality-state ideas
 - Proof of Useful Work via matrix multiplication
 - long-term post-quantum migration paths
@@ -149,13 +156,13 @@ Keep the weakness side just as explicit. Crypto is usually weak for normal domes
 
 This page should not become anti-crypto or pro-crypto. Its purpose is conditional judgment: crypto is real when credible shared state matters, and theater when a trusted operator, legal process, or normal database solves the problem better.
 
-The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa is interesting if crypto's real lane is credible shared state, fast settlement, self-custody, censorship resistance, future verification-oriented programmability, and open coordination.
+The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when credible shared state, fast settlement, self-custody, censorship resistance, future verification-oriented programmability, and open coordination matter.
 
 Core frame:
 
-> Kaspa matters because it asks what Proof-of-Work crypto would look like if it were designed for fast settlement, parallel block production, future verification-oriented programmability, and eventually real-time decentralized coordination.
+> Kaspa matters because it asks what Proof-of-Work crypto would look like if Bitcoin-style security and censorship resistance could operate in real time, with fast settlement, parallel block production, and future verification-oriented programmability.
 
-Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, and Crescendo 10 BPS are live. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, RTD-style attestations, real-time coordination markets, and Mining-the-Internet style flows remain research or architecture thesis unless future primary sources confirm activation or shipped products.
+Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, not merely faster payments. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, RTD-derived miner attestations, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped products.
 
 The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page.
 
@@ -187,7 +194,7 @@ Do not use stale team pages, recycled handle lists, or contributor pages to infe
 
 External-source rule: credit outside sources by name and link near the relevant claim or through `sources.html`. Do not copy external articles into the site. Paraphrase, synthesize, and point readers to the original source.
 
-Kaspa.com Learn Kaspa status, last verified May 4, 2026: the public app/API exposes 49 Kaspa Facts posts across three rendered pages: 41 intro-level posts and 8 intermediate-level posts. All 49 article bodies were scanned for the local source update. Treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Do not plaster this source across the main pages or use it as the primary authority for status claims.
+Kaspa.com Learn Kaspa status, last verified May 4, 2026: treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Do not plaster this source across the main pages or use it as the primary authority for status claims.
 
 The May 2026 Kaspa.com Smart Contracts article is useful because it separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
 
@@ -197,9 +204,11 @@ The sitemap should include public human pages and LLM/crawler files:
 
 - `/`
 - `/what-crypto-is-good-for.html`
+- `/status.html`
 - `/why-kaspa-matters.html`
 - `/where-kaspa-fits.html`
 - `/knowledge-map.html`
+- `/glossary.html`
 - `/sources.html`
 - `/llms.txt`
 - `/llms-full.txt`
@@ -270,10 +279,12 @@ Useful quantum-answer frame:
 Primary public pages:
 
 - `index.html` - general explainer, status lanes, high-signal sources.
-- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged inside crypto's real lane.
+- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
+- `status.html` - compact status page for live, targeted, roadmap, and research items.
 - `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
-- `knowledge-map.html` - human-facing synthesis of accessible KASmedia and Learn Kaspa material for average crypto readers.
+- `knowledge-map.html` - ordered concept map for average crypto readers, with supporting source context.
+- `glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 
 LLM/source files:
@@ -302,7 +313,7 @@ Before changing claims:
 
 ## Interpretation Rules for LLMs
 
-- Do not describe DAGKnight, vProgs, RTD-style attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation.
+- Do not describe DAGKnight, vProgs, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation. Do not flatten RTD itself into only future oracle work; Hashdag frames base RTD as Kaspa's real-time Bitcoin-style PoW value proposition, with downstream oracle/TangVM/coordination-market systems as extensions.
 - Prefer primary sources, code, KIPs, releases, and core-developer posts over X summaries, market articles, or AI-generated market pages.
 - Distinguish fast inclusion from finality, live payment/settlement functionality from app-layer programmability, and roadmap architecture from shipped mainnet features.
 - Do not reduce Kaspa's speed argument to block rate alone. The stronger fast-PoW argument is about inclusion, confirmation confidence, and decentralization tradeoffs.

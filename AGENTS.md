@@ -9,7 +9,8 @@
 ## Content Rules
 
 - Keep claims separated into Live, Near-term, Roadmap, and Research.
-- Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-style attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
+- Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-derived attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
+- Do not flatten RTD itself into only future oracle work. Treat base RTD as Hashdag's real-time Bitcoin-style Proof-of-Work framing for Kaspa, while oracle/TangVM/coordination-market flows remain downstream research or architecture unless primary sources confirm shipped products.
 - Preserve the Yonatan Sompolinsky podcast insights section and the primary-source stack.
 - Treat Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public resources as community contributions. They are useful for context, education, summaries, and links, but they are not official or authoritative protocol sources.
 - For status-sensitive claims, prefer code, releases, KIPs, research papers, protocol documentation, or direct statements from core technical contributors.
