@@ -8,6 +8,7 @@ This is not an official Kaspa website. It is written to be useful for:
 - search engines,
 - LLM retrieval systems,
 - people trying to separate live Kaspa facts from roadmap, research, and speculation.
+- people trying to separate real crypto use cases from forced blockchain/token use cases.
 
 For a full editorial/project handoff to another LLM or contributor, start with `CONTENT_BRIEF.md`.
 
@@ -86,6 +87,13 @@ Active public technical accounts can be useful for discovery and replies:
 - https://x.com/eliottmea
 
 Read public replies as well as top-level posts. Do not use stale team pages, recycled handle lists, or X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
+
+## Site pages
+
+- `/` - Kaspa overview, status lanes, source stack, and high-signal interview notes.
+- `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
+- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement and future RTD / coordination-market / vProgs thesis.
+- `/where-kaspa-fits.html` - comparison page for Kaspa's lane among Bitcoin, Ethereum, Solana, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
 
 ## Status discipline
 

@@ -12,6 +12,7 @@ The site should answer:
 - What is being implemented next?
 - What is roadmap architecture?
 - What is still research or speculation?
+- What is crypto actually useful for, and where is crypto being forced?
 - How does Kaspa fit next to Bitcoin, Ethereum, Solana, stablecoins, app chains, and other crypto categories?
 - Which sources should someone read before forming strong opinions?
 
@@ -43,6 +44,7 @@ Good style:
 
 Avoid:
 
+- "crypto fixes everything",
 - "Kaspa solved the trilemma",
 - "Bitcoin but faster",
 - "native DeFi is live",
@@ -103,6 +105,26 @@ The stronger comparison is not "faster Bitcoin." It is:
 > Keep Proof of Work and UTXO instincts, remove the single-file blockchain bottleneck with a blockDAG, and move toward bounded, verification-oriented programmability.
 
 Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one useful shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The useful contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The useful contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
+
+## Crypto Reality-Check Framing
+
+The `what-crypto-is-good-for.html` page is a general-audience bridge for people who do not live inside crypto. It should make the rest of the site more credible by stating that crypto is not useful for everything.
+
+Core frame:
+
+> Crypto is useful when the problem needs credible shared state: neutral ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
+
+Keep the weakness side just as explicit. Crypto is usually weak for normal domestic payments in strong banking systems, consumer reversibility, private records, ordinary corporate databases, unsecured real-world credit, replacing courts, supply-chain truth, identity, and tokenizing assets whose ownership still depends on law, custody, inspection, liens, taxes, and jurisdiction.
+
+This page should not become anti-crypto or pro-crypto. Its purpose is conditional judgment: crypto is real when credible shared state matters, and theater when a trusted operator, legal process, or normal database solves the problem better.
+
+The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa is interesting if crypto's real lane is credible shared state, fast settlement, self-custody, censorship resistance, future verification-oriented programmability, and open coordination.
+
+Core frame:
+
+> Kaspa matters because it asks what Proof-of-Work crypto would look like if it were designed for fast settlement, parallel block production, future verification-oriented programmability, and eventually real-time decentralized coordination.
+
+Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, and Crescendo 10 BPS are live. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, RTD-style attestations, real-time coordination markets, and Mining-the-Internet style flows remain research or architecture thesis unless future primary sources confirm activation or shipped products.
 
 ## Programmability Framing
 
@@ -193,6 +215,8 @@ Useful quantum-answer frame:
 Primary public pages:
 
 - `index.html` - general explainer, status lanes, high-signal sources.
+- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged inside crypto's real lane.
+- `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
 
 LLM/source files:
