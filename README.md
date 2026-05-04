@@ -52,6 +52,8 @@ Do not point `www` to the repository name.
 
 Use primary or near-primary sources first:
 
+Community portals, media sites, learning libraries, interviews, and recaps are useful source material, but they are not official protocol authority. Status-sensitive claims should be anchored in code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
+
 1. https://hashd.ag/ - Hashdag / Yonatan Sompolinsky's writing archive
 2. https://hashd.ag/raw - raw archive view
 3. https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c
@@ -74,7 +76,8 @@ Use primary or near-primary sources first:
 18. https://kasmedia.com/article/theweeklyknight081725
 19. https://kasmedia.com/article/weeklyknightl12s-and-pows
 20. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-21. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context only; do not treat as transcript unless a recording/transcript is available
+21. https://kaspa.org/ - community-maintained public portal context and broad summaries
+22. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context, paired with the available recording/Q&A links when using the Oxford material
 
 Active public technical accounts can be useful for discovery and replies:
 

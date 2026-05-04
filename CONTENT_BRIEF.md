@@ -95,7 +95,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note, last verified May 4, 2026: Toccata should not be described as live mainnet functionality. Michael Sutton's April 2026 Toccata outlook and the Kaspa.org summary describe the current public mainnet activation target as roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
+Status note, last verified May 4, 2026: Toccata should not be described as live mainnet functionality. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the current public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
 
 ### Roadmap / Architecture
 
@@ -175,9 +175,11 @@ Prefer primary or near-primary sources:
 
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
-3. Long-form context: Bitcoin Takeover, Oxford, KASmedia, full recordings, and transcripts.
-4. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but verify shipped-feature and activation claims against primary protocol/code sources.
+3. Community/context sources: Bitcoin Takeover, Oxford, KASmedia, Kaspa.com Learn Kaspa, Kaspa.org, full recordings, interviews, transcripts, recaps, and public portals. They are useful contributions, not protocol authority.
+4. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
 5. Discovery only: active public technical X accounts and replies.
+
+Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public/community resources are not official or authoritative protocol sources. They can orient readers and point into stronger material, but status-sensitive claims should come from code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
 Use X cautiously. It is useful for current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
 
