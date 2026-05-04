@@ -103,9 +103,9 @@
         </div>
       </div>
       <div class="hero-visual" aria-label="BlockDAG concept diagram">
-        <svg viewBox="40 86 620 330" role="img" aria-labelledby="hero-dag-title hero-dag-desc">
+        <svg viewBox="40 58 650 390" role="img" aria-labelledby="hero-dag-title hero-dag-desc">
           <title id="hero-dag-title">Parallel blocks ordered by GHOSTDAG</title>
-          <desc id="hero-dag-desc">A simplified diagram showing multiple proof-of-work blocks feeding into a blockDAG and being ordered into shared state.</desc>
+          <desc id="hero-dag-desc">A simplified blockDAG with several layers of parallel proof-of-work blocks referencing earlier blocks, plus a highlighted ordering path.</desc>
           <defs>
             <linearGradient id="dag-line" x1="0" x2="1">
               <stop offset="0" stop-color="#9bd7bd"/>
@@ -113,26 +113,51 @@
             </linearGradient>
           </defs>
           <g class="dag-links">
-            <path d="M96 270 C176 178, 256 162, 340 230"/>
-            <path d="M96 270 C190 268, 260 285, 340 230"/>
-            <path d="M96 270 C176 355, 268 348, 340 230"/>
-            <path d="M340 230 C420 146, 506 148, 594 188"/>
-            <path d="M340 230 C430 246, 504 258, 594 188"/>
-            <path d="M340 230 C424 322, 518 310, 594 188"/>
+            <path d="M92 248 L186 150"/>
+            <path d="M92 248 L188 248"/>
+            <path d="M92 248 L186 346"/>
+            <path d="M186 150 L292 112"/>
+            <path d="M186 150 L292 214"/>
+            <path d="M188 248 L292 214"/>
+            <path d="M188 248 L292 316"/>
+            <path d="M186 346 L292 316"/>
+            <path d="M292 112 L402 146"/>
+            <path d="M292 214 L402 146"/>
+            <path d="M292 214 L402 250"/>
+            <path d="M292 316 L402 250"/>
+            <path d="M292 316 L402 354"/>
+            <path d="M402 146 L514 118"/>
+            <path d="M402 146 L514 220"/>
+            <path d="M402 250 L514 220"/>
+            <path d="M402 250 L514 326"/>
+            <path d="M402 354 L514 326"/>
+            <path d="M514 118 L620 188"/>
+            <path d="M514 220 L620 188"/>
+            <path d="M514 220 L620 292"/>
+            <path d="M514 326 L620 292"/>
           </g>
-          <g class="dag-node" transform="translate(96 270)"><circle r="34"/><text y="7">PoW</text></g>
-          <g class="dag-node soft" transform="translate(258 156)"><circle r="28"/><text y="7">B1</text></g>
-          <g class="dag-node soft" transform="translate(248 296)"><circle r="28"/><text y="7">B2</text></g>
-          <g class="dag-node soft" transform="translate(250 380)"><circle r="28"/><text y="7">B3</text></g>
-          <g class="dag-node main" transform="translate(340 230)"><circle r="42"/><text y="7">DAG</text></g>
-          <g class="dag-node soft" transform="translate(504 136)"><circle r="28"/><text y="7">B4</text></g>
-          <g class="dag-node soft" transform="translate(500 280)"><circle r="28"/><text y="7">B5</text></g>
-          <g class="dag-node soft" transform="translate(502 366)"><circle r="28"/><text y="7">B6</text></g>
-          <g class="dag-node" transform="translate(594 188)"><circle r="38"/><text y="7">Order</text></g>
+          <g class="dag-order">
+            <path d="M92 248 L188 248 L292 214 L402 250 L514 220 L620 188"/>
+          </g>
+          <g class="dag-node selected" transform="translate(92 248)"><circle r="30"/><text y="7">A</text></g>
+          <g class="dag-node soft" transform="translate(186 150)"><circle r="26"/><text y="7">B</text></g>
+          <g class="dag-node selected" transform="translate(188 248)"><circle r="26"/><text y="7">C</text></g>
+          <g class="dag-node soft" transform="translate(186 346)"><circle r="26"/><text y="7">D</text></g>
+          <g class="dag-node soft" transform="translate(292 112)"><circle r="26"/><text y="7">E</text></g>
+          <g class="dag-node selected" transform="translate(292 214)"><circle r="26"/><text y="7">F</text></g>
+          <g class="dag-node soft" transform="translate(292 316)"><circle r="26"/><text y="7">G</text></g>
+          <g class="dag-node soft" transform="translate(402 146)"><circle r="26"/><text y="7">H</text></g>
+          <g class="dag-node selected" transform="translate(402 250)"><circle r="26"/><text y="7">I</text></g>
+          <g class="dag-node soft" transform="translate(402 354)"><circle r="26"/><text y="7">J</text></g>
+          <g class="dag-node soft" transform="translate(514 118)"><circle r="26"/><text y="7">K</text></g>
+          <g class="dag-node selected" transform="translate(514 220)"><circle r="26"/><text y="7">L</text></g>
+          <g class="dag-node soft" transform="translate(514 326)"><circle r="26"/><text y="7">M</text></g>
+          <g class="dag-node selected" transform="translate(620 188)"><circle r="28"/><text y="7">N</text></g>
+          <g class="dag-node soft" transform="translate(620 292)"><circle r="26"/><text y="7">O</text></g>
         </svg>
         <div class="visual-caption">
           <strong>Linear chains choose one branch at a time.</strong>
-          <span>Kaspa can include parallel honest work, then order it through GHOSTDAG.</span>
+          <span>Kaspa can keep many parallel blocks in the graph, then order them through GHOSTDAG.</span>
         </div>
       </div>
     </section>
