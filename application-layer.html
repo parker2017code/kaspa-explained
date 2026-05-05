@@ -57,7 +57,7 @@
       <p class="eyebrow">Application layer</p>
       <h1>Crypto valuations usually follow what a network lets people do.</h1>
       <p class="lead">Every serious crypto asset carries a bet about applications: money, collateral, stablecoin settlement, DeFi, trading, consumer apps, or coordination. Kaspa's application thesis should start from its own edge, not by copying another chain's old playbook.</p>
-      <p class="verified-note"><strong>Last verified: May 5, 2026.</strong> Kaspa's live lane is Proof of Work, UTXO, GHOSTDAG, Crescendo 10 BPS, and base real-time decentralization framing. Toccata is targeted, vProgs are roadmap architecture, and coordination-market extensions remain research unless primary sources later confirm shipped products.</p>
+      <p class="verified-note"><strong>Last verified: May 5, 2026.</strong> Kaspa's live lane is Proof of Work, UTXO, GHOSTDAG, Crescendo 10 BPS, and base real-time decentralization framing. Toccata is targeted, vProgs are roadmap architecture, and coordination-market extensions should be framed as app-level constructions over neutral primitives unless primary sources later confirm specific shipped software.</p>
     </section>
 
     <section class="section">
@@ -260,6 +260,7 @@
       <p class="eyebrow">Toccata vs vProgs</p>
       <h2>Toccata is the foundation. vProgs are the fuller app architecture.</h2>
       <p>These should not be described as competing chains, rival clients, or two separate versions of Kaspa programmability. Toccata is the nearer L1 hard-fork track: covenants, covenant IDs, ZK-facing verification work, sequencing commitments, native-asset groundwork, and developer tooling. vProgs are the longer app architecture: proof-producing programs that use Kaspa for shared sequencing, commitments, verification, and eventually synchronous composability.</p>
+      <p>The design philosophy is neutral primitives first. Kaspa should not decide which oracle, prediction market, portfolio app, DePIN market, launchpad, or trading strategy is "the" app. It should expose durable L1 surfaces; applications define the incentives, semantics, data sources, legal limits, and user experience.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Layer</th><th>What it is for</th><th>What not to claim yet</th><th>Status wording</th></tr></thead>
@@ -277,15 +278,53 @@
               <td>Roadmap architecture / early prototype implementation</td>
             </tr>
             <tr>
-              <td>RTD attestations</td>
-              <td>Future internet-money flows where opt-in miners or rewarded reporters help sample external-event truth quickly enough for apps to react under explicit rules.</td>
-              <td>Do not describe miner attestations, first-to-know terminals, or portfolio executors as shipped Toccata features.</td>
-              <td>Research / oracle architecture</td>
+              <td>Attestation markets</td>
+              <td>App-defined internet-money flows where opt-in miners or rewarded reporters are paid to expose external-event signals under explicit rules.</td>
+              <td>Do not describe the app logic as protocol-prescribed. Kaspa provides primitives; apps provide incentives, encoding, sources, and risk models.</td>
+              <td>App-layer construction over primitives</td>
             </tr>
           </tbody>
         </table>
       </div>
       <p class="verified-note">Implementation status is moving quickly. As checked on May 5, 2026, public evidence includes <code>rusty-kaspa</code> Toccata/TN12 branches, an early <code>kaspanet/vprogs</code> Rust prototype repo, and open KIP discussion around partitioned sequencing commitments. That is enough to discuss direction, not enough to erase the live vs roadmap boundary.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">What becomes possible</p>
+      <h2>The practical split is L1 covenants, standalone based apps, then full vProgs.</h2>
+      <p>The thesis is not "launch many independent L2s." It is closer to: keep Kaspa L1 as the neutral ordering, data, settlement, and verification anchor; let applications add their own semantics and incentives directly against those primitives; and avoid separate app empires with their own sequencers when L1 can provide the shared sequence.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Stage</th><th>What builders can target</th><th>What remains later</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Payload / based-VM experiments</td>
+              <td>VMs or app interpreters can read data posted to Kaspa L1 and follow the L1 order. This is useful for experiments, games, demos, and less trust-critical activity.</td>
+              <td>Without ZK settlement, L1 does not verify the app state. Trustless KAS bridging, canonical state commitments, and mature composability are missing.</td>
+            </tr>
+            <tr>
+              <td>Toccata L1 covenants</td>
+              <td>Peer-to-peer covenant systems, vault policy, escrow, assurance contracts, native assets, covenant state machines, and bounded local UTXO flows through Silverscript and script-engine extensions.</td>
+              <td>Not a global Ethereum-style VM where every node executes every app's state.</td>
+            </tr>
+            <tr>
+              <td>Standalone based-zk apps</td>
+              <td>Apps that follow Kaspa L1 sequencing, prove execution, use L1 settlement/canonical bridge patterns, and can be built by core or external teams as vProgs-compatible based computation.</td>
+              <td>They communicate through L1 proof/bridge paths first, not full synchronous composition between every program.</td>
+            </tr>
+            <tr>
+              <td>Hans' vProgs runtime work</td>
+              <td>An early Rust framework for based computation on Kaspa: scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline.</td>
+              <td>The repo itself says early development/prototype; APIs and architecture can change.</td>
+            </tr>
+            <tr>
+              <td>Full vProgs direction</td>
+              <td>A one-dimensional program space with shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and synchronous composition without rollup-island fragmentation.</td>
+              <td>This is the later architecture target, not the immediate Toccata app surface.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="section">
@@ -350,7 +389,7 @@
           <p>Agents, devices, miners, apps, and services buying resources or making commitments at internet speed with self-custodied funds.</p>
         </article>
       </div>
-      <p class="verified-note">These are research and architecture directions, not current shipped Kaspa products. The honest claim is that Kaspa's live RTD foundation and future programmability make them worth investigating. Any portfolio or trading use would need strong warnings, risk controls, and legal review; early signals can be wrong, manipulated, delayed, or misread.</p>
+      <p class="verified-note">These are app-level research and architecture directions, not protocol-prescribed Kaspa products. The honest claim is that Kaspa's live RTD foundation and future programmability make them worth investigating. Any portfolio or trading use would need strong warnings, risk controls, and legal review; early signals can be wrong, manipulated, delayed, or misread.</p>
     </section>
 
     <section class="section">
@@ -361,7 +400,7 @@
           <thead><tr><th>Capability</th><th>What it enables</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>10 BPS GHOSTDAG settlement</td><td>Fast inclusion, fast PoW user experience, wallets, payments, infrastructure, and clearer confirmation UX.</td><td>Live</td></tr>
-            <tr><td>Miner or reporter attestations</td><td>Opt-in event reporting, early external-event signals, oracle experiments, and first-to-know dashboards.</td><td>Research / architecture; not a shipped product</td></tr>
+            <tr><td>Attestation-capable primitives</td><td>Opt-in event reporting, early external-event signals, oracle experiments, and first-to-know dashboards built by apps.</td><td>App-level design over primitives</td></tr>
             <tr><td>MEV-aware ordering or auctions</td><td>Protects users who delegate an if-this-then-that strategy from miners or searchers exploiting the same event signal first.</td><td>Research / design work</td></tr>
             <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments.</td><td>Targeted hard-fork track, not live until activated</td></tr>
             <tr><td>STARK-sized proof support</td><td>Large validity proofs on Kaspa, with block-size and standard-fee tradeoffs to avoid cheap spam.</td><td>TN12 context / mainnet design question</td></tr>
@@ -381,14 +420,14 @@
           <tbody>
             <tr><td>Real-time assurance markets</td><td>A group funds a bounty, project, event, audit, legal defense, open-source tool, or local service only if a threshold commits by a deadline.</td><td>This is the cleanest stag-hunt product: nobody has to move first unless enough others do too.</td><td>Toccata first; richer later</td></tr>
             <tr><td>Kaspa-native prediction markets</td><td>Polymarket-style markets for crypto events, software milestones, protocol votes, sports, economics, or public data, with transparent oracle/dispute rules.</td><td>Prediction markets are coordination tools. Fast settlement and explicit oracles matter.</td><td>vProgs / research</td></tr>
-            <tr><td>First-to-know attestation terminal</td><td>A dashboard or API watches incentivized miner attestations and other reporters, then flags when a credible event signal starts forming before normal feeds catch up.</td><td>If miners can be rewarded for fast, censorship-resistant reporting, the killer app is not only the event result; it is the earliest reliable change in belief.</td><td>Research / oracle architecture</td></tr>
+            <tr><td>First-to-know attestation terminal</td><td>A dashboard or API watches app-incentivized miner attestations and other reporters, then flags when a credible event signal starts forming before normal feeds catch up.</td><td>If apps can reward fast, censorship-resistant reporting, the killer app is not only the event result; it is the earliest reliable change in belief.</td><td>App-level oracle market</td></tr>
             <tr><td>Attestation-aware portfolio guardrails</td><td>Tools that alert users when miner-attested signals affect markets they follow, without pretending the signal is financial advice or guaranteed truth.</td><td>Fast knowledge is valuable only if the app separates signal confidence, reporter incentives, legal limits, and user risk.</td><td>Research / legal-heavy</td></tr>
             <tr><td>Atomic strategy executor</td><td>A user defines "if this event is attested, then rebalance, hedge, unlock, bid, cancel, or route liquidity" and the app executes only under predeclared rules.</td><td>The flywheel appears when the strategy's assets and logic live on Kaspa, because the attestation and action can be closer to atomic.</td><td>vProgs / RTD research</td></tr>
             <tr><td>Hashpower and service auctions</td><td>Open auctions for mining services, compute jobs, bandwidth, data feeds, proofs, or app-specific resources.</td><td>PoW culture and real-time ordering fit markets for scarce technical resources.</td><td>Toccata / vProgs</td></tr>
             <tr><td>Fast merchant escrow</td><td>Point-of-sale payments with risk states, partial refunds, time-locked disputes, delivery confirmations, and business treasury vaults.</td><td>Kaspa's live speed matters if the product explains confirmation confidence and custody clearly.</td><td>Live UX now; covenants later</td></tr>
             <tr><td>Anti-rug launch rails</td><td>Token, NFT, or membership launches with transparent bonding curves, locked liquidity, refund rules, staged release, and warnings by default.</td><td>If launchpads happen, make them less extractive and more rule-bound than pure attention markets.</td><td>Toccata</td></tr>
             <tr><td>AI-agent task boards</td><td>Agents post tasks, stake deposits, pay for API work, buy data, prove completion, and settle disputes under public rules.</td><td>Agents need small fast commitments and machine-readable settlement.</td><td>vProgs / research</td></tr>
-            <tr><td>DePIN freshness markets</td><td>Networks pay for fresh mapping, sensor data, bandwidth, storage checks, or compute availability with time-sensitive rewards.</td><td>RTD-derived attestations could make freshness and censorship resistance more meaningful.</td><td>Research</td></tr>
+            <tr><td>DePIN freshness markets</td><td>Networks pay for fresh mapping, sensor data, bandwidth, storage checks, or compute availability with time-sensitive rewards.</td><td>App-level attestation incentives could make freshness and censorship resistance more meaningful.</td><td>Research / app design</td></tr>
             <tr><td>Proof-backed reputation</td><td>Builders, miners, wallets, services, and agents earn portable reputation from completed jobs, uptime, proofs, or fulfilled commitments.</td><td>Coordination markets need reputation that is not just a centralized score.</td><td>vProgs</td></tr>
             <tr><td>Native savings and vault policies</td><td>Personal and business wallets with limits, delays, recovery paths, allowlists, and emergency freezes.</td><td>UTXO covenants can make self-custody safer without giving custody to a platform.</td><td>Toccata</td></tr>
             <tr><td>One-product app chains around Kaspa</td><td>Focused markets for perps, prediction, stablecoin settlement, games, or infrastructure that settle or verify through Kaspa commitments.</td><td>Hyperliquid's lesson is product focus; Kaspa's version should exploit fast PoW ordering.</td><td>vProgs / architecture</td></tr>
@@ -447,6 +486,7 @@
         <li><a href="https://dappbay.bnbchain.org/ranking">BNB Chain DappBay rankings</a> for BNB Chain dApp categories and examples.</li>
         <li><a href="https://developers.tron.network/docs/tron-economic-model">TRON developer docs</a> for TRON's stablecoin and DeFi ecosystem framing.</li>
         <li><a href="https://tokenize-event.com/theatre-2-blockchain-technologies-and-the-potential-of-web3/utilising-decentralised-tech-secure-digital-wallets">Kaspa: Mining the Internet at Tokenize London</a> for Yonatan Sompolinsky's RTD, miner-attestation, internet-money flow, and focus/flywheel framing.</li>
+        <li><a href="https://kasmedia.com/article/the-weekly-knight-april-14">KASmedia Hong Kong wrap-up</a> for historical context on Michael Sutton's Crescendo/L1-L2 bridge talk, the ZK panel with Hans Moog, and the 2025 discussion around based rollups, state management, and liquidity fragmentation.</li>
         <li><a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">Michael Sutton's vProgs masterclass</a> for shared sequencing, one-dimensional program space, synchronous composability, computational DAGs, prover incentives, and sovereignty obligations.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/toccata">rusty-kaspa Toccata branch</a>, <a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, and <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> for current implementation/prototype evidence. Treat branches as moving targets.</li>
         <li><a href="https://github.com/kaspanet/kips/pull/36">KIP-21 pull request</a> for partitioned sequencing commitments and O(activity) proving direction; confirm final status before calling it activated.</li>

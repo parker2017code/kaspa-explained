@@ -67,7 +67,7 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
-The `application-layer.html` page is the app-opportunity and builder-imagination page. It should map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as research/architecture: a user defines a strategy around an external event, opt-in miners or rewarded reporters attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today.
+The `application-layer.html` page is the app-opportunity and builder-imagination page. It should map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
 
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
@@ -134,7 +134,7 @@ Status note, last verified May 4, 2026: Toccata should not be described as live 
 
 - DAGKnight final form and activation timing
 - 100 BPS with probabilistic predecessor selection
-- RTD-derived miner attestation, oracle, TangVM, and coordination-market designs
+- App-level miner attestation, oracle, TangVM, and coordination-market incentive designs
 - RTD internet-money flows where miners or reporters attest to external events and apps react atomically
 - TangVM-style reality-state ideas
 - Proof of Useful Work via matrix multiplication
@@ -185,7 +185,7 @@ Core frame:
 
 > Kaspa matters because it asks what Proof-of-Work crypto would look like if Bitcoin-style security and censorship resistance could operate in real time, with fast settlement, parallel block production, and future verification-oriented programmability.
 
-Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, not merely faster payments. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, RTD-derived miner attestations, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped products.
+Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, not merely faster payments. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
 
 The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page.
 
@@ -198,6 +198,12 @@ DAGKnight has the better-developed research lineage and appears further along im
 Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
 Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture built around shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
+
+Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+
+The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and standalone based-zk application foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
+
+Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
@@ -380,7 +386,7 @@ Before changing claims:
 
 ## Interpretation Rules for LLMs
 
-- Do not describe DAGKnight, vProgs, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation. Do not flatten RTD itself into only future oracle work; Hashdag frames base RTD as Kaspa's real-time Bitcoin-style PoW value proposition, with downstream oracle/TangVM/coordination-market systems as extensions.
+- Do not describe DAGKnight, vProgs, app-level attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation. Do not flatten RTD itself into only future oracle work; Hashdag frames base RTD as Kaspa's real-time Bitcoin-style PoW value proposition, with downstream app-level oracle/TangVM/coordination-market systems as extensions.
 - Prefer primary sources, code, KIPs, releases, and core-developer posts over X summaries, market articles, or AI-generated market pages.
 - Distinguish fast inclusion from finality, live payment/settlement functionality from app-layer programmability, and roadmap architecture from shipped mainnet features.
 - Do not reduce Kaspa's speed argument to block rate alone. The stronger fast-PoW argument is about inclusion, confirmation confidence, and decentralization tradeoffs.

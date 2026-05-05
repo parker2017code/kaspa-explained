@@ -25,7 +25,7 @@ The site includes a true zero-start education layer:
 - `kaspa-in-one-screen.html` compresses Kaspa into a shareable status-labeled artifact: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the thesis.
 - `adoption-metrics.html` explains non-price evidence categories for Kaspa adoption: wallets, node health, mining distribution, fees, liquidity, developer activity, integrations, and post-Toccata app signals.
 - `application-layer.html` explains why crypto application layers drive network value, maps what Bitcoin, Ethereum, Solana, stablecoins, oracles, and app-specific chains enabled, and proposes status-labeled Kaspa opportunity lanes for live RTD, Toccata, vProgs, and coordination-market research.
-  It should include the RTD internet-money flow as research/architecture: users define if-this-then-that strategies around external events, opt-in miners or rewarded reporters attest, the system samples the PoW majority, and on-Kaspa assets or logic gain lower latency and closer atomicity. Do not describe miner-attestation terminals, portfolio guardrails, or atomic strategy executors as shipped products.
+  It should include the RTD internet-money flow as app-level research/architecture: users define if-this-then-that strategies around external events, applications define incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and on-Kaspa assets or logic gain lower latency and closer atomicity. Do not describe miner-attestation terminals, portfolio guardrails, or atomic strategy executors as protocol-prescribed products.
 
 These pages should teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth. They should not become price-prediction, trading, or investment-advice pages.
 
@@ -82,6 +82,12 @@ As of May 5, 2026, Toccata should not be described as live mainnet functionality
 
 Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture built around shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
 
+Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; applications define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+
+The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and standalone based-zk application foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
+
+Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
+
 ## Roadmap and architecture
 
 - vProgs as app-level verifiable programs
@@ -94,7 +100,7 @@ Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L
 
 - DAGKnight final form and activation timing
 - 100 BPS with probabilistic predecessor selection
-- RTD-derived miner attestation, oracle, TangVM, and coordination-market designs
+- App-level miner attestation, oracle, TangVM, and coordination-market incentive designs
 - First-to-know miner-attestation terminals, attestation-aware portfolio guardrails, and atomic strategy executors
 - TangVM-style reality-state ideas
 - Proof of Useful Work via matrix multiplication
@@ -129,7 +135,7 @@ Important nuances:
 - Hashdag frames RTD first as Kaspa's real-time Bitcoin-style PoW value proposition: transactions that need about an hour of confidence on Bitcoin should be able to reach comparable confidence in seconds on Kaspa under normal network conditions, while preserving the PoW security model.
 - RTD is not merely wall-clock speed. In the hashd.ag framing, "real time" means real system time: optimistic speed when the network is smooth, and slower but still safety-preserving behavior when the network is degraded or attacked.
 - Hashdag also uses RTD as a metaproperty for infrastructure that provides censorship resistance, permissionlessness, and fairness in real time. Miner attestations, oracle flows, TangVM, and coordination markets are downstream extensions of that RTD base, not the definition of RTD itself.
-- RTD-derived oracle/TangVM flows are not shipped products; Yonatan described the internet-money flow as far from ready and still needing concrete data-source, incentive, anti-MEV, scheduler, and implementation work.
+- RTD-derived oracle/TangVM flows are not protocol-prescribed products; Yonatan described the internet-money flow as far from ready and still needing concrete data-source, incentive, anti-MEV, scheduler, and implementation work.
 - In the Tokenize London / Mining the Internet framing, the internet-money flow starts with a user strategy around an external event, then an internet-money layer reads news or other sources, miners opt in to attest, and Kaspa samples the PoW majority. The strategic flywheel is that if the assets and logic live on Kaspa, the action can be closer to zero-latency and atomic than if Kaspa only serves another chain. This is not live product functionality.
 - The proposed RTD flow also needs MEV-aware ordering or auctions so miners/searchers cannot exploit the user's delegated strategy before the strategy executes.
 - Security budget claims should connect to real activity, fees, DeFi, and long-term Proof of Useful Work research rather than price-only assumptions.
@@ -234,6 +240,7 @@ Additional deep dives:
 - https://kasmedia.com/article/theweeklyknight081725 - vProgs yellow-paper recap plus Michael Sutton vProgs framing; useful for computational minimalism, app sovereignty, ZK proofs, and synchronous/atomic composability.
 - https://kasmedia.com/article/weeklyknightl12s-and-pows - Michael Sutton fast-PoW recap; useful for separating fast inclusion from fast confirmations.
 - https://kasmedia.com/article/moog-synthesizers-and-kaspa - covenant workshop recap with Michael Sutton, Ori Newman, and IzioDev; useful for Silverscript, native assets, covenant examples, and the exploratory state of the app layer.
+- https://kasmedia.com/article/the-weekly-knight-april-14 - Hong Kong/Kaspa 2.0 historical recap; useful for Michael Sutton's L1-L2 bridge talk, Hans Moog's ZK panel appearance, based rollup framing, and liquidity-fragmentation context. Treat as historical context, not current activation status.
 - https://kaspa.org/ - community-maintained public portal context only; do not treat as official or authoritative protocol evidence.
 - https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - Kaspa.org Oxford Union event context for Yonatan, GHOSTDAG, DAGKnight, and RTD; do not treat it as a transcript or primary technical source unless a recording/transcript/paper/code source supports the specific claim.
 

@@ -157,7 +157,11 @@ Do not flatten everything into "live."
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Near-term track: Toccata/Covenants++ as the L1 hard-fork path for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. Treat this as targeted until activation is confirmed by primary sources.
 - Architecture / roadmap: vProgs as app-level verifiable programs, shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
-- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-derived miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
+- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
+
+Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+
+Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the thesis is L1-first shared sequencing, settlement, commitments, and verification.
 
 ## Local check
 
