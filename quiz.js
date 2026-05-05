@@ -2,195 +2,243 @@
   const questions = [
     {
       category: "Custody",
-      prompt: "A wallet popup asks you to sign a message before claiming an airdrop. What is the safest first move?",
+      prompt: "A wallet popup asks for a Permit2 signature with a deadline far in the future. The site is real, but you reached it through an ad. What is the best read?",
       options: [
-        "Sign it because message signatures cannot move funds.",
-        "Check what the signature authorizes, verify the site, and use a burner wallet if you still need to interact.",
-        "Ask the project Telegram whether the popup is normal.",
-        "Turn off your VPN and try again."
+        "Permit signatures are off-chain, so the wallet balance cannot be affected.",
+        "The real domain makes it safe; phishing only matters on fake domains.",
+        "The signature can still create spending authority. Verify the exact spender, token, allowance, and route before signing.",
+        "A hardware wallet makes the signature harmless."
       ],
-      correct: 1,
-      explanation: "A signature can authorize more than a harmless login. The safe habit is to inspect intent, verify the app, and isolate risk."
+      correct: 2,
+      explanation: "Off-chain signatures can authorize later on-chain movement. Hardware wallets protect keys, not your judgment about what you authorize."
     },
     {
       category: "Tokenomics",
-      prompt: "A token has a $20M market cap and a $2B fully diluted valuation. What should that make you ask?",
+      prompt: "A token trades at $0.20 with 50M circulating supply, 2B total supply, and monthly investor unlocks. Which number is the trap?",
       options: [
-        "Whether future unlocks could dilute current holders or add sell pressure.",
-        "Whether the token is guaranteed to reach $2B market cap.",
-        "Whether the low market cap means it is early and therefore safe.",
-        "Whether the contract is renounced."
+        "The circulating market cap looks small while future supply can reprice the float.",
+        "The total supply is irrelevant if today's chart is strong.",
+        "The token price is low, so dilution is already priced in.",
+        "Unlocks only matter if the team announces they are selling."
       ],
       correct: 0,
-      explanation: "Market cap and FDV can diverge when most supply is not circulating. Unlock schedule and insider allocation matter."
+      explanation: "Low float can make market cap look cheap while FDV and unlocks create future supply pressure. The chart does not remove that risk."
     },
     {
       category: "Consensus",
-      prompt: "What does Proof of Work primarily make expensive?",
+      prompt: "Two chains both show a transaction quickly. One has probabilistic PoW confirmations; one has BFT-style finality after validator votes. What should you not collapse?",
       options: [
-        "Creating valid blocks and rewriting history without controlling enough work.",
-        "Opening a wallet.",
-        "Writing smart contracts.",
-        "Sending transactions to a centralized exchange."
+        "Inclusion latency, confirmation confidence, and the mechanism that makes reversal costly.",
+        "Block explorers and wallet balances.",
+        "Whether the transaction appears in a UI.",
+        "Token price and transaction fee."
       ],
       correct: 0,
-      explanation: "Proof of Work makes block production and reorganization costly through external energy and hardware competition."
+      explanation: "Fast inclusion is not the same as finality or economic security. The path to confidence depends on the consensus model."
     },
     {
       category: "Markets",
-      prompt: "A coin has a $100M market cap. Does that mean $100M was invested into it?",
+      prompt: "A token has $400M market cap, $900K daily volume, and a 2% order-book depth of $120K. What is the practical implication?",
       options: [
-        "Yes, market cap equals dollars deposited.",
-        "No. Market cap is price times supply and can move on much less actual liquidity.",
-        "Yes, unless the coin is proof-of-work.",
-        "No, but only for meme coins."
+        "The market cap means large holders can exit near the displayed price.",
+        "The chart is liquid enough if a major exchange lists it.",
+        "The headline valuation may be much larger than realistic exit liquidity.",
+        "Low depth proves the token is early, not risky."
       ],
-      correct: 1,
-      explanation: "Market cap is not a cash pile. Thin liquidity can produce large market-cap moves from much smaller flows."
+      correct: 2,
+      explanation: "Market cap is not exit liquidity. Depth, volume quality, venue concentration, and slippage matter."
     },
     {
       category: "DeFi",
-      prompt: "A pool offers 2% daily yield with no clear source of revenue. What is the best interpretation?",
+      prompt: "A protocol pays high stablecoin yield from leveraged loop strategies against another yield-bearing asset. What is the least naive question?",
       options: [
-        "High demand proves the protocol is strong.",
-        "The yield probably comes from emissions, leverage, new deposits, or hidden risk until proven otherwise.",
-        "APY is always safe if the contract is audited.",
-        "Daily yield is safer than yearly yield."
+        "Whether the APY is higher than Treasury yields.",
+        "Whether the loop depends on oracle assumptions, borrow liquidity, liquidation mechanics, and correlated collateral risk.",
+        "Whether the token has enough social engagement.",
+        "Whether the pool says stablecoin, because stablecoin pools cannot depeg."
       ],
       correct: 1,
-      explanation: "Yield has to come from somewhere. If the source is unclear, assume risk is being hidden or transferred."
+      explanation: "Structured DeFi yield often hides leverage, oracle, liquidation, depeg, and liquidity assumptions behind a simple APY."
     },
     {
       category: "Security",
-      prompt: "A token says its liquidity is locked. What does that prove?",
+      prompt: "A project says its contracts are audited, liquidity is locked, ownership is renounced, and the team is doxxed. What is still missing?",
       options: [
-        "The token cannot be rugged.",
-        "Only that one rug path may be harder; contract controls, emissions, insiders, and demand still matter.",
-        "The code has been audited.",
-        "The token has real utility."
+        "Nothing important; those four signals cover the main risks.",
+        "Whether the system has economic demand, safe integrations, sane emissions, oracle risk, upgrade paths, and insider supply pressure.",
+        "Only whether the website looks professional.",
+        "Only whether the ticker is memorable."
       ],
       correct: 1,
-      explanation: "Locked liquidity is one signal, not a safety guarantee. Many other failure modes remain."
+      explanation: "Security theater often stacks real but incomplete signals. Audits and locked liquidity do not prove economic or systemic safety."
     },
     {
       category: "Claims",
-      prompt: "A project claims it is infinitely scalable, fully decentralized, quantum-proof, AI-powered, and institution-ready. What is the main problem?",
+      prompt: "A chain says it solved the trilemma because it has high throughput, low fees, and a large validator count. What is the stronger critique?",
       options: [
-        "It uses too many bearish words.",
-        "It makes broad claims without mechanisms or tradeoffs.",
-        "It forgot to mention its ticker.",
-        "It should use a higher APY."
-      ],
-      correct: 1,
-      explanation: "Serious crypto claims should name the mechanism, limits, threat model, and tradeoffs."
-    },
-    {
-      category: "Kaspa",
-      prompt: "Kaspa's blockDAG design primarily changes what compared with a simple linear chain?",
-      options: [
-        "It removes Proof of Work.",
-        "It lets honest blocks found in parallel be included and ordered instead of treated as ordinary wasted side branches.",
-        "It makes transaction fees unnecessary forever.",
-        "It turns Kaspa into a Proof-of-Stake network."
-      ],
-      correct: 1,
-      explanation: "Kaspa keeps Proof of Work and uses a blockDAG plus GHOSTDAG ordering to include parallel blocks."
-    },
-    {
-      category: "Kaspa",
-      prompt: "What does Kaspa's 10 BPS era mean?",
-      options: [
-        "Roughly ten blocks per second, not unlimited throughput or instant finality.",
-        "Ten guaranteed final transactions per second.",
-        "Ten validators decide each block.",
-        "DAGKnight is live."
+        "Ask about hardware requirements, state growth, bandwidth, validator distribution, client diversity, governance, and failure modes.",
+        "High throughput alone proves centralization.",
+        "Low fees prove decentralization.",
+        "Validator count is the only decentralization metric that matters."
       ],
       correct: 0,
-      explanation: "Block rate is not the same as finality, capacity without limits, or activation of future consensus work."
+      explanation: "Trilemma claims require a threat model and resource-cost analysis, not a few favorable surface metrics."
+    },
+    {
+      category: "Kaspa",
+      prompt: "In Kaspa, why is 'blockDAG' alone not the whole innovation?",
+      options: [
+        "Because a DAG is only useful for consensus if there is a rule for selecting, ordering, and weighting blocks.",
+        "Because the DAG removes the need for Proof of Work.",
+        "Because parallel blocks are automatically final.",
+        "Because a DAG means every block is equally blue."
+      ],
+      correct: 0,
+      explanation: "The hard part is ordering and consensus over the graph. GHOSTDAG is the live ordering rule; the DAG shape by itself is not enough."
+    },
+    {
+      category: "Kaspa",
+      prompt: "What is the cleanest way to describe Kaspa's 10 BPS era?",
+      options: [
+        "Higher block production rate with live GHOSTDAG ordering, not proof of instant finality or unlimited throughput.",
+        "DAGKnight mainnet activation.",
+        "A guarantee that every transaction is final in 100 milliseconds.",
+        "A sign that node resource costs no longer matter."
+      ],
+      correct: 0,
+      explanation: "10 BPS is live block-rate behavior. It does not erase propagation, bandwidth, storage, fee, or confirmation tradeoffs."
     },
     {
       category: "Roadmap",
-      prompt: "A roadmap feature is on testnet or in active development. How should you describe it publicly?",
+      prompt: "A project has a detailed research post, a testnet branch, and community demos. What public claim is still too strong?",
       options: [
-        "Live, because development is active.",
-        "Guaranteed, because the community expects it.",
-        "Status-labeled: targeted, roadmap, or research until primary sources confirm mainnet activation.",
-        "Official, if enough influencers repeat it."
+        "It is being explored or implemented.",
+        "It has public development evidence.",
+        "It is live mainnet functionality.",
+        "It deserves primary-source tracking."
       ],
       correct: 2,
-      explanation: "Status discipline is the difference between education and hype."
+      explanation: "Research, branches, and demos can be real progress without being live mainnet behavior."
     },
     {
       category: "Infrastructure",
-      prompt: "An L2 says it is decentralized, but one sequencer orders transactions and admin keys can upgrade contracts. What should you conclude?",
+      prompt: "An L2 inherits Ethereum data availability but has one centralized sequencer, upgradeable bridge contracts, and no live fraud proofs. What is the best classification?",
       options: [
-        "It is automatically decentralized because it uses a blockchain.",
-        "It may still be useful, but the trust assumptions need to be named.",
-        "Admin keys are impossible on blockchains.",
-        "Sequencers only matter for Proof of Work."
+        "Ethereum security, full stop.",
+        "A system with Ethereum-adjacent settlement/data assumptions plus separate sequencer, bridge, proof, and governance risks.",
+        "A sidechain, because all L2s are sidechains.",
+        "Decentralized if transaction fees are paid in ETH."
       ],
       correct: 1,
-      explanation: "Useful systems can still have trust assumptions. The honest move is to name them."
+      explanation: "L2 security is layered. Data availability, settlement, sequencing, bridge custody, proof systems, and admin powers should be separated."
     },
     {
       category: "Custody",
-      prompt: "What does a hardware wallet protect you from?",
+      prompt: "You revoke all ERC-20 approvals after using a DeFi app. Which risk remains?",
       options: [
-        "All scams and every bad transaction.",
-        "Private-key exposure on your computer, but not every malicious approval or misleading signature.",
-        "Market losses.",
-        "Bridge failures."
+        "Past malicious signatures or approvals on other chains/apps, seed compromise, and assets in contracts or bridges.",
+        "No risk remains, because revoking approvals resets the wallet.",
+        "Only market-price risk.",
+        "Only risk from NFTs, not tokens."
       ],
-      correct: 1,
-      explanation: "Hardware wallets reduce key-extraction risk. They do not make every signed action safe."
+      correct: 0,
+      explanation: "Revoking approvals is useful but narrow. It does not unwind all signatures, bridges, contract deposits, or key compromise."
     },
     {
       category: "DeFi",
-      prompt: "You provide liquidity to an AMM pair and one asset strongly outperforms the other. What risk should you understand?",
+      prompt: "An AMM pool shows deep total liquidity, but most of it sits far outside the current price range. What can still happen?",
       options: [
-        "Impermanent loss or opportunity cost versus simply holding the assets.",
-        "Proof of Work failure.",
-        "FDV compression only.",
-        "That AMMs cannot charge fees."
+        "Trades near the current price can still suffer high slippage.",
+        "Concentrated liquidity removes impermanent loss.",
+        "Depth outside the range guarantees tight execution.",
+        "LPs cannot be adversely selected."
       ],
       correct: 0,
-      explanation: "Liquidity providers are exposed to price divergence. Fees may or may not compensate."
+      explanation: "Displayed total liquidity can mislead if active liquidity near the execution range is thin."
     },
     {
-      category: "Claims",
-      prompt: "A DAO vote exists. What does that prove about decentralization?",
+      category: "Governance",
+      prompt: "A DAO vote passes with 92% support, but 4 delegates control most voting power and a multisig executes upgrades. What should the headline be?",
       options: [
-        "The system is decentralized by definition.",
-        "Only that a voting mechanism exists; token distribution, admin powers, turnout, delegation, and execution control still matter.",
-        "The project has no insiders.",
-        "The token cannot be a security."
+        "The community decided.",
+        "Token-vote signaling happened, but control concentration and execution authority still matter.",
+        "The protocol is now immutable.",
+        "The vote proves legal decentralization."
       ],
       correct: 1,
-      explanation: "Governance theater is common. Real decentralization depends on who can actually decide and execute changes."
+      explanation: "Votes are not the same as broad control. Distribution, delegation, quorum, multisig powers, and execution mechanics matter."
     },
     {
       category: "Basics",
-      prompt: "When is crypto most useful?",
+      prompt: "A startup wants to put supply-chain records on-chain so customers know products are authentic. What is the core weakness?",
       options: [
-        "Whenever a normal database exists.",
-        "When credible shared state matters among parties that do not fully trust one another.",
-        "Whenever a token can be launched.",
-        "Only when price goes up."
+        "Blockchains cannot preserve records.",
+        "The chain can preserve entered data, but cannot prove messy off-chain facts were true at entry.",
+        "Supply-chain use cases always require Proof of Work.",
+        "Tokens make all physical audits unnecessary."
       ],
       correct: 1,
-      explanation: "The durable use case is credible shared state: ownership, settlement, programmability, and coordination without one trusted operator."
+      explanation: "On-chain records can improve auditability, but they do not solve the oracle problem or real-world inspection by themselves."
     },
     {
       category: "Risk",
-      prompt: "A bridge offers unusually high incentives to attract deposits. What should you ask first?",
+      prompt: "A bridge uses a multisig of known ecosystem members and has never been hacked. What is the strongest remaining concern?",
       options: [
-        "Whether the incentive is high enough to ignore security.",
-        "What assets are custodied, what verifies withdrawals, who can upgrade contracts, and what happens if the bridge breaks.",
-        "Whether the Discord is active.",
-        "Whether the token has a meme."
+        "Known signers remove bridge risk.",
+        "The trust model may still depend on signer honesty, key security, upgrade authority, monitoring, and withdrawal liquidity.",
+        "Bridge risk only exists for anonymous teams.",
+        "No hack history proves the design is secure."
       ],
       correct: 1,
-      explanation: "Bridge risk often combines smart-contract, validator, custody, upgrade, and liquidity risk."
+      explanation: "Social trust and past uptime are not the same as minimized trust. Bridge assumptions should be explicit."
+    },
+    {
+      category: "MEV",
+      prompt: "A chain has low fees and fast blocks. Why can MEV still matter?",
+      options: [
+        "Because ordering power, private order flow, liquidation races, and validator/sequencer incentives can exist even when fees are low.",
+        "MEV only exists on Ethereum mainnet.",
+        "Fast blocks eliminate transaction ordering.",
+        "Low fees mean users cannot be sandwiched."
+      ],
+      correct: 0,
+      explanation: "MEV is about ordering and extraction opportunities. Fee level and speed do not erase it."
+    },
+    {
+      category: "Kaspa",
+      prompt: "Why is 'Kaspa is Bitcoin but faster' an incomplete description?",
+      options: [
+        "Because Kaspa keeps PoW instincts but changes the single-chain bottleneck with a blockDAG and GHOSTDAG ordering, while future app work is status-labeled.",
+        "Because Kaspa is Proof of Stake.",
+        "Because Bitcoin has no latency assumptions.",
+        "Because Kaspa already has mature native DeFi."
+      ],
+      correct: 0,
+      explanation: "The useful contrast is about blockDAG consensus and status-labeled programmability, not a slogan that hides the mechanism."
+    },
+    {
+      category: "Roadmap",
+      prompt: "A Kaspa roadmap discussion mentions Toccata, covenants, vProgs, native DeFi, and DAGKnight together. Which split is most disciplined?",
+      options: [
+        "They are all live because they belong to the same thesis.",
+        "Toccata/covenants are near-term track, vProgs/native app rails are roadmap architecture, and DAGKnight remains research/upgrade direction until activation evidence changes.",
+        "DAGKnight is live if 10 BPS is live.",
+        "vProgs are ordinary rollups, so their status does not matter."
+      ],
+      correct: 1,
+      explanation: "Bundling roadmap terms is how public explanations drift. Each claim needs its own status lane."
+    },
+    {
+      category: "Markets",
+      prompt: "A token's volume is high, but most trades are between two related market makers on one exchange. What should you infer?",
+      options: [
+        "Volume quality matters; wash-like or concentrated volume may not represent broad organic demand.",
+        "High volume always means strong adoption.",
+        "Market makers cannot influence perceived liquidity.",
+        "Exchange volume is more important than order-book depth or holder distribution."
+      ],
+      correct: 0,
+      explanation: "Volume can be low quality. Venue concentration, maker behavior, spread, depth, and real user flow all matter."
     }
   ];
 
@@ -211,33 +259,38 @@
     const answers = question.options.map((option, optionIndex) => `
       <label class="quiz-option">
         <input type="radio" name="q${index}" value="${optionIndex}" required>
+        <b>${String.fromCharCode(65 + optionIndex)}</b>
         <span>${option}</span>
       </label>
     `).join("");
 
     return `
       <fieldset class="quiz-question">
-        <legend><span>${String(index + 1).padStart(2, "0")}</span>${question.prompt}</legend>
+        <legend>
+          <span class="quiz-number">${String(index + 1).padStart(2, "0")}</span>
+          <strong>${question.prompt}</strong>
+          <em>${question.category}</em>
+        </legend>
         <div class="quiz-options">${answers}</div>
       </fieldset>
     `;
   }).join("");
 
   const getResultTitle = (score, confidenceGap) => {
-    if (score >= 88) return "Actually Competent Operator";
-    if (score >= 72 && confidenceGap <= 0) return "Quiet Builder";
-    if (score >= 72) return "Mostly Calibrated";
-    if (score >= 55 && confidenceGap >= 2) return "Whitepaper Skimmer";
-    if (score >= 55) return "Halfway Dangerous";
+    if (score >= 92) return "Actually Competent Operator";
+    if (score >= 80 && confidenceGap <= 0) return "Quiet Builder";
+    if (score >= 80) return "Mostly Calibrated";
+    if (score >= 62 && confidenceGap >= 2) return "Whitepaper Skimmer";
+    if (score >= 62) return "Halfway Dangerous";
     if (confidenceGap >= 2) return "Crypto Twitter Expert";
     return "Honest Beginner";
   };
 
   const getDiagnosis = (score, gap, weakest) => {
-    if (score >= 88) return "You understand mechanisms, not just vocabulary. Keep checking primary sources and threat models before making strong claims.";
-    if (score >= 72) return "You have a workable model, but a few blind spots could still cost money or lead to bad claims.";
-    if (score >= 55 && gap >= 2) return `You know the language, but your confidence is ahead of your model. Your weakest area was ${weakest}.`;
-    if (score >= 55) return `You are not lost, but you are not ready to trust your instincts alone. Your weakest area was ${weakest}.`;
+    if (score >= 92) return "You handled the traps that usually separate vocabulary from real judgment. Keep checking primary sources and threat models before making strong claims.";
+    if (score >= 80) return "You have a workable model, but the missed questions are still the sort of details that create bad trades, bad claims, or bad wallet decisions.";
+    if (score >= 62 && gap >= 2) return `You know the language, but your confidence is ahead of your model. Your weakest area was ${weakest}.`;
+    if (score >= 62) return `You are not lost, but you are not ready to trust your instincts alone. Your weakest area was ${weakest}.`;
     if (gap >= 2) return `Your confidence is doing more work than your understanding. Your most visible weakness was ${weakest}.`;
     return `You are early in the learning curve, which is fine. Start with ${weakest}, then rebuild from custody, markets, and consensus.`;
   };
@@ -263,7 +316,7 @@
     });
 
     const score = Math.round((correct / questions.length) * 100);
-    const knowledgeBand = score >= 85 ? 4 : score >= 70 ? 3 : score >= 50 ? 2 : 1;
+    const knowledgeBand = score >= 90 ? 4 : score >= 78 ? 3 : score >= 58 ? 2 : 1;
     const confidenceGap = confidenceValue - knowledgeBand;
     const weakest = Array.from(categoryStats.entries())
       .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))[0][0];
