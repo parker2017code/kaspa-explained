@@ -197,6 +197,8 @@ DAGKnight has the better-developed research lineage and appears further along im
 
 Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
+Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture built around shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
+
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
 For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
@@ -276,6 +278,7 @@ Useful for discovery and replies:
 - https://x.com/coderofstuff_
 - https://x.com/FreshAir08
 - https://x.com/eliottmea
+- https://x.com/KasSigner
 
 Read replies as well as top-level posts when researching a current technical point.
 

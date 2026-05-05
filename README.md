@@ -90,6 +90,7 @@ Active public technical accounts can be useful for discovery and replies:
 - https://x.com/coderofstuff_
 - https://x.com/FreshAir08
 - https://x.com/eliottmea
+- https://x.com/KasSigner
 
 Read public replies as well as top-level posts. Do not use stale team pages, recycled handle lists, or X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
 
@@ -154,8 +155,8 @@ licensed under MIT. See `LICENSE.md`.
 Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
-- Near-term track: Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and vProgs groundwork.
-- Architecture / roadmap: vProgs as app-level verifiable programs, Kaspa-native DeFi rails, monolithic-feeling developer experience, synchronous composability.
+- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. Treat this as targeted until activation is confirmed by primary sources.
+- Architecture / roadmap: vProgs as app-level verifiable programs, shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, RTD-derived miner attestation/oracle designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
 ## Local check
