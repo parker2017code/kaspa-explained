@@ -83,6 +83,8 @@ The `knowledge-map.html` page should start as an ordered learning path and then 
 
 The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
+Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
+
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
 The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, why it matters if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
@@ -193,6 +195,8 @@ Keep the fast-PoW argument focused and careful. Fast inclusion and fast confirma
 Any high-rate block-producing system can improve inclusion. Kaspa's stronger argument is that fast Proof of Work changes the confirmation/decentralization tradeoff. PoW samples hash power through work done after the fact, without requiring the protocol to identify and collect explicit supermajority votes from miners before every confirmation. In PoS finality designs, confirmation speed is more directly tied to stake voting, validator coordination, stake distribution, committees, or related sampling assumptions.
 
 Do not overclaim this. Do not state that Kaspa has instant finality, that all PoS systems are equivalent, or that the site has fully modeled Ethereum/Solana engineering details. The durable, site-appropriate claim is narrower: fast PoW blockDAGs make the inclusion/confirmation/decentralization tradeoff different, and that is one reason Kaspa is worth studying.
+
+Crescendo-specific nuance: do not turn 10 BPS into "10x finality." Michael Sutton's public Crescendo explanation framed practical throughput as roughly 8-9x higher under the observed policy and confirmation-time improvement as closer to 30%, because confirmation remains dominated by block latency. Use this to correct summaries that imply unlimited throughput, instant finality, or a clean 10x confirmation improvement.
 
 ## Crypto Reality-Check Framing
 
