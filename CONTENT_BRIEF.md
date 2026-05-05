@@ -41,7 +41,6 @@ Keep these audience paths visible:
 - Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-zero.html`.
 - Need to understand why coins have value or why there are so many coins: use `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, and `coin-atlas.html`.
 - Need design constraints: use `tradeoff-map.html`.
-- Need to test confidence against actual crypto judgment: use `quiz.html`.
 - Need a coin-evaluation checklist: use `analyze-any-coin.html`.
 - Need problem-first crypto history: use `crypto-history.html`.
 - Need a compact shareable Kaspa artifact: use `kaspa-in-one-screen.html`.
@@ -67,8 +66,6 @@ The `overview.html` page is the 90-second first-reader route. Keep it compact: w
 The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, why it matters if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
-
-The `quiz.html` page is the interactive Crypto Reality Check. It should be blunt but not purely insulting: test calibration, custody judgment, consensus basics, tokenomics, DeFi risk, market structure, claim detection, and Kaspa basics. Keep it scenario-based rather than trivia-based. The result should compare self-rated confidence with actual score and point readers to the right repair path.
 
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
@@ -239,7 +236,6 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/why-are-there-so-many-coins.html`
 - `/coin-atlas.html`
 - `/tradeoff-map.html`
-- `/quiz.html`
 - `/analyze-any-coin.html`
 - `/crypto-history.html`
 - `/kaspa-in-one-screen.html`

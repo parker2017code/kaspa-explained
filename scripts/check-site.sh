@@ -10,7 +10,6 @@ expected_pages=(
   "why-are-there-so-many-coins.html"
   "coin-atlas.html"
   "tradeoff-map.html"
-  "quiz.html"
   "analyze-any-coin.html"
   "crypto-history.html"
   "kaspa-in-one-screen.html"
@@ -44,7 +43,6 @@ expected_files=(
   "scripts/check-links.sh"
   "scripts/check-nav-sync.sh"
   "nav.js"
-  "quiz.js"
 )
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do
