@@ -36,7 +36,7 @@ Avoid writing only for protocol researchers. Use technical terms when needed, bu
 
 Audience paths should be distinct, not flattened into one universal page style. A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. A crypto-native reader or builder should be able to skip directly into `why-kaspa-matters.html`, `application-layer.html`, `status.html`, `sources.html`, `CLAIMS.yml`, and the LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and builder-dense at the same time.
 
-At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public "last verified" boxes.
+At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
 ## Current Site Structure
 
@@ -135,7 +135,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note, last verified May 4, 2026: Toccata should not be described as live mainnet functionality. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the current public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
+Status note: Toccata should not be described as live mainnet functionality unless current primary sources confirm activation. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
 
 ### Roadmap / Architecture
 
@@ -238,7 +238,7 @@ Prefer primary or near-primary sources:
 
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
-3. North-star framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance, but activation claims still need primary protocol/code or direct implementation evidence.
+3. Long-form framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance, but activation claims still need primary protocol/code or direct implementation evidence.
 4. Community/context sources: Oxford, KASmedia, Kaspa.com Learn Kaspa, Kaspa.org, full recordings, interviews, transcripts, recaps, and public portals. They are useful contributions, not protocol authority.
 5. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
 6. Discovery only: active public technical X accounts and replies.
@@ -251,7 +251,7 @@ Do not use stale team pages, recycled handle lists, or contributor pages to infe
 
 External-source rule: credit outside sources by name and link near the relevant claim or through `sources.html`. Do not copy external articles into the site. Paraphrase, synthesize, and point readers to the original source.
 
-Kaspa.com Learn Kaspa status, last verified May 4, 2026: treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Do not plaster this source across the main pages or use it as the primary authority for status claims.
+Kaspa.com Learn Kaspa status: treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Recheck it before relying on it for newly changed concepts. Do not plaster this source across the main pages or use it as the primary authority for status claims.
 
 The May 2026 Kaspa.com Smart Contracts article is useful because it separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
 

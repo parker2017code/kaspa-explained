@@ -165,7 +165,7 @@ Toccata/vProgs split: Toccata enables L1 covenant programming and standalone bas
 
 Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give advanced readers clear routes into deeper technical/status material. The target is not one page that serves every reader equally; it is a site with a slow beginner path and a direct builder/crypto-native path.
 
-Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible "last verified" boxes unless explicitly requested.
+Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
 
 ## Local check
 

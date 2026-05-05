@@ -22,7 +22,7 @@
 - At the start of any substantive repo session, do a quick current-source check for drift-prone Kaspa facts before editing status-sensitive pages.
 - Check primary or near-primary sources first: Kaspa.org posts, Kaspa Research, KIPs, `kaspanet/rusty-kaspa`, `kaspanet/vprogs`, release notes, core technical contributor posts, and durable transcripts.
 - Specifically recheck Toccata activation status, DAGKnight status, vProgs status, native DeFi status, RTD-derived attestation/oracle claims, TangVM status, Proof of Useful Work claims, and any date/window that appears in public copy.
-- Keep verification discipline in the repo and source trail. Do not add visible "last verified" callout boxes to public pages unless the user explicitly asks for them.
+- Keep verification discipline in the repo and source trail. Do not add visible public verification callout boxes unless the user explicitly asks for them.
 
 ## Validation
 
