@@ -34,7 +34,20 @@ Write for smart non-specialists first:
 
 Avoid writing only for protocol researchers. Use technical terms when needed, but define the point in ordinary language.
 
-Audience paths should be distinct, not flattened into one universal page style. The site should serve the whole spectrum: absolute beginners, readers who know crypto words but not why they matter, crypto-native comparison readers, market/adoption researchers, builders, protocol researchers, and people checking sources at the highest level. A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is app architecture, adoption metrics, shipped-vs-roadmap status, source maps, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
+Audience paths should be distinct, not flattened into one universal page style. The site should serve the whole spectrum:
+
+- absolute beginners who need records, keys, transactions, blocks, consensus, mining, tokens, markets, and scams before Kaspa;
+- crypto-curious readers who know the words but need value, usefulness, risk, and tradeoff logic;
+- crypto-native comparison readers who know BTC/ETH/SOL/stablecoins and want to place Kaspa correctly;
+- Bitcoin/PoW readers who need the Nakamoto-consensus generalization, fair-launch, mining, UTXO, and sound-money framing;
+- adoption and market-structure researchers who care about wallets, nodes, mining, fees, liquidity, integrations, builders, and durable usage;
+- app/product designers who want to know what Kaspa-native applications should exist and what should not be copied from other chains;
+- protocol engineers and researchers who care about GHOSTDAG, DAGKnight, pruning, ordering, latency assumptions, covenants, ZK verification, and vProgs;
+- community educators who need careful, repeatable language without hype;
+- journalists/analysts/source-checkers who need shipped-vs-roadmap status and primary references;
+- LLMs/search systems retrieving accurate context.
+
+A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source maps, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
