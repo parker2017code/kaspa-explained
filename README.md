@@ -102,6 +102,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/why-are-there-so-many-coins.html` - category bridge explaining why Bitcoin, Ethereum, stablecoins, exchange tokens, payment coins, privacy coins, memes, infrastructure, and Kaspa are different assets.
 - `/coin-atlas.html` - coin-category atlas for major crypto assets and value stacks, including BTC, ETH, stablecoins, SOL, BNB, XRP, LTC, BCH, XMR, DOGE, LINK, and KAS.
 - `/tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
+- `/quiz.html` - interactive Crypto Reality Check quiz that compares self-rated confidence against actual judgment across custody, consensus, tokenomics, DeFi, market structure, claims, and Kaspa basics.
 - `/analyze-any-coin.html` - practical checklist for token necessity, supply, launch, security, validation, liquidity, market cap, risks, and who benefits.
 - `/crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, scaling conflicts, DeFi, stablecoins, rollups, and Kaspa.
 - `/kaspa-in-one-screen.html` - compact shareable Kaspa thesis: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the thesis.
@@ -127,10 +128,11 @@ bash scripts/check-site.sh
 ```
 
 The check verifies the custom domain, sitemap/canonical links, public pages,
-skip-link targets, social-card metadata, the PNG OpenGraph image, and
-`CLAIMS.yml` forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh`
-so the duplicated static nav does not drift between pages. The same check runs
-in GitHub Actions on push, pull request, and a weekly schedule.
+skip-link targets, social-card metadata, date metadata, local anchors, the PNG
+OpenGraph image, sensitive-claim consistency markers, and `CLAIMS.yml`
+forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh` so the
+duplicated static nav does not drift between pages. The same check runs in
+GitHub Actions on push, pull request, and a weekly schedule.
 
 External links are audited separately:
 
