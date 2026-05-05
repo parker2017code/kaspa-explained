@@ -32,8 +32,6 @@ kaspaexplained.com
 - Custom domain: `kaspaexplained.com`
 - Enforce HTTPS when GitHub makes it available
 
-Only one repository should claim `kaspaexplained.com`. Remove the custom-domain Pages setting from `parker2017code/parker2017` when this public repo is ready.
-
 ## DNS
 
 For Namecheap or equivalent DNS:
@@ -116,11 +114,20 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
 - `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references.
 - `/glossary.html` - compact plain-English glossary for common Kaspa terms.
+- `/search.html` - static page-map search for concepts, audiences, status lanes, and source terms.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.
 - `/about.html` - editorial policy, disclosures, and correction process.
+- `/404.html` - GitHub Pages custom not-found page that routes users back to search, status, and Start Here.
 - `/CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims.
+- `/CONTRIBUTING.md` - correction and contribution rules for claim status, sources, local checks, and wording changes.
 
 ## Maintenance checks
+
+The `scripts/` folder contains the local and CI validation gates:
+
+- `scripts/check-site.sh` checks the expected public pages and support files, custom domain, sitemap/canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
+- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page so manual pages do not drift.
+- `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
 
 Run the static check before publishing:
 

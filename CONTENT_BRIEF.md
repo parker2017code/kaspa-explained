@@ -73,6 +73,7 @@ Keep these audience paths visible:
 - Want the app/design thesis: use `application-layer.html`.
 - Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `llms-full.txt`.
 - Need quick term definitions: use `glossary.html`.
+- Need to find a concept or page quickly: use `search.html`.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
@@ -294,6 +295,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/where-kaspa-fits.html`
 - `/knowledge-map.html`
 - `/glossary.html`
+- `/search.html`
 - `/sources.html`
 - `/about.html`
 - `/llms.txt`
@@ -386,6 +388,7 @@ Primary public pages:
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
 - `knowledge-map.html` - ordered concept map for average crypto readers, with supporting source context.
 - `glossary.html` - compact plain-English glossary for common Kaspa terms.
+- `search.html` - dependency-free static page-map search for concepts, audiences, status lanes, and source terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
 - `CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims and forbidden overclaims.

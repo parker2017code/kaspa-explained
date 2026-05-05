@@ -23,11 +23,14 @@ expected_pages=(
   "where-kaspa-fits.html"
   "knowledge-map.html"
   "glossary.html"
+  "search.html"
   "sources.html"
   "about.html"
 )
 expected_files=(
+  "404.html"
   "AGENTS.md"
+  "CONTRIBUTING.md"
   "CONTENT_BRIEF.md"
   "README.md"
   "LICENSE.md"
@@ -41,6 +44,7 @@ expected_files=(
   "CNAME"
   ".github/workflows/site-check.yml"
   ".github/workflows/link-check.yml"
+  ".github/ISSUE_TEMPLATE/stale-claim.yml"
   "scripts/check-links.sh"
   "scripts/check-nav-sync.sh"
   "nav.js"
