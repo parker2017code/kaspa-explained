@@ -163,7 +163,7 @@ Kaspa programmability should be framed as neutral primitives first. The protocol
 
 Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the thesis is L1-first shared sequencing, settlement, commitments, and verification.
 
-Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give advanced readers clear routes into deeper technical/status material. The target is not one page that serves every reader equally; it is a site with a slow beginner path and a direct builder/crypto-native path.
+Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-native reader, researcher, builder, protocol expert, and source-checking reviewer.
 
 Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
 

@@ -6,7 +6,7 @@ This document is the handoff brief for any LLM, editor, or contributor working o
 
 Kaspa Explained is an independent, source-first explainer for Kaspa. The goal is to help a general crypto-aware audience understand where Kaspa fits without turning roadmap, research, price action, or community enthusiasm into unsupported claims.
 
-The ideal voice is Yonatan-style first-principles explanation translated into everyday language: start from Bitcoin, money, ordering, latency, trust, and finance; make the intuition clear enough for the intended reader of the page; then preserve enough precision in the appropriate advanced paths for serious crypto readers and builders. Do not make the public site talk about internal editorial slogans. Just make the pages read that way.
+The ideal voice is Yonatan-style first-principles explanation translated into everyday language: start from Bitcoin, money, ordering, latency, trust, and finance; make the intuition clear enough for the intended reader of the page; then preserve enough precision in the appropriate deeper paths for crypto-native readers, researchers, builders, and source-checking experts. Do not make the public site talk about internal editorial slogans. Just make the pages read that way.
 
 The site should answer:
 
@@ -34,7 +34,7 @@ Write for smart non-specialists first:
 
 Avoid writing only for protocol researchers. Use technical terms when needed, but define the point in ordinary language.
 
-Audience paths should be distinct, not flattened into one universal page style. A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. A crypto-native reader or builder should be able to skip directly into `why-kaspa-matters.html`, `application-layer.html`, `status.html`, `sources.html`, `CLAIMS.yml`, and the LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and builder-dense at the same time.
+Audience paths should be distinct, not flattened into one universal page style. The site should serve the whole spectrum: absolute beginners, readers who know crypto words but not why they matter, crypto-native comparison readers, market/adoption researchers, builders, protocol researchers, and people checking sources at the highest level. A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is app architecture, adoption metrics, shipped-vs-roadmap status, source maps, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
@@ -45,6 +45,7 @@ The homepage should work as a router before it works as a deep article. The site
 Keep these audience paths visible:
 
 - Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-zero.html`.
+- Need the fast non-technical answer: use `overview.html` or `kaspa-in-one-screen.html`.
 - Need to understand why coins have value or why there are so many coins: use `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, and `coin-atlas.html`.
 - Need design constraints: use `tradeoff-map.html`.
 - Need a coin-evaluation checklist: use `analyze-any-coin.html`.
@@ -56,8 +57,9 @@ Keep these audience paths visible:
 - Need a compact first-reader path: use `overview.html`.
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
+- Want the app/design thesis: use `application-layer.html`.
+- Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `llms-full.txt`.
 - Need quick term definitions: use `glossary.html`.
-- Need sources: use `sources.html`.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
