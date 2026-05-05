@@ -67,6 +67,8 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
+The `application-layer.html` page is the app-opportunity and builder-imagination page. It should map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as research/architecture: a user defines a strategy around an external event, opt-in miners or rewarded reporters attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today.
+
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
 ## Editorial Standard
@@ -133,6 +135,7 @@ Status note, last verified May 4, 2026: Toccata should not be described as live 
 - DAGKnight final form and activation timing
 - 100 BPS with probabilistic predecessor selection
 - RTD-derived miner attestation, oracle, TangVM, and coordination-market designs
+- RTD internet-money flows where miners or reporters attest to external events and apps react atomically
 - TangVM-style reality-state ideas
 - Proof of Useful Work via matrix multiplication
 - long-term post-quantum migration paths
@@ -195,6 +198,8 @@ DAGKnight has the better-developed research lineage and appears further along im
 Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
 vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
+
+For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
 
 ## North-Star Interview
 

@@ -260,6 +260,8 @@
       <p class="eyebrow">vProgs lane</p>
       <h2>vProgs point toward richer apps without making L1 execute everything.</h2>
       <p>vProgs should be framed as app-level verifiable programs or ZKVM-style environments around Kaspa, not ordinary rollups and not live mature app rails. The important design direction is L1 as sequencing, commitments, verification, and metadata while richer app logic runs in proof-producing environments.</p>
+      <p>Michael Sutton's vProgs framing adds an important design target: a one-dimensional space of programs that share Kaspa L1 as the sequencer, so apps can synchronously compose without being trapped in separate rollup islands. The L1 should know sequencing, commitments, dependencies, and enough metadata to regulate computational scope, while provers handle execution and validity proofs.</p>
+      <p>Recent covenant++ notes describe a staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and eventually more efficient sequencing commitments where proving cost can follow a specific vProg's activity instead of the entire DAG. That is roadmap architecture, not live app infrastructure.</p>
       <div class="reference-grid">
         <article>
           <h3>Native-feeling DeFi</h3>
@@ -292,6 +294,8 @@
       <p class="eyebrow">RTD and coordination</p>
       <h2>Kaspa's weirdest opportunity is coordination, not another token casino.</h2>
       <p>Hashdag's RTD and Staghunt framing point to a more unusual application lane: markets and institutions where people need credible commitment before they act. These are the places where a normal website can collect promises, but the participants still worry that the operator can censor, reorder, change terms, or disappear.</p>
+      <p>Yonatan Sompolinsky's Tokenize London example makes the idea concrete. A liquidity provider could define a strategy for an external event, such as an index ruling that affects market positioning. An internet-money layer would read the relevant sources, miners could opt in to attest to the event, and the system would sample the Proof-of-Work majority quickly enough to act in the same flow.</p>
+      <p>At 10 BPS this can be illustrated, but the confidence from a one-second sample is still not the final RTD vision. The stronger claim appears with much higher sampling density, DAGKnight-style adaptive latency, and 100 BPS-type ambitions, where an attestation can be finalized within roughly one internet round trip. Even then, the event source, incentives, anti-MEV design, scheduler, dispute process, and implementation details remain hard problems.</p>
       <div class="fit-grid">
         <article class="section">
           <h3>Public-goods assurance</h3>
@@ -318,6 +322,25 @@
     </section>
 
     <section class="section">
+      <p class="eyebrow">Now / later boundary</p>
+      <h2>The internet-money flow needs several pieces that are not all live.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Capability</th><th>What it enables</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>10 BPS GHOSTDAG settlement</td><td>Fast inclusion, fast PoW user experience, wallets, payments, infrastructure, and clearer confirmation UX.</td><td>Live</td></tr>
+            <tr><td>Miner or reporter attestations</td><td>Opt-in event reporting, early external-event signals, oracle experiments, and first-to-know dashboards.</td><td>Research / architecture; not a shipped product</td></tr>
+            <tr><td>MEV-aware ordering or auctions</td><td>Protects users who delegate an if-this-then-that strategy from miners or searchers exploiting the same event signal first.</td><td>Research / design work</td></tr>
+            <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments.</td><td>Targeted hard-fork track, not live until activated</td></tr>
+            <tr><td>STARK-sized proof support</td><td>Large validity proofs on Kaspa, with block-size and standard-fee tradeoffs to avoid cheap spam.</td><td>TN12 context / mainnet design question</td></tr>
+            <tr><td>vProgs</td><td>Native-feeling apps, shared sequencing, synchronous composability, unified liquidity, and prover-backed execution.</td><td>Roadmap architecture</td></tr>
+            <tr><td>DAGKnight / higher BPS RTD</td><td>Denser real-time majority sampling and more robust internet-round-trip attestation finalization.</td><td>Research / future upgrade direction</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
       <p class="eyebrow">My take</p>
       <h2>The most interesting Kaspa apps would make coordination feel real-time.</h2>
       <div class="table-wrap">
@@ -328,6 +351,7 @@
             <tr><td>Kaspa-native prediction markets</td><td>Polymarket-style markets for crypto events, software milestones, protocol votes, sports, economics, or public data, with transparent oracle/dispute rules.</td><td>Prediction markets are coordination tools. Fast settlement and explicit oracles matter.</td><td>vProgs / research</td></tr>
             <tr><td>First-to-know attestation terminal</td><td>A dashboard or API watches incentivized miner attestations and other reporters, then flags when a credible event signal starts forming before normal feeds catch up.</td><td>If miners can be rewarded for fast, censorship-resistant reporting, the killer app is not only the event result; it is the earliest reliable change in belief.</td><td>Research / oracle architecture</td></tr>
             <tr><td>Attestation-aware portfolio guardrails</td><td>Tools that alert users when miner-attested signals affect markets they follow, without pretending the signal is financial advice or guaranteed truth.</td><td>Fast knowledge is valuable only if the app separates signal confidence, reporter incentives, legal limits, and user risk.</td><td>Research / legal-heavy</td></tr>
+            <tr><td>Atomic strategy executor</td><td>A user defines "if this event is attested, then rebalance, hedge, unlock, bid, cancel, or route liquidity" and the app executes only under predeclared rules.</td><td>The flywheel appears when the strategy's assets and logic live on Kaspa, because the attestation and action can be closer to atomic.</td><td>vProgs / RTD research</td></tr>
             <tr><td>Hashpower and service auctions</td><td>Open auctions for mining services, compute jobs, bandwidth, data feeds, proofs, or app-specific resources.</td><td>PoW culture and real-time ordering fit markets for scarce technical resources.</td><td>Toccata / vProgs</td></tr>
             <tr><td>Fast merchant escrow</td><td>Point-of-sale payments with risk states, partial refunds, time-locked disputes, delivery confirmations, and business treasury vaults.</td><td>Kaspa's live speed matters if the product explains confirmation confidence and custody clearly.</td><td>Live UX now; covenants later</td></tr>
             <tr><td>Anti-rug launch rails</td><td>Token, NFT, or membership launches with transparent bonding curves, locked liquidity, refund rules, staged release, and warnings by default.</td><td>If launchpads happen, make them less extractive and more rule-bound than pure attention markets.</td><td>Toccata</td></tr>
@@ -361,9 +385,9 @@
           <thead><tr><th>Phase</th><th>Build focus</th><th>What success looks like</th></tr></thead>
           <tbody>
             <tr><td>Now</td><td>Wallets, payment UX, infrastructure, explorers, mining/node visibility, education, confirmation-risk tools.</td><td>People can use and understand the live network without trusting one interface.</td></tr>
-            <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
-            <tr><td>vProgs</td><td>Proof-producing apps, shared sequencing, richer market logic, native-feeling DeFi, private proofs, app-level composability.</td><td>Applications get Ethereum/Solana-level usefulness while preserving Kaspa's verification-oriented design.</td></tr>
-            <tr><td>Research</td><td>DAGKnight, RTD-derived attestations, oracle markets, TangVM-style flows, coordination markets, AI-agent commitments.</td><td>The coordination thesis becomes concrete enough to test against real users and adversarial conditions.</td></tr>
+            <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, STARK/zk proof experiments, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
+            <tr><td>vProgs</td><td>Proof-producing apps, shared sequencing, richer market logic, native-feeling DeFi, private proofs, app-level composability, canonical bridge design.</td><td>Applications get Ethereum/Solana-level usefulness while preserving Kaspa's verification-oriented design.</td></tr>
+            <tr><td>Research</td><td>DAGKnight, 100 BPS sampling, RTD-derived attestations, oracle markets, MEV auctions, TangVM-style flows, coordination markets, AI-agent commitments.</td><td>The coordination thesis becomes concrete enough to test against real users and adversarial conditions.</td></tr>
           </tbody>
         </table>
       </div>
@@ -390,6 +414,10 @@
         <li><a href="https://xrpl.org/">XRPL.org</a> for XRPL payment, DEX, token, and payment-channel primitives.</li>
         <li><a href="https://dappbay.bnbchain.org/ranking">BNB Chain DappBay rankings</a> for BNB Chain dApp categories and examples.</li>
         <li><a href="https://developers.tron.network/docs/tron-economic-model">TRON developer docs</a> for TRON's stablecoin and DeFi ecosystem framing.</li>
+        <li><a href="https://tokenize-event.com/theatre-2-blockchain-technologies-and-the-potential-of-web3/utilising-decentralised-tech-secure-digital-wallets">Kaspa: Mining the Internet at Tokenize London</a> for Yonatan Sompolinsky's RTD, miner-attestation, internet-money flow, and focus/flywheel framing.</li>
+        <li><a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">Michael Sutton's vProgs masterclass</a> for shared sequencing, one-dimensional program space, synchronous composability, computational DAGs, prover incentives, and sovereignty obligations.</li>
+        <li><a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1">Michael Sutton's covenant++ and vProgs milestone notes</a> for inline zk covenants, based zk covenants, canonical bridge work, efficient sequencing commitments, and RTD context.</li>
+        <li><a href="https://gist.github.com/michaelsutton/a5c9bff6c9e9713edd0de9a3059bab9a">Michael Sutton's STARK-sized blocks and min-fee notes</a> for the STARK proof, block-size, standardness-fee, and elasticity tradeoffs.</li>
         <li><a href="/sources.html">Kaspa Explained sources</a> for the Kaspa status hierarchy and source discipline.</li>
       </ol>
     </section>
