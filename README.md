@@ -66,7 +66,7 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 10. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
    - https://www.youtube.com/live/GaJmYV8OHfQ
    - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
-   - North-star interview for site framing: generalized Nakamoto consensus, current GHOSTDAG, future DAGKnight/vProgs, pruning nuance, and broader crypto context. Do not treat roadmap discussion as live activation evidence.
+   - Use for site framing: generalized Nakamoto consensus, current GHOSTDAG, future DAGKnight/vProgs, pruning nuance, and broader crypto context. Do not treat roadmap discussion as live activation evidence.
 11. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
 12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
 13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
@@ -162,6 +162,10 @@ Do not flatten everything into "live."
 Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
 Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the thesis is L1-first shared sequencing, settlement, commitments, and verification.
+
+Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give advanced readers clear routes into deeper technical/status material. The target is not one page that serves every reader equally; it is a site with a slow beginner path and a direct builder/crypto-native path.
+
+Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible "last verified" boxes unless explicitly requested.
 
 ## Local check
 

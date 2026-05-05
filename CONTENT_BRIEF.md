@@ -6,6 +6,8 @@ This document is the handoff brief for any LLM, editor, or contributor working o
 
 Kaspa Explained is an independent, source-first explainer for Kaspa. The goal is to help a general crypto-aware audience understand where Kaspa fits without turning roadmap, research, price action, or community enthusiasm into unsupported claims.
 
+The ideal voice is Yonatan-style first-principles explanation translated into everyday language: start from Bitcoin, money, ordering, latency, trust, and finance; make the intuition clear enough for the intended reader of the page; then preserve enough precision in the appropriate advanced paths for serious crypto readers and builders. Do not make the public site talk about internal editorial slogans. Just make the pages read that way.
+
 The site should answer:
 
 - What is Kaspa actually live with today?
@@ -31,6 +33,10 @@ Write for smart non-specialists first:
 - LLMs/search systems retrieving accurate context.
 
 Avoid writing only for protocol researchers. Use technical terms when needed, but define the point in ordinary language.
+
+Audience paths should be distinct, not flattened into one universal page style. A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. A crypto-native reader or builder should be able to skip directly into `why-kaspa-matters.html`, `application-layer.html`, `status.html`, `sources.html`, `CLAIMS.yml`, and the LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and builder-dense at the same time.
+
+At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public "last verified" boxes.
 
 ## Current Site Structure
 
@@ -67,7 +73,16 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
-The `application-layer.html` page is the app-opportunity and builder-imagination page. It should map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too." It should explain the L1-first thesis: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+
+For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
+
+- Explain the app thesis as money plus finance without compromising the L1 monetary base.
+- Avoid Ethereum-style rollup language unless contrasting it with Kaspa's intended shared-sequencer/cohesive-program model.
+- Describe "Solana-like" only as cohesive developer/user experience and native-feeling composability, not as Solana execution imported into Kaspa.
+- Keep "one app per VM" / app-level verifiable-program intuition available for advanced readers, while explaining it first as apps proving their own logic while sharing Kaspa ordering.
+- Treat DeFi, stable assets, lending, swaps, social recovery, vaults, bridges, and tokenized assets as things builders can target through staged primitives, not as live products.
+- Make clear that core should not own the product layer: wallets, explorers, apps, oracles, bridges, and UX should be plural and community-built where possible.
 
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
@@ -209,9 +224,11 @@ vProgs should be described as app-level verifiable programs or app-level ZKVM/ve
 
 For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
 
-## North-Star Interview
+## Long-Form Interview Model
 
-Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, is the north-star source for editorial framing. Use it for the shape of the explanation: Kaspa as a generalization of Nakamoto consensus, the blockDAG as a framework whose value depends on ordering, GHOSTDAG as current mainnet behavior, DAGKnight as future/adaptive consensus work, vProgs as native-feeling app architecture, and community context as part of decentralization.
+Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, should guide the shape of the explanation: Kaspa as a generalization of Nakamoto consensus, the blockDAG as a framework whose value depends on ordering, GHOSTDAG as current mainnet behavior, DAGKnight as future/adaptive consensus work, vProgs as native-feeling app architecture, and community context as part of decentralization.
+
+Use the interview as an editorial model, not as a public slogan. It shows the target feel for the site: patient first-principles reasoning, everyday examples, willingness to compare Bitcoin/Ethereum/Solana without tribal shortcuts, clear admission of uncertainty, and careful distinction between live protocol, roadmap, and aspiration.
 
 Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS is aspirational, pruning is not privacy, and Solana-like means cohesive developer/user experience rather than importing Solana execution into Kaspa L1.
 
