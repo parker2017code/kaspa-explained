@@ -14,6 +14,7 @@ expected_pages=(
   "crypto-history.html"
   "kaspa-in-one-screen.html"
   "adoption-metrics.html"
+  "application-layer.html"
   "overview.html"
   "what-crypto-is-good-for.html"
   "status.html"

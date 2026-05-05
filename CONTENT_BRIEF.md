@@ -240,6 +240,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/crypto-history.html`
 - `/kaspa-in-one-screen.html`
 - `/adoption-metrics.html`
+- `/application-layer.html`
 - `/overview.html`
 - `/what-crypto-is-good-for.html`
 - `/status.html`
@@ -330,6 +331,7 @@ Primary public pages:
 - `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
+- `application-layer.html` - status-labeled application-layer opportunity map for what other crypto networks enabled and where Kaspa could shine across live RTD, Toccata, vProgs, and coordination-market research.
 - `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
