@@ -95,7 +95,17 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 
 ## Site pages
 
-- `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, status lanes, and blockDAG visual.
+- `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, zero-to-one crypto context links, status lanes, and blockDAG visual.
+- `/start-here.html` - true beginner router for readers who know nothing about crypto, market value, coin categories, tradeoffs, or Kaspa.
+- `/crypto-from-zero.html` - zero-to-one curriculum: records, keys, transactions, blocks, consensus, security, mining, staking, tokens, UTXO/account models, and Kaspa.
+- `/why-crypto-has-value.html` - market-value explainer for token necessity, prices, open markets, market cap, speculation, launch design, and who benefits.
+- `/why-are-there-so-many-coins.html` - category bridge explaining why Bitcoin, Ethereum, stablecoins, exchange tokens, payment coins, privacy coins, memes, infrastructure, and Kaspa are different assets.
+- `/coin-atlas.html` - coin-category atlas for major crypto assets and value stacks, including BTC, ETH, stablecoins, SOL, BNB, XRP, LTC, BCH, XMR, DOGE, LINK, and KAS.
+- `/tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
+- `/analyze-any-coin.html` - practical checklist for token necessity, supply, launch, security, validation, liquidity, market cap, risks, and who benefits.
+- `/crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, scaling conflicts, DeFi, stablecoins, rollups, and Kaspa.
+- `/kaspa-in-one-screen.html` - compact shareable Kaspa thesis: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the thesis.
+- `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/status.html` - compact shipped-vs-roadmap status page.
 - `/overview.html` - 90-second first-reader overview.

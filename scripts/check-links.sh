@@ -18,6 +18,25 @@ failures=0
 while IFS= read -r url; do
   [[ -n "$url" ]] || continue
 
+  if [[ "$url" == https://kaspaexplained.com* ]]; then
+    local_path="${url#https://kaspaexplained.com}"
+    local_path="${local_path%%\#*}"
+    local_path="${local_path%%\?*}"
+    if [[ -z "$local_path" || "$local_path" == "/" ]]; then
+      local_file="index.html"
+    else
+      local_file="${local_path#/}"
+    fi
+
+    if [[ -f "$local_file" ]]; then
+      printf 'OK   local %s\n' "$url"
+    else
+      printf 'FAIL local %s\n' "$url" >&2
+      failures=$((failures + 1))
+    fi
+    continue
+  fi
+
   code="$(
     curl -L -sS \
       --connect-timeout 12 \

@@ -7,6 +7,14 @@
 
   nav.classList.add("nav-enhanced");
 
+  const currentPath = window.location.pathname === "/" ? "/" : window.location.pathname.replace(/\/$/, "");
+  links.querySelectorAll("a[href]").forEach((link) => {
+    const linkPath = link.getAttribute("href") === "/" ? "/" : link.getAttribute("href").replace(/\/$/, "");
+    if (linkPath === currentPath) {
+      link.setAttribute("aria-current", "page");
+    }
+  });
+
   const setOpen = (isOpen) => {
     nav.dataset.open = isOpen ? "true" : "false";
     button.setAttribute("aria-expanded", String(isOpen));

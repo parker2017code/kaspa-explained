@@ -34,9 +34,18 @@ Avoid writing only for protocol researchers. Use technical terms when needed, bu
 
 ## Current Site Structure
 
-The homepage should work as a router before it works as a deep article. Keep these audience paths visible:
+The homepage should work as a router before it works as a deep article. The site now has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics but need sharper judgment.
 
-- New to crypto: start with `what-crypto-is-good-for.html`.
+Keep these audience paths visible:
+
+- Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-zero.html`.
+- Need to understand why coins have value or why there are so many coins: use `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, and `coin-atlas.html`.
+- Need design constraints: use `tradeoff-map.html`.
+- Need a coin-evaluation checklist: use `analyze-any-coin.html`.
+- Need problem-first crypto history: use `crypto-history.html`.
+- Need a compact shareable Kaspa artifact: use `kaspa-in-one-screen.html`.
+- Need a business/adoption lens without price prediction: use `adoption-metrics.html`.
+- New to crypto but already understands basic records/keys/blocks: use `what-crypto-is-good-for.html`.
 - Need current shipped-vs-roadmap status: use `status.html`.
 - Need a compact first-reader path: use `overview.html`.
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
@@ -53,6 +62,10 @@ The `knowledge-map.html` page should start as an ordered learning path and then 
 The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
+
+The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, why it matters if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
+
+The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
 The `glossary.html` page is the compact term map. Keep definitions short and plain.
 
@@ -151,6 +164,10 @@ Do not overclaim this. Do not state that Kaspa has instant finality, that all Po
 
 The `what-crypto-is-good-for.html` page is a general-audience bridge for people who do not live inside crypto. It should make the rest of the site more credible by stating that crypto is not useful for everything.
 
+The `start-here.html` and `crypto-from-zero.html` pages are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
+
+The `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `coin-atlas.html`, `tradeoff-map.html`, `analyze-any-coin.html`, and `crypto-history.html` pages are the market and context layer. They should explain valuation, categories, token necessity, launch design, actors, incentives, scams, and design constraints without becoming investment advice or price prediction.
+
 Core frame:
 
 > Crypto is useful when the problem needs credible shared state: neutral ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
@@ -213,6 +230,16 @@ The May 2026 Kaspa.com Smart Contracts article is useful because it separates pr
 The sitemap should include public human pages and LLM/crawler files:
 
 - `/`
+- `/start-here.html`
+- `/crypto-from-zero.html`
+- `/why-crypto-has-value.html`
+- `/why-are-there-so-many-coins.html`
+- `/coin-atlas.html`
+- `/tradeoff-map.html`
+- `/analyze-any-coin.html`
+- `/crypto-history.html`
+- `/kaspa-in-one-screen.html`
+- `/adoption-metrics.html`
 - `/overview.html`
 - `/what-crypto-is-good-for.html`
 - `/status.html`
@@ -292,7 +319,17 @@ Useful quantum-answer frame:
 
 Primary public pages:
 
-- `index.html` - general explainer, status lanes, high-signal sources.
+- `index.html` - audience-routed homepage, real-time Proof-of-Work thesis, status lanes, zero-start links, and compact Kaspa/adoption routes.
+- `start-here.html` - true beginner router for readers who know nothing about crypto or Kaspa.
+- `crypto-from-zero.html` - causal ladder from records, keys, transactions, blocks, consensus, incentives, tokens, and tradeoffs to Kaspa.
+- `why-crypto-has-value.html` - market-value explainer for token need, prices, market cap, open markets, speculation, launch design, and who benefits.
+- `why-are-there-so-many-coins.html` - category bridge explaining why major crypto assets are not all trying to do the same job.
+- `coin-atlas.html` - coin-category atlas and value-stack map for BTC, ETH, stablecoins, SOL, BNB, XRP, LTC, BCH, XMR, DOGE, LINK, and KAS.
+- `tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
+- `analyze-any-coin.html` - practical checklist for evaluating token necessity, supply, launch, validation, liquidity, market cap, risks, and beneficiaries.
+- `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
+- `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
+- `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
