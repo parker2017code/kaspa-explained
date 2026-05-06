@@ -148,6 +148,17 @@ forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh` so the
 duplicated static nav does not drift between pages. The same check runs in
 GitHub Actions on push, pull request, and a weekly schedule.
 
+For public copy, layout, or framing changes, also check:
+
+- mobile and desktop screenshots for affected pages,
+- no text overlap in diagrams, tables, cards, axis labels, buttons, or hero areas,
+- medium authority and medium visual weight in public copy,
+- `llms.txt`, `CLAIMS.yml`, `sources.html`, and `CONTENT_BRIEF.md` when status/source boundaries change,
+- GitHub About metadata when the public framing or README intro changes,
+- live HTML after GitHub Pages deploys.
+
+The fast-PoW comparison graphic on `why-kaspa-matters.html` needs special care: it should separate inclusion speed from explicit vote/stake coordination and should not imply instant finality or a simple "stronger confirmation" ranking.
+
 External links are audited separately:
 
 ```sh

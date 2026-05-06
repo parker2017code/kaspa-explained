@@ -31,6 +31,10 @@
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
 - Review links and source references after content changes.
+- For public tone/layout changes, verify the site still uses medium authority: clear and confident, not oversized, theatrical, promotional, or internally self-referential.
+- For comparison graphics, especially `why-kaspa-matters.html`, screenshot mobile and desktop and make sure labels do not overlap text. The fast-PoW graphic should separate inclusion speed from explicit vote/stake coordination without implying instant finality.
+- When public framing changes, check GitHub About metadata and README wording so GitHub, live HTML, and repo docs stay consistent.
+- After pushing, confirm GitHub Actions and Pages deployment completed, then fetch the live page HTML for the exact changed copy.
 
 ## Safety
 

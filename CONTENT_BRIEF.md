@@ -449,6 +449,15 @@ Before changing claims:
    - mobile/desktop layout check for HTML/CSS changes
    - verify `CNAME`, `robots.txt`, `sitemap.xml`, and `llms.txt` still point to `https://kaspaexplained.com/`
 
+Additional consistency checks after the May 2026 human-first/tone pass:
+
+- Public tone: scan changed public copy for medium authority and medium visual weight. Avoid grand titles, personal/internal shorthand, pitch-deck phrasing, and overlarge visual hierarchy.
+- LLM/context boundary: keep dense source rules, maintenance notes, and retrieval guidance in `llms.txt`, `CLAIMS.yml`, `sources.html`, and this brief. Public pages should not expose internal editorial notes.
+- GitHub public framing: when homepage, README, or site voice changes, check GitHub About metadata (`gh repo view ... --json description,homepageUrl,repositoryTopics`) and keep the repo description aligned with the live site.
+- Fast-PoW graph: verify the `why-kaspa-matters.html` comparison graphic does not imply instant finality, a simple "stronger confirmation" ranking, or a universal critique of all PoS systems. The visual should distinguish inclusion speed from explicit vote/stake coordination, and it must not overlap on mobile.
+- Visual overlap: for any CSS, heading-size, diagram, table, or card change, screenshot the affected page on mobile and desktop. Check that axis labels, hero arcs, buttons, cards, and table labels do not cover nearby text.
+- Live deployment: after push, verify GitHub Actions, Pages deployment, and direct live HTML for the exact changed phrases before saying the change is live.
+
 ## Interpretation Rules for LLMs
 
 - Do not describe DAGKnight, vProgs, app-level attestations/oracles, TangVM, Proof of Useful Work, post-quantum migration, native DeFi, or Toccata as live unless newer primary sources confirm activation. Do not flatten RTD itself into only future oracle work; Hashdag frames base RTD as Kaspa's real-time Bitcoin-style PoW value proposition, with downstream app-level oracle/TangVM/coordination-market systems as extensions.
