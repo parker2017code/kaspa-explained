@@ -179,6 +179,7 @@ licensed under MIT. See `LICENSE.md`.
 Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
+- Ecosystem live: KRC20 tokens and KRC721-style NFTs through ecosystem tooling, wallets, indexers, metadata, and APIs. Required deploy/mint gas fees are miner fees, while wallets or frontends may charge separately. Useful for tokens, coupons, event credits, rewards, access passes, and collectibles, but not native Kaspa smart contracts or Toccata/vProgs activation.
 - Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. Treat this as targeted until activation is confirmed by primary sources.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
