@@ -96,6 +96,8 @@ Keep these audience paths visible:
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
+The "Kaspa does not wait" or "impatient" idea can be used only as restrained explanatory flavor when it points to the actual mechanism: honest work does not have to wait in a single-file chain before it can be included and ordered. Prefer concrete lines like "do not force honest work to wait in a single-file chain" over personality-heavy slogans. Do not turn this into a guarantee of instant finality, a product slogan repeated across the site, or a replacement for the concrete GHOSTDAG/blockDAG explanation.
+
 The `where-kaspa-fits.html` page should include a scannable comparison table near the top. The page's job is to help crypto-native readers understand what Kaspa is and is not competing with.
 
 The `knowledge-map.html` page should start as an ordered learning path and then move into supporting source context.
