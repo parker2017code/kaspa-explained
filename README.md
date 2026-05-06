@@ -1,16 +1,17 @@
 # Kaspa Explained
 
-Independent source-first Kaspa research guide.
+Plain-English guide to Kaspa, fast Proof of Work, status lanes, sources, glossary, and crypto basics.
 
-This is not an official Kaspa website. It is written to be useful for:
+This is not an official Kaspa website and it is not investment advice. It is written to be useful for:
 
-- humans who want a plain-English but technically serious entry point,
-- search engines,
-- LLM retrieval systems,
+- readers who want a clear entry point,
+- readers checking what is live, what is roadmap, and what is research,
+- builders and researchers checking sources,
+- search and retrieval systems,
 - people trying to separate live Kaspa facts from roadmap, research, and speculation.
 - people trying to separate real crypto use cases from forced blockchain/token use cases.
 
-For a full editorial/project handoff to another LLM or contributor, start with `CONTENT_BRIEF.md`.
+For contributor and editorial context, start with `CONTENT_BRIEF.md`.
 
 ## Domain
 
@@ -98,7 +99,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 
 ## Site pages
 
-- `/` - audience-routed Kaspa overview, real-time Proof-of-Work thesis, zero-to-one crypto context links, status lanes, and blockDAG visual.
+- `/` - audience-routed Kaspa overview, real-time Proof-of-Work framing, zero-to-one crypto context links, status lanes, and blockDAG visual.
 - `/start-here.html` - true beginner router for readers who know nothing about crypto, market value, coin categories, tradeoffs, or Kaspa.
 - `/crypto-from-zero.html` - zero-to-one curriculum: records, keys, transactions, blocks, consensus, security, mining, staking, tokens, UTXO/account models, and Kaspa.
 - `/why-crypto-has-value.html` - market-value explainer for token necessity, prices, open markets, market cap, speculation, launch design, and who benefits.
@@ -107,7 +108,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
 - `/analyze-any-coin.html` - practical checklist for token necessity, supply, launch, security, validation, liquidity, market cap, risks, and who benefits.
 - `/crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, scaling conflicts, DeFi, stablecoins, rollups, and Kaspa.
-- `/kaspa-in-one-screen.html` - compact shareable Kaspa thesis: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the thesis.
+- `/kaspa-in-one-screen.html` - compact shareable Kaspa summary: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the case.
 - `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `/application-layer.html` - application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and research lanes may enable later.
 - `/builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
@@ -115,7 +116,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/status.html` - compact shipped-vs-roadmap status page with a code-grounded implementation-evidence section.
 - `/overview.html` - 90-second first-reader overview.
 - `/faq.html` - direct answers to common Kaspa status and concept questions.
-- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs thesis.
+- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs direction.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
 - `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references and a status-labeled DAGKnight/vProgs comparison.
 - `/glossary.html` - compact plain-English glossary for common Kaspa terms.
@@ -173,7 +174,7 @@ Do not flatten everything into "live."
 
 Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
-Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the thesis is L1-first shared sequencing, settlement, commitments, and verification.
+Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the direction is L1-first shared sequencing, settlement, commitments, and verification.
 
 Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
 
