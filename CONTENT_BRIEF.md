@@ -10,6 +10,22 @@ The ideal voice is Yonatan-style first-principles explanation translated into ev
 
 Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
+### Concrete-First Translation
+
+Public-facing and LLM-facing explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
+
+- "one shared record without one operator" before "credible shared state",
+- "apps that prove their own rules" before "verification-oriented programmability",
+- "funding rules strangers can rely on" before "coordination markets",
+- "fast mined ordering" before "settlement layer" or "sequencing",
+- "assets, vaults, markets, and commitments" before generic "programmability".
+
+Do not remove the technical terms where they are needed for precision, search, or source matching. Put them after the plain idea so the page is easier to understand without becoming less accurate. This applies to public HTML, meta descriptions, search cards, `llms.txt`, and contributor-facing handoff files.
+
+The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and why the mechanism matters. Then the compact term can help them remember and search for it.
+
+This sits beside source discipline and status lanes. Source discipline asks whether a claim is true and sourced. Status lanes ask whether it is live, targeted, roadmap, or research. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
+
 The site should answer:
 
 - What is Kaspa actually live with today?
@@ -96,7 +112,7 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
-The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too." It should explain the L1-first thesis: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too." It should explain the L1-first thesis in concrete product terms first: payments, vault rules, asset rules, escrow, markets, attestations, public funding rules, proof checks, and apps that prove what they did. Then name the technical layer: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
 
 The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
 
@@ -204,7 +220,7 @@ Kaspa is best framed as:
 
 The stronger comparison is not "faster Bitcoin." It is:
 
-> Keep Proof of Work and UTXO instincts, remove the single-file blockchain bottleneck with a blockDAG, and move toward bounded, verification-oriented programmability.
+> Keep Proof of Work and UTXO instincts, remove the single-file blockchain bottleneck with a blockDAG, and move toward bounded apps that can prove their rules.
 
 Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one useful shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The useful contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The useful contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
 
@@ -231,17 +247,17 @@ The `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `coin-atlas
 
 Core frame:
 
-> Crypto is useful when the problem needs credible shared state: neutral ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
+> Crypto is useful when strangers need one shared record of ownership and rules without one company, bank, platform, or government controlling the database. The technical version is credible shared state: neutral ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
 
 Keep the weakness side just as explicit. Crypto is usually weak for normal domestic payments in strong banking systems, consumer reversibility, private records, ordinary corporate databases, unsecured real-world credit, replacing courts, supply-chain truth, identity, and tokenizing assets whose ownership still depends on law, custody, inspection, liens, taxes, and jurisdiction.
 
-This page should not become anti-crypto or pro-crypto. Its purpose is conditional judgment: crypto is real when credible shared state matters, and theater when a trusted operator, legal process, or normal database solves the problem better.
+This page should not become anti-crypto or pro-crypto. Its purpose is conditional judgment: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
 
-The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when credible shared state, fast settlement, self-custody, censorship resistance, future verification-oriented programmability, and open coordination matter.
+The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when neutral money, self-custody, censorship resistance, fast mined ordering, future apps that prove rules, and public group commitments matter.
 
 Core frame:
 
-> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time, using fast settlement, parallel block production, and future verification-oriented programmability.
+> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time: mined payments today, parallel block production, and future apps that prove their own rules.
 
 Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, rather than faster payments alone. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
 
@@ -257,9 +273,9 @@ DAGKnight has the better-developed research lineage and appears further along im
 
 Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
-Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture built around shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
+Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture for apps that prove richer logic while sharing Kaspa ordering, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
 
-Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
 The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and standalone based-zk application foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
 
@@ -267,7 +283,7 @@ Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-s
 
 Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
-vProgs should be described as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
+vProgs should be described first as apps that prove their own logic, then as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
 For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
 
@@ -412,7 +428,7 @@ Primary public pages:
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may enable later.
 - `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `overview.html` - 90-second overview for first-time readers.
-- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
+- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where neutral shared records are worth the cost.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
 - `faq.html` - direct search-friendly answers for common Kaspa status and concept questions.
 - `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.

@@ -14,7 +14,8 @@
 - Preserve the Yonatan Sompolinsky podcast insights section and the primary-source stack.
 - Treat Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public resources as community contributions. They are useful for context, education, summaries, and links, but they are not official or authoritative protocol sources.
 - For status-sensitive claims, prefer code, releases, KIPs, research papers, protocol documentation, or direct statements from core technical contributors.
-- Keep Kaspa's app-layer focus on L1 programmability, covenants, ZK verification, sequencing commitments, and vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
+- Apply Concrete-First Translation: for public and LLM-facing copy, lead with the concrete reader picture first, then name the abstraction. Prefer "one shared record without one operator," "apps that prove their rules," "funding rules strangers can rely on," or "fast mined ordering" before terms like shared state, verification-oriented programmability, coordination markets, sequencing commitments, or settlement layer.
+- Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
 - Avoid price predictions, exchange rumors, or investment advice.
 
 ## Startup Verification
