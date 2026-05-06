@@ -71,12 +71,16 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 14. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
 15. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs talk
 16. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
-17. https://kasmedia.com/article/ori-interview
-18. https://kasmedia.com/article/theweeklyknight081725
-19. https://kasmedia.com/article/weeklyknightl12s-and-pows
-20. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-21. https://kaspa.org/ - community-maintained public portal context and broad summaries
-22. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context, paired with the available recording/Q&A links when using the Oxford material
+17. https://github.com/kaspanet/kaspa-python-sdk - standalone Kaspa Python SDK repo for builder tooling and Python integration evidence
+18. https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0 - Python SDK v1.1.0 release with UtxoProcessor/UtxoContext and GetVirtualChainFromBlockV2
+19. https://github.com/kaspanet/rusty-kaspa/pull/860 - TxIndex PR; optional transaction index and GetTransaction RPC evidence while open
+20. https://github.com/kaspanet/rusty-kaspa/pull/930 - Fast Trusted Relay WIP/draft PR; infrastructure experiment, not stable release evidence
+21. https://kasmedia.com/article/ori-interview
+22. https://kasmedia.com/article/theweeklyknight081725
+23. https://kasmedia.com/article/weeklyknightl12s-and-pows
+24. https://kasmedia.com/article/moog-synthesizers-and-kaspa
+25. https://kaspa.org/ - community-maintained public portal context and broad summaries
+26. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context, paired with the available recording/Q&A links when using the Oxford material
 
 Active public technical accounts can be useful for discovery and replies:
 

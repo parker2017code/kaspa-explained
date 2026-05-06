@@ -100,6 +100,12 @@ The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant
 
 The April 15, 2026 vProgs code burst added RISC0 backend, ZK VM, transaction prover, batch prover, ZK ABI, core codec, and Sparse Merkle Tree work. This is a real framework/prototype milestone and useful for builders to study or experiment with, but it should not be described as production app rails, live native DeFi, or stable public application infrastructure.
 
+Builder tooling should be tracked separately from protocol status. As of 2026-05-06, `kaspanet/kaspa-python-sdk` is a standalone public SDK repository. Its v1.1.0 release added GetVirtualChainFromBlockV2 plus UtxoProcessor and UtxoContext bindings, with generated docs and a versioned changelog. This is useful for Python builders and UTXO tracking, but it is not a protocol upgrade or activation signal.
+
+Infrastructure indexes should also stay in their own lane. `rusty-kaspa` PR #860 is an open pull request for optional TxIndex support, GetTransaction RPC data, inclusion and acceptance metadata, live consensus-notification updates, resync from scratch, and retention-root pruning. Treat it as builder/infrastructure evidence until merged and released.
+
+Fast Trusted Relay work should be treated as an infrastructure experiment. `rusty-kaspa` PR #930 is an open WIP/draft pull request for a custom UDP/FEC fast relay path for trusted operators. It is useful public implementation evidence, but not a stable release or mainnet-status change.
+
 Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
 For app-layer pages, this means:
@@ -261,6 +267,11 @@ Additional deep dives:
 - https://github.com/kaspanet/vprogs - early Rust prototype repo for vProgs execution framework; README explicitly says early development/prototype and APIs may change.
 - https://github.com/kaspanet/rusty-kaspa/tree/dagknight - public DAGKnight implementation/prototype branch; useful for code evidence, not activation status.
 - https://github.com/kaspanet/rusty-kaspa/issues/983 - TN12 opcode testing report; useful for covenant/ZK field-testing and developer-ergonomics context.
+- https://github.com/kaspanet/kaspa-python-sdk - standalone Kaspa Python SDK repo; use for builder tooling and Python integration evidence.
+- https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0 - Python SDK v1.1.0 release with GetVirtualChainFromBlockV2, UtxoProcessor, and UtxoContext.
+- https://kaspanet.github.io/kaspa-python-sdk/1.1.0/CHANGELOG/ - versioned Python SDK changelog.
+- https://github.com/kaspanet/rusty-kaspa/pull/860 - TxIndex PR; optional transaction index and GetTransaction RPC evidence, not merged/released status unless future evidence changes.
+- https://github.com/kaspanet/rusty-kaspa/pull/930 - Fast Trusted Relay WIP/draft PR; infrastructure experiment, not activation status.
 - https://github.com/kaspanet/kips/pull/36 - KIP-21 PR for partitioned sequencing commitments and O(activity) proving direction; confirm final status before calling it activated.
 - https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1 - Michael Sutton covenant++ and vProgs milestone notes; useful for inline zk covenants, based zk covenants, canonical bridge work, efficient sequencing commitments, degenerate computational DAGs, and RTD context.
 - https://gist.github.com/michaelsutton/a5c9bff6c9e9713edd0de9a3059bab9a - Michael Sutton STARK-sized blocks and min-fee notes; useful for STARK proof support, transient mass/block-size limits, standard minimum fee anti-spam framing, and block elasticity tradeoffs.
