@@ -99,7 +99,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 
 ## Site pages
 
-- `/` - audience-routed Kaspa overview, real-time Proof-of-Work framing, zero-to-one crypto context links, status lanes, and blockDAG visual.
+- `/` - audience-routed Kaspa overview, real-time Proof-of-Work framing, zero-to-one crypto context links, status lanes, common-misconception routing, and blockDAG visual.
 - `/start-here.html` - true beginner router for readers who know nothing about crypto, market value, coin categories, tradeoffs, or Kaspa.
 - `/crypto-from-zero.html` - zero-to-one curriculum: records, keys, transactions, blocks, consensus, security, mining, staking, tokens, UTXO/account models, and Kaspa.
 - `/why-crypto-has-value.html` - market-value explainer for token necessity, prices, open markets, market cap, speculation, launch design, and who benefits.
@@ -108,14 +108,14 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
 - `/analyze-any-coin.html` - practical checklist for token necessity, supply, launch, security, validation, liquidity, market cap, risks, and who benefits.
 - `/crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, scaling conflicts, DeFi, stablecoins, rollups, and Kaspa.
-- `/kaspa-in-one-screen.html` - compact shareable Kaspa summary: what it is, what is live, why it matters, what is not live, and what would strengthen or weaken the case.
+- `/kaspa-in-one-screen.html` - compact shareable Kaspa summary: what it is, what is live, why it matters, what is not live, common boundaries, and what would strengthen or weaken the case.
 - `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `/application-layer.html` - application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and research lanes may enable later.
 - `/builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/status.html` - compact shipped-vs-roadmap status page with a code-grounded implementation-evidence section.
 - `/overview.html` - 90-second first-reader overview.
-- `/faq.html` - direct answers to common Kaspa status and concept questions.
+- `/faq.html` - direct answers to common Kaspa status, concept, speed, TPS, finality, testnet, roadmap, and ecosystem-tooling questions.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs direction.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
 - `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references and a status-labeled DAGKnight/vProgs comparison.

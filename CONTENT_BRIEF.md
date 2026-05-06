@@ -84,7 +84,7 @@ Keep these audience paths visible:
 - Need a compact shareable Kaspa artifact: use `kaspa-in-one-screen.html`.
 - Need a business/adoption lens without price prediction: use `adoption-metrics.html`.
 - New to crypto but already understands basic records/keys/blocks: use `what-crypto-is-good-for.html`.
-- Need current shipped-vs-roadmap status: use `status.html`.
+- Need current shipped-vs-roadmap status or common claim corrections: use `status.html`.
 - Need a compact first-reader path: use `overview.html`.
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
@@ -93,6 +93,7 @@ Keep these audience paths visible:
 - Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
+- Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, KRC standards, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
@@ -105,6 +106,8 @@ The `knowledge-map.html` page should start as an ordered learning path and then 
 The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
 Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
+
+The common-misconceptions material should be distributed by reader intent. The homepage may name the risk and route the reader. The FAQ should give short corrections. The status page can carry the more precise table. The one-screen page can include only the compact "say this, not that" boundary. Do not repeat every correction on every page.
 
 KRC20 and KRC721 should be handled as ecosystem-token standards available around the live network through data insertion, wallet support, indexers, metadata, APIs, and off-chain redemption rules. They can be useful for practical products such as loyalty credits, coupons, access passes, event rewards, closed-loop festival credits, collectibles, and proof-of-attendance objects. Current KRC documentation and Kaspa.org FAQ context describe required deploy/mint gas fees as miner fees; still warn users to check wallets and frontends for separate service fees. Do not present KRC standards as native Kaspa smart contracts, Toccata activation, native L1 assets, mature DeFi, or vProgs.
 
@@ -237,9 +240,11 @@ Keep the fast-PoW argument focused and careful. Fast inclusion and fast confirma
 
 Any high-rate block-producing system can improve inclusion. Kaspa's stronger argument is that fast Proof of Work changes the confirmation/decentralization tradeoff. PoW samples hash power through work done after the fact, without requiring the protocol to identify and collect explicit supermajority votes from miners before every confirmation. In PoS finality designs, confirmation speed is more directly tied to stake voting, validator coordination, stake distribution, committees, or related sampling assumptions.
 
-Do not overclaim this. Do not state that Kaspa has instant finality, that all PoS systems are equivalent, or that the site has fully modeled Ethereum/Solana engineering details. The durable, site-appropriate claim is narrower: fast PoW blockDAGs make the inclusion/confirmation/decentralization tradeoff different, and that is one reason Kaspa is worth studying.
+Do not overclaim this. Do not state that Kaspa provides instant irreversible settlement, that all PoS systems are equivalent, or that the site has fully modeled Ethereum/Solana engineering details. The durable, site-appropriate claim is narrower: fast PoW blockDAGs make the inclusion/confirmation/decentralization tradeoff different, and that is one reason Kaspa is worth studying.
 
 Crescendo-specific nuance: do not turn 10 BPS into "10x finality." Michael Sutton's public Crescendo explanation framed practical throughput as roughly 8-9x higher under the observed policy and confirmation-time improvement as closer to 30%, because confirmation remains dominated by block latency. Use this to correct summaries that imply unlimited throughput, instant finality, or a clean 10x confirmation improvement.
+
+TPS and speed claims need measurement labels. Do not freeze one public TPS number as normal mainnet behavior unless current primary sources support that exact measurement and context. Distinguish block rate, block capacity, policy limits, test/lab throughput, sustained capacity estimates, organic demand, fees, and confirmation confidence.
 
 ## Crypto Reality-Check Framing
 
