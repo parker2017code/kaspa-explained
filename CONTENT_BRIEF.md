@@ -8,7 +8,7 @@ Kaspa Explained is an independent, source-first explainer for Kaspa. The goal is
 
 The ideal voice is Yonatan-style first-principles explanation translated into everyday language: start from Bitcoin, money, ordering, latency, trust, and finance; make the intuition clear enough for the intended reader of the page; then preserve enough precision in the appropriate deeper paths for crypto-native readers, researchers, builders, and source-checking experts. Do not make the public site talk about internal editorial slogans. Just make the pages read that way.
 
-Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `llms-full.txt`, `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
+Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
 The site should answer:
 
@@ -18,7 +18,7 @@ The site should answer:
 - What is still research or speculation?
 - What is crypto actually useful for, and where is crypto being forced?
 - How does Kaspa fit next to Bitcoin, Ethereum, Solana, stablecoins, app chains, and other crypto categories?
-- Which public pages and LLM files should be crawlable?
+- Which public pages and LLM context file should be crawlable?
 - Which sources should someone read before forming strong opinions?
 
 This is not an official Kaspa site and not investment advice.
@@ -74,7 +74,7 @@ Keep these audience paths visible:
 - Want mechanics: use `knowledge-map.html`.
 - Want the app/design thesis: use `application-layer.html`.
 - Want builder-specific programmability choices: use `builder-guide.html`.
-- Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `llms-full.txt`.
+- Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
 
@@ -319,7 +319,6 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/sources.html`
 - `/about.html`
 - `/llms.txt`
-- `/llms-full.txt`
 - `/CONTENT_BRIEF.md`
 - `/README.md`
 - `/CLAIMS.yml`
@@ -353,7 +352,7 @@ Workflow:
 3. Treat transcript mirrors as weaker than the recording page, podcast page, KASmedia recap, or user-supplied transcript unless timing and attribution are preserved.
 4. Keep recaps and transcripts separate.
 5. Promote only the strongest non-duplicative points to the homepage.
-6. Put deeper transcript notes in `llms-full.txt` or source docs.
+6. Put deeper transcript notes in `CONTENT_BRIEF.md`, `llms.txt`, `CLAIMS.yml`, or source docs.
 
 Important transcript-backed sources currently used:
 
@@ -417,7 +416,6 @@ Primary public pages:
 LLM/source files:
 
 - `llms.txt` - compact LLM-facing context.
-- `llms-full.txt` - richer retrieval context.
 - `CONTENT_BRIEF.md` - editorial/project handoff.
 - `README.md` - repo setup, source discipline, and deployment notes.
 - `AGENTS.md` - local coding-agent instructions.
@@ -431,7 +429,7 @@ Before changing claims:
 3. Prefer exact links over paraphrased rumors.
 4. Do not use current X posts alone for activation or shipped-feature status.
 5. Keep homepage copy general-audience friendly.
-6. Put dense technical detail in `llms-full.txt` or this brief.
+6. Put dense technical detail in `llms.txt`, `CLAIMS.yml`, source docs, or this brief.
 7. Run basic checks before publishing:
    - `bash scripts/check-site.sh`
    - `bash scripts/check-links.sh` when source/reference URLs change

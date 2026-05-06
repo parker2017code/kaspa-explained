@@ -15,6 +15,7 @@ expected_pages=(
   "kaspa-in-one-screen.html"
   "adoption-metrics.html"
   "application-layer.html"
+  "builder-guide.html"
   "overview.html"
   "what-crypto-is-good-for.html"
   "status.html"
@@ -38,7 +39,6 @@ expected_files=(
   "og-image.png"
   "og-image.svg"
   "llms.txt"
-  "llms-full.txt"
   "robots.txt"
   "sitemap.xml"
   "CNAME"
@@ -189,7 +189,6 @@ done < <(
 claim_checks=(
   "status.html|Toccata|target"
   "llms.txt|Near-term: Toccata"
-  "llms-full.txt|Toccata should not be described as live"
   "CONTENT_BRIEF.md|Toccata should not be described as live"
   "status.html|DAGKnight|research"
   "status.html|vProgs|roadmap"
