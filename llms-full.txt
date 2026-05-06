@@ -37,6 +37,8 @@ These pages should teach the problem first, the mechanism second, the tradeoff t
 
 The site includes `status.html` as the compact shipped-vs-roadmap page. It should stay shorter than the source map and focus on live, targeted, roadmap, and research status for Proof of Work, UTXO, GHOSTDAG, Crescendo 10 BPS, Toccata, vProgs, native DeFi, DAGKnight, and RTD.
 
+As of 2026-05-06, `status.html` also includes a compact implementation-evidence section. It should remain code-grounded and clearly below the shipped-status line: Silverscript/TN12 activity is Toccata polishing and field testing, kaspanet/vprogs has April 15 ZK framework progress, and rusty-kaspa/dagknight has March 22 prototype/refinement activity. Do not turn these signals into activation claims.
+
 The site includes `overview.html` as the 90-second first-reader page. It should stay compact and cover only what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
 The site includes `faq.html` as a direct answer page for common search questions. It should stay concise and status-labeled, with no price targets or roadmap flattening.
@@ -88,11 +90,15 @@ Maintenance trigger: recheck status pages, `llms.txt`, and `llms-full.txt` after
 
 As of May 5, 2026, Toccata should not be described as live mainnet functionality. Michael Sutton's April 2026 Toccata outlook is the preferred implementation-context source for the current public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so the sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. Treat Kaspa.org and other community portal summaries as orientation only. Feature freeze, TN12 restart, branch merge, auditing, TN10 rehearsal, and final activation are status-sensitive steps that need rechecking against primary sources.
 
+May 2026 Toccata developer evidence includes Silverscript TN12 dependency sync, KCC20 bootstrap/book fixes, and TN12 opcode field testing. These show active hard-fork and SDK polishing, not live mainnet activation. Developer-ergonomics notes such as compute-budget friction can be mentioned cautiously when linked to public issue/PR evidence, but unattributed chat logs should not be cited as promises.
+
 Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for bounded UTXO programmability, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-zk experiments. vProgs are the longer app architecture built around shared Kaspa sequencing, computational-DAG metadata, prover-backed execution, and eventual synchronous composability. Do not describe them as competing chains, rival clients, or both already-live app rails.
 
 Kaspa programmability should be framed as neutral primitives first. The protocol should expose durable L1 surfaces; applications define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
 The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and standalone based-zk application foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
+
+The April 15, 2026 vProgs code burst added RISC0 backend, ZK VM, transaction prover, batch prover, ZK ABI, core codec, and Sparse Merkle Tree work. This is a real framework/prototype milestone and useful for builders to study or experiment with, but it should not be described as production app rails, live native DeFi, or stable public application infrastructure.
 
 Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
@@ -135,6 +141,7 @@ Important nuances:
 - Bitcoin also has a latency assumption: its block rate assumes network latency is much smaller than 10 minutes. In this framing, Bitcoin can be treated as a k=0 edge case rather than as an unparameterized opposite to GHOSTDAG.
 - DAGKnight is a parameterless/adaptive consensus upgrade direction relative to fixed latency/K choices; it should not be described as live instant finality.
 - DAGKnight has the better-developed research lineage and appears further along implementation-wise than vProgs, while still not being an already-live mainnet upgrade.
+- The public rusty-kaspa dagknight branch shows March 22, 2026 prototype/refinement commits around free search, ranking/search, conflict-zone logic, tie-breaking placeholder, and UMC majority coverage. Treat this as implementation evidence, not testnet/mainnet status.
 - DAGKnight client latency settings should be based on adversarial or worst-case latency assumptions, not simply the smooth latency currently observed on the network.
 - Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If encountered in community shorthand, interpret it only as an adversarial-latency resilience goal for DAGKnight, not as a claim that DAGKnight is live today.
 - Current confirmation talk and future DAGKnight ambitions should not be mixed.
@@ -250,7 +257,10 @@ Additional deep dives:
 - https://tokenize-event.com/theatre-2-blockchain-technologies-and-the-potential-of-web3/utilising-decentralised-tech-secure-digital-wallets - Tokenize London listing for Yonatan Sompolinsky's Kaspa: Mining the Internet talk; use with available transcript/video context for RTD, miner attestations, internet-money flow, MEV auctions, and focus/flywheel framing.
 - https://github.com/kaspanet/rusty-kaspa/tree/toccata - moving implementation branch for Toccata/Covenants++ evidence; do not treat branch presence as activation.
 - https://github.com/kaspanet/rusty-kaspa/tree/tn12 - moving TN12 branch evidence; verify against current testnet instructions.
+- https://github.com/kaspanet/silverscript - Silverscript SDK and covenant examples; useful for Toccata developer-tooling and polishing evidence.
 - https://github.com/kaspanet/vprogs - early Rust prototype repo for vProgs execution framework; README explicitly says early development/prototype and APIs may change.
+- https://github.com/kaspanet/rusty-kaspa/tree/dagknight - public DAGKnight implementation/prototype branch; useful for code evidence, not activation status.
+- https://github.com/kaspanet/rusty-kaspa/issues/983 - TN12 opcode testing report; useful for covenant/ZK field-testing and developer-ergonomics context.
 - https://github.com/kaspanet/kips/pull/36 - KIP-21 PR for partitioned sequencing commitments and O(activity) proving direction; confirm final status before calling it activated.
 - https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1 - Michael Sutton covenant++ and vProgs milestone notes; useful for inline zk covenants, based zk covenants, canonical bridge work, efficient sequencing commitments, degenerate computational DAGs, and RTD context.
 - https://gist.github.com/michaelsutton/a5c9bff6c9e9713edd0de9a3059bab9a - Michael Sutton STARK-sized blocks and min-fee notes; useful for STARK proof support, transient mass/block-size limits, standard minimum fee anti-spam framing, and block elasticity tradeoffs.

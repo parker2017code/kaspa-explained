@@ -22,14 +22,14 @@
   <meta name="twitter:title" content="Kaspa Status | Kaspa Explained">
   <meta name="twitter:description" content="What is live, targeted, roadmap, and research in Kaspa without mixing shipped features with future architecture.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-image.png">
-  <meta name="dateModified" content="2026-05-05">
+  <meta name="dateModified" content="2026-05-06">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Status",
     "url": "https://kaspaexplained.com/status.html",
-    "dateModified": "2026-05-05",
+    "dateModified": "2026-05-06",
     "description": "A compact status page for what is live, targeted, roadmap, and research in Kaspa.",
     "about": ["Kaspa", "Proof of Work", "GHOSTDAG", "Crescendo", "Toccata", "vProgs", "DAGKnight"]
   }
@@ -205,6 +205,51 @@
     </section>
 
     <section class="section">
+      <p class="eyebrow">Implementation evidence</p>
+      <h2>Where the parallel tracks stand in code.</h2>
+      <p>Code and pull requests are not activation records. They are useful for seeing what is being tested, polished, or prototyped before a public status label changes.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>Recent public evidence</th>
+              <th>How to read it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Toccata / Silverscript</td>
+              <td><a href="https://github.com/kaspanet/silverscript/commit/627c175ed808c46471ee3c4b2907661e24aec9b2">TN12 dependency sync</a>, <a href="https://github.com/kaspanet/silverscript/commit/38ff79864d7a4dd47890d11e62c3da0e0c2108bc">KCC20 bootstrap fixes</a>, and <a href="https://github.com/kaspanet/silverscript/commit/06928a76e68b3bbd82968643670d99b07fc471db">book/build fixes</a> landed May 4-5, 2026. <a href="https://github.com/kaspanet/rusty-kaspa/issues/983">TN12 field testing</a> also surfaced real developer-ergonomics issues around covenant and ZK opcode use.</td>
+              <td>Still targeted, not live. The public target window remains roughly June 5-20, 2026 pending activation evidence. Current code signals look like hard-fork/testnet polishing and SDK rough-edge discovery, not mature app infrastructure.</td>
+            </tr>
+            <tr>
+              <td>vProgs</td>
+              <td>The <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo had an April 15, 2026 implementation burst: <a href="https://github.com/kaspanet/vprogs/commit/57039db09ea958689aee2ae89f81ba40c8cc3e6d">RISC0 backend</a>, ZK VM, transaction and batch provers, ABI, codec, and Sparse Merkle Tree work.</td>
+              <td>Roadmap implementation progress. Builders can study and experiment with the framework, but it remains early and should not be presented as production Kaspa app rails or live native DeFi.</td>
+            </tr>
+            <tr>
+              <td>DAGKnight</td>
+              <td>The public <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">rusty-kaspa dagknight branch</a> shows March 22, 2026 commits for free-search support, ranking/search refinements, conflict-zone work, tie-breaking placeholder, and UMC majority-coverage movement.</td>
+              <td>Research and prototype evidence. DAGKnight is not current mainnet behavior, not a live finality claim, and not proof by itself of a higher-BPS activation schedule.</td>
+            </tr>
+            <tr>
+              <td>Builder tooling</td>
+              <td><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspanet/kaspa-python-sdk</a> is now a standalone public SDK repo. The <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0">v1.1.0 release</a> added GetVirtualChainFromBlockV2 plus UtxoProcessor and UtxoContext bindings, with a <a href="https://kaspanet.github.io/kaspa-python-sdk/1.1.0/CHANGELOG/">versioned changelog</a> and generated documentation.</td>
+              <td>Developer-tooling progress, not a protocol upgrade. It helps Python builders track UTXOs and integrate with Kaspa, while protocol status still comes from node, KIP, and activation evidence.</td>
+            </tr>
+            <tr>
+              <td>Infrastructure indexes</td>
+              <td><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">rusty-kaspa PR #860</a> is open for review. It proposes an optional <code>--txindex</code>, a GetTransaction RPC path, inclusion and acceptance metadata, live updates from consensus notifications, resync from scratch, and pruning tied to retention-root changes.</td>
+              <td>Useful builder and infrastructure work, not consensus activation. It could help wallets, explorers, indexers, and large app-state workflows, but it remains an open pull request until merged and released.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note"><strong>Builder note:</strong> early tests and open PRs are useful signals for developers, but the public site should keep them below the shipped-status line until a primary activation or release artifact changes the status.</p>
+    </section>
+
+    <section class="section">
       <p class="eyebrow">Changelog</p>
       <h2>Status-sensitive updates.</h2>
       <div class="reference-grid">
@@ -223,6 +268,14 @@
         <article>
           <h3>May 5, 2026</h3>
           <p>Clarified why Toccata moved from the older May 5 target to the roughly June 5-20 window: sequencing commitments needed to be finalized before zk systems and runtimes depend on them.</p>
+        </article>
+        <article>
+          <h3>May 6, 2026</h3>
+          <p>Added code-grounded implementation evidence for the Toccata/Silverscript, vProgs, and DAGKnight tracks. These notes are context for current development, not activation records.</p>
+        </article>
+        <article>
+          <h3>May 6, 2026</h3>
+          <p>Added Python SDK and TxIndex as builder/infrastructure evidence. These help developers and indexers, but they do not change the protocol status lanes.</p>
         </article>
       </div>
     </section>

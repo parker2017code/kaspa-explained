@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="Kaspa Knowledge Map | Kaspa Explained">
   <meta name="twitter:description" content="A readable map of the important Kaspa ideas: Proof of Work, blockDAGs, GHOSTDAG, pruning, finality, Toccata, vProgs, RTD, and coordination markets.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-image.png">
-  <meta name="dateModified" content="2026-05-05">
+  <meta name="dateModified" content="2026-05-06">
   <link rel="stylesheet" href="styles.css">
   <script defer src="nav.js"></script>
 </head>
@@ -144,6 +144,39 @@
           <p>Yonatan's RTD framing starts with real-time Bitcoin-style PoW security, then points beyond payments toward attestations, oracles, assurance contracts, and markets where no single referee should control the rules.</p>
         </article>
       </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Parallel upgrade tracks</p>
+      <h2>DAGKnight and vProgs solve different problems.</h2>
+      <p>They are often discussed together because both point beyond today's GHOSTDAG/Crescendo network, but they belong in different lanes.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>What it changes</th>
+              <th>Current public code signal</th>
+              <th>Status lane</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DAGKnight</td>
+              <td>Consensus ordering and latency assumptions. It is the adaptive-successor direction after GHOSTDAG, not an application runtime.</td>
+              <td><a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">rusty-kaspa/dagknight</a> has March 22, 2026 commits around free search, ranking, conflict-zone logic, tie-breaking placeholder, and UMC majority coverage.</td>
+              <td>Research / prototype branch, not live mainnet</td>
+            </tr>
+            <tr>
+              <td>vProgs</td>
+              <td>Application execution architecture. The goal is proof-producing programs that use Kaspa for sequencing, commitments, settlement, and verification.</td>
+              <td><a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> had an April 15, 2026 ZK implementation burst: RISC0 backend, ZK VM, provers, ABI, codec, and Sparse Merkle Tree work.</td>
+              <td>Roadmap / early framework, not production app rails</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note"><strong>Simple split:</strong> DAGKnight is about how Kaspa orders blocks under changing network conditions. vProgs are about how apps can prove richer logic while using Kaspa as the shared ordering and verification anchor.</p>
     </section>
 
     <section class="section">

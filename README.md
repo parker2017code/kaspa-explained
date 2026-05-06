@@ -107,12 +107,12 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `/application-layer.html` - application-layer opportunity map explaining what other crypto networks enabled and where Kaspa could shine across live RTD, Toccata, vProgs, and research lanes.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
-- `/status.html` - compact shipped-vs-roadmap status page.
+- `/status.html` - compact shipped-vs-roadmap status page with a code-grounded implementation-evidence section.
 - `/overview.html` - 90-second first-reader overview.
 - `/faq.html` - direct answers to common Kaspa status and concept questions.
 - `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs thesis.
 - `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
-- `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references.
+- `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references and a status-labeled DAGKnight/vProgs comparison.
 - `/glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `/search.html` - static page-map search for concepts, audiences, status lanes, and source terms.
 - `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and crawlable LLM file map.

@@ -85,6 +85,8 @@ The `status.html` page is the compact status reference. Keep it shorter than the
 
 Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
 
+The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below the shipped-status line. As of 2026-05-06, the useful public evidence is: Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply activation.
+
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
 The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, why it matters if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
