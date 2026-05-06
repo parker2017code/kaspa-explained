@@ -144,6 +144,15 @@ Avoid:
 
 Editing test: each public sentence should make a specific, necessary, defensible claim. If a sentence mainly adds polish, symmetry, or persuasion cadence, cut it or move the detail to the source/context stack.
 
+Tone and visual weight:
+
+- Use medium authority. The site should not sound small, apologetic, or unsure, but it should also avoid manifesto, pitch-deck, or definitive-guide posture.
+- Write like a knowledgeable person helping a rushed reader choose the right path.
+- Use medium visual weight. Headings, cards, callouts, and diagrams should be clear and confident, not oversized or theatrical. Use size to create hierarchy, not drama.
+- Prefer humble guidance: "start here", "check this lane", "use this distinction", "current boundary", "what exists now", and "what may come later."
+- Avoid turning every heading into a grand claim, final answer, or abstract thesis.
+- Let interest come from concrete usefulness. The site can be Kaspa-positive without sounding promotional.
+
 ## Status Lanes
 
 Keep these categories separate.
@@ -232,7 +241,7 @@ The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general 
 
 Core frame:
 
-> Kaspa matters because it asks what Proof-of-Work crypto would look like if Bitcoin-style security and censorship resistance could operate in real time, with fast settlement, parallel block production, and future verification-oriented programmability.
+> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time, using fast settlement, parallel block production, and future verification-oriented programmability.
 
 Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, rather than faster payments alone. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
 
@@ -400,7 +409,7 @@ Primary public pages:
 - `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
-- `application-layer.html` - status-labeled application-layer opportunity map for what other crypto networks enabled and where Kaspa could shine across live RTD, Toccata, vProgs, and coordination-market research.
+- `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may enable later.
 - `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
