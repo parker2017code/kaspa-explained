@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa Builder Guide | Kaspa Explained</title>
+  <meta name="description" content="A builder-specific guide to Kaspa programmability options: covenants, based apps, inline ZK, full vProgs, SDKs, indexes, and status boundaries.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/builder-guide.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="Kaspa Builder Guide | Kaspa Explained">
+  <meta property="og:description" content="A status-labeled builder guide for choosing between covenants, based apps, inline ZK, and future full vProgs on Kaspa.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/builder-guide.html">
+  <meta property="og:image" content="https://kaspaexplained.com/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - independent Kaspa research guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa Builder Guide | Kaspa Explained">
+  <meta name="twitter:description" content="Choose the right Kaspa app path without confusing builder tooling with live protocol status.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-image.png">
+  <meta name="dateModified" content="2026-05-06">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Kaspa Builder Guide",
+    "url": "https://kaspaexplained.com/builder-guide.html",
+    "dateModified": "2026-05-06",
+    "description": "A status-labeled builder guide for Kaspa programmability options.",
+    "about": ["Kaspa", "Covenants", "Silverscript", "Based Apps", "Inline ZK", "vProgs"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="nav.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <div class="announcement">Independent Kaspa research guide - builder paths are status-labeled</div>
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here.html">Start</a>
+        <a href="/crypto-from-zero.html">Zero</a>
+        <a href="/why-crypto-has-value.html">Value</a>
+        <a href="/coin-atlas.html">Coins</a>
+        <a href="/tradeoff-map.html">Tradeoffs</a>
+        <a href="/why-kaspa-matters.html">Kaspa</a>
+        <a href="/application-layer.html">Apps</a>
+        <a href="/builder-guide.html">Builders</a>
+        <a href="/status.html">Status</a>
+        <a href="/sources.html">Sources</a>
+        <a href="/search.html">Search</a>
+        <a href="/about.html">About</a>
+      </div>
+      <a class="nav-cta" href="/status.html">Check Status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="builder-page">
+    <section class="section">
+      <p class="eyebrow">Builder guide</p>
+      <h1>Choose the smallest Kaspa app model that fits the product.</h1>
+      <p class="lead">Kaspa builders should start with the shape of the state: sequential L1 outputs, shared-state execution, per-action proofs, or later app-to-app composition.</p>
+      <div class="status-legend" aria-label="Status legend">
+        <span class="status-pill live">Live base</span>
+        <span class="status-pill target">Targeted</span>
+        <span class="status-pill roadmap">Roadmap</span>
+        <span class="status-pill research">Research</span>
+        <span class="status-pill not-live">Not live</span>
+      </div>
+      <p class="fit-note"><strong>Status rule:</strong> builder docs and open repositories show what people can study or prototype. Mainnet status still comes from activation, releases, and working applications.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Decision tree</p>
+      <h2>Start with concurrency, then proof needs.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>If yes</th>
+              <th>If no</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Do many users need to touch the same app state at the same time?</td>
+              <td>Start with based apps or vProgs-compatible runtime work.</td>
+              <td>Start with covenants and L1 state outputs.</td>
+            </tr>
+            <tr>
+              <td>Can the product be split into independent sub-apps or independent states?</td>
+              <td>Covenants can still work for each separate state.</td>
+              <td>Shared-state app architecture becomes more natural.</td>
+            </tr>
+            <tr>
+              <td>Does each action need its own proof, privacy check, or custom validity rule?</td>
+              <td>Consider inline ZK, but expect more proof and operations work.</td>
+              <td>Use covenants or based apps first.</td>
+            </tr>
+            <tr>
+              <td>Does the app need synchronous composition with other independent apps?</td>
+              <td>That is the future full-vProgs direction.</td>
+              <td>Build the narrow app first and keep the interface clean.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Current options</p>
+      <h2>The app model should match the state model.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>Covenants</h3>
+          <p><span class="status-pill target">Targeted</span></p>
+          <p>Best for asset rules and stateful outputs: vaults, treasury controls, escrow-like flows, unlock conditions, issuance policy, and small UTXO state machines.</p>
+          <p>One protected state advances one valid step at a time. Independent states can still run in parallel, but one hot state is sequential.</p>
+        </article>
+        <article>
+          <h3>Based apps</h3>
+          <p><span class="status-pill roadmap">Roadmap</span></p>
+          <p>Best when one app needs built-in accounts, balances, and shared-state execution. Users send actions through Kaspa L1, and a managed environment runs the Rust app logic.</p>
+          <p>This is construction-stage app architecture, not a mature public app platform.</p>
+        </article>
+        <article>
+          <h3>Inline ZK</h3>
+          <p><span class="status-pill roadmap">Specialized</span></p>
+          <p>Best when each action needs its own proof or custom validity check before it settles: privacy-preserving actions, proof-verified workflows, or custom account models.</p>
+          <p>This path usually requires more prover design, proof infrastructure, and operational ownership.</p>
+        </article>
+        <article>
+          <h3>Full vProgs</h3>
+          <p><span class="status-pill research">Future direction</span></p>
+          <p>Full vProgs are the future app-to-app composition direction: independent apps reading or calling one another in the same flow without separate bridge-style waiting.</p>
+          <p>Treat this as architectural direction, not a current option for production apps.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Build examples</p>
+      <h2>Map product ideas to the likely first path.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Product shape</th>
+              <th>Likely starting path</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vault, treasury, inheritance, recovery, escrow</td>
+              <td>Covenants</td>
+              <td>The product is mostly about who can move funds and how stateful outputs evolve.</td>
+            </tr>
+            <tr>
+              <td>Native asset issuance or transfer policy</td>
+              <td>Covenants</td>
+              <td>The app logic is asset-native and can often stay close to L1 output rules.</td>
+            </tr>
+            <tr>
+              <td>Trading venue, game economy, shared balance app</td>
+              <td>Based app</td>
+              <td>Many users need to touch shared state without waiting for a single UTXO chain to advance.</td>
+            </tr>
+            <tr>
+              <td>Private action, custom validity check, proof-gated workflow</td>
+              <td>Inline ZK</td>
+              <td>The proof is part of every action, so verification becomes the product boundary.</td>
+            </tr>
+            <tr>
+              <td>Composable app network with calls across independent apps</td>
+              <td>Full vProgs later</td>
+              <td>The need is app-to-app synchronous composition, which belongs to the longer architecture target.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Builder tooling</p>
+      <h2>Public tools to track.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>Silverscript</h3>
+          <p>Higher-level covenant tooling and examples for state transitions. Useful for learning the covenant direction; tooling and deployment workflows are still early.</p>
+          <p><a href="https://github.com/kaspanet/silverscript">Open Silverscript</a></p>
+        </article>
+        <article>
+          <h3>vProgs repo</h3>
+          <p>Early Rust framework work around based computation, scheduler/runtime/storage layers, L1 bridge concepts, and ZK proving components.</p>
+          <p><a href="https://github.com/kaspanet/vprogs">Open vProgs</a></p>
+        </article>
+        <article>
+          <h3>Python SDK</h3>
+          <p>Standalone Python SDK with v1.1.0 release evidence for GetVirtualChainFromBlockV2 and UtxoProcessor/UtxoContext bindings.</p>
+          <p><a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0">Open release</a></p>
+        </article>
+        <article>
+          <h3>TxIndex</h3>
+          <p>Open PR for optional transaction-history indexing and GetTransaction RPC support. Relevant for wallets, explorers, and app infrastructure if merged and released.</p>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">Open PR #860</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Status wording</p>
+      <h2>Say the stage before the slogan.</h2>
+      <ol class="learning-steps">
+        <li><strong>Covenants:</strong> <span>nearer L1 state-output path for constrained asset and UTXO-state rules.</span></li>
+        <li><strong>Based apps:</strong> <span>shared-state app direction for apps that need concurrency and account-style local state.</span></li>
+        <li><strong>Inline ZK:</strong> <span>specialized proof path for actions whose validity or privacy proof is the product boundary.</span></li>
+        <li><strong>Full vProgs:</strong> <span>future app-to-app composition direction, beyond standalone based-app construction.</span></li>
+      </ol>
+      <p class="fit-note">Use the positive stage first. Add caveats only where a reader might confuse builder work with live mainnet functionality.</p>
+    </section>
+
+    <section class="next-step section" aria-label="Suggested next step">
+      <p class="eyebrow">Next step</p>
+      <h2>Build from the status boundary inward.</h2>
+      <p>Use this page to choose a model, then verify current implementation state before writing public copy, docs, or product claims.</p>
+      <div class="actions">
+        <a class="button primary" href="/status.html">Open status</a>
+        <a class="button" href="/application-layer.html">App ideas</a>
+        <a class="button" href="/sources.html">Check sources</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Sources</p>
+      <h2>Builder references used for this page.</h2>
+      <ol class="source-list">
+        <li><a href="https://progdoc.izio.fr/overview.html">Izio's Kaspa programmability overview</a> for the builder decision tree: covenants, based apps, inline ZK, and future full vProgs. Treat it as builder guidance, not protocol activation evidence.</li>
+        <li><a href="https://progdoc.izio.fr/state-programs.html">Izio on Covenants</a> for sequential protected-output state, covenant IDs, and the current Silverscript builder reference.</li>
+        <li><a href="https://progdoc.izio.fr/app-vprogs.html">Izio on Based Apps</a> for shared-state app architecture and Rust app logic in a managed environment.</li>
+        <li><a href="https://progdoc.izio.fr/verified-actions.html">Izio on Inline ZK</a> for per-action proofs and proof-driven settlement.</li>
+        <li><a href="https://progdoc.izio.fr/full-vprogs.html">Izio on Full vProgs</a> for future app-to-app synchronous composition.</li>
+        <li><a href="/status.html">Kaspa Explained status</a> and <a href="/sources.html">source hierarchy</a> for live/targeted/roadmap/research boundaries.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav aria-label="Footer">
+        <a href="/status.html">Status</a>
+        <a href="/sources.html">Sources</a>
+        <a href="/search.html">Search</a>
+        <a href="/about.html">About</a>
+        <a href="/CLAIMS.yml">Claims</a>
+        <a href="https://github.com/parker2017code/kaspa-explained">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

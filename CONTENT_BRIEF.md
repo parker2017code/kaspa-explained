@@ -8,6 +8,8 @@ Kaspa Explained is an independent, source-first explainer for Kaspa. The goal is
 
 The ideal voice is Yonatan-style first-principles explanation translated into everyday language: start from Bitcoin, money, ordering, latency, trust, and finance; make the intuition clear enough for the intended reader of the page; then preserve enough precision in the appropriate deeper paths for crypto-native readers, researchers, builders, and source-checking experts. Do not make the public site talk about internal editorial slogans. Just make the pages read that way.
 
+Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `llms-full.txt`, `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
+
 The site should answer:
 
 - What is Kaspa actually live with today?
@@ -71,6 +73,7 @@ Keep these audience paths visible:
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
 - Want the app/design thesis: use `application-layer.html`.
+- Want builder-specific programmability choices: use `builder-guide.html`.
 - Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `llms-full.txt`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
@@ -94,6 +97,8 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
 The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too." It should explain the L1-first thesis: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+
+The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
 
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
 
@@ -131,6 +136,13 @@ Avoid:
 - exchange rumors,
 - market-cap or rank claims frozen into the explainer,
 - vague claims like "revolutionary" without explaining the mechanism.
+- repeated "not X but Y" framing on public pages,
+- repeated contrast frames such as "not just", "not only", "more than just", "from X to Y", "whether you are X or Y", "this is not merely", "redefining", or "changing the way we think",
+- over-polished LLM phrasing such as "delve", "tapestry", "seamless", "robust", "pivotal", "crucial", "unlock", "empower", "transform", "reimagine", "landscape", "journey", "at its core", "ultimately", or inflated adjectives that do not add a mechanism,
+- brochure language such as "next-generation", "cutting-edge", "game-changing", "powerful platform", "accelerate innovation", "drive the future", or "pave the way",
+- defensive caveat stacks where one status label or one source link would do the job.
+
+Editing test: each public sentence should make a specific, necessary, defensible claim. If a sentence mainly adds polish, symmetry, or persuasion cadence, cut it or move the detail to the source/context stack.
 
 ## Status Lanes
 
@@ -388,6 +400,7 @@ Primary public pages:
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what other crypto networks enabled and where Kaspa could shine across live RTD, Toccata, vProgs, and coordination-market research.
+- `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where credible shared state matters.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.

@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="Why Kaspa Matters | Kaspa Explained">
   <meta name="twitter:description" content="Kaspa asks whether credible shared state can move closer to internet speed while keeping Proof of Work.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-image.png">
-  <meta name="dateModified" content="2026-05-05">
+  <meta name="dateModified" content="2026-05-06">
   <link rel="stylesheet" href="styles.css">
   <script defer src="nav.js"></script>
 </head>
@@ -44,6 +44,7 @@
         <a href="/tradeoff-map.html">Tradeoffs</a>
         <a href="/why-kaspa-matters.html">Kaspa</a>
         <a href="/application-layer.html">Apps</a>
+        <a href="/builder-guide.html">Builders</a>
         <a href="/status.html">Status</a>
         <a href="/sources.html">Sources</a>
         <a href="/search.html">Search</a>
@@ -113,7 +114,7 @@
       <p class="eyebrow">Why the blockDAG matters</p>
       <h2>Kaspa works on the latency side of credible shared state.</h2>
       <p>Bitcoin showed that strangers can coordinate around scarce digital money without a central operator. But Bitcoin also chooses a slow block interval partly because network latency has to remain small relative to block production. That is not a criticism of Bitcoin; it is a real tradeoff in Nakamoto-style systems.</p>
-      <p>Kaspa comes from the research line that asks whether a Proof-of-Work network can include parallel honest blocks and still converge on ordering. The important point is not just "more speed." The important point is whether more honest work can participate in consensus instead of becoming wasted collision.</p>
+      <p>Kaspa comes from the research line that asks whether a Proof-of-Work network can include parallel honest blocks and still converge on ordering. The central question is whether more honest work can participate in consensus instead of becoming wasted collision.</p>
       <p>That is why Kaspa's credible-shared-state argument is different from ordinary "faster chain" marketing. The architecture is about the block-rate and latency tradeoff itself.</p>
       <p>In practical terms, that means the explanation has to include parents, mergesets, blue/red classification, blue work, and the virtual block. Parents describe direct block references. The mergeset captures the blocks being incorporated around a selected parent. Blue work gives the network a way to compare accumulated work across a DAG, while the virtual block gives nodes a current-state reference without pretending there is only one visible tip.</p>
       <div class="concept-diagram dag-concept" role="img" aria-label="Parallel blocks reference earlier blocks and are ordered by GHOSTDAG">
@@ -157,9 +158,9 @@
 
     <section class="section">
       <p class="eyebrow">Real-time decentralization</p>
-      <h2>The broader idea is not just faster payments.</h2>
-      <p><a href="/glossary.html#rtd">RTD</a> means Real-Time Decentralization. In Hashdag's framing, it is first Kaspa's core value proposition: Bitcoin-style Proof-of-Work security and censorship-resistance goals with real-time confirmation feel, not merely faster payments.</p>
-      <p>RTD is also not just wall-clock speed. The broader claim is that a partially synchronous system should move as fast as the real network allows: fast when conditions are smooth, slower but still safety-oriented when the network is degraded or attacked.</p>
+      <h2>The broader idea is real-time decentralized coordination.</h2>
+      <p><a href="/glossary.html#rtd">RTD</a> means Real-Time Decentralization. In Hashdag's framing, it is first Kaspa's core value proposition: Bitcoin-style Proof-of-Work security and censorship-resistance goals with real-time confirmation feel.</p>
+      <p>RTD is about real system time. A partially synchronous system should move as fast as the real network allows: fast when conditions are smooth, slower but still safety-oriented when the network is degraded or attacked.</p>
       <p>RTD-derived oracle, attestation, TangVM, and coordination-market flows are different. Those are app-level architecture and research ideas that would use Kaspa's high-frequency PoW sampling as a base. The protocol should provide neutral primitives; applications define incentives, semantics, data sources, and risk controls.</p>
     </section>
 
@@ -234,24 +235,24 @@
       <p class="eyebrow">Future architecture</p>
       <h2>Programmability matters, but it should stay status-labeled.</h2>
       <p>The serious Kaspa app-layer path runs through Toccata, covenants, Silverscript, ZK verification foundations, sequencing commitments, and vProgs groundwork. Michael Sutton's April 2026 Toccata outlook explains the move from the original May 5 target to roughly June 5-20, 2026 as a deliberate step to finalize sequencing-commitment architecture before zk systems bind to it.</p>
-      <p>The useful technical detail is that this path is not simply "turn on an Ethereum VM." KIP-10-style introspection lets scripts inspect transaction context, KIP-20-style covenant identifiers help preserve covenant lineage through UTXOs, and KIP-21-style partitioned sequencing commitments aim to make ZK proving follow active application lanes rather than the entire transaction stream.</p>
+      <p>The technical path uses Kaspa-specific primitives. KIP-10-style introspection lets scripts inspect transaction context, KIP-20-style covenant identifiers help preserve covenant lineage through UTXOs, and KIP-21-style partitioned sequencing commitments aim to make ZK proving follow active application lanes rather than the entire transaction stream.</p>
       <p>A helpful way to picture covenant-style apps is as controlled UTXO state machines. Kaspa.com Learn's smart-contract/chess walkthrough models an app with registration UTXOs, persistent player UTXOs, game-state UTXOs, move-routing transactions, move-application transactions, and final settlement. The important point is not that chess is the killer app; it is that state can be carried through constrained UTXO transitions without turning Kaspa L1 into a global account VM.</p>
-      <p>That is where programmable assets, native-feeling DeFi, and app-level verifiable programs belong. It should not be described as full Ethereum-style smart contracts already live on mainnet.</p>
-      <p>The useful distinction is that Kaspa is not trying to turn L1 into one global execution engine for every app. The stronger direction is L1 as sequencing, commitments, verification, and metadata, with app-level verifiable programs providing richer logic around it.</p>
-      <p>This is why "Solana-like" should mean cohesive developer and user experience, not importing Solana execution as-is. It is also why vProgs should not be flattened into ordinary rollups.</p>
+      <p>That is where programmable assets, native-feeling DeFi, and app-level verifiable programs belong: staged around covenants, ZK verification, sequencing commitments, and later vProgs.</p>
+      <p>The useful distinction is L1 as sequencing, commitments, verification, and metadata, with app-level verifiable programs providing richer logic around it.</p>
+      <p>In this context, "Solana-like" means cohesive developer and user experience. vProgs are better understood as Kaspa-native verifiable-program architecture than as ordinary rollups.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Current limits</p>
-      <h2>What is still not live.</h2>
+      <h2>Current boundaries.</h2>
       <ul class="limit-list">
-        <li>Kaspa does not have Ethereum's application ecosystem today.</li>
-        <li>Kaspa does not have Solana's consumer app adoption today.</li>
-        <li>Native Kaspa DeFi is not live.</li>
-        <li>DAGKnight is not live today.</li>
-        <li>vProgs are not live as a mature application ecosystem.</li>
-        <li>RTD-derived oracle, TangVM, and attestation flows are app-level constructions over primitives, not protocol-prescribed products.</li>
-        <li>Coordination markets are a research and architecture direction, not current product-market fit.</li>
+        <li>Ethereum leads today in application depth, liquidity, and developer adoption.</li>
+        <li>Solana leads today in consumer app adoption and cohesive fast-app UX.</li>
+        <li>Native Kaspa DeFi sits in the roadmap/application lane.</li>
+        <li>DAGKnight sits in the research and upgrade lane.</li>
+        <li>vProgs sit in the roadmap architecture lane.</li>
+        <li>RTD-derived oracle, TangVM, and attestation flows are app-level constructions over neutral primitives.</li>
+        <li>Coordination markets remain a research and architecture direction until real products and usage exist.</li>
       </ul>
     </section>
 
@@ -259,14 +260,14 @@
       <p class="eyebrow">Risk ledger</p>
       <h2>The roadmap still has to survive execution.</h2>
       <p>Kaspa's architecture matters, but architecture is not adoption. The case weakens if hard-fork work slips or ships unsafely, if node-resource requirements rise too far at higher BPS, if mining or pool concentration gets worse, if declining emissions are not offset by real fee demand, if Toccata-era programmability fails to attract useful apps, or if bridge/oracle systems introduce trusted bottlenecks that undercut the whole point.</p>
-      <p>There is also a competitive risk: Ethereum, Solana, Bitcoin L2s, stablecoin rails, and app-specific chains do not need to be philosophically perfect to win users. They only need to be good enough for the job. Kaspa's differentiated claim has to become usable infrastructure, not only a better architectural essay.</p>
+      <p>There is also a competitive risk: Ethereum, Solana, Bitcoin L2s, stablecoin rails, and app-specific chains can win users by being good enough for the job. Kaspa's differentiated claim has to become usable infrastructure.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Clean summary</p>
       <h2>Kaspa answers one specific question.</h2>
       <blockquote>What would Proof-of-Work crypto look like if Bitcoin-style security and censorship resistance could operate in real time, with future verification-oriented programmability built around it?</blockquote>
-      <p>That is the value proposition. Not "better than every chain." Not "crypto fixes everything." Kaspa matters because it takes credible shared state and pushes on speed, latency, inclusion, and coordination without giving up Proof of Work.</p>
+      <p>That is the value proposition: Kaspa takes credible shared state and pushes on speed, latency, inclusion, and coordination while keeping Proof of Work.</p>
     </section>
 
     <section class="section">
