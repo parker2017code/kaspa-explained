@@ -125,6 +125,8 @@ When explaining app-to-app composition, make the key boundary atomicity rather t
 
 The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
 
+The builder guide should also preserve practical TN12 breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced TN12 node with UTXO index; an unsynced node can return misleading zero balances; and a generic stable mainnet binary may not support every active TN12 setting. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
+
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
 
 - Explain the app thesis as money plus finance without compromising the L1 monetary base.

@@ -225,6 +225,50 @@
     </section>
 
     <section class="section">
+      <p class="eyebrow">TN12 setup notes</p>
+      <h2>What helps before prototyping.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Need</th>
+              <th>Practical path</th>
+              <th>Status boundary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Generate a test address</td>
+              <td>Use SDK or wallet tooling that produces a `kaspatest:` address, then paste that exact address into the TN12 faucet.</td>
+              <td>Testnet funds only. Do not reuse test keys for mainnet.</td>
+            </tr>
+            <tr>
+              <td>Get TN12 faucet tokens</td>
+              <td>Use the browser faucet at `faucet-tn12.kaspanet.io`. Automation may fail behind browser checks, so manual browser use is normal.</td>
+              <td>Faucet limits and availability can change.</td>
+            </tr>
+            <tr>
+              <td>Run a local TN12 node</td>
+              <td>Build or use a TN12-capable `rusty-kaspa` branch and start `kaspad --testnet --netsuffix=12 --utxoindex` with local RPC listeners.</td>
+              <td>Do not assume a generic stable mainnet binary supports every active TN12 setting.</td>
+            </tr>
+            <tr>
+              <td>Check balances locally</td>
+              <td>Query local wRPC JSON, often `127.0.0.1:18210`, after the node is synced and UTXO index is enabled.</td>
+              <td>Unsynced nodes can return misleading zero balances.</td>
+            </tr>
+            <tr>
+              <td>Move from mockup to app</td>
+              <td>Separate UI policy design from real Silverscript compilation, signing, transaction construction, broadcast, and explorer-visible outputs.</td>
+              <td>A simulator is not an enforced covenant until TN12 transactions prove it.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">Mainnet builders should use the released mainnet node and normal `kaspa:` addresses. TN12 builders should label every address, token, and transaction as testnet-only.</p>
+    </section>
+
+    <section class="section">
       <p class="eyebrow">Status wording</p>
       <h2>Say the stage first.</h2>
       <ol class="learning-steps">
@@ -257,6 +301,7 @@
         <li><a href="https://progdoc.izio.fr/app-vprogs.html">Izio on Based Apps</a> for shared-state app architecture and Rust app logic in a managed environment.</li>
         <li><a href="https://progdoc.izio.fr/verified-actions.html">Izio on Inline ZK</a> for per-action proofs and proof-driven settlement.</li>
         <li><a href="https://progdoc.izio.fr/full-vprogs.html">Izio on Full vProgs</a> for future app-to-app synchronous composition.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> for testnet covenant prototyping context. Treat these as testnet builder tools, not mainnet activation evidence.</li>
         <li><a href="/status.html">Kaspa Explained status</a> and <a href="/sources.html">source hierarchy</a> for live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>
