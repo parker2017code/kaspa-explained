@@ -206,6 +206,26 @@ main:focus {
   background: rgba(103, 232, 249, .07);
 }
 
+@media (max-width: 1320px) {
+  .nav {
+    gap: 10px;
+  }
+
+  .nav-links {
+    gap: 4px;
+  }
+
+  .nav-links a,
+  .nav-cta {
+    padding-inline: 10px;
+    font-size: 13px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+}
+
 .hero {
   position: relative;
   display: grid;
@@ -1565,20 +1585,20 @@ blockquote {
   stroke-dasharray: 8 8;
 }
 
-.dag-node circle {
+.dag-visual .dag-node circle {
   stroke: rgba(255, 255, 255, .42);
   stroke-width: 2;
 }
 
-.dag-node.main circle {
+.dag-visual .dag-node.main circle {
   fill: #67e8f9;
 }
 
-.dag-node.orphan circle {
+.dag-visual .dag-node.orphan circle {
   fill: #f0abfc;
 }
 
-.dag-node text {
+.dag-visual .dag-node text {
   fill: #061217;
   font-size: 15px;
   font-weight: 950;
@@ -1605,6 +1625,108 @@ blockquote {
 .concept-diagram p {
   margin: 14px 0 0;
   color: var(--muted);
+}
+
+.pressure-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    ". speed ."
+    "security privacy decentralization"
+    ". usability ."
+    "caption caption caption";
+  gap: clamp(10px, 2vw, 18px);
+  align-items: stretch;
+}
+
+.pressure-map::before,
+.pressure-map::after {
+  content: "";
+  position: absolute;
+  inset: 18% 12% 26%;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+}
+
+.pressure-map::after {
+  inset: 30% 21% 22%;
+  border-color: rgba(125, 211, 252, .22);
+  transform: rotate(-9deg);
+}
+
+.pressure-node {
+  position: relative;
+  z-index: 1;
+  min-height: 112px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 8px;
+  padding: 16px 14px;
+  text-align: center;
+  background: rgba(8, 13, 15, .78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+.pressure-node strong,
+.pressure-node span {
+  display: block;
+  max-width: 100%;
+}
+
+.pressure-node strong {
+  color: var(--text);
+  font-size: clamp(15px, 1.7vw, 18px);
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.pressure-node span {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.pressure-node.speed {
+  grid-area: speed;
+  background: linear-gradient(135deg, rgba(125, 211, 252, .18), rgba(8, 13, 15, .8));
+}
+
+.pressure-node.security {
+  grid-area: security;
+  background: linear-gradient(135deg, rgba(155, 215, 189, .18), rgba(8, 13, 15, .8));
+}
+
+.pressure-node.decentralization {
+  grid-area: decentralization;
+  background: linear-gradient(135deg, rgba(184, 176, 232, .18), rgba(8, 13, 15, .8));
+}
+
+.pressure-node.privacy {
+  grid-area: privacy;
+  background: linear-gradient(135deg, rgba(216, 167, 222, .16), rgba(8, 13, 15, .8));
+}
+
+.pressure-node.usability {
+  grid-area: usability;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .1), rgba(8, 13, 15, .8));
+}
+
+.pressure-map p {
+  position: relative;
+  z-index: 1;
+  grid-area: caption;
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  padding-top: 14px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 750;
 }
 
 .diagram-box {
@@ -2107,6 +2229,28 @@ blockquote {
     text-align: center;
   }
 
+  .pressure-map {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "speed"
+      "security"
+      "decentralization"
+      "privacy"
+      "usability"
+      "caption";
+  }
+
+  .pressure-map::before,
+  .pressure-map::after {
+    display: none;
+  }
+
+  .pressure-node {
+    min-height: 86px;
+    justify-items: start;
+    text-align: left;
+  }
+
   .table-wrap {
     overflow: visible;
   }
@@ -2115,6 +2259,10 @@ blockquote {
     min-width: 0;
     border-collapse: separate;
     border-spacing: 0 12px;
+  }
+
+  .mini-preview .reality-table {
+    min-width: 0;
   }
 
   .reality-table thead {
