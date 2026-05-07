@@ -125,6 +125,10 @@ When explaining app-to-app composition, make the key boundary atomicity rather t
 
 The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
 
+The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
+
+For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production rails.
+
 The builder guide should also preserve practical TN12 breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced TN12 node with UTXO index; an unsynced node can return misleading zero balances; and a generic stable mainnet binary may not support every active TN12 setting. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
 
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
@@ -317,11 +321,11 @@ Prefer primary or near-primary sources:
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
 3. Long-form framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance, but activation claims still need primary protocol/code or direct implementation evidence.
-4. Community/context sources: Oxford, KASmedia, Kaspa.com Learn Kaspa, Kaspa.org, full recordings, interviews, transcripts, recaps, and public portals. They are useful contributions, not protocol authority.
+4. Context and education sources: Oxford recordings, KASmedia, Kaspa.com Learn Kaspa, the current Kaspa.org site, full recordings, interviews, transcripts, and recaps. They are useful for orientation, links, and framing, not protocol activation by themselves.
 5. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
 6. Discovery only: active public technical X accounts and replies.
 
-Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public/community resources are not official or authoritative protocol sources. They can orient readers and point into stronger material, but status-sensitive claims should come from code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
+The current Kaspa.org site is the public Kaspa/KasMedia entry point for broad orientation, fair-launch/genesis-proof framing, wallet flow, builder routing, and links into stronger sources. It replaced the older article-style site, so old Kaspa.org article URLs should be treated as stale until checked. Status-sensitive claims should still come from code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
 Use X cautiously. It is useful for current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
 

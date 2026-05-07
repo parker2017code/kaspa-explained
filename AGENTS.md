@@ -12,7 +12,7 @@
 - Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-derived attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
 - Do not flatten RTD itself into only future oracle work. Treat base RTD as Hashdag's real-time Bitcoin-style Proof-of-Work framing for Kaspa, while oracle/TangVM/coordination-market flows remain downstream research or architecture unless primary sources confirm shipped products.
 - Preserve the Yonatan Sompolinsky podcast insights section and the primary-source stack.
-- Treat Kaspa.org, KASmedia, Kaspa.com Learn Kaspa, and similar public resources as community contributions. They are useful for context, education, summaries, and links, but they are not official or authoritative protocol sources.
+- Treat the current Kaspa.org site as a public Kaspa/KasMedia entry point with useful orientation, wallet, builder, genesis-proof, and source links. It replaced the older article-style site, so do not rely on old Kaspa.org deep links without checking them. For protocol status, it is still a pointer into stronger sources, not activation evidence by itself.
 - For status-sensitive claims, prefer code, releases, KIPs, research papers, protocol documentation, or direct statements from core technical contributors.
 - Apply Concrete-First Translation: for public and LLM-facing copy, lead with the concrete reader picture first, then name the abstraction. Prefer "one shared record without one operator," "apps that prove their rules," "funding rules strangers can rely on," or "fast mined ordering" before terms like shared state, verification-oriented programmability, coordination markets, sequencing commitments, or settlement layer.
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
@@ -21,7 +21,7 @@
 ## Startup Verification
 
 - At the start of any substantive repo session, do a quick current-source check for drift-prone Kaspa facts before editing status-sensitive pages.
-- Check primary or near-primary sources first: Kaspa Research, KIPs, `kaspanet/rusty-kaspa`, `kaspanet/vprogs`, release notes, core technical contributor posts, and durable transcripts. Use Kaspa.org only as community portal context or as a pointer into stronger sources.
+- Check primary or near-primary sources first: Kaspa Research, KIPs, `kaspanet/rusty-kaspa`, `kaspanet/vprogs`, release notes, core technical contributor posts, and durable transcripts. Use the current Kaspa.org pages for orientation and source discovery, then verify status-sensitive claims against stronger sources.
 - Specifically recheck Toccata activation status, DAGKnight status, vProgs status, native DeFi status, RTD-derived attestation/oracle claims, TangVM status, Proof of Useful Work claims, and any date/window that appears in public copy.
 - Keep verification discipline in the repo and source trail. Do not add visible public verification callout boxes unless the user explicitly asks for them.
 

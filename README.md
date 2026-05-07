@@ -80,8 +80,21 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 22. https://kasmedia.com/article/theweeklyknight081725
 23. https://kasmedia.com/article/weeklyknightl12s-and-pows
 24. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-25. https://kaspa.org/ - community-maintained public portal context and broad summaries
-26. https://kaspa.org/yonatan-sompolinsky-at-the-oxford-union/ - event context, paired with the available recording/Q&A links when using the Oxford material
+25. https://kaspa.org/ - current public Kaspa/KasMedia entry point, genesis-proof framing, and links into wallets, builder resources, explorer, GitHub, and DAG visualizer
+26. https://kaspa.org/lore - concise current public summary for Kaspa history, fair-launch framing, RTD, Crescendo, Toccata, DAGKnight, and longer-roadmap context; verify status-sensitive details against primary sources
+27. https://kaspa.org/build - current builder entry point for Rusty Kaspa, WASM SDK, docs, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&D links
+28. https://kaspa.org/hodl - current wallet and self-custody entry point; useful for beginner custody flow and exchange-delay caveats, not investment advice
+29. https://docs.kaspa.org - current Kaspa docs entry point
+30. https://kaspa.aspectron.org/docs/ - WASM SDK docs
+31. https://api.kaspa.org/docs - best-effort community REST API docs
+32. https://kaspa.aspectron.org/rpc/pnn.html - Public Node Network docs
+33. https://hub.docker.com/r/kaspanet/rusty-kaspad - Rusty Kaspa Docker images
+34. https://db-dl.kaspa.org - explorer/API database dumps
+35. https://deepwiki.com/kaspanet/rusty-kaspa - generated Rusty Kaspa code navigation; useful for orientation, not source of truth
+36. https://github.com/supertypo/simply-kaspa-indexer - community indexing project
+37. https://github.com/kaspanet/dnsseeder - Kaspa DNS seeder
+38. https://github.com/aspectron/khost - node-hosting/community capacity tooling
+39. https://github.com/K-Kluster/kaspa-js - community JavaScript tooling
 
 Active public technical accounts can be useful for discovery and replies:
 

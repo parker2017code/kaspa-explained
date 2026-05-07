@@ -50,6 +50,7 @@
   </script>
   <link rel="stylesheet" href="styles.css">
   <script defer src="nav.js"></script>
+  <script defer src="live-kaspa.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -92,6 +93,12 @@
           <a class="button" href="/status.html">Check status</a>
           <a class="button" href="/faq.html#common-misconceptions">Common misconceptions</a>
         </div>
+        <nav class="kaspa-org-rail" aria-label="Current Kaspa.org routes">
+          <a href="https://kaspa.org/lore">LORE</a>
+          <a href="https://kaspa.org/hodl">HODL</a>
+          <a href="https://kaspa.org/build">BUIDL</a>
+          <a href="https://kgi.kaspad.net/">DAGVIZ</a>
+        </nav>
         <div class="hero-status" aria-label="Kaspa status summary">
           <div><span>Live</span><strong>PoW blockDAG, GHOSTDAG, 10 BPS</strong></div>
           <div><span>Targeted</span><strong>Toccata, covenants, ZK foundations</strong></div>
@@ -177,6 +184,55 @@
         <a class="button" href="/overview.html">90-second overview</a>
         <a class="button" href="/status.html">Check the lanes</a>
       </div>
+    </section>
+
+    <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
+      <div class="live-panel-head">
+        <div>
+          <p class="eyebrow">Live network readout</p>
+          <h2 id="live-network-title">Watch the chain, then verify the origin.</h2>
+          <p class="lead">These numbers are fetched from the community REST API for a quick read. They are useful for orientation, not a replacement for running your own node or reproducing the genesis proof.</p>
+        </div>
+        <div class="live-status-light" id="live-status-light" aria-live="polite">
+          <span aria-hidden="true"></span>
+          <strong>Loading</strong>
+        </div>
+      </div>
+      <div class="live-metric-grid" aria-label="Live Kaspa metrics">
+        <article>
+          <span>Circulating supply</span>
+          <strong id="live-supply">Loading</strong>
+          <p>Reported by `api.kaspa.org/info/coinsupply`.</p>
+        </article>
+        <article>
+          <span>Mined</span>
+          <strong id="live-mined">Loading</strong>
+          <p>Circulating supply divided by max supply.</p>
+        </article>
+        <article>
+          <span>DAG blocks</span>
+          <strong id="live-blocks">Loading</strong>
+          <p>Current blockDAG count from the network readout.</p>
+        </article>
+        <article>
+          <span>DAA score</span>
+          <strong id="live-daa">Loading</strong>
+          <p>Kaspa's ordering-height style progress marker.</p>
+        </article>
+      </div>
+      <div class="origin-proof-strip">
+        <div>
+          <span>Origin proof</span>
+          <p>Kaspa.org now exposes a stronger fair-launch proof flow: empty genesis UTXO set, Bitcoin timestamp anchors, checkpoint linkage, and scheduled emission after the Nov. 22, 2021 checkpoint.</p>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="https://kaspa.org/#verify">Verify on Kaspa.org</a>
+          <a class="button" href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb">Run the proof</a>
+          <a class="button" href="https://api.kaspa.org/docs">REST API docs</a>
+          <a class="button" href="https://kgi.kaspad.net/">DAGVIZ</a>
+        </div>
+      </div>
+      <p class="live-footnote" id="live-updated">Waiting for live data.</p>
     </section>
 
     <section class="audience-routes section" aria-label="Audience routes">
