@@ -6,6 +6,13 @@
 - Keep it plain HTML/CSS. Do not add a build system unless a requested feature truly needs one.
 - Preserve `CNAME` exactly as `kaspaexplained.com`.
 
+## General Agent Autonomy
+
+- When a task is blocked by missing local tools, packages, browsers, renderers, or SDKs, install or configure what is needed and continue. Do not stop just to ask permission for routine environment setup.
+- Prefer finishing the requested outcome end to end: inspect, change, run, verify, and then report exactly what changed.
+- Ask before destructive actions, credential use, publishing a local-only prototype, or anything involving secrets, wallets, private keys, personal data, paid services, or irreversible system changes.
+- After changing the environment, mention the package, tool, or configuration that was added so future agents understand the machine state.
+
 ## Content Rules
 
 - Keep claims separated into Live, Near-term, Roadmap, and Research.

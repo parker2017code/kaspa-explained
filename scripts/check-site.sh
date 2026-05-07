@@ -36,8 +36,8 @@ expected_files=(
   "README.md"
   "LICENSE.md"
   "CLAIMS.yml"
-  "og-image.png"
-  "og-image.svg"
+  "og-kaspa-explained.png"
+  "og-kaspa-explained.svg"
   "llms.txt"
   "robots.txt"
   "sitemap.xml"
@@ -61,8 +61,8 @@ bash scripts/check-nav-sync.sh
   exit 1
 }
 
-[[ -s og-image.png ]] || {
-  echo "og-image.png must exist and be non-empty" >&2
+[[ -s og-kaspa-explained.png ]] || {
+  echo "og-kaspa-explained.png must exist and be non-empty" >&2
   exit 1
 }
 
@@ -103,7 +103,7 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
-  grep -q 'property="og:image" content="https://kaspaexplained.com/og-image.png"' "$page" || {
+  grep -q 'property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png"' "$page" || {
     echo "$page missing PNG OpenGraph image" >&2
     exit 1
   }
