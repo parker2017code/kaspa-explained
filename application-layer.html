@@ -122,6 +122,7 @@
       <h2>The app thesis.</h2>
       <p>The application case starts with a lean Proof-of-Work money layer that can order payments quickly, keep ownership in UTXOs, enforce covenant rules, check proofs, and eventually host apps that prove their own logic.</p>
       <p>A good Kaspa app can ask a plain question: does this need self-custodied money, a public ordering record, fast PoW sampling, local UTXO rules, proof-backed execution, or later app-to-app actions? If it mainly needs ordinary server state, use ordinary server architecture.</p>
+      <p>Proof-backed does not mean fact-backed by default. If an app depends on Ethereum state, a Bitcoin payment, a price, a weather event, or any other outside fact, the builder must also define how that fact becomes an agreed input for the Kaspa app.</p>
     </section>
 
     <section class="section">
@@ -336,7 +337,7 @@
               <tr><td>KRC20 / KRC721 ecosystem standards</td><td>Issued tokens, NFT-style passes, coupons, rewards, event credits, collectibles, and token-aware wallet or indexer UX.</td><td>Ecosystem live; depends on tooling and off-chain redemption rules</td></tr>
               <tr><td>Attestation-capable rails</td><td>Opt-in event reporting, early external-event signals, oracle experiments, and first-to-know dashboards built by apps.</td><td>App-level design over base rails</td></tr>
               <tr><td>MEV-aware ordering or auctions</td><td>Protects users who delegate an if-this-then-that strategy from miners or searchers exploiting the same event signal first.</td><td>Research / design work</td></tr>
-              <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments.</td><td>Targeted hard-fork track, not live until activated</td></tr>
+              <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments. External-chain or real-world claims still need an anchor such as a light client, finality certificate, accumulated-work view, oracle, reporter set, or dispute process.</td><td>Targeted hard-fork track, not live until activated</td></tr>
               <tr><td>STARK-sized proof support</td><td>Large validity proofs on Kaspa, with block-size and standard-fee tradeoffs to avoid cheap spam.</td><td>TN12 context / mainnet design question</td></tr>
               <tr><td>vProgs</td><td>Apps that prove their own logic, share Kaspa ordering, feel cohesive to users, and support atomic app-to-app actions in the later roadmap.</td><td>Roadmap architecture</td></tr>
               <tr><td>DAGKnight / higher BPS RTD</td><td>Denser real-time majority sampling and stronger internet-round-trip attestation confidence.</td><td>Research / future upgrade direction</td></tr>
@@ -366,7 +367,7 @@
         <li><strong>Needs a neutral shared record.</strong> <span>The app gets meaningfully better when no single operator controls the database.</span></li>
         <li><strong>Benefits from fast mined ordering.</strong> <span>Real-time Proof-of-Work feel changes user experience, risk, or group action.</span></li>
         <li><strong>Uses UTXO constraints well.</strong> <span>The app can be modeled as bounded state transitions, vaults, commitments, assets, or payment flows.</span></li>
-        <li><strong>Names off-chain assumptions.</strong> <span>If the app depends on outside facts, it names the oracle and dispute assumptions clearly.</span></li>
+        <li><strong>Names off-chain assumptions.</strong> <span>If the app depends on outside facts, it names the source root, oracle, reporter, light-client, challenge, and dispute assumptions clearly.</span></li>
         <li><strong>Can start narrow.</strong> <span>The first version solves one concrete problem before claiming to replace finance, identity, games, or law.</span></li>
       </ol>
     </section>

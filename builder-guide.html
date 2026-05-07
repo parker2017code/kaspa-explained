@@ -109,6 +109,11 @@
               <td>Use covenants or based apps first.</td>
             </tr>
             <tr>
+              <td>Does the proof depend on another chain, an oracle, a price, or a real-world event?</td>
+              <td>Name the anchor first: source root, finality certificate, accumulated-work view, oracle, reporter set, or challenge process.</td>
+              <td>The proof can stay inside the app's own state rules.</td>
+            </tr>
+            <tr>
               <td>Does the app need synchronous composition with other independent apps?</td>
               <td>That is the future full-vProgs direction, especially if several app states must succeed or fail as one operation.</td>
               <td>Build the narrow app first. Toccata-era apps can coordinate through L1 proofs and sequencing without claiming full atomic composition.</td>
@@ -138,7 +143,7 @@
           <h3>Inline ZK</h3>
           <p><span class="status-pill roadmap">Specialized</span></p>
           <p>Best when each action needs its own proof or custom validity check before it settles: privacy-preserving actions, proof-verified workflows, or custom account models.</p>
-          <p>This path usually requires more prover design, proof infrastructure, and operational ownership.</p>
+          <p>This path usually requires more prover design, proof infrastructure, and operational ownership. A ZK proof is not an oracle; if the proof uses outside data, the app still needs a canonical anchor for that data.</p>
         </article>
         <article>
           <h3>Full vProgs</h3>
@@ -425,6 +430,7 @@
         <li><strong>Covenants:</strong> <span>nearer L1 state-output path for constrained asset and UTXO-state rules.</span></li>
         <li><strong>Based apps:</strong> <span>shared-state app direction for apps that need concurrency and account-style local state.</span></li>
         <li><strong>Inline ZK:</strong> <span>specialized proof path for actions whose validity or privacy proof is the product boundary.</span></li>
+        <li><strong>External anchors:</strong> <span>ZK can check a statement about chosen inputs; builders must still define how source-chain roots, prices, events, or attestations become trusted inputs.</span></li>
         <li><strong>Full vProgs:</strong> <span>future app-to-app atomic composition direction, beyond standalone based-app construction.</span></li>
         <li><strong>KRC standards:</strong> <span>ecosystem token and NFT-style tooling available today through indexed data and wallet support, not native smart-contract activation.</span></li>
       </ol>
