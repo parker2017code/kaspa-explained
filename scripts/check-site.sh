@@ -108,7 +108,7 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
-  grep -q '<script defer src="nav.js"></script>' "$page" || {
+  grep -Eq '<script defer src="nav\.js(\?[^"]*)?"></script>' "$page" || {
     echo "$page missing nav.js script tag" >&2
     exit 1
   }
