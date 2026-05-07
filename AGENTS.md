@@ -23,6 +23,10 @@
 - For status-sensitive claims, prefer code, releases, KIPs, research papers, protocol documentation, or direct statements from core technical contributors.
 - Apply Concrete-First Translation: for public and LLM-facing copy, lead with the concrete reader picture first, then name the abstraction. Prefer "one shared record without one operator," "apps that prove their rules," "funding rules strangers can rely on," or "fast mined ordering" before terms like shared state, verification-oriented programmability, coordination markets, sequencing commitments, or settlement layer.
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
+- Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
+- Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer rather than help the reader.
+- One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
+- Treat text as part of the product. UI labels, docs, fixtures, generated summaries, LLM context, and handoff notes should be scanned with the same care as code: necessary, specific, clean, and defensible.
 - Avoid price predictions, exchange rumors, or investment advice.
 
 ## Startup Verification
@@ -39,7 +43,7 @@
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
 - Review links and source references after content changes.
-- For public tone/layout changes, verify the site still uses medium authority: clear and confident, not oversized, theatrical, promotional, or internally self-referential.
+- For public tone/layout changes, verify the site stays plain and useful: clear enough to trust, restrained enough to source-check, and never theatrical, promotional, or internally self-referential.
 - For comparison graphics, especially `why-kaspa-matters.html`, screenshot mobile and desktop and make sure labels do not overlap text. The fast-PoW graphic should separate inclusion speed from explicit vote/stake coordination without implying instant finality.
 - When public framing changes, check GitHub About metadata and README wording so GitHub, live HTML, and repo docs stay consistent.
 - After pushing, confirm GitHub Actions and Pages deployment completed, then fetch the live page HTML for the exact changed copy.

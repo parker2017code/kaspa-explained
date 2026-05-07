@@ -92,7 +92,9 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 34. https://docs.kaspa.org/integrate/kaspa-node - official node integration guide
 35. https://docs.kaspa.org/references - official integration reference page
 36. https://kaspa.aspectron.org/docs/ - WASM SDK docs
-37. https://api.kaspa.org/docs - best-effort community REST API docs
+37. https://kaspa.aspectron.org/docs/classes/RpcClient.html - RpcClient constructor and submitTransaction request-shape docs
+38. https://kaspa-mdbook.aspectron.com/transactions/signing.html - Aspectron signing guide for SDK transaction signing and request-style submit
+39. https://api.kaspa.org/docs - best-effort community REST API docs
 38. https://kaspa.aspectron.org/rpc/pnn.html - Public Node Network docs
 39. https://hub.docker.com/r/kaspanet/rusty-kaspad - Rusty Kaspa Docker images
 40. https://db-dl.kaspa.org - explorer/API database dumps
@@ -210,6 +212,8 @@ Toccata/vProgs split: Toccata enables L1 covenant programming and standalone bas
 Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. Apply Concrete-First Translation: "one shared record without one operator" before "credible shared state," "apps that prove their rules" before "verification-oriented programmability," and "fast mined ordering" before "settlement layer." The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
 
 Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
+
+Builder verification rule: a local txid or signed object is not accepted app state. Builder-facing pages should tell readers to fetch accepted transaction evidence, record SDK/node/network/endpoint details, and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
 
 ## Local check
 

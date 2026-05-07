@@ -133,6 +133,8 @@ For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: tr
 
 The builder guide should also preserve practical TN12 breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced TN12 node with UTXO index; an unsynced node can return misleading zero balances; and a generic stable mainnet binary may not support every active TN12 setting. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
 
+Builder-facing verification lessons should be concrete and reusable: a local txid is not accepted app state; fetch accepted transaction evidence after submit; record node version, SDK version, network id, endpoint, encoding, tx version, and input budget fields; compare failing contract spends against accepted sibling spends before claiming a protocol boundary; and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection. Keep private prototype txids out of public copy unless they are independently useful as source evidence.
+
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
 
 - Explain the app thesis as money plus finance without compromising the L1 monetary base.
@@ -147,6 +149,8 @@ The `glossary.html` page is the compact term map. Keep definitions short and pla
 ## Editorial Standard
 
 Use plain, direct language. Preserve a serious point of view, but do not hype.
+
+The voice should never sound clever for its own sake. Avoid dramatic authority, bold adjective piles, invented slogans, and sentences that mainly perform confidence. Let the facts, source links, and concrete examples carry the weight.
 
 Good style:
 
@@ -173,9 +177,13 @@ Avoid:
 - repeated contrast frames such as "not just", "not only", "more than just", "from X to Y", "whether you are X or Y", "this is not merely", "redefining", or "changing the way we think",
 - over-polished LLM phrasing such as "delve", "tapestry", "seamless", "robust", "pivotal", "crucial", "unlock", "empower", "transform", "reimagine", "landscape", "journey", "at its core", "ultimately", or inflated adjectives that do not add a mechanism,
 - brochure language such as "next-generation", "cutting-edge", "game-changing", "powerful platform", "accelerate innovation", "drive the future", or "pave the way",
+- clever-authority phrasing that tries to sound definitive without adding evidence,
+- dramatic adjective stacks where one plain noun would work,
 - defensive caveat stacks where one status label or one source link would do the job.
 
 Editing test: each public sentence should make a specific, necessary, defensible claim. If a sentence mainly adds polish, symmetry, or persuasion cadence, cut it or move the detail to the source/context stack.
+
+Craft rule: text is product surface. UI labels, public copy, repo docs, fixtures, generated summaries, LLM context, and handoff notes need the same care as code. Keep every line necessary, accurate, scan-friendly, and clean.
 
 Tone and visual weight:
 

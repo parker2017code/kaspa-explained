@@ -81,40 +81,40 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Decision tree</p>
+      <p class="eyebrow">Decision path</p>
       <h2>Start with state and proofs.</h2>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
             <tr>
               <th>Question</th>
-              <th>If yes</th>
-              <th>If no</th>
+              <th>Use this path</th>
+              <th>Simpler path</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Do many users need to touch the same app state at the same time?</td>
+              <td>Many users touch the same app state at the same time.</td>
               <td>Start with based apps or vProgs-compatible runtime work.</td>
               <td>Start with covenants and L1 state outputs.</td>
             </tr>
             <tr>
-              <td>Can the product be split into independent sub-apps or independent states?</td>
+              <td>The product splits cleanly into independent states.</td>
               <td>Covenants can still work for each separate state.</td>
               <td>Shared-state app architecture becomes more natural.</td>
             </tr>
             <tr>
-              <td>Does each action need its own proof, privacy check, or custom validity rule?</td>
+              <td>Each action needs its own proof, privacy check, or custom validity rule.</td>
               <td>Consider inline ZK, but expect more proof and operations work.</td>
               <td>Use covenants or based apps first.</td>
             </tr>
             <tr>
-              <td>Does the proof depend on another chain, an oracle, a price, or a real-world event?</td>
+              <td>The proof depends on another chain, an oracle, a price, or a real-world event.</td>
               <td>Name the anchor first: source root, finality certificate, accumulated-work view, oracle, reporter set, or challenge process.</td>
               <td>The proof can stay inside the app's own state rules.</td>
             </tr>
             <tr>
-              <td>Does the app need synchronous composition with other independent apps?</td>
+              <td>The app needs synchronous composition with other independent apps.</td>
               <td>That is the future full-vProgs direction, especially if several app states must succeed or fail as one operation.</td>
               <td>Build the narrow app first. Toccata-era apps can coordinate through L1 proofs and sequencing without claiming full atomic composition.</td>
             </tr>
@@ -137,19 +137,19 @@
           <h3>Based apps</h3>
           <p><span class="status-pill roadmap">Roadmap</span></p>
           <p>Best when one app needs built-in accounts, balances, and shared-state execution. Users send actions through Kaspa L1, and a managed environment runs the Rust app logic.</p>
-          <p>This is construction-stage app architecture, not a mature public app platform.</p>
+          <p>This is construction-stage app architecture.</p>
         </article>
         <article>
           <h3>Inline ZK</h3>
           <p><span class="status-pill roadmap">Specialized</span></p>
           <p>Best when each action needs its own proof or custom validity check before it settles: privacy-preserving actions, proof-verified workflows, or custom account models.</p>
-          <p>This path usually requires more prover design, proof infrastructure, and operational ownership. A ZK proof is not an oracle; if the proof uses outside data, the app still needs a canonical anchor for that data.</p>
+          <p>This path usually requires more prover design, proof infrastructure, and operational ownership. Outside data still needs a canonical anchor.</p>
         </article>
         <article>
           <h3>Full vProgs</h3>
           <p><span class="status-pill research">Future direction</span></p>
           <p>Full vProgs are the future app-to-app composition direction: independent apps reading or calling one another in the same flow, with atomic combined outcomes instead of separate bridge-style waiting.</p>
-          <p>Treat this as architectural direction, not a current option for production apps.</p>
+          <p>Treat this as architectural direction.</p>
         </article>
       </div>
     </section>
@@ -424,6 +424,45 @@
     </section>
 
     <section class="section">
+      <p class="eyebrow">Verification habits</p>
+      <h2>Prove the state change.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Builder habit</th>
+              <th>Why it matters</th>
+              <th>Practical check</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fetch accepted state after submit</td>
+              <td>Local construction does not prove accepted app state.</td>
+              <td>Record `is_accepted`, accepting block data, output script type, address, and amount.</td>
+            </tr>
+            <tr>
+              <td>Pin the submit surface</td>
+              <td>REST, JSON wRPC, Borsh wRPC, SDK versions, and testnet branches can expose different transaction shapes.</td>
+              <td>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</td>
+            </tr>
+            <tr>
+              <td>Compare with a known working spend</td>
+              <td>Witness order, signature preimage, redeem-script shape, and constructor keys are easier to check against a sibling transaction that already worked.</td>
+              <td>Diff the failing path against an accepted release, refund, or simple payment path before blaming protocol rules.</td>
+            </tr>
+            <tr>
+              <td>Label failed attempts narrowly</td>
+              <td>Tooling failures and consensus failures need different labels.</td>
+              <td>Keep the artifact, but mark it as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">Testnet lesson: teach the verification habit without turning one prototype into a mainnet claim.</p>
+    </section>
+
+    <section class="section">
       <p class="eyebrow">Status wording</p>
       <h2>Say the stage first.</h2>
       <ol class="learning-steps">
@@ -460,6 +499,7 @@
         <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> for testnet covenant prototyping context. Treat these as testnet builder tools, not mainnet activation evidence.</li>
         <li><a href="https://kaspa.org/build">Kaspa.org Build</a> for the current developer resource index: Rusty Kaspa, WASM SDK, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&amp;D links.</li>
         <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>, for current builder workflow guidance.</li>
+        <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a> and <a href="https://kaspa-mdbook.aspectron.com/transactions/signing.html">Aspectron transaction signing guide</a> for the JavaScript SDK request shape used by current builder examples.</li>
         <li><a href="/status.html">Kaspa Explained status</a> and <a href="/sources.html">source hierarchy</a> for live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>
