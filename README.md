@@ -70,39 +70,40 @@ Community portals, media sites, learning libraries, interviews, and recaps are u
 12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
 13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
 14. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
-15. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs talk
-16. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
-17. https://github.com/kaspanet/kaspa-python-sdk - standalone Kaspa Python SDK repo for builder tooling and Python integration evidence
-18. https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0 - Python SDK v1.1.0 release with UtxoProcessor/UtxoContext and GetVirtualChainFromBlockV2
-19. https://github.com/kaspanet/rusty-kaspa/pull/860 - TxIndex PR; optional transaction index and GetTransaction RPC evidence while open
-20. https://github.com/kaspanet/rusty-kaspa/pull/930 - Fast Trusted Relay WIP/draft PR; infrastructure experiment, not stable release evidence
-21. https://kasmedia.com/article/ori-interview
-22. https://kasmedia.com/article/theweeklyknight081725
-23. https://kasmedia.com/article/weeklyknightl12s-and-pows
-24. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-25. https://kaspa.org/ - current public Kaspa/KasMedia entry point, genesis-proof framing, and links into wallets, builder resources, explorer, GitHub, and DAG visualizer
-26. https://kaspa.org/lore - concise current public summary for Kaspa history, fair-launch framing, RTD, Crescendo, Toccata, DAGKnight, and longer-roadmap context; verify status-sensitive details against primary sources
-27. https://kaspa.org/build - current builder entry point for Rusty Kaspa, WASM SDK, docs, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&D links
-28. https://kaspa.org/hodl - current wallet and self-custody entry point; useful for beginner custody flow and exchange-delay caveats, not investment advice
-29. https://docs.kaspa.org - current Kaspa builder docs entry point for programmability, integration, wallet flows, payloads, accepted transactions, and node infrastructure
-30. https://docs.kaspa.org/integrate/getting-started - official SDK/RPC starter path for JavaScript, Rust, and Python
-31. https://docs.kaspa.org/programmability - official builder routing for Covenants, Based Apps, Inline ZK, and future Full vProgs; use for model selection, not activation claims by itself
-32. https://docs.kaspa.org/integrate/transaction-payload - official payload guide for application data within standard mempool mass limits
-33. https://docs.kaspa.org/integrate/accepted-transactions - official accepted-transaction ingestion guide
-34. https://docs.kaspa.org/integrate/kaspa-node - official node integration guide
-35. https://docs.kaspa.org/references - official integration reference page
-36. https://kaspa.aspectron.org/docs/ - WASM SDK docs
-37. https://kaspa.aspectron.org/docs/classes/RpcClient.html - RpcClient constructor and submitTransaction request-shape docs
-38. https://kaspa-mdbook.aspectron.com/transactions/signing.html - Aspectron signing guide for SDK transaction signing and request-style submit
-39. https://api.kaspa.org/docs - best-effort community REST API docs
-38. https://kaspa.aspectron.org/rpc/pnn.html - Public Node Network docs
-39. https://hub.docker.com/r/kaspanet/rusty-kaspad - Rusty Kaspa Docker images
-40. https://db-dl.kaspa.org - explorer/API database dumps
-41. https://deepwiki.com/kaspanet/rusty-kaspa - generated Rusty Kaspa code navigation; useful for orientation, not source of truth
-42. https://github.com/supertypo/simply-kaspa-indexer - community indexing project
-43. https://github.com/kaspanet/dnsseeder - Kaspa DNS seeder
-44. https://github.com/aspectron/khost - node-hosting/community capacity tooling
-45. https://github.com/K-Kluster/kaspa-js - community JavaScript tooling
+15. https://x.com/DailyKaspa/status/2052716697262374936 - Kaspa Daily Yonatan Q&A Part 1, May 8, 2026. Use as narrative/source context: Base of Liquidity is a thesis rather than an adoption plan, generic payments are not the whole adoption vector, coordination markets are a highlighted product direction, and Part 2 should be checked when available.
+16. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs talk
+17. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
+18. https://github.com/kaspanet/kaspa-python-sdk - standalone Kaspa Python SDK repo for builder tooling and Python integration evidence
+19. https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0 - Python SDK v1.1.0 release with UtxoProcessor/UtxoContext and GetVirtualChainFromBlockV2
+20. https://github.com/kaspanet/rusty-kaspa/pull/860 - TxIndex PR; optional transaction index and GetTransaction RPC evidence while open
+21. https://github.com/kaspanet/rusty-kaspa/pull/930 - Fast Trusted Relay WIP/draft PR; infrastructure experiment, not stable release evidence
+22. https://kasmedia.com/article/ori-interview
+23. https://kasmedia.com/article/theweeklyknight081725
+24. https://kasmedia.com/article/weeklyknightl12s-and-pows
+25. https://kasmedia.com/article/moog-synthesizers-and-kaspa
+26. https://kaspa.org/ - current public Kaspa/KasMedia entry point, genesis-proof framing, and links into wallets, builder resources, explorer, GitHub, and DAG visualizer
+27. https://kaspa.org/lore - concise current public summary for Kaspa history, fair-launch framing, RTD, Crescendo, Toccata, DAGKnight, and longer-roadmap context; verify status-sensitive details against primary sources
+28. https://kaspa.org/build - current builder entry point for Rusty Kaspa, WASM SDK, docs, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&D links
+29. https://kaspa.org/hodl - current wallet and self-custody entry point; useful for beginner custody flow and exchange-delay caveats, not investment advice
+30. https://docs.kaspa.org - current Kaspa builder docs entry point for programmability, integration, wallet flows, payloads, accepted transactions, and node infrastructure
+31. https://docs.kaspa.org/integrate/getting-started - official SDK/RPC starter path for JavaScript, Rust, and Python
+32. https://docs.kaspa.org/programmability - official builder routing for Covenants, Based Apps, Inline ZK, and future Full vProgs; use for model selection, not activation claims by itself
+33. https://docs.kaspa.org/integrate/transaction-payload - official payload guide for application data within standard mempool mass limits
+34. https://docs.kaspa.org/integrate/accepted-transactions - official accepted-transaction ingestion guide
+35. https://docs.kaspa.org/integrate/kaspa-node - official node integration guide
+36. https://docs.kaspa.org/references - official integration reference page
+37. https://kaspa.aspectron.org/docs/ - WASM SDK docs
+38. https://kaspa.aspectron.org/docs/classes/RpcClient.html - RpcClient constructor and submitTransaction request-shape docs
+39. https://kaspa-mdbook.aspectron.com/transactions/signing.html - Aspectron signing guide for SDK transaction signing and request-style submit
+40. https://api.kaspa.org/docs - best-effort community REST API docs
+41. https://kaspa.aspectron.org/rpc/pnn.html - Public Node Network docs
+42. https://hub.docker.com/r/kaspanet/rusty-kaspad - Rusty Kaspa Docker images
+43. https://db-dl.kaspa.org - explorer/API database dumps
+44. https://deepwiki.com/kaspanet/rusty-kaspa - generated Rusty Kaspa code navigation; useful for orientation, not source of truth
+45. https://github.com/supertypo/simply-kaspa-indexer - community indexing project
+46. https://github.com/kaspanet/dnsseeder - Kaspa DNS seeder
+47. https://github.com/aspectron/khost - node-hosting/community capacity tooling
+48. https://github.com/K-Kluster/kaspa-js - community JavaScript tooling
 
 Active public technical accounts can be useful for discovery and replies:
 
@@ -206,6 +207,8 @@ Do not flatten everything into "live."
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
 Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+
+Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: do not let "fast money," Base of Liquidity, or generic merchant/POS language stand in for adoption strategy. Payment and receipt flows are rails. The stronger public framing is useful products, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
 
 Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-zk app foundations. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the direction is L1-first shared sequencing, settlement, commitments, and verification.
 

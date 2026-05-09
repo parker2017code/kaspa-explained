@@ -12,6 +12,7 @@
 - Prefer finishing the requested outcome end to end: inspect, change, run, verify, and then report exactly what changed.
 - Ask before destructive actions, credential use, publishing a local-only prototype, or anything involving secrets, wallets, private keys, personal data, paid services, or irreversible system changes.
 - After changing the environment, mention the package, tool, or configuration that was added so future agents understand the machine state.
+- Keep this file short and executable. Put longer source rationale in `README.md`, `CONTENT_BRIEF.md`, `llms.txt`, `sources.html`, and `CLAIMS.yml` instead of turning every agent session into a giant prompt.
 
 ## Content Rules
 
@@ -19,10 +20,12 @@
 - Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-derived attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
 - Do not flatten RTD itself into only future oracle work. Treat base RTD as Hashdag's real-time Bitcoin-style Proof-of-Work framing for Kaspa, while oracle/TangVM/coordination-market flows remain downstream research or architecture unless primary sources confirm shipped products.
 - Preserve the Yonatan Sompolinsky podcast insights section and the primary-source stack.
+- Treat the May 8, 2026 Kaspa Daily Yonatan Q&A Part 1 as current narrative/source context once linked in the source stack: Base of Liquidity is a thesis, not a use case; generic merchant/POS payments should not become the headline 2026 adoption vector; coordination markets, usable products, visible on-chain activity, and L1-first framing deserve more weight.
 - Treat the current Kaspa.org site as a public Kaspa/KasMedia entry point with useful orientation, wallet, builder, genesis-proof, and source links. It replaced the older article-style site, so do not rely on old Kaspa.org deep links without checking them. For protocol status, it is still a pointer into stronger sources, not activation evidence by itself.
 - For status-sensitive claims, prefer code, releases, KIPs, research papers, protocol documentation, or direct statements from core technical contributors.
 - Apply Concrete-First Translation: for public and LLM-facing copy, lead with the concrete reader picture first, then name the abstraction. Prefer "one shared record without one operator," "apps that prove their rules," "funding rules strangers can rely on," or "fast mined ordering" before terms like shared state, verification-oriented programmability, coordination markets, sequencing commitments, or settlement layer.
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
+- Do not default to EVM compatibility or external L2 migration as Kaspa's app path. If mentioning L2s or EVM, keep the source status and network-effect tradeoff explicit.
 - Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer rather than help the reader.
 - One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
