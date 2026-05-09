@@ -29,6 +29,7 @@
 - Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer rather than help the reader.
 - One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
+- Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source. Avoid over-negative repetition when a status label and the next dependency are clearer.
 - Treat text as part of the product. UI labels, docs, fixtures, generated summaries, LLM context, and handoff notes should be scanned with the same care as code: necessary, specific, clean, and defensible.
 - Avoid price predictions, exchange rumors, or investment advice.
 

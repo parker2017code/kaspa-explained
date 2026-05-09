@@ -175,6 +175,7 @@ Avoid:
 - vague claims like "revolutionary" without explaining the mechanism.
 - repeated "not X but Y" framing on public pages,
 - repeated contrast frames such as "not just", "not only", "more than just", "from X to Y", "whether you are X or Y", "this is not merely", "redefining", or "changing the way we think",
+- overcorrected negative framing where every paragraph repeats a missing feature; use one status label and name the next dependency instead,
 - over-polished LLM phrasing such as "delve", "tapestry", "seamless", "robust", "pivotal", "crucial", "unlock", "empower", "transform", "reimagine", "landscape", "journey", "at its core", "ultimately", or inflated adjectives that do not add a mechanism,
 - brochure language such as "next-generation", "cutting-edge", "game-changing", "powerful platform", "accelerate innovation", "drive the future", or "pave the way",
 - clever-authority phrasing that tries to sound definitive without adding evidence,
@@ -183,7 +184,7 @@ Avoid:
 
 Editing test: each public sentence should make a specific, necessary, defensible claim. If a sentence mainly adds polish, symmetry, or persuasion cadence, cut it or move the detail to the source/context stack.
 
-Craft rule: text is product surface. UI labels, public copy, repo docs, fixtures, generated summaries, LLM context, and handoff notes need the same care as code. Keep every line necessary, accurate, scan-friendly, and clean.
+Craft rule: text is product surface. UI labels, public copy, repo docs, fixtures, generated summaries, LLM context, and handoff notes need the same care as code. Keep every line necessary, accurate, scan-friendly, and clean. Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source.
 
 Tone and visual weight:
 
