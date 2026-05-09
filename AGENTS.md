@@ -10,6 +10,7 @@
 
 - When a task is blocked by missing local tools, packages, browsers, renderers, or SDKs, install or configure what is needed and continue. Do not stop just to ask permission for routine environment setup.
 - Prefer finishing the requested outcome end to end: inspect, change, run, verify, and then report exactly what changed.
+- When the user says start, continue, go, keep going, or similar, keep executing the next concrete tasks from repo context and track progress until the user says stop/pause or a real blocker needs input.
 - Ask before destructive actions, credential use, publishing a local-only prototype, or anything involving secrets, wallets, private keys, personal data, paid services, or irreversible system changes.
 - After changing the environment, mention the package, tool, or configuration that was added so future agents understand the machine state.
 - Keep this file short and executable. Put longer source rationale in `README.md`, `CONTENT_BRIEF.md`, `llms.txt`, `sources.html`, and `CLAIMS.yml` instead of turning every agent session into a giant prompt.
