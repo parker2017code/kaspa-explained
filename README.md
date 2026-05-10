@@ -134,6 +134,7 @@ Read public replies as well as top-level posts. Do not use stale team pages, rec
 - `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `/application-layer.html` - application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and research lanes may enable later.
 - `/builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
+- `/builder-evidence.html` - bridge page between Kaspa Explained and technical proof, separating live/targeted/roadmap/research claims with source reference.
 - `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
 - `/status.html` - compact shipped-vs-roadmap status page with a code-grounded implementation-evidence section.
 - `/overview.html` - 90-second first-reader overview.

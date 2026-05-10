@@ -459,6 +459,7 @@ Primary public pages:
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may enable later.
 - `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
+- `builder-evidence.html` - proof bridge page that points readers to TN12 evidence and keeps app ideas separate from proof.
 - `overview.html` - 90-second overview for first-time readers.
 - `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where neutral shared records are worth the cost.
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
@@ -478,6 +479,7 @@ LLM/source files:
 - `CONTENT_BRIEF.md` - editorial/project handoff.
 - `README.md` - repo setup, source discipline, and deployment notes.
 - `AGENTS.md` - local coding-agent instructions.
+- `builder-evidence.html` - bridge page for technical proof verification.
 
 ## Update Workflow
 

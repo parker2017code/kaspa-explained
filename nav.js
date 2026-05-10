@@ -42,6 +42,7 @@ Start here:
 - https://kaspaexplained.com/CLAIMS.yml
 - https://kaspaexplained.com/status.html
 - https://kaspaexplained.com/builder-guide.html
+- https://kaspaexplained.com/builder-evidence.html
 
 Rules:
 - Keep live, near-term, roadmap, and research claims separate.
@@ -82,6 +83,7 @@ Question:
         <a href="/CLAIMS.yml">Claims</a>
         <a href="/status.html">Status</a>
         <a href="/builder-guide.html">Builders</a>
+        <a href="/builder-evidence.html">Evidence</a>
       </div>
       <p class="llm-copy-status" aria-live="polite"></p>
     </div>

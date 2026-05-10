@@ -16,6 +16,7 @@ expected_pages=(
   "adoption-metrics.html"
   "application-layer.html"
   "builder-guide.html"
+  "builder-evidence.html"
   "overview.html"
   "what-crypto-is-good-for.html"
   "status.html"
