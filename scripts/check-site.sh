@@ -51,6 +51,7 @@ expected_files=(
   ".github/ISSUE_TEMPLATE/stale-claim.yml"
   "scripts/check-links.sh"
   "scripts/check-claims.py"
+  "scripts/check-html.py"
   "scripts/check-nav-sync.sh"
   "nav.js"
 )
@@ -61,6 +62,7 @@ done
 
 bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
+python3 scripts/check-html.py
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2

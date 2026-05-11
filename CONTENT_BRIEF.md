@@ -14,6 +14,8 @@ Public pages should be shorter than the evidence stack. Put detailed source trai
 
 This is the repo-level cleanup queue. Keep it here instead of adding more status files.
 
+Working estimate: site cleanup/tidying is roughly `80-85%`. Public claim discipline is stronger than repo maintainability; the next gains come from parser checks, manifest-driven inventory, and continued README/source-map reduction.
+
 1. Keep README short: project purpose, source discipline, local checks, status lanes, and contribution entrypoints only.
 2. Keep long source inventories in `sources.html`, `CLAIMS.yml`, and `llms.txt`, not duplicated in README.
 3. Add parser-based HTML checks for duplicate IDs, required metadata, local anchors, and sitemap/dateModified consistency.
