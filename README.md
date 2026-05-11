@@ -1,6 +1,6 @@
 # Kaspa Explained
 
-Plain-English guide to Kaspa, fast Proof of Work, status lanes, sources, glossary, and crypto basics.
+Plain-English guide to Kaspa, fast Proof of Work, current status, sources, glossary, and crypto basics.
 
 This is not an official Kaspa website and it is not investment advice. It is written to be useful for:
 

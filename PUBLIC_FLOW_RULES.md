@@ -18,7 +18,7 @@ Lead with:
 - Home and overview pages should build confidence quickly.
 - Application and builder pages should route readers into money rails, covenants, based-app prototypes, and later vProgs.
 - Status/source pages can hold deeper evidence discipline.
-- Reviewer or crawler notes belong in support files, not the main reader flow.
+- Technical or crawler notes belong in support files, not the main reader flow.
 
 ## Public Copy
 

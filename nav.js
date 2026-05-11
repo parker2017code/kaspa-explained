@@ -71,7 +71,7 @@ Start here:
 - https://kaspaexplained.com/builder-evidence.html
 
 Rules:
-- Use CLAIMS.yml and status.html for current status lanes.
+- Use CLAIMS.yml and status.html for current status.
 - Keep live, near-term, roadmap, research, and testnet-only evidence separate.
 - Prefer primary or near-primary sources for status-sensitive claims.
 - Explain in plain English first, then use technical terms.
