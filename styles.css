@@ -23,20 +23,20 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f4ecd9;
-  --bg-2: #fff8e8;
-  --panel: rgba(255, 252, 241, .82);
-  --panel-strong: rgba(255, 252, 241, .96);
+  --bg: #f7f3ea;
+  --bg-2: #fffcf4;
+  --panel: rgba(255, 253, 246, .86);
+  --panel-strong: rgba(255, 253, 246, .97);
   --line: rgba(55, 43, 24, .16);
-  --line-bright: rgba(135, 111, 51, .34);
-  --text: #201a11;
-  --muted: #594c39;
-  --faint: #82735a;
-  --cyan: #315d55;
-  --green: #37685e;
-  --purple: #5d5340;
-  --pink: #855b3e;
-  --ink: #fff8e8;
+  --line-bright: rgba(80, 91, 82, .24);
+  --text: #18201d;
+  --muted: #52615a;
+  --faint: #78847d;
+  --cyan: #2c615a;
+  --green: #326e61;
+  --purple: #6b6251;
+  --pink: #7c5d45;
+  --ink: #fffdf6;
   --accent-soft: rgba(55, 104, 94, .1);
   --surface-soft: rgba(60, 42, 15, .045);
   --shadow: 0 22px 48px rgba(98, 71, 34, .16);
@@ -73,6 +73,14 @@ body {
     linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 52%, var(--bg) 100%);
   color: var(--text);
   font: 16px/1.62 var(--body-font);
+}
+
+:root[data-theme="light"] body {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+}
+
+:root[data-theme="light"] body::before {
+  opacity: 0;
 }
 
 body::before {
@@ -255,20 +263,95 @@ main:focus {
 }
 
 .theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 80;
   min-height: 38px;
   border: 1px solid var(--line-bright);
   border-radius: 999px;
-  padding: 8px 13px;
+  padding: 8px 14px;
   color: var(--text);
-  background: var(--surface-soft);
+  background: linear-gradient(135deg, var(--accent-soft), var(--surface-soft));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
   font: inherit;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 800;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .theme-toggle:hover {
   background: var(--accent-soft);
+}
+
+:root[data-theme="light"] .site-header,
+:root[data-theme="light"] .announcement,
+:root[data-theme="light"] .section,
+:root[data-theme="light"] .hero-copy,
+:root[data-theme="light"] .hero-visual,
+:root[data-theme="light"] .quick-grid article,
+:root[data-theme="light"] .status-grid article,
+:root[data-theme="light"] .reference-grid article,
+:root[data-theme="light"] .route-grid article,
+:root[data-theme="light"] .path-grid article,
+:root[data-theme="light"] .source-card,
+:root[data-theme="light"] .source-tier,
+:root[data-theme="light"] .search-card,
+:root[data-theme="light"] .overview-grid article,
+:root[data-theme="light"] .compare-cards article,
+:root[data-theme="light"] .fit-grid article,
+:root[data-theme="light"] .lane-grid article,
+:root[data-theme="light"] .check-grid article,
+:root[data-theme="light"] .one-screen-grid article,
+:root[data-theme="light"] .must-read-grid article,
+:root[data-theme="light"] .insight-grid article {
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+:root[data-theme="light"] .eyebrow,
+:root[data-theme="light"] .theme-toggle,
+:root[data-theme="light"] .nav-links a:hover,
+:root[data-theme="light"] .nav-links a[aria-current="page"],
+:root[data-theme="light"] .nav-cta {
+  background: var(--accent-soft);
+}
+
+:root[data-theme="light"] .timeline article,
+:root[data-theme="light"] .search-box input,
+:root[data-theme="light"] .pressure-node,
+:root[data-theme="light"] .llm-launch {
+  color: var(--text);
+  background: var(--panel);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+:root[data-theme="light"] .dag-node circle {
+  fill: var(--panel-strong);
+}
+
+:root[data-theme="light"] .dag-node.soft circle {
+  fill: var(--surface-soft);
+  stroke: var(--line-bright);
+}
+
+:root[data-theme="light"] .dag-node text,
+:root[data-theme="light"] .dag-visual .dag-node text {
+  fill: var(--text);
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .dag-visual .dag-node circle {
+  stroke: var(--line-bright);
+}
+
+:root[data-theme="light"] .dag-visual .dag-node.main circle,
+:root[data-theme="light"] .dag-visual .dag-node.orphan circle {
+  fill: var(--accent-soft);
 }
 
 @media (max-width: 1320px) {
@@ -1740,45 +1823,65 @@ blockquote {
 
 /* Status labels */
 .status-pill {
+  --status-color: var(--muted);
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  border-radius: 999px;
-  padding: 5px 10px;
-  color: var(--ink);
+  gap: 7px;
+  min-height: 0;
+  border-radius: 0;
+  padding: 0;
+  color: var(--text);
+  background: transparent;
   font-size: 12px;
-  font-weight: 950;
-  letter-spacing: .08em;
+  font-weight: 800;
+  letter-spacing: .04em;
   text-transform: uppercase;
+  cursor: default;
+}
+
+.status-pill::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--status-color) 18%, transparent);
 }
 
 .status-pill.live {
-  background: var(--green);
+  --status-color: var(--green);
 }
 
 .status-pill.target {
-  background: var(--cyan);
+  --status-color: var(--cyan);
 }
 
 .status-pill.roadmap {
-  background: var(--purple);
+  --status-color: var(--purple);
 }
 
 .status-pill.research {
-  background: #f0abfc;
+  --status-color: #f0abfc;
 }
 
 .status-pill.not-live {
-  color: var(--text);
-  background: rgba(255, 255, 255, .14);
-  border: 1px solid rgba(255, 255, 255, .22);
+  --status-color: var(--muted);
 }
 
 .status-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px 14px;
   margin-top: 18px;
+}
+
+.status-legend::before {
+  content: "Status labels:";
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 .status-legend.compact {
@@ -2596,7 +2699,7 @@ blockquote {
 
   .nav {
     min-height: 0;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     padding: 14px 0;
   }
 
@@ -2610,6 +2713,16 @@ blockquote {
 
   .nav-menu-button {
     display: inline-flex;
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .theme-toggle {
+    min-height: 34px;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
   .nav-links {

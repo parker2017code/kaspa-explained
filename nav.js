@@ -11,13 +11,11 @@
   const savedTheme = localStorage.getItem(themeKey);
   document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
 
-  const themeToggle = document.createElement("button");
-  themeToggle.type = "button";
-  themeToggle.className = "theme-toggle";
+  const themeToggle = nav.querySelector(".theme-toggle");
 
   const renderThemeToggle = () => {
     const isLight = document.documentElement.dataset.theme === "light";
-    themeToggle.textContent = isLight ? "Dark" : "Light";
+    themeToggle.textContent = `Theme: ${isLight ? "Dark" : "Light"}`;
     themeToggle.setAttribute("aria-label", `Switch to ${isLight ? "dark" : "light"} mode`);
   };
 
@@ -29,7 +27,6 @@
   });
 
   renderThemeToggle();
-  nav.append(themeToggle);
 
   const normalizePath = (href) => {
     const path = new URL(href, window.location.origin).pathname.replace(/\/$/, "");
