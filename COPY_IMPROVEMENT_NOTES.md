@@ -26,6 +26,7 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 - Lead with the useful explanation first, then status/source discipline where it helps.
 - Keep one clear status table instead of repeating the full status taxonomy everywhere.
 - Use page-specific jobs: beginner pages teach, builder pages route, status pages audit, source pages cite.
+- Treat one reported issue as a class until proven otherwise. One confusing status chip means check all status chips; one fake-clickable card means check every similar card; one cramped mobile control means check the header/footer/floating controls across breakpoints.
 - Reduce repeated caveat patterns. Say what works, what is targeted, what is missing, then move on.
 - Avoid internal terms like lanes unless the page explicitly explains them.
 - Preserve source discipline without making every page sound like it is defending itself.

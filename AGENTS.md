@@ -32,6 +32,7 @@
 - One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
 - Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source. Avoid over-negative repetition when a status label and the next dependency are clearer.
 - Treat text as part of the product. UI labels, docs, fixtures, generated summaries, LLM context, and handoff notes should be scanned with the same care as code: necessary, specific, clean, and defensible.
+- Treat user examples as class signals unless the user explicitly says one instance only. If the user points at one non-clickable card, cramped label, confusing command, or awkward status chip, audit the whole class of similar UI/copy patterns.
 - Avoid price predictions, exchange rumors, or investment advice.
 
 ## Startup Verification
