@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 DOMAIN = MANIFEST["domain"]
 PAGES = MANIFEST["pages"]
+SITEMAP_EXTRA_FILES = MANIFEST.get("sitemapExtraFiles", [])
 
 
 class PageParser(HTMLParser):
@@ -82,10 +83,14 @@ def main():
     sitemap_urls = set(sitemap_dates)
     iso_date = re.compile(r"^\d{4}-\d{2}-\d{2}$")
     manifest_urls = {expected_url(page) for page in PAGES}
+    allowed_sitemap_urls = manifest_urls | {f"{DOMAIN}/{path}" for path in SITEMAP_EXTRA_FILES}
 
     if not manifest_urls.issubset(sitemap_urls):
         missing = sorted(manifest_urls - sitemap_urls)
         fail(errors, f"sitemap missing manifest pages: {', '.join(missing)}")
+    if sitemap_urls - allowed_sitemap_urls:
+        extra = sorted(sitemap_urls - allowed_sitemap_urls)
+        fail(errors, f"sitemap has entries not listed in site-manifest.json: {', '.join(extra)}")
 
     for page in PAGES:
         parser = PageParser()
