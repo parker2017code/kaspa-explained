@@ -42,11 +42,15 @@ expected_files=(
   "llms.txt"
   "robots.txt"
   "sitemap.xml"
+  "favicon.svg"
+  "styles.css"
+  "live-kaspa.js"
   "CNAME"
   ".github/workflows/site-check.yml"
   ".github/workflows/link-check.yml"
   ".github/ISSUE_TEMPLATE/stale-claim.yml"
   "scripts/check-links.sh"
+  "scripts/check-claims.py"
   "scripts/check-nav-sync.sh"
   "nav.js"
 )
@@ -56,6 +60,7 @@ for file in "${expected_pages[@]}" "${expected_files[@]}"; do
 done
 
 bash scripts/check-nav-sync.sh
+python3 scripts/check-claims.py
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2
