@@ -76,8 +76,8 @@ Use the public site itself for the page map:
 
 The `scripts/` folder contains the local and CI validation gates:
 
-- `scripts/check-site.sh` checks the expected public pages and support files, custom domain, sitemap/canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
-- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page so manual pages do not drift.
+- `scripts/check-site.sh` checks the expected public pages and support files, custom domain, generated sitemap, canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, search-result coverage, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
+- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and rejects nav links that are not listed in `site-manifest.json`.
 - `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
 
 Run the static check before publishing:
@@ -88,10 +88,11 @@ bash scripts/check-site.sh
 
 The check verifies the custom domain, sitemap/canonical links, public pages,
 skip-link targets, social-card metadata, date metadata, local anchors, the PNG
-OpenGraph image, sensitive-claim consistency markers, and `CLAIMS.yml`
-forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh` so the
-duplicated static nav does not drift between pages. The same check runs in
-GitHub Actions on push, pull request, and a weekly schedule.
+OpenGraph image, search cards, sensitive-claim consistency markers, and
+`CLAIMS.yml` forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh`
+so the duplicated static nav does not drift between pages or point at routes
+outside `site-manifest.json`. The same check runs in GitHub Actions on push,
+pull request, and a weekly schedule.
 
 For public copy, layout, or framing changes, also check:
 

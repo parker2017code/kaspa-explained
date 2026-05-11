@@ -12,6 +12,23 @@ extract_links() {
 
 extract_links index.html > "$tmp_dir/index.links"
 mapfile -t pages < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"] + ["404.html"]))')
+python3 - "$tmp_dir/index.links" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+manifest = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
+allowed = {"/" if page == "index.html" else f"/{page}" for page in manifest["pages"]}
+links = []
+for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
+    href, _label = line.split("|", 1)
+    links.append(href)
+
+unknown = sorted({href for href in links if (href == "/" or href.endswith(".html")) and href not in allowed})
+if unknown:
+    print(f"Navigation links not listed in site-manifest.json: {', '.join(unknown)}", file=sys.stderr)
+    raise SystemExit(1)
+PY
 
 for page in "${pages[@]}"; do
   extract_links "$page" > "$tmp_dir/$page.links"
