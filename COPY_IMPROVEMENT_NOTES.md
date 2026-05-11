@@ -62,6 +62,15 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 3. Review the longest pages for collapsible detail and stronger section hierarchy.
 4. Replace more proof/status text with clearer user journeys and concrete examples.
 
+## Priority queue
+
+1. Fix visible layout defects first: mobile nav overlap, desktop horizontal overflow, light-mode contrast, clipped buttons, and lower-right floating-control collisions.
+2. Make every clickable-looking card, chip, or status label either a real link/control or visually static text.
+3. Keep the homepage simple: plain thesis, one primary route, one beginner route, one status/source route.
+4. Move repeated live/targeted/roadmap/research language to the status page and use shorter page-specific links elsewhere.
+5. Shorten the longest public pages, especially Application Layer, by using stronger top-level segmentation and optional detail.
+6. Then reduce maintenance risk: manifest-driven nav/search/page inventory, fewer repeated card structures, and smaller CSS sections.
+
 ## Lessons from strong open-source websites
 
 - Homepage should explain the shape quickly; source/status pages prove the details.
