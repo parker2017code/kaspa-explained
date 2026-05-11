@@ -15,8 +15,9 @@
 
   const renderThemeToggle = () => {
     const isLight = document.documentElement.dataset.theme === "light";
-    themeToggle.textContent = `Theme: ${isLight ? "Dark" : "Light"}`;
+    themeToggle.textContent = isLight ? "Dark" : "Light";
     themeToggle.setAttribute("aria-label", `Switch to ${isLight ? "dark" : "light"} mode`);
+    themeToggle.title = `Switch to ${isLight ? "dark" : "light"} mode`;
   };
 
   themeToggle.addEventListener("click", () => {
