@@ -11,6 +11,7 @@ done
 
 bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
+python3 scripts/build-sitemap.py --check
 python3 scripts/check-html.py
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
