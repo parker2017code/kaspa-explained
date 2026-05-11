@@ -69,6 +69,7 @@ Use the public site itself for the page map:
 - `sources.html` is the human source map.
 - `search.html` is the quickest concept/page finder.
 - `CLAIMS.yml` is the lightweight status ledger for sensitive claims.
+- `site-manifest.json` is the checked page/support-file inventory.
 - `CONTRIBUTING.md` explains correction and contribution rules.
 
 ## Maintenance checks

@@ -1,60 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-domain="https://kaspaexplained.com"
-expected_pages=(
-  "index.html"
-  "start-here.html"
-  "crypto-from-zero.html"
-  "why-crypto-has-value.html"
-  "why-are-there-so-many-coins.html"
-  "coin-atlas.html"
-  "tradeoff-map.html"
-  "analyze-any-coin.html"
-  "crypto-history.html"
-  "kaspa-in-one-screen.html"
-  "adoption-metrics.html"
-  "application-layer.html"
-  "builder-guide.html"
-  "builder-evidence.html"
-  "overview.html"
-  "what-crypto-is-good-for.html"
-  "status.html"
-  "faq.html"
-  "why-kaspa-matters.html"
-  "where-kaspa-fits.html"
-  "knowledge-map.html"
-  "glossary.html"
-  "search.html"
-  "sources.html"
-  "about.html"
-)
-expected_files=(
-  "404.html"
-  "AGENTS.md"
-  "CONTRIBUTING.md"
-  "CONTENT_BRIEF.md"
-  "README.md"
-  "LICENSE.md"
-  "CLAIMS.yml"
-  "og-kaspa-explained.png"
-  "og-kaspa-explained.svg"
-  "llms.txt"
-  "robots.txt"
-  "sitemap.xml"
-  "favicon.svg"
-  "styles.css"
-  "live-kaspa.js"
-  "CNAME"
-  ".github/workflows/site-check.yml"
-  ".github/workflows/link-check.yml"
-  ".github/ISSUE_TEMPLATE/stale-claim.yml"
-  "scripts/check-links.sh"
-  "scripts/check-claims.py"
-  "scripts/check-html.py"
-  "scripts/check-nav-sync.sh"
-  "nav.js"
-)
+domain="$(python3 -c 'import json; print(json.load(open("site-manifest.json"))["domain"])')"
+mapfile -t expected_pages < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"]))')
+mapfile -t expected_files < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["requiredFiles"]))')
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do
   [[ -f "$file" ]] || { echo "Missing $file" >&2; exit 1; }

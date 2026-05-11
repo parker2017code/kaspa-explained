@@ -1,39 +1,14 @@
 #!/usr/bin/env python3
 from html.parser import HTMLParser
+import json
 from pathlib import Path
 import re
 import sys
 import xml.etree.ElementTree as ET
 
-DOMAIN = "https://kaspaexplained.com"
-
-PAGES = [
-    "index.html",
-    "start-here.html",
-    "crypto-from-zero.html",
-    "why-crypto-has-value.html",
-    "why-are-there-so-many-coins.html",
-    "coin-atlas.html",
-    "tradeoff-map.html",
-    "analyze-any-coin.html",
-    "crypto-history.html",
-    "kaspa-in-one-screen.html",
-    "adoption-metrics.html",
-    "application-layer.html",
-    "builder-guide.html",
-    "builder-evidence.html",
-    "overview.html",
-    "what-crypto-is-good-for.html",
-    "status.html",
-    "faq.html",
-    "why-kaspa-matters.html",
-    "where-kaspa-fits.html",
-    "knowledge-map.html",
-    "glossary.html",
-    "search.html",
-    "sources.html",
-    "about.html",
-]
+MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
+DOMAIN = MANIFEST["domain"]
+PAGES = MANIFEST["pages"]
 
 
 class PageParser(HTMLParser):

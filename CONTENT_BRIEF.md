@@ -18,8 +18,8 @@ Working estimate: site cleanup/tidying is roughly `80-85%`. Public claim discipl
 
 1. Keep README short: project purpose, source discipline, local checks, status lanes, and contribution entrypoints only.
 2. Keep long source inventories in `sources.html`, `CLAIMS.yml`, and `llms.txt`, not duplicated in README.
-3. Add parser-based HTML checks for duplicate IDs, required metadata, local anchors, and sitemap/dateModified consistency.
-4. Move repeated page, nav, source, and sitemap inventory toward a manifest or small static generator when manual sync becomes the bigger risk.
+3. Keep parser-based HTML checks for duplicate IDs, required metadata, local anchors, and sitemap/dateModified consistency.
+4. Keep page and support-file inventory in `site-manifest.json`; move nav, source, and sitemap inventory toward the manifest or a small static generator when manual sync becomes the bigger risk.
 5. Keep `CLAIMS.yml` as the source of truth for status-sensitive claims and enforce claim-level freshness in CI.
 6. Keep public copy shorter than the context stack: one page, one primary reader job, one clear status boundary.
 
