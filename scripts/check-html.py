@@ -24,6 +24,7 @@ class PageParser(HTMLParser):
         self.meta_descriptions = 0
         self.open_graph_images = 0
         self.twitter_cards = 0
+        self.links = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -47,6 +48,8 @@ class PageParser(HTMLParser):
             self.open_graph_images += 1
         if tag == "meta" and attrs.get("name") == "twitter:card":
             self.twitter_cards += 1
+        if tag == "a" and attrs.get("href"):
+            self.links.append(attrs["href"])
 
     def handle_endtag(self, tag):
         if tag == "head":
@@ -76,7 +79,13 @@ def fail(errors, message):
 def main():
     errors = []
     sitemap_dates = read_sitemap_dates()
+    sitemap_urls = set(sitemap_dates)
     iso_date = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+    manifest_urls = {expected_url(page) for page in PAGES}
+
+    if not manifest_urls.issubset(sitemap_urls):
+        missing = sorted(manifest_urls - sitemap_urls)
+        fail(errors, f"sitemap missing manifest pages: {', '.join(missing)}")
 
     for page in PAGES:
         parser = PageParser()
@@ -106,6 +115,15 @@ def main():
         sitemap_lastmod = sitemap_dates.get(url)
         if sitemap_lastmod != parser.date_modified[0]:
             fail(errors, f"{page} sitemap lastmod {sitemap_lastmod} does not match dateModified {parser.date_modified[0]}")
+        if page == "search.html":
+            search_links = {
+                f"{DOMAIN}{href}" if href.startswith("/") else href
+                for href in parser.links
+                if href == "/" or href.endswith(".html")
+            }
+            if not manifest_urls.issubset(search_links):
+                missing = sorted(manifest_urls - search_links)
+                fail(errors, f"search.html missing manifest page links: {', '.join(missing)}")
 
     if errors:
         for error in errors:

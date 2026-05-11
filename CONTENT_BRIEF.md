@@ -14,12 +14,12 @@ Public pages should be shorter than the evidence stack. Put detailed source trai
 
 This is the repo-level cleanup queue. Keep it here instead of adding more status files.
 
-Working estimate: site cleanup/tidying is roughly `80-85%`. Public claim discipline is stronger than repo maintainability; the next gains come from parser checks, manifest-driven inventory, and continued README/source-map reduction.
+Working estimate: site cleanup/tidying is roughly `88-90%`. Public claim discipline is stronger than repo maintainability; the next gains come from generating nav/sitemap/search inventory from `site-manifest.json` and continued README/source-map reduction.
 
 1. Keep README short: project purpose, source discipline, local checks, status lanes, and contribution entrypoints only.
 2. Keep long source inventories in `sources.html`, `CLAIMS.yml`, and `llms.txt`, not duplicated in README.
-3. Keep parser-based HTML checks for duplicate IDs, required metadata, local anchors, and sitemap/dateModified consistency.
-4. Keep page and support-file inventory in `site-manifest.json`; move nav, source, and sitemap inventory toward the manifest or a small static generator when manual sync becomes the bigger risk.
+3. Keep parser-based HTML checks for duplicate IDs, required metadata, local anchors, search page coverage, sitemap coverage, and sitemap/dateModified consistency.
+4. Keep page and support-file inventory in `site-manifest.json`; move nav, source, sitemap, and search inventory toward the manifest or a small static generator when manual sync becomes the bigger risk.
 5. Keep `CLAIMS.yml` as the source of truth for status-sensitive claims and enforce claim-level freshness in CI.
 6. Keep public copy shorter than the context stack: one page, one primary reader job, one clear status boundary.
 
