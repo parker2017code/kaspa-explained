@@ -59,6 +59,7 @@ Use these files instead of turning the README into the source map:
 - `llms.txt` for compact retrieval guidance.
 - `CONTENT_BRIEF.md` for editorial context and source-use rules.
 - `COPY_CLEANUP_PLAN.md` for public wording cleanup.
+- `PUBLIC_FLOW_RULES.md` for the default reader flow: plain path first, deeper evidence where readers ask for it.
 
 Community portals, media sites, learning libraries, interviews, recaps, and public technical accounts are useful context. They are not activation evidence by themselves. Do not use X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
 

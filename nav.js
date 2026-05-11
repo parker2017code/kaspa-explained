@@ -7,6 +7,30 @@
 
   nav.classList.add("nav-enhanced");
 
+  const themeKey = "kaspa-explained-theme";
+  const savedTheme = localStorage.getItem(themeKey);
+  document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
+
+  const themeToggle = document.createElement("button");
+  themeToggle.type = "button";
+  themeToggle.className = "theme-toggle";
+
+  const renderThemeToggle = () => {
+    const isLight = document.documentElement.dataset.theme === "light";
+    themeToggle.textContent = isLight ? "Dark" : "Light";
+    themeToggle.setAttribute("aria-label", `Switch to ${isLight ? "dark" : "light"} mode`);
+  };
+
+  themeToggle.addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem(themeKey, next);
+    renderThemeToggle();
+  });
+
+  renderThemeToggle();
+  nav.append(themeToggle);
+
   const normalizePath = (href) => {
     const path = new URL(href, window.location.origin).pathname.replace(/\/$/, "");
     return path || "/";
