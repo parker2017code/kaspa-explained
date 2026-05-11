@@ -76,8 +76,8 @@
           <p>Use covenants and proof hooks for spend limits, vault rules, escrow, simple assets, and contracts that only allow specific state changes.</p>
         </article>
         <article>
-          <span>Later roadmap</span>
-          <p>Use vProgs and RTD-derived designs for markets, lending, app-specific proofs, attestations, public funding rules, and app flows that can act like one coordinated product.</p>
+          <span>Based apps</span>
+          <p>Build based-app prototypes for markets, lending, attestations, public funding, and agent flows. Add ZK proofs when verification is the product boundary; treat full vProgs as the later atomic-composition path.</p>
         </article>
       </div>
     </section>
@@ -172,9 +172,9 @@
     <section class="section">
       <p class="eyebrow">Translate patterns</p>
       <h2>Possible Kaspa versions.</h2>
-      <p>Use the short list first: wallets, receipt rails, vaults, escrow, assurance contracts, simple assets, auctions, and proof-backed markets. The details depend on Toccata, vProgs, and later research.</p>
-      <p>Based rollups belong in the later execution lane. They matter if they give builders richer app state while preserving Kaspa L1 sequencing and a path toward vProgs; they are not needed for the first L1 covenant examples.</p>
-      <p>The biggest later app change is atomic composition. Two app actions can be fast or proof-linked without being one operation. Full vProgs aim at the stronger model: one user action can update several app states together, with the combined action succeeding or failing as a unit.</p>
+      <p>Use the short list first: wallets, receipt rails, vaults, escrow, assurance contracts, simple assets, auctions, DeFi reducers, coordination apps, and agent-payment flows.</p>
+      <p>Based apps are the richer-state lane. A based app anchors state transitions to Kaspa ordering, commitments, proofs, settlement, or exits. It may use ZK, but it does not have to start as a ZK app.</p>
+      <p>Full vProgs are the later atomic-composition path: one user action can update several app states together, with the combined action succeeding or failing as a unit.</p>
       <details class="source-more">
         <summary>Open pattern translation table</summary>
         <div class="table-wrap">
@@ -184,10 +184,10 @@
               <tr><td>MetaMask / Phantom / Xaman</td><td>A wallet that explains inclusion, confirmation confidence, UTXO control, vault policy, and app permissions in plain language.</td><td>Users need to understand fast PoW risk states and balances.</td><td>Live foundation now; richer policies post-Toccata</td></tr>
               <tr><td>TRON USDT transfer</td><td>Receipt, transfer, and exchange-flow rails that make value movement inspectable.</td><td>Kaspa already has fast mined payment feel; the missing work is product UX, liquidity, distribution, and a reason to use the rail.</td><td>Live foundation now</td></tr>
               <tr><td>ERC-20 / ERC-721 style assets</td><td>KRC20 tokens for simple credits, rewards, event tokens, or community assets; KRC721-style NFTs for coupons, access passes, tickets, memberships, collectibles, or proof-of-attendance objects.</td><td>These can use Kaspa's live data and payment rails, with required deploy/mint gas fees paid to miners. The useful product still depends on wallets, indexers, metadata, redemption rules, and the issuer honoring the claim.</td><td>Ecosystem live; not native smart contracts</td></tr>
-              <tr><td>Uniswap / Jupiter</td><td>Simple swaps and liquidity routing after asset and covenant rails mature.</td><td>Market apps need public fast ordering, but native DeFi needs the right foundations.</td><td>Post-Toccata / vProgs</td></tr>
-              <tr><td>Aave / Maker / Kamino</td><td>Collateral vaults, guarded lending, stable assets, and risk-managed liquidity with explicit liquidation and oracle assumptions.</td><td>Fast payment and UTXO vault policy could be useful now. Later vProgs matter if a lending position, market position, and settlement rule need to update atomically instead of through separate steps.</td><td>vProgs / roadmap</td></tr>
-              <tr><td>Hyperliquid</td><td>A focused Kaspa-anchored market app: auctions, collateralized perps, hashpower markets, or real-time liquidity.</td><td>The lesson is focus: build one product that uses Kaspa's ordering and payment rails.</td><td>vProgs / app-specific architecture</td></tr>
-              <tr><td>Based rollup app</td><td>A small rollup-side app that still uses Kaspa ordering, proof checks, or settlement as its anchor.</td><td>This can test richer execution without pretending the L1 covenant examples need an L2.</td><td>Research / future execution lane</td></tr>
+              <tr><td>Uniswap / Jupiter</td><td>A based-app swap prototype: deposits, intents, liquidity state, replay, and later proof or settlement checks.</td><td>Market apps need public fast ordering plus richer shared state than one covenant UTXO usually wants to carry.</td><td>Based-app prototype; later custody/proof work</td></tr>
+              <tr><td>Aave / Maker / Kamino</td><td>A based-app lending prototype: collateral records, risk state, oracle inputs, liquidation review, and explicit settlement rails.</td><td>Fast payment and UTXO vault policy help, but lending needs app state, risk logic, and source assumptions.</td><td>Based-app prototype; later vProgs for atomic composition</td></tr>
+              <tr><td>Hyperliquid</td><td>A focused Kaspa-anchored market app: auctions, collateralized perps, hashpower markets, or real-time liquidity.</td><td>The lesson is focus: build one product that uses Kaspa ordering, commitments, and settlement instead of selling generic infrastructure.</td><td>Based-app prototype</td></tr>
+              <tr><td>Based app</td><td>A small app-specific state machine anchored to Kaspa ordering, proof checks, settlement, or exits.</td><td>This tests richer execution without pretending the first L1 covenant examples need an L2.</td><td>Prototype lane; based-zk when proofs are needed</td></tr>
               <tr><td>Polymarket / coordination markets</td><td>Prediction, assurance, public-goods, research-bounty, software-funding, and group-action markets.</td><td>These markets need public commitments, settlement rules, and explicit oracle assumptions. They fit the coordination-market direction better than generic payment adoption copy.</td><td>Toccata for simple contracts; research for deeper oracle and coordination markets</td></tr>
               <tr><td>Helium / Hivemapper / Render</td><td>Proof-of-service or proof-of-resource markets for bandwidth, compute, sensing, local infrastructure, or AI-agent work.</td><td>High-frequency PoW and public group-commitment research may help later attestation designs.</td><td>Research / architecture</td></tr>
               <tr><td>ENS / Farcaster / social graphs</td><td>Identity, handles, reputation, access passes, and portable group membership tied to self-custody.</td><td>The first useful versions may be simple access and membership systems.</td><td>Post-Toccata / vProgs</td></tr>
@@ -290,7 +290,7 @@
     <section class="section">
       <p class="eyebrow">Builder path</p>
       <h2>Choose the app model first.</h2>
-      <p>Covenants, based apps, inline ZK, and future full vProgs answer different state and proof problems. Start with the smallest model that fits the product, then check the current implementation stage.</p>
+      <p>Covenants, based apps, inline ZK, and future full vProgs answer different state and proof problems. Build the smallest product slice first, then add stronger proof, custody, or composition only when the product needs it.</p>
       <div class="actions">
         <a class="button primary" href="/builder-guide.html">Open builder guide</a>
         <a class="button" href="/status.html">Check status</a>
@@ -385,7 +385,8 @@
             <tr><td>Now</td><td>Wallets, receipt UX, infrastructure, explorers, mining/node visibility, education, confirmation-risk tools.</td><td>People can use and understand the live network without trusting one interface.</td></tr>
             <tr><td>Now: ecosystem assets</td><td>KRC20/KRC721-aware wallets, indexers, coupon/pass flows, event-credit experiments, token catalogs, merchant redemption tools, and safety warnings.</td><td>People can try practical token and NFT workflows while still understanding that these are ecosystem standards, not native smart contracts.</td></tr>
             <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, STARK/zk proof experiments, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
-            <tr><td>vProgs</td><td>Apps that prove their own logic, share Kaspa ordering, support richer markets, private proofs, app-to-app flows, and canonical bridge design.</td><td>Applications can become more useful without asking the base layer to execute every app globally.</td></tr>
+              <tr><td>Based apps</td><td>App-specific state machines anchored to Kaspa ordering, commitments, proofs, settlement, or exits. They can start as deterministic replay and grow into based-zk when proof verification matters.</td><td>Builders can test richer products without waiting for full app-to-app composition.</td></tr>
+              <tr><td>vProgs</td><td>Apps that prove their own logic, share Kaspa ordering, support richer markets, private proofs, app-to-app flows, and canonical bridge design.</td><td>The later goal is stronger composition without asking the base layer to execute every app globally.</td></tr>
             <tr><td>Research</td><td>DAGKnight, 100 BPS sampling, RTD-derived attestations, oracle markets, MEV auctions, TangVM-style flows, public funding markets, and AI-agent commitments.</td><td>The broad coordination thesis becomes testable through real products.</td></tr>
           </tbody>
         </table>
