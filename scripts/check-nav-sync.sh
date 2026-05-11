@@ -23,6 +23,13 @@ links = []
 for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
     href, _label = line.split("|", 1)
     links.append(href)
+manifest_nav = [f"{item['href']}|{item['label']}" for item in manifest.get("nav", [])]
+observed_nav = Path(sys.argv[1]).read_text(encoding="utf-8").splitlines()
+if observed_nav != manifest_nav:
+    print("Navigation links differ from site-manifest.json nav entries.", file=sys.stderr)
+    print("expected:", manifest_nav, file=sys.stderr)
+    print("observed:", observed_nav, file=sys.stderr)
+    raise SystemExit(1)
 
 unknown = sorted({href for href in links if (href == "/" or href.endswith(".html")) and href not in allowed})
 if unknown:

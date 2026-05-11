@@ -69,7 +69,7 @@ Use the public site itself for the page map:
 - `sources.html` is the human source map.
 - `search.html` is the quickest concept/page finder.
 - `CLAIMS.yml` is the lightweight status ledger for sensitive claims.
-- `site-manifest.json` is the checked page/support-file inventory.
+- `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `CONTRIBUTING.md` explains correction and contribution rules.
 
 ## Maintenance checks
@@ -77,7 +77,7 @@ Use the public site itself for the page map:
 The `scripts/` folder contains the local and CI validation gates:
 
 - `scripts/check-site.sh` checks the expected public pages and support files, custom domain, generated sitemap, canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, search-result coverage, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
-- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and rejects nav links that are not listed in `site-manifest.json`.
+- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and checks the primary nav against `site-manifest.json`.
 - `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
 
 Run the static check before publishing:
