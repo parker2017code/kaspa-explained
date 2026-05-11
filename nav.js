@@ -7,9 +7,13 @@
 
   nav.classList.add("nav-enhanced");
 
-  const currentPath = window.location.pathname === "/" ? "/" : window.location.pathname.replace(/\/$/, "");
+  const normalizePath = (href) => {
+    const path = new URL(href, window.location.origin).pathname.replace(/\/$/, "");
+    return path || "/";
+  };
+  const currentPath = normalizePath(window.location.href);
   links.querySelectorAll("a[href]").forEach((link) => {
-    const linkPath = link.getAttribute("href") === "/" ? "/" : link.getAttribute("href").replace(/\/$/, "");
+    const linkPath = normalizePath(link.href);
     if (linkPath === currentPath) {
       link.setAttribute("aria-current", "page");
     }
@@ -45,9 +49,9 @@ Start here:
 - https://kaspaexplained.com/builder-evidence.html
 
 Rules:
-- Keep live, near-term, roadmap, and research claims separate.
-- Do not describe Toccata, DAGKnight, vProgs, native DeFi, TangVM, Proof of Useful Work, or RTD-derived oracle/attestation flows as live unless current primary sources confirm activation.
-- Prefer code, releases, KIPs, research papers, protocol docs, and core technical contributor posts for status-sensitive claims.
+- Use CLAIMS.yml and status.html for current status lanes.
+- Keep live, near-term, roadmap, research, and testnet-only evidence separate.
+- Prefer primary or near-primary sources for status-sensitive claims.
 - Explain in plain English first, then use technical terms.
 
 Question:
@@ -60,7 +64,7 @@ Question:
       <span aria-hidden="true">𐤊</span>
       Ask AI
     </button>
-    <div class="llm-panel" id="llm-panel" role="dialog" aria-modal="false" aria-labelledby="llm-panel-title" hidden>
+    <div class="llm-panel" id="llm-panel" aria-labelledby="llm-panel-title" hidden>
       <div class="llm-panel-head">
         <div>
           <p class="eyebrow">LLM source pack</p>
@@ -96,6 +100,7 @@ Question:
   const llmPrompt = widget.querySelector(".llm-prompt");
   const llmCopy = widget.querySelector(".llm-copy");
   const llmCopyStatus = widget.querySelector(".llm-copy-status");
+  let previousFocus = null;
 
   llmPrompt.value = sourcePrompt;
 
@@ -103,10 +108,12 @@ Question:
     llmPanel.hidden = !isOpen;
     llmLaunch.setAttribute("aria-expanded", String(isOpen));
     if (isOpen) {
+      previousFocus = document.activeElement;
       llmPrompt.focus();
       llmPrompt.setSelectionRange(llmPrompt.value.length, llmPrompt.value.length);
-    } else {
-      llmLaunch.focus();
+    } else if (previousFocus && document.contains(previousFocus)) {
+      previousFocus.focus();
+      previousFocus = null;
     }
   };
 
