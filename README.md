@@ -49,106 +49,27 @@ Do not point `www` to the repository name.
 
 ## Source discipline
 
-Use primary or near-primary sources first:
+Use primary or near-primary sources first. Status-sensitive claims should be anchored in code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
-Community portals, media sites, learning libraries, interviews, and recaps are useful source material, but they are not official protocol authority. Status-sensitive claims should be anchored in code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
+Use these files instead of turning the README into the source map:
 
-1. https://hashd.ag/ - Hashdag / Yonatan Sompolinsky's writing archive
-2. https://hashd.ag/raw - raw archive view
-3. https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c
-4. https://github.com/kaspanet/rusty-kaspa
-5. https://github.com/kaspanet/rusty-kaspa/releases
-6. https://research.kas.pa/
-7. https://qa.kas.pa/
-8. https://kasmedia.com/ - KASmedia articles, interviews, recaps, and theory posts; useful community context, not primary activation evidence
-9. https://kaspa.com/learn-kaspa - Kaspa.com Learn Kaspa / Kaspa Facts intro and intermediate learning library
-10. Bitcoin Takeover S16 E41 Yonatan Sompolinsky interview and transcript:
-   - https://www.youtube.com/live/GaJmYV8OHfQ
-   - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
-   - Use for site framing: generalized Nakamoto consensus, current GHOSTDAG, future DAGKnight/vProgs, pruning nuance, and broader crypto context. Do not treat roadmap discussion as live activation evidence.
-11. Kaspa: Mining the Internet Yonatan Sompolinsky Tokenize talk
-12. https://kasmedia.com/article/weeklyknight-08282025 - recap of the Bitcoin Takeover Yonatan interview, with selected quotes and exact YouTube live URL
-13. https://www.youtube.com/watch?v=VIZGKoIaGR0 - Yonatan Sompolinsky Oxford Union address
-14. https://www.youtube.com/watch?v=S1dS1xvvFss - Yonatan Sompolinsky Oxford Union Q&A
-15. https://x.com/DailyKaspa/status/2052716697262374936 - Kaspa Daily Yonatan Q&A Part 1, May 8, 2026. Use as narrative/source context: Base of Liquidity is a thesis rather than an adoption plan, generic payments are not the whole adoption vector, coordination markets are a highlighted product direction, and Part 2 should be checked when available.
-16. https://www.youtube.com/watch?v=xHlOcR1x2tU - Michael Sutton vProgs talk
-17. https://www.youtube.com/watch?v=p21KDrKEhB8 - Michael Sutton on Crescendo, based rollups, and DAGKnight
-18. https://github.com/kaspanet/kaspa-python-sdk - standalone Kaspa Python SDK repo for builder tooling and Python integration evidence
-19. https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v1.1.0 - Python SDK v1.1.0 release with UtxoProcessor/UtxoContext and GetVirtualChainFromBlockV2
-20. https://github.com/kaspanet/rusty-kaspa/pull/860 - TxIndex PR; optional transaction index and GetTransaction RPC evidence while open
-21. https://github.com/kaspanet/rusty-kaspa/pull/930 - Fast Trusted Relay WIP/draft PR; infrastructure experiment, not stable release evidence
-22. https://kasmedia.com/article/ori-interview
-23. https://kasmedia.com/article/theweeklyknight081725
-24. https://kasmedia.com/article/weeklyknightl12s-and-pows
-25. https://kasmedia.com/article/moog-synthesizers-and-kaspa
-26. https://kaspa.org/ - current public Kaspa/KasMedia entry point, genesis-proof framing, and links into wallets, builder resources, explorer, GitHub, and DAG visualizer
-27. https://kaspa.org/lore - concise current public summary for Kaspa history, fair-launch framing, RTD, Crescendo, Toccata, DAGKnight, and longer-roadmap context; verify status-sensitive details against primary sources
-28. https://kaspa.org/build - current builder entry point for Rusty Kaspa, WASM SDK, docs, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&D links
-29. https://kaspa.org/hodl - current wallet and self-custody entry point; useful for beginner custody flow and exchange-delay caveats, not investment advice
-30. https://docs.kaspa.org - current Kaspa builder docs entry point for programmability, integration, wallet flows, payloads, accepted transactions, and node infrastructure
-31. https://docs.kaspa.org/integrate/getting-started - official SDK/RPC starter path for JavaScript, Rust, and Python
-32. https://docs.kaspa.org/programmability - official builder routing for Covenants, Based Apps, Inline ZK, and future Full vProgs; use for model selection, not activation claims by itself
-33. https://docs.kaspa.org/integrate/transaction-payload - official payload guide for application data within standard mempool mass limits
-34. https://docs.kaspa.org/integrate/accepted-transactions - official accepted-transaction ingestion guide
-35. https://docs.kaspa.org/integrate/kaspa-node - official node integration guide
-36. https://docs.kaspa.org/references - official integration reference page
-37. https://kaspa.aspectron.org/docs/ - WASM SDK docs
-38. https://kaspa.aspectron.org/docs/classes/RpcClient.html - RpcClient constructor and submitTransaction request-shape docs
-39. https://kaspa-mdbook.aspectron.com/transactions/signing.html - Aspectron signing guide for SDK transaction signing and request-style submit
-40. https://api.kaspa.org/docs - best-effort community REST API docs
-41. https://kaspa.aspectron.org/rpc/pnn.html - Public Node Network docs
-42. https://hub.docker.com/r/kaspanet/rusty-kaspad - Rusty Kaspa Docker images
-43. https://db-dl.kaspa.org - explorer/API database dumps
-44. https://deepwiki.com/kaspanet/rusty-kaspa - generated Rusty Kaspa code navigation; useful for orientation, not source of truth
-45. https://github.com/supertypo/simply-kaspa-indexer - community indexing project
-46. https://github.com/kaspanet/dnsseeder - Kaspa DNS seeder
-47. https://github.com/aspectron/khost - node-hosting/community capacity tooling
-48. https://github.com/K-Kluster/kaspa-js - community JavaScript tooling
+- `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
+- `sources.html` for the public source hierarchy and external reference map.
+- `llms.txt` for compact retrieval guidance.
+- `CONTENT_BRIEF.md` for editorial context and source-use rules.
 
-Active public technical accounts can be useful for discovery and replies:
-
-- https://x.com/hashdag
-- https://x.com/michaelsuttonil
-- https://x.com/OriNewman
-- https://x.com/hus_qy
-- https://x.com/IzioDev
-- https://x.com/coderofstuff_
-- https://x.com/FreshAir08
-- https://x.com/eliottmea
-- https://x.com/KasSigner
-
-Read public replies as well as top-level posts. Do not use stale team pages, recycled handle lists, or X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
+Community portals, media sites, learning libraries, interviews, recaps, and public technical accounts are useful context. They are not activation evidence by themselves. Do not use X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
 
 ## Site pages
 
-- `/` - audience-routed Kaspa overview, real-time Proof-of-Work framing, zero-to-one crypto context links, status lanes, common-misconception routing, and blockDAG visual.
-- `/start-here.html` - true beginner router for readers who know nothing about crypto, market value, coin categories, tradeoffs, or Kaspa.
-- `/crypto-from-zero.html` - zero-to-one curriculum: records, keys, transactions, blocks, consensus, security, mining, staking, tokens, UTXO/account models, and Kaspa.
-- `/why-crypto-has-value.html` - market-value explainer for token necessity, prices, open markets, market cap, speculation, launch design, and who benefits.
-- `/why-are-there-so-many-coins.html` - category bridge explaining why Bitcoin, Ethereum, stablecoins, exchange tokens, payment coins, privacy coins, memes, infrastructure, and Kaspa are different assets.
-- `/coin-atlas.html` - coin-category atlas for major crypto assets and value stacks, including BTC, ETH, stablecoins, SOL, BNB, XRP, LTC, BCH, XMR, DOGE, LINK, and KAS.
-- `/tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
-- `/analyze-any-coin.html` - practical checklist for token necessity, supply, launch, security, validation, liquidity, market cap, risks, and who benefits.
-- `/crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, scaling conflicts, DeFi, stablecoins, rollups, and Kaspa.
-- `/kaspa-in-one-screen.html` - compact shareable Kaspa summary: what it is, what is live, why it matters, what is not live, common boundaries, and what would strengthen or weaken the case.
-- `/adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
-- `/application-layer.html` - application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and research lanes may enable later.
-- `/builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
-- `/builder-evidence.html` - bridge page between Kaspa Explained and technical proof, separating live/targeted/roadmap/research claims with source reference.
-- `/what-crypto-is-good-for.html` - general crypto reality check for where crypto is useful and where a normal database, payment system, court, or trusted operator is better.
-- `/status.html` - compact shipped-vs-roadmap status page with a code-grounded implementation-evidence section.
-- `/overview.html` - 90-second first-reader overview.
-- `/faq.html` - direct answers to common Kaspa status, concept, speed, TPS, finality, testnet, roadmap, and ecosystem-tooling questions.
-- `/why-kaspa-matters.html` - bridge page from the general crypto reality check to Kaspa's live Proof-of-Work blockDAG settlement, base real-time decentralization framing, and future coordination-market / vProgs direction.
-- `/where-kaspa-fits.html` - comparison page and scannable table for Kaspa's lane among Bitcoin, Ethereum, Solana, XRP, BNB, TRON, stablecoins, exchange chains, meme assets, smart-contract L1s, Chainlink, and app-specific chains.
-- `/knowledge-map.html` - ordered concept map for average crypto readers, with supporting references and a status-labeled DAGKnight/vProgs comparison.
-- `/glossary.html` - compact plain-English glossary for common Kaspa terms.
-- `/search.html` - static page-map search for concepts, audiences, status lanes, and source terms.
-- `/sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and human/LLM file map.
-- `/about.html` - editorial policy, disclosures, and correction process.
-- `/404.html` - GitHub Pages custom not-found page that routes users back to search, status, and Start Here.
-- `/CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims.
-- `/CONTRIBUTING.md` - correction and contribution rules for claim status, sources, local checks, and wording changes.
+Use the public site itself for the page map:
+
+- `index.html` routes readers by audience and knowledge level.
+- `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
+- `sources.html` is the human source map.
+- `search.html` is the quickest concept/page finder.
+- `CLAIMS.yml` is the lightweight status ledger for sensitive claims.
+- `CONTRIBUTING.md` explains correction and contribution rules.
 
 ## Maintenance checks
 

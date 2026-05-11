@@ -10,6 +10,17 @@ The ideal voice is Yonatan-style first-principles explanation translated into ev
 
 Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
+## Current Cleanup Queue
+
+This is the repo-level cleanup queue. Keep it here instead of adding more status files.
+
+1. Keep README short: project purpose, source discipline, local checks, status lanes, and contribution entrypoints only.
+2. Keep long source inventories in `sources.html`, `CLAIMS.yml`, and `llms.txt`, not duplicated in README.
+3. Add parser-based HTML checks for duplicate IDs, required metadata, local anchors, and sitemap/dateModified consistency.
+4. Move repeated page, nav, source, and sitemap inventory toward a manifest or small static generator when manual sync becomes the bigger risk.
+5. Keep `CLAIMS.yml` as the source of truth for status-sensitive claims and enforce claim-level freshness in CI.
+6. Keep public copy shorter than the context stack: one page, one primary reader job, one clear status boundary.
+
 ### Concrete-First Translation
 
 Public-facing and LLM-facing explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
