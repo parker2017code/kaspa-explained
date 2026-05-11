@@ -61,3 +61,17 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 2. Do a mobile-first pass on header, floating Ask AI button, and long app-layer pages.
 3. Review the longest pages for collapsible detail and stronger section hierarchy.
 4. Replace more proof/status text with clearer user journeys and concrete examples.
+
+## Lessons from strong open-source websites
+
+- Homepage should explain the shape quickly; source/status pages prove the details.
+- Use one plain thesis, one primary route, one secondary route, and one technical/source route.
+- Vite-style lesson: a memorable sentence plus a direct start action is stronger than a broad content grid.
+- Astro-style lesson: lead with the product promise, then use visuals and proof points after the reader understands the frame.
+- Docusaurus/Starlight lesson: dense docs can be excellent if navigation, search, headings, and side routes are obvious.
+- docs.page lesson: blunt open-source value props work when they say exactly what is generated, from where, and with how much setup.
+- Kaspa.org lesson: public network pages can sound normal and confident without repeating every caveat on the homepage.
+- For Kaspa Explained, the status page should carry most live/targeted/roadmap/research taxonomy.
+- Other pages should teach first and link to status/source pages when the reader needs proof.
+- Visual system: warm editorial paper in light mode, clean dark mode, one Kaspa green accent, restrained secondary accent.
+- Copy system: fewer defensive loops. Say what works, what is coming, what is missing, then move on.
