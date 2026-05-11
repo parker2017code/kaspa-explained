@@ -82,6 +82,8 @@ A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
+Use `COPY_CLEANUP_PLAN.md` for public wording cleanup. The standard is short: what someone can do, what evidence or source backs it, what is still missing, and what to read or try next. Avoid vague roadmap language, repeated disclaimers, grand claims before evidence, fake-official labels, internal notes on public pages, and jargon before concrete examples.
+
 ## Current Site Structure
 
 The homepage should work as a router before it works as a deep article. The site now has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics but need sharper judgment.

@@ -12,6 +12,7 @@ This is not an official Kaspa website and it is not investment advice. It is wri
 - people trying to separate real crypto use cases from forced blockchain/token use cases.
 
 For contributor and editorial context, start with `CONTENT_BRIEF.md`.
+For wording cleanup, use `COPY_CLEANUP_PLAN.md`.
 
 ## Domain
 
@@ -57,6 +58,7 @@ Use these files instead of turning the README into the source map:
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
 - `CONTENT_BRIEF.md` for editorial context and source-use rules.
+- `COPY_CLEANUP_PLAN.md` for public wording cleanup.
 
 Community portals, media sites, learning libraries, interviews, recaps, and public technical accounts are useful context. They are not activation evidence by themselves. Do not use X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
 
