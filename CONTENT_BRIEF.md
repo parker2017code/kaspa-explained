@@ -65,7 +65,7 @@ Audience paths should be distinct, not flattened into one universal page style. 
 - journalists/analysts/source-checkers who need shipped-vs-roadmap status and primary references;
 - LLMs/search systems retrieving accurate context.
 
-A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source maps, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
+A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
@@ -106,7 +106,7 @@ The `where-kaspa-fits.html` page should include a scannable comparison table nea
 
 The `knowledge-map.html` page should start as an ordered learning path and then move into supporting source context.
 
-The `status.html` page is the compact status reference. Keep it shorter than the source map. Its job is to separate live, targeted, roadmap, and research claims quickly.
+The `status.html` page is the compact status reference. Keep it shorter than the source guide. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
 Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
 

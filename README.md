@@ -53,7 +53,7 @@ Do not point `www` to the repository name.
 
 Use primary or near-primary sources first. Status-sensitive claims should be anchored in code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
-Use these files instead of turning the README into the source map:
+Use these files instead of turning the README into the source guide:
 
 - `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
 - `sources.html` for the public source hierarchy and external reference map.
@@ -70,7 +70,7 @@ Use the public site itself for the page map:
 
 - `index.html` routes readers by audience and knowledge level.
 - `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
-- `sources.html` is the human source map.
+- `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
