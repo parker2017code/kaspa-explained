@@ -71,7 +71,7 @@ Use the public site itself for the page map:
 - `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
 - `sources.html` is the human source map.
 - `search.html` is the quickest concept/page finder.
-- `CLAIMS.yml` is the lightweight status ledger for sensitive claims.
+- `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `CONTRIBUTING.md` explains correction and contribution rules.
 
@@ -123,7 +123,7 @@ block routine content fixes.
 Content is licensed under CC BY 4.0. Code, CSS, scripts, and workflow files are
 licensed under MIT. See `LICENSE.md`.
 
-## Status discipline
+## Current Status Rules
 
 Do not flatten everything into "live."
 

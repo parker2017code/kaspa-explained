@@ -488,7 +488,7 @@ Primary public pages:
 - `search.html` - dependency-free static page-map search for concepts, audiences, status lanes, and source terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
-- `CLAIMS.yml` - lightweight status ledger for sensitive live/targeted/roadmap/research claims and forbidden overclaims.
+- `CLAIMS.yml` - reference file for status-sensitive claims and forbidden overclaims.
 
 LLM/source files:
 

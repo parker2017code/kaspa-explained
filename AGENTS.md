@@ -29,10 +29,12 @@
 - Do not default to EVM compatibility or external L2 migration as Kaspa's app path. If mentioning L2s or EVM, keep the source status and network-effect tradeoff explicit.
 - Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer rather than help the reader.
+- Do not write cringey internal-process language in public copy or durable notes. Avoid vague words like "framing pass," "status theater," "polish pass," "move the narrative," and "unlock." Say the concrete task: shorten the page, link the card, move details to docs, show the command prereqs, or explain the app path.
 - One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
 - Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source. Avoid over-negative repetition when a status label and the next dependency are clearer.
 - Treat text as part of the product. UI labels, docs, fixtures, generated summaries, LLM context, and handoff notes should be scanned with the same care as code: necessary, specific, clean, and defensible.
 - Treat user examples as class signals unless the user explicitly says one instance only. If the user points at one non-clickable card, cramped label, confusing command, or awkward status chip, audit the whole class of similar UI/copy patterns.
+- For broad cleanup work, use read-only parallel agents for audits and research when available. Assign them search/review tasks, keep edits local to the main agent, and use their findings to avoid narrow one-off fixes.
 - Avoid price predictions, exchange rumors, or investment advice.
 
 ## Startup Verification

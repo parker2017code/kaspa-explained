@@ -27,6 +27,9 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 - Keep one clear status table instead of repeating the full status taxonomy everywhere.
 - Use page-specific jobs: beginner pages teach, builder pages route, status pages audit, source pages cite.
 - Treat one reported issue as a class until proven otherwise. One confusing status chip means check all status chips; one fake-clickable card means check every similar card; one cramped mobile control means check the header/footer/floating controls across breakpoints.
+- Treat cringey language as a product bug: vague roadmap fog, fake-official labels, repeated defensive disclaimers, unexplained jargon, internal planning language, and claims bigger than the evidence.
+- Write like the site should read. No vague process labels. Say the job plainly: shorten the page, link the card, remove the fake button, move the detail to docs, explain the command prereq, or show what the app does.
+- For broad cleanup, use read-only parallel agents to search faster: clickable-looking elements, cringey copy, mobile layout, source/reference issues, and strong-site patterns. The main agent owns edits and checks.
 - Reduce repeated caveat patterns. Say what works, what is targeted, what is missing, then move on.
 - Avoid internal terms like lanes unless the page explicitly explains them.
 - Preserve source discipline without making every page sound like it is defending itself.
@@ -62,6 +65,20 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 2. Do a mobile-first pass on header, floating Ask AI button, and long app-layer pages.
 3. Review the longest pages for collapsible detail and stronger section hierarchy.
 4. Replace more proof/status text with clearer user journeys and concrete examples.
+
+## Next work
+
+1. Put money rails first, covenants second, based apps third, vProgs later.
+2. Make every card, chip, and label either do something or look like plain text.
+3. Shorten Application Layer, Builder Guide, Sources, and Knowledge Map.
+4. Keep live/targeted/roadmap/research mostly on the Status page.
+5. Steal structure from strong sites: simple hero, few routes, docs carry depth, no matrix homepage.
+6. Recheck Vite, Astro, Docusaurus/Starlight, docs.page, and Kaspa.org source.
+7. Generate nav/search/page lists from one source.
+8. Keep public HTML, `CLAIMS.yml`, `llms.txt`, README, and notes in sync.
+9. Make the beginner route clearer.
+10. Make the builder route answer: what can I build now?
+11. Verify live pages after each pushed public change.
 
 ## Priority queue
 
