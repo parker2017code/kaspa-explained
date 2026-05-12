@@ -31,6 +31,23 @@ grep -q "${domain}/sitemap.xml" robots.txt || {
 }
 
 for page in "${expected_pages[@]}"; do
+  forbidden_public_notes=(
+    "What should be clickable"
+    "Source map"
+    "reviewer:"
+    "Technical:"
+    "What Claude"
+    "Active build plan"
+    "Artifact work order"
+  )
+
+  for phrase in "${forbidden_public_notes[@]}"; do
+    if grep -qi "$phrase" "$page"; then
+      echo "$page exposes internal note language: $phrase" >&2
+      exit 1
+    fi
+  done
+
   if [[ "$page" == "index.html" ]]; then
     url="${domain}/"
   else

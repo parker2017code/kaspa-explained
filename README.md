@@ -13,6 +13,7 @@ This is not an official Kaspa website and it is not investment advice. It is wri
 
 For contributor and editorial context, start with `CONTENT_BRIEF.md`.
 Working cleanup notes live under `.github/notes/` so they do not become part of the public site surface.
+If you are starting from a blank terminal, use `CLI_FROM_ZERO.md` for the local preview, site check, and mainnet/testnet/roadmap boundary.
 
 ## Domain
 
@@ -57,6 +58,7 @@ Use these files instead of turning the README into the source map:
 - `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
+- `CLI_FROM_ZERO.md` for local command-line setup and verification.
 - `CONTENT_BRIEF.md` for editorial context and source-use rules.
 - `.github/notes/` for internal cleanup queues and flow rules.
 
