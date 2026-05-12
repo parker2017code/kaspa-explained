@@ -8,8 +8,10 @@
   nav.classList.add("nav-enhanced");
 
   const themeKey = "kaspa-explained-theme";
+  const themeParam = new URLSearchParams(window.location.search).get("theme");
   const savedTheme = localStorage.getItem(themeKey);
-  document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
+  const initialTheme = themeParam === "light" || themeParam === "dark" ? themeParam : savedTheme;
+  document.documentElement.dataset.theme = initialTheme === "light" ? "light" : "dark";
 
   const themeToggle = nav.querySelector(".theme-toggle");
 

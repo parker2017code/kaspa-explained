@@ -77,4 +77,22 @@ for page in "${pages[@]}"; do
   }
 done
 
-echo "Rendered layout screenshots passed. pages=${#pages[@]}"
+for theme in light dark; do
+  for viewport in "390,844:mobile" "1280,900:desktop"; do
+    IFS=":" read -r size label <<< "$viewport"
+    "$browser" \
+      --headless=new \
+      --disable-gpu \
+      --no-sandbox \
+      --hide-scrollbars \
+      --window-size="$size" \
+      --screenshot="$tmp_dir/index-${theme}-${label}.png" \
+      "http://127.0.0.1:4183/index.html?theme=$theme" >/dev/null 2>&1
+    [[ -s "$tmp_dir/index-${theme}-${label}.png" ]] || {
+      echo "Rendered $theme $label screenshot failed for index.html" >&2
+      exit 1
+    }
+  done
+done
+
+echo "Rendered layout screenshots passed. pages=${#pages[@]} themes=2"
