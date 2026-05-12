@@ -163,6 +163,7 @@ Good style:
 
 - specific nouns,
 - concrete tradeoffs,
+- named actors and requirements,
 - clear current-status wording,
 - useful comparisons,
 - short explanations before jargon,
@@ -178,6 +179,7 @@ Avoid:
 - "Toccata is live" unless future primary sources confirm it,
 - price targets,
 - exchange rumors,
+- corporate abstraction without a concrete actor and requirement, such as "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic unlock," "robust platform," or "seamless experience",
 - market-cap or rank claims frozen into the explainer,
 - vague claims like "revolutionary" without explaining the mechanism.
 - repeated "not X but Y" framing on public pages,
@@ -192,6 +194,8 @@ Avoid:
 Editing test: each public sentence should make a specific, necessary, defensible claim. If a sentence mainly adds polish, symmetry, or persuasion cadence, cut it or move the detail to the source/context stack.
 
 Craft rule: text is product surface. UI labels, public copy, repo docs, fixtures, generated summaries, LLM context, and handoff notes need the same care as code. Keep every line necessary, accurate, scan-friendly, and clean. Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source.
+
+Plain-language rule: if a sentence says a vague group "needs readiness" or "needs maturity," rewrite it around the actual actor. A fund may need custody, audit trails, reporting, and legal review. An exchange may need node stability, wallet integration, liquidity, monitoring, and support. A payments company may need payment APIs, refunds, accounting, uptime, and support. A builder may need docs, SDKs, indexers, examples, and testnet paths. If the sentence cannot name who needs what, it is probably filler.
 
 Tone and visual weight:
 

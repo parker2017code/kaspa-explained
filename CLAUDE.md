@@ -15,6 +15,7 @@
 - `CNAME` sets the domain — never edit it
 - Toccata/TN12 covenant claims must match the TN12 lab evidence in `../tn12-covenant-vault-demo/artifacts/`; cross-reference before stating anything as proven
 - Status vocabulary: use the same labels as the TN12 lab (`TN12_ACCEPTED`, `MAINNET_BLOCKED`, etc.) when describing protocol states
+- No corporate abstraction in public copy or handoff notes. If a term like institutional readiness, ecosystem maturity, enterprise adoption, robust, seamless, unlock, or enable appears, replace it or define the actor, the job, and the concrete requirement.
 
 ## Publish check
 Run `/publish-check` before any content changes go live.
