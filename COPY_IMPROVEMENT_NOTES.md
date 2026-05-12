@@ -92,6 +92,13 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 6. Shorten the longest public pages, especially Application Layer, by using stronger top-level segmentation and optional detail.
 7. Then reduce maintenance risk: manifest-driven nav/search/page inventory, fewer repeated card structures, and smaller CSS sections.
 
+## Current UI Rule
+
+- Keep light/dark controls small and out of the main reading path. The theme toggle belongs as a bottom-corner utility, not as another nav item.
+- Keep Ask AI and theme controls on opposite corners when both are present.
+- Heavy tables, source lists, and reference grids should default to collapsed details unless the page's main job requires them visible.
+- If a page already links to Status or Sources, do not repeat the full caveat taxonomy in the body.
+
 ## Lessons from strong open-source websites
 
 - Homepage should explain the shape quickly; source/status pages prove the details.
