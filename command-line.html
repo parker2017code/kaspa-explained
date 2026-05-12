@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa Command Line From Zero | Kaspa Explained</title>
+  <meta name="description" content="A practical command-line route for verifying Kaspa with nodes, RPC, wallets, explorers, testnet, and future Toccata tooling without trusting one hosted interface.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/command-line.html">
+  <link rel="icon" href="favicon.svg?v=20260512-k" type="image/svg+xml">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="Kaspa Command Line From Zero | Kaspa Explained">
+  <meta property="og:description" content="Run a node, open the CLI path, use testnet carefully, and verify accepted transactions without depending on one explorer.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/command-line.html">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa Command Line From Zero | Kaspa Explained">
+  <meta name="twitter:description" content="A practical command-line route for Kaspa node, wallet, RPC, explorer, and testnet verification.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png">
+  <meta name="dateModified" content="2026-05-11">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Kaspa Command Line From Zero",
+    "url": "https://kaspaexplained.com/command-line.html",
+    "dateModified": "2026-05-11",
+    "description": "A practical command-line route for verifying Kaspa with nodes, RPC, wallets, explorers, testnet, and future Toccata tooling.",
+    "about": ["Kaspa", "Rusty Kaspa", "RPC", "Wallets", "Testnet", "Toccata"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260511-flow">
+  <script defer src="nav.js?v=20260511-flow"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <div class="announcement">Independent Kaspa research guide - command-line verification path</div>
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here.html">Start</a>
+        <a href="/kaspa-in-one-screen.html">One Screen</a>
+        <a href="/application-layer.html">Apps</a>
+        <a href="/builder-guide.html">Builders</a>
+        <a href="/status.html">Status</a>
+        <a href="/sources.html">Sources</a>
+        <a href="/search.html">Search</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/status.html">What is live?</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="builder-page">
+    <section class="section">
+      <p class="eyebrow">Command line</p>
+      <h1>From explorer trust to your own checks.</h1>
+      <p class="lead">The goal is not to make every reader a node operator on day one. The goal is to show the route away from one hosted explorer, one wallet UI, or one dashboard when you need stronger assurance.</p>
+      <div class="actions">
+        <a class="button primary" href="#mainnet-node">Run a node</a>
+        <a class="button" href="#testnet">Use testnet</a>
+        <a class="button" href="#sources">Sources</a>
+      </div>
+      <p class="fit-note">Mainnet commands move around with releases. Check the source links before touching real funds.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Mental model</p>
+      <h2>Verification ladder.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>1. Explorer</h3>
+          <p>Use an explorer to see whether a transaction appears accepted. This is convenient, not the final trust model.</p>
+        </article>
+        <article>
+          <h3>2. Second source</h3>
+          <p>Compare another explorer, API, wallet, or indexer view. If two hosted views disagree, slow down.</p>
+        </article>
+        <article>
+          <h3>3. Your wallet</h3>
+          <p>Check network, address, balance, transaction history, fee, and signing intent inside wallet software you control.</p>
+        </article>
+        <article>
+          <h3>4. Your node</h3>
+          <p>Run or query a node when you need to verify chain state without depending on a hosted interface.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="mainnet-node" class="section">
+      <p class="eyebrow">Mainnet</p>
+      <h2>Run a Rusty Kaspa node.</h2>
+      <p>Fast Docker route from Kaspa.org Build:</p>
+      <pre><code>docker run -d --name kaspad -p 16110:16110 kaspanet/rusty-kaspad:latest</code></pre>
+      <p>Source-build route from the Rusty Kaspa README:</p>
+      <pre><code>git clone https://github.com/kaspanet/rusty-kaspa
+cd rusty-kaspa
+cargo run --release --bin kaspad</code></pre>
+      <p>Mainnet node with UTXO indexing:</p>
+      <pre><code>cargo run --release --bin kaspad -- --utxoindex</code></pre>
+      <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed UTXO state. Let the node sync before treating its answers as current.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Wallet and RPC</p>
+      <h2>Open the terminal wallet/RPC path.</h2>
+      <p>From a Rusty Kaspa checkout:</p>
+      <pre><code>cd cli
+cargo run --release</code></pre>
+      <p>Use this as the current source-backed entry into the Rusty Kaspa terminal RPC and wallet runtime. Before creating wallets or signing anything, inspect help output, confirm the network, confirm wallet file locations, back up keys, and test with tiny amounts.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">wRPC</p>
+      <h2>Enable a JSON WebSocket RPC endpoint.</h2>
+      <p>Rusty Kaspa documents wRPC as optional and disabled by default. For JSON wRPC:</p>
+      <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
+      <p>This lets SDKs and scripts query node state over WebSocket. Bind carefully on public machines. A public RPC endpoint is infrastructure, not a wallet safety boundary.</p>
+    </section>
+
+    <section id="testnet" class="section">
+      <p class="eyebrow">Testnet</p>
+      <h2>Practice before mainnet.</h2>
+      <p>Generic Rusty Kaspa testnet route:</p>
+      <pre><code>cargo run --release --bin kaspad -- --testnet</code></pre>
+      <p>Older hard-fork testnet guides used explicit suffixes, for example:</p>
+      <pre><code>kaspad --testnet --netsuffix=10 --utxoindex
+cargo run --bin kaspad --release -- --testnet --netsuffix=10 --utxoindex</code></pre>
+      <p>For TN12/Toccata work, verify the current netsuffix, release, endpoint, and flags from active public docs before running. Do not assume a TN10 command is the right TN12 command.</p>
+      <p><a href="/builder-evidence.html">Builder Evidence</a> links the public site to the TN12 proof lab when you want accepted testnet examples.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Toccata reminder</p>
+      <h2>Update this when mainnet behavior changes.</h2>
+      <p>Toccata/TN12 command examples stay in the testnet or targeted lane until public activation evidence, Rusty Kaspa releases, official docs, and working tool commands show that the behavior is live on mainnet.</p>
+    </section>
+
+    <section id="sources" class="section">
+      <p class="eyebrow">Sources</p>
+      <h2>Check these before running commands.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>Kaspa Build</h3>
+          <p><a href="https://kaspa.org/build">kaspa.org/build</a></p>
+          <p>Node, SDK, query, explorer, and testnet entry points.</p>
+        </article>
+        <article>
+          <h3>Kaspa Docs</h3>
+          <p><a href="https://docs.kaspa.org/">docs.kaspa.org</a></p>
+          <p>Integration docs for RPC, payloads, accepted transactions, and node infrastructure.</p>
+        </article>
+        <article>
+          <h3>Rusty Kaspa</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa">github.com/kaspanet/rusty-kaspa</a></p>
+          <p>Current node, wallet, CLI, Docker, and wRPC source commands.</p>
+        </article>
+        <article>
+          <h3>Releases and explorers</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/releases">Rusty Kaspa releases</a></p>
+          <p><a href="https://explorer.kaspa.org/">Kaspa explorer</a></p>
+          <p><a href="https://faucet-testnet.kaspanet.io/">Testnet faucet</a></p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav aria-label="Footer">
+        <a href="/status.html">Status</a>
+        <a href="/sources.html">Sources</a>
+        <a href="/search.html">Search</a>
+        <a href="/about.html">About</a>
+        <a href="/CLAIMS.yml">Claims</a>
+        <a href="https://github.com/parker2017code/kaspa-explained">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
