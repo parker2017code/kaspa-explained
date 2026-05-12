@@ -130,6 +130,14 @@ When explaining app-to-app composition, make the key boundary atomicity rather t
 
 The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
 
+SilverScript/covenant examples should be judged by the state transition they
+actually prove. A serious example shows continuation state, required output
+rules, signature-script wiring, rejected paths, and a submit route that
+preserves covenant fields. Funding a script output or wrapping P2PK logic is
+not enough to call a feature script-enforced. Use mux/worker, ICC sibling
+authority, and challenge/timeout language only when the specific artifact or
+source supports it.
+
 For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. If a bridge, market, oracle, or attestation app depends on outside data, name the anchor: source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, challenge process, or other trust model. This is a precision rule, not a reason to bury the reader in bridge theory.
 
 The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
