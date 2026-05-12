@@ -79,6 +79,41 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
+  grep -Eq '<link rel="icon" href="favicon\.svg(\?[^"]*)?" type="image/svg\+xml">' "$page" || {
+    echo "$page missing SVG favicon metadata" >&2
+    exit 1
+  }
+
+  grep -q '<link rel="icon" href="favicon.ico" sizes="any">' "$page" || {
+    echo "$page missing ICO favicon metadata" >&2
+    exit 1
+  }
+
+  grep -q '<link rel="icon" href="favicon.png" type="image/png">' "$page" || {
+    echo "$page missing PNG favicon metadata" >&2
+    exit 1
+  }
+
+  grep -q '<link rel="apple-touch-icon" href="apple-touch-icon.png">' "$page" || {
+    echo "$page missing Apple touch icon metadata" >&2
+    exit 1
+  }
+
+  grep -q '<link rel="manifest" href="site.webmanifest">' "$page" || {
+    echo "$page missing web app manifest metadata" >&2
+    exit 1
+  }
+
+  grep -q '<meta name="apple-mobile-web-app-title" content="Kaspa Explained">' "$page" || {
+    echo "$page missing Apple web app title" >&2
+    exit 1
+  }
+
+  grep -q '<meta name="theme-color" content="#09090b">' "$page" || {
+    echo "$page missing theme-color metadata" >&2
+    exit 1
+  }
+
   grep -Eq 'property="og:image" content="https://kaspaexplained.com/og-kaspa-explained(-[0-9]{8})?\.png"' "$page" || {
     echo "$page missing PNG OpenGraph image" >&2
     exit 1
