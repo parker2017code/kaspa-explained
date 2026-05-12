@@ -12,6 +12,7 @@
   document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
 
   const themeToggle = nav.querySelector(".theme-toggle");
+  document.body.appendChild(themeToggle);
 
   const renderThemeToggle = () => {
     const isLight = document.documentElement.dataset.theme === "light";
