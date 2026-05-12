@@ -109,6 +109,7 @@ Keep these audience paths visible:
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
 - Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, KRC standards, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
+- Need the common "why is KAS cheaper than BTC" answer: use `faq.html#kaspa-bitcoin-valuation` and `why-crypto-has-value.html#market-cap`. Keep it as valuation literacy, not price prediction.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 

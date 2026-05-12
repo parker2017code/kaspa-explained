@@ -35,6 +35,7 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 - Preserve source discipline without making every page sound like it is defending itself.
 - Let the status page carry most of the live / targeted / roadmap / research burden.
 - On education pages, lead with concrete use and plain explanation before caveats.
+- For valuation questions, avoid price targets and stale numbers by default. Teach unit price versus market cap, then explain Bitcoin certainty versus Kaspa adoption/execution risk.
 
 ## Near-term UX cleanup
 
@@ -79,6 +80,7 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 9. Make the beginner route clearer.
 10. Make the builder route answer: what can I build now?
 11. Verify live pages after each pushed public change.
+12. Keep the Kaspa-vs-Bitcoin valuation answer short: market cap, liquidity, access, adoption, certainty, and execution risk before roadmap taxonomy.
 
 ## Priority queue
 
