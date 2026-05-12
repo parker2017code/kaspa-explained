@@ -40,7 +40,7 @@
 ## Startup Verification
 
 - At the start of any substantive repo session, do a quick current-source check for drift-prone Kaspa facts before editing status-sensitive pages.
-- Check primary or near-primary sources first: Kaspa Research, KIPs, `kaspanet/rusty-kaspa`, `kaspanet/vprogs`, release notes, core technical contributor posts, and durable transcripts. Use the current Kaspa.org pages for orientation and source discovery, then verify status-sensitive claims against stronger sources.
+- Check primary or near-primary sources first: Kaspa Research, KIPs, `kaspanet/rusty-kaspa`, `kaspanet/vprogs`, release notes, core technical contributor posts, and durable transcripts. Use current `kaspa.org/developments/`, `docs.kaspa.org`, and `kaspa.org/build` pages for orientation and source discovery, then verify status-sensitive claims against stronger sources.
 - Specifically recheck Toccata activation status, DAGKnight status, vProgs status, native DeFi status, RTD-derived attestation/oracle claims, TangVM status, Proof of Useful Work claims, and any date/window that appears in public copy.
 - Keep verification discipline in the repo and source trail. Do not add visible public verification callout boxes unless the user explicitly asks for them.
 
@@ -50,6 +50,7 @@
 - Run `bash scripts/check-site.sh` before publishing.
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
+- For web-surface changes, keep the full favicon/social set coherent: SVG favicon, PNG favicon, ICO favicon, Apple touch icon, web manifest, Open Graph image, and Twitter image.
 - Review links and source references after content changes.
 - For public tone/layout changes, verify the site stays plain and useful: clear enough to trust, restrained enough to source-check, and never theatrical, promotional, or internally self-referential.
 - For comparison graphics, especially `why-kaspa-matters.html`, screenshot mobile and desktop and make sure labels do not overlap text. The fast-PoW graphic should separate inclusion speed from explicit vote/stake coordination without implying instant finality.

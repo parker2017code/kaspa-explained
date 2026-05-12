@@ -7,7 +7,13 @@
   <meta name="description" content="A builder guide for choosing the simplest Kaspa app path: money rails, covenant spend rules, based apps, inline ZK, or later full vProgs.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/builder-guide.html">
-  <link rel="icon" href="favicon.svg?v=20260512-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k2" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa Builder Guide | Kaspa Explained">
   <meta property="og:description" content="Choose between money rails, covenants, based apps, inline ZK, and later full vProgs on Kaspa.">
@@ -22,14 +28,14 @@
   <meta name="twitter:title" content="Kaspa Builder Guide | Kaspa Explained">
   <meta name="twitter:description" content="Choose the right Kaspa app path without confusing builder tooling with live protocol status.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png">
-  <meta name="dateModified" content="2026-05-07">
+  <meta name="dateModified" content="2026-05-12">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Builder Guide",
     "url": "https://kaspaexplained.com/builder-guide.html",
-    "dateModified": "2026-05-07",
+    "dateModified": "2026-05-12",
     "description": "A builder guide for choosing the simplest Kaspa app path.",
     "about": ["Kaspa", "Covenants", "Silverscript", "Based Apps", "Inline ZK", "vProgs"]
   }
@@ -62,7 +68,6 @@
 
   <main id="top" tabindex="-1" class="builder-page">
     <section class="section">
-      <p class="eyebrow">Builder guide</p>
       <h1>Kaspa builder guide.</h1>
       <p class="lead">Kaspa builders should start with the user action: a payment, vault rule, asset rule, market, proof, or later app-to-app flow. Then choose the simplest state model that can support it.</p>
       <p class="fit-note"><strong>Build rule:</strong> start with the smallest working rail. Mainnet status still comes from activation, releases, and working applications.</p>
@@ -70,7 +75,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Decision path</p>
       <h2>Start with state and proofs.</h2>
       <div class="table-wrap">
         <table class="reality-table">
@@ -113,38 +117,13 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Current options</p>
       <h2>Match app model to state model.</h2>
-      <div class="reference-grid">
-        <article>
-          <h3>Covenants</h3>
-          <p><span class="status-pill target">Constrained spend rules</span></p>
-          <p>Best for asset rules and stateful outputs: vaults, treasury controls, escrow-like flows, unlock conditions, issuance policy, and small UTXO state machines.</p>
-          <p>One protected state advances one valid step at a time. Independent states can still run in parallel, but one hot state is sequential.</p>
-        </article>
-        <article>
-          <h3>Based apps</h3>
-          <p><span class="status-pill target">App state anchored to Kaspa</span></p>
-          <p>Best when one app needs richer state than a simple covenant flow: balances, orders, packs, risk rows, task states, or market state anchored to Kaspa L1.</p>
-          <p>A based app can start with deterministic replay over accepted transactions. Add ZK when the app needs proof-verified execution, privacy, or a trust-minimized bridge.</p>
-        </article>
-        <article>
-          <h3>Inline ZK</h3>
-          <p><span class="status-pill roadmap">Proof when needed</span></p>
-          <p>Best when each action needs its own proof or custom validity check before it settles: privacy-preserving actions, proof-verified workflows, or custom account models.</p>
-          <p>This path usually requires more prover design, proof infrastructure, and operational ownership. Outside data still needs a canonical anchor.</p>
-        </article>
-        <article>
-          <h3>Full vProgs</h3>
-          <p><span class="status-pill research">Later composition path</span></p>
-          <p>Full vProgs are the future app-to-app composition direction: independent apps reading or calling one another in the same flow, with atomic combined outcomes instead of separate bridge-style waiting.</p>
-          <p>Treat this as architectural direction.</p>
-        </article>
-      </div>
+      <p>Covenants are for constrained spend rules: vaults, treasury controls, escrow-like flows, unlock conditions, issuance policy, and small UTXO state machines. One protected state advances one valid step at a time.</p>
+      <p>Based apps are for richer app state anchored to Kaspa ordering: balances, orders, packs, risk rows, task states, or market state. They can start with deterministic replay over accepted transactions and add ZK only when proof-verified execution, privacy, or trust-minimized bridge logic becomes the product boundary.</p>
+      <p>Inline ZK is for actions that need their own proof before settlement. Full vProgs are the later app-to-app composition direction, where independent apps can read or call one another in one combined outcome.</p>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Build examples</p>
       <h2>Map product ideas to a path.</h2>
       <p>Pick the smallest path that matches the product. Most first builds should be a wallet/payment rail, a covenant-shaped rule, or a narrow based app.</p>
       <details class="source-more">
@@ -191,7 +170,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Builder runway</p>
       <h2>Use the new BUIDL path as the practical start.</h2>
       <p class="lead">Kaspa.org now gives builders a cleaner first mile: try the SDK in-browser, pick an app or infrastructure path, then decide when public access is enough and when you need your own node.</p>
       <details class="source-more">
@@ -235,17 +213,10 @@
           </table>
         </div>
       </details>
-      <div class="actions">
-        <a class="button primary" href="https://kaspa.org/build">Open Kaspa.org BUIDL</a>
-        <a class="button" href="https://docs.kaspa.org/integrate/getting-started">Official getting started</a>
-        <a class="button" href="https://github.com/kaspanet/rusty-kaspa/tree/v1.1.0/wasm/examples">WASM examples</a>
-        <a class="button" href="https://kaspa.aspectron.org/rpc/pnn.html">Public Node Network</a>
-        <a class="button" href="https://api.kaspa.org/docs">REST API docs</a>
-      </div>
+      <p><a href="https://kaspa.org/build">Kaspa.org Build</a>, the <a href="https://docs.kaspa.org/integrate/getting-started">official getting-started docs</a>, and the <a href="https://api.kaspa.org/docs">REST API docs</a> are the normal first references. Keep hosted APIs as prototype infrastructure until reliability, privacy, and scale requirements are clear.</p>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Builder tooling</p>
       <h2>Public tools to track.</h2>
       <p>Start with official docs and examples. Open the full tool list only when you need a concrete implementation reference.</p>
       <details class="source-more">
@@ -312,7 +283,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Access and infrastructure</p>
       <h2>Useful builder surfaces.</h2>
       <p>Most builders only need one or two of these at a time. Keep the rest as a reference drawer.</p>
       <details class="source-more">
@@ -363,7 +333,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Community infra</p>
       <h2>Ecosystem projects to inspect.</h2>
       <p>Use these as references after choosing a build path. They should not be the first thing a new reader has to parse.</p>
       <details class="source-more">
@@ -394,7 +363,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">TN12 setup notes</p>
       <h2>What helps before prototyping.</h2>
       <p>Use TN12 when you need testnet covenant practice. Keep this as setup detail, not the public explanation of Kaspa.</p>
       <details class="source-more">
@@ -447,7 +415,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Verification habits</p>
       <h2>Prove the state change.</h2>
       <p>After submit, fetch accepted state and compare the exact result to the thing the app claims happened.</p>
       <details class="source-more">
@@ -490,7 +457,6 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">Status wording</p>
       <h2>Say the stage first.</h2>
       <ol class="learning-steps">
         <li><strong>Covenants:</strong> <span>nearer L1 state-output path for constrained asset and UTXO-state rules.</span></li>
@@ -505,19 +471,15 @@
     </section>
 
     <section class="next-step section" aria-label="Suggested next step">
-      <p class="eyebrow">Next step</p>
       <h2>Build from current status.</h2>
       <p>Use this page to choose a model, then verify current implementation state before writing docs or product claims.</p>
       <div class="actions">
         <a class="button primary" href="/status.html">Open status</a>
         <a class="button" href="/application-layer.html">App ideas</a>
-        <a class="button" href="/builder-evidence.html">Proof bridge</a>
-        <a class="button" href="/sources.html">Check sources</a>
       </div>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Sources</p>
       <h2>Builder references used for this page.</h2>
       <ol class="source-list">
         <li><a href="https://progdoc.izio.fr/overview.html">Izio's Kaspa programmability overview</a> for the builder decision tree: covenants, based apps, inline ZK, and future full vProgs.</li>

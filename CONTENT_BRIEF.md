@@ -508,6 +508,8 @@ Additional consistency checks after the May 2026 human-first/tone pass:
 
 - Public tone: scan changed public copy for medium authority and medium visual weight. Avoid grand titles, personal/internal shorthand, pitch-deck phrasing, and overlarge visual hierarchy.
 - LLM/context boundary: keep dense source rules, maintenance notes, and retrieval guidance in `llms.txt`, `CLAIMS.yml`, `sources.html`, and this brief. Public pages should not expose internal editorial notes.
+- Source freshness: use current `kaspa.org/developments/`, `docs.kaspa.org`, and `kaspa.org/build` for orientation and builder routing, then verify live/shipped protocol claims against KIPs, code, releases, research papers, or accepted artifacts before public copy changes.
+- Web basics: favicon, touch icon, manifest, Open Graph image, Twitter image, canonical links, sitemap, robots, and local screenshots are part of the product surface. Keep them updated when brand marks, route structure, or public framing changes.
 - GitHub public framing: when homepage, README, or site voice changes, check GitHub About metadata (`gh repo view ... --json description,homepageUrl,repositoryTopics`) and keep the repo description aligned with the live site.
 - Fast-PoW graph: verify the `why-kaspa-matters.html` comparison graphic does not imply instant finality, a simple "stronger confirmation" ranking, or a universal critique of all PoS systems. The visual should distinguish inclusion speed from explicit vote/stake coordination, and it must not overlap on mobile.
 - Visual overlap: for any CSS, heading-size, diagram, table, or card change, screenshot the affected page on mobile and desktop. Check that axis labels, hero arcs, buttons, cards, and table labels do not cover nearby text.
