@@ -243,49 +243,52 @@
       <h2>Toccata path.</h2>
       <p>Toccata is the near-term hard-fork track for spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, and vProgs groundwork. It should be described as future mainnet capability until activation is confirmed.</p>
       <p>For builders, the first useful testnet products are simple and auditable: a vault policy, an assurance contract, an escrow, or a constrained asset rule. The hard part is the gap between a good UI and an enforced covenant: address generation, faucet funding, a synced TN12 node, UTXO-indexed balance checks, Silverscript compilation, signing, broadcast, and explorer-visible outputs.</p>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead><tr><th>Opportunity</th><th>What it could look like</th><th>Why Kaspa may fit</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>Vaults and wallet policies</td>
-              <td>Time-locked spending paths, delayed withdrawals, emergency keys, spending limits, and business treasury controls.</td>
-              <td>UTXO covenants can express constrained asset movement without turning every account into a global VM object.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-            <tr>
-              <td>Assurance contracts</td>
-              <td>Funds move only if enough participants commit by a deadline; otherwise they return.</td>
-              <td>This maps directly to stag-hunt and public-goods coordination: the rule is credible before everyone acts.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-            <tr>
-              <td>Conditional escrow</td>
-              <td>Milestone payments, disputes, deposits, delivery windows, and refund paths governed by transparent script rules.</td>
-              <td>Fast payment feedback helps escrow feel usable while covenants keep the state machine constrained.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-            <tr>
-              <td>Native assets and access passes</td>
-              <td>Tickets, memberships, credentials, game items, loyalty points, and redeemable claims with clear custody rules.</td>
-              <td>Some assets need fast transfer and self-custody more than full general-purpose DeFi at first.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-            <tr>
-              <td>Atomic market primitives</td>
-              <td>Simple swaps, auctions, batch settlement, OTC flows, and intent-style exchange with bounded script behavior.</td>
-              <td>Kaspa's edge is credible fast ordering; market design should use that rather than pretending mature DeFi is already here.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-            <tr>
-              <td>Games and state machines</td>
-              <td>Chess-like or turn-based apps where state is carried through constrained UTXO transitions.</td>
-              <td>The useful point is state discipline, not the game itself: registration, player state, game state, move routing, and final settlement.</td>
-              <td>Post-Toccata opportunity</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <details class="source-more">
+        <summary>Open Toccata app examples</summary>
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead><tr><th>Opportunity</th><th>What it could look like</th><th>Why Kaspa may fit</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Vaults and wallet policies</td>
+                <td>Time-locked spending paths, delayed withdrawals, emergency keys, spending limits, and business treasury controls.</td>
+                <td>UTXO covenants can express constrained asset movement without turning every account into a global VM object.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+              <tr>
+                <td>Assurance contracts</td>
+                <td>Funds move only if enough participants commit by a deadline; otherwise they return.</td>
+                <td>This maps directly to stag-hunt and public-goods coordination: the rule is credible before everyone acts.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+              <tr>
+                <td>Conditional escrow</td>
+                <td>Milestone payments, disputes, deposits, delivery windows, and refund paths governed by transparent script rules.</td>
+                <td>Fast payment feedback helps escrow feel usable while covenants keep the state machine constrained.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+              <tr>
+                <td>Native assets and access passes</td>
+                <td>Tickets, memberships, credentials, game items, loyalty points, and redeemable claims with clear custody rules.</td>
+                <td>Some assets need fast transfer and self-custody more than full general-purpose DeFi at first.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+              <tr>
+                <td>Atomic market primitives</td>
+                <td>Simple swaps, auctions, batch settlement, OTC flows, and intent-style exchange with bounded script behavior.</td>
+                <td>Kaspa's edge is credible fast ordering; market design should use that rather than pretending mature DeFi is already here.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+              <tr>
+                <td>Games and state machines</td>
+                <td>Chess-like or turn-based apps where state is carried through constrained UTXO transitions.</td>
+                <td>The useful point is state discipline, not the game itself: registration, player state, game state, move routing, and final settlement.</td>
+                <td>Post-Toccata opportunity</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
     </section>
 
     <section class="section">
@@ -304,28 +307,31 @@
       <p>RTD and Staghunt framing point to markets where people need credible commitment before they act. A normal website can collect promises, but users may still worry that the operator can censor, reorder, change terms, or disappear.</p>
       <p>The practical first version is not magic: collect conditional commitments, group compatible commitments, run a transparent solver, prepare settlement or refunds, and replay the accepted evidence. The harder research target adds privacy, reusable capital, solver incentives, censorship resistance, and atomic execution.</p>
       <p>The hard parts are concrete: event sources, incentives, anti-MEV design, scheduling, disputes, and implementation. At 10 BPS this remains an app/research lane; stronger RTD claims depend on later sampling density and consensus work.</p>
-      <div class="fit-grid">
-        <article class="section">
-          <h3>Public-goods assurance</h3>
-          <p>Projects, research, events, software, or local infrastructure that receive funding once enough participants join under fixed rules.</p>
-        </article>
-        <article class="section">
-          <h3>Real-time auctions</h3>
-          <p>Fast, open auctions for scarce digital goods, access, blockspace-related rights, or services where ordering and censorship resistance matter.</p>
-        </article>
-        <article class="section">
-          <h3>Oracle-backed markets</h3>
-          <p>Prediction, insurance, and payment markets that need external data, but where oracle trust, incentives, and dispute paths are explicit.</p>
-        </article>
-        <article class="section">
-          <h3>First-to-know signal markets</h3>
-          <p>Watch miners or other rewarded reporters begin attesting to an event, then surface the earliest credible signal before normal feeds agree.</p>
-        </article>
-        <article class="section">
-          <h3>Machine-to-machine payments</h3>
-          <p>Agents, devices, miners, apps, and services buying resources or making commitments at internet speed with self-custodied funds.</p>
-        </article>
-      </div>
+      <details class="source-more">
+        <summary>Open group-commitment examples</summary>
+        <div class="fit-grid">
+          <article class="section">
+            <h3>Public-goods assurance</h3>
+            <p>Projects, research, events, software, or local infrastructure that receive funding once enough participants join under fixed rules.</p>
+          </article>
+          <article class="section">
+            <h3>Real-time auctions</h3>
+            <p>Fast, open auctions for scarce digital goods, access, blockspace-related rights, or services where ordering and censorship resistance matter.</p>
+          </article>
+          <article class="section">
+            <h3>Oracle-backed markets</h3>
+            <p>Prediction, insurance, and payment markets that need external data, but where oracle trust, incentives, and dispute paths are explicit.</p>
+          </article>
+          <article class="section">
+            <h3>First-to-know signal markets</h3>
+            <p>Watch miners or other rewarded reporters begin attesting to an event, then surface the earliest credible signal before normal feeds agree.</p>
+          </article>
+          <article class="section">
+            <h3>Machine-to-machine payments</h3>
+            <p>Agents, devices, miners, apps, and services buying resources or making commitments at internet speed with self-custodied funds.</p>
+          </article>
+        </div>
+      </details>
     </section>
 
     <section class="section">
@@ -355,14 +361,18 @@
     <section class="section">
       <p class="eyebrow">Short list</p>
       <h2>Coordination app examples.</h2>
-      <div class="reference-grid">
-        <article><h3>Assurance markets</h3><p>Funds move when enough people commit by a deadline. This is the cleanest public-goods and stag-hunt fit.</p></article>
-        <article><h3>Prediction and event markets</h3><p>Useful only with explicit oracle, reporter, dispute, and legal assumptions. Fast payment feedback does not remove those hard parts.</p></article>
-        <article><h3>First-to-know terminals</h3><p>Apps could reward fast attestations and surface early confidence changes before normal feeds agree.</p></article>
-        <article><h3>Merchant escrow and vaults</h3><p>Live payment UX can improve now; covenant policies could later add refunds, limits, delays, and recovery paths.</p></article>
-        <article><h3>Hashpower and service auctions</h3><p>PoW culture and fast ordering fit markets for scarce technical resources, proofs, compute, data, and app-specific services.</p></article>
-        <article><h3>AI-agent commitments</h3><p>Agents need small, machine-readable commitments: deposits, task payment, completion proofs, and dispute rules.</p></article>
-      </div>
+      <p>These are examples, not a second homepage. Start with the checklist below, then open the list if the app really needs group commitment rules.</p>
+      <details class="source-more">
+        <summary>Open coordination examples</summary>
+        <div class="reference-grid">
+          <article><h3>Assurance markets</h3><p>Funds move when enough people commit by a deadline. This is the cleanest public-goods and stag-hunt fit.</p></article>
+          <article><h3>Prediction and event markets</h3><p>Useful only with explicit oracle, reporter, dispute, and legal assumptions. Fast payment feedback does not remove those hard parts.</p></article>
+          <article><h3>First-to-know terminals</h3><p>Apps could reward fast attestations and surface early confidence changes before normal feeds agree.</p></article>
+          <article><h3>Merchant escrow and vaults</h3><p>Live payment UX can improve now; covenant policies could later add refunds, limits, delays, and recovery paths.</p></article>
+          <article><h3>Hashpower and service auctions</h3><p>PoW culture and fast ordering fit markets for scarce technical resources, proofs, compute, data, and app-specific services.</p></article>
+          <article><h3>AI-agent commitments</h3><p>Agents need small, machine-readable commitments: deposits, task payment, completion proofs, and dispute rules.</p></article>
+        </div>
+      </details>
     </section>
 
     <section class="section">
@@ -380,19 +390,23 @@
     <section id="execution-order" class="section">
       <p class="eyebrow">Execution order</p>
       <h2>Build order.</h2>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead><tr><th>Phase</th><th>Build focus</th><th>What success looks like</th></tr></thead>
-          <tbody>
-            <tr><td>Now</td><td>Wallets, receipt UX, infrastructure, explorers, mining/node visibility, education, confirmation-risk tools.</td><td>People can use and understand the live network without trusting one interface.</td></tr>
-            <tr><td>Now: ecosystem assets</td><td>KRC20/KRC721-aware wallets, indexers, coupon/pass flows, event-credit experiments, token catalogs, merchant redemption tools, and safety warnings.</td><td>People can try practical token and NFT workflows while still understanding that these are ecosystem standards, not native smart contracts.</td></tr>
-            <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, STARK/zk proof experiments, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
+      <p>Build in this order: useful wallet/payment rails, small covenant-shaped products, then richer based-app or vProg paths only when the product needs shared state or composition.</p>
+      <details class="source-more">
+        <summary>Open build-order table</summary>
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead><tr><th>Phase</th><th>Build focus</th><th>What success looks like</th></tr></thead>
+            <tbody>
+              <tr><td>Now</td><td>Wallets, receipt UX, infrastructure, explorers, mining/node visibility, education, confirmation-risk tools.</td><td>People can use and understand the live network without trusting one interface.</td></tr>
+              <tr><td>Now: ecosystem assets</td><td>KRC20/KRC721-aware wallets, indexers, coupon/pass flows, event-credit experiments, token catalogs, merchant redemption tools, and safety warnings.</td><td>People can try practical token and NFT workflows while still understanding that these are ecosystem standards, not native smart contracts.</td></tr>
+              <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, STARK/zk proof experiments, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
               <tr><td>Based apps</td><td>App-specific state machines anchored to Kaspa ordering, commitments, proofs, settlement, or exits. They can start as deterministic replay and grow into based-zk when proof verification matters.</td><td>Builders can test richer products without waiting for full app-to-app composition.</td></tr>
               <tr><td>vProgs</td><td>Apps that prove their own logic, share Kaspa ordering, support richer markets, private proofs, app-to-app flows, and canonical bridge design.</td><td>The later goal is stronger composition without asking the base layer to execute every app globally.</td></tr>
-            <tr><td>Research</td><td>DAGKnight, 100 BPS sampling, RTD-derived attestations, oracle markets, MEV auctions, TangVM-style flows, public funding markets, and AI-agent commitments.</td><td>The broad coordination thesis becomes testable through real products.</td></tr>
-          </tbody>
-        </table>
-      </div>
+              <tr><td>Research</td><td>DAGKnight, 100 BPS sampling, RTD-derived attestations, oracle markets, MEV auctions, TangVM-style flows, public funding markets, and AI-agent commitments.</td><td>The broad coordination thesis becomes testable through real products.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
     </section>
 
     <section class="next-step section" aria-label="Suggested next step">
