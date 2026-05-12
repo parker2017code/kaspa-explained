@@ -10,19 +10,6 @@ The ideal voice is Yonatan-style first-principles explanation translated into ev
 
 Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
-## Current Cleanup Queue
-
-This is the repo-level cleanup queue. Keep it here instead of adding more status files.
-
-Working estimate: site cleanup/tidying is roughly `93-95%`. Public claim discipline is stronger than repo maintainability; the next gains come from generating nav and search inventory from `site-manifest.json` instead of only validating them.
-
-1. Keep README short: project purpose, source discipline, local checks, status lanes, and contribution entrypoints only.
-2. Keep long source inventories in `sources.html`, `CLAIMS.yml`, and `llms.txt`, not duplicated in README.
-3. Keep parser-based HTML checks for duplicate IDs, required metadata, local anchors, search page coverage, sitemap coverage, sitemap allowlisted extras, and sitemap/dateModified consistency.
-4. Keep page, nav, support-file, and sitemap-extra inventory in `site-manifest.json`; sitemap is generated from the manifest and page metadata, search cards are checked against manifest order, and nav must match manifest nav entries. Move nav, source, and search generation toward the manifest when manual sync becomes the bigger risk.
-5. Keep `CLAIMS.yml` as the source of truth for status-sensitive claims and enforce claim-level freshness in CI.
-6. Keep public copy shorter than the context stack: one page, one primary reader job, one clear status boundary.
-
 ### Concrete-First Translation
 
 Public-facing and LLM-facing explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
@@ -82,7 +69,7 @@ A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
 
-Use `COPY_CLEANUP_PLAN.md` for public wording cleanup. The standard is short: what someone can do, what evidence or source backs it, what is still missing, and what to read or try next. Avoid vague roadmap language, repeated disclaimers, grand claims before evidence, fake-official labels, internal notes on public pages, and jargon before concrete examples.
+Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standard is short: what someone can do, what evidence or source backs it, what is still missing, and what to read or try next. Avoid vague roadmap language, repeated disclaimers, grand claims before evidence, fake-official labels, internal notes on public pages, and jargon before concrete examples.
 
 ## Current Site Structure
 
