@@ -79,7 +79,7 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
-  grep -q 'property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png"' "$page" || {
+  grep -Eq 'property="og:image" content="https://kaspaexplained.com/og-kaspa-explained(-[0-9]{8})?\.png"' "$page" || {
     echo "$page missing PNG OpenGraph image" >&2
     exit 1
   }
