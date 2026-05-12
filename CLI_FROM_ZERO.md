@@ -1,72 +1,26 @@
 # Kaspa Explained CLI From Zero
 
-This guide is for someone starting with a terminal and no repo context.
+This guide is for someone starting with a terminal and trying to verify Kaspa
+without trusting one explorer, one wallet UI, or one hosted dashboard.
 
-Kaspa Explained is a static public explainer site. It does not create wallets, sign transactions, submit testnet transactions, or run a Kaspa node. Its command-line path is for reading, editing, and verifying the website locally.
+Kaspa Explained does not create wallets, sign transactions, submit transactions,
+or run a Kaspa node. This file is a source-backed map to the public command-line
+paths that do those jobs.
 
 ## What You Need
 
 - A terminal.
 - Git.
-- Python 3 for local preview.
-- Bash for the site checks.
+- Docker, or Rust/Cargo if building Rusty Kaspa from source.
+- Separate wallet/key hygiene before touching real funds.
 
 Check the basics:
 
 ```sh
 git --version
-python3 --version
-bash --version
+docker --version
+cargo --version
 ```
-
-## Get The Repo
-
-```sh
-git clone <repo-url>
-cd kaspa-explained
-```
-
-What happened:
-
-- `git clone` copied the site files.
-- `cd` moved your terminal into the site repo.
-
-There is no `npm ci` step here because this repo is a plain static site.
-
-## Run The Site Locally
-
-```sh
-python3 -m http.server 4173
-```
-
-Open:
-
-```txt
-http://127.0.0.1:4173/
-```
-
-Stop the server with `Ctrl+C` in the terminal that started it.
-
-## Run The Local Gate
-
-In another terminal:
-
-```sh
-bash scripts/check-site.sh
-```
-
-What it checks:
-
-- expected public pages and support files;
-- canonical links and sitemap entries;
-- local anchors;
-- duplicated nav wiring;
-- search-result coverage;
-- social metadata;
-- source/status guardrails;
-- forbidden overclaim phrases.
-
-If this passes, the static site is internally consistent. It does not prove that every live Kaspa fact is current forever.
 
 ## Mainnet, Testnet, Roadmap, Research
 
@@ -80,22 +34,213 @@ Use the site to separate claim types:
 
 For command-line TN12 experiments, use the TN12 repo. This site can link to that evidence, but it does not execute it.
 
-## Edit Safely
+## Mainnet Terminal Path
 
-Before editing a status-sensitive claim:
+This repo should help a reader know where to go, not invent private mainnet
+commands. A real mainnet terminal path usually has this shape:
 
-1. Check the relevant page.
-2. Check `CLAIMS.yml`.
-3. Check `sources.html`.
-4. Check `CONTENT_BRIEF.md` for editorial boundaries.
-5. Update `llms.txt` only when machine-readable guidance changes.
-6. Run `bash scripts/check-site.sh`.
+```txt
+install official node or wallet tooling
+sync or connect to a mainnet node/RPC source
+query an address, transaction, or UTXO
+build or review a transaction with production wallet software
+sign only after checking network, inputs, outputs, amount, fee, and intent
+broadcast through the intended mainnet route
+verify the accepted transaction in an explorer or node/indexer query
+```
 
-Keep public wording concrete:
+The reason to learn this path is resilience. A trustless base layer is weaker
+in practice if nearly everyone depends on one hosted explorer, one wallet UI, or
+one dashboard to know what happened. A normal user does not need to become a
+node operator on day one, but the public education path should show how to move
+from a website, to an explorer, to a wallet, to a node/RPC query when more
+assurance is needed.
 
-- Say what a person or app can do.
-- Then say whether it is live, testnet-only, targeted, roadmap, or research.
-- Do not repeat the full status taxonomy on every page.
+Use public Kaspa resources for the exact commands and versions:
+
+- Kaspa.org Build and official documentation for current builder entry points.
+- Rusty Kaspa releases and docs for node/RPC behavior.
+- WASM/SDK examples for supported application code paths.
+- Public explorers for accepted transaction checks.
+- Wallet documentation for key handling, signing, and broadcast behavior.
+
+Useful source URLs:
+
+- `https://kaspa.org/build`
+- `https://docs.kaspa.org/`
+- `https://github.com/kaspanet/rusty-kaspa`
+- `https://github.com/kaspanet/rusty-kaspa/releases`
+- `https://explorer.kaspa.org/`
+- `https://faucet-testnet.kaspanet.io/`
+
+Do not copy TN12 commands into mainnet. Testnet faucet wallets, covenant proof
+drafts, and local `.local/` keys are learning tools, not production wallets.
+
+## Mainnet Commands
+
+These are the current source-backed entry points. Treat them as the path to
+learn and verify from the terminal. Before using real funds, check the linked
+sources for current versions, flags, and wallet behavior.
+
+### Run a mainnet node
+
+Fastest Docker route:
+
+```sh
+docker run -d --name kaspad -p 16110:16110 kaspanet/rusty-kaspad:latest
+```
+
+What it does:
+
+- downloads and starts the latest Rusty Kaspa node image;
+- exposes local gRPC on port `16110`;
+- gives your machine a local node process to query;
+- does not create a wallet or sign transactions.
+
+Source-build route:
+
+```sh
+git clone https://github.com/kaspanet/rusty-kaspa
+cd rusty-kaspa
+cargo run --release --bin kaspad
+```
+
+Mainnet node with UTXO indexing:
+
+```sh
+cargo run --release --bin kaspad -- --utxoindex
+```
+
+Use `--utxoindex` when wallet or UTXO queries need indexed UTXO state. Let the
+node sync before relying on its answers.
+
+### Open the terminal wallet/RPC interface
+
+From a Rusty Kaspa checkout:
+
+```sh
+cd cli
+cargo run --release
+```
+
+What it does:
+
+- opens the Rusty Kaspa command-line interface;
+- gives a terminal route into RPC and wallet runtime behavior;
+- should be used only after reading its help output and confirming which network
+  it is connected to.
+
+Before signing anything:
+
+- confirm mainnet versus testnet;
+- confirm where wallet files are stored;
+- back up keys according to wallet documentation;
+- send a tiny test amount first;
+- verify the accepted transaction through more than one source when possible.
+
+### Start a generic testnet node
+
+Generic Rusty Kaspa testnet route:
+
+```sh
+cargo run --release --bin kaspad -- --testnet
+```
+
+Older Kaspa hard-fork testnet guides use explicit testnet suffixes, for example:
+
+```sh
+kaspad --testnet --netsuffix=10 --utxoindex
+cargo run --bin kaspad --release -- --testnet --netsuffix=10 --utxoindex
+```
+
+For TN12 or Toccata-era testing, confirm the current release, netsuffix, and
+flags from the active public Toccata/TN12 docs before running. Do not assume a
+TN10 command is the right TN12 command.
+
+### Enable wRPC on a node
+
+For app/RPC work, enable the JSON WebSocket RPC listener:
+
+```sh
+--rpclisten-json=<interface:port>
+--rpclisten-json=default
+```
+
+Use this as a flag on the node command, for example:
+
+```sh
+cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default
+```
+
+What it does:
+
+- exposes a wRPC JSON endpoint;
+- lets SDKs/scripts query node state over WebSocket;
+- is required by some app and payload workflows;
+- should be bound carefully if the machine is reachable from the public
+  internet.
+
+### Query without running your own node
+
+Kaspa.org Build points to public docs, public explorers, a community API, and
+the public node network. Use those for learning and quick reads, but remember
+that hosted services are convenience layers. For higher assurance, compare
+against your own node or another independent source.
+
+Basic verification ladder:
+
+```txt
+explorer says tx accepted
+another explorer or API agrees
+your wallet balance matches
+your own node/RPC query agrees
+your app/indexer replay matches the accepted txid and payload/output rules
+```
+
+That is the point of the command-line path: not everyone needs to run every
+layer all the time, but the route away from a single hosted view should exist.
+
+## From Reading To Running
+
+Use this route if you are starting from zero:
+
+1. Read `start-here.html` and `status.html` to separate live, targeted, roadmap,
+   and research claims.
+2. Use `builder-guide.html` and `sources.html` to find the public docs behind a
+   command path.
+3. Run a mainnet node only from current Rusty Kaspa release/source docs.
+4. Use `kaspa-cli` or wallet docs only after checking network, key storage, and
+   signing behavior.
+5. For TN12 experiments, switch repos and follow that repo's
+   `docs/CLI_FROM_ZERO.md`.
+6. For mainnet funds, stop and use official wallet/node documentation instead
+   of copying testnet commands.
+
+## Public Sources For Mainnet Work
+
+This site does not invent mainnet command guidance. It points readers back to
+public Kaspa resources:
+
+- `sources.html` lists the source hierarchy and reference map.
+- `builder-guide.html` links to Kaspa.org Build, official Kaspa docs, Rusty
+  Kaspa releases, WASM examples, accepted-transaction docs, payload docs, node
+  docs, explorers, and testnet resources.
+- `status.html` says which claims are live, ecosystem-live, targeted, roadmap,
+  or research.
+- Official mainnet work should start from public Kaspa wallet, node, SDK, and
+  explorer documentation. TN12 covenant commands are testnet practice, not a
+  mainnet substitute.
+- When Toccata or later mainnet tooling changes what can be done from a
+  terminal, update this site from public activation, release, and tool docs
+  first. Do not promote testnet commands as mainnet instructions.
+
+## Maintainer Reminder
+
+When Toccata becomes mainnet behavior, update this file, `status.html`,
+`builder-guide.html`, `sources.html`, `CLAIMS.yml`, and `llms.txt` from public
+activation evidence, Rusty Kaspa releases, official docs, and working tool
+commands. Until that evidence exists, keep Toccata/TN12 command examples in the
+testnet or targeted lane.
 
 ## What This Repo Does Not Do
 

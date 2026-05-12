@@ -13,7 +13,7 @@ This is not an official Kaspa website and it is not investment advice. It is wri
 
 For contributor and editorial context, start with `CONTENT_BRIEF.md`.
 Working cleanup notes live under `.github/notes/` so they do not become part of the public site surface.
-If you are starting from a blank terminal, use `CLI_FROM_ZERO.md` for the local preview, site check, and mainnet/testnet/roadmap boundary.
+If you are starting from a blank terminal, use `CLI_FROM_ZERO.md` for the split between Kaspa mainnet node/wallet verification, TN12 testnet practice, and future Toccata-era command paths.
 
 ## Domain
 
@@ -61,6 +61,11 @@ Use these files instead of turning the README into the source guide:
 - `CLI_FROM_ZERO.md` for local command-line setup and verification.
 - `CONTENT_BRIEF.md` for editorial context and source-use rules.
 - `.github/notes/` for internal cleanup queues and flow rules.
+
+When Toccata becomes mainnet behavior, refresh `CLI_FROM_ZERO.md`,
+`status.html`, `builder-guide.html`, `sources.html`, `CLAIMS.yml`, and
+`llms.txt` from public activation evidence, Rusty Kaspa releases, official docs,
+and working tool commands before changing public status language.
 
 Community portals, media sites, learning libraries, interviews, recaps, and public technical accounts are useful context. They are not activation evidence by themselves. Do not use X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
 
