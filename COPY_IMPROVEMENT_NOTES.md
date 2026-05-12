@@ -7,6 +7,19 @@ This is an internal working note for editorial and UX cleanup. Do not turn it in
 - Source-disciplined explainer: B+
 - Polished public website: B-
 
+## Active Todo
+
+Work in this order unless a visible regression appears:
+
+1. Homepage route compression: keep the first screen to the plain thesis, the beginner route, the status/source route, and one builder/app route.
+2. Long-page pruning: shorten `sources.html`, `knowledge-map.html`, `status.html`, and any remaining card-wall sections by collapsing reference material behind details.
+3. Clickable-affordance audit: every card, chip, status label, or route-looking object must either link somewhere useful or look like passive text.
+4. Copy pass: remove remaining defensive loops such as repeated "not live", "check status", "claims need context", and "status discipline" where the page already links to Status or Sources.
+5. Visual pass: keep light/dark mode small, check mobile/desktop rendered pages, and fix contrast or spacing before changing content.
+6. Manifest pass: move more nav/search/page inventory toward `site-manifest.json` generation instead of manual sync.
+7. Source sync: when public wording changes, keep visible HTML, `CLAIMS.yml`, `llms.txt`, README, and notes aligned.
+8. Publish verification: after push, verify Actions/Pages and fetch exact live HTML before saying it is live.
+
 ## Main problems to fix
 
 - The site is credible but slightly over-disciplined. It repeats live / targeted / roadmap / research too often.
