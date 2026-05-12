@@ -88,6 +88,7 @@ The `scripts/` folder contains the local and CI validation gates:
 - `scripts/check-site.sh` checks the expected public pages and support files, custom domain, generated sitemap, canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, search-result coverage, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
 - `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and checks the primary nav against `site-manifest.json`.
 - `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
+- `scripts/check-rendered-layout.sh` optionally opens key pages in Chromium at mobile and desktop sizes and verifies screenshots can be rendered.
 
 Run the static check before publishing:
 
@@ -111,6 +112,12 @@ For public copy, layout, or framing changes, also check:
 - `llms.txt`, `CLAIMS.yml`, `sources.html`, and `CONTENT_BRIEF.md` when status/source boundaries change,
 - GitHub About metadata when the public framing or README intro changes,
 - live HTML after GitHub Pages deploys.
+
+Rendered screenshot smoke check, when Chromium is available:
+
+```sh
+bash scripts/check-rendered-layout.sh
+```
 
 The fast-PoW comparison graphic on `why-kaspa-matters.html` needs special care: it should separate inclusion speed from explicit vote/stake coordination and should not imply instant finality or a simple "stronger confirmation" ranking.
 
