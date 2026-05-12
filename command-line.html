@@ -68,10 +68,39 @@
       <p class="lead">The goal is not to make every reader a node operator on day one. The goal is to show the route away from one hosted explorer, one wallet UI, or one dashboard when you need stronger assurance.</p>
       <div class="actions">
         <a class="button primary" href="#mainnet-node">Run a node</a>
+        <a class="button" href="#wallet-cli">Open CLI</a>
         <a class="button" href="#testnet">Use testnet</a>
+        <a class="button" href="#tn12">TN12 practice</a>
         <a class="button" href="#sources">Sources</a>
       </div>
       <p class="fit-note">Mainnet commands move around with releases. Check the source links before touching real funds.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Start here</p>
+      <h2>Pick the job.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>Verify chain state</h3>
+          <p>Run or query a node, compare explorers, and check accepted transactions without trusting one hosted screen.</p>
+          <p><a href="#mainnet-node">Start with node commands</a></p>
+        </article>
+        <article>
+          <h3>Use a wallet from terminal</h3>
+          <p>Open the Rusty Kaspa CLI route, inspect help, confirm network, and avoid signing until key storage is clear.</p>
+          <p><a href="#wallet-cli">Start with kaspa-cli</a></p>
+        </article>
+        <article>
+          <h3>Practice safely</h3>
+          <p>Use testnet or TN12 before mainnet. Testnet coins are for learning, not value storage.</p>
+          <p><a href="#testnet">Start with testnet</a></p>
+        </article>
+        <article>
+          <h3>Build app checks</h3>
+          <p>Use wRPC and accepted-transaction replay when an app needs to prove that a txid, payload, or output really landed.</p>
+          <p><a href="#wrpc">Start with wRPC</a></p>
+        </article>
+      </div>
     </section>
 
     <section class="section">
@@ -95,13 +124,18 @@
           <p>Run or query a node when you need to verify chain state without depending on a hosted interface.</p>
         </article>
       </div>
+      <p class="fit-note">Independent verification means climbing this ladder when the situation matters. It does not mean every normal payment requires every step.</p>
     </section>
 
     <section id="mainnet-node" class="section">
       <p class="eyebrow">Mainnet</p>
       <h2>Run a Rusty Kaspa node.</h2>
+      <p>Prerequisites: Docker for the container route, or Rust/Cargo for the source route. A node can verify chain state; it does not create or protect wallet keys by itself.</p>
       <p>Fast Docker route from Kaspa.org Build:</p>
       <pre><code>docker run -d --name kaspad -p 16110:16110 kaspanet/rusty-kaspad:latest</code></pre>
+      <p>Basic container checks:</p>
+      <pre><code>docker ps
+docker logs --tail=80 kaspad</code></pre>
       <p>Source-build route from the Rusty Kaspa README:</p>
       <pre><code>git clone https://github.com/kaspanet/rusty-kaspa
 cd rusty-kaspa
@@ -111,21 +145,28 @@ cargo run --release --bin kaspad</code></pre>
       <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed UTXO state. Let the node sync before treating its answers as current.</p>
     </section>
 
-    <section class="section">
+    <section id="wallet-cli" class="section">
       <p class="eyebrow">Wallet and RPC</p>
       <h2>Open the terminal wallet/RPC path.</h2>
       <p>From a Rusty Kaspa checkout:</p>
       <pre><code>cd cli
 cargo run --release</code></pre>
-      <p>Use this as the current source-backed entry into the Rusty Kaspa terminal RPC and wallet runtime. Before creating wallets or signing anything, inspect help output, confirm the network, confirm wallet file locations, back up keys, and test with tiny amounts.</p>
+      <p>Use this as the current source-backed entry into the Rusty Kaspa terminal RPC and wallet runtime. Before creating wallets or signing anything:</p>
+      <div class="reference-grid">
+        <article><h3>Check network</h3><p>Confirm whether the CLI is connected to mainnet or testnet before creating or importing wallet material.</p></article>
+        <article><h3>Check files</h3><p>Find where wallet files, keys, and local state are stored. Do not guess.</p></article>
+        <article><h3>Check intent</h3><p>For every transaction, inspect address, amount, fee, network, and whether it is a send, sweep, or self-transfer.</p></article>
+        <article><h3>Test small</h3><p>Use tiny amounts first, then verify the accepted txid through more than one source.</p></article>
+      </div>
     </section>
 
-    <section class="section">
+    <section id="wrpc" class="section">
       <p class="eyebrow">wRPC</p>
       <h2>Enable a JSON WebSocket RPC endpoint.</h2>
       <p>Rusty Kaspa documents wRPC as optional and disabled by default. For JSON wRPC:</p>
       <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
       <p>This lets SDKs and scripts query node state over WebSocket. Bind carefully on public machines. A public RPC endpoint is infrastructure, not a wallet safety boundary.</p>
+      <p>Use wRPC when an app needs to read accepted transactions, inspect payload-capable routes, or compare indexer state against node-observed chain state.</p>
     </section>
 
     <section id="testnet" class="section">
@@ -138,6 +179,20 @@ cargo run --release</code></pre>
 cargo run --bin kaspad --release -- --testnet --netsuffix=10 --utxoindex</code></pre>
       <p>For TN12/Toccata work, verify the current netsuffix, release, endpoint, and flags from active public docs before running. Do not assume a TN10 command is the right TN12 command.</p>
       <p><a href="/builder-evidence.html">Builder Evidence</a> links the public site to the TN12 proof lab when you want accepted testnet examples.</p>
+    </section>
+
+    <section id="tn12" class="section">
+      <p class="eyebrow">TN12 practice</p>
+      <h2>Use the proof lab for covenant-shaped testnet work.</h2>
+      <p>TN12 is where covenant, payload, and replay experiments can be practiced before mainnet behavior changes. In the TN12 repo, the basic route is:</p>
+      <pre><code>git clone https://github.com/parker2017code/tn12-covenant-vault-demo
+cd tn12-covenant-vault-demo
+npm ci
+npm run check:all
+npm run check:tn12
+npm run playground:wallets</code></pre>
+      <p>Then fund only the printed <code>kaspatest:</code> addresses with faucet tKAS, inspect txids in the TN12 explorer, and replay before believing app state. Anything with <code>--submit</code> is a real TN12 broadcast.</p>
+      <p>This is testnet practice. It is not a mainnet wallet, not mainnet custody, and not proof that Toccata is activated on mainnet.</p>
     </section>
 
     <section class="section">

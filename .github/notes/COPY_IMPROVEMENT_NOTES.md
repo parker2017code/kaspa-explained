@@ -20,6 +20,19 @@ Work in this order unless a visible regression appears:
 7. Source sync: when public wording changes, keep visible HTML, `CLAIMS.yml`, `llms.txt`, README, and notes aligned.
 8. Publish verification: after push, verify Actions/Pages and fetch exact live HTML before saying it is live.
 
+## Next Defined Work
+
+1. Skeptical-case page.
+   - What it is: one public page that gives the strongest fair objections to Kaspa before answering them.
+   - It should cover node-operation pressure, fee/security budget, liquidity and developer mindshare, mining concentration, ecosystem/indexer fragility, and whether app-layer ambition muddies the money/payments story.
+   - Done when it is linked from the homepage or One Screen page, listed in search, and source/status language stays conservative.
+2. Command-line guide hardening.
+   - What it is: keep `/command-line.html` as the public guide for independent verification from terminal.
+   - Done when current Rusty Kaspa/node/wallet/RPC/testnet commands are source-backed, and Toccata command wording is refreshed only after public mainnet activation evidence changes.
+3. Beginner route compression.
+   - What it is: make the first-reader route "What problem is Kaspa trying to solve?", "What is live?", and "What could go wrong?"
+   - Done when a nontechnical reader can follow those three pages without reading Sources or Builder Guide first.
+
 ## Main problems to fix
 
 - The site is credible but slightly over-disciplined. It repeats live / targeted / roadmap / research too often.
