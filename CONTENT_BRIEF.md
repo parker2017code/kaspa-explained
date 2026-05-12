@@ -326,7 +326,7 @@ Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-s
 
 Frame Kaspa as L1-first and shared-sequencer-first rather than Ethereum-rollup-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
-Based apps are a real build lane, not just a future caveat. Direct L1 covenant examples such as vaults, escrow, and assurance can be explained without an L2. Based-app prototypes should be described as richer app state anchored to Kaspa ordering, commitments, proofs, settlement, or exits. Based-zk is the stronger proving path when replay alone is not enough. Keep ecosystem L2 projects out of the site's assumptions unless a page is explicitly about ecosystem projects.
+Based apps are a real build lane, not a future caveat. Direct L1 covenant examples such as vaults, escrow, and assurance can be explained without an L2. Based-app prototypes should be described as richer app state anchored to Kaspa ordering, commitments, proofs, settlement, or exits. Based-zk is the stronger proving path when replay alone is not enough. Keep ecosystem L2 projects out of the site's assumptions unless a page is explicitly about ecosystem projects.
 
 vProgs should be described first as apps that prove their own logic, then as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
 
@@ -470,7 +470,7 @@ Primary public pages:
 - `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
-- `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may enable later.
+- `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
 - `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `builder-evidence.html` - proof bridge page that points readers to TN12 evidence and keeps app ideas separate from proof.
 - `overview.html` - 90-second overview for first-time readers.
