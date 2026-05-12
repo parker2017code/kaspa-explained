@@ -157,6 +157,8 @@ Use plain, direct language. Preserve a serious point of view, but do not hype.
 
 The voice should never sound clever for its own sake. Avoid dramatic authority, bold adjective piles, invented slogans, and sentences that mainly perform confidence. Let the facts, source links, and concrete examples carry the weight.
 
+Apply this writing bar across public pages and LLM-facing files. Every touched page, repo guide, source note, generated summary, and context file should be direct, sourced or status-labeled, necessary, and free of defensive throat-clearing.
+
 Good style:
 
 - specific nouns,
@@ -223,7 +225,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note: Toccata should not be described as live mainnet functionality unless current primary sources confirm activation. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
+Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is a targeted mainnet hard-fork track. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it.
 
 ### Roadmap / Architecture
 
@@ -284,7 +286,7 @@ Core frame:
 
 Keep the weakness side just as explicit. Crypto is usually weak for normal domestic payments in strong banking systems, consumer reversibility, private records, ordinary corporate databases, unsecured real-world credit, replacing courts, supply-chain truth, identity, and tokenizing assets whose ownership still depends on law, custody, inspection, liens, taxes, and jurisdiction.
 
-This page should not become anti-crypto or pro-crypto. Its purpose is conditional judgment: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
+Keep this page conditional rather than tribal: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
 
 The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when neutral money, self-custody, censorship resistance, fast mined ordering, future apps that prove rules, and public group commitments matter.
 
@@ -304,21 +306,21 @@ Design for two human modes at once: a rushed reader who needs the right page in 
 
 Be careful with app-layer claims.
 
-DAGKnight has the better-developed research lineage and appears further along implementation-wise than vProgs, while neither should be described as already-live mainnet functionality unless primary sources confirm activation. This nuance belongs in status discipline and research context; it does not need to be repeated everywhere.
+DAGKnight has the better-developed research lineage and a more visible implementation branch than vProgs. Both remain outside live-mainnet status until primary sources confirm activation. This nuance belongs in status discipline and research context; it does not need to be repeated everywhere.
 
-Avoid using "Kaspa DAGKnight is WWIII-resistant" as public headline copy. If it appears as community shorthand, keep it clearly framed as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
+Keep "Kaspa DAGKnight is WWIII-resistant" out of public headline copy. When it appears as community shorthand, frame it as an adversarial-latency resilience research/implementation goal, not as a live-mainnet guarantee.
 
 Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path, not the definition of every based app. vProgs are the longer app architecture for apps that prove richer logic while sharing Kaspa ordering, computational-DAG metadata, prover-backed execution, and eventual synchronous composability.
 
 Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
-Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https://www.youtube.com/watch?v=b3wPZ04p410`), is a useful narrative source. It frames the coordination problem as stag hunt rather than prisoner's dilemma; credible commitments, conditional participation, and economic exposure as core market primitives; the internet as connection without enforceable coordination; and Kaspa's real-time decentralized confirmation thesis as relevant because coordination markets need fast observable signals without centralized sequencing. Do not treat the talk as activation evidence for Toccata, vProgs, DeFi, or production coordination-market infrastructure.
+Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https://www.youtube.com/watch?v=b3wPZ04p410`), is a narrative source for the coordination-market thesis. It frames the problem as stag hunt rather than prisoner's dilemma, names credible commitments, conditional participation, and economic exposure as core market primitives, and connects Kaspa's real-time decentralized confirmation thesis to coordination markets that need fast observable signals without centralized sequencing. Use it for product framing. Keep live-status labels tied to activation evidence.
 
 The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and based-app foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
 
-Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release are useful evidence for Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext, but they do not change protocol status. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment and should not be presented as stable release evidence while it remains WIP/draft.
+Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release show Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext. Protocol status still comes from node, release, KIP, and activation evidence. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment until merged and released.
 
-Avoid saying Kaspa needs independent L2s in the Ethereum-rollup sense. The stronger thesis is L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
+Frame Kaspa as L1-first and shared-sequencer-first rather than Ethereum-rollup-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
 
 Based apps are a real build lane, not just a future caveat. Direct L1 covenant examples such as vaults, escrow, and assurance can be explained without an L2. Based-app prototypes should be described as richer app state anchored to Kaspa ordering, commitments, proofs, settlement, or exits. Based-zk is the stronger proving path when replay alone is not enough. Keep ecosystem L2 projects out of the site's assumptions unless a page is explicitly about ecosystem projects.
 

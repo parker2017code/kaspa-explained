@@ -67,7 +67,7 @@ When Toccata becomes mainnet behavior, refresh `CLI_FROM_ZERO.md`,
 `llms.txt` from public activation evidence, Rusty Kaspa releases, official docs,
 and working tool commands before changing public status language.
 
-Community portals, media sites, learning libraries, interviews, recaps, and public technical accounts are useful context. They are not activation evidence by themselves. Do not use X alone for activation dates, shipped-feature claims, exchange claims, or protocol guarantees.
+Use community portals, media sites, learning libraries, interviews, recaps, and public technical accounts for orientation, links, and framing. Use code, releases, KIPs, protocol docs, direct technical notes, or verifiable network evidence for activation dates, shipped-feature claims, exchange claims, and protocol guarantees.
 
 ## Site pages
 
@@ -148,17 +148,17 @@ Do not flatten everything into "live."
 
 Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
-Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: do not let "fast money," Base of Liquidity, or generic merchant/POS language stand in for adoption strategy. Payment and receipt flows are rails. The stronger public framing is useful products, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
+Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: treat "fast money," Base of Liquidity, and merchant/POS flows as rails, not the whole adoption strategy. The stronger public framing is useful products, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
 
-Narrative update from Junny Ho's Web3 Festival HK 2026 talk (`https://www.youtube.com/watch?v=b3wPZ04p410`): coordination markets should be framed around stag-hunt coordination, credible commitments, conditional participation, economic exposure, and real-time decentralized confirmation. Use this as framing context; it is not shipped-feature evidence.
+Narrative update from Junny Ho's Web3 Festival HK 2026 talk (`https://www.youtube.com/watch?v=b3wPZ04p410`): frame coordination markets around stag-hunt coordination, credible commitments, conditional participation, economic exposure, and real-time decentralized confirmation. Keep shipped-feature claims tied to activation evidence.
 
-Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-app foundations. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path, not the definition of every based app. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, not proof that full synchronous vProgs are live. Avoid framing Kaspa as needing independent Ethereum-style L2s; the direction is L1-first shared sequencing, settlement, commitments, and verification.
+Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-app foundations. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path, not the definition of every based app. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa. Full synchronous vProgs need separate activation evidence. Frame Kaspa around L1-first shared sequencing, settlement, commitments, and verification rather than independent Ethereum-style L2s.
 
 Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. Apply Concrete-First Translation: "one shared record without one operator" before "credible shared state," "apps that prove their rules" before "verification-oriented programmability," and "fast mined ordering" before "settlement layer." The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
 
 Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
 
-Builder verification rule: a local txid or signed object is not accepted app state. Builder-facing pages should tell readers to fetch accepted transaction evidence, record SDK/node/network/endpoint details, and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
+Builder verification rule: accepted app state starts after accepted transaction evidence. Builder-facing pages should tell readers to record SDK, node, network, endpoint, tx shape, and acceptance evidence, then label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
 
 ## Local check
 
