@@ -37,7 +37,7 @@ Do not remove the technical terms where they are needed for precision, search, o
 
 The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and why the mechanism matters. Then the compact term can help them remember and search for it.
 
-This sits beside source discipline and status lanes. Source discipline asks whether a claim is true and sourced. Status lanes ask whether it is live, targeted, roadmap, or research. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
+This sits beside source checks and current-status checks. Source checks ask whether a claim is true and sourced. Current-status checks ask whether it is mainnet, testnet, third-party ecosystem work, future upgrade work, or research. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
 
 The site should answer:
 
@@ -126,7 +126,7 @@ The common-misconceptions material should be distributed by reader intent. The h
 
 KRC20 and KRC721 should be handled as ecosystem-token standards available around the live network through data insertion, wallet support, indexers, metadata, APIs, and off-chain redemption rules. They can be useful for practical products such as loyalty credits, coupons, access passes, event rewards, closed-loop festival credits, collectibles, and proof-of-attendance objects. Current KRC documentation describes required deploy/mint gas fees as miner fees; still warn users to check wallets and frontends for separate service fees. Do not present KRC standards as native Kaspa smart contracts, Toccata activation, native L1 assets, mature DeFi, or vProgs.
 
-The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below the shipped-status line. As of 2026-05-07, the useful public evidence is: Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply activation.
+The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-05-07, the useful public evidence is: Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply activation.
 
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
@@ -173,7 +173,7 @@ Good style:
 
 - specific nouns,
 - concrete tradeoffs,
-- clear status labels,
+- clear current-status wording,
 - useful comparisons,
 - short explanations before jargon,
 - links to source material.
