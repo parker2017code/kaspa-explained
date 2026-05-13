@@ -93,6 +93,16 @@ body::before {
   opacity: .34;
 }
 
+@keyframes mechanicsPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--pink) 12%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 13px color-mix(in srgb, var(--pink) 20%, transparent);
+  }
+}
+
 a {
   color: var(--cyan);
   text-decoration: none;
@@ -1005,6 +1015,102 @@ li,
   pointer-events: none;
 }
 
+.app-mechanics-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(310px, .56fr);
+  gap: clamp(18px, 3vw, 34px);
+  align-items: stretch;
+}
+
+.network-mechanics-map {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(103, 232, 249, .08), transparent 58%),
+    rgba(255, 255, 255, .04);
+  padding: 18px;
+}
+
+.mechanics-dag {
+  position: relative;
+  min-height: 170px;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.mechanics-dag::before,
+.mechanics-dag::after {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 8%;
+  height: 1px;
+  background: rgba(103, 232, 249, .42);
+  transform-origin: left center;
+}
+
+.mechanics-dag::before {
+  top: 50%;
+  transform: rotate(-7deg);
+}
+
+.mechanics-dag::after {
+  top: 58%;
+  transform: rotate(12deg);
+  opacity: .5;
+}
+
+.mechanics-dag i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(103, 232, 249, .55);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--bg) 62%, var(--green));
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mechanics-dag i.selected {
+  border-color: var(--green);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--green) 12%, transparent);
+}
+
+.mechanics-dag i.tx {
+  border-color: var(--pink);
+  background: var(--pink);
+  box-shadow: 0 0 0 9px color-mix(in srgb, var(--pink) 14%, transparent);
+  animation: mechanicsPulse 3.8s ease-in-out infinite;
+}
+
+.mechanics-readout {
+  padding-top: 14px;
+}
+
+.mechanics-readout span {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.mechanics-readout strong {
+  display: block;
+  margin: 7px 0;
+  color: var(--text);
+  font-size: 19px;
+  line-height: 1.15;
+}
+
+.mechanics-readout p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .reality-callout {
   border-color: color-mix(in srgb, var(--green) 28%, transparent);
   background: var(--surface-soft);
@@ -1368,6 +1474,114 @@ blockquote {
 .reference-grid li {
   margin: 8px 0;
   color: var(--muted);
+}
+
+.crypto-native-route {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: clamp(20px, 3vw, 30px);
+}
+
+.crypto-native-route article,
+.crypto-native-ledger article {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(103, 232, 249, .08), transparent 58%),
+    rgba(255, 255, 255, .04);
+  padding: clamp(18px, 2vw, 22px);
+  transition: border-color .18s ease, transform .18s ease;
+}
+
+.crypto-native-route article:hover,
+.crypto-native-ledger article:hover,
+.rail-ladder article:hover,
+.network-mechanics-map:hover {
+  border-color: rgba(103, 232, 249, .34);
+  transform: translateY(-1px);
+}
+
+.crypto-native-route article:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: -10px;
+  width: 16px;
+  height: 1px;
+  background: rgba(103, 232, 249, .38);
+}
+
+.crypto-native-route span,
+.crypto-native-ledger span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.crypto-native-route strong {
+  display: block;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.crypto-native-route p,
+.crypto-native-ledger p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.crypto-native-ledger {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.rail-ladder {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: clamp(20px, 3vw, 30px);
+}
+
+.rail-ladder article {
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(103, 232, 249, .07), transparent),
+    rgba(255, 255, 255, .04);
+  padding: 16px;
+}
+
+.rail-ladder span {
+  display: block;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.rail-ladder strong {
+  display: block;
+  margin: 8px 0;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.16;
+}
+
+.rail-ladder p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .compact-columns {
@@ -2652,6 +2866,10 @@ blockquote {
     grid-template-columns: 1fr;
   }
 
+  .app-mechanics-hero {
+    grid-template-columns: 1fr;
+  }
+
   .hero-copy {
     min-height: 0;
   }
@@ -2672,6 +2890,9 @@ blockquote {
     .category-list,
     .lane-grid,
     .check-grid,
+    .crypto-native-route,
+    .crypto-native-ledger,
+    .rail-ladder,
     .reference-grid,
     .source-tier-grid,
     .path-grid,
@@ -2782,6 +3003,10 @@ blockquote {
     display: block;
   }
 
+  .crypto-native-route article:not(:last-child)::after {
+    display: none;
+  }
+
   h2 {
     font-size: 1.6rem;
   }
@@ -2797,6 +3022,9 @@ blockquote {
   .category-list,
   .lane-grid,
   .check-grid,
+  .crypto-native-route,
+  .crypto-native-ledger,
+  .rail-ladder,
   .reference-grid,
   .compact-columns,
     .source-list,
