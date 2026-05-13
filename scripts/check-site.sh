@@ -135,7 +135,7 @@ for page in "${expected_pages[@]}"; do
   }
 done
 
-grep -q 'Ask AI' nav.js && grep -q 'className = "llm-widget"' nav.js && grep -q '^\.llm-launch' styles.css || {
+grep -q 'Ask AI' nav.js && grep -q 'className = "llm-widget"' nav.js && grep -q 'llm-launch-mark' nav.js && grep -q 'kaspa-favicon.svg' styles.css && grep -q '^\.llm-launch' styles.css || {
   echo "Ask AI source-pack widget missing from nav.js/styles.css" >&2
   exit 1
 }

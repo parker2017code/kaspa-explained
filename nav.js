@@ -101,7 +101,7 @@ Question:
     widget.className = "llm-widget";
     widget.innerHTML = `
       <button class="llm-launch" type="button" aria-expanded="false" aria-controls="llm-panel">
-        <span aria-hidden="true">K</span>
+        <span class="llm-launch-mark" aria-hidden="true"></span>
         Ask AI
       </button>
       <div class="llm-panel" id="llm-panel" aria-labelledby="llm-panel-title" hidden>
