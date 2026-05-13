@@ -134,9 +134,11 @@ SilverScript/covenant examples should be judged by the state transition they
 actually prove. A serious example shows continuation state, required output
 rules, signature-script wiring, rejected paths, and a submit route that
 preserves covenant fields. Funding a script output or wrapping P2PK logic is
-not enough to call a feature script-enforced. Use mux/worker, ICC sibling
-authority, and challenge/timeout language only when the specific artifact or
-source supports it.
+not enough to call a feature script-enforced. Lead with the concrete job:
+budget that cannot drain at once, step-by-step workflow, asset that needs its
+controller, group release/refund, scheduled payout, or blocked withdrawal. Use
+worker-routed workflow, controller-input authority, and challenge/timeout
+language only when the specific artifact or source supports it.
 
 For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. If a bridge, market, oracle, or attestation app depends on outside data, name the anchor: source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, challenge process, or other trust model. This is a precision rule, not a reason to bury the reader in bridge theory.
 
