@@ -1584,6 +1584,74 @@ blockquote {
   font-size: 14px;
 }
 
+.builder-console {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: clamp(22px, 3vw, 32px);
+}
+
+.builder-console article,
+.builder-ledger article {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(103, 232, 249, .08), transparent 58%),
+    rgba(255, 255, 255, .04);
+  padding: clamp(18px, 2vw, 22px);
+  transition: border-color .18s ease, transform .18s ease;
+}
+
+.builder-console article:hover,
+.builder-ledger article:hover {
+  border-color: rgba(103, 232, 249, .34);
+  transform: translateY(-1px);
+}
+
+.builder-console article:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: -10px;
+  width: 16px;
+  height: 1px;
+  background: rgba(103, 232, 249, .38);
+}
+
+.builder-console span,
+.builder-ledger span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.builder-console strong,
+.builder-ledger strong {
+  display: block;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.builder-console p,
+.builder-ledger p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.builder-ledger {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: clamp(20px, 3vw, 30px);
+}
+
 .compact-columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
@@ -2892,6 +2960,8 @@ blockquote {
     .check-grid,
     .crypto-native-route,
     .crypto-native-ledger,
+    .builder-console,
+    .builder-ledger,
     .rail-ladder,
     .reference-grid,
     .source-tier-grid,
@@ -2934,6 +3004,10 @@ blockquote {
   main,
   .footer {
     width: min(100% - 28px, 1240px);
+  }
+
+  main {
+    padding-bottom: 72px;
   }
 
   .nav {
@@ -3007,6 +3081,23 @@ blockquote {
     display: none;
   }
 
+  .builder-console article:not(:last-child)::after {
+    display: none;
+  }
+
+  .llm-widget {
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    transform: scale(.9);
+    transform-origin: right bottom;
+  }
+
+  .llm-launch {
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
   h2 {
     font-size: 1.6rem;
   }
@@ -3024,6 +3115,8 @@ blockquote {
   .check-grid,
   .crypto-native-route,
   .crypto-native-ledger,
+  .builder-console,
+  .builder-ledger,
   .rail-ladder,
   .reference-grid,
   .compact-columns,
