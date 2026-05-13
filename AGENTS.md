@@ -53,6 +53,15 @@
 ## Validation
 
 - For HTML/CSS edits, check mobile and desktop layout.
+- Understand the reader problem before changing the page. Name the user job, status claim, source dependency, and likely misunderstanding before editing public copy or UI.
+- Prefer correctness over cleverness. A plain sourced sentence, route card, or status label is better than a clever phrase that hides whether something is live, testnet, roadmap, or research.
+- Treat security and trust as defaults. Do not expose private data, imply wallet/custody support, add unverifiable assistant claims, or make source-sensitive statements without current evidence.
+- Tests should prove behavior and source discipline. Update checks when navigation, metadata, source/status wording, search cards, Ask AI, or public route structure changes.
+- Design for failure. Search no-results, Ask AI unavailable/copy failure, broken source links, stale status, missing assets, and mobile overflow need explicit behavior.
+- Keep the site observable enough to audit. Public pages should make the source path, status label, canonical URL, sitemap coverage, and changed copy easy to verify.
+- Protect content integrity. Keep `CLAIMS.yml`, `llms.txt`, `sitemap.xml`, metadata, public HTML, and source pages aligned after status-sensitive edits.
+- Keep complexity low. Add dependencies, scripts, visuals, or pages only when they reduce reader confusion or verification burden.
+- Treat AI output as a fast junior contributor. Generated copy, summaries, and code must be reviewed, source-checked, simplified, and run through local gates before commit.
 - Treat design and copy edits as implementation work, not static mockup work. A change should account for user intent, component reuse, responsive behavior, accessibility, performance, source/status drift, and maintenance cost.
 - For public UI changes, verify the relevant component states: default, hover/focus, active/current, empty, loading or unavailable, error, long-content wrapping, and mobile layout.
 - Keep shared patterns consistent across pages: route cards, status chips, source cards, app-path ladders, search results, Ask AI, drawers, tables, command blocks, and footer links.

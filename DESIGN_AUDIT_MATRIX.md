@@ -71,6 +71,20 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Analytics, if added | Track useful learning paths and broken searches, not hype metrics. | Keep consent/privacy clear and avoid broad behavioral surveillance. |
 | Maintainability | Keep repeated layout/copy patterns disciplined until a build step becomes clearly worth it. | Prefer shared CSS tokens/classes over page-specific styling. |
 
+## Engineering Discipline Rules
+
+| Principle | Kaspa Explained application | Required behavior |
+|---|---|---|
+| Problem before solution | Start from the reader question, claim status, source dependency, or route job. | Do not add copy, pages, or visuals until the user action and status boundary are clear. |
+| Correctness before cleverness | Plain sourced wording beats clever protocol slogans. | Keep live, ecosystem-live, targeted, roadmap, research, and testnet evidence distinct. |
+| Security and trust default | Source-sensitive claims and wallet/custody implications carry risk. | Verify drift-prone facts and avoid implying product support that does not exist. |
+| Tests as specs | Site checks encode the public contract. | Update checks when metadata, navigation, source/status wording, search, Ask AI, or layout behavior changes. |
+| Failure design | No-results, unavailable, broken link, stale status, and mobile overflow are real states. | Give the reader a clear next action instead of an empty or broken surface. |
+| Observability | The site should be easy to audit. | Keep canonical URLs, sitemap, source links, claim files, and visible copy aligned. |
+| Data integrity | Status labels and source trails are part of the product. | Do not let public HTML, `CLAIMS.yml`, `llms.txt`, and source docs drift apart. |
+| Simplicity | Static, readable, source-linked pages are the default. | Add dependencies or new components only when they reduce confusion or verification burden. |
+| AI discipline | AI output is untrusted until checked. | Reduce generated prose to concrete claims, verify sources, and run local gates before commit. |
+
 ## Content Design
 
 | Area | Decision | Current check | Next action |
