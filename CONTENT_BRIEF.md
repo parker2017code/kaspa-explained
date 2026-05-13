@@ -24,6 +24,8 @@ Do not remove the technical terms where they are needed for precision, search, o
 
 The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and why the mechanism matters. Then the compact term can help them remember and search for it.
 
+Crypto translation rule: use the crypto term only when it helps precision, search, or source matching. Then immediately translate it into what someone is testing, buying, building, approving, measuring, or trying to avoid. "Decentralized coordination" means people can agree on one shared record without one company controlling it. "Infrastructure" means wallets, exchanges, custody, APIs, indexers, explorers, liquidity, accounting, support, and uptime. "Programmability" means a wallet, app, or script can show which rule allowed, refused, or recorded an action. The practical questions are speed, security, wallets, exchange support, liquidity, developer tools, and whether real users have a reason to use it.
+
 This sits beside source checks and current-status checks. Source checks ask whether a claim is true and sourced. Current-status checks ask whether it is mainnet, testnet, third-party ecosystem work, future upgrade work, or research. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
 
 The site should answer:
@@ -44,7 +46,7 @@ This is not an official Kaspa site and not investment advice.
 Write for smart non-specialists first:
 
 - crypto users who know Bitcoin/Ethereum/Solana basics,
-- crypto-native readers who also know XRP, BNB, TRON, stablecoin rails, and exchange-linked ecosystems,
+- crypto-native readers who also know XRP, BNB, TRON, stablecoin payment paths, and exchange-linked ecosystems,
 - curious newcomers who need a plain-language path before technical material,
 - builders deciding whether Kaspa is worth studying,
 - researchers and community members who need source discipline,
@@ -122,7 +124,7 @@ The `kaspa-in-one-screen.html` page is the shareable compression artifact. It sh
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
-The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too," and it should not make generic merchant/POS payments the adoption thesis. It should explain the L1-first thesis in concrete product terms first: receipt rails, vault rules, asset rules, escrow, coordination markets, attestations, public funding rules, proof checks, and apps that prove what they did. Then name the technical layer: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native lanes while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too," and it should not make generic merchant/POS payments the adoption thesis. It should explain the L1-first thesis in concrete product terms first: app receipts, vault rules, asset rules, escrow, coordination markets, attestations, public funding rules, proof checks, and apps that prove what they did. Then name the technical layer: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native paths while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
 
 When explaining coordination markets, start with the product shape: users make conditional commitments, the app groups compatible commitments, a solver checks whether the group satisfies the conditions, and settlement or refunds follow. The first buildable lane can be transparent and replay-backed. The harder research target adds private accumulation, capital multiplexing, solver incentives, censorship resistance, MEV resistance, and atomic execution.
 
@@ -144,7 +146,7 @@ For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK ve
 
 The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
 
-For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production rails.
+For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
 
 The builder guide should also preserve practical TN12 breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced TN12 node with UTXO index; an unsynced node can return misleading zero balances; and a generic stable mainnet binary may not support every active TN12 setting. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
 
@@ -205,6 +207,20 @@ Editing test: each public sentence should make a specific, necessary, defensible
 
 Craft rule: text is product surface. UI labels, public copy, repo docs, fixtures, generated summaries, LLM context, and handoff notes need the same care as code. Keep every line necessary, accurate, scan-friendly, and clean. Prefer plain build language: live, near-term, roadmap, research, needs wallet, needs indexer, needs custody, needs source.
 
+Implementation craft rule: a public edit is not complete just because the words or layout look better in one viewport. Treat each page as a small product surface with user intent, states, responsive behavior, accessibility, performance, source trail, and maintenance cost.
+
+For Kaspa Explained this means:
+
+- Every section should support a reader job: understand, compare, verify, build carefully, search, or correct a claim.
+- Shared patterns should behave consistently: route cards, source cards, status chips, comparison tables, app-path ladders, search results, Ask AI, drawers, command blocks, and footer links.
+- Status states stay distinct: live mainnet, ecosystem-live, targeted upgrade, testnet-only, roadmap, research, source-needed, stale-check-needed, and unknown.
+- Long source titles, URLs, page labels, protocol terms, and dates must wrap cleanly on mobile.
+- Tables belong where comparison or source evidence is the job. Beginner-facing pages should explain the plain action before dense grids.
+- Search and Ask AI need useful empty/error/unavailable states and must not become source authority.
+- Use semantic HTML, real links for navigation, buttons for actions, visible focus, logical headings, and status text that does not depend on color alone.
+- Keep the site dependency-light. Prefer crawlable HTML, shared CSS variables/classes, small SVGs, and vanilla JS over framework or animation additions.
+- Public claims, metadata, sitemap entries, `llms.txt`, `CLAIMS.yml`, and source pages should not drift apart after a status-sensitive edit.
+
 Plain-language rule: if a sentence says a vague group "needs readiness" or "needs maturity," rewrite it around the actual actor. A fund may need custody, audit trails, reporting, and legal review. An exchange may need node stability, wallet integration, liquidity, monitoring, and support. A payments company may need payment APIs, refunds, accounting, uptime, and support. A builder may need docs, SDKs, indexers, examples, and testnet paths. If the sentence cannot name who needs what, it is probably filler.
 
 Tone and visual weight:
@@ -244,7 +260,7 @@ Status note: Toccata should not be described as live mainnet functionality witho
 ### Roadmap / Architecture
 
 - vProgs as app-level verifiable programs
-- Kaspa-native DeFi rails
+- Kaspa-native DeFi paths
 - monolithic-feeling developer experience without global L1 execution of every app
 - synchronous composability across programs
 - vProgs as a deeper application-architecture direction
@@ -306,7 +322,7 @@ The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general 
 
 Core frame:
 
-> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time: fast mined ordering today, receipt rails around the live network, and future apps that prove their own rules.
+> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time: fast mined ordering today, app receipts around the live network, and future apps that prove their own rules.
 
 Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, rather than faster payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is thesis framing, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
 
@@ -326,7 +342,7 @@ Keep "Kaspa DAGKnight is WWIII-resistant" out of public headline copy. When it a
 
 Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L1 hard-fork track for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path, not the definition of every based app. vProgs are the longer app architecture for apps that prove richer logic while sharing Kaspa ordering, computational-DAG metadata, prover-backed execution, and eventual synchronous composability.
 
-Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
+Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch paths, AI-agent task boards, and DeFi.
 
 Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https://www.youtube.com/watch?v=b3wPZ04p410`), is a narrative source for the coordination-market thesis. It frames the problem as stag hunt rather than prisoner's dilemma, names credible commitments, conditional participation, and economic exposure as core market primitives, and connects Kaspa's real-time decentralized confirmation thesis to coordination markets that need fast observable signals without centralized sequencing. Use it for product framing. Keep live-status labels tied to activation evidence.
 

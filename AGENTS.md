@@ -27,6 +27,7 @@
 - Public AI/source rules live in `ai-guidance.html`; keep it aligned with `llms.txt`, `CLAIMS.yml`, and `CONTENT_BRIEF.md` when claim categories change.
 - SilverScript lessons belong there too: do not build shallow P2PK wrappers when stateful covenant depth is the goal; use DECL state, continuation outputs, mux/worker routing, ICC sibling authority, challenge/timeout paths, and negative cases where the source material calls for them.
 - Apply Concrete-First Translation: for public and LLM-facing copy, lead with the concrete reader picture first, then name the abstraction. Prefer "one shared record without one operator," "apps that prove their rules," "funding rules strangers can rely on," or "fast mined ordering" before terms like shared state, verification-oriented programmability, coordination markets, sequencing commitments, or settlement layer.
+- Use crypto terms only when they help precision or search, then translate them into what someone is testing, buying, building, approving, measuring, or trying to avoid. Say "people agree on one shared transaction record without one company," "wallets and exchanges need support," "builders need SDKs and indexers," "funds need custody and reporting," or "users need a reason to use it" before broad terms like decentralized coordination, infrastructure, rails, programmability, or ecosystem readiness.
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
 - Do not default to EVM compatibility or external L2 migration as Kaspa's app path. If mentioning L2s or EVM, keep the source status and network-effect tradeoff explicit.
 - Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
@@ -52,6 +53,13 @@
 ## Validation
 
 - For HTML/CSS edits, check mobile and desktop layout.
+- Treat design and copy edits as implementation work, not static mockup work. A change should account for user intent, component reuse, responsive behavior, accessibility, performance, source/status drift, and maintenance cost.
+- For public UI changes, verify the relevant component states: default, hover/focus, active/current, empty, loading or unavailable, error, long-content wrapping, and mobile layout.
+- Keep shared patterns consistent across pages: route cards, status chips, source cards, app-path ladders, search results, Ask AI, drawers, tables, command blocks, and footer links.
+- Use semantic HTML first. Links navigate, buttons act, headings stay ordered, labels remain explicit, focus stays visible, and color is never the only status signal.
+- Do not let long URLs, source titles, protocol terms, or table cells break mobile layout. Move dense material into drawers or lower sections when the first reader path suffers.
+- Do not add new frameworks, animation libraries, analytics scripts, wallet widgets, or external embeds for polish. Add dependencies only when they serve a specific reader or verification flow.
+- Search and Ask AI are helper surfaces. They need plain empty/error/unavailable behavior and must route back to source/status pages instead of becoming authority.
 - Run `bash scripts/check-site.sh` before publishing.
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
