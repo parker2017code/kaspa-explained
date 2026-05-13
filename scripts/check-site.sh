@@ -14,6 +14,7 @@ python3 scripts/check-claims.py
 python3 scripts/build-sitemap.py --check
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
+python3 scripts/check-copy-quality.py
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2
