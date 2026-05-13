@@ -135,6 +135,11 @@ for page in "${expected_pages[@]}"; do
   }
 done
 
+grep -q 'Ask AI' nav.js && grep -q 'className = "llm-widget"' nav.js && grep -q '^\.llm-launch' styles.css || {
+  echo "Ask AI source-pack widget missing from nav.js/styles.css" >&2
+  exit 1
+}
+
 for page in "${expected_pages[@]}"; do
   grep -q '<meta name="description" content="[^"]' "$page" || {
     echo "$page missing meta description" >&2
