@@ -40,6 +40,7 @@
 - Apply the writing bar across public pages and LLM-facing files. Every touched page, repo guide, source note, generated summary, and context file should be direct, sourced or status-labeled, necessary, and free of defensive throat-clearing.
 - Treat text as part of the product. UI labels, docs, fixtures, generated summaries, LLM context, and handoff notes should be scanned with the same care as code: necessary, specific, clean, and defensible.
 - Treat user examples as class signals unless the user explicitly says one instance only. If the user points at one non-clickable card, cramped label, confusing command, or awkward status chip, audit the whole class of similar UI/copy patterns.
+- Treat pinpoint feedback as exact-defect input first, not as rollback permission. If the user points at one bad arrow, label, spacing issue, typo, or awkward line, identify and repair that element before changing unrelated parts. This does not forbid broader improvement when the task is a broader cleanup or redesign; once the defect is fixed, keep improving the surface where it makes the reader job stronger.
 - For broad cleanup work, use read-only parallel agents for audits and research when available. Assign them search/review tasks, keep edits local to the main agent, and use their findings to avoid narrow one-off fixes.
 - Avoid price predictions, exchange rumors, or investment advice.
 
@@ -56,19 +57,19 @@
 - Understand the reader problem before changing the page. Name the user job, status claim, source dependency, and likely misunderstanding before editing public copy or UI.
 - Prefer correctness over cleverness. A plain sourced sentence, route card, or status label is better than a clever phrase that hides whether something is live, testnet, roadmap, or research.
 - Treat security and trust as defaults. Do not expose private data, imply wallet/custody support, add unverifiable assistant claims, or make source-sensitive statements without current evidence.
-- Tests should prove behavior and source discipline. Update checks when navigation, metadata, source/status wording, search cards, Ask AI, or public route structure changes.
-- Design for failure. Search no-results, Ask AI unavailable/copy failure, broken source links, stale status, missing assets, and mobile overflow need explicit behavior.
+- Tests should prove behavior and source discipline. Update checks when navigation, metadata, source/status wording, search cards, or public route structure changes.
+- Design for failure. Search no-results, broken source links, stale status, missing assets, and mobile overflow need explicit behavior.
 - Keep the site observable enough to audit. Public pages should make the source path, status label, canonical URL, sitemap coverage, and changed copy easy to verify.
 - Protect content integrity. Keep `CLAIMS.yml`, `llms.txt`, `sitemap.xml`, metadata, public HTML, and source pages aligned after status-sensitive edits.
 - Keep complexity low. Add dependencies, scripts, visuals, or pages only when they reduce reader confusion or verification burden.
 - Treat AI output as a fast junior contributor. Generated copy, summaries, and code must be reviewed, source-checked, simplified, and run through local gates before commit.
 - Treat design and copy edits as implementation work, not static mockup work. A change should account for user intent, component reuse, responsive behavior, accessibility, performance, source/status drift, and maintenance cost.
 - For public UI changes, verify the relevant component states: default, hover/focus, active/current, empty, loading or unavailable, error, long-content wrapping, and mobile layout.
-- Keep shared patterns consistent across pages: route cards, status chips, source cards, app-path ladders, search results, Ask AI, drawers, tables, command blocks, and footer links.
+- Keep shared patterns consistent across pages: route cards, status chips, source cards, app-path ladders, search results, drawers, tables, command blocks, and footer links.
 - Use semantic HTML first. Links navigate, buttons act, headings stay ordered, labels remain explicit, focus stays visible, and color is never the only status signal.
 - Do not let long URLs, source titles, protocol terms, or table cells break mobile layout. Move dense material into drawers or lower sections when the first reader path suffers.
 - Do not add new frameworks, animation libraries, analytics scripts, wallet widgets, or external embeds for polish. Add dependencies only when they serve a specific reader or verification flow.
-- Search and Ask AI are helper surfaces. They need plain empty/error/unavailable behavior and must route back to source/status pages instead of becoming authority.
+- Search and source-pack docs are helper surfaces. They need plain routing back to source/status pages instead of becoming authority.
 - Run `bash scripts/check-site.sh` before publishing.
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.

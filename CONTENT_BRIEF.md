@@ -146,6 +146,8 @@ For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK ve
 
 The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
 
+The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source, not protocol activation authority. It is useful for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, KRC20 token metadata/market data, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
+
 For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
 
 The builder guide should also preserve practical TN12 breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced TN12 node with UTXO index; an unsynced node can return misleading zero balances; and a generic stable mainnet binary may not support every active TN12 setting. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
@@ -211,12 +213,13 @@ Implementation craft rule: a public edit is not complete just because the words 
 
 For Kaspa Explained this means:
 
+- Pinpoint feedback is exact-defect input first, not rollback permission. If a reader or the user flags one malformed arrow, cramped label, weird glyph, typo, copy line, or spacing bug, identify and repair that element before changing unrelated parts. This does not mean hold back on quality: when the task is a broader cleanup or redesign, keep improving the surface after the defect is fixed.
 - Every section should support a reader job: understand, compare, verify, build carefully, search, or correct a claim.
-- Shared patterns should behave consistently: route cards, source cards, status chips, comparison tables, app-path ladders, search results, Ask AI, drawers, command blocks, and footer links.
+- Shared patterns should behave consistently: route cards, source cards, status chips, comparison tables, app-path ladders, search results, drawers, command blocks, and footer links.
 - Status states stay distinct: live mainnet, ecosystem-live, targeted upgrade, testnet-only, roadmap, research, source-needed, stale-check-needed, and unknown.
 - Long source titles, URLs, page labels, protocol terms, and dates must wrap cleanly on mobile.
 - Tables belong where comparison or source evidence is the job. Beginner-facing pages should explain the plain action before dense grids.
-- Search and Ask AI need useful empty/error/unavailable states and must not become source authority.
+- Search and source-pack docs need useful routing back to source/status pages and must not become source authority.
 - Use semantic HTML, real links for navigation, buttons for actions, visible focus, logical headings, and status text that does not depend on color alone.
 - Keep the site dependency-light. Prefer crawlable HTML, shared CSS variables/classes, small SVGs, and vanilla JS over framework or animation additions.
 - Public claims, metadata, sitemap entries, `llms.txt`, `CLAIMS.yml`, and source pages should not drift apart after a status-sensitive edit.

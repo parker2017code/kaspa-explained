@@ -136,10 +136,10 @@ for page in "${expected_pages[@]}"; do
   }
 done
 
-grep -q 'Ask AI' nav.js && grep -q 'className = "llm-widget"' nav.js && grep -q 'llm-launch-mark' nav.js && grep -q 'kaspa-favicon.svg' styles.css && grep -q '^\.llm-launch' styles.css || {
-  echo "Ask AI source-pack widget missing from nav.js/styles.css" >&2
+if grep -q 'Ask AI\|llm-widget\|llm-launch' nav.js styles.css; then
+  echo "Retired Ask AI widget code should not ship in nav.js/styles.css" >&2
   exit 1
-}
+fi
 
 for page in "${expected_pages[@]}"; do
   grep -q '<meta name="description" content="[^"]' "$page" || {

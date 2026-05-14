@@ -29,20 +29,20 @@
   <meta name="twitter:title" content="Kaspa Command Line From Zero | Kaspa Explained">
   <meta name="twitter:description" content="A practical command-line route for Kaspa node, wallet, RPC, explorer, and testnet verification.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png?v=20260512-brand">
-  <meta name="dateModified" content="2026-05-11">
+  <meta name="dateModified" content="2026-05-14">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Command Line From Zero",
     "url": "https://kaspaexplained.com/command-line.html",
-    "dateModified": "2026-05-11",
+    "dateModified": "2026-05-14",
     "description": "A practical command-line route for verifying Kaspa with nodes, RPC, wallets, explorers, testnet, and future Toccata tooling.",
     "about": ["Kaspa", "Rusty Kaspa", "RPC", "Wallets", "Testnet", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260512-ask-ai">
-  <script defer src="nav.js?v=20260512-ask-ai"></script>
+  <link rel="stylesheet" href="styles.css?v=20260514-clean">
+  <script defer src="nav.js?v=20260514-clean"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -75,6 +75,7 @@
       <div class="actions">
         <a class="button primary" href="#mainnet-node">Run a node</a>
         <a class="button" href="#wallet-cli">Open CLI</a>
+        <a class="button" href="#hosted-api">Hosted API checks</a>
         <a class="button" href="#testnet">Use testnet</a>
         <a class="button" href="#tn12">TN12 practice</a>
         <a class="button" href="#sources">Sources</a>
@@ -106,6 +107,11 @@
           <p>Use wRPC and accepted-transaction replay when an app needs to prove that a txid, payload, or output really landed.</p>
           <p><a href="#wrpc">Start with wRPC</a></p>
         </article>
+        <article>
+          <h3>Use a hosted API</h3>
+          <p>Use a documented API for address history, acceptance checks, block ranges, and KRC token data when a prototype cannot run its own indexer yet.</p>
+          <p><a href="#hosted-api">Start with KDP</a></p>
+        </article>
       </div>
     </section>
 
@@ -133,15 +139,73 @@
       <p class="fit-note">Independent verification means climbing this ladder when the situation matters. It does not mean every normal payment requires every step.</p>
     </section>
 
+    <section id="hosted-api" class="section">
+      <p class="eyebrow">Hosted API</p>
+      <h2>Use KDP for quick reads, then know when to leave it.</h2>
+      <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, block queries, KRC20 token data, and a node RPC proxy. It is useful for prototypes, dashboards, exchange/wallet integrations, and independent second-source checks.</p>
+      <div class="reference-grid">
+        <article>
+          <h3>Transaction acceptance</h3>
+          <p>Batch-check txids for acceptance, accepting block hash, and confirmation count.</p>
+          <pre><code>curl --request POST \
+  --url https://api.kas.fyi/v1/transactions/acceptance \
+  --header 'Content-Type: application/json' \
+  --header 'x-api-key: &lt;api-key&gt;' \
+  --data '{"transactionIds":["&lt;txid&gt;"]}'</code></pre>
+        </article>
+        <article>
+          <h3>Block ranges</h3>
+          <p>Read blocks by blue score or DAA score. KDP limits DAA-score ranges to 100 scores per request, so paginated jobs should advance deliberately.</p>
+          <pre><code>curl --request GET \
+  --url https://api.kas.fyi/v1/blocks/daa-score/{daa_score_start}/{daa_score_end} \
+  --header 'x-api-key: &lt;api-key&gt;'</code></pre>
+          <pre><code>curl --request GET \
+  --url https://api.kas.fyi/v1/blocks/blue-score/{blue_score_start}/{blue_score_end} \
+  --header 'x-api-key: &lt;api-key&gt;'</code></pre>
+        </article>
+        <article>
+          <h3>Address history</h3>
+          <p>Use cursor pagination for large address histories. Cache carefully and handle rate limits.</p>
+          <pre><code>curl --request GET \
+  --url 'https://api.kas.fyi/v1/addresses/&lt;address&gt;/transactions?limit=100' \
+  --header 'x-api-key: &lt;api-key&gt;'</code></pre>
+        </article>
+        <article>
+          <h3>API data rules</h3>
+          <p>Amounts are sompi strings, not floats. Hashes are 64-character hex strings. Addresses use the <code>kaspa:</code> prefix. API timestamps are Unix milliseconds.</p>
+          <pre><code>1 KAS = 100000000 SOMPI
+amount: "31112708372"
+blockTime: 1749531022210</code></pre>
+        </article>
+        <article>
+          <h3>Rate limits and keys</h3>
+          <p>Send the API key in <code>x-api-key</code>. Watch rate-limit headers, request-unit cost, 401 errors for key issues, and 429 errors for backoff.</p>
+          <pre><code>ratelimit-limit: 500;w=1
+ratelimit-remaining: 490
+x-request-cost-ru: 10</code></pre>
+        </article>
+        <article>
+          <h3>Production boundary</h3>
+          <p>API keys, rate limits, pricing, and provider uptime are product dependencies. Production apps should plan their own node, indexer, or redundant provider path when reliability, privacy, or scale matters.</p>
+        </article>
+      </div>
+      <p class="fit-note">KDP is a useful hosted read path. Protocol status still comes from source, releases, KIPs, nodes, and network evidence.</p>
+    </section>
+
     <section id="mainnet-node" class="section">
       <p class="eyebrow">Mainnet</p>
       <h2>Run a Rusty Kaspa node.</h2>
       <p>Prerequisites: Docker for the container route, or Rust/Cargo for the source route. A node can verify chain state; it does not create or protect wallet keys by itself.</p>
-      <p>Fast Docker route from Kaspa.org Build:</p>
-      <pre><code>docker run -d --name kaspad -p 16110:16110 kaspanet/rusty-kaspad:latest</code></pre>
+      <p>Docker route with persistent storage:</p>
+      <pre><code>docker pull kaspanet/rusty-kaspad:latest
+mkdir -p ~/kaspa-data
+docker run -d --name kaspa-node --restart unless-stopped \
+  -v ~/kaspa-data:/app/data \
+  -p 16110:16110 -p 16111:16111 -p 17110:17110 -p 18110:18110 \
+  kaspanet/rusty-kaspad:latest</code></pre>
       <p>Basic container checks:</p>
       <pre><code>docker ps
-docker logs --tail=80 kaspad</code></pre>
+docker logs --tail=80 kaspa-node</code></pre>
       <p>Source-build route from the Rusty Kaspa README:</p>
       <pre><code>git clone https://github.com/kaspanet/rusty-kaspa
 cd rusty-kaspa
@@ -211,6 +275,16 @@ npm run playground:wallets</code></pre>
       <p class="eyebrow">Sources</p>
       <h2>Check these before running commands.</h2>
       <div class="reference-grid">
+        <article>
+          <h3>Kaspa Developer Platform</h3>
+          <p><a href="https://docs.kas.fyi/">docs.kas.fyi</a></p>
+          <p><a href="https://docs.kas.fyi/api-reference/v1/transaction/create-transaction-acceptance">Transaction acceptance</a></p>
+          <p><a href="https://docs.kas.fyi/api-reference/v1/block/get-block-daa-score">DAA-score blocks</a></p>
+          <p><a href="https://docs.kas.fyi/api-reference/v1/block/get-block-blue-score">Blue-score blocks</a></p>
+          <p><a href="https://docs.kas.fyi/essentials/data-types">Data types</a></p>
+          <p><a href="https://docs.kas.fyi/rate-limits">Rate limits</a></p>
+          <p>Hosted API for address history, transaction acceptance, block ranges, KRC20 data, and node RPC proxy access. Useful for prototypes and second-source checks.</p>
+        </article>
         <article>
           <h3>Kaspa Build</h3>
           <p><a href="https://kaspa.org/build">kaspa.org/build</a></p>

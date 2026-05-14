@@ -17,7 +17,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 | Area | Decision | Current check | Next action |
 |---|---|---|---|
-| Navigation | Few top-level routes; source/status routes always reachable. | Current nav is coherent. | Keep Ask AI as helper, not primary navigation. |
+| Navigation | Few top-level routes; source/status routes always reachable. | Current nav is coherent. | Keep AI/source-pack material in docs, not as a floating homepage widget. |
 | Page hierarchy | Beginner path, compact thesis, apps/builders, status, sources, search. | Strong. | Add cross-links where cards read like dead text. |
 | Search | Static site search is useful. | Search page exists. | Keep labels human-readable and avoid internal-only terms in result cards. |
 | Footer | Simple source/trust links. | Fine. | Avoid deep commercial footer. |
@@ -29,14 +29,14 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 | Layout system | Static HTML field guide with workbench panels where technical. | App layer and builder guide now have mechanics/workbench visuals. | Apply same grammar selectively to key pages, not everywhere. |
 | Above fold | Page job, plain summary, one visual where it clarifies mechanics. | Start/application/builder improved. | Avoid huge H1 plus long caveats on mobile. |
 | Tables | Status/source/detail only. | Many tables remain, but many are behind drawers. | Move encyclopedic tables lower or behind details where possible. |
-| Mobile | Hamburger, stacked sections, Ask AI smaller. | Screenshots show no overflow. | Keep checking floating Ask AI overlap after every layout edit. |
+| Mobile | Hamburger, stacked sections, compact sections. | Screenshots should show no overflow. | Keep checking dense cards, command blocks, and diagrams after every layout edit. |
 
 ## Visual System
 
 | Area | Decision | Current check | Next action |
 |---|---|---|---|
 | Style | Protocol field guide: graphite/off-white, restrained Kaspa teal, dense but calm. | Current dark theme mostly fits. | Avoid generic SaaS hero/cards and decorative crypto visuals. |
-| Branding | Kaspa mark, serious technical voice. | Ask AI now uses Kaspa logo. | Keep logo sizing and top nav consistent across pages. |
+| Branding | Kaspa mark, serious technical voice. | Top nav and favicon set carry the brand. | Keep logo sizing and top nav consistent across pages. |
 | Color | Teal for source/action, muted text for context, amber only for warnings/highlights. | Generally consistent. | Audit any color-only status labels. |
 | Typography | Human-readable first, monospace only for code/hashes. | Good. | Avoid long technical headings on public pages. |
 | Spacing | Moderate-density field guide, not airy marketing page. | New builder console is dense but readable. | Keep cards 8px radius or less. |
@@ -47,11 +47,11 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 | Area | Decision | Current check | Next action |
 |---|---|---|---|
 | Buttons / CTAs | Route to status, sources, start, builder paths, not conversion funnels. | Current CTAs are mostly informational. | Avoid "book demo / join / launch" style language. |
-| Forms / inputs | Search and Ask AI are the main interactive inputs. | Search exists; Ask AI floats. | Ensure search/Ask AI have useful empty/error states. |
+| Forms / inputs | Search is the main sitewide input; diagrams use local controls. | Search exists. | Ensure search has useful empty/error states. |
 | Cards | Use for reader paths, source groups, comparison items. | Heavy but manageable. | Make cards clickable when they look actionable. |
 | Tables | Use for status, comparisons, source hierarchy. | Strong but dense. | Keep beginner pages less table-heavy. |
 | Drawers | Use to hide tool lists, source detail, long tables. | Good pattern. | Avoid hiding the main aha point in drawers. |
-| Ask AI | Helpful assistant entry, not a core claim surface. | Present and visually corrected. | Keep it from covering content on mobile. |
+| Source pack | AI/source-pack material belongs in `llms.txt`, sources, claims, and evidence pages. | Floating widget retired. | Keep source-pack docs useful without adding a distracting global widget. |
 
 ## Implementation Engineering Rules
 
@@ -60,13 +60,13 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Area | Kaspa Explained rule | Required check |
 |---|---|---|
 | User intent | Code follows the reader jobs: understand, compare, verify, build carefully, search, or correct a claim. | Every new section should have one reader action and one next link. |
-| Components | Treat route cards, source cards, status chips, app-path ladders, search results, Ask AI, tables, and drawers as reusable patterns. | Each pattern needs default, hover/focus, empty, error/unavailable, and long-content behavior where applicable. |
+| Components | Treat route cards, source cards, status chips, app-path ladders, search results, tables, drawers, and command blocks as reusable patterns. | Each pattern needs default, hover/focus, empty, error/unavailable, and long-content behavior where applicable. |
 | State management | Keep live, ecosystem-live, targeted, roadmap, research, testnet-only, source-needed, and stale-check-needed distinct. | Do not flatten status lanes into generic "coming soon" or "available" language. |
 | Content variability | Long source names, dates, protocol terms, URLs, and examples must wrap without breaking cards or mobile layout. | Test with long headings, long links, and 390px mobile width. |
 | Responsive behavior | Mobile pages should preserve the reader path, not just stack every table. | Tables need cards, wrappers, or drawers when they are too wide. |
-| Accessibility | Use semantic HTML, logical headings, real labels, visible focus, source links with clear text, and status wording beyond color. | Search, nav, theme toggle, Ask AI, and drawers must remain keyboard-usable. |
+| Accessibility | Use semantic HTML, logical headings, real labels, visible focus, source links with clear text, and status wording beyond color. | Search, nav, theme toggle, diagrams, and drawers must remain keyboard-usable. |
 | Performance | Stay static and dependency-light. SVG/CSS visuals are preferred over JS-heavy interaction. | No framework or animation library for decoration. |
-| Security and privacy | Avoid surprise tracking, wallet-like UI, private data, or unverifiable assistant claims. | Ask AI/search helpers must not become source authority. |
+| Security and privacy | Avoid surprise tracking, wallet-like UI, private data, or unverifiable assistant claims. | Search and source-pack docs must route back to source/status pages instead of becoming authority. |
 | SEO and source trail | Important explanations should remain crawlable HTML with metadata, canonical URLs, sitemap coverage, and llms context alignment. | Run site checks after public copy or route changes. |
 | Analytics, if added | Track useful learning paths and broken searches, not hype metrics. | Keep consent/privacy clear and avoid broad behavioral surveillance. |
 | Maintainability | Keep repeated layout/copy patterns disciplined until a build step becomes clearly worth it. | Prefer shared CSS tokens/classes over page-specific styling. |
@@ -78,7 +78,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Problem before solution | Start from the reader question, claim status, source dependency, or route job. | Do not add copy, pages, or visuals until the user action and status boundary are clear. |
 | Correctness before cleverness | Plain sourced wording beats clever protocol slogans. | Keep live, ecosystem-live, targeted, roadmap, research, and testnet evidence distinct. |
 | Security and trust default | Source-sensitive claims and wallet/custody implications carry risk. | Verify drift-prone facts and avoid implying product support that does not exist. |
-| Tests as specs | Site checks encode the public contract. | Update checks when metadata, navigation, source/status wording, search, Ask AI, or layout behavior changes. |
+| Tests as specs | Site checks encode the public contract. | Update checks when metadata, navigation, source/status wording, search, route structure, or layout behavior changes. |
 | Failure design | No-results, unavailable, broken link, stale status, and mobile overflow are real states. | Give the reader a clear next action instead of an empty or broken surface. |
 | Observability | The site should be easy to audit. | Keep canonical URLs, sitemap, source links, claim files, and visible copy aligned. |
 | Data integrity | Status labels and source trails are part of the product. | Do not let public HTML, `CLAIMS.yml`, `llms.txt`, and source docs drift apart. |
@@ -94,7 +94,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Tone | Plain, direct, source-disciplined. | Good baseline. | Remove company-deck words and repeated "do not bundle" style copy. |
 | Evidence | Claims need source hierarchy or status label. | Very strong. | Keep `CLAIMS.yml`, `llms.txt`, status, and public HTML synchronized. |
 | Non-obvious value | Tell why Kaspa matters in normal use: self-custody, fast mined ordering, rules users can inspect. | App pages improved. | Make more examples problem-first before protocol-first. |
-| Error / empty states | 404 exists; search empty state exists. | Good enough. | Audit Ask AI/search error messages after any JS change. |
+| Error / empty states | 404 exists; search empty state exists. | Good enough. | Audit search messages and broken-link states after JS or source changes. |
 
 ## Trust, Accessibility, And Quality
 
