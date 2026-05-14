@@ -43,7 +43,9 @@
   }
 
   const normalizePath = (href) => {
-    const path = new URL(href, window.location.origin).pathname.replace(/\/$/, "");
+    const path = new URL(href, window.location.origin).pathname
+      .replace(/\/$/, "")
+      .replace(/\.html$/, "");
     return path || "/";
   };
   const currentPath = normalizePath(window.location.href);

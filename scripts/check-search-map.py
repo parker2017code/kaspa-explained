@@ -50,7 +50,11 @@ class SearchParser(HTMLParser):
 
 
 def expected_href(page):
-    return "/" if page == "index.html" else f"/{page}"
+    if page == "index.html":
+        return "/"
+    if page.endswith(".html"):
+        page = page[:-5]
+    return f"/{page}"
 
 
 def main():
@@ -62,7 +66,7 @@ def main():
     observed = []
 
     for index, card in enumerate(parser.cards, start=1):
-        hrefs = [href for href in card["hrefs"] if href == "/" or href.endswith(".html")]
+        hrefs = [href for href in card["hrefs"] if href == "/" or (href.startswith("/") and "." not in href.rsplit("/", 1)[-1])]
         if len(hrefs) != 1:
             errors.append(f"search card {index} must have exactly one page link; found {hrefs}")
             continue

@@ -29,6 +29,9 @@ while IFS= read -r url; do
       local_file="index.html"
     else
       local_file="${local_path#/}"
+      if [[ "$local_file" != *.* ]]; then
+        local_file="${local_file}.html"
+      fi
     fi
 
     if [[ -f "$local_file" ]]; then

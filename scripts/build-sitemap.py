@@ -25,7 +25,11 @@ class DateParser(HTMLParser):
 
 
 def url_for(path):
-    return f"{DOMAIN}/" if path == "index.html" else f"{DOMAIN}/{path}"
+    if path == "index.html":
+        return f"{DOMAIN}/"
+    if path.endswith(".html"):
+        path = path[:-5]
+    return f"{DOMAIN}/{path}"
 
 
 def read_existing_metadata():

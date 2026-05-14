@@ -112,7 +112,7 @@
 
   function renderAiLink() {
     if (!aiLink) return;
-    const url = new URL("/ai-guidance.html", window.location.origin);
+    const url = new URL("/ai-guidance", window.location.origin);
     url.searchParams.set("mode", "redteam");
     aiLink.href = url.pathname + url.search;
   }

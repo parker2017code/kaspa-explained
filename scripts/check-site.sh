@@ -52,7 +52,7 @@ for page in "${expected_pages[@]}"; do
   if [[ "$page" == "index.html" ]]; then
     url="${domain}/"
   else
-    url="${domain}/${page}"
+    url="${domain}/${page%.html}"
   fi
 
   grep -q "<loc>${url}</loc>" sitemap.xml || {
@@ -154,9 +154,9 @@ for page in "${expected_pages[@]}"; do
 done
 
 for page in "${expected_pages[@]}"; do
-  grep -q "/status.html" "$page" || { echo "$page missing status nav/link" >&2; exit 1; }
-  grep -q "/sources.html" "$page" || { echo "$page missing sources nav/link" >&2; exit 1; }
-  grep -q "/about.html" "$page" || { echo "$page missing about nav/link" >&2; exit 1; }
+  grep -q "/status" "$page" || { echo "$page missing status nav/link" >&2; exit 1; }
+  grep -q "/sources" "$page" || { echo "$page missing sources nav/link" >&2; exit 1; }
+  grep -q "/about" "$page" || { echo "$page missing about nav/link" >&2; exit 1; }
 done
 
 check_anchor() {
@@ -198,6 +198,9 @@ done < <(
           target_path="${ref%%#*}"
           anchor="${ref##*#}"
           target_file="${target_path#/}"
+          if [[ "$target_file" != *.html ]]; then
+            target_file="${target_file}.html"
+          fi
           printf '%s|%s|%s\n' "$page" "$target_file" "$anchor"
         done
   done

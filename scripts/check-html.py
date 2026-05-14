@@ -58,7 +58,11 @@ class PageParser(HTMLParser):
 
 
 def expected_url(page):
-    return f"{DOMAIN}/" if page == "index.html" else f"{DOMAIN}/{page}"
+    if page == "index.html":
+        return f"{DOMAIN}/"
+    if page.endswith(".html"):
+        page = page[:-5]
+    return f"{DOMAIN}/{page}"
 
 
 def read_sitemap_dates():
@@ -124,7 +128,7 @@ def main():
             search_links = {
                 f"{DOMAIN}{href}" if href.startswith("/") else href
                 for href in parser.links
-                if href == "/" or href.endswith(".html")
+                if href == "/" or (href.startswith("/") and "." not in href.rsplit("/", 1)[-1])
             }
             if not manifest_urls.issubset(search_links):
                 missing = sorted(manifest_urls - search_links)

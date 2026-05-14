@@ -74,7 +74,7 @@
       extra ? `My context: ${extra}` : "My context: no extra context provided.",
       "",
       "Use these sources first:",
-      ...(sourceLines.length ? sourceLines : ["- Kaspa Explained sources: https://kaspaexplained.com/sources.html"]),
+      ...(sourceLines.length ? sourceLines : ["- Kaspa Explained sources: https://kaspaexplained.com/sources"]),
       "",
       "Answer rules:",
       "- Separate live mainnet behavior, testnet evidence, targeted upgrades, roadmap work, research, and unverified claims.",

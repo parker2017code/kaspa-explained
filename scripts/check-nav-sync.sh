@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 manifest = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
-allowed = {"/" if page == "index.html" else f"/{page}" for page in manifest["pages"]}
+allowed = {"/" if page == "index.html" else f"/{page.removesuffix('.html')}" for page in manifest["pages"]}
 links = []
 for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
     href, _label = line.split("|", 1)
@@ -31,7 +31,7 @@ if observed_nav != manifest_nav:
     print("observed:", observed_nav, file=sys.stderr)
     raise SystemExit(1)
 
-unknown = sorted({href for href in links if (href == "/" or href.endswith(".html")) and href not in allowed})
+unknown = sorted({href for href in links if (href == "/" or (href.startswith("/") and "." not in href.rsplit("/", 1)[-1])) and href not in allowed})
 if unknown:
     print(f"Navigation links not listed in site-manifest.json: {', '.join(unknown)}", file=sys.stderr)
     raise SystemExit(1)
