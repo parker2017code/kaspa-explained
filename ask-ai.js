@@ -51,6 +51,8 @@
     grok: (prompt) => `https://grok.com/?q=${encodeURIComponent(prompt)}`
   };
 
+  const params = new URLSearchParams(window.location.search);
+
   function sourceUrl(path) {
     return new URL(path, siteOrigin).href;
   }
@@ -88,6 +90,13 @@
       const buildUrl = destinations[link.dataset.aiOpen];
       if (buildUrl) link.href = buildUrl(promptBox.value);
     });
+  }
+
+  function applyUrlState() {
+    const mode = params.get("mode") || params.get("question");
+    const context = params.get("context");
+    if (mode && tasks[mode]) question.value = mode;
+    if (context) custom.value = context;
   }
 
   async function copyPrompt(showStatus = true) {
@@ -128,5 +137,6 @@
     });
   });
 
+  applyUrlState();
   renderPrompt();
 })();

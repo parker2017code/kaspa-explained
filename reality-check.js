@@ -6,6 +6,9 @@
   const scoreEl = root.querySelector("[data-pitch-score]");
   const verdictEl = root.querySelector("[data-pitch-verdict]");
   const resultsEl = root.querySelector("[data-pitch-results]");
+  const aiLink = root.querySelector("[data-pitch-ai-link]");
+  const copyButton = root.querySelector("[data-pitch-copy]");
+  const copyStatus = root.querySelector("[data-pitch-copy-status]");
   const sampleButtons = Array.from(root.querySelectorAll("[data-pitch-sample]"));
 
   const checks = [
@@ -79,6 +82,7 @@
     const score = results.filter((item) => item.passed).length;
     scoreEl.textContent = `${score}/${checks.length}`;
     verdictEl.textContent = verdict(score, text.length);
+    renderAiLink();
     resultsEl.innerHTML = results.map((item) => `
       <article class="${item.passed ? "pass" : "miss"}">
         <span>${item.passed ? "Answered" : "Missing"}</span>
@@ -86,6 +90,26 @@
         <p>${item.question}</p>
       </article>
     `).join("");
+  }
+
+  function redTeamPrompt() {
+    const pitch = input.value.trim() || "Paste a Kaspa product pitch here.";
+    return [
+      "Red-team this Kaspa product pitch using the Reality Check framework.",
+      "",
+      `Pitch: ${pitch}`,
+      "",
+      "Check: specific user, concrete job, liquidity source, wallet/signing flow, live/testnet/roadmap status, evidence, failure modes, and day-two behavior.",
+      "Then say what would make the idea real, what is missing, and which claims should not be repeated yet."
+    ].join("\n");
+  }
+
+  function renderAiLink() {
+    if (!aiLink) return;
+    const url = new URL("/ai-guidance.html", window.location.origin);
+    url.searchParams.set("mode", "redteam");
+    url.searchParams.set("context", redTeamPrompt());
+    aiLink.href = url.pathname + url.search;
   }
 
   function verdict(score, length) {
@@ -97,6 +121,14 @@
   }
 
   input.addEventListener("input", runChecks);
+  copyButton?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(redTeamPrompt());
+      copyStatus.textContent = "Red-team prompt copied.";
+    } catch (error) {
+      copyStatus.textContent = "Open Ask AI and paste the pitch if clipboard access is blocked.";
+    }
+  });
   sampleButtons.forEach((button) => {
     button.addEventListener("click", () => {
       input.value = samples[button.dataset.pitchSample] || "";
