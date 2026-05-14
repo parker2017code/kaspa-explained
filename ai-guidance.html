@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AI Guidance for Kaspa Claims | Kaspa Explained</title>
-  <meta name="description" content="How AI tools and contributors should describe Kaspa without mixing live mainnet behavior, testnet evidence, roadmap work, and research.">
+  <title>Ask AI About Kaspa With Sources | Kaspa Explained</title>
+  <meta name="description" content="Open ChatGPT, Claude, Perplexity, or Grok with a source-aware Kaspa prompt that uses Kaspa Explained, status pages, claims, and source links.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/ai-guidance.html">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -16,8 +16,8 @@
   <meta name="application-name" content="Kaspa Explained">
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
-  <meta property="og:title" content="AI Guidance for Kaspa Claims | Kaspa Explained">
-  <meta property="og:description" content="Rules for describing Kaspa with source discipline and clear status labels.">
+  <meta property="og:title" content="Ask AI About Kaspa With Sources | Kaspa Explained">
+  <meta property="og:description" content="Generate a source-aware Kaspa prompt, copy it, and open your AI tool of choice.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/ai-guidance.html">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png?v=20260512-brand">
@@ -26,12 +26,13 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Guidance for Kaspa Claims | Kaspa Explained">
-  <meta name="twitter:description" content="Rules for describing Kaspa with source discipline and clear status labels.">
+  <meta name="twitter:title" content="Ask AI About Kaspa With Sources | Kaspa Explained">
+  <meta name="twitter:description" content="Generate a source-aware Kaspa prompt, copy it, and open your AI tool of choice.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png?v=20260512-brand">
-  <meta name="dateModified" content="2026-05-13">
+  <meta name="dateModified" content="2026-05-14">
   <link rel="stylesheet" href="styles.css?v=20260514-clean">
   <script defer src="nav.js?v=20260514-clean"></script>
+  <script defer src="ask-ai.js?v=20260514"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -49,6 +50,7 @@
         <a href="/builder-guide.html">Builders</a>
         <a href="/status.html">Status</a>
         <a href="/sources.html">Sources</a>
+        <a href="/ai-guidance.html">Ask AI</a>
         <a href="/search.html">Search</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -58,12 +60,71 @@
 
   <main id="top" tabindex="-1" class="sources-page">
     <section class="sources-hero section">
-      <p class="eyebrow">AI and source discipline</p>
-      <h1>How to talk about Kaspa.</h1>
-      <p class="lead">Use this before summarizing Kaspa with an AI tool. Keep mainnet behavior, testnet evidence, targeted upgrades, roadmap architecture, and research in separate buckets.</p>
+      <p class="eyebrow">Ask AI</p>
+      <h1>Ask about Kaspa with sources.</h1>
+      <p class="lead">Pick a question, include the source pack, then open your AI tool with a prompt that separates live mainnet behavior, testnet evidence, targeted upgrades, roadmap work, and research.</p>
       <div class="actions">
-        <a class="button primary" href="/status.html">Open status page</a>
+        <a class="button primary" href="#ask-ai-tool">Build prompt</a>
         <a class="button" href="/CLAIMS.yml">Open claims file</a>
+        <a class="button" href="/llms.txt">Open LLM context</a>
+      </div>
+    </section>
+
+    <section id="ask-ai-tool" class="section ai-ask-panel" data-ai-ask>
+      <p class="eyebrow">Prompt builder</p>
+      <h2>Open your AI with the right context.</h2>
+      <div class="ai-ask-layout">
+        <div class="ai-ask-controls">
+          <label class="ai-field">
+            <span>Question</span>
+            <select data-ai-question>
+              <option value="short">Give me the short, accurate explanation of Kaspa.</option>
+              <option value="blockdag">Explain blockchain versus blockDAG visually and technically.</option>
+              <option value="status">Check whether a Kaspa claim is live, targeted, roadmap, or research.</option>
+              <option value="builder">Show the builder path for nodes, APIs, wallets, KRC tooling, and TN12 work.</option>
+              <option value="compare">Compare Kaspa to Bitcoin, Ethereum, Solana, and other fast chains without tribal framing.</option>
+              <option value="design">Turn Kaspa into an app, product, or research idea with clear proof requirements.</option>
+              <option value="redteam">Red-team a bullish Kaspa claim and tell me what evidence is missing.</option>
+              <option value="roadmap">Separate Crescendo, KRC, Toccata, vProgs, DAGKnight, and app-layer claims.</option>
+              <option value="safety">Explain wallets, mining, nodes, and common safety checks.</option>
+              <option value="skeptical">Give me the skeptical case and what evidence would change it.</option>
+            </select>
+          </label>
+          <label class="ai-field">
+            <span>Your angle</span>
+            <textarea rows="4" data-ai-custom placeholder="Optional: paste a claim, question, txid, page URL, or topic."></textarea>
+          </label>
+          <fieldset class="ai-source-picker">
+            <legend>Source pack</legend>
+            <label><input type="checkbox" data-ai-source checked data-label="One-screen summary" value="/kaspa-in-one-screen.html"> One-screen summary</label>
+            <label><input type="checkbox" data-ai-source checked data-label="Current status" value="/status.html"> Current status</label>
+            <label><input type="checkbox" data-ai-source checked data-label="Claims file" value="/CLAIMS.yml"> Claims file</label>
+            <label><input type="checkbox" data-ai-source checked data-label="LLM context" value="/llms.txt"> LLM context</label>
+            <label><input type="checkbox" data-ai-source data-label="Command line and KDP" value="/command-line.html"> Command line and KDP</label>
+            <label><input type="checkbox" data-ai-source data-label="Builder guide" value="/builder-guide.html"> Builder guide</label>
+            <label><input type="checkbox" data-ai-source data-label="Full source hierarchy" value="/sources.html"> Full source hierarchy</label>
+          </fieldset>
+          <div class="ai-preset-strip" aria-label="Prompt shortcuts">
+            <button type="button" data-ai-preset="status">Verify claim</button>
+            <button type="button" data-ai-preset="builder">Builder path</button>
+            <button type="button" data-ai-preset="redteam">Red team</button>
+            <button type="button" data-ai-preset="design">Idea lab</button>
+          </div>
+        </div>
+        <div class="ai-prompt-card">
+          <div class="ai-prompt-toolbar">
+            <span>Generated prompt</span>
+            <button type="button" data-ai-copy>Copy</button>
+          </div>
+          <textarea readonly rows="16" data-ai-prompt aria-label="Generated AI prompt"></textarea>
+          <div class="ai-destination-grid" aria-label="Open prompt in an AI tool">
+            <a href="https://chatgpt.com/" data-ai-open="chatgpt">ChatGPT</a>
+            <a href="https://claude.ai/new" data-ai-open="claude">Claude</a>
+            <a href="https://www.perplexity.ai/search/new" data-ai-open="perplexity">Perplexity</a>
+            <a href="https://grok.com/" data-ai-open="grok">Grok</a>
+          </div>
+          <p class="ai-copy-status" data-ai-status aria-live="polite">Prompt is ready. Opening a tool also copies it.</p>
+        </div>
       </div>
     </section>
 
@@ -173,6 +234,7 @@
       <nav aria-label="Footer">
         <a href="/status.html">Status</a>
         <a href="/sources.html">Sources</a>
+        <a href="/ai-guidance.html">Ask AI</a>
         <a href="/search.html">Search</a>
         <a href="/about.html">About</a>
         <a href="/CLAIMS.yml">Claims</a>

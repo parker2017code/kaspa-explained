@@ -60,6 +60,7 @@
         <a href="/builder-guide.html">Builders</a>
         <a href="/status.html">Status</a>
         <a href="/sources.html">Sources</a>
+        <a href="/ai-guidance.html">Ask AI</a>
         <a href="/search.html">Search</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -141,10 +142,11 @@
 
     <section id="hosted-api" class="section">
       <p class="eyebrow">Hosted API</p>
-      <h2>Use KDP for quick reads, then know when to leave it.</h2>
-      <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, block queries, KRC20 token data, and a node RPC proxy. It is useful for prototypes, dashboards, exchange/wallet integrations, and independent second-source checks.</p>
-      <div class="reference-grid">
-        <article>
+      <h2>KDP commands and boundaries.</h2>
+      <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, block queries, KRC20 token data, and a node RPC proxy. It is useful for prototypes, dashboards, exchange/wallet integrations, and second-source checks.</p>
+      <div class="api-command-grid" aria-label="Kaspa Developer Platform command examples">
+        <article class="api-command-card">
+          <span class="command-method command-method-post">POST</span>
           <h3>Transaction acceptance</h3>
           <p>Batch-check txids for acceptance, accepting block hash, and confirmation count.</p>
           <pre><code>curl --request POST \
@@ -153,38 +155,49 @@
   --header 'x-api-key: &lt;api-key&gt;' \
   --data '{"transactionIds":["&lt;txid&gt;"]}'</code></pre>
         </article>
-        <article>
-          <h3>Block ranges</h3>
-          <p>Read blocks by blue score or DAA score. KDP limits DAA-score ranges to 100 scores per request, so paginated jobs should advance deliberately.</p>
+        <article class="api-command-card">
+          <span class="command-method">GET</span>
+          <h3>DAA-score blocks</h3>
+          <p>Read a bounded DAA-score range. KDP limits these ranges to 100 scores per request.</p>
           <pre><code>curl --request GET \
   --url https://api.kas.fyi/v1/blocks/daa-score/{daa_score_start}/{daa_score_end} \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
+          <p class="api-command-note">For paginated jobs, advance the range deliberately and record the last checked score.</p>
+        </article>
+        <article class="api-command-card">
+          <span class="command-method">GET</span>
+          <h3>Blue-score blocks</h3>
+          <p>Read blocks by blue score when that is the progress marker your app stores.</p>
           <pre><code>curl --request GET \
   --url https://api.kas.fyi/v1/blocks/blue-score/{blue_score_start}/{blue_score_end} \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
         </article>
-        <article>
+        <article class="api-command-card">
+          <span class="command-method">GET</span>
           <h3>Address history</h3>
           <p>Use cursor pagination for large address histories. Cache carefully and handle rate limits.</p>
           <pre><code>curl --request GET \
   --url 'https://api.kas.fyi/v1/addresses/&lt;address&gt;/transactions?limit=100' \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
         </article>
-        <article>
+        <article class="api-command-card api-command-card-note">
+          <span class="command-method command-method-note">DATA</span>
           <h3>API data rules</h3>
           <p>Amounts are sompi strings, not floats. Hashes are 64-character hex strings. Addresses use the <code>kaspa:</code> prefix. API timestamps are Unix milliseconds.</p>
           <pre><code>1 KAS = 100000000 SOMPI
 amount: "31112708372"
 blockTime: 1749531022210</code></pre>
         </article>
-        <article>
+        <article class="api-command-card api-command-card-note">
+          <span class="command-method command-method-note">LIMITS</span>
           <h3>Rate limits and keys</h3>
           <p>Send the API key in <code>x-api-key</code>. Watch rate-limit headers, request-unit cost, 401 errors for key issues, and 429 errors for backoff.</p>
           <pre><code>ratelimit-limit: 500;w=1
 ratelimit-remaining: 490
 x-request-cost-ru: 10</code></pre>
         </article>
-        <article>
+        <article class="api-command-card api-command-card-note">
+          <span class="command-method command-method-note">BOUNDARY</span>
           <h3>Production boundary</h3>
           <p>API keys, rate limits, pricing, and provider uptime are product dependencies. Production apps should plan their own node, indexer, or redundant provider path when reliability, privacy, or scale matters.</p>
         </article>
@@ -316,6 +329,7 @@ npm run playground:wallets</code></pre>
       <nav aria-label="Footer">
         <a href="/status.html">Status</a>
         <a href="/sources.html">Sources</a>
+        <a href="/ai-guidance.html">Ask AI</a>
         <a href="/search.html">Search</a>
         <a href="/about.html">About</a>
         <a href="/CLAIMS.yml">Claims</a>
