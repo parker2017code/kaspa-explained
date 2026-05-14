@@ -136,7 +136,7 @@ Before signing anything:
 - confirm where wallet files are stored;
 - back up keys according to wallet documentation;
 - send a tiny test amount first;
-- verify the accepted transaction through more than one source when possible.
+- verify the accepted transaction through independent sources when possible.
 
 ### Start a generic testnet node
 

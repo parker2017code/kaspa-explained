@@ -69,13 +69,13 @@ Audience paths should be distinct, not flattened into one universal page style. 
 
 A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
-At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail rather than as visible public verification boxes.
+At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail. Do not add visible public verification boxes unless the task asks for them.
 
 Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standard is short: what someone can do, what evidence or source backs it, what is still missing, and what to read or try next. Avoid vague roadmap language, repeated disclaimers, grand claims before evidence, fake-official labels, internal notes on public pages, and jargon before concrete examples.
 
 ## Current Site Structure
 
-The homepage should work as a router before it works as a deep article. The site now has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics but need sharper judgment.
+The homepage should work as a router first. The site has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
 
 Keep these audience paths visible:
 
@@ -129,9 +129,9 @@ The `application-layer.html` page is the app-opportunity and builder-imagination
 
 When explaining coordination markets, start with the product shape: users make conditional commitments, the app groups compatible commitments, a solver checks whether the group satisfies the conditions, and settlement or refunds follow. The first buildable lane can be transparent and replay-backed. The harder research target adds private accumulation, capital multiplexing, solver incentives, censorship resistance, MEV resistance, and atomic execution.
 
-When explaining app-to-app composition, make the key boundary atomicity rather than "same block." Fast L1 ordering, proof-linked coordination, or two actions landing close together are not the same as one combined state transition where all touched apps succeed or fail together. Toccata can support covenant rules, ZK proof checks, sequencing commitments, and based-zk foundations. Full cross-app atomic composition remains later vProgs roadmap architecture.
+When explaining app-to-app composition, make the key boundary atomicity, not "same block." Fast L1 ordering, proof-linked coordination, or two actions landing close together are not the same as one combined state transition where all touched apps succeed or fail together. Toccata can support covenant rules, ZK proof checks, sequencing commitments, and based-zk foundations. Full cross-app atomic composition remains later vProgs roadmap architecture.
 
-The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Keep Izio's progdoc material credited as builder guidance, not activation evidence. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes rather than protocol-status lanes.
+The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Credit Izio's progdoc material as builder guidance. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes, outside protocol-status lanes.
 
 SilverScript/covenant examples should be judged by the state transition they
 actually prove. A serious example shows continuation state, required output
@@ -197,8 +197,8 @@ Avoid:
 - corporate abstraction without a concrete actor and requirement, such as "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic unlock," "robust platform," or "seamless experience",
 - market-cap or rank claims frozen into the explainer,
 - vague claims like "revolutionary" without explaining the mechanism.
-- repeated "not X but Y" framing on public pages,
-- repeated contrast frames such as "not just", "not only", "more than just", "from X to Y", "whether you are X or Y", "this is not merely", "redefining", or "changing the way we think",
+- repeated contrast scaffolding on public pages,
+- repeated contrast frames, vague transformation formulas, and synthetic thought-leadership cadence,
 - overcorrected negative framing where every paragraph repeats a missing feature; use one status label and name the next dependency instead,
 - over-polished LLM phrasing such as "delve", "tapestry", "seamless", "robust", "pivotal", "crucial", "unlock", "empower", "transform", "reimagine", "landscape", "journey", "at its core", "ultimately", or inflated adjectives that do not add a mechanism,
 - brochure language such as "next-generation", "cutting-edge", "game-changing", "powerful platform", "accelerate innovation", "drive the future", or "pave the way",
@@ -229,7 +229,7 @@ Plain-language rule: if a sentence says a vague group "needs readiness" or "need
 
 Tone and visual weight:
 
-- Use medium authority. The site should not sound small, apologetic, or unsure, but it should also avoid manifesto, pitch-deck, or definitive-guide posture.
+- Use medium authority. The site should sound clear and grounded. Avoid small, apologetic, manifesto, pitch-deck, and definitive-guide posture.
 - Write like a knowledgeable person helping a rushed reader choose the right path.
 - Use medium visual weight. Headings, cards, callouts, and diagrams should be clear and confident, not oversized or theatrical. Use size to create hierarchy, not drama.
 - Prefer humble guidance: "start here", "check this lane", "use this distinction", "current boundary", "what exists now", and "what may come later."
@@ -322,7 +322,7 @@ Core frame:
 
 Keep the weakness side just as explicit. Crypto is usually weak for normal domestic payments in strong banking systems, consumer reversibility, private records, ordinary corporate databases, unsecured real-world credit, replacing courts, supply-chain truth, identity, and tokenizing assets whose ownership still depends on law, custody, inspection, liens, taxes, and jurisdiction.
 
-Keep this page conditional rather than tribal: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
+Keep this page conditional: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
 
 The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when neutral money, self-custody, censorship resistance, fast mined ordering, future apps that prove rules, and public group commitments matter.
 
@@ -330,7 +330,7 @@ Core frame:
 
 > Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time: fast mined ordering today, app receipts around the live network, and future apps that prove their own rules.
 
-Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement and censorship-resistance goals, rather than faster payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is thesis framing, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
+Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement, censorship-resistance goals, and a broader thesis than fast payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is thesis framing, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
 
 KRC20/KRC721 nuance: KRC token and NFT-style standards belong in the ecosystem-live lane, not the core-protocol-live lane. They can be described as practical tooling for issued tokens, coupons, event credits, access passes, membership objects, rewards, and collectibles when wallet/indexer support exists. State that required deploy/mint gas fees are miner fees, not a proof that every wallet or frontend is fee-free. Always state that the issuer or application still controls redemption logic, metadata quality, user support, compliance, refunds, and real-world enforcement.
 
@@ -350,17 +350,17 @@ Toccata and vProgs are related but distinct. Toccata/Covenants++ is the nearer L
 
 Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch paths, AI-agent task boards, and DeFi.
 
-Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https://www.youtube.com/watch?v=b3wPZ04p410`), is a narrative source for the coordination-market thesis. It frames the problem as stag hunt rather than prisoner's dilemma, names credible commitments, conditional participation, and economic exposure as core market primitives, and connects Kaspa's real-time decentralized confirmation thesis to coordination markets that need fast observable signals without centralized sequencing. Use it for product framing. Keep live-status labels tied to activation evidence.
+Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https://www.youtube.com/watch?v=b3wPZ04p410`), is a narrative source for the coordination-market thesis. It frames the problem as stag hunt, not prisoner's dilemma, names credible commitments, conditional participation, and economic exposure as core market primitives, and connects Kaspa's real-time decentralized confirmation thesis to coordination markets that need fast observable signals without centralized sequencing. Use it for product framing. Keep live-status labels tied to activation evidence.
 
 The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and based-app foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
 
 Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release show Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext. Protocol status still comes from node, release, KIP, and activation evidence. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment until merged and released.
 
-Frame Kaspa as L1-first and shared-sequencer-first rather than Ethereum-rollup-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification rather than creating separate sequencer empires.
+Frame Kaspa as L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification without separate sequencer empires.
 
 Based apps are a real build lane, not a future caveat. Direct L1 covenant examples such as vaults, escrow, and assurance can be explained without an L2. Based-app prototypes should be described as richer app state anchored to Kaspa ordering, commitments, proofs, settlement, or exits. Based-zk is the stronger proving path when replay alone is not enough. Keep ecosystem L2 projects out of the site's assumptions unless a page is explicitly about ecosystem projects.
 
-vProgs should be described first as apps that prove their own logic, then as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata rather than executing every app's logic.
+vProgs should be described first as apps that prove their own logic, then as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata, while app runtimes execute their own logic.
 
 For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
 
@@ -370,7 +370,7 @@ Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, should guide t
 
 Use the interview as an editorial model, not as a public slogan. It shows the target feel for the site: patient first-principles reasoning, everyday examples, willingness to compare Bitcoin/Ethereum/Solana without tribal shortcuts, clear admission of uncertainty, and careful distinction between live protocol, roadmap, and aspiration.
 
-Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS is aspirational, pruning is not privacy, and Solana-like means cohesive developer/user experience rather than importing Solana execution into Kaspa L1.
+Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS is aspirational, pruning is not privacy, and Solana-like means cohesive developer/user experience, with no imported Solana execution model on Kaspa L1.
 
 ## Source Hierarchy
 
@@ -427,7 +427,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/README.md`
 - `/CLAIMS.yml`
 
-Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable as a repository file, but it is local agent guidance rather than a public content surface.
+Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable as a repository file, but it is local agent guidance outside the public content surface.
 
 ## Active Public Technical Accounts
 

@@ -31,6 +31,7 @@
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
 - Do not default to EVM compatibility or external L2 migration as Kaspa's app path. If mentioning L2s or EVM, keep the source status and network-effect tradeoff explicit.
 - Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
+- Do not use rhetorical contrast patterns unless quoting source text: `not X but Y`, `not just X but Y`, `not only X but also Y`, `more than X`, `isn't merely X`, `goes beyond X`, or `rather than X, Y`. Rewrite matches as direct positive sentences.
 - Avoid corporate abstraction unless the sentence cashes it out. Do not leave terms like "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic," or "platform unlock" standing alone. Name the actor and requirement: an exchange needs node stability, wallet integration, liquidity, legal review, and support; a payments company needs payment APIs, refunds, accounting, uptime, and support; builders need docs, SDKs, indexers, and working examples.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer rather than help the reader.
 - Do not write cringey internal-process language in public copy or durable notes. Avoid vague words like "framing pass," "status theater," "polish pass," "move the narrative," and "unlock." Say the concrete task: shorten the page, link the card, move details to docs, show the command prereqs, or explain the app path.
@@ -71,6 +72,7 @@
 - Do not add new frameworks, animation libraries, analytics scripts, wallet widgets, or external embeds for polish. Add dependencies only when they serve a specific reader or verification flow.
 - Search and source-pack docs are helper surfaces. They need plain routing back to source/status pages instead of becoming authority.
 - Run `bash scripts/check-site.sh` before publishing.
+- Run `npm run lint:copy` before finalizing prose changes. If it fails, rewrite the flagged copy and run it again.
 - Run `bash scripts/check-links.sh` when source/reference URLs change, or use the scheduled GitHub Action for routine link audits.
 - Confirm `robots.txt`, `sitemap.xml`, `llms.txt`, and `CNAME` still point to `https://kaspaexplained.com/`.
 - For web-surface changes, keep the full favicon/social set coherent: SVG favicon, PNG favicon, ICO favicon, Apple touch icon, web manifest, Open Graph image, and Twitter image.

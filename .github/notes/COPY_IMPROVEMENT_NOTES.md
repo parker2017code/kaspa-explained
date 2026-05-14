@@ -114,7 +114,7 @@ Work in this order unless a visible regression appears:
 2. Make every clickable-looking card, chip, or status label either a real link/control or visually static text.
 3. Keep the homepage simple: plain thesis, one primary route, one beginner route, one status/source route.
 4. Move repeated live/targeted/roadmap/research language to the status page and use shorter page-specific links elsewhere.
-5. Run the public framing pass: money-first, covenants as constrained spend rules, based apps as app state anchored to Kaspa evidence, and vProgs as later architecture rather than the default product story.
+5. Run the public framing pass: money-first, covenants as constrained spend rules, based apps as app state anchored to Kaspa evidence, and vProgs as later architecture.
 6. Shorten the longest public pages, especially Application Layer, by using stronger top-level segmentation and optional detail.
 7. Then reduce maintenance risk: manifest-driven nav/search/page inventory, fewer repeated card structures, and smaller CSS sections.
 
