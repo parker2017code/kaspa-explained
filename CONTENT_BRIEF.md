@@ -485,7 +485,7 @@ Useful quantum-answer frame:
 
 Primary public pages:
 
-- `index.html` - audience-routed homepage, real-time Proof-of-Work thesis, status lanes, zero-start links, and compact Kaspa/adoption routes.
+- `index.html` - audience-routed homepage, real-time Proof-of-Work thesis, interactive blockchain-vs-blockDAG teaching model, status lanes, zero-start links, and compact Kaspa/adoption routes.
 - `start-here.html` - true beginner router for readers who know nothing about crypto or Kaspa.
 - `crypto-from-zero.html` - causal ladder from records, keys, transactions, blocks, consensus, incentives, tokens, and tradeoffs to Kaspa.
 - `why-crypto-has-value.html` - market-value explainer for token need, prices, market cap, open markets, speculation, launch design, and who benefits.

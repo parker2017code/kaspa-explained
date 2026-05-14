@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Kaspa Explained | Proof-of-Work blockDAG Guide">
   <meta name="twitter:description" content="Live proof-of-work blockDAG, 10 BPS, sources, and builder paths.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260512.png?v=20260512-brand">
-  <meta name="dateModified" content="2026-05-12">
+  <meta name="dateModified" content="2026-05-14">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -85,13 +85,19 @@
   <main id="top" tabindex="-1">
     <section class="hero">
       <div class="hero-copy">
+        <p class="eyebrow">Visual protocol guide</p>
         <h1>Kaspa is <span class="hero-title-accent">real-time</span> <span class="mobile-title-break">Proof of Work.</span></h1>
         <p class="lead">It keeps mined <a href="/glossary.html#proof-of-work">Proof of Work</a> and a <a href="/glossary.html#utxo">UTXO</a> model, then uses a <a href="/glossary.html#blockdag">blockDAG</a> and <a href="/glossary.html#ghostdag">GHOSTDAG</a> so honest blocks can be found in parallel and still ordered into one shared history.</p>
-        <p class="plain-bridge">Kaspa's core move is simple: do not force honest work to wait in a single-file chain when it can stay in the graph and still be ordered into one shared payment history.</p>
-        <p class="fit-note"><strong>Real-time means fast mined inclusion.</strong> Finality confidence is still probabilistic.</p>
+        <p class="plain-bridge">The useful picture: Bitcoin-style mining, a graph instead of one file line, and one ordered payment history after the graph is resolved.</p>
+        <div class="hero-signal-grid" aria-label="Kaspa homepage shortcuts">
+          <a href="#blockdag-demo"><span>01</span><strong>Compare the shape</strong><small>Single chain versus blockDAG.</small></a>
+          <a href="/status.html"><span>02</span><strong>Check what is live</strong><small>Mainnet, ecosystem, roadmap, research.</small></a>
+          <a href="/sources.html"><span>03</span><strong>Follow the sources</strong><small>Research, releases, docs, code.</small></a>
+        </div>
         <div class="actions">
           <a class="button" href="/start-here.html">Start from zero</a>
           <a class="button primary" href="/kaspa-in-one-screen.html">Kaspa in one screen</a>
+          <a class="button" href="#blockdag-demo">Open visual model</a>
         </div>
       </div>
       <div class="hero-visual" aria-label="BlockDAG concept diagram">
@@ -148,17 +154,183 @@
           <g class="dag-node soft" transform="translate(620 292)"><circle r="26"/><text y="7">O</text></g>
         </svg>
         <div class="visual-caption">
-          <strong>Linear chains choose one branch at a time.</strong>
-          <span>Kaspa can keep many parallel blocks in the graph, then order them through GHOSTDAG.</span>
+          <strong>Parallel work is the point.</strong>
+          <span>Kaspa keeps more honest blocks in the graph, then orders them with GHOSTDAG.</span>
         </div>
       </div>
     </section>
 
-    <section id="start-here" class="section prose-section">
-      <h2>The short argument.</h2>
-      <p class="lead">Kaspa is mined like Bitcoin, but it is built so honest blocks found at nearly the same time can stay in the record. GHOSTDAG gives nodes a rule for ordering that graph into one payment history.</p>
-      <p>The live network is the Crescendo-era 10 BPS chain: people can send, receive, self-custody, mine, run nodes, use wallets and explorers, and try ecosystem-token workflows around KRC tooling.</p>
-      <p>Toccata, app programs, DAGKnight, and richer app paths are separate build stages. Keep them in view, but do not mix them into the live payment network. When the exact boundary matters, use the <a href="/status.html">status page</a> or the <a href="/sources.html">source list</a>.</p>
+    <section id="start-here" class="section orientation-console" aria-labelledby="orientation-title">
+      <div>
+        <p class="eyebrow">Read it by job</p>
+        <h2 id="orientation-title">Start with the question in front of you.</h2>
+        <p class="lead">Use the page to move from picture to evidence: learn the shape, check the status, verify the source, then decide whether to go deeper.</p>
+      </div>
+      <div class="orientation-grid">
+        <a href="/start-here.html"><span>New reader</span><strong>What problem is Kaspa trying to solve?</strong><small>Start before the jargon.</small></a>
+        <a href="/kaspa-in-one-screen.html"><span>Fast answer</span><strong>What is the honest short version?</strong><small>Live, not live, risks.</small></a>
+        <a href="/status.html"><span>Status check</span><strong>Which claims are live today?</strong><small>No roadmap blending.</small></a>
+        <a href="/builder-guide.html"><span>Builder path</span><strong>What can be tested or built carefully?</strong><small>Tools, proofs, boundaries.</small></a>
+      </div>
+    </section>
+
+    <section id="blockdag-demo" class="protocol-demo section" data-demo-mode="dag" data-reader-mode="simple" aria-labelledby="blockdag-demo-title">
+      <div class="protocol-demo-head">
+        <div>
+          <p class="eyebrow">Interactive model</p>
+          <h2 id="blockdag-demo-title">Compare the chain and the graph.</h2>
+          <p class="lead">This model is simulated. It shows the structural difference the site keeps coming back to: one selected chain versus a graph that can include parallel blocks and then order them.</p>
+        </div>
+        <div class="demo-status-card" aria-live="polite">
+          <span>Current view</span>
+          <strong id="demo-status-label">Kaspa blockDAG</strong>
+        </div>
+      </div>
+
+      <div class="demo-grid">
+        <div class="demo-workspace" aria-label="Blockchain and blockDAG visual model">
+          <svg viewBox="0 0 760 420" role="img" aria-labelledby="demo-svg-title demo-svg-desc">
+            <title id="demo-svg-title">Blockchain versus blockDAG visual model</title>
+            <desc id="demo-svg-desc">A simplified diagram that can show a linear chain, a Kaspa-style blockDAG, or a higher-throughput burst where parallel blocks are still referenced and ordered.</desc>
+            <defs>
+              <marker id="demo-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0 0 L9 4.5 L0 9 Z"></path>
+              </marker>
+            </defs>
+
+            <g class="demo-layer demo-layer-chain">
+              <path class="demo-edge selected" d="M92 216 L218 216 L344 216 L470 216 L596 216" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge rejected" d="M344 216 L444 124" marker-end="url(#demo-arrow)"></path>
+              <g class="demo-block selected" transform="translate(92 216)"><circle r="30"></circle><text y="6">A</text></g>
+              <g class="demo-block selected" transform="translate(218 216)"><circle r="30"></circle><text y="6">B</text></g>
+              <g class="demo-block selected" transform="translate(344 216)"><circle r="30"></circle><text y="6">C</text></g>
+              <g class="demo-block side" transform="translate(444 124)"><circle r="28"></circle><text y="6">X</text></g>
+              <g class="demo-block selected" transform="translate(470 216)"><circle r="30"></circle><text y="6">D</text></g>
+              <g class="demo-block selected" transform="translate(596 216)"><circle r="30"></circle><text y="6">E</text></g>
+              <text class="demo-label" x="90" y="330">One selected path. Competing work may fall out of the record.</text>
+            </g>
+
+            <g class="demo-layer demo-layer-dag">
+              <path class="demo-edge" d="M94 218 L214 126" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M94 218 L214 218" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M94 218 L214 310" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M214 126 L342 166" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M214 218 L342 166" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M214 218 L342 270" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M214 310 L342 270" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M342 166 L470 126" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M342 166 L470 218" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M342 270 L470 218" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M342 270 L470 310" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M470 126 L596 188" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M470 218 L596 188" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M470 218 L596 280" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge selected" d="M94 218 L214 218 L342 166 L470 218 L596 188" marker-end="url(#demo-arrow)"></path>
+              <g class="demo-block selected" transform="translate(94 218)"><circle r="30"></circle><text y="6">A</text></g>
+              <g class="demo-block included" transform="translate(214 126)"><circle r="28"></circle><text y="6">B</text></g>
+              <g class="demo-block selected" transform="translate(214 218)"><circle r="30"></circle><text y="6">C</text></g>
+              <g class="demo-block included" transform="translate(214 310)"><circle r="28"></circle><text y="6">D</text></g>
+              <g class="demo-block selected" transform="translate(342 166)"><circle r="30"></circle><text y="6">E</text></g>
+              <g class="demo-block included" transform="translate(342 270)"><circle r="28"></circle><text y="6">F</text></g>
+              <g class="demo-block included" transform="translate(470 126)"><circle r="28"></circle><text y="6">G</text></g>
+              <g class="demo-block selected" transform="translate(470 218)"><circle r="30"></circle><text y="6">H</text></g>
+              <g class="demo-block included" transform="translate(470 310)"><circle r="28"></circle><text y="6">I</text></g>
+              <g class="demo-block selected" transform="translate(596 188)"><circle r="30"></circle><text y="6">J</text></g>
+              <g class="demo-block included" transform="translate(596 280)"><circle r="28"></circle><text y="6">K</text></g>
+              <text class="demo-label" x="90" y="362">Parallel blocks can stay visible, then GHOSTDAG orders the history.</text>
+            </g>
+
+            <g class="demo-layer demo-layer-pressure">
+              <path class="demo-edge" d="M78 210 L198 104 L326 112 L456 82 L614 138" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M78 210 L198 178 L326 204 L456 176 L614 138" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M78 210 L198 254 L326 238 L456 260 L614 300" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M78 210 L198 326 L326 316 L456 338 L614 300" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M198 104 L326 204 L456 176" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M198 178 L326 112 L456 82" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M198 254 L326 316 L456 260" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge" d="M326 204 L456 260 L614 300" marker-end="url(#demo-arrow)"></path>
+              <path class="demo-edge selected" d="M78 210 L198 178 L326 204 L456 176 L614 138" marker-end="url(#demo-arrow)"></path>
+              <g class="demo-block selected" transform="translate(78 210)"><circle r="28"></circle><text y="6">0</text></g>
+              <g class="demo-block included" transform="translate(198 104)"><circle r="24"></circle><text y="6">1</text></g>
+              <g class="demo-block selected" transform="translate(198 178)"><circle r="28"></circle><text y="6">2</text></g>
+              <g class="demo-block included" transform="translate(198 254)"><circle r="24"></circle><text y="6">3</text></g>
+              <g class="demo-block included" transform="translate(198 326)"><circle r="24"></circle><text y="6">4</text></g>
+              <g class="demo-block included" transform="translate(326 112)"><circle r="24"></circle><text y="6">5</text></g>
+              <g class="demo-block selected" transform="translate(326 204)"><circle r="28"></circle><text y="6">6</text></g>
+              <g class="demo-block included" transform="translate(326 238)"><circle r="24"></circle><text y="6">7</text></g>
+              <g class="demo-block included" transform="translate(326 316)"><circle r="24"></circle><text y="6">8</text></g>
+              <g class="demo-block included" transform="translate(456 82)"><circle r="24"></circle><text y="6">9</text></g>
+              <g class="demo-block selected" transform="translate(456 176)"><circle r="28"></circle><text y="6">10</text></g>
+              <g class="demo-block included" transform="translate(456 260)"><circle r="24"></circle><text y="6">11</text></g>
+              <g class="demo-block included" transform="translate(456 338)"><circle r="24"></circle><text y="6">12</text></g>
+              <g class="demo-block selected" transform="translate(614 138)"><circle r="28"></circle><text y="6">13</text></g>
+              <g class="demo-block included" transform="translate(614 300)"><circle r="24"></circle><text y="6">14</text></g>
+              <text class="demo-label" x="76" y="384">Higher block rate matters only if the graph stays bounded and ordered.</text>
+            </g>
+          </svg>
+        </div>
+
+        <aside class="demo-control-panel" aria-label="BlockDAG visual controls">
+          <div>
+            <span class="control-label">Choose the view</span>
+            <div class="segmented-control" role="group" aria-label="Diagram view">
+              <button type="button" data-demo-mode="chain">Single chain</button>
+              <button type="button" data-demo-mode="dag" aria-pressed="true">BlockDAG</button>
+              <button type="button" data-demo-mode="pressure">Higher load</button>
+            </div>
+          </div>
+
+          <div>
+            <span class="control-label">Reader mode</span>
+            <div class="segmented-control compact" role="group" aria-label="Reader level">
+              <button type="button" data-reader-mode="simple" aria-pressed="true">Plain</button>
+              <button type="button" data-reader-mode="bitcoin">Bitcoin user</button>
+              <button type="button" data-reader-mode="builder">Builder</button>
+            </div>
+          </div>
+
+          <div class="demo-explainer">
+            <span id="demo-mode-tag">Kaspa blockDAG</span>
+            <p id="demo-explainer-text">Kaspa keeps more honest work in the graph. GHOSTDAG gives nodes a rule for turning that graph into one ordered payment history.</p>
+          </div>
+
+          <dl class="demo-metrics" aria-label="Teaching model assumptions">
+            <div><dt>Model</dt><dd>Simulated</dd></div>
+            <div><dt>Mainnet</dt><dd>10 BPS era</dd></div>
+            <div><dt>Boundary</dt><dd>Fast inclusion, not instant finality</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section explainer-workbench" aria-labelledby="workbench-title">
+      <div>
+        <p class="eyebrow">Protocol workbench</p>
+        <h2 id="workbench-title">From shape to status to source.</h2>
+        <p class="lead">The important claims are easier to judge when the page separates the graph shape, the ordering rule, the current network, and the source trail.</p>
+      </div>
+      <div class="workbench-grid">
+        <article>
+          <span>Shape</span>
+          <strong>BlockDAG instead of one line</strong>
+          <p>Parallel honest blocks can be included in the graph instead of treated only as waste.</p>
+        </article>
+        <article>
+          <span>Rule</span>
+          <strong>GHOSTDAG orders the graph</strong>
+          <p>The graph still needs consensus. The visual is not a claim that every branch is equal.</p>
+        </article>
+        <article>
+          <span>Status</span>
+          <strong>Live network, separate roadmap</strong>
+          <p>10 BPS, wallets, nodes, mining, explorers, and KRC tooling are different from Toccata, vProgs, and DAGKnight.</p>
+        </article>
+        <article>
+          <span>Proof</span>
+          <strong>Sources before slogans</strong>
+          <p>Use the source stack when a claim depends on activation, code, releases, research, or current docs.</p>
+        </article>
+      </div>
     </section>
 
     <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
@@ -268,44 +440,41 @@
       </div>
     </section>
 
+    <section class="section transaction-journey" aria-labelledby="journey-title">
+      <div>
+        <p class="eyebrow">Transaction journey</p>
+        <h2 id="journey-title">Follow a transaction from wallet to confidence.</h2>
+        <p class="lead">A transaction is not magic. It is created, broadcast, mined into a block, placed in the DAG, ordered by consensus, and then gains confirmation confidence over time.</p>
+      </div>
+      <div class="journey-rail" aria-label="Simplified Kaspa transaction path">
+        <article><span>1</span><strong>Create</strong><p>Wallet prepares inputs, outputs, amount, and fee.</p></article>
+        <article><span>2</span><strong>Broadcast</strong><p>The transaction reaches nodes and miners.</p></article>
+        <article><span>3</span><strong>Mine</strong><p>A miner includes it in a proof-of-work block.</p></article>
+        <article><span>4</span><strong>Order</strong><p>The block joins the DAG and GHOSTDAG orders history.</p></article>
+        <article><span>5</span><strong>Confirm</strong><p>Confidence increases. It is fast, not instantly irreversible.</p></article>
+      </div>
+    </section>
+
     <section class="section">
-      <h2>Bitcoin chooses one path. Kaspa orders parallel work.</h2>
-      <p>A normal blockchain has one selected chain. When honest miners find blocks at nearly the same time, one path wins and the other competing blocks usually become wasted side blocks. Kaspa's blockDAG starts from a different shape: honest parallel blocks can reference one another and GHOSTDAG gives nodes a rule for ordering that graph.</p>
-      <div class="dag-visual" role="img" aria-label="Bitcoin single chain compared with Kaspa blockDAG">
-        <div class="chain-panel">
-          <h3>Bitcoin-style chain</h3>
-          <svg viewBox="0 0 420 190" aria-hidden="true">
-            <path class="dag-line" d="M50 95 L135 95 L220 95 L305 95 L380 95"></path>
-            <path class="dag-line muted-line" d="M220 95 L282 42"></path>
-            <g class="dag-node main" transform="translate(50 95)"><circle r="18"></circle><text y="5">A</text></g>
-            <g class="dag-node main" transform="translate(135 95)"><circle r="18"></circle><text y="5">B</text></g>
-            <g class="dag-node main" transform="translate(220 95)"><circle r="18"></circle><text y="5">C</text></g>
-            <g class="dag-node orphan" transform="translate(282 42)"><circle r="18"></circle><text y="5">X</text></g>
-            <g class="dag-node main" transform="translate(305 95)"><circle r="18"></circle><text y="5">D</text></g>
-            <g class="dag-node main" transform="translate(380 95)"><circle r="18"></circle><text y="5">E</text></g>
-          </svg>
-          <p>Competing honest work can lose the race for one linear history.</p>
-        </div>
-        <div class="chain-panel">
-          <h3>Kaspa blockDAG</h3>
-          <svg viewBox="0 0 420 190" aria-hidden="true">
-            <path class="dag-line" d="M50 95 L135 58 L220 58 L305 82 L380 95"></path>
-            <path class="dag-line" d="M50 95 L135 132 L220 132 L305 108 L380 95"></path>
-            <path class="dag-line" d="M135 58 L220 132"></path>
-            <path class="dag-line" d="M135 132 L220 58"></path>
-            <path class="dag-line" d="M220 58 L305 108"></path>
-            <path class="dag-line" d="M220 132 L305 82"></path>
-            <g class="dag-node main" transform="translate(50 95)"><circle r="18"></circle><text y="5">A</text></g>
-            <g class="dag-node main" transform="translate(135 58)"><circle r="18"></circle><text y="5">B</text></g>
-            <g class="dag-node main" transform="translate(135 132)"><circle r="18"></circle><text y="5">C</text></g>
-            <g class="dag-node main" transform="translate(220 58)"><circle r="18"></circle><text y="5">D</text></g>
-            <g class="dag-node main" transform="translate(220 132)"><circle r="18"></circle><text y="5">E</text></g>
-            <g class="dag-node main" transform="translate(305 82)"><circle r="18"></circle><text y="5">F</text></g>
-            <g class="dag-node main" transform="translate(305 108)"><circle r="18"></circle><text y="5">G</text></g>
-            <g class="dag-node main" transform="translate(380 95)"><circle r="18"></circle><text y="5">H</text></g>
-          </svg>
-          <p>Parallel blocks can be included, then ordered by the consensus rule.</p>
-        </div>
+      <h2>Common mistakes to avoid.</h2>
+      <p class="lead">The site should make the strongest version of Kaspa easier to understand without making fragile claims stronger than the evidence.</p>
+      <div class="compare-cards">
+        <article>
+          <span>Speed</span>
+          <p>Fast blocks are not the same as instant finality. Inclusion, confidence, throughput, and UX are separate claims.</p>
+        </article>
+        <article>
+          <span>Structure</span>
+          <p>BlockDAG does not mean no consensus. It means the consensus rule works over a graph instead of only one line.</p>
+        </article>
+        <article>
+          <span>Roadmap</span>
+          <p>Toccata, vProgs, DAGKnight, native DeFi, and oracle-style systems need their own activation evidence.</p>
+        </article>
+        <article>
+          <span>Ecosystem</span>
+          <p>KRC tooling can be useful today, but it is not native smart contracts or proof that future app layers are live.</p>
+        </article>
       </div>
     </section>
 
@@ -330,5 +499,65 @@
       </nav>
     </div>
   </footer>
+  <script>
+    (function () {
+      const demo = document.getElementById("blockdag-demo");
+      if (!demo) return;
+
+      const statusLabel = document.getElementById("demo-status-label");
+      const modeTag = document.getElementById("demo-mode-tag");
+      const explainer = document.getElementById("demo-explainer-text");
+
+      const labels = {
+        chain: "Single-chain selection",
+        dag: "Kaspa blockDAG",
+        pressure: "Higher load"
+      };
+
+      const copy = {
+        simple: {
+          chain: "A single chain has to choose one branch. When two honest blocks arrive close together, one path can fall out of the record.",
+          dag: "Kaspa keeps more honest work in the graph. GHOSTDAG gives nodes a rule for turning that graph into one ordered payment history.",
+          pressure: "Higher block rate is useful only when the graph stays bounded, readable, and ordered. The claim is controlled parallel work, not unlimited speed."
+        },
+        bitcoin: {
+          chain: "Bitcoin keeps settlement conservative by making one chain dominant and treating competing branches as temporary. That is robust, but it limits block frequency.",
+          dag: "Kaspa keeps Proof of Work and UTXOs, but changes the structure. Parallel blocks can be incorporated and then ordered instead of being treated only as waste.",
+          pressure: "The tradeoff is engineering discipline: block rate, propagation delay, pruning, ordering depth, and node load all matter. Fast blocks are not a free security upgrade."
+        },
+        builder: {
+          chain: "A linear chain gives applications a simple ordering surface. The constraint appears when users want lower latency or higher activity without leaving Proof of Work.",
+          dag: "The builder surface starts with accepted transactions, payloads, UTXOs, and ordering evidence. App claims still need source, status, and replay boundaries.",
+          pressure: "For apps, treat high-frequency ordering as an input, not a product guarantee. Record node, SDK, network, endpoint, tx shape, acceptance evidence, and failure class."
+        }
+      };
+
+      const setPressed = (selector, attr, value) => {
+        demo.querySelectorAll(selector).forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset[attr] === value));
+        });
+      };
+
+      const render = () => {
+        const mode = demo.dataset.demoMode || "dag";
+        const reader = demo.dataset.readerMode || "simple";
+        statusLabel.textContent = labels[mode];
+        modeTag.textContent = labels[mode];
+        explainer.textContent = copy[reader][mode];
+        setPressed("[data-demo-mode]", "demoMode", mode);
+        setPressed("[data-reader-mode]", "readerMode", reader);
+      };
+
+      demo.addEventListener("click", (event) => {
+        const modeButton = event.target.closest("button[data-demo-mode]");
+        const readerButton = event.target.closest("button[data-reader-mode]");
+        if (modeButton) demo.dataset.demoMode = modeButton.dataset.demoMode;
+        if (readerButton) demo.dataset.readerMode = readerButton.dataset.readerMode;
+        if (modeButton || readerButton) render();
+      });
+
+      render();
+    })();
+  </script>
 </body>
 </html>
