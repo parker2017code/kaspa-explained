@@ -291,8 +291,14 @@ main:focus {
 :root[data-theme="light"] .demo-metrics div,
 :root[data-theme="light"] .explainer-workbench,
 :root[data-theme="light"] .workbench-grid article,
-:root[data-theme="light"] .transaction-journey,
-:root[data-theme="light"] .journey-rail article,
+:root[data-theme="light"] .transaction-path,
+:root[data-theme="light"] .transaction-rail article,
+:root[data-theme="light"] .status-workbench,
+:root[data-theme="light"] .status-lane-grid a,
+:root[data-theme="light"] .verification-workflow,
+:root[data-theme="light"] .verification-steps article,
+:root[data-theme="light"] .build-path-console,
+:root[data-theme="light"] .build-path-grid article,
 :root[data-theme="light"] .hero-status a,
 :root[data-theme="light"] .awareness-callout,
 :root[data-theme="light"] .live-kaspa-panel,
@@ -628,7 +634,10 @@ li,
 
 .hero-signal-grid span,
 .orientation-grid span,
-.workbench-grid span {
+.workbench-grid span,
+.status-lane-grid span,
+.verification-steps span,
+.build-path-grid span {
   display: block;
   margin-bottom: 7px;
   color: var(--green);
@@ -640,14 +649,18 @@ li,
 
 .hero-signal-grid strong,
 .orientation-grid strong,
-.workbench-grid strong {
+.workbench-grid strong,
+.status-lane-grid strong,
+.verification-steps strong,
+.build-path-grid strong {
   display: block;
   color: var(--text);
   line-height: 1.2;
 }
 
 .hero-signal-grid small,
-.orientation-grid small {
+.orientation-grid small,
+.status-lane-grid small {
   display: block;
   margin-top: 5px;
   color: var(--muted);
@@ -1074,21 +1087,21 @@ li,
   color: var(--muted);
 }
 
-.transaction-journey {
+.transaction-path {
   display: grid;
   grid-template-columns: minmax(0, .42fr) minmax(0, 1fr);
   gap: clamp(20px, 3vw, 34px);
   align-items: start;
 }
 
-.journey-rail {
-  counter-reset: journey;
+.transaction-rail {
+  counter-reset: step;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 
-.journey-rail article {
+.transaction-rail article {
   position: relative;
   min-height: 168px;
   border: 1px solid var(--line);
@@ -1097,7 +1110,7 @@ li,
   background: rgba(255, 255, 255, .035);
 }
 
-.journey-rail article:not(:last-child)::after {
+.transaction-rail article:not(:last-child)::after {
   content: "";
   position: absolute;
   top: 36px;
@@ -1107,7 +1120,7 @@ li,
   background: var(--line-bright);
 }
 
-.journey-rail span {
+.transaction-rail span {
   width: 30px;
   height: 30px;
   display: inline-flex;
@@ -1122,15 +1135,69 @@ li,
   font-weight: 900;
 }
 
-.journey-rail strong {
+.transaction-rail strong {
   display: block;
   color: var(--text);
   line-height: 1.2;
 }
 
-.journey-rail p {
+.transaction-rail p {
   margin: 9px 0 0;
   color: var(--muted);
+}
+
+.status-workbench,
+.verification-workflow,
+.build-path-console {
+  display: grid;
+  grid-template-columns: minmax(0, .42fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 34px);
+  align-items: start;
+}
+
+.status-lane-grid,
+.verification-steps,
+.build-path-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.status-lane-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.verification-steps,
+.build-path-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.status-lane-grid a,
+.verification-steps article,
+.build-path-grid article {
+  min-width: 0;
+  min-height: 178px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  color: inherit;
+  background: rgba(255, 255, 255, .035);
+  text-decoration: none;
+}
+
+.status-lane-grid a:hover {
+  border-color: var(--line-bright);
+  background: var(--accent-soft);
+}
+
+.verification-steps p,
+.build-path-grid p {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.verification-workflow .route-strip {
+  grid-column: 2;
+  margin-top: 2px;
 }
 
 .quick-grid,
@@ -3370,8 +3437,24 @@ blockquote {
   .demo-grid,
   .orientation-console,
   .explainer-workbench,
-  .transaction-journey {
+  .transaction-path,
+  .status-workbench,
+  .verification-workflow,
+  .build-path-console {
     grid-template-columns: 1fr;
+  }
+
+  .status-lane-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .verification-steps,
+  .build-path-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .verification-workflow .route-strip {
+    grid-column: auto;
   }
 
   .demo-workspace {
@@ -3529,7 +3612,7 @@ blockquote {
     display: none;
   }
 
-  .journey-rail article:not(:last-child)::after {
+  .transaction-rail article:not(:last-child)::after {
     display: none;
   }
 
@@ -3555,7 +3638,10 @@ blockquote {
   .hero-signal-grid,
   .orientation-grid,
   .workbench-grid,
-  .journey-rail,
+  .transaction-rail,
+  .status-lane-grid,
+  .verification-steps,
+  .build-path-grid,
   .demo-metrics div,
   .quick-grid,
   .timeline,
