@@ -76,21 +76,26 @@
 
   function runChecks() {
     const text = normalize(input.value);
+    const hasText = text.trim().length > 0;
     const results = checks.map((check) => ({
       ...check,
-      passed: text.length > 0 && check.terms.some((term) => text.includes(term))
+      passed: hasText && check.terms.some((term) => text.includes(term))
     }));
     const score = results.filter((item) => item.passed).length;
-    scoreEl.textContent = `${score}/${checks.length}`;
-    verdictEl.textContent = verdict(score, text.length);
+    scoreEl.textContent = hasText ? `${score}/${checks.length}` : "Start";
+    verdictEl.textContent = verdict(score, hasText);
     renderAiLink();
-    resultsEl.innerHTML = results.map((item) => `
-      <article class="${item.passed ? "pass" : "miss"}">
-        <span>${item.passed ? "Keyword found" : "Not found"}</span>
+    resultsEl.innerHTML = results.map((item) => {
+      const state = hasText ? (item.passed ? "pass" : "miss") : "neutral";
+      const label = hasText ? (item.passed ? "Keyword found" : "Not found") : "Question";
+      return `
+      <article class="${state}">
+        <span>${label}</span>
         <strong>${item.label}</strong>
         <p>${item.question}</p>
       </article>
-    `).join("");
+    `;
+    }).join("");
   }
 
   function redTeamPrompt() {
@@ -112,8 +117,8 @@
     aiLink.href = url.pathname + url.search;
   }
 
-  function verdict(score, length) {
-    if (!length) return "Paste a pitch to start.";
+  function verdict(score, hasText) {
+    if (!hasText) return "Paste a pitch to start.";
     if (score <= 2) return "Keyword scan: few product basics found.";
     if (score <= 5) return "Keyword scan: partial coverage only.";
     if (score <= 7) return "Keyword scan: most basics mentioned.";
