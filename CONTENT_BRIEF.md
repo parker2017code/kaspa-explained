@@ -157,7 +157,7 @@ Builder-facing verification lessons should be concrete and reusable: a local txi
 
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
 
-- Explain the app thesis as money plus finance without compromising the L1 monetary base.
+- Explain the app case as money plus finance without compromising the L1 monetary base.
 - Avoid Ethereum-style rollup language unless contrasting it with Kaspa's intended shared-sequencer/cohesive-program model.
 - Describe "Solana-like" only as cohesive developer/user experience and native-feeling composability, not as Solana execution imported into Kaspa.
 - Keep "one app per VM" / app-level verifiable-program intuition available for advanced readers, while explaining it first as apps proving their own logic while sharing Kaspa ordering.
@@ -318,7 +318,7 @@ The `reality-check.html` page is the crypto-native product judgment layer. It sh
 
 Core frame:
 
-> Crypto is useful when strangers need one shared record of ownership and rules without one company, bank, platform, or government controlling the database. The technical version is credible shared state: neutral ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
+> Crypto is useful when strangers need one shared record of ownership and rules without one company, bank, platform, or government controlling the database. The technical version is a neutral shared record: ownership records, adversarial trust, self-custody, global 24/7 settlement, censorship resistance, programmable assets, on-chain markets, objective smart-contract escrow, digital provenance, or open-network incentives.
 
 Keep the weakness side just as explicit. Crypto is usually weak for normal domestic payments in strong banking systems, consumer reversibility, private records, ordinary corporate databases, unsecured real-world credit, replacing courts, supply-chain truth, identity, and tokenizing assets whose ownership still depends on law, custody, inspection, liens, taxes, and jurisdiction.
 
@@ -328,9 +328,9 @@ The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general 
 
 Core frame:
 
-> Kaspa asks whether Proof-of-Work can keep its security model while feeling closer to real time: fast mined ordering today, app receipts around the live network, and future apps that prove their own rules.
+> Kaspa keeps Proof-of-Work security culture while pushing the payment experience closer to real time: fast mined ordering today, app receipts around the live network, and future apps that prove their own rules.
 
-Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement, censorship-resistance goals, and a broader thesis than fast payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is thesis framing, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture thesis unless future primary sources confirm activation or shipped software.
+Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement, censorship-resistance goals, and a broader case than fast payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is positioning context, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture work unless future primary sources confirm activation or shipped software.
 
 KRC20/KRC721 nuance: KRC token and NFT-style standards belong in the ecosystem-live lane, not the core-protocol-live lane. They can be described as practical tooling for issued tokens, coupons, event credits, access passes, membership objects, rewards, and collectibles when wallet/indexer support exists. State that required deploy/mint gas fees are miner fees, not a proof that every wallet or frontend is fee-free. Always state that the issuer or application still controls redemption logic, metadata quality, user support, compliance, refunds, and real-world enforcement.
 
@@ -378,7 +378,7 @@ Prefer primary or near-primary sources:
 
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
-3. Long-form framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance, but activation claims still need primary protocol/code or direct implementation evidence.
+3. Long-form framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance. Activation claims still need primary protocol/code or direct implementation evidence.
 4. Context and education sources: Oxford recordings, KASmedia, Kaspa.com Learn Kaspa, the current Kaspa.org site, full recordings, interviews, transcripts, and recaps. They are useful for orientation, links, and framing, not protocol activation by themselves.
 5. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
 6. Discovery only: active public technical X accounts and replies.
@@ -491,7 +491,7 @@ Useful quantum-answer frame:
 
 Primary public pages:
 
-- `index.html` - audience-routed homepage, real-time Proof-of-Work thesis, interactive blockchain-vs-blockDAG teaching model, status lanes, zero-start links, and compact Kaspa/adoption routes.
+- `index.html` - audience-routed homepage, real-time Proof-of-Work case, interactive blockchain-vs-blockDAG teaching model, status labels, zero-start links, and compact Kaspa/adoption routes.
 - `start-here.html` - true beginner router for readers who know nothing about crypto or Kaspa.
 - `crypto-from-zero.html` - causal ladder from records, keys, transactions, blocks, consensus, incentives, tokens, and tradeoffs to Kaspa.
 - `why-crypto-has-value.html` - market-value explainer for token need, prices, market cap, open markets, speculation, launch design, and who benefits.
@@ -513,7 +513,7 @@ Primary public pages:
 - `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
 - `knowledge-map.html` - ordered concept map for average crypto readers, with supporting source context.
 - `glossary.html` - compact plain-English glossary for common Kaspa terms.
-- `search.html` - dependency-free static page-map search for concepts, audiences, status lanes, and source terms.
+- `search.html` - dependency-free static page-map search for concepts, audiences, status labels, and source terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
 - `CLAIMS.yml` - reference file for status-sensitive claims and forbidden overclaims.
