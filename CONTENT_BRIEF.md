@@ -93,6 +93,7 @@ Keep these audience paths visible:
 - Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
 - Want mechanics: use `knowledge-map.html`.
 - Want the app/design thesis: use `application-layer.html`.
+- Need to test whether a crypto product pitch is real or fake: use `reality-check.html`.
 - Want builder-specific programmability choices: use `builder-guide.html`.
 - Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
@@ -312,6 +313,8 @@ The `what-crypto-is-good-for.html` page is a general-audience bridge for people 
 The `start-here.html` and `crypto-from-zero.html` pages are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
 
 The `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `coin-atlas.html`, `tradeoff-map.html`, `analyze-any-coin.html`, and `crypto-history.html` pages are the market and context layer. They should explain valuation, categories, token necessity, launch design, actors, incentives, scams, and design constraints without becoming investment advice or price prediction.
+
+The `reality-check.html` page is the crypto-native product judgment layer. It should help readers test pitches against concrete users, jobs, liquidity, wallet/signing flow, current-status labels, evidence, failure modes, and day-two behavior. Field studies of Solana, Colosseum, and other active ecosystems are useful comparison inputs, but they are not Kaspa activation evidence and should not become "copy Solana" advice.
 
 Core frame:
 

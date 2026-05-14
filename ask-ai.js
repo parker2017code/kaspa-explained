@@ -19,7 +19,7 @@
     builder: "Show the builder path for Kaspa: running a node, using hosted APIs, wallet or payment work, KRC tooling, and TN12 or covenant-related work. Separate live paths from future paths.",
     compare: "Compare Kaspa to Bitcoin, Ethereum, Solana, and other fast chains without tribal framing. Explain the actual design differences, tradeoffs, and claim boundaries.",
     design: "Generate three useful Kaspa app, product, or research ideas. For each one, state the user job, what can be built now, what needs Toccata or later work, and what evidence would prove it.",
-    redteam: "Red-team a bullish Kaspa claim. Identify vague wording, missing evidence, live-versus-roadmap mixing, and the strongest counterargument.",
+    redteam: "Red-team a bullish Kaspa claim or product pitch. Identify the user, job, liquidity source, wallet flow, evidence, live-versus-roadmap mixing, failure modes, and strongest counterargument.",
     roadmap: "Separate Crescendo, KRC tooling, Toccata, vProgs, DAGKnight, and app-layer claims. For each, say what is live, what is targeted, what is research, and where to verify it.",
     safety: "Explain wallets, mining, nodes, and common safety checks for someone trying not to rely on hype or unsafe links.",
     skeptical: "Give me the skeptical case for Kaspa. List the strongest concerns, the evidence that exists, and what would need fresh verification."
@@ -36,7 +36,7 @@
     },
     redteam: {
       question: "redteam",
-      custom: "Challenge the strongest version of the Kaspa thesis without using lazy dismissal or price talk."
+      custom: "Challenge the strongest version of this Kaspa pitch without lazy dismissal or price talk. Test user, job, liquidity, wallet flow, evidence, status boundary, failure modes, and day-two behavior."
     },
     design: {
       question: "design",
