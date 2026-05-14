@@ -63,7 +63,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Components | Treat route cards, source cards, status chips, app-path ladders, search results, tables, drawers, and command blocks as reusable patterns. | Each pattern needs default, hover/focus, empty, error/unavailable, and long-content behavior where applicable. |
 | State management | Keep live, ecosystem-live, targeted, roadmap, research, testnet-only, source-needed, and stale-check-needed distinct. | Do not flatten status lanes into generic "coming soon" or "available" language. |
 | Content variability | Long source names, dates, protocol terms, URLs, and examples must wrap without breaking cards or mobile layout. | Test with long headings, long links, and 390px mobile width. |
-| Responsive behavior | Mobile pages should preserve the reader path, not just stack every table. | Tables need cards, wrappers, or drawers when they are too wide. |
+| Responsive behavior | Mobile pages need a clear reader path. Tables need mobile-specific treatment when width becomes a problem. | Tables need cards, wrappers, or drawers when they are too wide. |
 | Accessibility | Use semantic HTML, logical headings, real labels, visible focus, source links with clear text, and status wording beyond color. | Search, nav, theme toggle, diagrams, and drawers must remain keyboard-usable. |
 | Performance | Stay static and dependency-light. SVG/CSS visuals are preferred over JS-heavy interaction. | No framework or animation library for decoration. |
 | Security and privacy | Avoid surprise tracking, wallet-like UI, private data, or unverifiable assistant claims. | Search and source-pack docs must route back to source/status pages instead of becoming authority. |
