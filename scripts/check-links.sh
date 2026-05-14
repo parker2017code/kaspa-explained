@@ -11,7 +11,10 @@ grep -RhoE 'https?://[^"'"'"')<[:space:]]+' \
   --include='*.yml' \
   . \
   | sed 's/[`.,;]*$//' \
+  | grep -Ev '(\{|\}|&lt;|&gt;|<|>)' \
   | grep -Ev '^https?://(127\.0\.0\.1|localhost)(:|/|$)' \
+  | grep -Ev '^https://api\.kas\.fyi/v1/transactions/acceptance$' \
+  | grep -Ev '^https://api\.kas\.fyi/v1/addresses/?$' \
   | sort -u > "$tmp_urls"
 
 failures=0

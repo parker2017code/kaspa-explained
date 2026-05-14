@@ -10,6 +10,7 @@
   const copyButton = root.querySelector("[data-pitch-copy]");
   const copyStatus = root.querySelector("[data-pitch-copy-status]");
   const sampleButtons = Array.from(root.querySelectorAll("[data-pitch-sample]"));
+  const transferKey = "kaspa-explained-reality-redteam-prompt";
 
   const checks = [
     {
@@ -85,7 +86,7 @@
     renderAiLink();
     resultsEl.innerHTML = results.map((item) => `
       <article class="${item.passed ? "pass" : "miss"}">
-        <span>${item.passed ? "Answered" : "Missing"}</span>
+        <span>${item.passed ? "Keyword found" : "Not found"}</span>
         <strong>${item.label}</strong>
         <p>${item.question}</p>
       </article>
@@ -108,19 +109,28 @@
     if (!aiLink) return;
     const url = new URL("/ai-guidance.html", window.location.origin);
     url.searchParams.set("mode", "redteam");
-    url.searchParams.set("context", redTeamPrompt());
     aiLink.href = url.pathname + url.search;
   }
 
   function verdict(score, length) {
     if (!length) return "Paste a pitch to start.";
-    if (score <= 2) return "Narrative first. Needs basic product answers.";
-    if (score <= 5) return "Some shape. Still missing evidence.";
-    if (score <= 7) return "Promising structure. Verify the weak spots.";
-    return "Good first pass. Now check sources and status.";
+    if (score <= 2) return "Keyword scan: few product basics found.";
+    if (score <= 5) return "Keyword scan: partial coverage only.";
+    if (score <= 7) return "Keyword scan: most basics mentioned.";
+    return "Keyword scan: now verify the answers.";
+  }
+
+  function savePromptForAi() {
+    try {
+      window.sessionStorage.setItem(transferKey, redTeamPrompt());
+      if (copyStatus) copyStatus.textContent = "Prompt loaded for Ask AI in this browser tab.";
+    } catch (error) {
+      if (copyStatus) copyStatus.textContent = "Open Ask AI and paste the copied prompt if session storage is blocked.";
+    }
   }
 
   input.addEventListener("input", runChecks);
+  aiLink?.addEventListener("click", savePromptForAi);
   copyButton?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(redTeamPrompt());

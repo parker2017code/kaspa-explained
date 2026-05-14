@@ -46,6 +46,7 @@ pages=(
   "start-here.html"
   "kaspa-in-one-screen.html"
   "skeptical-case.html"
+  "reality-check.html"
   "command-line.html"
 )
 

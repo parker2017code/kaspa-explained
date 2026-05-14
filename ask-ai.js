@@ -11,6 +11,7 @@
   const openLinks = Array.from(root.querySelectorAll("[data-ai-open]"));
   const presetButtons = Array.from(root.querySelectorAll("[data-ai-preset]"));
   const siteOrigin = "https://kaspaexplained.com";
+  const transferKey = "kaspa-explained-reality-redteam-prompt";
 
   const tasks = {
     short: "Give me the short, accurate explanation of Kaspa for a smart reader who is not a protocol engineer.",
@@ -94,9 +95,17 @@
 
   function applyUrlState() {
     const mode = params.get("mode") || params.get("question");
-    const context = params.get("context");
     if (mode && tasks[mode]) question.value = mode;
-    if (context) custom.value = context;
+    try {
+      const storedPrompt = window.sessionStorage.getItem(transferKey);
+      if (storedPrompt) {
+        custom.value = storedPrompt;
+        window.sessionStorage.removeItem(transferKey);
+        status.textContent = "Reality check prompt loaded from this browser session.";
+      }
+    } catch (error) {
+      // Session storage is an enhancement; copy/paste still works.
+    }
   }
 
   async function copyPrompt(showStatus = true) {
