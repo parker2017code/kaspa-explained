@@ -75,12 +75,17 @@ Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standar
 
 ## Current Site Structure
 
-The homepage should work as a router first. The site has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
+The homepage should work as a router first. Its strongest traffic job is to route searchers and community debates into exact-answer pages: what Kaspa is, claim checking, Toccata status, smart-contract status, finality boundaries, the skeptical case, and verification paths. The site also has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
 
 Keep these audience paths visible:
 
 - Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-zero.html`.
+- Ask "what is Kaspa?": use `what-is-kaspa.html`, then `ghostdag-explained.html` or `kaspa-in-one-screen.html`.
 - Need the fast non-technical answer: use `overview.html` or `kaspa-in-one-screen.html`.
+- Need to check a public claim: use `kaspa-claims-checker.html`, then `status.html`, `toccata-status.html`, or `kaspa-smart-contracts-status.html`.
+- Need a dated freshness snapshot: use `kaspa-status-check-may-2026.html`, then refresh it when major source evidence changes.
+- Need to know whether Toccata is live: use `toccata-status.html`.
+- Need to correct finality language: use `kaspa-confirmations-finality.html`.
 - Need to understand why coins have value or why there are so many coins: use `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, and `coin-atlas.html`.
 - Need design constraints: use `tradeoff-map.html`.
 - Need a coin-evaluation checklist: use `analyze-any-coin.html`.
@@ -94,7 +99,9 @@ Keep these audience paths visible:
 - Want mechanics: use `knowledge-map.html`.
 - Want the app/design thesis: use `application-layer.html`.
 - Need to test whether a crypto product pitch is real or fake: use `reality-check.html`.
+- Need a fair skeptical page to link in debates: use `skeptical-case.html`.
 - Want builder-specific programmability choices: use `builder-guide.html`.
+- Need to verify a transaction without trusting one explorer: use `command-line.html`.
 - Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
@@ -113,7 +120,7 @@ The `status.html` page is the compact status reference. Keep it shorter than the
 
 Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
 
-The common-misconceptions material should be distributed by reader intent. The homepage may name the risk and route the reader. The FAQ should give short corrections. The status page can carry the more precise table. The one-screen page can include only the compact "say this, not that" boundary. Do not repeat every correction on every page.
+The common-misconceptions material should be distributed by reader intent. The homepage may name the risk and route the reader. The claims checker should be the flagship link for arguments. The FAQ should give short corrections. The status page can carry the more precise table. The one-screen page can include only the compact "say this, not that" boundary. Do not repeat every correction on every page.
 
 KRC20 and KRC721 should be handled as ecosystem-token standards available around the live network through data insertion, wallet support, indexers, metadata, APIs, and off-chain redemption rules. They can be useful for practical products such as loyalty credits, coupons, access passes, event rewards, closed-loop festival credits, collectibles, and proof-of-attendance objects. Current KRC documentation describes required deploy/mint gas fees as miner fees; still warn users to check wallets and frontends for separate service fees. Do not present KRC standards as native Kaspa smart contracts, Toccata activation, native L1 assets, mature DeFi, or vProgs.
 

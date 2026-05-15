@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GHOSTDAG Explained | Kaspa Explained</title>
+  <meta name="description" content="GHOSTDAG explained in plain English: how Kaspa orders parallel proof-of-work blocks in a blockDAG without claiming instant finality.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/ghostdag-explained">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="GHOSTDAG Explained | Kaspa Explained">
+  <meta property="og:description" content="A plain model of GHOSTDAG, blockDAG ordering, selected-chain confusion, and finality boundaries.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/ghostdag-explained">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GHOSTDAG Explained | Kaspa Explained">
+  <meta name="twitter:description" content="How Kaspa orders parallel blocks, and what GHOSTDAG does not mean.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-05-15">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is GHOSTDAG?",
+        "acceptedAnswer": {"@type": "Answer", "text": "GHOSTDAG is Kaspa's live ordering rule for its blockDAG. It lets parallel proof-of-work blocks stay in the graph and gives nodes a shared way to order them."}
+      },
+      {
+        "@type": "Question",
+        "name": "Is GHOSTDAG the same as DAGKnight?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG is current mainnet behavior. DAGKnight is a later consensus research and upgrade direction."}
+      },
+      {
+        "@type": "Question",
+        "name": "Does GHOSTDAG give instant finality?",
+        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG helps Kaspa include and order parallel blocks quickly, but confirmation confidence is still probabilistic."}
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260514-clean">
+  <script defer src="nav.js?v=20260514-clean"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home"><span class="brand-mark" aria-hidden="true"></span>Kaspa Explained</a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here">Start</a>
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/kaspa-claims-checker">Claims</a>
+        <a href="/toccata-status">Toccata</a>
+        <a href="/builder-guide">Build</a>
+        <a href="/skeptical-case">Skeptical</a>
+        <a href="/sources">Sources</a>
+        <a href="/search">Search</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/status">What is live?</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="knowledge-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Protocol explainer</p>
+      <h1>GHOSTDAG explained.</h1>
+      <p class="lead">GHOSTDAG is the live Kaspa rule that turns a graph of parallel proof-of-work blocks into one ordered payment history.</p>
+      <p class="fit-note"><strong>Citable summary:</strong> GHOSTDAG is Kaspa's current blockDAG ordering rule; it is not DAGKnight and it does not mean instant finality.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Plain model</p>
+      <h2>Why Kaspa needs it.</h2>
+      <div class="summary-grid">
+        <article><span>Problem</span><p>If blocks arrive quickly, honest miners can find blocks at nearly the same time.</p></article>
+        <article><span>Old shape</span><p>A single chain has to choose one path. Some honest work can become stale or orphaned.</p></article>
+        <article><span>Kaspa shape</span><p>A blockDAG keeps more parallel blocks visible in the record.</p></article>
+        <article><span>Ordering rule</span><p>GHOSTDAG gives nodes a shared way to classify and order the graph.</p></article>
+        <article><span>User effect</span><p>Transactions can appear quickly while confirmation confidence increases over time.</p></article>
+        <article><span>Boundary</span><p>This is fast mined ordering, not proof that every transaction is instantly irreversible.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Confusions</p>
+      <h2>Say it safely.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Question</th><th>Answer</th><th>Best wording</th></tr></thead>
+          <tbody>
+            <tr><td>Is GHOSTDAG live?</td><td><span class="status-pill live">Live</span></td><td>GHOSTDAG is Kaspa's live blockDAG ordering rule.</td></tr>
+            <tr><td>Is it DAGKnight?</td><td><span class="status-pill not-live">No</span></td><td>DAGKnight is a separate future consensus direction.</td></tr>
+            <tr><td>Does it remove finality risk?</td><td><span class="status-pill not-live">No</span></td><td>Kaspa has fast inclusion and probabilistic confirmation confidence.</td></tr>
+            <tr><td>Does it mean unlimited TPS?</td><td><span class="status-pill not-live">No</span></td><td>Throughput depends on block capacity, policy, fees, demand, and network conditions.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="next-step section">
+      <p class="eyebrow">Source trail</p>
+      <h2>Verify the claim.</h2>
+      <p>Use Kaspa Research for protocol lineage, Rusty Kaspa for implementation, the status page for current labels, and the finality page for payment-confidence wording.</p>
+      <div class="actions">
+        <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
+        <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
+        <a class="button" href="/kaspa-confirmations-finality">Confirmations and finality</a>
+        <a class="button" href="/status">Status</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav aria-label="Footer">
+        <a href="/status">Status</a>
+        <a href="/sources">Sources</a>
+        <a href="/ai-guidance">Ask AI</a>
+        <a href="/search">Search</a>
+        <a href="/about">About</a>
+        <a href="/CLAIMS.yml">Claims</a>
+        <a href="https://github.com/parker2017code/kaspa-explained">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

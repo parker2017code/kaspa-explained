@@ -1,6 +1,6 @@
 # Kaspa Explained
 
-Plain-English guide to Kaspa, fast Proof of Work, current status, sources, glossary, and crypto basics.
+Plain-English guide to Kaspa, fast Proof of Work, current status, claim checking, sources, glossary, and crypto basics.
 
 This is not an official Kaspa website and it is not investment advice. It is written to be useful for:
 
@@ -74,7 +74,12 @@ Use community portals, media sites, learning libraries, interviews, recaps, and 
 Use the public site itself for the page map:
 
 - `index.html` routes readers by audience and knowledge level.
+- `what-is-kaspa.html` answers the highest-intent beginner search directly.
+- `kaspa-claims-checker.html` is the shareable live / ecosystem / targeted / roadmap / research reference.
+- `toccata-status.html` tracks Toccata status and safe wording.
 - `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
+- `kaspa-status-check-may-2026.html` is the current dated status snapshot.
+- `skeptical-case.html` is the flagship fair-objections page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
