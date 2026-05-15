@@ -48,6 +48,9 @@ pages=(
   "skeptical-case.html"
   "reality-check.html"
   "command-line.html"
+  "builder-guide.html"
+  "status.html"
+  "sources.html"
 )
 
 for page in "${pages[@]}"; do
