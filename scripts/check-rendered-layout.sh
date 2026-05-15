@@ -99,4 +99,6 @@ for theme in light dark; do
   done
 done
 
+node scripts/check-svg-spacing.mjs
+
 echo "Rendered layout screenshots passed. pages=${#pages[@]} themes=2"
