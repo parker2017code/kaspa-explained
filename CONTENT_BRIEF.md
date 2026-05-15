@@ -255,7 +255,7 @@ Keep these categories separate.
 - UTXO model
 - GHOSTDAG consensus
 - Crescendo 10 BPS era
-- real-time decentralization as the core fast-PoW value proposition: Bitcoin-style PoW security and censorship-resistance goals with seconds-scale confirmation feel under normal network conditions
+- real-time decentralization as the core fast-PoW value proposition and current Kaspa.org north-star framing: Bitcoin-style PoW security and censorship-resistance goals with seconds-scale confirmation feel under normal network conditions
 - pruning and UTXO commitments
 - public wallets, explorers, visualizers, nodes, mining ecosystem
 
@@ -281,7 +281,7 @@ Status note: Toccata should not be described as live mainnet functionality witho
 ### Research / Speculative
 
 - DAGKnight final form and activation timing
-- 100 BPS with probabilistic predecessor selection
+- Kaspa.org's proposed 2027 bucket for 100 BPS, 10 millisecond blocks, and partition-resilient local payment flows
 - App-level miner attestation, oracle, TangVM, and coordination-market incentive designs
 - RTD internet-money flows where miners or reporters attest to external events and apps react atomically
 - TangVM-style reality-state ideas
@@ -363,7 +363,9 @@ Junny Ho's Web3 Festival HK 2026 talk, "Scaling Trustless Coordination" (`https:
 
 The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant programming and based-app foundations: covenants, Silverscript, ZK verification opcodes, sequencing commitment access, partitioned sequencing commitments, native-asset groundwork, and bridge/settlement patterns. Hans Moog's `kaspanet/vprogs` repo is an early Rust framework for based computation on Kaspa with scheduler, resource access, batch execution, rollback, storage/state layers, node VM, L1 bridge, and ZK proving pipeline. Its immediate role is compatible based computation/runtime work, while full vProgs synchronous composability is later architecture.
 
-Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release show Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext. Protocol status still comes from node, release, KIP, and activation evidence. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment until merged and released.
+Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release show Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext. Protocol status still comes from node, release, KIP, and activation evidence. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment until merged and released. The redesigned Kaspa.org Build page also makes the infrastructure runway clearer: Rusty Kaspa, WASM SDK, public nodes, community REST APIs, database dumps, KIPs, Silverscript, vProgs, and public R&D channels are builder routes, while production systems still need explicit node, indexer, archival, API-key, rate-limit, and provider-redundancy decisions.
+
+KIP alignment is now a status-sensitive subtopic. Kaspa.org Build and the Toccata summary describe KIP-21 sequencing commitments in the Toccata bundle, while the GitHub KIPs repo currently shows the KIP-21 PR as open and KIP-15 as active for canonical transaction ordering and sequencing commitments. Do not flatten this into "finalized mainnet KIP-21" until KIP, release, and activation artifacts agree.
 
 Frame Kaspa as L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification without separate sequencer empires.
 
@@ -379,7 +381,7 @@ Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, should guide t
 
 Use the interview as an editorial model, not as a public slogan. It shows the target feel for the site: patient first-principles reasoning, everyday examples, willingness to compare Bitcoin/Ethereum/Solana without tribal shortcuts, clear admission of uncertainty, and careful distinction between live protocol, roadmap, and aspiration.
 
-Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS is aspirational, pruning is not privacy, and Solana-like means cohesive developer/user experience, with no imported Solana execution model on Kaspa L1.
+Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS and partition-resilient payment flows are proposed future work, pruning is not privacy, and Solana-like means cohesive developer/user experience, with no imported Solana execution model on Kaspa L1.
 
 ## Source Hierarchy
 
