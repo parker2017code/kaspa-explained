@@ -16,7 +16,7 @@
   --ink: #101315;
   --accent-soft: rgba(79, 186, 149, .1);
   --surface-soft: rgba(240, 244, 238, .045);
-  --shadow: 0 22px 54px rgba(0, 0, 0, .28);
+  --shadow: 0 12px 28px rgba(0, 0, 0, .18);
   --display-font: "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
   --body-font: "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 }
@@ -39,7 +39,7 @@
   --ink: #fffaf0;
   --accent-soft: rgba(52, 133, 101, .1);
   --surface-soft: rgba(84, 61, 32, .045);
-  --shadow: 0 22px 48px rgba(94, 67, 33, .14);
+  --shadow: 0 10px 24px rgba(94, 67, 33, .10);
 }
 
 * {
@@ -67,10 +67,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 14% 8%, color-mix(in srgb, var(--green) 8%, transparent), transparent 30rem),
-    radial-gradient(circle at 86% 18%, color-mix(in srgb, var(--pink) 7%, transparent), transparent 26rem),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 52%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 52%, var(--bg) 100%);
   color: var(--text);
   font: 16px/1.62 var(--body-font);
 }
@@ -434,13 +431,7 @@ main:focus {
 }
 
 .hero::before {
-  content: "";
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 18px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--green) 50%, transparent), transparent);
+  content: none;
 }
 
 .section,
@@ -472,10 +463,10 @@ main:focus {
   max-width: 100%;
   margin: 0 0 10px;
   color: color-mix(in srgb, var(--green) 82%, var(--text));
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: 11px;
-  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 h1,
@@ -491,8 +482,8 @@ h1 {
   z-index: 1;
   max-width: 100%;
   margin-bottom: 18px;
-  font-size: clamp(2.8rem, 5vw, 4.3rem);
-  line-height: .98;
+  font-size: clamp(2.45rem, 4.4vw, 3.7rem);
+  line-height: 1.04;
   letter-spacing: 0;
   font-family: var(--display-font);
   font-weight: 800;
@@ -510,7 +501,7 @@ h1 {
 
 h2 {
   margin-bottom: 18px;
-  font-size: 2.55rem;
+  font-size: 2.2rem;
   line-height: 1.1;
   letter-spacing: 0;
   font-family: var(--display-font);
@@ -569,12 +560,12 @@ li,
   padding: 12px 18px;
   color: var(--text);
   background: rgba(255, 255, 255, .045);
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .button:hover {
   text-decoration: none;
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .button.primary {
@@ -613,10 +604,10 @@ li,
   z-index: 1;
   max-width: 700px;
   margin-top: 16px;
-  border-left: 3px solid var(--green);
-  padding: 10px 0 10px 16px;
+  border-left: 2px solid color-mix(in srgb, var(--green) 62%, transparent);
+  padding: 8px 0 8px 14px;
   color: var(--text);
-  background: linear-gradient(90deg, rgba(155, 215, 189, .11), transparent);
+  background: transparent;
   font-size: 17px;
   line-height: 1.55;
 }
@@ -642,7 +633,7 @@ li,
 
 .hero-signal-grid a:hover {
   border-color: var(--line-bright);
-  background: var(--accent-soft);
+  background: rgba(255, 255, 255, .045);
 }
 
 .hero-signal-grid span,
@@ -655,9 +646,9 @@ li,
   margin-bottom: 7px;
   color: var(--green);
   font-size: 11px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-weight: 750;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .hero-signal-grid strong,
@@ -732,9 +723,7 @@ li,
   padding: clamp(22px, 4vw, 40px);
   overflow: hidden;
   background:
-    radial-gradient(circle at 16% 18%, color-mix(in srgb, var(--green) 18%, transparent), transparent 18rem),
-    radial-gradient(circle at 92% 14%, color-mix(in srgb, var(--cyan) 14%, transparent), transparent 17rem),
-    linear-gradient(135deg, color-mix(in srgb, var(--green) 10%, transparent), transparent 42%),
+    linear-gradient(135deg, color-mix(in srgb, var(--green) 5%, transparent), transparent 44%),
     var(--surface-soft);
 }
 
@@ -744,10 +733,10 @@ li,
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .018) 1px, transparent 1px);
   background-size: 36px 36px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .74), transparent 86%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .45), transparent 86%);
 }
 
 .hero-visual svg {
@@ -1648,7 +1637,7 @@ li,
 .glossary-hero h1 {
   max-width: 1000px;
   font-size: clamp(2.45rem, 5vw, 4.25rem);
-  line-height: 1;
+  line-height: 1.06;
 }
 
 .fit-hero::after,
@@ -1658,16 +1647,7 @@ li,
 .knowledge-hero::after,
 .status-hero::after,
 .glossary-hero::after {
-  content: "";
-  position: absolute;
-  right: -12rem;
-  top: -14rem;
-  width: 34rem;
-  height: 34rem;
-  border: 1px solid color-mix(in srgb, var(--green) 18%, transparent);
-  border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--green) 10%, transparent), transparent 64%);
-  pointer-events: none;
+  content: none;
 }
 
 .app-mechanics-hero {
@@ -3134,9 +3114,7 @@ blockquote {
   border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 8px;
   padding: clamp(18px, 2vw, 24px);
-  background:
-    linear-gradient(135deg, rgba(155, 215, 189, .08), transparent 48%),
-    rgba(255, 255, 255, .04);
+  background: rgba(255, 255, 255, .035);
 }
 
 .summary-grid span {
@@ -3144,9 +3122,9 @@ blockquote {
   margin-bottom: 10px;
   color: var(--green);
   font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .11em;
-  text-transform: uppercase;
+  font-weight: 750;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .summary-grid p {
@@ -3159,7 +3137,7 @@ blockquote {
 .knowledge-page .section,
 .sources-page .section,
 .reality-page .section {
-  box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
   backdrop-filter: none;
 }
 

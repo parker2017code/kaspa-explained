@@ -78,8 +78,10 @@ Use the public site itself for the page map:
 - `kaspa-claims-checker.html` is the shareable live / ecosystem / targeted / roadmap / research reference.
 - `toccata-status.html` tracks Toccata status and safe wording.
 - `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
+- `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
-- `skeptical-case.html` is the flagship fair-objections page.
+- `build-this-now.html` turns the builder loop into short practical recipes.
+- `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
