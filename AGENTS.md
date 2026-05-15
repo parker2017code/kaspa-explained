@@ -6,6 +6,22 @@
 - Keep it plain HTML/CSS. Do not add a build system unless a requested feature truly needs one.
 - Preserve `CNAME` exactly as `kaspaexplained.com`.
 
+## Codex Operating Spine
+
+- Codex is the primary agent for this repo. Use `AGENTS.md` as the durable instruction source.
+- Claude Code is secondary future compatibility. `CLAUDE.md` should import this file instead of carrying a separate rule set.
+- Start substantive work by checking `git status --short`, reading the relevant page/script, and identifying the exact reader or verification job before editing.
+- Treat `CLAIMS.yml` as the source of truth for factual claims introduced in public HTML.
+- Never fabricate txids, addresses, block hashes, DAA scores, or on-chain proof evidence.
+- Make the smallest coherent patch. Do not rewrite unrelated files, change public routes, or add dependencies without explicit approval.
+- Preserve public behavior unless the user explicitly asks for a behavior change.
+- Do not change lockfiles, package managers, auth, deployment, domain, analytics, or GitHub Pages settings without calling it out before the edit.
+- For risky or broad changes, write a short plan before implementation. For narrow defect fixes, inspect first and patch directly.
+- After edits, report changed files, commands run, verification result, commit hash, push target, and any remaining risk.
+- If a check fails, report the exact command and failure. Fix only failures related to the current task unless the user expands scope.
+- For UI/layout changes, verify desktop and mobile behavior with rendered checks or screenshots when possible, and check long source titles, URLs, tables, and numbered source blocks for overflow.
+- Before committing, run the cheap gate for the touched surface. Before pushing public content, run the publish gate below and verify the live page after GitHub Pages deploys.
+
 ## General Agent Autonomy
 
 - When a task is blocked by missing local tools, packages, browsers, renderers, or SDKs, install or configure what is needed and continue. Do not stop just to ask permission for routine environment setup.
