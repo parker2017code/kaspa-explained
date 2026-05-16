@@ -54,6 +54,41 @@
   }
   </script>
   <link rel="stylesheet" href="styles.css?v=20260515-source-list-wrap">
+  <style>
+    .toccata-status-table th:nth-child(2),
+    .toccata-status-table td:nth-child(2) {
+      width: 9.5rem;
+      white-space: nowrap;
+    }
+
+    .toccata-status-table .status-pill {
+      white-space: nowrap;
+      overflow-wrap: normal;
+      word-break: keep-all;
+    }
+
+    .toccata-status-table .status-pill::before {
+      flex: 0 0 8px;
+    }
+
+    .toccata-status-table .status-pill.testnet {
+      --status-color: var(--cyan);
+    }
+
+    @media (max-width: 700px) {
+      .toccata-status-table td:nth-child(1)::before {
+        content: "Area";
+      }
+
+      .toccata-status-table td:nth-child(2)::before {
+        content: "Status";
+      }
+
+      .toccata-status-table td:nth-child(3)::before {
+        content: "Meaning";
+      }
+    }
+  </style>
   <script defer src="nav.js?v=20260514-clean"></script>
 </head>
 <body>
@@ -89,10 +124,10 @@
       <p class="eyebrow">Current state</p>
       <h2>Status by area.</h2>
       <div class="table-wrap">
-        <table class="reality-table">
+        <table class="reality-table toccata-status-table">
           <thead><tr><th>Area</th><th>Status</th><th>What it means</th></tr></thead>
           <tbody>
-            <tr><td>TN12 covenant testing</td><td><span class="status-pill target">Testnet</span></td><td>Useful evidence for developer flows and opcode testing, but not mainnet activation.</td></tr>
+            <tr><td>TN12 covenant testing</td><td><span class="status-pill testnet">Testnet</span></td><td>Useful evidence for developer flows and opcode testing, but not mainnet activation.</td></tr>
             <tr><td>Silverscript</td><td><span class="status-pill target">Targeted</span></td><td>High-level scripting language and examples for native Kaspa Script work.</td></tr>
             <tr><td>KIP-21 sequencing commitments</td><td><span class="status-pill target">Targeted</span></td><td>Designed to let app proving scale with app activity instead of the full DAG. As of May 15, 2026, keep final-interface wording conditional until KIP, release, and activation artifacts agree.</td></tr>
             <tr><td>zk verification hooks</td><td><span class="status-pill target">Targeted</span></td><td>Proof checks can help app verification, but external facts still need anchors.</td></tr>
