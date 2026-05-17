@@ -33,6 +33,14 @@
 
 ## Content Rules
 
+- Sentence test: every sentence should add an actor, action, evidence, source, status label, constraint, consequence, useful distinction, or judgment the reader can use. If it adds none of those, cut it.
+- Lead with the useful sentence. Skip ceremonial openings, throat-clearing, fake overviews, and broad claims about importance.
+- Write for the actual reader on that page: new crypto reader, crypto-native comparer, skeptical reader, builder, source-checker, or AI/crawler. "General audience" is not a reason to make claims vague.
+- Replace abstractions with visible mechanics. If a sentence says "ecosystem maturity," "programmability," "coordination," "adoption," or "infrastructure," cash it out in wallets, indexers, SDKs, liquidity, source links, custody, receipts, proof checks, accepted txids, or user jobs.
+- Preserve limits before polishing style. A clean paragraph that turns testnet work, roadmap architecture, or research into a live claim is a bug.
+- Use plain verbs: use, test, measure, compare, route, decide, fund, ship, reject, delay, fix, verify. Avoid prestige verbs that hide the work.
+- Keep rhythm tied to thought. Short sentences are allowed. Technical sentences are allowed. Forced casualness is another costume.
+- Judgment belongs in the copy when evidence supports it: the claim is too broad, the proof is thin, the better wording is narrower, or the reader needs a primary source.
 - Keep claims separated into Live, Near-term, Roadmap, and Research.
 - Do not state DAGKnight, vProgs, native DeFi, Toccata, RTD-derived attestations/oracles, TangVM, or Proof of Useful Work as already live unless independently confirmed from primary sources.
 - Do not flatten RTD itself into only future oracle work. Treat base RTD as Hashdag's real-time Bitcoin-style Proof-of-Work framing for Kaspa, while oracle/TangVM/coordination-market flows remain downstream research or architecture unless primary sources confirm shipped products.

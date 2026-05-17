@@ -10,6 +10,8 @@ The ideal voice is Yonatan-style first-principles explanation translated into ev
 
 Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
+Use `COPY_STYLE.md` as the repo-wide sentence standard. Keep a sentence when it adds an actor, action, evidence, status label, constraint, consequence, useful distinction, or judgment. Cut it when a competent stranger could have written it without knowing Kaspa.
+
 ### Concrete-First Translation
 
 Public-facing and LLM-facing explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
@@ -104,7 +106,7 @@ Keep these audience paths visible:
 - Want builder-specific programmability choices: use `builder-guide.html`.
 - Want short current builder recipes: use `build-this-now.html`.
 - Need to verify a transaction without trusting one explorer: use `command-line.html`.
-- Want source-level verification: use `sources.html`, `status.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
+- Want source-level verification: use `sources.html`, `status.html`, `claims-reference.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
 - Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, KRC standards, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
@@ -205,7 +207,7 @@ Avoid:
 - exchange rumors,
 - corporate abstraction without a concrete actor and requirement, such as "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic unlock," "robust platform," or "seamless experience",
 - market-cap or rank claims frozen into the explainer,
-- vague claims like "revolutionary" without explaining the mechanism.
+- avoid vague claims like "revolutionary" without explaining the mechanism.
 - repeated contrast scaffolding on public pages,
 - repeated contrast frames, vague transformation formulas, and synthetic thought-leadership cadence,
 - overcorrected negative framing where every paragraph repeats a missing feature; use one status label and name the next dependency instead,

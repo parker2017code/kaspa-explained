@@ -56,6 +56,8 @@ Use primary or near-primary sources first. Status-sensitive claims should be anc
 Use these files instead of turning the README into the source guide:
 
 - `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
+- `claims-reference.html` for a browser-readable version of the status-label rules.
+- `COPY_STYLE.md` for the repo-wide anti-filler sentence standard.
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
 - `CLI_FROM_ZERO.md` for local command-line setup and verification.
@@ -84,6 +86,7 @@ Use the public site itself for the page map:
 - `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
+- `claims-reference.html` is the human-readable companion to `CLAIMS.yml`.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `CONTRIBUTING.md` explains correction and contribution rules.
