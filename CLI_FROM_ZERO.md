@@ -157,6 +157,11 @@ For TN12 or Toccata-era testing, confirm the current release, netsuffix, and
 flags from the active public Toccata/TN12 docs before running. Do not assume a
 TN10 command is the right TN12 command.
 
+As of May 17, 2026, Rusty Kaspa's `tn10-toc2` pre-release schedules a
+Testnet-10 Toccata activation test for May 18, 2026 at 16:00 UTC, DAA score
+467,579,632. Treat that release as testnet activation evidence and check its
+current notes before reusing historical TN10/Crescendo commands.
+
 ### Enable wRPC on a node
 
 For app/RPC work, enable the JSON WebSocket RPC listener:
@@ -230,6 +235,8 @@ public Kaspa resources:
 - Official mainnet work should start from public Kaspa wallet, node, SDK, and
   explorer documentation. TN12 covenant commands are testnet practice, not a
   mainnet substitute.
+- TN10/Toccata activation-test releases are also testnet evidence. Do not turn
+  a Testnet-10 schedule into mainnet command guidance.
 - When Toccata or later mainnet tooling changes what can be done from a
   terminal, update this site from public activation, release, and tool docs
   first. Do not promote testnet commands as mainnet instructions.
