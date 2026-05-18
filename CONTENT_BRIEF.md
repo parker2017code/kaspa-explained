@@ -517,7 +517,7 @@ Primary public pages:
 - `tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
 - `analyze-any-coin.html` - practical checklist for evaluating token necessity, supply, launch, validation, liquidity, market cap, risks, and beneficiaries.
 - `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
-- `kaspa-origin-story.html` - sourced origin page for DAGLabs, PHANTOM/GHOSTDAG, the April 2021 testnet, failed hardware/presale paths, fair launch, Black Tuesday, dust-attack context, Rust rewrite, Crescendo, and the Toccata boundary.
+- `kaspa-origin-story.html` - sourced origin page for DAGLabs, Polychain/Accomplice-era VC funding context, PHANTOM/GHOSTDAG, the April 2021 testnet, failed hardware/presale paths, fair launch, the DAGLabs/Polychain-related early-miner estimate, Black Tuesday, dust-attack context, Rust rewrite, Crescendo, and the Toccata boundary.
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
