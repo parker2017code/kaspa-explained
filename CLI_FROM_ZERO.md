@@ -157,9 +157,10 @@ For TN12 or Toccata-era testing, confirm the current release, netsuffix, and
 flags from the active public Toccata/TN12 docs before running. Do not assume a
 TN10 command is the right TN12 command.
 
-As of May 17, 2026, Rusty Kaspa's `tn10-toc2` pre-release schedules a
-Testnet-10 Toccata activation test for May 18, 2026 at 16:00 UTC, DAA score
-467,579,632. Treat that release as testnet activation evidence and check its
+As of May 18, 2026, Rusty Kaspa's `tn10-toc2` pre-release scheduled
+Testnet-10 Toccata activation at DAA score 467,579,632. A May 18 API check
+showed Testnet-10 virtual DAA above that score. Treat that release and REST
+status as testnet activation evidence and check their
 current notes before reusing historical TN10/Crescendo commands.
 
 ### Enable wRPC on a node

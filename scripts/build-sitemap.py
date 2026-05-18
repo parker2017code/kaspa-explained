@@ -10,6 +10,7 @@ MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 DOMAIN = MANIFEST["domain"]
 PAGES = MANIFEST["pages"]
 EXTRA_FILES = MANIFEST.get("sitemapExtraFiles", [])
+EXTRA_LASTMOD = MANIFEST.get("sitemapExtraLastmod", {})
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
 
@@ -77,7 +78,7 @@ def build_sitemap():
         old = existing.get(loc, {})
         entries.append({
             "loc": loc,
-            "lastmod": old.get("lastmod", page_date_modified(path) if path.endswith(".html") else "2026-05-11"),
+            "lastmod": EXTRA_LASTMOD.get(path, old.get("lastmod", page_date_modified(path) if path.endswith(".html") else "2026-05-11")),
             "changefreq": old.get("changefreq", "weekly"),
             "priority": old.get("priority", "0.5")
         })

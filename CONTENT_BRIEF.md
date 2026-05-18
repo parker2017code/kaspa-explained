@@ -128,7 +128,7 @@ The common-misconceptions material should be distributed by reader intent. The h
 
 KRC20 and KRC721 should be handled as ecosystem-token standards available around the live network through data insertion, wallet support, indexers, metadata, APIs, and off-chain redemption rules. They can be useful for practical products such as loyalty credits, coupons, access passes, event rewards, closed-loop festival credits, collectibles, and proof-of-attendance objects. Current KRC documentation describes required deploy/mint gas fees as miner fees; still warn users to check wallets and frontends for separate service fees. Do not present KRC standards as native Kaspa smart contracts, Toccata activation, native L1 assets, mature DeFi, or vProgs.
 
-The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-05-17, the useful public evidence is: Rusty Kaspa `tn10-toc2` scheduling a Testnet-10 Toccata activation test for May 18, 2026 at 16:00 UTC and DAA score 467,579,632; Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply mainnet activation.
+The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-05-18, the useful public evidence is: Rusty Kaspa `tn10-toc2` scheduled Testnet-10 Toccata activation at DAA score 467,579,632, and Testnet-10 REST status later showed virtual DAA above that score; Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply mainnet activation.
 
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
@@ -270,7 +270,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is a targeted mainnet hard-fork track. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. Rusty Kaspa's `tn10-toc2` pre-release is current testnet evidence: it schedules a Testnet-10 Toccata activation test for May 18, 2026 at 16:00 UTC, DAA score 467,579,632.
+Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is a targeted mainnet hard-fork track. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. Rusty Kaspa's `tn10-toc2` pre-release and Testnet-10 REST status are current testnet evidence: the release scheduled activation at DAA score 467,579,632, and the API later showed virtual DAA above that score.
 
 ### Roadmap / Architecture
 

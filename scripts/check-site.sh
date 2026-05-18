@@ -12,6 +12,7 @@ done
 bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
 python3 scripts/build-sitemap.py --check
+python3 scripts/build-agent-index.py --check
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py

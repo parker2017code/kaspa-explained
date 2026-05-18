@@ -60,6 +60,7 @@ Use these files instead of turning the README into the source guide:
 - `COPY_STYLE.md` for the repo-wide anti-filler sentence standard.
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
+- `agent-index.json` for a static, read-only agent gateway over page text and reference files.
 - `CLI_FROM_ZERO.md` for local command-line setup and verification.
 - `CONTENT_BRIEF.md` for editorial context and source-use rules.
 - `.github/notes/` for internal cleanup queues and flow rules.
@@ -89,6 +90,7 @@ Use the public site itself for the page map:
 - `claims-reference.html` is the human-readable companion to `CLAIMS.yml`.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
+- `agent-index.json` is the generated static retrieval index for AI agents.
 - `CONTRIBUTING.md` explains correction and contribution rules.
 
 ## Maintenance checks
@@ -96,6 +98,7 @@ Use the public site itself for the page map:
 The `scripts/` folder contains the local and CI validation gates:
 
 - `scripts/check-site.sh` checks the expected public pages and support files, custom domain, generated sitemap, canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, search-result coverage, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
+- `scripts/build-agent-index.py` builds and checks the static agent index from public pages and reference files.
 - `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and checks the primary nav against `site-manifest.json`.
 - `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
 - `scripts/check-rendered-layout.sh` optionally opens key pages in Chromium at mobile and desktop sizes and verifies screenshots can be rendered.
@@ -152,7 +155,7 @@ Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Ecosystem live: KRC20 tokens and KRC721-style NFTs through ecosystem tooling, wallets, indexers, metadata, and APIs. Required deploy/mint gas fees are miner fees, while wallets or frontends may charge separately. Useful for tokens, coupons, event credits, rewards, access passes, and collectibles, but not native Kaspa smart contracts or Toccata/vProgs activation.
-- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release schedules a Testnet-10 activation test for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. Treat this as targeted until mainnet activation is confirmed by primary sources.
+- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release scheduled Testnet-10 activation at DAA score 467,579,632, and a May 18, 2026 API check showed Testnet-10 virtual DAA above that score. Treat this as testnet evidence until mainnet activation is confirmed by primary sources.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 
