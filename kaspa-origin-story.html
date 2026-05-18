@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa Origin Story: Fair Launch, Failed Plans, and Crescendo | Kaspa Explained</title>
+  <meta name="description" content="A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/kaspa-origin-story">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="Kaspa Origin Story | Kaspa Explained">
+  <meta property="og:description" content="The sourced version of Kaspa's origin: research, DAGLabs, failed launch paths, fair launch, early stress, Rust, Crescendo, and Toccata status.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/kaspa-origin-story">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa Origin Story | Kaspa Explained">
+  <meta name="twitter:description" content="Research, failed commercialization paths, fair launch, Rust, Crescendo, and the Toccata boundary.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-05-18">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Kaspa Origin Story",
+    "url": "https://kaspaexplained.com/kaspa-origin-story",
+    "dateModified": "2026-05-18",
+    "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260515-source-list-wrap">
+  <script defer src="nav.js?v=20260514-clean"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here">Start</a>
+        <a href="/overview">Overview</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/toccata-status">Toccata live?</a>
+        <a href="/builder-guide">Build</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/sources">Sources</a>
+        <a href="/search">Search</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/status">What is live?</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="knowledge-page">
+    <section class="knowledge-hero section">
+      <p class="eyebrow">Origin story</p>
+      <h1>Kaspa's fair launch was the path left after the other paths failed.</h1>
+      <p class="lead">Kaspa began as research into faster proof-of-work ordering, moved through DAGLabs and an April 2021 testnet, then launched as a public mined network after hardware, presale, and business-model paths failed to become the launch structure.</p>
+      <p class="fit-note"><strong>Citable summary:</strong> Kaspa grew from PHANTOM/GHOSTDAG research into a fair-launched Proof-of-Work blockDAG. Mainnet launched in November 2021 with no premine, insider allocation, or pre-sales; Crescendo later made 10 BPS live; Toccata remains a targeted programmability hard-fork track as of May 18, 2026.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">The useful thesis</p>
+      <h2>The origin story is a constraint story.</h2>
+      <p>The clean version is not that Kaspa was born from perfect planning. The stronger sourced version is that research, startup funding, hardware plans, DeFi-sequencing ambitions, and community pressure collided until the simplest remaining launch was also the cleanest one: publish the network and let anyone mine.</p>
+      <p>That matters because every earlier structure would have made Kaspa partly answer to something outside the protocol: a hardware distribution plan, a presale contract, a startup balance sheet, or a role as infrastructure for another app ecosystem. The fair launch did not prove future adoption, price, or technical success. It did remove the official premine, pre-sale, and insider-allocation surface from the starting line.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Research first</p>
+      <h2>The problem came before the coin.</h2>
+      <p>Kaspa's research lineage starts with the question Bitcoin leaves exposed at high block rates: what should a proof-of-work network do with honest blocks found in parallel? A single-chain system normally chooses one branch and discards the other branch's work. A blockDAG tries to keep more honest work visible, then use a rule such as GHOSTDAG to order that graph into one shared payment history.</p>
+      <p>DBLP lists Yonatan Sompolinsky and Aviv Zohar's 2018 paper, <a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">PHANTOM: A Scalable BlockDAG Protocol</a>, as an IACR ePrint publication. Kaspa.org describes Kaspa as growing from blockDAG research that continued through SPECTRE and PHANTOM into the protocols running Kaspa today.</p>
+      <p>Earlier public interviews make the through-line sharper. A 2017 Epicenter episode presented GHOST and SPECTRE as attempts to scale Bitcoin-style Proof of Work by using DAG structure instead of wasting parallel blocks. A 2018 Rethink Trust profile described DAGLabs as focused on higher Layer One throughput and faster confirmation while preserving a trustless base-layer design.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">DAGLabs and testnet</p>
+      <h2>The startup path existed before the fair launch.</h2>
+      <p>Public sources do not date DAGLabs perfectly consistently. An April 26, 2021 Investing.com launch article says DAGLabs was founded in 2017 by Yonatan Sompolinsky and Guy Corem and raised $8 million from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018 to commercialize DAG protocols. The safe claim is narrower: DAGLabs funded and organized part of the pre-mainnet path before Kaspa became a public community-mined network.</p>
+      <p>Guy Corem's April 13, 2021 testnet note called Kaspa a Golang implementation of Phantom/GHOSTDAG and a generalization of Nakamoto Consensus. The April 2021 Investing.com article records the practical testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, and Kashboard. It framed the project as a testnet first, with a later mainnet launch planned without pre-mining or founder allocations.</p>
+      <p>Use source-backed implementation language here. Yonatan's Hashdag archive later describes the original Kaspad codebase as an adaptation of the Bitcoin client <code>btcd</code>, written in Golang. That is the safer public wording than repeating unsourced "Bitcoin Core 0.19" claims.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Could-have-been paths</p>
+      <h2>The failed plans are part of the story.</h2>
+      <div class="reference-grid">
+        <article>
+          <h3>ASIC and presale path</h3>
+          <p>Hashdag's 2020 community-launch archive said Kaspa would have no premine or founder rewards, but it did not present that plan as a pure fair launch. It described DAGLabs as a for-profit miner, a pre-launch ASIC-customization path, and a DeFi-contract auction for rights to future Kaspa coins. Yonatan later said the hardware and ASIC-presale path did not materialize because optical ASIC hardware was not mature.</p>
+        </article>
+        <article>
+          <h3>DeFi sequencing path</h3>
+          <p>The April 2021 launch article framed Kaspa as faster ordering infrastructure for DeFi applications using Ethereum. The later Uphold interview recap keeps the same deeper theme: Kaspa's core specialization is sequencing, especially where finance is sensitive to transaction order and MEV. That context explains the "base sequencing layer for another ecosystem" idea without turning it into a claim that Kaspa ever shipped as an Ethereum L2.</p>
+        </article>
+        <article>
+          <h3>Gamenet path</h3>
+          <p>Yonatan later described a gamenet attempt as flawed: closer to a testnet with incentives than a normal mainnet. The useful point is that the launch design changed under pressure before the public network found its actual shape.</p>
+        </article>
+        <article>
+          <h3>Fair-launch path</h3>
+          <p>In the later HackerNoon interview, Yonatan called DAGLabs a failed attempt to reconcile venture-backed and fair-launch models. He said investors encouraged launch despite no business model or ROI plan; when asked if Polychain pushed him to launch, he accepted that as one way to put it and added that Gadi also pushed him because he saw the potential.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Launch</p>
+      <h2>The public network launched without a premine.</h2>
+      <p>Kaspa.org's current lore page says mainnet launched in November 2021 as a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The current homepage adds the genesis-proof framing: every coin traces cryptographically back to an empty genesis. The public proof frame is simple: mining created the supply, and no official allocation table created coins for insiders.</p>
+      <p>That claim should stay precise. Yonatan later estimated that Kaspa core developers mined about 2.5% of total supply after launch. That is not a premine, but it belongs in the early-miner picture. Fair launch lowers official insider-allocation risk. It does not erase early-miner advantage, mining-infrastructure asymmetry, later ASIC concentration, liquidity risk, or the need to fund development after launch.</p>
+      <p>The 2025 Bitcoin Takeover interview adds the strongest firsthand nuance: Yonatan described the launch as messy and reluctant, with the gamenet idea overtaken by miners who chose to keep mining. He also described the two-week halt as a recovery path that preserved the UTXO set through a second genesis that cryptographically pointed back to the last valid state. That makes the story less polished, but more source-backed.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Early stress</p>
+      <h2>The chain had to survive real failure.</h2>
+      <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash during the prior 48 hours. The post says the developers were not trying to roll back to an earlier preferred state; they were rebuilding and comparing a certainly valid UTXO commitment after a memory problem. That is the sourced version of the "two-week bug" story.</p>
+      <p>Kaspa also faced later state pressure. Kaspalytics recorded a September 2023 dust attack where the UTXO count jumped from about 8 million to 62 million. That belongs in the resilience timeline, but it should not be confused with the November 2021 launch bug.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Rust and Crescendo</p>
+      <h2>The original implementation was not the final form.</h2>
+      <p>Hashdag's 2022 "Kaspa where to" archive says Michael Sutton proposed a major refactor and Rust rewrite because the Golang codebase carried technical debt and was hard for new contributors to work in. Kaspa.org now summarizes that move as a full rewrite from the original Golang node into Rust, backed by a community grant.</p>
+      <p>Rusty Kaspa's repository describes the Rust implementation as a drop-in replacement for the older Golang node. Its README says the Crescendo hard fork took place on May 5, 2025, moving the network from 1 BPS to 10 BPS. The v1.0.0 release notes say the same hard fork transitioned Kaspa from 1 BPS to 10 BPS at mainnet DAA score 110,165,000.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Toccata boundary</p>
+      <h2>Crescendo is live. Toccata is the next status boundary.</h2>
+      <p>The draft phrase "Toccata" can carry the wrong date if it is used for 10 BPS. Crescendo is the hard fork that made 10 BPS live on mainnet. Toccata is the targeted hard-fork track for covenant-based base-layer programmability, Silverscript, ZK-facing verification work, sequencing commitments, and native-asset groundwork.</p>
+      <p>As of May 18, 2026, Kaspa Explained treats Toccata as targeted, not live mainnet behavior. Testnet-10 and TN12 evidence matters, but mainnet activation still needs primary release and network evidence. Use <a href="/toccata-status">Toccata Status</a> before quoting Toccata as shipped.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">What to say</p>
+      <h2>The careful version is stronger.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Topic</th><th>Use this wording</th><th>Avoid this shortcut</th></tr></thead>
+          <tbody>
+            <tr><td>Code origin</td><td>Original Kaspad was Golang and source-backed as an adaptation of <code>btcd</code>.</td><td>Bitcoin Core 0.19, unless a durable source is added.</td></tr>
+            <tr><td>DAGLabs</td><td>DAGLabs funded and organized pre-mainnet work; public sources differ on 2017 versus 2018 dating.</td><td>A single exact founding date with no caveat.</td></tr>
+            <tr><td>Fair launch</td><td>No premine, insider allocation, or pre-sales; every coin came from mining.</td><td>Claims of flawless distribution or no early contributor mining.</td></tr>
+            <tr><td>Business failure</td><td>Hardware, presale, and startup paths failed to materialize before the vanilla fair launch.</td><td>Bankruptcy language unless a stronger source says bankruptcy.</td></tr>
+            <tr><td>Toccata</td><td>Targeted programmability hard-fork track as of May 18, 2026.</td><td>Toccata made Kaspa 10 BPS or mainnet activation already happened.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Sources</p>
+      <h2>Sources for this origin page.</h2>
+      <ol class="source-list">
+        <li><a href="https://kaspa.org/lore">Kaspa.org Lore</a> - current public summary for fair launch, research lineage, Rust rewrite, Crescendo, Toccata, DAGKnight, and roadmap framing.</li>
+        <li><a href="https://kaspa.org/">Kaspa.org homepage</a> - genesis-proof framing for no premine, no hidden allocation, and fair launch.</li>
+        <li><a href="https://uk.investing.com/news/cryptocurrency-news/researcher-behind-ghost-protocol-launches-cryptocurrency-network-kaspa-2355728">Investing.com April 2021 launch article</a> - DAGLabs, April 2021 testnet, no-premining launch intent, and DeFi sequencing context.</li>
+        <li><a href="https://vcorem.medium.com/daglabs-just-released-its-kaspa-tesnet-b396481eb0c6">Guy Corem testnet note</a> - April 2021 Kaspa testnet release and Golang Phantom/GHOSTDAG implementation framing.</li>
+        <li><a href="https://epicenter.tv/episode/192-spectre-ghosts-radical-ideas-to-scale-blockchain-tech">Epicenter episode 192</a> - 2017 GHOST, SPECTRE, and blockDAG research context with Aviv Zohar and Yonatan Sompolinsky.</li>
+        <li><a href="https://blockchain.intellectsoft.net/blog/yonatan-sompolinsky-co-founder-scientist-at-daglabs/">Rethink Trust 2018 profile</a> - DAGLabs, Layer One scalability, throughput, confirmation-speed, and trustless-design framing.</li>
+        <li><a href="https://www.kasmedia.com/article/dr-yonatan-sompolinsky-s-interview-with-uphold-s-head-of-research-dr-martin-heisboeck">Uphold Institutional interview recap</a> - sequencing, finance, MEV, Rust implementation, and ZK-oriented future-programmability framing.</li>
+        <li><a href="https://hashd.ag/raw">Hashdag raw archive</a> - launch-plan, ASIC/presale, gamenet, Black Tuesday, and Rust-refactor context from Yonatan Sompolinsky's writing archive.</li>
+        <li><a href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">Kaspa launch plan: responding to reality</a> - post-launch community, governance, roadmap, and maintenance context.</li>
+        <li><a href="https://hashdag.medium.com/kaspa-black-tuesday-8c7f4fa35834">Kaspa (Black Tuesday)</a> - November 2021 network-crash and UTXO-commitment context.</li>
+        <li><a href="https://hackernoon.com/interview-with-dr-yonatan-sompolinsky-of-kaspa">Hackernoon interview with Yonatan Sompolinsky</a> - DAGLabs, ASIC-presale path, optical ASIC immaturity, fair launch, Polychain, and Gadi context.</li>
+        <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 transcript</a> - firsthand launch nuance, gamenet, second genesis, UTXO-set preservation, and smart-contract roadmap boundaries.</li>
+        <li><a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">DBLP: PHANTOM: A Scalable BlockDAG Protocol</a> - bibliographic record for the 2018 PHANTOM paper by Sompolinsky and Zohar.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa GitHub</a> - Rust node implementation, replacement relationship to the older Golang node, and Crescendo README context.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.0.0">Rusty Kaspa v1.0.0 release</a> - Crescendo mainnet release notes and 1 BPS to 10 BPS transition.</li>
+        <li><a href="https://www.kaspalytics.com/blog/post/2024-week4-this-week-on-dag">Kaspalytics Week 4, 2024</a> - September 2023 dust-attack UTXO-count context.</li>
+      </ol>
+    </section>
+
+    <section class="next-step section" aria-label="Suggested next step">
+      <p class="eyebrow">Next step</p>
+      <h2>Separate origin from current status.</h2>
+      <p>The origin story explains why the launch matters. The status pages explain what the network can do today and what still needs activation evidence.</p>
+      <div class="actions">
+        <a class="button primary" href="/status">Open status</a>
+        <a class="button" href="/kaspa-in-one-screen">Read one-screen summary</a>
+        <a class="button" href="/sources">Open sources</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav aria-label="Footer">
+        <a href="/status">Status</a>
+        <a href="/sources">Sources</a>
+        <a href="/ai-guidance">Ask AI</a>
+        <a href="/search">Search</a>
+        <a href="/about">About</a>
+        <a href="/claims-reference">Claims</a>
+        <a href="https://github.com/parker2017code/kaspa-explained">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

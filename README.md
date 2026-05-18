@@ -84,6 +84,7 @@ Use the public site itself for the page map:
 - `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
 - `build-this-now.html` turns the builder loop into short practical recipes.
+- `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
 - `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.

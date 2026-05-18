@@ -93,6 +93,7 @@ Keep these audience paths visible:
 - Need design constraints: use `tradeoff-map.html`.
 - Need a coin-evaluation checklist: use `analyze-any-coin.html`.
 - Need problem-first crypto history: use `crypto-history.html`.
+- Need Kaspa origin/fair-launch context: use `kaspa-origin-story.html`.
 - Need a compact shareable Kaspa artifact: use `kaspa-in-one-screen.html`.
 - Need a business/adoption lens without price prediction: use `adoption-metrics.html`.
 - New to crypto but already understands basic records/keys/blocks: use `what-crypto-is-good-for.html`.
@@ -381,6 +382,8 @@ For application-layer discussion, treat Michael Sutton's vProgs framing as a roa
 
 Bitcoin Takeover S16 E41, the 2025 Yonatan Sompolinsky interview, should guide the shape of the explanation: Kaspa as a generalization of Nakamoto consensus, the blockDAG as a framework whose value depends on ordering, GHOSTDAG as current mainnet behavior, DAGKnight as future/adaptive consensus work, vProgs as native-feeling app architecture, and community context as part of decentralization.
 
+For origin history, use the same interview to keep the fair-launch story candid: Yonatan described the launch as messy and reluctant, said the gamenet idea was overtaken by miners who kept mining, and framed the early second-genesis recovery as preserving the UTXO set rather than reallocating coins. Pair that with Kaspa.org, Hashdag, Investing.com, Guy Corem's testnet note, HackerNoon, and the older Epicenter/Rethink Trust sources before making origin claims.
+
 Use the interview as an editorial model, not as a public slogan. It shows the target feel for the site: patient first-principles reasoning, everyday examples, willingness to compare Bitcoin/Ethereum/Solana without tribal shortcuts, clear admission of uncertainty, and careful distinction between live protocol, roadmap, and aspiration.
 
 Do not turn the interview's roadmap discussion, demos, or aspirations into live-status claims. In particular: native DeFi is not live, DAGKnight is not live, vProgs are not live, 100 BPS and partition-resilient payment flows are proposed future work, pruning is not privacy, and Solana-like means cohesive developer/user experience, with no imported Solana execution model on Kaspa L1.
@@ -421,6 +424,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/tradeoff-map.html`
 - `/analyze-any-coin.html`
 - `/crypto-history.html`
+- `/kaspa-origin-story.html`
 - `/kaspa-in-one-screen.html`
 - `/adoption-metrics.html`
 - `/application-layer.html`
@@ -513,6 +517,7 @@ Primary public pages:
 - `tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
 - `analyze-any-coin.html` - practical checklist for evaluating token necessity, supply, launch, validation, liquidity, market cap, risks, and beneficiaries.
 - `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
+- `kaspa-origin-story.html` - sourced origin page for DAGLabs, PHANTOM/GHOSTDAG, the April 2021 testnet, failed hardware/presale paths, fair launch, Black Tuesday, dust-attack context, Rust rewrite, Crescendo, and the Toccata boundary.
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
