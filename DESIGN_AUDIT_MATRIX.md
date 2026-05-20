@@ -6,7 +6,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 ## Product Stance
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Purpose | Source-first field guide: what Kaspa is, what is live, what is targeted, what is roadmap, what is research. | Strong source/status discipline already exists. | Keep every page tied to one reader job. |
 | Primary user | New crypto learner, crypto-native comparer, builder, researcher, journalist, LLM/source-checker. | Content brief defines these paths. | Do not make every page serve all audiences equally. |
@@ -15,7 +15,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 ## Information Architecture
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Navigation | Few top-level routes; source/status routes always reachable. | Current nav is coherent. | Keep AI/source-pack material in docs, not as a floating homepage widget. |
 | Page hierarchy | Beginner path, compact thesis, apps/builders, status, sources, search. | Strong. | Add cross-links where cards read like dead text. |
@@ -24,7 +24,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 ## Layout And Density
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Layout system | Static HTML field guide with workbench panels where technical. | App layer and builder guide now have mechanics/workbench visuals. | Apply same grammar selectively to key pages, not everywhere. |
 | Above fold | Page job, plain summary, one visual where it clarifies mechanics. | Start/application/builder improved. | Avoid huge H1 plus long caveats on mobile. |
@@ -33,7 +33,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 ## Visual System
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Style | Protocol field guide: graphite/off-white, restrained Kaspa teal, dense but calm. | Current dark theme mostly fits. | Avoid generic SaaS hero/cards and decorative crypto visuals. |
 | Branding | Kaspa mark, serious technical voice. | Top nav and favicon set carry the brand. | Keep logo sizing and top nav consistent across pages. |
@@ -44,7 +44,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 ## Components
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Buttons / CTAs | Route to status, sources, start, builder paths, not conversion funnels. | Current CTAs are mostly informational. | Avoid "book demo / join / launch" style language. |
 | Forms / inputs | Search is the main sitewide input; diagrams use local controls. | Search exists. | Ensure search has useful empty/error states. |
@@ -87,7 +87,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 
 ## Content Design
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Copy order | Human picture first, technical label second, status third. | Encoded in README/AGENTS/CONTENT_BRIEF and increasingly in HTML. | Continue term sweeps for mechanism-first or status-blurring language. |
 | Crypto translation | Use crypto terms only when they help precision, search, or source matching. | Encoded in `AGENTS.md` and `CONTENT_BRIEF.md`. | Translate each term into what someone tests, buys, builds, approves, measures, or avoids. |
@@ -98,7 +98,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 
 ## Trust, Accessibility, And Quality
 
-| Area | Decision | Current check | Next action |
+| Area | Choice | Current check | Next action |
 |---|---|---|---|
 | Trust | Source links, status lanes, no price/investment framing. | Strong. | Continue checking drift-prone facts before status edits. |
 | Accessibility | Skip link, semantic HTML, nav, color contrast, keyboard basics. | Checks pass. | Add/maintain focus states and reduced-motion support. |

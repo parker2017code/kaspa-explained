@@ -34,6 +34,7 @@ const skipDirs = new Set([
 ]);
 
 const skipFiles = new Set([
+  "agent-index.json",
   "package-lock.json",
   "scripts/audit-facing-copy.mjs",
   "scripts/lint-copy.mjs",
@@ -42,7 +43,7 @@ const skipFiles = new Set([
 const rules = [
   {
     name: "not-reframe-but",
-    pattern: /\bnot\s+(?:just|only|merely|simply)?\s*[^.!?\n]{1,120}\s+but\s+(?:also\s+)?[^.!?\n]{1,120}/i,
+    pattern: /\bnot\s+(?:just|only|merely|simply)\s+[^.!?\n]{1,120}\s+but\s+(?:also\s+)?[^.!?\n]{1,120}/i,
   },
   {
     name: "does-not-reframe-but",
@@ -50,7 +51,7 @@ const rules = [
   },
   {
     name: "more-than-reframe",
-    pattern: /\bmore\s+than\s+[^.!?\n]{1,120}/i,
+    pattern: /\bmore\s+than\s+(?![\d.,$%])[^.!?\n]{1,120}/i,
   },
   {
     name: "merely-reframe",
@@ -62,19 +63,31 @@ const rules = [
   },
   {
     name: "rather-than-reframe",
-    pattern: /\brather\s+than\s+[^.!?\n]{1,120}/i,
+    pattern: /\brather\s+than\s+(?:merely|simply|just)\s+[^.!?\n]{1,120}/i,
   },
   {
     name: "throat-clearing",
-    pattern: /\b(it is important to note|it is worth noting|at its core|in essence|from a broader perspective|rapidly evolving landscape|this (?:highlights|underscores) the importance)\b/i,
+    pattern: /\b(in today'?s rapidly evolving landscape|it is important to note|it is worth noting|in conclusion|ultimately|at its core|in essence|from a broader perspective|this (?:highlights|underscores)(?: the importance)?)\b/i,
   },
   {
     name: "generic-polish",
-    pattern: /\b(delve|underscore|intricate|tapestry|realm|pivotal|seamless|robust|holistic|cutting[- ]edge|game[- ]changing|transformative|revolutionary|empower|foster)\b/i,
+    pattern: /\b(delve|underscore|intricate|tapestry|realm|pivotal|seamless|robust|holistic|cutting[- ]edge|game[- ]changing|transformative|revolutionary|empower|foster)\b|\bunlock(?:s|ed|ing)?\s+(?:new\s+)?(?:value|potential|insights?|opportunities?|efficiency|growth|power|capabilities)\b|\bleverage(?:s|d|ing)?\s+[^.!?\n]{0,80}\s+(?:to|for)\b|\bnavigate(?:s|d|ing)?\s+(?:the\s+)?(?:complexities|landscape|world|realm)\b/i,
   },
   {
     name: "generic-platform-copy",
     pattern: /\b(platform capabilities|technology overview|where the platform applies|start a conversation|complete picture|all-in-one|end-to-end|valuable insights|drive innovation|enhance efficiency|comprehensive solution)\b/i,
+  },
+  {
+    name: "process-narration",
+    pattern: /\b(i(?:'|\u2019)?m going to|i(?:'|\u2019)?ll start by|i will start by|my thinking is|the logic here is|the key is|this works because|i(?:'|\u2019)?d frame it as|i would frame it as|the best approach is)\b/i,
+  },
+  {
+    name: "workflow-scaffold",
+    pattern: /\b(internal reasoning|workflow notes|scoring logic|drafting rationale|process commentary|ranking labels?|writer-facing|reader-facing clutter)\b/i,
+  },
+  {
+    name: "writer-facing-label",
+    pattern: /(?:^|[|>]\s*)(?:angle|cta|decision|priority|rationale|uncertainty|optional|recommended|if sending|strong fit|weak fit|research[- ]first)\s*(?::|[-|])|(?:^|[|>]\s*)skip\s*(?::|[|])/i,
   },
 ];
 
@@ -100,7 +113,8 @@ function walk(dir) {
 }
 
 function shouldSkipFile(fullPath, relativePath) {
-  if (skipFiles.has(relativePath)) return true;
+  const normalizedPath = relativePath.split(path.sep).join("/");
+  if (skipFiles.has(normalizedPath)) return true;
   const extension = path.extname(fullPath);
   if (!checkedExtensions.has(extension)) return true;
   const parts = relativePath.split(path.sep);

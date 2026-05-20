@@ -38,6 +38,8 @@ const skipDirs = new Set([
 
 const skipFiles = new Set([
   "AGENTS.md",
+  "agent-index.json",
+  "scripts/audit-facing-copy.mjs",
   "scripts/lint-copy.mjs",
   "package-lock.json",
 ]);
@@ -45,7 +47,7 @@ const skipFiles = new Set([
 const rules = [
   {
     name: "not-reframe-but",
-    pattern: /\bnot\s+(?:just|only|merely|simply)?\s*[^.!?\n]{1,120}\s+but\s+(?:also\s+)?[^.!?\n]{1,120}/gi,
+    pattern: /\bnot\s+(?:just|only|merely|simply)\s+[^.!?\n]{1,120}\s+but\s+(?:also\s+)?[^.!?\n]{1,120}/gi,
   },
   {
     name: "does-not-reframe-but",
@@ -53,11 +55,11 @@ const rules = [
   },
   {
     name: "comma-but-reframe",
-    pattern: /\b(?:this|that|it|they|we|the\s+(?:goal|point|question|claim|site|page|demo|repo|product|value|story))\s+(?:is|are|was|were)\s+[^.!?\n]{1,80},\s+but\s+[^.!?\n]{1,120}/gi,
+    pattern: /\b(?:this|that|it|they|we|the\s+(?:goal|point|question|claim|site|page|demo|repo|product|value|story))\s+(?:is|are|was|were)\s+(?!not\b)[^.!?\n]{1,80},\s+but\s+[^.!?\n]{1,120}/gi,
   },
   {
     name: "more-than-reframe",
-    pattern: /\bmore\s+than\s+[^.!?\n]{1,120}/gi,
+    pattern: /\bmore\s+than\s+(?![\d.,$%])[^.!?\n]{1,120}/gi,
   },
   {
     name: "merely-reframe",
@@ -69,7 +71,31 @@ const rules = [
   },
   {
     name: "rather-than-reframe",
-    pattern: /\brather\s+than\s+[^.!?\n]{1,120}/gi,
+    pattern: /\brather\s+than\s+(?:merely|simply|just)\s+[^.!?\n]{1,120}/gi,
+  },
+  {
+    name: "throat-clearing",
+    pattern: /\b(in today'?s rapidly evolving landscape|it is important to note|it is worth noting|in conclusion|ultimately|at its core|in essence|from a broader perspective|this (?:highlights|underscores)(?: the importance)?)\b/gi,
+  },
+  {
+    name: "generic-polish",
+    pattern: /\b(delve|underscore|intricate|tapestry|realm|pivotal|seamless|robust|holistic|cutting[- ]edge|game[- ]changing|transformative|revolutionary|empower|foster)\b|\bunlock(?:s|ed|ing)?\s+(?:new\s+)?(?:value|potential|insights?|opportunities?|efficiency|growth|power|capabilities)\b|\bleverage(?:s|d|ing)?\s+[^.!?\n]{0,80}\s+(?:to|for)\b|\bnavigate(?:s|d|ing)?\s+(?:the\s+)?(?:complexities|landscape|world|realm)\b/gi,
+  },
+  {
+    name: "generic-platform-copy",
+    pattern: /\b(platform capabilities|technology overview|where the platform applies|start a conversation|complete picture|all-in-one|end-to-end|valuable insights|drive innovation|enhance efficiency|comprehensive solution)\b/gi,
+  },
+  {
+    name: "process-narration",
+    pattern: /\b(i(?:'|\u2019)?m going to|i(?:'|\u2019)?ll start by|i will start by|my thinking is|the logic here is|the key is|this works because|i(?:'|\u2019)?d frame it as|i would frame it as|the best approach is)\b/gi,
+  },
+  {
+    name: "workflow-scaffold",
+    pattern: /\b(internal reasoning|workflow notes|scoring logic|drafting rationale|process commentary|ranking labels?|writer-facing|reader-facing clutter)\b/gi,
+  },
+  {
+    name: "writer-facing-label",
+    pattern: /(?:^|[|>]\s*)(?:angle|cta|decision|priority|rationale|uncertainty|optional|recommended|if sending|strong fit|weak fit|research[- ]first)\s*(?::|[-|])|(?:^|[|>]\s*)skip\s*(?::|[|])/gi,
   },
 ];
 
@@ -88,7 +114,7 @@ function walk(dir) {
     }
 
     if (!entry.isFile()) continue;
-    if (skipFiles.has(relativePath)) continue;
+    if (skipFiles.has(relativePath.split(path.sep).join("/"))) continue;
     if (!checkedExtensions.has(path.extname(entry.name))) continue;
 
     checkFile(fullPath, relativePath);
@@ -102,6 +128,7 @@ function checkFile(fullPath, relativePath) {
   for (const rule of rules) {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
+      if (isInstructionContext(relativePath, line)) continue;
       if (isCodePropertyLine(line, rule.name)) continue;
       rule.pattern.lastIndex = 0;
       const match = rule.pattern.exec(line);
@@ -121,6 +148,21 @@ function checkFile(fullPath, relativePath) {
 function isCodePropertyLine(line, ruleName) {
   if (ruleName !== "empty-marketing-verb") return false;
   return /\b(?:text-)?transform\s*:/.test(line) || /\btransition\s*:[^;]*\btransform\b/.test(line);
+}
+
+function isInstructionContext(relativePath, line) {
+  const normalizedPath = relativePath.replaceAll(path.sep, "/");
+  const ruleFile =
+    normalizedPath === "AGENTS.md" ||
+    normalizedPath === "COPY_STYLE.md" ||
+    normalizedPath === "CONTENT_BRIEF.md" ||
+    normalizedPath === "llms.txt" ||
+    normalizedPath.endsWith("/COPY_RULES.md") ||
+    normalizedPath.endsWith("/DEVELOPMENT_PRINCIPLES.md");
+
+  if (!ruleFile) return false;
+  if (/[`|]/.test(line)) return true;
+  return /\b(such as|avoid|cut|delete|rewrite|ban|banned|do not|should not|weak|better|rule|rules|pattern|patterns|style|standard|llm|ai prose|generic|brochure|copy|guardrail|guidance|workflow)\b/i.test(line);
 }
 
 walk(root);
