@@ -28,7 +28,7 @@ The deeper mental model: abstraction is a compression format, not the starting p
 
 Crypto translation rule: use the crypto term only when it helps precision, search, or source matching. Then immediately translate it into what someone is testing, buying, building, approving, measuring, or trying to avoid. "Decentralized coordination" means people can agree on one shared record without one company controlling it. "Infrastructure" means wallets, exchanges, custody, APIs, indexers, explorers, liquidity, accounting, support, and uptime. "Programmability" means a wallet, app, or script can show which rule allowed, refused, or recorded an action. The practical questions are speed, security, wallets, exchange support, liquidity, developer tools, and whether real users have a reason to use it.
 
-This sits beside source checks and current-status checks. Source checks ask whether a claim is true and sourced. Current-status checks ask whether it is mainnet, testnet, third-party ecosystem work, future upgrade work, or research. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
+This sits beside source checks and current-status checks. Source checks ask whether a claim is true and sourced. Current-status checks ask whether it is mainnet, testnet, future upgrade work, research, unsupported, or outside L1 scope. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
 
 The site should answer:
 
@@ -110,7 +110,7 @@ Keep these audience paths visible:
 - Want source-level verification: use `sources.html`, `status.html`, `claims-reference.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
-- Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, KRC standards, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
+- Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, app/project headlines, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
 - Need the common "why is KAS cheaper than BTC" answer: use `faq.html#kaspa-bitcoin-valuation` and `why-crypto-has-value.html#market-cap`. Keep it as valuation literacy, not price prediction.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
@@ -123,11 +123,13 @@ The `knowledge-map.html` page should start as an ordered learning path and then 
 
 The `status.html` page is the compact status reference. Keep it shorter than the source guide. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
-Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, third-party ecosystem projects, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
+Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, app/project headlines, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
 
 The common-misconceptions material should be distributed by reader intent. The homepage may name the risk and route the reader. The claims checker should be the main link for arguments. The FAQ should give short corrections. The status page can carry the more precise table. The one-screen page can include only the compact "say this, not that" boundary. Do not repeat every correction on every page.
 
-KRC20 and KRC721 should be handled as ecosystem-token standards available around the live network through data insertion, wallet support, indexers, metadata, APIs, and off-chain redemption rules. They can be useful for practical products such as loyalty credits, coupons, access passes, event rewards, closed-loop festival credits, collectibles, and proof-of-attendance objects. Current KRC documentation describes required deploy/mint gas fees as miner fees; still warn users to check wallets and frontends for separate service fees. Do not present KRC standards as native Kaspa smart contracts, Toccata activation, native L1 assets, mature DeFi, or vProgs.
+Volatile-data rule: do not add facts that can change in seconds, minutes, or hours unless they are free, source-backed, and read from a current API or live node/API script. If the fact is not important to Kaspa L1 status, omit it instead of creating a manual maintenance burden.
+
+App/project catalogs should not be public status lanes on this site. Mention an app only when the L1 fact itself matters, such as transaction payload behavior, accepted-transaction evidence, or fees paid to miners. Otherwise, leave it out and keep Kaspa Explained focused on first-party L1 protocol status.
 
 The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-05-18, the useful public evidence is: Rusty Kaspa `tn10-toc2` scheduled Testnet-10 Toccata activation at DAA score 467,579,632, and Testnet-10 REST status later showed virtual DAA above that score; Silverscript/TN12 activity as Toccata polishing and field testing; kaspanet/vprogs April 15 ZK framework progress; and rusty-kaspa/dagknight March 22 prototype/refinement activity. Do not let this section become a hype feed or imply mainnet activation.
 
@@ -159,7 +161,7 @@ For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK ve
 
 The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
 
-The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source, not protocol activation authority. It is useful for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, KRC20 token metadata/market data, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
+The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source, not protocol activation authority. It is useful for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
 
 For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
 
@@ -229,7 +231,7 @@ For Kaspa Explained this means:
 - Pinpoint feedback is exact-defect input first, not rollback permission. If a reader or the user flags one malformed arrow, cramped label, weird glyph, typo, copy line, or spacing bug, identify and repair that element before changing unrelated parts. This does not mean hold back on quality: when the task is a broader cleanup or redesign, keep improving the surface after the defect is fixed.
 - Every section should support a reader job: understand, compare, verify, build carefully, search, or correct a claim.
 - Shared patterns should behave consistently: route cards, source cards, status chips, comparison tables, app-path ladders, search results, drawers, command blocks, and footer links.
-- Status states stay distinct: live mainnet, ecosystem-live, targeted upgrade, testnet-only, roadmap, research, source-needed, stale-check-needed, and unknown.
+- Status states stay distinct: live mainnet, targeted upgrade, testnet-only, roadmap, research, source-needed, stale-check-needed, wrong, unsupported, and unknown.
 - Long source titles, URLs, page labels, protocol terms, and dates must wrap cleanly on mobile.
 - Tables belong where comparison or source evidence is the job. Beginner-facing pages should explain the plain action before dense grids.
 - Search and source-pack docs need useful routing back to source/status pages and must not become source authority.
@@ -326,7 +328,7 @@ The `start-here.html` and `crypto-from-zero.html` pages are the true zero-start 
 
 The `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `coin-atlas.html`, `tradeoff-map.html`, `analyze-any-coin.html`, and `crypto-history.html` pages are the market and context layer. They should explain valuation, categories, token necessity, launch design, actors, incentives, scams, and design constraints without becoming investment advice or price prediction.
 
-The `reality-check.html` page is the crypto-native product judgment layer. It should help readers test pitches against concrete users, jobs, liquidity, wallet/signing flow, current-status labels, evidence, failure modes, and day-two behavior. Field studies of Solana, Colosseum, and other active ecosystems are useful comparison inputs, but they are not Kaspa activation evidence and should not become "copy Solana" advice.
+The `reality-check.html` page is the crypto-native product judgment layer. It should help readers test pitches against concrete users, jobs, liquidity, wallet/signing flow, current-status labels, evidence, failure modes, and day-two behavior. It should not become a directory of other chains, app projects, hackathons, or market programs.
 
 Core frame:
 
@@ -344,7 +346,7 @@ Core frame:
 
 Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, Crescendo 10 BPS, and the base RTD framing are live enough to describe as Kaspa's present value proposition: real-time Bitcoin-style PoW settlement, censorship-resistance goals, and a broader case than fast payments alone. The May 8, 2026 Kaspa Daily Yonatan Q&A makes this sharper: Base of Liquidity is positioning context, generic payments are not the whole adoption strategy, and product development plus visible on-chain activity matter. Toccata, covenants, Silverscript, ZK foundations, sequencing commitments, and vProgs groundwork are the near-term implementation track. vProgs and native DeFi are roadmap architecture. DAGKnight, app-level miner attestation incentives, oracle/TangVM flows, and coordination-market applications remain research or architecture work unless future primary sources confirm activation or shipped software.
 
-KRC20/KRC721 nuance: KRC token and NFT-style standards belong in the ecosystem-live lane, not the core-protocol-live lane. They can be described as practical tooling for issued tokens, coupons, event credits, access passes, membership objects, rewards, and collectibles when wallet/indexer support exists. State that required deploy/mint gas fees are miner fees, not a proof that every wallet or frontend is fee-free. Always state that the issuer or application still controls redemption logic, metadata quality, user support, compliance, refunds, and real-world enforcement.
+App/project nuance: do not turn app standards, wallets, frontends, or marketing into Kaspa L1 status copy. If the L1 fact matters, cite transaction payload docs, accepted-transaction docs, public node/API evidence, or miner fee/reward evidence. Otherwise, leave it out.
 
 The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page. The homepage should stay a human-first router: three primary actions, four main reader paths, one short status boundary, a compact app-layer preview, and a clear handoff to the source/context stack.
 
@@ -407,7 +409,7 @@ Do not use stale team pages, recycled handle lists, or contributor pages to infe
 
 External-source rule: credit outside sources by name and link near the relevant claim or through `sources.html`. Do not copy external articles into the site. Paraphrase, synthesize, and point readers to the original source.
 
-Kaspa.com Learn Kaspa status: treat the article set as a useful third-party learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Recheck it before relying on it for newly changed concepts. Do not plaster this source across the main pages or use it as the primary authority for status claims.
+Kaspa.com Learn Kaspa status: treat the article set as a useful learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Recheck it before relying on it for newly changed concepts. Do not plaster this source across the main pages or use it as the primary authority for status claims.
 
 The May 2026 Kaspa.com Smart Contracts article is useful because it separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
 

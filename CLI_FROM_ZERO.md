@@ -27,7 +27,7 @@ cargo --version
 Use the site to separate claim types:
 
 - Mainnet live: current Kaspa network behavior such as proof of work, UTXO accounting, GHOSTDAG, and the current blockDAG era.
-- Ecosystem live: wallets, tools, KRC-style tokens/NFTs, explorers, and indexers that exist around Kaspa.
+- Mainnet tools: wallets, explorers, indexers, APIs, and receipt workflows that exist around live Kaspa transactions.
 - Testnet only: TN12 covenant/proof experiments and other non-mainnet validation work.
 - Targeted or roadmap: planned protocol/application work that is not yet live mainnet behavior.
 - Research: ideas, papers, prototypes, or architecture directions that should not be described as shipped.
@@ -231,7 +231,7 @@ public Kaspa resources:
 - `builder-guide.html` links to Kaspa.org Build, official Kaspa docs, Rusty
   Kaspa releases, WASM examples, accepted-transaction docs, payload docs, node
   docs, explorers, and testnet resources.
-- `status.html` says which claims are live, ecosystem-live, targeted, roadmap,
+- `status.html` says which claims are live, testnet-only, targeted, roadmap,
   or research.
 - Official mainnet work should start from public Kaspa wallet, node, SDK, and
   explorer documentation. TN12 covenant commands are testnet practice, not a

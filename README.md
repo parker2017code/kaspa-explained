@@ -51,7 +51,7 @@ Do not point `www` to the repository name.
 
 ## Source discipline
 
-Use primary or near-primary sources first. Status-sensitive claims should be anchored in code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
+Use first-party sources first for L1 and status-sensitive claims: kaspanet GitHub repositories, releases, KIPs, Kaspa.org, docs.kaspa.org, public Kaspa API/node readings, and research papers. Core technical posts can explain rationale, but they do not replace release, KIP, node, or activation evidence.
 
 Use these files instead of turning the README into the source guide:
 
@@ -78,9 +78,9 @@ Use the public site itself for the page map:
 
 - `index.html` routes readers by audience and knowledge level.
 - `what-is-kaspa.html` answers the highest-intent beginner search directly.
-- `kaspa-claims-checker.html` is the shareable live / ecosystem / targeted / roadmap / research reference.
+- `kaspa-claims-checker.html` is the shareable live / testnet / targeted / roadmap / research reference.
 - `toccata-status.html` tracks Toccata status and safe wording.
-- `status.html` separates live, ecosystem-live, targeted, roadmap, and research claims.
+- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims.
 - `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
 - `build-this-now.html` turns the builder loop into short practical recipes.
@@ -155,8 +155,11 @@ licensed under MIT. See `LICENSE.md`.
 Do not flatten everything into "live."
 
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
-- Ecosystem live: KRC20 tokens and KRC721-style NFTs through ecosystem tooling, wallets, indexers, metadata, and APIs. Required deploy/mint gas fees are miner fees, while wallets or frontends may charge separately. Useful for tokens, coupons, event credits, rewards, access passes, and collectibles, but not native Kaspa smart contracts or Toccata/vProgs activation.
-- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release scheduled Testnet-10 activation at DAA score 467,579,632, and a May 18, 2026 API check showed Testnet-10 virtual DAA above that score. Treat this as testnet evidence until mainnet activation is confirmed by primary sources.
+- Volatile facts: do not add values that can change in seconds, minutes, or hours unless they are free, source-backed, and read from a current API or live node/API script. If the fact is not important to Kaspa L1 status, omit it.
+- App/project catalogs are out of scope for status updates unless the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners.
+- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release scheduled Testnet-10 activation at DAA score 467,579,632, and a May 20, 2026 API check showed Testnet-10 virtual DAA 469,381,698. Treat this as testnet evidence until mainnet activation is confirmed by primary sources.
+- May 20 L1 snapshot: public REST checks showed `kaspa-mainnet`, virtual DAA 438,800,479, 10,971,285 blocks, about 27.45 billion KAS from the supply endpoint, and 2.75 KAS per block. Recheck exact values before quoting.
+- Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
 

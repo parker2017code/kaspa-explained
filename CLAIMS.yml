@@ -1,4 +1,4 @@
-last_checked: 2026-05-18
+last_checked: 2026-05-20
 recheck_after: 2026-06-05
 claims:
   proof_of_work:
@@ -20,6 +20,21 @@ claims:
     forbidden_copy:
       - 10 BPS gives automatic 10x finality
       - Kaspa mainnet payments are instantly final
+  l1_status_snapshot_2026_05_20:
+    status: measurement_sensitive
+    recheck_after: 2026-06-05
+    summary: A May 20, 2026 12:54 PM CDT L1 status check showed the public Kaspa REST API on kaspa-mainnet, virtual DAA score 438,800,479, 10,971,285 blocks, 2.75 KAS block reward, and about 27.45 billion KAS from the public supply endpoint. Treat these as time-stamped network readings, not timeless constants.
+    source: https://api.kaspa.org/info/blockdag
+    forbidden_copy:
+      - May 20 snapshot values are permanent
+      - A public REST API reading is stronger than node or release evidence
+  emission_schedule_may_2026:
+    status: live_design
+    summary: Kaspa's emission schedule steps down monthly. The official schedule shows 27.5 KAS per second beginning May 8, 2026, then 25.9565436 KAS per second beginning June 7, 2026, and 24.49971475 KAS per second beginning July 7, 2026. With the 10 BPS mainnet, the current API block reward is 2.75 KAS per block. Do not describe July 2026 as a one-time emission cliff.
+    source: https://kaspa.org/wp-content/uploads/2022/09/KASPA-EMISSION-SCHEDULE.pdf
+    forbidden_copy:
+      - Kaspa has a July 2026 emission cliff
+      - July 2026 suddenly stops Kaspa issuance
   tps_and_speed_context:
     status: measurement_sensitive
     recheck_after: 2026-07-01
@@ -62,30 +77,30 @@ claims:
     forbidden_copy:
       - Coordination markets are live on Kaspa
       - Staghunt is production-ready on Kaspa
-  krc20_krc721:
-    status: ecosystem_live
+  app_project_claims:
+    status: builder_guardrail
     recheck_after: 2026-07-01
-    summary: KRC20 tokens and KRC721-style NFTs can be issued, transferred, displayed, and indexed through ecosystem tooling around data written to Kaspa. Required deploy/mint gas fees are described as miner fees, while wallets or frontends may charge separately. KRC standards are useful for practical token, coupon, access-pass, event-credit, reward, collectible, and proof-of-attendance workflows, but they are not native Kaspa smart contracts, Toccata activation, mature DeFi, or vProgs.
-    source: https://docs-kasplex.gitbook.io/krc20/
+    summary: App/project claims are not L1 protocol-status evidence. Mention them only when the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners. Otherwise, leave them out.
+    source: https://docs.kaspa.org/integrate/transaction-payload
     forbidden_copy:
-      - KRC20 is native Kaspa smart contracts
-      - KRC721 is native Kaspa smart contracts
-      - KRC tokens prove Toccata is live
-      - KRC wallets never charge fees
+      - App activity proves Toccata is live
+      - Project tooling proves native Kaspa smart contracts are live
+      - A wallet or frontend feature is protocol activation evidence
   toccata:
     status: targeted
     recheck_after: 2026-06-05
-    summary: Toccata is a targeted hard-fork track with a public June 5-20, 2026 mainnet window. Kaspa.org Build describes it as live on TN12 ahead of mainnet activation. The Rusty Kaspa tn10-toc2 pre-release scheduled a Testnet-10 Toccata hard-fork activation point for May 18, 2026 at 16:00 UTC, DAA score 467,579,632; the Testnet-10 REST API later showed virtual DAA above that activation score. This is testnet activation evidence, not mainnet activation.
+    summary: Toccata is a targeted L1 hard-fork track with a public June 5-20, 2026 mainnet window. Kaspa.org Build describes it as live on TN12 ahead of mainnet activation. The Rusty Kaspa tn10-toc2 pre-release scheduled a Testnet-10 Toccata hard-fork activation point for May 18, 2026 at 16:00 UTC, DAA score 467,579,632; a May 20, 2026 check of the Testnet-10 REST API still showed virtual DAA above that activation score. The relevant KIP PRs for KIP-16, KIP-17, KIP-20, and KIP-21 were still open in GitHub checks on May 20. This is testnet and proposal evidence, not mainnet activation.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2
     forbidden_copy:
       - Toccata is live
       - TN12 covenant evidence proves mainnet activation
       - TN10 activation proves mainnet activation
       - tn10-toc2 is a mainnet release
+      - Toccata KIPs are merged and activated
   tn10_toccata_activation_test:
     status: testnet_only
     recheck_after: 2026-06-05
-    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. A May 18, 2026 check of the Testnet-10 REST API showed virtual DAA above that activation score. Use it as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
+    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. A May 20, 2026 check of the Testnet-10 REST API showed virtual DAA 469,381,698, above that activation score. Use it as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2
     forbidden_copy:
       - TN10 activation proves mainnet activation

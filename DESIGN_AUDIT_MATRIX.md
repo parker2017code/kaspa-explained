@@ -61,7 +61,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 |---|---|---|
 | User intent | Code follows the reader jobs: understand, compare, verify, build carefully, search, or correct a claim. | Every new section should have one reader action and one next link. |
 | Components | Treat route cards, source cards, status chips, app-path ladders, search results, tables, drawers, and command blocks as reusable patterns. | Each pattern needs default, hover/focus, empty, error/unavailable, and long-content behavior where applicable. |
-| State management | Keep live, ecosystem-live, targeted, roadmap, research, testnet-only, source-needed, and stale-check-needed distinct. | Do not flatten status lanes into generic "coming soon" or "available" language. |
+| State management | Keep live, testnet-only, targeted, roadmap, research, source-needed, stale-check-needed, wrong, and unsupported distinct. | Do not flatten status lanes into generic "coming soon" or "available" language. |
 | Content variability | Long source names, dates, protocol terms, URLs, and examples must wrap without breaking cards or mobile layout. | Test with long headings, long links, and 390px mobile width. |
 | Responsive behavior | Mobile pages need a clear reader path. Tables need mobile-specific treatment when width becomes a problem. | Tables need cards, wrappers, or drawers when they are too wide. |
 | Accessibility | Use semantic HTML, logical headings, real labels, visible focus, source links with clear text, and status wording beyond color. | Search, nav, theme toggle, diagrams, and drawers must remain keyboard-usable. |
@@ -76,7 +76,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Principle | Kaspa Explained application | Required behavior |
 |---|---|---|
 | Problem before solution | Start from the reader question, claim status, source dependency, or route job. | Do not add copy, pages, or visuals until the user action and status boundary are clear. |
-| Correctness before cleverness | Plain sourced wording beats clever protocol slogans. | Keep live, ecosystem-live, targeted, roadmap, research, and testnet evidence distinct. |
+| Correctness before cleverness | Plain sourced wording beats clever protocol slogans. | Keep live, targeted, roadmap, research, and testnet evidence distinct. |
 | Security and trust default | Source-sensitive claims and wallet/custody implications carry risk. | Verify drift-prone facts and avoid implying product support that does not exist. |
 | Tests as specs | Site checks encode the public contract. | Update checks when metadata, navigation, source/status wording, search, route structure, or layout behavior changes. |
 | Failure design | No-results, unavailable, broken link, stale status, and mobile overflow are real states. | Give the reader a clear next action instead of an empty or broken surface. |

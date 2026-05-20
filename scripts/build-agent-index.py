@@ -120,9 +120,9 @@ def build_index():
     reference_files = [read_reference_file(path) for path in REFERENCE_FILES]
     return {
         "name": "Kaspa Explained Agent Index",
-        "version": "2026-05-18",
+        "version": "2026-05-20",
         "domain": DOMAIN,
-        "scope": "Read-only Kaspa Explained and Kaspa ecosystem retrieval. Do not use as a generic crypto search index.",
+        "scope": "Read-only Kaspa Explained L1/status retrieval. Do not use as a generic crypto search index.",
         "recommendedEntryPoints": {
             "humans": f"{DOMAIN}/ai-guidance",
             "agents": f"{DOMAIN}/agent-index.json",
@@ -132,7 +132,7 @@ def build_index():
         },
         "agentUse": [
             "Search page text and reference files for Kaspa-specific questions.",
-            "Keep live mainnet, ecosystem-live, testnet, targeted, roadmap, research, and unsupported claims separate.",
+            "Keep live mainnet, testnet, targeted, roadmap, research, wrong, unsupported, and out-of-scope claims separate.",
             "Cite the canonical page URL near each claim.",
             "Use primary sources linked from the page before treating status-sensitive claims as current.",
             "Do not provide price predictions or investment advice.",

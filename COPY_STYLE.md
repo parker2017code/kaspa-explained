@@ -52,7 +52,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 
 - `Kaspa is a live Proof-of-Work blockDAG that uses GHOSTDAG to order parallel blocks into one payment history.`
 - `Fast inclusion is different from instant finality.`
-- `KRC tooling is real ecosystem tooling around Kaspa data; it is not native L1 smart contracts.`
+- `App/project activity is not L1 activation evidence unless the claim is specifically about L1 transaction data, accepted transactions, or miner fees.`
 - `TN12 evidence is useful builder evidence; it is not mainnet activation.`
 - `Toccata is a targeted hard-fork track until release and activation evidence prove otherwise.`
 - `vProgs are later app architecture, not a live app ecosystem.`
