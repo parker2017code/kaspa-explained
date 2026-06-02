@@ -120,7 +120,7 @@ def build_index():
     reference_files = [read_reference_file(path) for path in REFERENCE_FILES]
     return {
         "name": "Kaspa Explained Agent Index",
-        "version": "2026-05-20",
+        "version": "2026-06-02",
         "domain": DOMAIN,
         "scope": "Read-only Kaspa Explained L1/status retrieval. Do not use as a generic crypto search index.",
         "recommendedEntryPoints": {

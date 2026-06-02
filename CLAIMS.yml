@@ -1,4 +1,4 @@
-last_checked: 2026-05-20
+last_checked: 2026-06-02
 recheck_after: 2026-06-05
 claims:
   proof_of_work:
@@ -20,13 +20,13 @@ claims:
     forbidden_copy:
       - 10 BPS gives automatic 10x finality
       - Kaspa mainnet payments are instantly final
-  l1_status_snapshot_2026_05_20:
+  l1_status_snapshot_2026_06_02:
     status: measurement_sensitive
     recheck_after: 2026-06-05
-    summary: A May 20, 2026 12:54 PM CDT L1 status check showed the public Kaspa REST API on kaspa-mainnet, virtual DAA score 438,800,479, 10,971,285 blocks, 2.75 KAS block reward, and about 27.45 billion KAS from the public supply endpoint. Treat these as time-stamped network readings, not timeless constants.
+    summary: A June 2, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet, virtual DAA score 449,675,496, 26,167,933 blocks, 2.75 KAS block reward, and about 27.48 billion KAS from the public supply endpoint. Treat these as time-stamped network readings, not timeless constants.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
-      - May 20 snapshot values are permanent
+      - June 2 snapshot values are permanent
       - A public REST API reading is stronger than node or release evidence
   emission_schedule_may_2026:
     status: live_design
@@ -80,7 +80,7 @@ claims:
   app_project_claims:
     status: builder_guardrail
     recheck_after: 2026-07-01
-    summary: App/project claims are not L1 protocol-status evidence. Mention them only when the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners. Otherwise, leave them out.
+    summary: App/project claims are not L1 protocol-status evidence. Igra/Kaskad-style L2 or ecosystem app launches can be useful ecosystem context, but they do not prove native Kaspa L1 smart contracts, Toccata mainnet activation, or mature Kaspa-native DeFi. Mention app projects only when the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners. Otherwise, leave them out.
     source: https://docs.kaspa.org/integrate/transaction-payload
     forbidden_copy:
       - App activity proves Toccata is live
@@ -89,27 +89,28 @@ claims:
   toccata:
     status: targeted
     recheck_after: 2026-06-05
-    summary: Toccata is a targeted L1 hard-fork track with a public June 5-20, 2026 mainnet window. Kaspa.org Build describes it as live on TN12 ahead of mainnet activation. The Rusty Kaspa tn10-toc2 pre-release scheduled a Testnet-10 Toccata hard-fork activation point for May 18, 2026 at 16:00 UTC, DAA score 467,579,632; a May 20, 2026 check of the Testnet-10 REST API still showed virtual DAA above that activation score. The relevant KIP PRs for KIP-16, KIP-17, KIP-20, and KIP-21 were still open in GitHub checks on May 20. This is testnet and proposal evidence, not mainnet activation.
-    source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2
+    summary: Toccata is a targeted L1 hard-fork track with a public June 5-20, 2026 mainnet window. Kaspa.org Build describes it as live on TN12 ahead of mainnet activation. Rusty Kaspa's tn10-toc2 pre-release scheduled the first Testnet-10 Toccata activation point for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled a final TN10 Toccata ZK hardening layer for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A June 2, 2026 TN10 REST check showed virtual DAA 480,274,326. KIP-16, KIP-20, and KIP-21 are merged and listed as implemented and activated in TN10; KIP-17 remains open. This is testnet and proposal/release evidence, not mainnet activation.
+    source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3
     forbidden_copy:
       - Toccata is live
       - TN12 covenant evidence proves mainnet activation
       - TN10 activation proves mainnet activation
       - tn10-toc2 is a mainnet release
-      - Toccata KIPs are merged and activated
+      - merged TN10 KIPs prove mainnet activation
   tn10_toccata_activation_test:
     status: testnet_only
     recheck_after: 2026-06-05
-    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. A May 20, 2026 check of the Testnet-10 REST API showed virtual DAA 469,381,698, above that activation score. Use it as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
-    source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2
+    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A June 2, 2026 check of the Testnet-10 REST API showed virtual DAA 480,274,326, above both scores. Use this as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
+    source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3
     forbidden_copy:
       - TN10 activation proves mainnet activation
       - Testnet-10 Toccata means mainnet Toccata is live
       - tn10-toc2 is a mainnet release
+      - tn10-toc3 is a mainnet release
       - TN10 passed the activation score, so Toccata is live on mainnet
   tn12_covenant_evidence:
     status: testnet_only
-    recheck_after: 2026-06-01
+    recheck_after: 2026-06-05
     summary: >
       The TN12 covenant lab has accepted proof transactions for vault recovery,
       vault delayed withdrawal, assurance release/refund, escrow release/refund/cancel,
@@ -163,12 +164,13 @@ claims:
   native_defi:
     status: roadmap
     recheck_after: 2026-07-01
-    summary: Native Kaspa DeFi depends on future Kaspa-native programmability foundations and useful app tooling; it is not live today. Do not describe the pending L1 path as Ethereum-style or EVM-compatible execution unless a primary source adds that support.
+    summary: Native Kaspa L1 DeFi depends on future Kaspa-native programmability foundations and useful app tooling; it is not live today. Kaskad/Igra-style L2 lending can be described as ecosystem or L2 DeFi context, but it is not evidence that native Kaspa L1 DeFi, Toccata mainnet, or vProgs are live. Do not describe the pending L1 path as Ethereum-style or EVM-compatible execution unless a primary source adds that support.
     source: https://kaspaexplained.com/why-kaspa-matters
     forbidden_copy:
       - Native DeFi is live
       - A mature live Kaspa-native app ecosystem already exists
       - Kaspa has live EVM-compatible L1 contracts
+      - Kaskad proves native Kaspa L1 DeFi is live
       - Kaspa is waiting for Ethereum-style L1 smart contracts
       - Ethereum-style native app execution is planned on L1
       - live EVM-style L1 execution
