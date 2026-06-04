@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa Covenants Explained: Spend Rules for UTXO Apps | Kaspa Explained</title>
+  <meta name="description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/kaspa-covenants-explained">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
+  <meta property="og:description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/kaspa-covenants-explained">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
+  <meta name="twitter:description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-06-04">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Kaspa Covenants Explained: Spend Rules for UTXO Apps",
+    "url": "https://kaspaexplained.com/kaspa-covenants-explained",
+    "dateModified": "2026-06-04",
+    "description": "Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.",
+    "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Kaspa covenants?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Kaspa covenants are targeted spending rules that can restrict how a UTXO is spent next. Product examples include vaults, budgets, escrow, controlled assets, and threshold funding rules."}
+      },
+      {
+        "@type": "Question",
+        "name": "Are Kaspa covenants live on mainnet?",
+        "acceptedAnswer": {"@type": "Answer", "text": "They should be treated as Toccata-targeted until mainnet activation evidence exists. Use status labels when discussing covenant demos, testnet artifacts, or future app ideas."}
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260604-founder-funnel">
+  <script defer src="nav.js?v=20260514-clean"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here">Start</a>
+        <a href="/overview">Overview</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/toccata-status">Toccata live?</a>
+        <a href="/builder-guide">Build</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/sources">Sources</a>
+        <a href="/search">Search</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/status">What is live?</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="status-page app-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Kaspa builder funnel</p>
+      <h1>Kaspa covenants explained.</h1>
+      <p class="lead">Kaspa covenants are spending rules that can restrict how a coin or UTXO may be spent next. In product terms, they can make a budget, vault, asset, escrow, or commitment follow visible rules.</p>
+      <p class="fit-note"><strong>Status boundary:</strong> use <a href="/status">current status</a> and <a href="/toccata-status">Toccata status</a> before calling any app-layer capability live.</p>
+    </section>
+
+    <section class="section">
+      <h2>Kaspa covenants in plain language.</h2>
+      <p>A normal wallet signature says who may spend. A covenant-style rule can also inspect the spending transaction and require the next output to preserve a rule, route funds, limit value, or carry state forward.</p>
+      <p>That turns some app logic into a money rule users can inspect. It does not remove wallet UX, audits, liquidity, legal risk, or oracle design.</p>
+    </section>
+
+    <section class="section">
+      <h2>Examples.</h2>
+      <div class="reference-grid">
+        <article><h3>Budget that cannot drain at once</h3><p>A treasury output can require each next spend to leave enough value or respect a cap.</p></article>
+        <article><h3>Withdrawal with recovery</h3><p>A vault can route normal withdrawal and emergency recovery through different paths.</p></article>
+        <article><h3>Asset with controller</h3><p>A ticket or pass can require an issuer or controller input before transfer or redemption.</p></article>
+        <article><h3>Commitment with refund</h3><p>A funding rule can release only after a threshold, then refund if the threshold is missed.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Covenant evidence checklist.</h2>
+      <ol class="learning-steps">
+        <li><strong>User job.</strong> <span>Say what the user does before naming the opcode or compiler.</span></li>
+        <li><strong>Accepted path.</strong> <span>Show the accepted transaction or test artifact.</span></li>
+        <li><strong>Rejected path.</strong> <span>Show what fails when the rule is violated.</span></li>
+        <li><strong>Status label.</strong> <span>Say live, testnet, targeted, roadmap, or research.</span></li>
+        <li><strong>Missing product work.</strong> <span>Name wallet signing, audits, indexing, support, liquidity, and custody gaps.</span></li>
+      </ol>
+    </section>
+
+    <section class="next-step section">
+      <h2>Use covenants for bounded rules.</h2>
+      <div class="actions">
+        <a class="button primary" href="/kaspa-toccata-use-cases">Toccata use cases</a>
+        <a class="button" href="/builder-guide">Builder guide</a>
+        <a class="button" href="/builder-fit-survey">Submit covenant idea</a>
+        <a class="button" href="/reality-check">Reality check</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav aria-label="Footer">
+        <a href="/status">Status</a>
+        <a href="/sources">Sources</a>
+        <a href="/ai-guidance">Ask AI</a>
+        <a href="/search">Search</a>
+        <a href="/about">About</a>
+        <a href="/claims-reference">Claims</a>
+        <a href="https://github.com/parker2017code/kaspa-explained">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

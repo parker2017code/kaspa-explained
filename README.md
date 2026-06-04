@@ -84,6 +84,14 @@ Use the public site itself for the page map:
 - `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
 - `build-this-now.html` turns the builder loop into short practical recipes.
+- `build-on-kaspa.html` is the founder, builder, supporter, and matching-board funnel.
+- `builder-fit-survey.html` is the local founder/app idea intake survey.
+- `investor-supporter-survey.html` is the local supporter intake survey.
+- `kaspa-for-fintech-founders.html`, `kaspa-app-ideas.html`,
+  `kaspa-toccata-use-cases.html`, `kaspa-covenants-explained.html`,
+  `kaspa-vs-solana-builders.html`, `kaspa-vs-ethereum-apps.html`,
+  `kaspa-coordination-markets.html`, `kaspa-hackathon-challenges.html`, and
+  `kaspa-founder-investor-matching.html` are the founder/search page cluster.
 - `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
 - `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
@@ -103,6 +111,8 @@ The `scripts/` folder contains the local and CI validation gates:
 - `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and checks the primary nav against `site-manifest.json`.
 - `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
 - `scripts/check-rendered-layout.sh` optionally opens key pages in Chromium at mobile and desktop sizes and verifies screenshots can be rendered.
+
+Internal setup notes live under `.github/notes/`.
 
 Run the static check before publishing:
 
@@ -157,7 +167,7 @@ Do not flatten everything into "live."
 - Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
 - Volatile facts: do not add values that can change in seconds, minutes, or hours unless they are free, source-backed, and read from a current API or live node/API script. If the fact is not important to Kaspa L1 status, omit it.
 - App/project catalogs are out of scope for status updates unless the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners.
-- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release scheduled the first Testnet-10 activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; and a June 2, 2026 API check showed Testnet-10 virtual DAA 480,274,326. Treat this as testnet evidence until mainnet activation is confirmed by primary sources.
+- Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa's `tn10-toc2` pre-release scheduled the first Testnet-10 activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; and a June 4, 2026 API check showed Testnet-10 virtual DAA 482,210,917. Raw KIP checks on June 4 listed KIP-16, KIP-17, KIP-20, and KIP-21 as implemented and activated in TN10. Treat this as testnet evidence until mainnet activation is confirmed by primary sources.
 - June 2 L1 snapshot: public REST checks showed `kaspa-mainnet`, virtual DAA 449,675,496, 26,167,933 blocks, about 27.48 billion KAS from the supply endpoint, and 2.75 KAS per block. Recheck exact values before quoting.
 - Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
@@ -179,10 +189,10 @@ Builder verification rule: accepted app state starts after accepted transaction 
 
 ## Local check
 
-This is a plain static site. A quick smoke check is enough:
+This is a plain static site. Use the clean-URL server for local preview so links such as `/status` resolve to `status.html`:
 
 ```sh
-python3 -m http.server 4173
+python3 scripts/serve-local.py --port 8783
 ```
 
-Then open `http://127.0.0.1:4173/`.
+Then open `http://127.0.0.1:8783/`.

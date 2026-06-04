@@ -103,6 +103,8 @@ Keep these audience paths visible:
 - Want mechanics: use `knowledge-map.html`.
 - Want the app/design thesis: use `application-layer.html`.
 - Need to test whether a crypto product pitch is real or fake: use `reality-check.html`.
+- Need founder or supporter intake: use `build-on-kaspa.html`, `builder-fit-survey.html`, `investor-supporter-survey.html`, and `kaspa-founder-investor-matching.html`.
+- Need founder/search pages: use `kaspa-for-fintech-founders.html`, `kaspa-app-ideas.html`, `kaspa-toccata-use-cases.html`, `kaspa-covenants-explained.html`, `kaspa-vs-solana-builders.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, and `kaspa-hackathon-challenges.html`.
 - Need a fair skeptical page to link in debates: use `skeptical-case.html`.
 - Want builder-specific programmability choices: use `builder-guide.html`.
 - Want short current builder recipes: use `build-this-now.html`.
@@ -131,7 +133,7 @@ Volatile-data rule: do not add facts that can change in seconds, minutes, or hou
 
 App/project catalogs should not be public status lanes on this site. Mention an app only when the L1 fact itself matters, such as transaction payload behavior, accepted-transaction evidence, or fees paid to miners. Otherwise, leave it out and keep Kaspa Explained focused on first-party L1 protocol status.
 
-The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-06-02, the useful public evidence is: Rusty Kaspa `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 480,274,326; KIP-16, KIP-20, and KIP-21 were merged and listed as TN10 activated; KIP-17 remained open; Silverscript/TN12 activity remained testnet polishing and field testing; kaspanet/vprogs April 15 ZK framework progress and rusty-kaspa/dagknight March 22 prototype/refinement activity remained development signals. Do not let this section become a hype feed or imply mainnet activation.
+The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below release or activation evidence. As of 2026-06-04, the useful public evidence is: Rusty Kaspa `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 482,210,917 on June 4; raw KIP files list KIP-16, KIP-17, KIP-20, and KIP-21 as implemented and activated in TN10; Silverscript/TN12 activity remained testnet polishing and field testing; kaspanet/vprogs April 15 ZK framework progress and rusty-kaspa/dagknight March 22 prototype/refinement activity remained development signals. Do not let this section become a hype feed or imply mainnet activation.
 
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
@@ -273,7 +275,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is a targeted mainnet hard-fork track. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 2 API check showed virtual DAA 480,274,326.
+Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is a targeted mainnet hard-fork track. Michael Sutton's April 2026 Toccata outlook is the clearest implementation-context source for the public mainnet activation target of roughly June 5-20, 2026, after the original May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 4 API check showed virtual DAA 482,210,917.
 
 ### Roadmap / Architecture
 
@@ -370,7 +372,7 @@ The Toccata/vProgs capability split should be precise. Toccata gives L1 covenant
 
 Builder tooling belongs in its own lane. The standalone `kaspanet/kaspa-python-sdk` repo and v1.1.0 release show Python integration, virtual-chain access, and UTXO tracking through UtxoProcessor/UtxoContext. Protocol status still comes from node, release, KIP, and activation evidence. TxIndex PR #860 is builder/infrastructure evidence while open; Fast Trusted Relay PR #930 is an infrastructure experiment until merged and released. The redesigned Kaspa.org Build page also makes the infrastructure runway clearer: Rusty Kaspa, WASM SDK, public nodes, community REST APIs, database dumps, KIPs, Silverscript, vProgs, and public R&D channels are builder routes, while production systems still need explicit node, indexer, archival, API-key, rate-limit, and provider-redundancy decisions.
 
-KIP alignment is now a status-sensitive subtopic. As of June 2, 2026, KIP-16, KIP-20, and KIP-21 were merged and listed as implemented and activated in TN10, while KIP-17 remained open. Do not flatten this into finalized mainnet activation until KIP, release, and mainnet activation artifacts agree.
+KIP alignment is now a status-sensitive subtopic. As of June 4, 2026, raw KIP files list KIP-16, KIP-17, KIP-20, and KIP-21 as implemented and activated in TN10. Do not flatten this into finalized mainnet activation until KIP, release, and mainnet activation artifacts agree.
 
 Frame Kaspa as L1-first and shared-sequencer-first: applications add programmability directly against Kaspa L1 primitives, while based-zk systems and future vProgs use Kaspa L1 for sequencing, commitments, settlement, and verification without separate sequencer empires.
 
@@ -523,6 +525,18 @@ Primary public pages:
 - `kaspa-in-one-screen.html` - compact shareable Kaspa thesis with live/not-live/status-labeled framing.
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
+- `build-on-kaspa.html` - founder and builder funnel that routes app ideas through fit questions, surveys, and matching-board paths.
+- `builder-fit-survey.html` - local browser survey for founder/app idea intake. It creates a copyable summary and does not submit data from GitHub Pages.
+- `investor-supporter-survey.html` - local browser survey for supporter, mentor, technical-review, and capital-interest intake.
+- `kaspa-for-fintech-founders.html` - founder-facing fintech fit page for payments, receipts, custody, escrow, and treasury rules.
+- `kaspa-app-ideas.html` - app idea map by status lane.
+- `kaspa-toccata-use-cases.html` - Toccata use-case page for covenants, ZK hooks, sequencing commitments, and mainnet evidence boundaries.
+- `kaspa-covenants-explained.html` - plain-language covenant page for UTXO spend rules.
+- `kaspa-vs-solana-builders.html` - builder comparison page for Kaspa and Solana.
+- `kaspa-vs-ethereum-apps.html` - app comparison page for Kaspa and Ethereum.
+- `kaspa-coordination-markets.html` - coordination-market page for conditional commitments and assurance funding.
+- `kaspa-hackathon-challenges.html` - hackathon challenge page for AI agents, wallets, receipts, and vaults.
+- `kaspa-founder-investor-matching.html` - matching-board model for opt-in public cards and consent-based intros.
 - `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
 - `builder-evidence.html` - proof bridge page that points readers to TN12 evidence and keeps app ideas separate from proof.
 - `overview.html` - 90-second overview for first-time readers.

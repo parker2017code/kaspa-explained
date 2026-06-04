@@ -11,7 +11,10 @@ extract_links() {
 }
 
 extract_links index.html > "$tmp_dir/index.links"
-mapfile -t pages < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"] + ["404.html"]))')
+pages=()
+while IFS= read -r page; do
+  pages+=("$page")
+done < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"] + ["404.html"]))')
 python3 - "$tmp_dir/index.links" <<'PY'
 import json
 import sys

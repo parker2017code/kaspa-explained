@@ -2,8 +2,15 @@
 set -euo pipefail
 
 domain="$(python3 -c 'import json; print(json.load(open("site-manifest.json"))["domain"])')"
-mapfile -t expected_pages < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"]))')
-mapfile -t expected_files < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["requiredFiles"]))')
+expected_pages=()
+while IFS= read -r page; do
+  expected_pages+=("$page")
+done < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"]))')
+
+expected_files=()
+while IFS= read -r file; do
+  expected_files+=("$file")
+done < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["requiredFiles"]))')
 
 for file in "${expected_pages[@]}" "${expected_files[@]}"; do
   [[ -f "$file" ]] || { echo "Missing $file" >&2; exit 1; }
@@ -230,7 +237,10 @@ for check in "${claim_checks[@]}"; do
   fi
 done
 
-mapfile -t forbidden_patterns < <(
+forbidden_patterns=()
+while IFS= read -r pattern; do
+  forbidden_patterns+=("$pattern")
+done < <(
   awk '
     /forbidden_copy:/ { in_forbidden = 1; next }
     in_forbidden && /^[[:space:]]+- / {
