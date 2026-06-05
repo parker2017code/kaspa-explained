@@ -423,6 +423,18 @@ function auditHeaderControls() {
   if (!Number.isFinite(mobileToggleFontSize) || mobileToggleFontSize < 12) {
     fail("mobile .theme-toggle text should remain readable");
   }
+
+  const headerHoverBlocks = [
+    ...css.matchAll(/\n\.nav-links a:hover,\s*\n\.nav-cta:hover(?:,\s*\n\.theme-toggle:hover,\s*\n\.nav-menu-button:hover)?\s*\{([\s\S]*?)\n\}/g),
+    ...css.matchAll(/\n\.theme-toggle:hover\s*\{([\s\S]*?)\n\}/g),
+    ...css.matchAll(/\n\.nav-menu-button:hover\s*\{([\s\S]*?)\n\}/g),
+  ];
+
+  for (const match of headerHoverBlocks) {
+    if (/transform\s*:\s*translateY\(\s*-\s*[\d.]+px\s*\)/.test(match[1])) {
+      fail("sticky header hover controls must not translate upward; the pill can clip against the viewport top");
+    }
+  }
 }
 
 auditKaspaBrandTokens();
