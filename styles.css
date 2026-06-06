@@ -5439,3 +5439,393 @@ h2 {
     border-radius: 16px;
   }
 }
+
+/*
+  Glass refinement layer.
+  Keeps Kaspa Explained content and claim boundaries intact while making the
+  homepage and shared surfaces feel more deliberate and spatial.
+*/
+
+:root {
+  --panel: rgba(18, 28, 26, .68);
+  --panel-strong: rgba(12, 22, 20, .9);
+  --glass-surface: rgba(18, 28, 26, .68);
+  --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .028) 36%, transparent 68%, rgba(var(--green-rgb), .05));
+  --glass-edge: color-mix(in srgb, rgba(221, 249, 244, .24), var(--line));
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, .12);
+  --glass-rim: inset 0 0 0 1px rgba(255, 255, 255, .045);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .24), 0 28px 80px rgba(0, 0, 0, .24);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, .2), 0 16px 42px rgba(0, 0, 0, .18);
+}
+
+:root[data-theme="light"] {
+  --panel: rgba(255, 255, 255, .72);
+  --panel-strong: rgba(250, 255, 254, .94);
+  --glass-surface: rgba(255, 255, 255, .72);
+  --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .2) 34%, transparent 68%, rgba(var(--green-rgb), .045));
+  --glass-edge: color-mix(in srgb, rgba(19, 88, 80, .24), var(--line));
+  --glass-inset: inset 0 1px 0 rgba(255, 255, 255, .82);
+  --glass-rim: inset 0 0 0 1px rgba(60, 64, 67, .04);
+}
+
+body {
+  background:
+    linear-gradient(125deg, rgba(var(--green-rgb), .1), transparent 28%, rgba(var(--cyan-rgb), .08) 74%, transparent),
+    linear-gradient(180deg, #070d0c 0%, var(--bg) 42rem, var(--bg-2) 100%);
+}
+
+body::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 15rem),
+    linear-gradient(90deg, rgba(var(--green-rgb), .025) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(var(--cyan-rgb), .018) 1px, transparent 1px);
+  background-size: auto, 52px 52px, 52px 52px;
+  opacity: .18;
+}
+
+.site-header {
+  width: min(1240px, calc(100% - 32px));
+  margin: 12px auto 0;
+  border: 1px solid var(--glass-edge);
+  border-radius: 999px;
+  background:
+    var(--glass-sheen),
+    color-mix(in srgb, var(--panel-strong) 78%, transparent);
+  box-shadow: var(--glass-inset), var(--glass-rim), 0 18px 48px rgba(0, 0, 0, .22);
+  overflow: visible;
+}
+
+.nav {
+  width: 100%;
+  min-height: 64px;
+  padding-inline: 18px;
+}
+
+.brand-mark {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(var(--green-rgb), .18);
+}
+
+.nav-links a,
+.theme-toggle,
+.nav-cta,
+.nav-menu-button,
+.button,
+.segmented-control button,
+.pitch-ai-actions button {
+  border-radius: 999px;
+}
+
+.nav-links a {
+  border-color: transparent;
+  background: transparent;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--green) 34%, transparent);
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  text-decoration: none;
+}
+
+.hero {
+  position: relative;
+  align-items: stretch;
+  padding-top: clamp(3.4rem, 6vw, 5.4rem);
+}
+
+.hero::before {
+  inset: 1rem 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(221, 249, 244, .24), transparent);
+  opacity: 1;
+}
+
+.hero-copy,
+.hero-visual,
+.section:not(.prose-section),
+.hero-signal-grid a,
+.orientation-grid a,
+.hero-status a,
+.demo-workspace,
+.demo-status-card,
+.route-grid .route-card-link,
+.source-card,
+.search-card,
+.compare-cards article,
+.api-command-card,
+.ai-prompt-card,
+.pitch-input-card,
+.pitch-output-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-edge);
+  background:
+    var(--glass-sheen),
+    var(--glass-surface);
+  box-shadow: var(--glass-inset), var(--glass-rim), var(--shadow-soft);
+  backdrop-filter: blur(20px) saturate(138%);
+  -webkit-backdrop-filter: blur(20px) saturate(138%);
+}
+
+.hero-copy,
+.hero-visual {
+  border-radius: 28px;
+  box-shadow: var(--glass-inset), var(--glass-rim), var(--shadow);
+}
+
+.hero-copy::after,
+.hero-visual::before,
+.section:not(.prose-section)::before,
+.orientation-grid a::before,
+.hero-signal-grid a::before,
+.route-grid .route-card-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, .09), transparent 28%, rgba(var(--green-rgb), .035) 84%);
+  opacity: .72;
+}
+
+.hero-copy > *,
+.hero-visual > *,
+.section:not(.prose-section) > *,
+.orientation-grid a > *,
+.hero-signal-grid a > *,
+.route-grid .route-card-link > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.lead {
+  color: color-mix(in srgb, var(--muted) 86%, var(--text));
+}
+
+.hero-signal-grid a,
+.orientation-grid a,
+.route-grid .route-card-link {
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.hero-signal-grid a:hover,
+.orientation-grid a:hover,
+.route-grid .route-card-link:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--green) 46%, var(--glass-edge));
+  box-shadow: var(--glass-inset), var(--glass-rim), var(--shadow);
+  text-decoration: none;
+}
+
+.visual-readout div,
+.demo-status-card {
+  border-color: color-mix(in srgb, var(--green) 28%, var(--line));
+  background: color-mix(in srgb, var(--green) 9%, var(--glass-surface));
+}
+
+.button.primary,
+.nav-cta {
+  background: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--cyan) 42%, var(--green)));
+  color: var(--ink);
+  box-shadow: var(--glass-inset), 0 12px 28px rgba(var(--green-rgb), .18);
+}
+
+.button:hover,
+.theme-toggle:hover,
+.nav-cta:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    width: 100%;
+    margin-top: 0;
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  .hero-copy,
+  .hero-visual {
+    border-radius: 22px;
+  }
+}
+
+/* Spacing repair: glass borders need more inner air than flat surfaces. */
+.section:not(.prose-section) {
+  padding: clamp(28px, 4vw, 52px);
+}
+
+.hero-copy,
+.hero-visual {
+  padding: clamp(24px, 4vw, 48px);
+}
+
+.quick-grid article,
+.summary-grid article,
+.status-grid article,
+.overview-grid article,
+.compare-cards article,
+.fit-grid article,
+.lane-grid article,
+.check-grid article,
+.one-screen-grid article,
+.must-read-grid article,
+.insight-grid article,
+.route-grid .route-card-link,
+.hero-signal-grid a,
+.orientation-grid a,
+.hero-status a,
+.source-card,
+.search-card,
+.api-command-card,
+.ai-prompt-card,
+.pitch-input-card,
+.pitch-output-card,
+.demo-status-card {
+  padding: clamp(18px, 2.4vw, 28px);
+}
+
+.status-legend,
+.jump-list,
+.visual-caption,
+.visual-readout {
+  padding: 12px;
+  gap: 10px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  line-height: 1.25;
+}
+
+.status-legend .legend-label {
+  padding-inline: 2px 6px;
+}
+
+.fit-note,
+.verified-note,
+.source-more,
+.plain-bridge,
+.api-command-card-note {
+  padding: 14px 16px;
+}
+
+.table-wrap {
+  padding: clamp(10px, 2vw, 16px);
+}
+
+.reality-table th,
+.reality-table td {
+  padding: 16px 18px;
+}
+
+.section:not(.prose-section) > * + *,
+.quick-grid article > * + *,
+.summary-grid article > * + *,
+.status-grid article > * + *,
+.route-grid .route-card-link > * + *,
+.hero-signal-grid a > * + *,
+.orientation-grid a > * + * {
+  margin-top: 0.72rem;
+}
+
+@media (max-width: 760px) {
+  .section:not(.prose-section) {
+    padding: 22px;
+  }
+
+  .hero-copy,
+  .hero-visual {
+    padding: 22px;
+  }
+
+  .quick-grid article,
+  .summary-grid article,
+  .status-grid article,
+  .overview-grid article,
+  .compare-cards article,
+  .fit-grid article,
+  .lane-grid article,
+  .check-grid article,
+  .one-screen-grid article,
+  .must-read-grid article,
+  .insight-grid article,
+  .route-grid .route-card-link,
+  .hero-signal-grid a,
+  .orientation-grid a,
+  .hero-status a,
+  .source-card,
+  .search-card,
+  .api-command-card,
+  .ai-prompt-card,
+  .pitch-input-card,
+  .pitch-output-card,
+  .demo-status-card {
+    padding: 18px;
+  }
+
+  .status-legend,
+  .jump-list {
+    padding: 10px;
+  }
+
+  .status-pill {
+    min-height: 28px;
+    padding: 5px 9px;
+  }
+
+  .table-wrap {
+    padding: 10px;
+  }
+
+  .reality-table td {
+    padding: 10px 0;
+  }
+}
+
+/* Mobile nav repair: make the opened menu a real clickable panel. */
+@media (max-width: 760px) {
+  .site-header,
+  .nav {
+    overflow: visible;
+  }
+
+  .nav {
+    position: relative;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    position: absolute;
+    z-index: 60;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: flex !important;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--glass-edge);
+    border-radius: 18px;
+    background:
+      var(--glass-sheen),
+      color-mix(in srgb, var(--panel-strong) 92%, transparent);
+    box-shadow: var(--glass-inset), var(--glass-rim), var(--shadow-soft);
+    pointer-events: auto;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links a {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    width: auto;
+    min-width: max-content;
+    pointer-events: auto;
+  }
+}
