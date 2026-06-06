@@ -1364,7 +1364,7 @@ li,
   overflow-wrap: anywhere;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 760px) {
   .transaction-path .transaction-rail {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -1797,6 +1797,11 @@ li,
   color: var(--green);
 }
 
+.toccata-console.is-complete {
+  border-color: rgba(var(--green-rgb), .5);
+  box-shadow: var(--glass-inset), 0 28px 90px rgba(var(--green-rgb), .16);
+}
+
 .toccata-dag {
   position: relative;
   display: grid;
@@ -1858,6 +1863,49 @@ li,
   margin: 0;
   color: var(--muted);
   overflow-wrap: anywhere;
+}
+
+.toccata-passport {
+  flex: 1 0 100%;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(var(--green-rgb), .36);
+  border-radius: 18px;
+  margin-top: 4px;
+  padding: 15px;
+  background:
+    linear-gradient(135deg, rgba(var(--green-rgb), .16), transparent 58%),
+    rgba(255, 255, 255, .052);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.toccata-passport[hidden] {
+  display: none;
+}
+
+.toccata-passport span {
+  color: var(--green);
+}
+
+.toccata-passport strong {
+  color: var(--text);
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+}
+
+.toccata-passport p {
+  color: var(--muted);
+}
+
+.toccata-passport button {
+  justify-self: start;
+  min-height: 38px;
+  border: 1px solid rgba(var(--green-rgb), .42);
+  border-radius: 999px;
+  padding: 8px 13px;
+  color: var(--bg);
+  background: var(--green);
+  font-weight: 850;
+  cursor: pointer;
 }
 
 .toccata-play-card {
@@ -1981,6 +2029,44 @@ li,
   transform: translateY(-1px);
 }
 
+.toccata-signal-map a[data-hunt-state="found"] {
+  border-color: rgba(var(--green-rgb), .5);
+  background:
+    linear-gradient(135deg, rgba(var(--green-rgb), .18), transparent 64%),
+    rgba(255, 255, 255, .055);
+}
+
+.toccata-signal-map a[data-hunt-state="next"] {
+  border-color: rgba(var(--cyan-rgb), .62);
+  box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .12), 0 14px 34px rgba(var(--cyan-rgb), .1);
+}
+
+.toccata-signal-map a[data-hunt-state="locked"] {
+  opacity: .62;
+}
+
+.toccata-signal-map a[data-hunt-state]::after {
+  content: attr(data-hunt-state);
+  justify-self: start;
+  border: 1px solid rgba(var(--green-rgb), .24);
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toccata-signal-map a[data-hunt-state="found"]::after {
+  color: var(--green);
+}
+
+.toccata-signal-map a[data-hunt-state="next"]::after {
+  color: var(--cyan);
+  border-color: rgba(var(--cyan-rgb), .36);
+}
+
 .toccata-signal-map span {
   color: var(--green);
   font-size: .72rem;
@@ -2002,7 +2088,7 @@ li,
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
-  z-index: 25;
+  z-index: 1010;
   width: 44px;
   height: 44px;
   display: grid;
@@ -2022,6 +2108,7 @@ li,
   border-radius: 999px;
   background: var(--green);
   box-shadow: 0 8px 20px rgba(var(--green-rgb), .18);
+  animation: toccataSignalPulse 2.8s ease-in-out infinite;
 }
 
 .toccata-hunt-marker.is-found span {
@@ -2029,11 +2116,30 @@ li,
   box-shadow: 0 8px 20px rgba(var(--cyan-rgb), .18);
 }
 
+.toccata-hunt-marker::after {
+  content: "signal";
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid rgba(var(--green-rgb), .24);
+  border-radius: 999px;
+  padding: 5px 8px;
+  color: var(--green);
+  background: color-mix(in srgb, var(--panel-strong) 92%, transparent);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .9;
+  pointer-events: none;
+}
+
 .toccata-hunt-toast {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
   bottom: calc(max(16px, env(safe-area-inset-bottom)) + 56px);
-  z-index: 26;
+  z-index: 1011;
   width: min(22rem, calc(100vw - 32px));
   display: grid;
   gap: 4px;
@@ -2070,11 +2176,23 @@ li,
   line-height: 1.35;
 }
 
+@keyframes toccataSignalPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(var(--green-rgb), .18);
+  }
+
+  50% {
+    transform: scale(1.16);
+    box-shadow: 0 10px 28px rgba(var(--green-rgb), .3);
+  }
+}
+
 .toccata-hunt-burst {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 80;
+  z-index: 1012;
   width: 1px;
   height: 1px;
   pointer-events: none;
@@ -2108,7 +2226,7 @@ li,
   position: fixed;
   left: 50%;
   bottom: max(26px, env(safe-area-inset-bottom));
-  z-index: 81;
+  z-index: 1013;
   width: min(31rem, calc(100vw - 32px));
   display: grid;
   gap: 4px;
@@ -3954,6 +4072,7 @@ blockquote {
   padding: clamp(18px, 2vw, 24px);
   color: var(--text);
   overflow: visible;
+  overflow-wrap: anywhere;
 }
 
 .path-grid a:hover {
@@ -3965,18 +4084,22 @@ blockquote {
 .path-grid span,
 .use-source-grid strong {
   display: block;
+  max-width: 100%;
   margin-bottom: 10px;
   color: var(--green);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .11em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .path-grid strong {
   display: block;
+  max-width: 100%;
   font-size: 20px;
   line-height: 1.16;
+  overflow-wrap: anywhere;
 }
 
 .path-grid p,
@@ -7532,5 +7655,42 @@ main > :first-child {
     .route-card-grid
   ) > :is(a, article, .route-card-link) {
     grid-column: auto !important;
+  }
+}
+
+/* Final orphan-row guardrails: exact rendered checks should never leave one card alone. */
+@media (min-width: 760px) {
+  :is(.transaction-rail, .toccata-signal-map):has(> :nth-child(5):last-child) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  :is(.transaction-rail, .toccata-signal-map):has(> :nth-child(5):last-child) > * {
+    grid-column: span 2 !important;
+  }
+
+  :is(.transaction-rail, .toccata-signal-map):has(> :nth-child(5):last-child) > :nth-last-child(-n + 2) {
+    grid-column: span 3 !important;
+  }
+
+  .live-metric-grid:has(> :nth-child(4):last-child) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  :is(.summary-grid, .api-command-grid):has(> :nth-child(7):last-child) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  :is(.summary-grid, .api-command-grid):has(> :nth-child(7):last-child) > * {
+    grid-column: span 3 !important;
+  }
+
+  :is(.summary-grid, .api-command-grid):has(> :nth-child(7):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4 !important;
+  }
+}
+
+@media (min-width: 760px) and (max-width: 980px) {
+  .live-metric-grid:has(> :nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

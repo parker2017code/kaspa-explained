@@ -76,16 +76,18 @@
   });
 
   const huntSignals = [
-    { path: "/", label: "Signal 1 found", clue: "You found the countdown. Toccata has a target, and the chase starts here.", next: "Next stop: Status." },
-    { path: "/status", label: "Signal 2 found", clue: "You found the timing check. Scheduled is exciting; live still needs the network to reach the target.", next: "Next stop: Toccata." },
-    { path: "/toccata-status", label: "Signal 3 found", clue: "You found the release note. The target is DAA 474,165,565.", next: "Next stop: Build on Kaspa." },
-    { path: "/build-on-kaspa", label: "Signal 4 found", clue: "You found the builder spark. The point is useful apps with fewer central chokepoints.", next: "Next stop: App ideas." },
-    { path: "/kaspa-app-ideas", label: "Signal 5 found", clue: "You found the idea board: vaults, escrow, assets, receipts, safer payouts, and stranger things.", next: "Next stop: Claims." },
-    { path: "/kaspa-claims-checker", label: "Signal 6 found", clue: "You found the hype filter. Good excitement survives clear wording.", next: "Next stop: Sources." },
-    { path: "/sources", label: "Signal 7 found", clue: "You found the last signal. The trail is complete.", next: "Return home for the final chord." }
+    { path: "/", name: "Countdown", label: "Signal 1 found", clue: "You found the countdown. Toccata has a target, and the chase starts here.", next: "Next stop: Toccata Status." },
+    { path: "/toccata-status", name: "Toccata Status", label: "Signal 2 found", clue: "You found the number to watch: DAA 474,165,565.", next: "Next stop: Build on Kaspa." },
+    { path: "/build-on-kaspa", name: "Build on Kaspa", label: "Signal 3 found", clue: "You found the builder spark: useful apps with fewer central chokepoints.", next: "Next stop: App Ideas." },
+    { path: "/kaspa-app-ideas", name: "App Ideas", label: "Signal 4 found", clue: "You found the idea board: vaults, escrow, assets, receipts, safer payouts, and stranger things.", next: "Next stop: Sources." },
+    { path: "/sources", name: "Sources", label: "Signal 5 found", clue: "You found the receipts. The hunt is complete.", next: "Return home to unlock your Toccata passport." }
   ];
   const huntKey = "kaspa-toccata-chase-signals";
-  const rewardText = "Final chord: Toccata targets DAA 474,165,565. The chase is complete. Now go build something worth the countdown.";
+  const validHuntPaths = new Set(huntSignals.map((signal) => signal.path));
+  const rewardText = "Passport unlocked: you found why Toccata matters. More app rules can move from private servers toward Kaspa-native validation.";
+  const victoryLine = "I finished the Kaspa Explained Toccata hunt: countdown, DAA target, builder spark, app ideas, and receipts. Toccata is about moving more app rules toward Kaspa-native validation.";
+
+  const signalIndex = (path) => huntSignals.findIndex((signal) => signal.path === path);
 
   const showHuntBurst = (x, y, isFinal) => {
     const burst = document.createElement("div");
@@ -109,7 +111,7 @@
     finale.className = "toccata-finale";
     finale.setAttribute("role", "status");
     finale.setAttribute("aria-live", "polite");
-    finale.innerHTML = "<strong>Toccata chord found</strong><span>Seven signals down. The countdown is on.</span>";
+    finale.innerHTML = "<strong>Toccata passport unlocked</strong><span>Five signals down. You found the builder spark.</span>";
     document.body.appendChild(finale);
     window.setTimeout(() => finale.dataset.show = "true", 20);
     window.setTimeout(() => {
@@ -121,7 +123,7 @@
   const readHuntState = () => {
     try {
       const parsed = JSON.parse(localStorage.getItem(huntKey) || "[]");
-      return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
+      return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string" && validHuntPaths.has(item)) : [];
     } catch (error) {
       return [];
     }
@@ -138,13 +140,23 @@
   const renderHuntProgress = () => {
     const progressEl = document.getElementById("toccata-hunt-progress");
     const rewardEl = document.getElementById("toccata-hunt-reward");
-    if (!progressEl || !rewardEl) return;
+    const passportEl = document.getElementById("toccata-passport");
     const state = readHuntState();
     const foundCount = Math.min(state.length, huntSignals.length);
     const isComplete = foundCount >= huntSignals.length;
-    progressEl.textContent = `${foundCount} / ${huntSignals.length} signals found`;
-    rewardEl.textContent = isComplete ? rewardText : "Find the quiet signals around the site. The final note appears here.";
+    if (progressEl) progressEl.textContent = `${foundCount} / ${huntSignals.length} signals found`;
+    if (rewardEl) rewardEl.textContent = isComplete ? rewardText : "Find five quiet signals around the site. The reward unlocks here.";
+    if (passportEl) passportEl.hidden = !isComplete;
     document.querySelector(".toccata-console")?.classList.toggle("is-complete", isComplete);
+    document.querySelectorAll(".toccata-signal-map a").forEach((link) => {
+      const url = new URL(link.getAttribute("href"), window.location.origin);
+      const path = url.pathname === "/" ? "/" : url.pathname.replace(/\/$/, "");
+      const index = signalIndex(path);
+      const isFound = state.includes(path);
+      const isNext = !isComplete && index === foundCount;
+      link.dataset.huntState = isFound ? "found" : isNext ? "next" : "locked";
+      link.setAttribute("aria-label", `${link.textContent.trim().replace(/\s+/g, " ")} - ${isFound ? "found" : isNext ? "next" : "locked"}`);
+    });
   };
 
   const currentSignal = huntSignals.find((signal) => signal.path === currentPath);
@@ -165,11 +177,25 @@
 
     marker.addEventListener("click", (event) => {
       const state = readHuntState();
-      const nextState = state.includes(currentSignal.path) ? state : [...state, currentSignal.path];
+      const currentIndex = signalIndex(currentSignal.path);
+      const expectedSignal = huntSignals[state.length];
+      const alreadyFound = state.includes(currentSignal.path);
+      const isExpected = currentIndex === state.length;
+      if (!alreadyFound && !isExpected) {
+        toast.innerHTML = `<strong>${currentSignal.name} is later</strong><span>This hunt unlocks in order so it stays easy to follow.</span><small>Next stop: ${expectedSignal?.name || "return home"}.</small>`;
+        toast.dataset.show = "true";
+        showHuntBurst(event.clientX, event.clientY, false);
+        window.clearTimeout(marker._huntTimer);
+        marker._huntTimer = window.setTimeout(() => {
+          toast.dataset.show = "false";
+        }, 4800);
+        return;
+      }
+      const nextState = alreadyFound ? state : [...state, currentSignal.path];
       const isFinal = nextState.length >= huntSignals.length && state.length < huntSignals.length;
       writeHuntState(nextState);
       marker.classList.add("is-found");
-      toast.innerHTML = `<strong>${currentSignal.label}</strong><span>${currentSignal.clue}</span><small>${currentSignal.next}</small>`;
+      toast.innerHTML = `<strong>${alreadyFound ? "Already found" : currentSignal.label}</strong><span>${currentSignal.clue}</span><small>${isFinal ? "Return home for your passport." : currentSignal.next}</small>`;
       toast.dataset.show = "true";
       showHuntBurst(event.clientX, event.clientY, isFinal);
       if (isFinal) showFinale();
@@ -186,5 +212,37 @@
   }
 
   renderHuntProgress();
+  const copyPassport = document.getElementById("toccata-passport-copy");
+  const copyTextFallback = () => {
+    const existing = document.getElementById("toccata-passport-copy-fallback");
+    const textarea = existing || document.createElement("textarea");
+    textarea.id = "toccata-passport-copy-fallback";
+    textarea.value = victoryLine;
+    textarea.readOnly = true;
+    textarea.setAttribute("aria-label", "Toccata victory line");
+    textarea.className = "toccata-copy-fallback";
+    if (!existing) {
+      copyPassport.insertAdjacentElement("afterend", textarea);
+    }
+    textarea.hidden = false;
+    textarea.focus();
+    textarea.select();
+    try {
+      const copied = document.execCommand("copy");
+      copyPassport.textContent = copied ? "Copied" : "Select text";
+      if (copied) textarea.hidden = true;
+    } catch (error) {
+      copyPassport.textContent = "Select text";
+    }
+  };
+  copyPassport?.addEventListener("click", async () => {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(victoryLine);
+      copyPassport.textContent = "Copied";
+    } catch (error) {
+      copyTextFallback();
+    }
+  });
   window.addEventListener("storage", renderHuntProgress);
 })();

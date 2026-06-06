@@ -25,6 +25,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - Use plain verbs: use, test, measure, compare, route, decide, fund, ship, reject, delay, fix, verify.
 - Use technical terms when they help precision or search, then translate them into what someone can inspect, build, measure, approve, or avoid.
 - Keep judgment visible when evidence supports it.
+- Avoid defensive hedging. Use one clear status or timing label where the reader needs it, then write the product idea confidently. Hedge only when the uncertainty changes what a reader should do.
 
 ## Cut Or Rewrite
 
@@ -57,6 +58,19 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - `Toccata is a targeted hard-fork track until release and activation evidence prove otherwise.`
 - `vProgs are later app architecture, not a live app ecosystem.`
 - `DAGKnight is research/future consensus direction, not current mainnet behavior.`
+
+## Hedge Test
+
+If a sentence uses `may`, `might`, `could`, `should`, `would`, `until`, `not live`, `needs evidence`, or `pending`, ask whether the caveat changes the reader's action. If not, rewrite it as a direct statement or move the status caveat to one nearby label.
+
+Use the direct claim when the source or practical pattern is grounded:
+
+| Weak | Better |
+| --- | --- |
+| `If Toccata lands as intended, it could open the door to new products.` | `Toccata opens the door to a new generation of Kaspa products.` |
+| `This may allow developers to build real-time financial applications at scale.` | `This gives developers a path to real-time financial applications at scale.` |
+| `This could be an interesting prototype if reviewers think the approach is valid.` | `This prototype shows delayed recovery, pledge release, timeout refund, escrow release, and mutual cancel flows on testnet.` |
+| `This might be reasonable, but there are risks and it depends.` | `Yes, that is reasonable. The boundary is X.` |
 
 ## Final Test
 
