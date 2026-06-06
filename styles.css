@@ -7620,7 +7620,7 @@ body::before {
 /* Final interaction/layout guardrails.
    Visible cards define their own clickable area; blank grid space stays inert. */
 body {
-  padding-top: 96px;
+  padding-top: var(--site-header-clearance, 132px);
 }
 
 .skip-link {
@@ -7769,4 +7769,13 @@ main > :first-child {
   .reality-table td:nth-child(2) {
     overflow-wrap: normal;
   }
+}
+
+/* Final anchor-position guard: hash links must clear the fixed pill nav. */
+html {
+  scroll-padding-top: var(--site-header-clearance, 132px);
+}
+
+:where([id]) {
+  scroll-margin-top: var(--site-header-clearance, 132px);
 }

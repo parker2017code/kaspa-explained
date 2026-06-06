@@ -56,9 +56,25 @@
     }
   });
 
+  const updateHeaderClearance = () => {
+    const header = document.querySelector(".site-header");
+    if (!header) return;
+    const rect = header.getBoundingClientRect();
+    const clearance = Math.ceil(rect.bottom + 28);
+    document.documentElement.style.setProperty("--site-header-clearance", `${clearance}px`);
+  };
+
+  updateHeaderClearance();
+  window.addEventListener("resize", updateHeaderClearance);
+  window.addEventListener("orientationchange", updateHeaderClearance);
+  window.addEventListener("hashchange", updateHeaderClearance);
+  window.addEventListener("load", updateHeaderClearance);
+  document.fonts?.ready?.then(updateHeaderClearance).catch(() => {});
+
   const setOpen = (isOpen) => {
     nav.dataset.open = isOpen ? "true" : "false";
     button.setAttribute("aria-expanded", String(isOpen));
+    requestAnimationFrame(updateHeaderClearance);
   };
 
   setOpen(false);
