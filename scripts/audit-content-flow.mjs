@@ -89,7 +89,8 @@ function auditBuildHub() {
     "Product ideas",
     "Toccata ideas",
     "Compare",
-    "Submit",
+    "Evidence",
+    "Reality check",
   ];
 
   for (const label of flowLabels) {

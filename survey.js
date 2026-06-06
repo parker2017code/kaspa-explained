@@ -1,6 +1,7 @@
 (function () {
   const roots = Array.from(document.querySelectorAll("[data-fit-survey]"));
   if (!roots.length) return;
+  const reviewEmail = "parker2017@gmail.com";
 
   function fieldLabel(input) {
     const label = input.closest("label");
@@ -59,7 +60,8 @@
     grouped.forEach((values, name) => {
       lines.push(`- ${name}: ${values.join(", ")}`);
     });
-    lines.push("", "Consent check before sharing: confirm public-card permission and contact rule.");
+    lines.push("", "Review route: send by email for private approval before any public card or intro.");
+    lines.push("Consent check before sharing: confirm public-card permission and contact rule.");
     lines.push("Status check before posting: use https://kaspaexplained.com/status and https://kaspaexplained.com/toccata-status.");
     return lines.join("\n");
   }
@@ -83,7 +85,7 @@
       summaryEl.value = summary;
       if (mailLink) {
         const subject = root.dataset.surveyType === "supporter" ? "Kaspa supporter survey" : "Kaspa builder fit submission";
-        mailLink.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
+        mailLink.href = `mailto:${reviewEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
       }
     }
 

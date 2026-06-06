@@ -111,13 +111,13 @@
     finale.className = "toccata-finale";
     finale.setAttribute("role", "status");
     finale.setAttribute("aria-live", "polite");
-    finale.innerHTML = "<strong>Toccata passport unlocked</strong><span>Five signals down. You found the builder spark.</span>";
+    finale.innerHTML = "<strong>Toccata passport unlocked</strong><span>Five signals down. You found the builder spark.</span><a href=\"/\">Go home</a>";
     document.body.appendChild(finale);
     window.setTimeout(() => finale.dataset.show = "true", 20);
     window.setTimeout(() => {
       finale.dataset.show = "false";
       window.setTimeout(() => finale.remove(), 280);
-    }, 4200);
+    }, 9000);
   };
 
   const readHuntState = () => {
@@ -195,7 +195,7 @@
       const isFinal = nextState.length >= huntSignals.length && state.length < huntSignals.length;
       writeHuntState(nextState);
       marker.classList.add("is-found");
-      toast.innerHTML = `<strong>${alreadyFound ? "Already found" : currentSignal.label}</strong><span>${currentSignal.clue}</span><small>${isFinal ? "Return home for your passport." : currentSignal.next}</small>`;
+      toast.innerHTML = `<strong>${alreadyFound ? "Already found" : currentSignal.label}</strong><span>${currentSignal.clue}</span>${isFinal ? "<a href=\"/\">Go home for your passport</a>" : `<small>${currentSignal.next}</small>`}`;
       toast.dataset.show = "true";
       showHuntBurst(event.clientX, event.clientY, isFinal);
       if (isFinal) showFinale();
