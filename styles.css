@@ -2470,7 +2470,7 @@ li,
 .route-grid .route-card-link,
 .reality-table th,
 .reality-table td {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
 }
 
@@ -2895,6 +2895,23 @@ blockquote {
 .reality-table td:first-child {
   color: var(--green);
   font-weight: 900;
+}
+
+.reality-table th:first-child,
+.reality-table td:first-child,
+.reality-table th:nth-child(2),
+.reality-table td:nth-child(2) {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.reality-table td:first-child {
+  min-width: 12rem;
+}
+
+.reality-table td:nth-child(2):has(.status-pill),
+.reality-table th:nth-child(2) {
+  min-width: 9rem;
 }
 
 .check-grid {
@@ -7715,5 +7732,41 @@ main > :first-child {
 @media (min-width: 760px) and (max-width: 980px) {
   .live-metric-grid:has(> :nth-child(4):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Final table readability guard: keep row labels and status pills from
+   splitting mid-word while allowing long descriptions and links to wrap. */
+.reality-table th:first-child,
+.reality-table td:first-child,
+.reality-table th:nth-child(2),
+.reality-table td:nth-child(2),
+.reality-table .status-pill {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.reality-table td:first-child {
+  min-width: 12rem;
+  white-space: normal;
+}
+
+.reality-table td:nth-child(2):has(.status-pill),
+.reality-table th:nth-child(2) {
+  min-width: 9rem;
+}
+
+.reality-table .status-pill {
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .reality-table td:first-child {
+    min-width: 0;
+  }
+
+  .reality-table td:first-child,
+  .reality-table td:nth-child(2) {
+    overflow-wrap: normal;
   }
 }
