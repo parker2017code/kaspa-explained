@@ -310,6 +310,19 @@ function auditCardPadding() {
     fail(".section should keep generous internal padding");
   }
 
+  const originProofBlock = declarationBlock(/\n\.origin-proof-strip\s*\{([\s\S]*?)\n\}/, "origin proof strip spacing");
+  if (declarationValue(originProofBlock, "padding-top")) {
+    fail(".origin-proof-strip needs full card padding, not only padding-top");
+  }
+  const originProofPadding = declarationValue(originProofBlock, "padding");
+  if (
+    !/clamp\(18px,\s*3vw,\s*28px\)\s+clamp\(18px,\s*3vw,\s*26px\)\s+clamp\(18px,\s*2\.5vw,\s*24px\)/.test(
+      originProofPadding,
+    )
+  ) {
+    fail(".origin-proof-strip needs enough inline padding to keep mobile text off the border");
+  }
+
   const realityCardBlock = declarationBlock(
     /\n\.reality-grid article,\s*\n\.field-study-grid article\s*\{([\s\S]*?)\n\}/,
     "reality and field-study card spacing",
