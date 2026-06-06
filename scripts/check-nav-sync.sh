@@ -10,7 +10,14 @@ extract_links() {
     | sed -n 's/.*<a href="\([^"]*\)"[^>]*>\([^<]*\)<\/a>.*/\1|\2/p'
 }
 
+extract_footer_links() {
+  local file="$1"
+  sed -n '/<nav class="footer-nav-groups" aria-label="Footer">/,/<\/nav>/p' "$file" \
+    | sed -n 's/.*<a href="\([^"]*\)"[^>]*>\([^<]*\)<\/a>.*/\1|\2/p'
+}
+
 extract_links index.html > "$tmp_dir/index.links"
+extract_footer_links index.html > "$tmp_dir/index.footer-links"
 pages=()
 while IFS= read -r page; do
   pages+=("$page")
@@ -47,6 +54,14 @@ for page in "${pages[@]}"; do
     cat "$tmp_dir/nav.diff" >&2
     exit 1
   fi
+
+  extract_footer_links "$page" > "$tmp_dir/$page.footer-links"
+  if ! diff -u "$tmp_dir/index.footer-links" "$tmp_dir/$page.footer-links" >"$tmp_dir/footer.diff"; then
+    echo "Footer link set differs in $page" >&2
+    cat "$tmp_dir/footer.diff" >&2
+    exit 1
+  fi
 done
 
 echo "Navigation link sets match."
+echo "Footer link sets match."
