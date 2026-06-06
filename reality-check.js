@@ -6,11 +6,9 @@
   const scoreEl = root.querySelector("[data-pitch-score]");
   const verdictEl = root.querySelector("[data-pitch-verdict]");
   const resultsEl = root.querySelector("[data-pitch-results]");
-  const aiLink = root.querySelector("[data-pitch-ai-link]");
   const copyButton = root.querySelector("[data-pitch-copy]");
   const copyStatus = root.querySelector("[data-pitch-copy-status]");
   const sampleButtons = Array.from(root.querySelectorAll("[data-pitch-sample]"));
-  const transferKey = "kaspa-explained-reality-redteam-prompt";
 
   const checks = [
     {
@@ -39,7 +37,7 @@
     },
     {
       id: "status",
-      label: "Status boundary",
+      label: "Status",
       question: "Is it live, ecosystem tooling, testnet, roadmap, or research?",
       terms: ["live", "mainnet", "testnet", "tn12", "toccata", "roadmap", "research", "prototype", "krc", "activation", "release"]
     },
@@ -84,7 +82,6 @@
     const score = results.filter((item) => item.passed).length;
     scoreEl.textContent = hasText ? `${score}/${checks.length}` : "Start";
     verdictEl.textContent = verdict(score, hasText);
-    renderAiLink();
     resultsEl.innerHTML = results.map((item) => {
       const state = hasText ? (item.passed ? "pass" : "miss") : "neutral";
       const label = hasText ? (item.passed ? "Keyword found" : "Not found") : "Question";
@@ -110,13 +107,6 @@
     ].join("\n");
   }
 
-  function renderAiLink() {
-    if (!aiLink) return;
-    const url = new URL("/ai-guidance", window.location.origin);
-    url.searchParams.set("mode", "redteam");
-    aiLink.href = url.pathname + url.search;
-  }
-
   function verdict(score, hasText) {
     if (!hasText) return "Paste a pitch to start.";
     if (score <= 2) return "Keyword scan: few product basics found.";
@@ -125,23 +115,13 @@
     return "Keyword scan: now verify the answers.";
   }
 
-  function savePromptForAi() {
-    try {
-      window.sessionStorage.setItem(transferKey, redTeamPrompt());
-      if (copyStatus) copyStatus.textContent = "Prompt loaded for Ask AI in this browser tab.";
-    } catch (error) {
-      if (copyStatus) copyStatus.textContent = "Open Ask AI and paste the copied prompt if session storage is blocked.";
-    }
-  }
-
   input.addEventListener("input", runChecks);
-  aiLink?.addEventListener("click", savePromptForAi);
   copyButton?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(redTeamPrompt());
       copyStatus.textContent = "Red-team prompt copied.";
     } catch (error) {
-      copyStatus.textContent = "Open Ask AI and paste the pitch if clipboard access is blocked.";
+      copyStatus.textContent = "Copy is blocked. Select the pitch text and copy it manually.";
     }
   });
   sampleButtons.forEach((button) => {

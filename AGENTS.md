@@ -90,6 +90,10 @@
 - Treat AI output as a fast junior contributor. Generated copy, summaries, and code must be reviewed, source-checked, simplified, and run through local gates before commit.
 - Treat design and copy edits as implementation work, not static mockup work. A change should account for user intent, component reuse, responsive behavior, accessibility, performance, source/status drift, and maintenance cost.
 - For public UI changes, verify the relevant component states: default, hover/focus, active/current, empty, loading or unavailable, error, long-content wrapping, and mobile layout.
+- Before any commit that touches layout, run a rendered click-target audit. Blank grid space must not navigate. A link card may be clickable only inside its visible border and padding; row gaps, stretched orphan columns, and empty cells must remain inert.
+- Before publishing layout changes, inspect header behavior after navigation and scroll on desktop and mobile. The pill nav must stay above page content, must not slide off-screen, and must not be covered by hero cards, tables, search panels, or decorative overlays.
+- Keep page starts consistent. Top content should begin at the same visual offset below the sticky header unless a deliberate full-bleed hero explains the exception. Search, overview, status, and article pages should not each invent their own first-section spacing.
+- Status discipline should feel like product labeling, not legal throat-clearing. Use a clear label and one nearby timing note; do not repeat scheduled-versus-live caveats in every paragraph.
 - Keep shared patterns consistent across pages: route cards, status chips, source cards, app-path ladders, search results, drawers, tables, command blocks, and footer links.
 - Use semantic HTML first. Links navigate, buttons act, headings stay ordered, labels remain explicit, focus stays visible, and color is never the only status signal.
 - Do not let long URLs, source titles, protocol terms, or table cells break mobile layout. Move dense material into drawers or lower sections when the first reader path suffers.

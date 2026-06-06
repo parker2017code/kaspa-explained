@@ -86,8 +86,8 @@ function auditBuildHub() {
   const html = read("build-on-kaspa.html");
   const flowLabels = [
     "Founder fit",
-    "Product lane",
-    "Toccata rule",
+    "Product ideas",
+    "Toccata ideas",
     "Compare",
     "Submit",
   ];

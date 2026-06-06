@@ -76,16 +76,16 @@
   });
 
   const huntSignals = [
-    { path: "/", label: "Genesis note", clue: "Start with the activation target, then follow the source trail." },
-    { path: "/status", label: "Status note", clue: "Scheduled is a lane. Activated needs the score and behavior." },
-    { path: "/toccata-status", label: "Release note", clue: "The v2.0.0 release gives the DAA target." },
-    { path: "/build-on-kaspa", label: "Builder note", clue: "The best app ideas name a user before naming a primitive." },
-    { path: "/kaspa-app-ideas", label: "Idea note", clue: "Spend rules matter when they solve a real job." },
-    { path: "/kaspa-claims-checker", label: "Claim note", clue: "Live, testnet, scheduled, roadmap, and research are different claims." },
-    { path: "/sources", label: "Source note", clue: "The final note belongs to the reader who checks primary sources." }
+    { path: "/", label: "Signal 1 found", clue: "You found the countdown. Toccata has a target, and the chase starts here.", next: "Next stop: Status." },
+    { path: "/status", label: "Signal 2 found", clue: "You found the timing check. Scheduled is exciting; live still needs the network to reach the target.", next: "Next stop: Toccata." },
+    { path: "/toccata-status", label: "Signal 3 found", clue: "You found the release note. The target is DAA 474,165,565.", next: "Next stop: Build on Kaspa." },
+    { path: "/build-on-kaspa", label: "Signal 4 found", clue: "You found the builder spark. The point is useful apps with fewer central chokepoints.", next: "Next stop: App ideas." },
+    { path: "/kaspa-app-ideas", label: "Signal 5 found", clue: "You found the idea board: vaults, escrow, assets, receipts, safer payouts, and stranger things.", next: "Next stop: Claims." },
+    { path: "/kaspa-claims-checker", label: "Signal 6 found", clue: "You found the hype filter. Good excitement survives clear wording.", next: "Next stop: Sources." },
+    { path: "/sources", label: "Signal 7 found", clue: "You found the last signal. The trail is complete.", next: "Return home for the final chord." }
   ];
   const huntKey = "kaspa-toccata-chase-signals";
-  const rewardText = "Final note: DAA 474,165,565 is the target. The reward is knowing which claim is real before the timeline argues about it.";
+  const rewardText = "Final chord: Toccata targets DAA 474,165,565. The chase is complete. Now go build something worth the countdown.";
 
   const showHuntBurst = (x, y, isFinal) => {
     const burst = document.createElement("div");
@@ -109,7 +109,7 @@
     finale.className = "toccata-finale";
     finale.setAttribute("role", "status");
     finale.setAttribute("aria-live", "polite");
-    finale.innerHTML = "<strong>Toccata chord found</strong><span>Seven signals checked. Now verify the activation score.</span>";
+    finale.innerHTML = "<strong>Toccata chord found</strong><span>Seven signals down. The countdown is on.</span>";
     document.body.appendChild(finale);
     window.setTimeout(() => finale.dataset.show = "true", 20);
     window.setTimeout(() => {
@@ -169,7 +169,7 @@
       const isFinal = nextState.length >= huntSignals.length && state.length < huntSignals.length;
       writeHuntState(nextState);
       marker.classList.add("is-found");
-      toast.innerHTML = `<strong>${currentSignal.label}</strong><span>${currentSignal.clue}</span>`;
+      toast.innerHTML = `<strong>${currentSignal.label}</strong><span>${currentSignal.clue}</span><small>${currentSignal.next}</small>`;
       toast.dataset.show = "true";
       showHuntBurst(event.clientX, event.clientY, isFinal);
       if (isFinal) showFinale();

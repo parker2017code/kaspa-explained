@@ -1860,6 +1860,144 @@ li,
   overflow-wrap: anywhere;
 }
 
+.toccata-play-card {
+  border: 1px solid var(--line-bright);
+  border-radius: 16px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, .045);
+}
+
+.toccata-play-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--green);
+  font-size: .74rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.toccata-play-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.toccata-audience-lanes,
+.toccata-builder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.toccata-audience-lanes {
+  margin-top: 14px;
+}
+
+.toccata-audience-lanes article,
+.toccata-builder-grid a {
+  min-width: 0;
+  border: 1px solid rgba(var(--green-rgb), .22);
+  border-radius: 16px;
+  padding: 14px;
+  color: var(--text);
+  background: rgba(255, 255, 255, .038);
+  overflow-wrap: anywhere;
+}
+
+.toccata-builder-grid a {
+  min-height: 132px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+}
+
+.toccata-audience-lanes span,
+.toccata-builder-grid span {
+  display: block;
+  color: var(--green);
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.toccata-audience-lanes strong,
+.toccata-builder-grid strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--text);
+  line-height: 1.18;
+}
+
+.toccata-audience-lanes p,
+.toccata-builder-grid small {
+  display: block;
+  margin: 7px 0 0;
+  color: var(--muted);
+  line-height: 1.36;
+}
+
+.toccata-builder-party {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+}
+
+.toccata-signal-map {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  margin-top: 2px;
+  padding-top: clamp(14px, 2.5vw, 22px);
+}
+
+.toccata-signal-map a {
+  min-width: 0;
+  min-height: 118px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  border: 1px solid rgba(var(--green-rgb), .24);
+  border-radius: 16px;
+  padding: 14px;
+  color: var(--text);
+  background:
+    linear-gradient(135deg, rgba(var(--green-rgb), .11), transparent 64%),
+    rgba(255, 255, 255, .038);
+  overflow-wrap: anywhere;
+}
+
+.toccata-signal-map a:hover {
+  border-color: rgba(var(--cyan-rgb), .42);
+  background:
+    linear-gradient(135deg, rgba(var(--cyan-rgb), .12), transparent 64%),
+    rgba(255, 255, 255, .052);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.toccata-signal-map span {
+  color: var(--green);
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.toccata-signal-map strong {
+  color: var(--text);
+  line-height: 1.12;
+}
+
+.toccata-signal-map small {
+  color: var(--muted);
+  line-height: 1.32;
+}
+
 .toccata-hunt-marker {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
@@ -1924,6 +2062,12 @@ li,
 
 .toccata-hunt-toast span {
   color: var(--muted);
+}
+
+.toccata-hunt-toast small {
+  color: var(--cyan);
+  font-weight: 780;
+  line-height: 1.35;
 }
 
 .toccata-hunt-burst {
@@ -7279,5 +7423,114 @@ body::before {
   .toccata-hunt-panel p {
     width: 100%;
     flex-basis: auto;
+  }
+}
+
+/* Final global nav layer: header must stay above every page card while scrolling. */
+.site-header {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1240px, calc(100% - 40px));
+  z-index: 1000;
+  isolation: isolate;
+  border-radius: 24px;
+}
+
+.nav {
+  position: relative;
+  width: 100%;
+  z-index: 1001;
+}
+
+@media (max-width: 700px) {
+  .site-header {
+    position: fixed;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100% - 24px, 1240px);
+  }
+}
+
+/* Final interaction/layout guardrails.
+   Visible cards define their own clickable area; blank grid space stays inert. */
+body {
+  padding-top: 96px;
+}
+
+.skip-link {
+  z-index: 1200;
+}
+
+main {
+  padding-top: clamp(34px, 4vw, 48px);
+}
+
+main > :first-child {
+  margin-top: 0;
+}
+
+.hero {
+  padding-top: 0;
+}
+
+:where(
+  .orientation-grid,
+  .toccata-signal-map,
+  .toccata-builder-grid,
+  .hero-signal-grid,
+  .hero-status,
+  .route-grid,
+  .path-grid,
+  .source-strip,
+  .link-grid,
+  .summary-grid,
+  .compare-cards,
+  .homepage-route-grid,
+  .route-card-grid
+) {
+  align-items: start;
+  grid-auto-rows: auto;
+}
+
+:where(
+  .orientation-grid,
+  .toccata-signal-map,
+  .toccata-builder-grid,
+  .hero-signal-grid,
+  .hero-status,
+  .route-grid,
+  .path-grid,
+  .source-strip,
+  .link-grid,
+  .summary-grid,
+  .compare-cards,
+  .homepage-route-grid,
+  .route-card-grid
+) > :is(a, article, .route-card-link) {
+  align-self: start;
+  height: auto;
+  min-height: 0;
+}
+
+@media (min-width: 900px) {
+  :where(
+    .orientation-grid,
+    .toccata-signal-map,
+    .toccata-builder-grid,
+    .hero-signal-grid,
+    .hero-status,
+    .route-grid,
+    .path-grid,
+    .source-strip,
+    .link-grid,
+    .summary-grid,
+    .compare-cards,
+    .homepage-route-grid,
+    .route-card-grid
+  ) > :is(a, article, .route-card-link) {
+    grid-column: auto !important;
   }
 }
