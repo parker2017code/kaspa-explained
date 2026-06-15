@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Crypto Applications & Kaspa Opportunities | Kaspa Explained">
   <meta name="twitter:description" content="A practical map of crypto use cases and where Kaspa develops its own application layer.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-05">
+  <meta name="dateModified" content="2026-06-15">
   <link rel="stylesheet" href="styles.css?v=20260606-anchor-clearance">
   <script defer src="nav.js?v=20260606-anchor-clearance"></script>
 </head>
@@ -86,7 +86,7 @@
       <h2>Public reader first, builder detail later.</h2>
       <div class="summary-grid">
         <article><span>Normal reader</span><p>Use the first half for app jobs: payments, receipts, Toccata rules, and later app composition.</p></article>
-        <article><span>Builder</span><p>Use <a href="/builder-guide">Builder Guide</a> and <a href="/builder-evidence">Builder Evidence</a> when the question turns into tools, artifacts, and proof.</p></article>
+        <article><span>Builder</span><p>Use <a href="/builder-guide">Builder Guide</a>, <a href="/builder-evidence">Builder Evidence</a>, and <a href="/kaspa-vprogs-explained">vProgs Explained</a> when the question turns into tools, artifacts, and proof.</p></article>
         <article><span>Speculative idea</span><p>Use <a href="/reality-check">Reality Check</a> before turning coordination markets, oracle designs, or RTD-derived ideas into public claims.</p></article>
       </div>
     </section>
@@ -133,13 +133,13 @@
         <article><span>Context</span><strong>Attach receipts</strong><p>App data, invoices, proof links, and replayable rows.</p></article>
         <article><span>Toccata work</span><strong>Constrain spends</strong><p>Vault rules, escrow, caps, refunds, simple controlled assets.</p></article>
         <article><span>Based apps</span><strong>Replay shared state</strong><p>Auctions, coordination, markets, and app-specific state.</p></article>
-        <article><span>Later</span><strong>Compose apps</strong><p>Actions where several app states update together.</p></article>
+        <article><span>Later</span><strong>Compose apps</strong><p><a href="/kaspa-vprogs-explained">vProgs-style actions</a> where several app states update together.</p></article>
       </div>
     </section>
 
     <section id="app-thesis" class="section">
       <h2>The app job.</h2>
-      <p>The application case starts with money users can hold themselves. Then come payment receipts, vault rules, escrow rules, assets, and funding rules. Based apps are the next step when an app needs shared state anchored to Kaspa evidence. Later app programs matter when several apps need one combined action that succeeds or fails together.</p>
+      <p>The application case starts with money users can hold themselves. Then come payment receipts, vault rules, escrow rules, assets, and funding rules. Based apps are the next step when an app needs shared state anchored to Kaspa evidence. <a href="/kaspa-vprogs-explained">Later vProgs</a> matter when several apps need one combined action that succeeds or fails together.</p>
       <p>A good Kaspa app starts with a plain question: does this need self-custodied money, a public ordering record, fast PoW sampling, local UTXO rules, proof-backed execution, or later app-to-app actions? If not, ordinary server state is probably enough.</p>
       <p>If an app depends on an outside fact such as a price, weather event, or another chain, it needs an input rule for that fact before settlement can rely on it.</p>
     </section>
@@ -206,7 +206,7 @@
       <h2>Possible Kaspa versions.</h2>
       <p>Use the short list first: wallets, payment receipts, vaults, escrow, funding rules, simple assets, auctions, market replay, coordination apps, and agent-payment flows.</p>
       <p>A based app is an app whose state is tied back to Kaspa ordering, commitments, proofs, settlement, or exits. It uses ZK when proofs matter, and it can start as accepted transactions plus deterministic replay.</p>
-      <p>Later app programs are the composition path: one user action can update several app states together, with the combined action succeeding or failing as a unit.</p>
+      <p><a href="/kaspa-vprogs-explained">Later app programs</a> are the composition path: one user action can update several app states together, with the combined action succeeding or failing as a unit.</p>
       <details class="source-more">
         <summary>Open pattern translation table</summary>
         <div class="table-wrap">
@@ -222,7 +222,7 @@
               <tr><td>Based app</td><td>A small app-specific state machine anchored to Kaspa ordering, proof checks, settlement, or exits.</td><td>This tests richer execution without pretending the first L1 covenant examples need an L2.</td><td>Prototype lane; based-zk when proofs are needed</td></tr>
               <tr><td>Coordination market</td><td>Prediction, assurance, public-goods, research-bounty, software-funding, and group-action markets.</td><td>A coordination market lets people commit to an action only if enough compatible people also commit. The first useful versions can use transparent commitments, solver output, wallet-reviewed settlement, and replayed evidence.</td><td>Toccata for simple contracts; based-app prototypes for transparent coordination; research for private/atomic markets</td></tr>
               <tr><td>Proof-of-resource market</td><td>Markets for bandwidth, compute, sensing, local infrastructure, or agent work.</td><td>High-frequency PoW and public group-commitment research supports later attestation designs.</td><td>Research / architecture</td></tr>
-              <tr><td>ENS / Farcaster / social graphs</td><td>Identity, handles, reputation, access passes, and portable group membership tied to self-custody.</td><td>The first useful versions are simple access and membership systems.</td><td>Post-Toccata / vProgs</td></tr>
+              <tr><td>ENS / Farcaster / social graphs</td><td>Identity, handles, reputation, access passes, and portable group membership tied to self-custody.</td><td>The first useful versions are simple access and membership systems.</td><td>Post-Toccata / <a href="/kaspa-vprogs-explained">vProgs roadmap</a></td></tr>
               <tr><td>Asset launch rails</td><td>Launch and bonding tools with clearer risk labels, anti-scam defaults, and transparent liquidity paths.</td><td>Cheap creation creates attention markets; the design question is whether they can be less extractive.</td><td>Post-Toccata opportunity</td></tr>
             </tbody>
           </table>
@@ -372,7 +372,7 @@
               <tr><td>MEV-aware ordering or auctions</td><td>Protects users who delegate an if-this-then-that strategy from miners or searchers exploiting the same event signal first.</td><td>Research / design work</td></tr>
               <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments. External-chain or real-world claims still need an anchor such as a light client, finality certificate, accumulated-work view, oracle, reporter set, or dispute process.</td><td>Released and scheduled hard-fork track, not live until activated</td></tr>
               <tr><td>STARK-sized proof support</td><td>Large validity proofs on Kaspa, with block-size and standard-fee tradeoffs to avoid cheap spam.</td><td>TN12 context / mainnet design question</td></tr>
-              <tr><td>Later app programs</td><td>Apps that prove their own logic, share Kaspa ordering, feel cohesive to users, and support atomic app-to-app actions in the later roadmap.</td><td>Roadmap architecture</td></tr>
+              <tr><td>Later app programs</td><td><a href="/kaspa-vprogs-explained">Apps that prove their own logic</a>, share Kaspa ordering, feel cohesive to users, and support atomic app-to-app actions in the later roadmap.</td><td>Roadmap architecture</td></tr>
               <tr><td>DAGKnight / higher BPS RTD</td><td>Denser real-time majority sampling and stronger internet-round-trip attestation confidence.</td><td>Research / future upgrade direction</td></tr>
             </tbody>
           </table>
@@ -421,7 +421,7 @@
               <tr><td>Now: L2 ecosystem apps</td><td>Igra/Kaskad-style EVM L2 lending and bridge-adjacent app activity, labeled as ecosystem/L2 context.</td><td>Readers can see app activity without mistaking it for native Kaspa L1 DeFi, Toccata mainnet activation, or vProgs.</td></tr>
               <tr><td>Toccata</td><td>Covenant examples, vaults, simple assets, escrow, assurance contracts, UTXO state-machine demos, STARK/zk proof experiments, developer docs.</td><td>Builders can make small useful apps without claiming full DeFi is live.</td></tr>
               <tr><td>Based apps</td><td>App-specific state machines anchored to Kaspa ordering, commitments, proofs, settlement, or exits. They can start as deterministic replay and grow into based-zk when proof verification matters.</td><td>Builders can test richer products without waiting for full app-to-app composition.</td></tr>
-              <tr><td>Later app programs</td><td>Apps that prove their own logic, share Kaspa ordering, support richer markets, private proofs, app-to-app flows, and canonical bridge design.</td><td>The later goal is stronger composition without asking the base layer to execute every app globally.</td></tr>
+              <tr><td>Later app programs</td><td><a href="/kaspa-vprogs-explained">Apps that prove their own logic</a>, share Kaspa ordering, support richer markets, private proofs, app-to-app flows, and canonical bridge design.</td><td>The later goal is stronger composition without asking the base layer to execute every app globally.</td></tr>
               <tr><td>Research</td><td>DAGKnight, 100 BPS sampling, RTD-derived attestations, oracle markets, MEV auctions, TangVM-style flows, public funding markets, and AI-agent commitments.</td><td>The broad coordination thesis becomes testable through real products.</td></tr>
             </tbody>
           </table>

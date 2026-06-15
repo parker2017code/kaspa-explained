@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa vProgs Explained: Resource Lanes, Proofs, and App Composition | Kaspa Explained</title>
+  <meta name="description" content="Kaspa vProgs explained in plain language: resource-level scheduling, based computation, ZK proofs, Toccata boundaries, and why vProgs are roadmap architecture rather than live native DeFi.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/kaspa-vprogs-explained">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="Kaspa vProgs Explained | Kaspa Explained">
+  <meta property="og:description" content="Resource-level scheduling, based computation, ZK proofs, and the roadmap boundary for Kaspa vProgs.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/kaspa-vprogs-explained">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa vProgs Explained | Kaspa Explained">
+  <meta name="twitter:description" content="A practical guide to resource-level scheduling, based computation, ZK proofs, and the roadmap boundary for vProgs.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-06-15">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Kaspa vProgs Explained",
+    "url": "https://kaspaexplained.com/kaspa-vprogs-explained",
+    "dateModified": "2026-06-15",
+    "description": "Kaspa vProgs explained in plain language: resource-level scheduling, based computation, ZK proofs, Toccata boundaries, and why vProgs are roadmap architecture rather than live native DeFi.",
+    "about": ["Kaspa", "vProgs", "Based Apps", "Toccata", "ZK", "Covenants"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260606-anchor-clearance">
+  <script defer src="nav.js?v=20260606-anchor-clearance"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/start-here">Start</a>
+        <a href="/what-is-kaspa">Kaspa 101</a>
+        <a href="/status">Status</a>
+        <a href="/kaspa-claims-checker">Claims</a>
+        <a href="/toccata-status">Toccata</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/kaspa-app-ideas">Ideas</a>
+        <a href="/search">Search</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="status-page app-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Roadmap architecture</p>
+      <h1>Kaspa vProgs explained.</h1>
+      <p class="lead">vProgs are the later Kaspa app architecture for programs that prove richer logic while sharing Kaspa ordering. The practical idea is simple: split app state into named resources, run independent work in parallel, and prove the result without asking Kaspa L1 to execute every app step.</p>
+      <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Toccata is released and scheduled for mainnet activation, but full vProgs and mature native Kaspa DeFi are not live mainnet behavior.</p>
+      <div class="actions">
+        <a class="button primary" href="/builder-guide">Builder guide</a>
+        <a class="button" href="/application-layer">Application layer</a>
+        <a class="button" href="/toccata-status">Toccata status</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">One sentence</p>
+      <h2>The useful mental model.</h2>
+      <blockquote>vProgs turn app execution into a flow of resource-level dependencies: conflicting work waits on the same resource, while independent work keeps moving through the system.</blockquote>
+      <div class="summary-grid">
+        <article><span>Resource</span><p>A coin, balance, object, order, vault, game position, or app-specific state item that can be named and updated.</p></article>
+        <article><span>Dependency</span><p>A transaction declares which resources it reads and writes, so the scheduler knows what can run together.</p></article>
+        <article><span>Proof</span><p>The app can produce proofs or journals that let later layers verify what happened without replaying everything on L1.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Scheduling</p>
+      <h2>Why resource lanes matter.</h2>
+      <p>In a global account-style system, many app actions compete for the same shared state. vProgs push the design toward individually addressable resources. If Alice touches resource A and Bob touches resource Z, those actions do not have to wait for each other. If both touch resource A, their order still matters and the scheduler serializes that part.</p>
+      <p>The scheduler builds a dependency graph from declared read/write metadata. Each resource acts like a small lane. A transaction attaches to the lanes it touches, waits for the values it needs, runs when its dependencies are ready, and then passes updated values forward. The result is a computational DAG: independent branches keep executing while congested resources only slow the work that actually conflicts.</p>
+      <p>This is the public-facing point from the Hans Moog vProgs walkthrough: the interesting claim is not "more TPS" as a slogan. The interesting claim is narrower and better: independent app state can continue flowing even when one resource or market is busy.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Layer map</p>
+      <h2>What the prototype repo shows.</h2>
+      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository describes itself as an early-development Rust framework for based computation on Kaspa. Its README maps the framework into layers: core types, storage, state, scheduling, transaction runtime, and node integration. The workspace also includes L1 and ZK crates for bridge/types, ABI, transaction prover, batch prover, VM, and RISC Zero backend work.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr><th>Layer</th><th>Plain job</th><th>Why it exists</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Core</td><td>Shared types such as resources, transactions, and access metadata.</td><td>Every layer needs the same basic language.</td></tr>
+            <tr><td>Storage</td><td>Read and write app state to disk.</td><td>The app needs persistence without making storage know app semantics.</td></tr>
+            <tr><td>State</td><td>Define what is stored and how versions or rollbacks work.</td><td>Execution needs a clear model for resource state.</td></tr>
+            <tr><td>Scheduling</td><td>Track resource access and orchestrate parallel execution.</td><td>Independent resource lanes should run without one global lock.</td></tr>
+            <tr><td>Runtime</td><td>Define what a transaction or program does when it executes.</td><td>Different VMs or app runtimes can plug into the scheduling model.</td></tr>
+            <tr><td>Node</td><td>Put the layers together into a concrete runnable system.</td><td>A framework needs a real integration surface, not just isolated crates.</td></tr>
+            <tr><td>ZK / L1</td><td>Produce proofs and connect app results back to Kaspa evidence.</td><td>The app needs verification and settlement boundaries.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Toccata connection</p>
+      <h2>What comes before full vProgs.</h2>
+      <p>Toccata is the near-term hard-fork track. Its release and KIP work target covenant-style spending rules, covenant IDs, ZK proof checks, and sequencing commitments. Those pieces matter because richer apps need more than one local script: they need a way to constrain UTXO state, identify app state, prove selected computation, and anchor app-local sequencing to Kaspa evidence.</p>
+      <p>That still does not make full vProgs live. Toccata can support simpler covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full app-to-app composition is the later target: one combined action touching several app states and succeeding or failing as a unit.</p>
+      <div class="summary-grid">
+        <article><span>Near-term</span><p>Covenants, spend constraints, asset rules, proof checks, and lane-friendly commitments.</p></article>
+        <article><span>Based app</span><p>One app anchors its state to Kaspa ordering, commitments, proofs, settlement, or exits.</p></article>
+        <article><span>Full vProgs</span><p>Later app architecture for richer logic and cross-app atomic composition.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Copy boundary</p>
+      <h2>Say this, not that.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr><th>Use this wording</th><th>Avoid this wording</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>vProgs are roadmap architecture for app programs that prove richer logic while sharing Kaspa ordering.</td><td>Treating vProgs as activated Kaspa smart contracts.</td><td>The public repo is explicit prototype evidence, not mainnet activation evidence.</td></tr>
+            <tr><td>Toccata gives Kaspa a path to stronger L1 app rules and based-app foundations.</td><td>Toccata means full Kaspa DeFi is live.</td><td>Activation, wallets, liquidity, audits, custody, and app usage are separate evidence.</td></tr>
+            <tr><td>Independent resource lanes can execute without waiting on unrelated congested state.</td><td>Kaspa apps have unlimited throughput.</td><td>Parallelism depends on workload shape and declared resource conflicts.</td></tr>
+            <tr><td>ZK proves a statement about chosen public inputs.</td><td>A proof automatically proves prices, bridge truth, or real-world events.</td><td>External facts still need anchors such as a light client, oracle, reporter set, or challenge process.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Builder filter</p>
+      <h2>When this architecture matters.</h2>
+      <p>Use the vProgs mental model when a product has many independent pieces of state, many users touching the same app, or a proof requirement that belongs outside a simple covenant spend. Examples include trading state, auctions, games, coordination markets, app-specific ledgers, and proof-backed settlement flows.</p>
+      <p>Do not start with vProgs when the product is only a payment, receipt, vault rule, refund path, allowance cap, or controlled asset. Those are simpler covenant or wallet problems first. A good Kaspa app chooses the smallest state model that can honestly do the job.</p>
+      <div class="actions">
+        <a class="button primary" href="/kaspa-covenants-explained">Covenants first</a>
+        <a class="button" href="/builder-evidence">Builder evidence</a>
+        <a class="button" href="/sources#code-tracking">Source links</a>
+      </div>
+    </section>
+
+    <section class="next-step section">
+      <p class="eyebrow">Primary sources</p>
+      <h2>Check the receipts.</h2>
+      <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0 release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>, and <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21 sequencing commitments</a>.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent resource.</strong> Kaspa-positive research guide, not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/what-is-kaspa">Kaspa 101</a>
+          <a href="/overview">90-second overview</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/builder-guide">Builder guide</a>
+          <a href="/kaspa-app-ideas">App ideas</a>
+        </div>
+        <div class="footer-link-group" aria-label="Site">
+          <span>Site</span>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+          <a href="/about#corrections">Corrections</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
