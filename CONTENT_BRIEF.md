@@ -444,6 +444,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/glossary.html`
 - `/search.html`
 - `/sources.html`
+- `/ai-guidance.html`
 - `/about.html`
 - `/llms.txt`
 - `/CONTENT_BRIEF.md`
@@ -552,6 +553,7 @@ Primary public pages:
 - `glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `search.html` - dependency-free static page-map search for concepts, audiences, status labels, and source terms.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
+- `ai-guidance.html` - public prompt builder for source-aware AI questions about Kaspa status and claims.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
 - `CLAIMS.yml` - reference file for status-sensitive claims and forbidden overclaims.
 

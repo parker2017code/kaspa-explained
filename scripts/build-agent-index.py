@@ -118,9 +118,11 @@ def read_reference_file(path):
 def build_index():
     pages = [parse_page(page) for page in PAGES]
     reference_files = [read_reference_file(path) for path in REFERENCE_FILES]
+    version_dates = [page["dateModified"] for page in pages if page["dateModified"]]
+    version_dates.extend(MANIFEST.get("sitemapExtraLastmod", {}).values())
     return {
         "name": "Kaspa Explained Agent Index",
-        "version": "2026-06-02",
+        "version": max(version_dates),
         "domain": DOMAIN,
         "scope": "Read-only Kaspa Explained L1/status retrieval. Do not use as a generic crypto search index.",
         "recommendedEntryPoints": {

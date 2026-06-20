@@ -1,7 +1,7 @@
 (function () {
   const roots = Array.from(document.querySelectorAll("[data-fit-survey]"));
   if (!roots.length) return;
-  const reviewEmail = "parker2017@gmail.com";
+  const reviewEmail = ["parker2017", "gmail.com"].join("@");
 
   function fieldLabel(input) {
     const label = input.closest("label");
@@ -86,6 +86,7 @@
       if (mailLink) {
         const subject = root.dataset.surveyType === "supporter" ? "Kaspa supporter survey" : "Kaspa builder fit submission";
         mailLink.href = `mailto:${reviewEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
+        mailLink.textContent = "Open email draft";
       }
     }
 

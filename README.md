@@ -97,6 +97,7 @@ Use the public site itself for the page map:
 - `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
+- `ai-guidance.html` is the public prompt builder for source-aware AI questions.
 - `claims-reference.html` is the human-readable companion to `CLAIMS.yml`.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
