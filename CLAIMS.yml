@@ -1,4 +1,4 @@
-last_checked: 2026-06-15
+last_checked: 2026-06-20
 recheck_after: 2026-06-30
 claims:
   proof_of_work:
@@ -20,17 +20,17 @@ claims:
     forbidden_copy:
       - 10 BPS gives automatic 10x finality
       - Kaspa mainnet payments are instantly final
-  l1_status_snapshot_2026_06_15:
+  l1_status_snapshot_2026_06_20:
     status: measurement_sensitive
     recheck_after: 2026-06-30
-    summary: A June 15, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet, virtual DAA score 461,207,885, 1,403,205 blocks, 2.59565436 KAS block reward, and about 27.510915688 billion KAS from the public supply endpoint. Treat these as time-stamped network readings, not timeless constants.
+    summary: A June 20, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet, virtual DAA score 465,403,885, 1,277,659 blocks, 2.59565436 KAS block reward, and about 27.521806849 billion KAS from the public supply endpoint. Treat these as time-stamped network readings, not timeless constants.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
-      - June 15 snapshot values are permanent
+      - June 20 snapshot values are permanent
       - A public REST API reading is stronger than node or release evidence
   emission_schedule_may_2026:
     status: live_design
-    summary: Kaspa's emission schedule steps down monthly. The official schedule shows 27.5 KAS per second beginning May 8, 2026, then 25.9565436 KAS per second beginning June 7, 2026, and 24.49971475 KAS per second beginning July 7, 2026. With the 10 BPS mainnet, the June 15 API block reward is 2.59565436 KAS per block. Do not describe July 2026 as a one-time emission cliff.
+    summary: Kaspa's emission schedule steps down monthly. The official schedule shows 27.5 KAS per second beginning May 8, 2026, then 25.9565436 KAS per second beginning June 7, 2026, and 24.49971475 KAS per second beginning July 7, 2026. With the 10 BPS mainnet, the June 20 API block reward is 2.59565436 KAS per block. Do not describe July 2026 as a one-time emission cliff.
     source: https://wiki.kaspa.org/en/tokenomics
     forbidden_copy:
       - Kaspa has a July 2026 emission cliff
@@ -89,8 +89,9 @@ claims:
   toccata:
     status: targeted
     recheck_after: 2026-06-30
-    summary: Rusty Kaspa v2.0.0 was published on June 5, 2026 as the Mainnet Toccata Release. Its release notes schedule Toccata mainnet activation for DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC, and say nodes switch peer compatibility behavior 24 hours before activation. The June 15 mainnet REST snapshot showed virtual DAA 461,207,885, below the activation score. Treat Toccata as released and scheduled, not live, until mainnet activation and observable post-activation behavior exist. TN10/TN12 and KIP evidence remain useful testnet/design evidence.
+    summary: Rusty Kaspa v2.0.1 was published on June 15, 2026 as a Toccata maintenance release. Rusty Kaspa v2.0.0 was published on June 5, 2026 as the Mainnet Toccata Release; it schedules Toccata mainnet activation for DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC, and says nodes switch peer compatibility behavior 24 hours before activation. The June 20 mainnet REST snapshot showed virtual DAA 465,403,885, below the activation score. Treat Toccata as released and scheduled, not live, until mainnet activation and observable post-activation behavior exist. TN10/TN12 and KIP evidence remain useful testnet/design evidence.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
+    supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
       - Toccata is live
       - v2.0.0 means Toccata is already activated
@@ -101,7 +102,7 @@ claims:
   tn10_toccata_activation_test:
     status: testnet_only
     recheck_after: 2026-06-30
-    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A June 15, 2026 check of the Testnet-10 REST API showed virtual DAA 491,796,527, above the scheduled scores. Use this as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
+    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A June 20, 2026 check of the Testnet-10 REST API showed virtual DAA 495,999,867, above the scheduled scores. Use this as testnet evidence for the activation path and node behavior, not as proof that Toccata is live on mainnet.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3
     forbidden_copy:
       - TN10 activation proves mainnet activation
@@ -111,7 +112,7 @@ claims:
       - TN10 passed the activation score, so Toccata is live on mainnet
   tn12_covenant_evidence:
     status: testnet_only
-    recheck_after: 2026-06-19
+    recheck_after: 2026-07-01
     summary: >
       The TN12 covenant lab has accepted proof transactions for vault recovery,
       vault delayed withdrawal, assurance release/refund, escrow release/refund/cancel,
@@ -132,6 +133,17 @@ claims:
     source: https://github.com/kaspanet/vprogs
     forbidden_copy:
       - vProgs are live
+  argent:
+    status: research
+    recheck_after: 2026-07-01
+    summary: Michael Sutton's Argent repo is an experimental actor-style frontend for Silverscript covenant contracts. It frames multi-contract covenant systems as closed state machines with actors, state, transitions, named emits, and terminal become dispatch, then generates Silverscript for examples such as Stones and Tickets. Treat it as early research/tooling evidence: not audited, not production-ready, no stable ABI, no generated transaction builder, no launch-proof tooling, and no mainnet activation evidence.
+    source: https://github.com/michaelsutton/argent
+    forbidden_copy:
+      - Argent proves production Kaspa smart contracts are ready
+      - Argent is audited
+      - Argent proves Toccata is live on mainnet
+      - Argent has a stable ABI
+      - Argent includes a generated transaction builder
   cross_app_composition:
     status: roadmap
     recheck_after: 2026-07-01

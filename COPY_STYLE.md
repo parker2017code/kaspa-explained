@@ -27,16 +27,18 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - Keep judgment visible when evidence supports it.
 - Avoid defensive hedging. Use one clear status or timing label where the reader needs it, then write the product idea confidently. Hedge only when the uncertainty changes what a reader should do.
 
-## Cut Or Rewrite
+## Usually Cut Or Rewrite
 
-- Avoid: in today's rapidly evolving landscape
-- Avoid: delve, underscore, intricate, tapestry, realm, pivotal
-- Avoid: leverage, unlock, empower, foster, navigate, drive innovation
-- Avoid: seamless, robust, holistic, comprehensive, transformative, cutting-edge
-- Avoid: it is important to note
-- Avoid: this highlights, this underscores
-- Avoid: at its core, in essence, ultimately
-- Avoid: critical, significant, meaningful, impactful, advanced, dynamic when no measurement follows
+These are not literal bans. Keep a phrase when it carries a real technical, status, or reader-decision distinction. Cut it when it is only cadence filler.
+
+- Usually avoid: in today's rapidly evolving landscape
+- Usually avoid: delve, underscore, intricate, tapestry, realm, pivotal
+- Usually avoid: leverage, unlock, empower, foster, navigate, drive innovation
+- Usually avoid: seamless, robust, holistic, comprehensive, transformative, cutting-edge
+- Usually avoid: it is important to note
+- Usually avoid: this highlights, this underscores
+- Usually avoid: at its core, in essence, ultimately
+- Usually avoid: critical, significant, meaningful, impactful, advanced, dynamic when no measurement follows
 
 ## Sentence Patterns To Fix
 
@@ -55,7 +57,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - `Fast inclusion is different from instant finality.`
 - `App/project activity is not L1 activation evidence unless the claim is specifically about L1 transaction data, accepted transactions, or miner fees.`
 - `TN12 evidence is useful builder evidence; it is not mainnet activation.`
-- `Toccata is a targeted hard-fork track until release and activation evidence prove otherwise.`
+- `Toccata is released and scheduled until activation evidence and post-activation behavior prove mainnet status.`
 - `vProgs are later app architecture, not a live app ecosystem.`
 - `DAGKnight is research/future consensus direction, not current mainnet behavior.`
 

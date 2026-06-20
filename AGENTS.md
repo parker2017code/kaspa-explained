@@ -8,10 +8,10 @@
 
 ## Codex Operating Spine
 
-- Codex is the primary agent for this repo. Use `AGENTS.md` as the durable instruction source.
+- Codex is the primary agent for this repo. Use `AGENTS.md` as the durable repo instruction file.
 - Claude Code is secondary future compatibility. `CLAUDE.md` should import this file instead of carrying a separate rule set.
 - Start substantive work by checking `git status --short`, reading the relevant page/script, and identifying the exact reader or verification job before editing.
-- Treat `CLAIMS.yml` as the source of truth for factual claims introduced in public HTML.
+- Use `CLAIMS.yml` as the checked claim registry for factual claims introduced in public HTML.
 - Never fabricate txids, addresses, block hashes, DAA scores, or on-chain proof evidence.
 - Make the smallest coherent patch. Do not rewrite unrelated files, change public routes, or add dependencies without explicit approval.
 - Preserve public behavior unless the user explicitly asks for a behavior change.
@@ -54,8 +54,8 @@
 - Use crypto terms only when they help precision or search, then translate them into what someone is testing, buying, building, approving, measuring, or trying to avoid. Say "people agree on one shared transaction record without one company," "wallets and exchanges need support," "builders need SDKs and indexers," "funds need custody and reporting," or "users need a reason to use it" before broad terms like decentralized coordination, infrastructure, rails, programmability, or ecosystem readiness.
 - Keep Kaspa's app-layer focus on usable staged primitives: vault rules, asset rules, proof checks, sequencing commitments, apps that prove logic, and later vProgs. Do this through emphasis and sourcing; do not add public callouts about unrelated projects unless the user explicitly asks.
 - Do not default to EVM compatibility or external L2 migration as Kaspa's app path. If mentioning L2s or EVM, keep the source status and network-effect tradeoff explicit.
-- Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim.
-- Do not use rhetorical contrast patterns unless quoting source text: `not X but Y`, `not just X but Y`, `not only X but also Y`, `more than X`, `isn't merely X`, `goes beyond X`, or `rather than X, Y`. Rewrite matches as direct positive sentences.
+- Keep public copy free of lazy contrast scaffolding. Repeated "not X but Y," "not just," "more than," "whether X or Y," "unlock," "empower," "seamless," "robust," and similar cadence-fillers should be cut or replaced with the concrete claim when they are only rhythm filler.
+- These are judgment calls, not literal bans. Use a contrast phrase when it carries a real status, mechanism, or reader-decision distinction.
 - Avoid corporate abstraction unless the sentence cashes it out. Do not leave terms like "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic," or "platform unlock" standing alone. Name the actor and requirement: an exchange needs node stability, wallet integration, liquidity, legal review, and support; a payments company needs payment APIs, refunds, accounting, uptime, and support; builders need docs, SDKs, indexers, and working examples.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer while leaving the reader with less clarity.
 - Do not write cringey internal-process language in public copy or durable notes. Avoid vague words like "framing pass," "status theater," "polish pass," "move the narrative," and "unlock." Say the concrete task: shorten the page, link the card, move details to docs, show the command prereqs, or explain the app path.

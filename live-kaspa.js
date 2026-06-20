@@ -5,11 +5,11 @@
   const daaEl = document.getElementById("live-daa");
   const updatedEl = document.getElementById("live-updated");
   const statusEl = document.getElementById("live-status-light");
-  const chaseEl = document.querySelector(".toccata-console");
-  const chaseDaysEl = document.getElementById("toccata-days");
-  const chaseHoursEl = document.getElementById("toccata-hours");
-  const chaseMinutesEl = document.getElementById("toccata-minutes");
-  const chaseDaaLeftEl = document.getElementById("toccata-daa-left");
+  const toccataEl = document.querySelector(".toccata-console");
+  const toccataDaysEl = document.getElementById("toccata-days");
+  const toccataHoursEl = document.getElementById("toccata-hours");
+  const toccataMinutesEl = document.getElementById("toccata-minutes");
+  const toccataDaaLeftEl = document.getElementById("toccata-daa-left");
   let lastVirtualDaaScore = null;
 
   if (!supplyEl || !minedEl || !blocksEl || !daaEl || !updatedEl || !statusEl) return;
@@ -37,10 +37,10 @@
   };
 
   const renderToccataCountdown = (virtualDaaScore) => {
-    if (!chaseEl || !chaseDaysEl || !chaseHoursEl || !chaseMinutesEl || !chaseDaaLeftEl) return;
+    if (!toccataEl || !toccataDaysEl || !toccataHoursEl || !toccataMinutesEl || !toccataDaaLeftEl) return;
 
-    const targetTime = Date.parse(chaseEl.dataset.toccataTargetTime || "");
-    const targetDaa = Number(chaseEl.dataset.toccataTargetDaa || "0");
+    const targetTime = Date.parse(toccataEl.dataset.toccataTargetTime || "");
+    const targetDaa = Number(toccataEl.dataset.toccataTargetDaa || "0");
     const now = Date.now();
     const timeLeft = Number.isFinite(targetTime) ? Math.max(0, targetTime - now) : 0;
     const totalMinutes = Math.floor(timeLeft / 60000);
@@ -48,18 +48,18 @@
     const hours = Math.floor((totalMinutes % 1440) / 60);
     const minutes = totalMinutes % 60;
 
-    chaseDaysEl.textContent = String(days);
-    chaseHoursEl.textContent = String(hours).padStart(2, "0");
-    chaseMinutesEl.textContent = String(minutes).padStart(2, "0");
+    toccataDaysEl.textContent = String(days);
+    toccataHoursEl.textContent = String(hours).padStart(2, "0");
+    toccataMinutesEl.textContent = String(minutes).padStart(2, "0");
 
     const currentDaa = Number(virtualDaaScore);
     if (Number.isFinite(targetDaa) && Number.isFinite(currentDaa) && currentDaa > 0) {
       const daaLeft = Math.max(0, targetDaa - currentDaa);
-      chaseDaaLeftEl.textContent = formatInteger(String(daaLeft));
-      chaseEl.dataset.activationState = daaLeft === 0 ? "score-reached" : "scheduled";
+      toccataDaaLeftEl.textContent = formatInteger(String(daaLeft));
+      toccataEl.dataset.activationState = daaLeft === 0 ? "score-reached" : "scheduled";
     } else {
-      chaseDaaLeftEl.textContent = "Pending";
-      chaseEl.dataset.activationState = "unknown";
+      toccataDaaLeftEl.textContent = "Pending";
+      toccataEl.dataset.activationState = "unknown";
     }
   };
 
