@@ -84,6 +84,7 @@ Use the public site itself for the page map:
 - `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
 - `kaspa-vprogs-explained.html` explains resource-level scheduling, based computation, and the vProgs roadmap boundary.
+- `kaspa-tps-explained.html` answers the max-TPS question by workload: simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
 - `build-this-now.html` turns the builder loop into short practical recipes.
 - `build-on-kaspa.html` is the founder, builder, supporter, and matching-board funnel.
 - `builder-fit-survey.html` is the local founder/app idea intake survey.
@@ -171,6 +172,7 @@ Do not flatten everything into "live."
 - App/project catalogs are out of scope for status updates unless the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners.
 - Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa v2.0.1 was published on June 15, 2026 as a Toccata maintenance release. Rusty Kaspa v2.0.0 was published on June 5, 2026 as the Mainnet Toccata Release and schedules activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC. Rusty Kaspa's `tn10-toc2` pre-release scheduled the first Testnet-10 activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; and a June 20, 2026 API check showed Testnet-10 virtual DAA 495,999,867. Treat this as released and scheduled until mainnet reaches the activation score and post-activation behavior is observable.
 - June 20 L1 snapshot: public REST checks showed `kaspa-mainnet`, virtual DAA 465,403,885, 1,277,659 blocks, about 27.521806849 billion KAS from the supply endpoint, and 2.59565436 KAS per block. Recheck exact values before quoting.
+- TPS/capacity: use `kaspa-tps-explained.html` when the answer depends on workload. Current simple-payment capacity is a rough 2.5k-3.4k TPS range at 10 BPS from block mass and transaction shape; covenant, proof, token, and vProg-style app capacity need actual workload specs.
 - Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.

@@ -85,6 +85,7 @@ Keep these audience paths visible:
 - Ask "what is Kaspa?": use `what-is-kaspa.html`, then `ghostdag-explained.html` or `kaspa-in-one-screen.html`.
 - Need the fast non-technical answer: use `overview.html` or `kaspa-in-one-screen.html`.
 - Need to check a public claim: use `kaspa-claims-checker.html`, then `status.html`, `toccata-status.html`, or `kaspa-smart-contracts-status.html`.
+- Need a TPS/capacity answer: use `kaspa-tps-explained.html`. It separates simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
 - Need a dated freshness snapshot: use `kaspa-status-check-may-2026.html`, then refresh it when major source evidence changes.
 - Need the recurring update index: use `kaspa-status-updates.html`.
 - Need to know whether Toccata is live: use `toccata-status.html`.
@@ -321,7 +322,7 @@ Do not overclaim this. Do not state that Kaspa provides instant irreversible set
 
 Crescendo-specific nuance: do not turn 10 BPS into "10x finality." Michael Sutton's public Crescendo explanation framed practical throughput as roughly 8-9x higher under the observed policy and confirmation-time improvement as closer to 30%, because confirmation remains dominated by block latency. Use this to correct summaries that imply unlimited throughput, instant finality, or a clean 10x confirmation improvement.
 
-TPS and speed claims need measurement labels. Do not freeze one public TPS number as normal mainnet behavior unless current primary sources support that exact measurement and context. Distinguish block rate, block capacity, policy limits, test/lab throughput, sustained capacity estimates, organic demand, fees, and confirmation confidence.
+TPS and speed claims need measurement labels. Do not freeze one public TPS number as normal mainnet behavior unless current primary sources support that exact measurement and context. Distinguish block rate, block capacity, policy limits, test/lab throughput, sustained capacity estimates, organic demand, fees, and confirmation confidence. Current simple-payment capacity can be framed as a rough 2.5k-3.4k TPS range at 10 BPS under transaction-shape assumptions; covenant apps, ZK proof settlements, tokens, and future vProg-style app throughput need separate workload definitions.
 
 ## Crypto Reality-Check Framing
 
@@ -434,6 +435,7 @@ The sitemap should include public human pages and LLM/crawler files:
 - `/adoption-metrics.html`
 - `/application-layer.html`
 - `/kaspa-vprogs-explained.html`
+- `/kaspa-tps-explained.html`
 - `/overview.html`
 - `/what-crypto-is-good-for.html`
 - `/status.html`
@@ -529,6 +531,7 @@ Primary public pages:
 - `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
 - `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
 - `kaspa-vprogs-explained.html` - resource-lane and based-computation explainer for vProgs as roadmap architecture.
+- `kaspa-tps-explained.html` - workload-specific TPS explainer for simple payments, Toccata covenants, ZK settlements, tokens, and future vProg-style app throughput.
 - `build-on-kaspa.html` - founder and builder funnel that routes app ideas through fit questions, surveys, and matching-board paths.
 - `builder-fit-survey.html` - local browser survey for founder/app idea intake. It creates a copyable summary and does not submit data from GitHub Pages.
 - `investor-supporter-survey.html` - local browser survey for supporter, mentor, technical-review, and capital-interest intake.
