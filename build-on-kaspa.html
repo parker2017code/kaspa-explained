@@ -29,14 +29,14 @@
   <meta name="twitter:title" content="Build on Kaspa: Toccata App Ideas and Builder Paths">
   <meta name="twitter:description" content="Toccata app ideas, live payment paths, and where good Kaspa products begin.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-20">
+  <meta name="dateModified" content="2026-06-21">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Build on Kaspa: Toccata App Ideas and Builder Paths",
     "url": "https://kaspaexplained.com/build-on-kaspa",
-    "dateModified": "2026-06-20",
+    "dateModified": "2026-06-21",
     "description": "A plain-language guide for people excited about building on Kaspa: Toccata app ideas, live payment paths, and where good products begin.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
@@ -118,10 +118,23 @@
         </article>
       </div>
       <div class="toccata-builder-grid">
-        <a href="/kaspa-app-ideas"><span>Explore</span><strong>Browse app sparks</strong><small>Vaults, receipts, escrow, assets, and proof checks.</small></a>
+        <a href="/kaspa-app-ideas"><span>Explore</span><strong>Browse app ideas</strong><small>Vaults, receipts, escrow, assets, and proof checks.</small></a>
         <a href="/builder-guide"><span>Build</span><strong>Use the builder guide</strong><small>Pick the smallest path that proves the idea.</small></a>
         <a href="/toccata-status"><span>Countdown</span><strong>See the target</strong><small>DAA 474,165,565 is the number to watch.</small></a>
       </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Infrastructure note</p>
+      <h2>Some builders need Toccata readiness work.</h2>
+      <p class="lead">The Toccata node guide matters for anyone running nodes, wallets, pools, exchanges, explorers, indexers, or custom RPC/protobuf integrations. Ordinary users do not need this checklist.</p>
+      <div class="summary-grid">
+        <article><span>Nodes</span><p>Upgrade to Rusty Kaspa v2.0.1 or newer before activation. The node database upgrade is one-way, so operators who might roll back should plan for resync cost.</p></article>
+        <article><span>Fees</span><p>Direct RPC submission now uses the upcoming standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. That is mempool policy, not consensus.</p></article>
+        <article><span>APIs</span><p>New integrations should use <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> where relevant.</p></article>
+        <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, block submission, indexing, wallet balances, and fee estimation against Testnet-10 before mainnet activation.</p></article>
+      </div>
+      <p class="source-inline">Primary reference: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Rusty Kaspa Toccata node setup guide</a>.</p>
     </section>
 
     <section class="section">
