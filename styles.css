@@ -7518,3 +7518,117 @@ html {
 :where([id]) {
   scroll-margin-top: var(--site-header-clearance, 132px);
 }
+
+/* Final phone-width repair: later glass rules can otherwise leave the page
+   wider than the real viewport in headless and mobile browsers. */
+@media (max-width: 520px) {
+  .site-header {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 10px auto 0;
+    border-radius: 24px;
+  }
+
+  .nav,
+  main,
+  .footer {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .brand {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+
+  .theme-toggle,
+  .nav-cta {
+    display: none !important;
+  }
+
+  .nav-menu-button {
+    display: inline-flex;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    padding: 6px 10px;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    left: 0;
+    right: 0;
+    max-width: 100%;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links a {
+    min-width: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .hero,
+  .status-workbench,
+  .build-path-console {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero {
+    padding-top: 2rem;
+  }
+
+  .hero-copy,
+  .hero-visual,
+  .section:not(.prose-section) {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 18px;
+    padding: 22px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 10vw, 2.55rem);
+    line-height: 1.08;
+  }
+
+  .lead,
+  .plain-bridge,
+  .fit-note,
+  .source-inline {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .hero-signal-grid,
+  .hero-status,
+  .status-lane-grid,
+  .build-path-grid,
+  .summary-grid,
+  .reference-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-signal-grid a,
+  .status-lane-grid a,
+  .summary-grid article,
+  .reference-grid article {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .visual-caption {
+    grid-template-columns: 1fr;
+  }
+}

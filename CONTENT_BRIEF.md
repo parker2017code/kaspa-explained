@@ -77,7 +77,7 @@ Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standar
 
 ## Current Site Structure
 
-The homepage should work as a router first. Its strongest traffic job is to route searchers and community debates into exact-answer pages: what Kaspa is, claim checking, Toccata status, smart-contract status, finality boundaries, the skeptical case, and verification paths. The site also has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
+The homepage should work as a router first. Its strongest traffic job is to route searchers and community debates into six clear jobs: what Kaspa is, what is live now, claim checking, risks, build paths, and sources. Toccata status, smart-contract status, finality, app ideas, and beginner curriculum pages stay one click deeper instead of competing in the primary nav. The site also has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
 
 Keep these audience paths visible:
 
@@ -352,7 +352,7 @@ Keep this page tightly status-labeled. GHOSTDAG, the UTXO model, Proof of Work, 
 
 App/project nuance: do not turn app standards, wallets, frontends, or marketing into Kaspa L1 status copy. If the L1 fact matters, cite transaction payload docs, accepted-transaction docs, public node/API evidence, or miner fee/reward evidence. Otherwise, leave it out.
 
-The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page. The homepage should stay a human-first router: three primary actions, four main reader paths, one short status boundary, a compact app-layer preview, and a clear handoff to the source/context stack.
+The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page. The homepage should stay a human-first router: six route cards, three primary actions, one short Toccata boundary, a compact app-layer preview, and clear handoff links to status, risks, build paths, and sources.
 
 Design for two human modes at once: a rushed reader who needs the right page in seconds, and an interested reader who wants depth after choosing a lane. Long pages should provide jump links near the top. Dense source lists, changelogs, and implementation evidence can use `<details>` so the core explanation stays scannable. Do not hide the main thesis, status boundary, or first useful answer behind a toggle.
 
