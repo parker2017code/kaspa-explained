@@ -2,7 +2,7 @@
 
 Plain-English guide to Kaspa, fast Proof of Work, current status, claim checking, sources, glossary, and crypto basics.
 
-This is not an official Kaspa website and it is not investment advice. It is written to be useful for:
+This is not an official Kaspa website and it is not investment advice. It is written for:
 
 - readers who want a clear entry point,
 - readers checking what is live, what is roadmap, and what is research,
@@ -83,6 +83,7 @@ Use the public site itself for the page map:
 - `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims.
 - `kaspa-status-updates.html` is the index for dated status updates.
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
+- `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
 - `kaspa-vprogs-explained.html` explains resource-level scheduling, based computation, and the vProgs roadmap boundary.
 - `kaspa-tps-explained.html` answers the max-TPS question by workload: simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
 - `build-this-now.html` turns the builder loop into short practical recipes.
@@ -172,7 +173,7 @@ Do not flatten everything into "live."
 - App/project catalogs are out of scope for status updates unless the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners.
 - Near-term track: Toccata/Covenants++ as the L1 hard-fork path for concrete rules such as spend constraints, asset rules, covenant IDs, Silverscript, ZK-facing verification work, sequencing commitments, native-asset groundwork, and standalone based-app experiments. Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0 was published on June 5, 2026 as the Mainnet Toccata Release and schedules activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC. Rusty Kaspa's `tn10-toc2` pre-release scheduled the first Testnet-10 activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; and a June 25, 2026 API check showed Testnet-10 virtual DAA 500,129,160. Treat this as released and scheduled until mainnet reaches the activation score and post-activation behavior is observable.
 - Toccata operator note: the Rusty Kaspa Toccata node setup guide adds practical upgrade evidence for node operators, wallets, exchanges, pools, miners, explorers, and indexers. Keep it as operator readiness, not mainnet activation: v2.0.1+ upgrade before activation, one-way database migration, higher standard-fee policy for RPC submission, storageMass/storage_mass and transaction version 1 field handling, and Testnet-10 infrastructure testing.
-- June 25 L1 snapshot: public REST checks at 07:38 UTC showed `kaspa-mainnet`, virtual DAA 469,532,801, 1,085,993 blocks, about 27.533 billion KAS from the supply endpoint, and 2.59565436 KAS per block. Recheck exact values before quoting.
+- June 25 L1 snapshot: public REST checks at 11:45 UTC showed `kaspa-mainnet`, virtual DAA 469,680,863, 1,234,055 blocks, about 27.533 billion KAS from the supply endpoint, and 2.59565436 KAS per block. Recheck exact values before quoting.
 - Builder tooling: Python SDK v2.0.0/v2.0.1 added Toccata-aligned wallet, lane-proof, SMT-sync, and covenant-binding support. Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts. Open KIP-24 covers transaction-v1 fields and hashing; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work. Treat these as tooling/design evidence until merged release and activation evidence changes the status.
 - TPS/capacity: use `kaspa-tps-explained.html` when the answer depends on workload. Current simple-payment capacity is a rough 2.5k-3.4k TPS range at 10 BPS from block mass and transaction shape; covenant, proof, token, and vProg-style app capacity need actual workload specs.
 - Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
@@ -181,7 +182,7 @@ Do not flatten everything into "live."
 
 Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
 
-Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: treat "fast money," Base of Liquidity, and merchant/POS flows as rails, not the whole adoption strategy. The stronger public framing is useful products, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
+Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: treat "fast money," Base of Liquidity, and merchant/POS flows as rails, not the whole adoption strategy. The stronger public framing is products people repeat, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
 
 Narrative update from Junny Ho's Web3 Festival HK 2026 talk (`https://www.youtube.com/watch?v=b3wPZ04p410`): frame coordination markets around stag-hunt coordination, credible commitments, conditional participation, economic exposure, and real-time decentralized confirmation. Keep shipped-feature claims tied to activation evidence.
 
@@ -191,7 +192,7 @@ Editorial voice: explain Kaspa in first-principles everyday language for the pag
 
 Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
 
-Builder verification rule: accepted app state starts after accepted transaction evidence. Builder-facing pages should tell readers to record SDK, node, network, endpoint, tx shape, and acceptance evidence, then label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
+Builder verification rule: accepted app state starts after accepted transaction evidence. Builder pages should tell readers to record SDK, node, network, endpoint, tx shape, and acceptance evidence, then label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
 
 ## Local check
 

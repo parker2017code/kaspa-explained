@@ -34,6 +34,10 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - Use technical terms when they help precision or search, then translate them into what someone can inspect, build, measure, approve, or avoid.
 - Keep judgment visible when evidence supports it.
 - Avoid defensive hedging. Use one clear status or timing label where the reader needs it, then write the product idea confidently. Hedge only when the uncertainty changes what a reader should do.
+- Do not announce that copy is clear, clean, public, practical, useful, important, or plain-language. Make it clear by stating the mechanism, evidence, constraint, consequence, or reader action.
+- Do not use public labels that expose editorial intent: `clean public summary`, `citable summary`, `plain-language explanation`, `why this matters`, `what this means`, `key takeaway`, `public-facing`, `reader-facing`, or `builder-facing`. Use reader labels such as `Summary`, `Status`, `Claim`, `Evidence`, `Current state`, `What changed`, `Developer summary`, or remove the label.
+- Do not name a concept unless the target field already uses that term, the source uses it, or the text immediately defines it with a concrete mechanism. Otherwise describe the physical object, protocol mechanism, measurement, constraint, or decision.
+- For Kaspa pages, use field-native language: blockDAG, GHOSTDAG, pruning, UTXO, mempool, confirmations, finality, KIPs, covenants, TSP, vProgs, Toccata, nodes, miners, wallets, indexers, explorers, exchanges, bridges, fees, blockspace, throughput, latency, reorg risk, archival data, and transaction ordering.
 
 ## Usually Cut Or Rewrite
 
@@ -47,6 +51,9 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 - Usually avoid: this highlights, this underscores
 - Usually avoid: at its core, in essence, ultimately
 - Usually avoid: critical, significant, meaningful, impactful, advanced, dynamic when no measurement follows
+- Usually avoid: clean, useful, practical, important, serious, real, stronger, mature, simple, or clear when the word only adds tone.
+- Usually avoid: why this matters, what this means, key takeaway, broader point, immediate point, put simply, in plain language, public-facing, reader-facing, builder-facing.
+- Usually avoid invented term shells: validation-capacity layer, throughput sovereignty engine, DAG-native settlement fabric, app-readiness pathway, proof-of-work scalability stack, blockDAG execution substrate, finality confidence engine, programmable sovereignty framework, serious app layer, real-world settlement network, blockspace coordination flywheel, next-generation payment rail.
 
 ## Sentence Patterns To Fix
 
@@ -58,6 +65,16 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 | `A comprehensive approach to X` | List the actual parts. |
 | `X plays a vital role in Y` | Name the mechanism. |
 | `This can help stakeholders...` | Name the stakeholder and decision. |
+| `Why this matters` | State the consequence as the heading. |
+| `Useful X` | Name what X lets the reader do. |
+| `Practical X` | Name the constraint or use case. |
+| `Stronger X` | Name the property that improves. |
+| `Mature X` | Name the shipped capability. |
+| `Real X` | Name the actor or artifact: wallet, node, app, user, transaction, source. |
+| `DAG-native settlement fabric` | `Kaspa orders parallel blocks with GHOSTDAG.` |
+| `App-readiness pathway` | `Toccata adds covenant tools and vProgs.` |
+| `Throughput sovereignty layer` | `Higher throughput changes fees, node load, and infrastructure requirements.` |
+| `Real users` | Name the actors: wallets, exchanges, explorers, indexers, payment flows. |
 
 ## Kaspa-Specific Guardrails
 
@@ -68,6 +85,8 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 - `Toccata is released and scheduled until activation evidence and post-activation behavior prove mainnet status.`
 - `vProgs are later app architecture, not a live app ecosystem.`
 - `DAGKnight is research/future consensus direction, not current mainnet behavior.`
+- Public Kaspa sentences should usually name a protocol mechanism, implementation status, user or infrastructure consequence, unresolved limitation, source/evidence, or decision for builders, users, miners, exchanges, wallets, explorers, or indexers.
+- If a phrase sounds like a framework a consultant invented and a Kaspa developer would not say it at a whiteboard, cut it.
 
 ## Hedge Test
 

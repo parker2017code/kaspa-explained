@@ -23,6 +23,7 @@ python3 scripts/build-agent-index.py --check
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py
+node scripts/audit-domain-terms.mjs
 node scripts/audit-content-flow.mjs
 node scripts/audit-visual-guardrails.mjs
 

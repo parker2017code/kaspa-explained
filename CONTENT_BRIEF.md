@@ -10,11 +10,11 @@ The ideal voice is Yonatan-style first-principles explanation translated into ev
 
 Public pages should be shorter than the evidence stack. Put detailed source trails, implementation notes, and LLM guardrails in `CLAIMS.yml`, `sources.html`, and this brief. Human-facing pages should lead with the affirmative idea, then add a boundary only where a reader might confuse live, targeted, roadmap, and research claims.
 
-Use `COPY_STYLE.md` as the repo-wide sentence standard. Keep a sentence when it adds an actor, action, evidence, status label, constraint, consequence, useful distinction, or judgment. Cut it when a competent stranger could have written it without knowing Kaspa.
+Use `COPY_STYLE.md` as the repo-wide sentence standard. Keep a sentence when it adds an actor, action, evidence, status label, constraint, consequence, reader-relevant distinction, or judgment. Cut it when a competent stranger could have written it without knowing Kaspa.
 
 ### Concrete-First Translation
 
-Public-facing and LLM-facing explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
+Reader and crawler explanations should use Concrete-First Translation: make the reader see the real object, action, or tradeoff before naming the abstraction. Give the reader a real picture first, then the technical name:
 
 - "one shared record without one operator" before "credible shared state",
 - "apps that prove their own rules" before "verification-oriented programmability",
@@ -26,7 +26,7 @@ Do not remove the technical terms where they are needed for precision, search, o
 
 The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and why the mechanism matters. Then the compact term can help them remember and search for it.
 
-Crypto translation rule: use the crypto term only when it helps precision, search, or source matching. Then immediately translate it into what someone is testing, buying, building, approving, measuring, or trying to avoid. "Decentralized coordination" means people can agree on one shared record without one company controlling it. "Infrastructure" means wallets, exchanges, custody, APIs, indexers, explorers, liquidity, accounting, support, and uptime. "Programmability" means a wallet, app, or script can show which rule allowed, refused, or recorded an action. The practical questions are speed, security, wallets, exchange support, liquidity, developer tools, and whether real users have a reason to use it.
+Crypto translation rule: use the crypto term only when it helps precision, search, or source matching. Then immediately translate it into what someone is testing, buying, building, approving, measuring, or trying to avoid. "Decentralized coordination" means people can agree on one shared record without one company controlling it. "Infrastructure" means wallets, exchanges, custody, APIs, indexers, explorers, liquidity, accounting, support, and uptime. "Programmability" means a wallet, app, or script can show which rule allowed, refused, or recorded an action. The practical questions are speed, security, wallets, exchange support, liquidity, developer tools, and whether users have a reason to come back.
 
 This sits beside source checks and current-status checks. Source checks ask whether a claim is true and sourced. Current-status checks ask whether it is mainnet, testnet, future upgrade work, research, unsupported, or outside L1 scope. Concrete-First Translation asks whether a normal reader can immediately picture what the claim means.
 
@@ -49,7 +49,7 @@ Write for smart non-specialists first:
 
 - crypto users who know Bitcoin/Ethereum/Solana basics,
 - crypto-native readers who also know XRP, BNB, TRON, stablecoin payment paths, and exchange-linked ecosystems,
-- curious newcomers who need a plain-language path before technical material,
+- curious newcomers who need a beginner path before technical material,
 - builders deciding whether Kaspa is worth studying,
 - researchers and community members who need source discipline,
 - LLMs/search systems retrieving accurate context.
@@ -135,7 +135,7 @@ Volatile-data rule: do not add facts that can change in seconds, minutes, or hou
 
 App/project catalogs should not be public status lanes on this site. Mention an app only when the L1 fact itself matters, such as transaction payload behavior, accepted-transaction evidence, or fees paid to miners. Otherwise, leave it out and keep Kaspa Explained focused on first-party L1 protocol status.
 
-The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below activation evidence. As of 2026-06-25, the useful public evidence is: Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the Mainnet Toccata Release and schedules activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC; the Rusty Kaspa Toccata node setup guide adds operator evidence for v2.0.1+ upgrades, one-way node database migration, standard-fee policy changes, storageMass/storage_mass and transaction version 1 integration changes, and Testnet-10 infrastructure testing; Rusty Kaspa `v1.3.0-toc.5` was a June 3 mainnet pre-activation pre-release that explicitly did not activate Toccata; `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 500,129,160 on June 25; raw KIP files list KIP-16 and KIP-20 as proposed plus implemented and activated in TN10 while KIP-17 and KIP-21 are implemented and activated in TN10; Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts; open KIP-24 covers transaction-v1 fields and hashing for compute budgets, covenant bindings, user lanes, and ZK-friendly txids; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work; kaspanet/vprogs is an early Rust framework for based computation with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components plus the June 18 settlement-into-covenants merge; michaelsutton/argent is experimental actor-style Silverscript tooling research; rusty-kaspa/dagknight March 22 prototype/refinement activity remained a development signal. Do not let this section become a hype feed or imply mainnet activation before the activation score is reached and post-activation behavior exists.
+The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below activation evidence. As of 2026-06-25, the public evidence is: Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the Mainnet Toccata Release and schedules activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC; the Rusty Kaspa Toccata node setup guide adds operator evidence for v2.0.1+ upgrades, one-way node database migration, standard-fee policy changes, storageMass/storage_mass and transaction version 1 integration changes, Stratum Bridge mining guidance, and Testnet-10 infrastructure testing; Rusty Kaspa `v1.3.0-toc.5` was a June 3 mainnet pre-activation pre-release that explicitly did not activate Toccata; `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 500,129,160 on June 25; raw KIP files list KIP-16 and KIP-20 as proposed plus implemented and activated in TN10 while KIP-17 and KIP-21 are implemented and activated in TN10; Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts; open KIP-24 covers transaction-v1 fields and hashing for compute budgets, covenant bindings, user lanes, and ZK-friendly txids; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work; kaspanet/vprogs is an early Rust framework for based computation with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components plus the June 18 settlement-into-covenants merge; michaelsutton/argent is experimental actor-style Silverscript tooling research; rusty-kaspa/dagknight March 22 prototype/refinement activity remained a development signal. `toccata-explained.html` is the hub for this material. Do not let this section become a hype feed or imply mainnet activation before the activation score is reached and post-activation behavior exists.
 
 The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
 
@@ -161,17 +161,17 @@ controller, group release/refund, scheduled payout, or blocked withdrawal. Use
 worker-routed workflow, controller-input authority, and challenge/timeout
 language only when the specific artifact or source supports it.
 
-For builder-facing ZK wording, keep the external-anchor boundary explicit. ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. If a bridge, market, oracle, or attestation app depends on outside data, name the anchor: source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, challenge process, or other trust model. This is a precision rule, not a reason to bury the reader in bridge theory.
+For ZK builder wording, keep the external-anchor boundary explicit. ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. If a bridge, market, oracle, or attestation app depends on outside data, name the anchor: source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, challenge process, or other trust model. This is a precision rule, not a reason to bury the reader in bridge theory.
 
-The current Kaspa.org Build page is a useful developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
+The current Kaspa.org Build page is a developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
 
-The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source, not protocol activation authority. It is useful for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
+The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source, not protocol activation authority. Use it for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
 
-For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This is useful because it tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
+For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
 
 The builder guide should also preserve practical testnet breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced testnet node with UTXO index; an unsynced node can return misleading zero balances; a generic stable mainnet binary may not support every active TN12 setting; and TN10/Toccata activation-test commands should start from the current Rusty Kaspa release notes, not old Crescendo examples. Put this in the builder lane, not across the whole site, and keep mainnet instructions separate from testnet-only covenant work.
 
-Builder-facing verification lessons should be concrete and reusable: a local txid is not accepted app state; fetch accepted transaction evidence after submit; record node version, SDK version, network id, endpoint, encoding, tx version, and input budget fields; compare failing contract spends against accepted sibling spends before claiming a protocol boundary; and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection. Keep private prototype txids out of public copy unless they are independently useful as source evidence.
+Builder verification lessons should be concrete and reusable: a local txid is not accepted app state; fetch accepted transaction evidence after submit; record node version, SDK version, network id, endpoint, encoding, tx version, and input budget fields; compare failing contract spends against accepted sibling spends before claiming a protocol boundary; and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection. Keep private prototype txids out of public copy unless they independently support source evidence.
 
 For the app page specifically, the Bitcoin Takeover interview changes the framing in these ways:
 
@@ -198,7 +198,7 @@ Good style:
 - concrete tradeoffs,
 - named actors and requirements,
 - clear current-status wording,
-- useful comparisons,
+- comparisons,
 - short explanations before jargon,
 - links to source material.
 
@@ -240,12 +240,12 @@ For Kaspa Explained this means:
 - Status states stay distinct: live mainnet, targeted upgrade, testnet-only, roadmap, research, source-needed, stale-check-needed, wrong, unsupported, and unknown.
 - Long source titles, URLs, page labels, protocol terms, and dates must wrap cleanly on mobile.
 - Tables belong where comparison or source evidence is the job. Beginner-facing pages should explain the plain action before dense grids.
-- Search and source-pack docs need useful routing back to source/status pages and must not become source authority.
+- Search and source-pack docs need direct routes back to source/status pages and must not become source authority.
 - Use semantic HTML, real links for navigation, buttons for actions, visible focus, logical headings, and status text that does not depend on color alone.
 - Keep the site dependency-light. Prefer crawlable HTML, shared CSS variables/classes, small SVGs, and vanilla JS over framework or animation additions.
 - Public claims, metadata, sitemap entries, `llms.txt`, `CLAIMS.yml`, and source pages should not drift apart after a status-sensitive edit.
 
-Plain-language rule: if a sentence says a vague group "needs readiness" or "needs maturity," rewrite it around the actual actor. A fund may need custody, audit trails, reporting, and legal review. An exchange may need node stability, wallet integration, liquidity, monitoring, and support. A payments company may need payment APIs, refunds, accounting, uptime, and support. A builder may need docs, SDKs, indexers, examples, and testnet paths. If the sentence cannot name who needs what, it is probably filler.
+Actor rule: if a sentence says a vague group "needs readiness" or "needs maturity," rewrite it around the actual actor. A fund may need custody, audit trails, reporting, and legal review. An exchange may need node stability, wallet integration, liquidity, monitoring, and support. A payments company may need payment APIs, refunds, accounting, uptime, and support. A builder may need docs, SDKs, indexers, examples, and testnet paths. If the sentence cannot name who needs what, it is probably filler.
 
 Tone and visual weight:
 
@@ -254,7 +254,7 @@ Tone and visual weight:
 - Use medium visual weight. Headings, cards, callouts, and diagrams should be clear and confident, not oversized or theatrical. Use size to create hierarchy, not drama.
 - Prefer humble guidance: "start here", "check this lane", "use this distinction", "current boundary", "what exists now", and "what may come later."
 - Avoid turning every heading into a grand claim, final answer, or abstract thesis.
-- Let interest come from concrete usefulness. The site can be Kaspa-positive without sounding promotional.
+- Let interest come from concrete jobs. The site can be Kaspa-positive without sounding promotional.
 
 ## Status Lanes
 
@@ -279,7 +279,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is now a released and scheduled mainnet hard-fork track. Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the current primary release source for the activation parameters: DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 Toccata outlook remains useful implementation context for why the older May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. The Toccata node setup guide is operator-readiness evidence, not activation evidence: use it for node upgrades, fee-policy changes, transaction field changes, pools, miners, exchanges, wallets, explorers, indexers, and Testnet-10 checks. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 25 API check showed virtual DAA 500,129,160.
+Status note: Toccata should not be described as live mainnet functionality without current primary activation evidence. It is now a released and scheduled mainnet hard-fork track. Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the current primary release source for the activation parameters: DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 Toccata outlook remains implementation context for why the older May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. The Toccata node setup guide is operator-readiness evidence, not activation evidence: use it for node upgrades, fee-policy changes, transaction field changes, pools, miners, exchanges, wallets, explorers, indexers, and Testnet-10 checks. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 25 API check showed virtual DAA 500,129,160.
 
 ### Roadmap / Architecture
 
@@ -309,7 +309,7 @@ The stronger comparison is not "faster Bitcoin." It is:
 
 > Keep Proof of Work and UTXO instincts, remove the single-file blockchain bottleneck with a blockDAG, and move toward bounded apps that can prove their rules.
 
-Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one useful shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The useful contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The useful contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
+Do not imply that Bitcoin has no latency parameter or network-timing assumption. Bitcoin's 10-minute block interval also assumes network latency is much smaller than the block interval; one shorthand is that Bitcoin behaves like the k=0 edge case in this family of Nakamoto/GHOSTDAG-style reasoning. The contrast is not "Bitcoin is unparameterized, Kaspa is parameterized." The contrast is how Kaspa exposes, raises, and eventually aims to adapt the block-rate/latency tradeoff while allowing parallel honest blocks to contribute to ordering.
 
 ## Fast Proof-of-Work Framing
 
@@ -356,7 +356,7 @@ App/project nuance: do not turn app standards, wallets, frontends, or marketing 
 
 The `sources.html` page is the public source hierarchy and attribution page. Use it to centralize credits, Kaspa.com Learn Kaspa links, external references, and public crawl/LLM file links instead of adding distracting footnote walls to every human-facing page. The homepage should stay a human-first router: six route cards, three primary actions, one short Toccata boundary, a compact app-layer preview, and clear handoff links to status, risks, build paths, and sources.
 
-Design for two human modes at once: a rushed reader who needs the right page in seconds, and an interested reader who wants depth after choosing a lane. Long pages should provide jump links near the top. Dense source lists, changelogs, and implementation evidence can use `<details>` so the core explanation stays scannable. Do not hide the main thesis, status boundary, or first useful answer behind a toggle.
+Design for two human modes at once: a rushed reader who needs the right page in seconds, and an interested reader who wants depth after choosing a lane. Long pages should provide jump links near the top. Dense source lists, changelogs, and implementation evidence can use `<details>` so the core explanation stays scannable. Do not hide the main thesis, status boundary, or first answer behind a toggle.
 
 ## Programmability Framing
 
@@ -403,21 +403,21 @@ Prefer primary or near-primary sources:
 1. Primary protocol/code: `kaspanet/rusty-kaspa`, releases, KIPs, Kaspa Research, and protocol documentation.
 2. Core-dev explainers: Michael Sutton technical posts, Ori Newman, Coder of Stuff, Hashdag/Yonatan, and other active technical builders.
 3. Long-form framing source: Bitcoin Takeover S16 E41. It is high-signal for explanatory framing and status nuance. Activation claims still need primary protocol/code or direct implementation evidence.
-4. Context and education sources: Oxford recordings, KASmedia, Kaspa.com Learn Kaspa, the current Kaspa.org site, full recordings, interviews, transcripts, and recaps. They are useful for orientation, links, and framing, not protocol activation by themselves.
+4. Context and education sources: Oxford recordings, KASmedia, Kaspa.com Learn Kaspa, the current Kaspa.org site, full recordings, interviews, transcripts, and recaps. They provide orientation, links, and framing, not protocol activation by themselves.
 5. Learning references: Kaspa.com Learn Kaspa / Kaspa Facts for approachable intro/intermediate concept explanations. Credit this source when using its explanations, but treat it like community education and verify shipped-feature and activation claims against primary protocol/code sources.
 6. Discovery only: active public technical X accounts and replies.
 
 The current Kaspa.org site is the public Kaspa/KasMedia entry point for broad orientation, fair-launch/genesis-proof framing, wallet flow, builder routing, and links into stronger sources. It replaced the older article-style site, so old Kaspa.org article URLs should be treated as stale until checked. Status-sensitive claims should still come from code, releases, KIPs, research papers, protocol documentation, or direct implementation notes from core technical contributors.
 
-Use X cautiously. It is useful for current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
+Use X cautiously. It can surface current builder commentary, links, replies, and corrections. It is weak for shipped-feature claims unless backed by code, KIPs, releases, or durable long-form sources.
 
 Do not use stale team pages, recycled handle lists, or contributor pages to infer current involvement.
 
 External-source rule: credit outside sources by name and link near the relevant claim or through `sources.html`. Do not copy external articles into the site. Paraphrase, synthesize, and point readers to the original source.
 
-Kaspa.com Learn Kaspa status: treat the article set as a useful learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Recheck it before relying on it for newly changed concepts. Do not plaster this source across the main pages or use it as the primary authority for status claims.
+Kaspa.com Learn Kaspa status: treat the article set as a learning library for BlockDAG, GHOSTDAG, DAG terminology, parents/mergesets, blue score/blue work, k-clusters, pruning, UTXO, MuHash, finality, transaction selection, mass, opcodes, KIPs, and node types. Recheck it before relying on it for newly changed concepts. Do not plaster this source across the main pages or use it as the primary authority for status claims.
 
-The May 2026 Kaspa.com Smart Contracts article is useful because it separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
+The May 2026 Kaspa.com Smart Contracts article separates programmability into layers and includes a chess covenant walkthrough. Use that chess material as a concrete example of UTXO state-machine design: registration state, player state, game state, move-routing transactions, move-application transactions, and final settlement. Do not frame it as proof that a mature app ecosystem is live.
 
 ## Public Crawl Map
 
@@ -459,7 +459,7 @@ Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable 
 
 ## Active Public Technical Accounts
 
-Useful for discovery and replies:
+Discovery and replies:
 
 - https://x.com/hashdag
 - https://x.com/michaelsuttonil
@@ -504,7 +504,7 @@ Do not conflate mining hashes with transaction signatures. Proof of Work and wal
 
 Do not describe Toccata as the quantum upgrade. Treat post-quantum readiness as a separate migration topic unless primary builders publish a concrete plan.
 
-Useful quantum-answer frame:
+Quantum answer frame:
 
 - wallets,
 - exchanges,
@@ -540,7 +540,7 @@ Primary public pages:
 - `kaspa-for-fintech-founders.html` - founder-facing fintech fit page for payments, receipts, custody, escrow, and treasury rules.
 - `kaspa-app-ideas.html` - app idea map by status lane.
 - `kaspa-toccata-use-cases.html` - Toccata use-case page for covenants, ZK hooks, sequencing commitments, and mainnet evidence boundaries.
-- `kaspa-covenants-explained.html` - plain-language covenant page for UTXO spend rules.
+- `kaspa-covenants-explained.html` - covenant page for UTXO spend rules.
 - `kaspa-vs-solana-builders.html` - builder comparison page for Kaspa and Solana.
 - `kaspa-vs-ethereum-apps.html` - app comparison page for Kaspa and Ethereum.
 - `kaspa-coordination-markets.html` - coordination-market page for conditional commitments and assurance funding.

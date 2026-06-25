@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kaspa Covenants Explained: Spend Rules for UTXO Apps | Kaspa Explained</title>
-  <meta name="description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/kaspa-covenants-explained">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
-  <meta property="og:description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta property="og:description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-covenants-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,17 +27,17 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
-  <meta name="twitter:description" content="Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="twitter:description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-23">
+  <meta name="dateModified" content="2026-06-25">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Covenants Explained: Spend Rules for UTXO Apps",
     "url": "https://kaspaexplained.com/kaspa-covenants-explained",
-    "dateModified": "2026-06-23",
-    "description": "Kaspa covenants explained in plain language: constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.",
+    "dateModified": "2026-06-25",
+    "description": "Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
   </script>
@@ -93,9 +93,25 @@
     </section>
 
     <section class="section">
-      <h2>Kaspa covenants in plain language.</h2>
+      <h2>How covenants work.</h2>
       <p>A normal wallet signature says who is allowed to spend. A covenant-style rule can also inspect the spending transaction and require the next output to preserve a rule, route funds, limit value, or carry state forward.</p>
       <p>That turns some app logic into a money rule users can inspect. It does not remove wallet UX, audits, liquidity, legal risk, or oracle design.</p>
+    </section>
+
+    <section class="section">
+      <h2>Why covenant IDs matter.</h2>
+      <p>A covenant can enforce how one protected UTXO moves next. A covenant ID adds lineage: consensus can mark that a UTXO belongs to the authorized covenant family rather than a fake state with similar-looking rules.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Piece</th><th>Plain job</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Normal script</td><td>Checks whether this spend is allowed.</td><td>Good for ownership and ordinary payment rules.</td></tr>
+            <tr><td>Covenant</td><td>Checks whether the next output preserves a rule.</td><td>Applies to vaults, escrow paths, controlled assets, and state transitions.</td></tr>
+            <tr><td>Covenant ID</td><td>Tracks a covenant family across valid continuations.</td><td>Makes covenant membership harder to fake and easier to index.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-inline">For the broader upgrade frame, read <a href="/toccata-explained">Toccata Explained</a>. Primary reference: <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
     </section>
 
     <section class="section">
@@ -124,7 +140,7 @@
       <div class="actions">
         <a class="button primary" href="/kaspa-toccata-use-cases">Toccata use cases</a>
         <a class="button" href="/builder-guide">Builder guide</a>
-        <a class="button" href="/builder-guide">Builder guide</a>
+        <a class="button" href="/toccata-explained">Toccata explained</a>
         <a class="button" href="/reality-check">Reality check</a>
       </div>
     </section>

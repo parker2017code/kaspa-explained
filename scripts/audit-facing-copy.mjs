@@ -36,6 +36,7 @@ const skipDirs = new Set([
 const skipFiles = new Set([
   "agent-index.json",
   "package-lock.json",
+  "scripts/audit-domain-terms.mjs",
   "scripts/audit-facing-copy.mjs",
   "scripts/lint-copy.mjs",
 ]);
@@ -84,6 +85,14 @@ const rules = [
   {
     name: "workflow-scaffold",
     pattern: /\b(internal reasoning|workflow notes|scoring logic|drafting rationale|process commentary|ranking labels?|writer-facing|reader-facing clutter)\b/i,
+  },
+  {
+    name: "editorial-scaffold-label",
+    pattern: /\b(clean public summary|citable summary|plain[- ]language explanation|source of truth|highest[- ]signal|operating spec|useful framing|why this matters|what this means|key takeaway|broader point|immediate point|stronger version|practical implication|public[- ]facing|reader[- ]facing|builder[- ]facing|copy tone)\b/i,
+  },
+  {
+    name: "llm-transition-scaffold",
+    pattern: /\b(put simply|in plain language|more importantly|it(?:'|\u2019)?s worth noting|it is worth noting|this matters because|at the end of the day)\b/i,
   },
   {
     name: "writer-facing-label",
