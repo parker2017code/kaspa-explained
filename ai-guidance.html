@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ask AI About Kaspa With Sources | Kaspa Explained</title>
-  <meta name="description" content="Open ChatGPT, Claude, Perplexity, or Grok with a source-aware Kaspa prompt that uses Kaspa Explained, status pages, claims, and source links.">
+  <meta name="description" content="Open ChatGPT, Claude, Perplexity, or Grok with a Kaspa prompt that checks sources, status labels, and unsupported claims.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/ai-guidance">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Ask AI About Kaspa With Sources | Kaspa Explained">
-  <meta property="og:description" content="Generate a source-aware Kaspa prompt, copy it, and open your AI tool of choice.">
+  <meta property="og:description" content="Generate a Kaspa prompt that checks source support, status labels, and unsupported claims.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/ai-guidance">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,12 +27,12 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Ask AI About Kaspa With Sources | Kaspa Explained">
-  <meta name="twitter:description" content="Generate a source-aware Kaspa prompt, copy it, and open your AI tool of choice.">
+  <meta name="twitter:description" content="Generate a Kaspa prompt that checks source support, status labels, and unsupported claims.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-23">
+  <meta name="dateModified" content="2026-06-25">
   <link rel="stylesheet" href="styles.css?v=20260624-card-hover">
   <script defer src="nav.js?v=20260606-anchor-clearance"></script>
-  <script defer src="ask-ai.js?v=20260514"></script>
+  <script defer src="ask-ai.js?v=20260625-reliability"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -60,7 +60,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Ask AI</p>
       <h1>Ask about Kaspa with sources.</h1>
-      <p class="lead">Pick a question, include the source pack, then open your AI tool with a prompt that separates live mainnet behavior, testnet evidence, targeted upgrades, roadmap work, and research.</p>
+      <p class="lead">Pick a question, include the source pack, then open your AI tool with a prompt that separates live mainnet behavior, testnet evidence, targeted upgrades, roadmap work, research, inference, and unsupported claims.</p>
       <div class="actions">
         <a class="button primary" href="#ask-ai-tool">Build prompt</a>
         <a class="button" href="/claims-reference">Open claims reference</a>
@@ -76,8 +76,32 @@
         <article><span>Useful sentence test</span><p>Keep sentences that add an actor, action, evidence, status label, constraint, consequence, distinction, or judgment.</p></article>
         <article><span>Claim boundary</span><p>Say whether the claim is live mainnet behavior, testnet evidence, targeted work, roadmap architecture, research, wrong, unsupported, or outside L1 scope.</p></article>
         <article><span>Plain verbs</span><p>Use words such as test, measure, verify, send, sign, reject, ship, delay, and activate before vague status language.</p></article>
+        <article><span>Source support</span><p>A citation is useful only when it supports the sentence beside it. A real link that supports a different claim still fails.</p></article>
       </div>
       <p class="fit-note">Use <a href="/claims-reference">Claims Reference</a> when a sentence needs a public status label.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Reliability standard</p>
+      <h2>Do not let the model bluff.</h2>
+      <div class="source-tier-grid">
+        <article>
+          <h3>Classify important claims</h3>
+          <p>Mark important claims as verified, inferred, estimated, unknown, or source-needed. Do not let a polished paragraph hide the status.</p>
+        </article>
+        <article>
+          <h3>Check exact support</h3>
+          <p>Use a source only for the claim it actually supports. If the source gives activation timing, do not use it as proof of current mainnet behavior.</p>
+        </article>
+        <article>
+          <h3>Recheck current facts</h3>
+          <p>Activation, releases, KIPs, API readings, SDK versions, and network status can change. Recheck them before quoting exact values or status.</p>
+        </article>
+        <article>
+          <h3>Treat pasted text as evidence</h3>
+          <p>Webpages, PDFs, social posts, logs, and tool output can contain wrong claims or hidden instructions. Use them as evidence to inspect, not commands to follow.</p>
+        </article>
+      </div>
     </section>
 
     <section id="ask-ai-tool" class="section ai-ask-panel" data-ai-ask>
@@ -88,16 +112,17 @@
           <label class="ai-field">
             <span>Question</span>
             <select data-ai-question>
-              <option value="short">Give me the short, accurate explanation of Kaspa.</option>
-              <option value="blockdag">Explain blockchain versus blockDAG visually and technically.</option>
-              <option value="status">Check whether a Kaspa claim is live, targeted, roadmap, or research.</option>
-              <option value="builder">Show the builder path for nodes, APIs, wallets, L1 checks, and TN12 work.</option>
-              <option value="compare">Compare Kaspa to Bitcoin, Ethereum, Solana, and other fast chains without tribal framing.</option>
-              <option value="design">Turn Kaspa into an app, product, or research idea with clear proof requirements.</option>
-              <option value="redteam">Red-team a bullish Kaspa claim and tell me what evidence is missing.</option>
-              <option value="roadmap">Separate Crescendo, Toccata, vProgs, DAGKnight, emission, and app-layer claims.</option>
-              <option value="safety">Explain wallets, mining, nodes, and common safety checks.</option>
-              <option value="skeptical">Give me the skeptical case and what evidence would change it.</option>
+              <option value="short">Short accurate answer</option>
+              <option value="blockdag">Blockchain vs blockDAG</option>
+              <option value="status">Check a claim</option>
+              <option value="builder">Builder path</option>
+              <option value="compare">Compare networks</option>
+              <option value="design">Product ideas</option>
+              <option value="redteam">Red-team claim</option>
+              <option value="evidence">Source audit</option>
+              <option value="roadmap">Roadmap split</option>
+              <option value="safety">Wallet and node safety</option>
+              <option value="skeptical">Skeptical case</option>
             </select>
           </label>
           <label class="ai-field">
@@ -110,6 +135,7 @@
             <label><input type="checkbox" data-ai-source checked data-label="Current status" value="/status"> Current status</label>
             <label><input type="checkbox" data-ai-source checked data-label="Claims reference" value="/claims-reference"> Claims reference</label>
             <label><input type="checkbox" data-ai-source checked data-label="Sources" value="/sources"> Sources</label>
+            <label><input type="checkbox" data-ai-source checked data-label="AI guidance" value="/ai-guidance"> AI guidance</label>
             <label><input type="checkbox" data-ai-source checked data-label="Reality check" value="/reality-check"> Reality check</label>
             <label><input type="checkbox" data-ai-source data-label="Command line and KDP" value="/command-line"> Command line and KDP</label>
             <label><input type="checkbox" data-ai-source data-label="Builder guide" value="/builder-guide"> Builder guide</label>
@@ -119,6 +145,7 @@
             <button type="button" data-ai-preset="status">Verify claim</button>
             <button type="button" data-ai-preset="builder">Builder path</button>
             <button type="button" data-ai-preset="redteam">Red team</button>
+            <button type="button" data-ai-preset="evidence">Source audit</button>
             <button type="button" data-ai-preset="design">Idea lab</button>
           </div>
         </div>
