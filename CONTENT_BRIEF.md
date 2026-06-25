@@ -24,7 +24,7 @@ Reader and crawler explanations should use Concrete-First Translation: make the 
 
 Do not remove the technical terms where they are needed for precision, search, or source matching. Put them after the plain idea so the page is easier to understand without becoming less accurate. This applies to public HTML, meta descriptions, search cards, `llms.txt`, and contributor-facing handoff files.
 
-The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and why the mechanism matters. Then the compact term can help them remember and search for it.
+The deeper mental model: abstraction is a compression format, not the starting point. A reader should first know what moves, who controls it, what can go wrong, and what the mechanism changes. Then the compact term can help them remember and search for it.
 
 Crypto translation rule: use the crypto term only when it helps precision, search, or source matching. Then immediately translate it into what someone is testing, buying, building, approving, measuring, or trying to avoid. "Decentralized coordination" means people can agree on one shared record without one company controlling it. "Infrastructure" means wallets, exchanges, custody, APIs, indexers, explorers, liquidity, accounting, support, and uptime. "Programmability" means a wallet, app, or script can show which rule allowed, refused, or recorded an action. The practical questions are speed, security, wallets, exchange support, liquidity, developer tools, and whether users have a reason to come back.
 
@@ -127,7 +127,7 @@ The `knowledge-map.html` page should start as an ordered learning path and then 
 
 The `status.html` page is the compact status reference. Keep it shorter than the source guide. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
-Use the status page to show why source discipline matters. Public Kaspa summaries often mix live mainnet features, testnet work, app/project headlines, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
+Use the status page to enforce source discipline. Public Kaspa summaries often mix live mainnet features, testnet work, app/project headlines, roadmap targets, and research claims; the site should separate those lanes before repeating a claim.
 
 The common-misconceptions material should be distributed by reader intent. The homepage may name the risk and route the reader. The claims checker should be the main link for arguments. The FAQ should give short corrections. The status page can carry the more precise table. The one-screen page can include only the compact "say this, not that" boundary. Do not repeat every correction on every page.
 
@@ -137,9 +137,9 @@ App/project catalogs should not be public status lanes on this site. Mention an 
 
 The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below activation evidence. As of 2026-06-25, the public evidence is: Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the Mainnet Toccata Release and schedules activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC; the Rusty Kaspa Toccata node setup guide adds operator evidence for v2.0.1+ upgrades, one-way node database migration, standard-fee policy changes, storageMass/storage_mass and transaction version 1 integration changes, Stratum Bridge mining guidance, and Testnet-10 infrastructure testing; Rusty Kaspa `v1.3.0-toc.5` was a June 3 mainnet pre-activation pre-release that explicitly did not activate Toccata; `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 500,129,160 on June 25; raw KIP files list KIP-16 and KIP-20 as proposed plus implemented and activated in TN10 while KIP-17 and KIP-21 are implemented and activated in TN10; Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts; open KIP-24 covers transaction-v1 fields and hashing for compute budgets, covenant bindings, user lanes, and ZK-friendly txids; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work; kaspanet/vprogs is an early Rust framework for based computation with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components plus the June 18 settlement-into-covenants merge; michaelsutton/argent is experimental actor-style Silverscript tooling research; rusty-kaspa/dagknight March 22 prototype/refinement activity remained a development signal. `toccata-explained.html` is the hub for this material. Do not let this section become a hype feed or imply mainnet activation before the activation score is reached and post-activation behavior exists.
 
-The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, why it matters, and what to read next.
+The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, what the design changes, and what to read next.
 
-The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, why it matters if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
+The `kaspa-in-one-screen.html` page is the shareable compression artifact. It should say what Kaspa is, what is live, what changes if the thesis works, what is not live, and what signals would strengthen or weaken the thesis. Keep it status-labeled and non-promotional.
 
 The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
 
@@ -344,7 +344,7 @@ Keep the weakness side just as explicit. Crypto is usually weak for normal domes
 
 Keep this page conditional: crypto is real when a neutral shared record is worth the cost, and theater when a trusted operator, legal process, or normal database solves the problem better.
 
-The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain why Kaspa matters when neutral money, self-custody, censorship resistance, fast mined ordering, future apps that prove rules, and public group commitments matter.
+The `why-kaspa-matters.html` page is the Kaspa-specific bridge from the general crypto reality check. It should explain Kaspa's design case for neutral money, self-custody, censorship resistance, fast mined ordering, future apps that prove rules, and public group commitments.
 
 Core frame:
 

@@ -95,6 +95,10 @@ const rules = [
     pattern: /\b(put simply|in plain language|more importantly|it(?:'|\u2019)?s worth noting|it is worth noting|this matters because|at the end of the day)\b/i,
   },
   {
+    name: "importance-signpost",
+    pattern: /\bwhy\s+(?:it|this|that|[a-z][\w'-]*(?:\s+[a-z][\w'-]*){0,4})\s+matters\b|\b(?:this|that|it|the\s+(?:distinction|point|idea|difference|reason|effect|claim|rule|design|path|case|question|locality))\s+(?:still\s+)?(?:matters|is\s+(?:important|crucial|critical|key|useful|meaningful|powerful|exciting|serious))(?:\s+because)?\b|\b(?:the\s+key\s+(?:point|idea)\s+is|the\s+important\s+part\s+is|what\s+this\s+means|this\s+(?:shows|signals|highlights|underscores))\b/i,
+  },
+  {
     name: "writer-facing-label",
     pattern: /(?:^|[|>]\s*)(?:angle|cta|decision|priority|rationale|uncertainty|optional|recommended|if sending|strong fit|weak fit|research[- ]first)\s*(?::|[-|])|(?:^|[|>]\s*)skip\s*(?::|[|])/i,
   },

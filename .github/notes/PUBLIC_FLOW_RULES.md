@@ -22,7 +22,7 @@ Lead with:
 
 ## Public Copy
 
-- Do not make the reader decode roadmap taxonomy before they know why it matters.
+- Do not make the reader decode roadmap taxonomy before they know what changed, what is live, and what still needs evidence.
 - Use "money rails -> covenants -> based-app prototypes -> later vProgs" as the default app path.
 - Say that based apps are a build lane, and ZK is one verification path, not the definition.
 - Keep source discipline, but avoid defensive public repetition.

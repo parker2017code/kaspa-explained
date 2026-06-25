@@ -56,6 +56,7 @@
 - Use an independent crypto-publication voice: reported, attributed, sober, and specific. The site should read like an informed crypto newsroom explainer, not holder copy, campaign copy, or an official project page.
 - Sentence test: every sentence should add an actor, action, evidence, source, status label, constraint, consequence, useful distinction, or judgment the reader can use. If it adds none of those, cut it.
 - Lead with the useful sentence. Skip ceremonial openings, throat-clearing, fake overviews, and broad claims about importance.
+- Public copy should not tell the reader what to think or feel. Do not write "why this matters," "this matters because," "the key point is," "this shows," "this highlights," or similar bridges when the sentence can state the mechanism, status, consequence, actor, constraint, or action directly.
 - Write for the actual reader on that page: new crypto reader, crypto-native comparer, skeptical reader, builder, source-checker, or AI/crawler. "General audience" is not a reason to make claims vague.
 - Replace abstractions with visible mechanics. If a sentence says "ecosystem maturity," "programmability," "coordination," "adoption," or "infrastructure," cash it out in wallets, indexers, SDKs, liquidity, source links, custody, receipts, proof checks, accepted txids, or user jobs.
 - Preserve limits before polishing style. A clean paragraph that turns testnet work, roadmap architecture, or research into a live claim is a bug.

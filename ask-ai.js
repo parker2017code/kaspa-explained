@@ -15,7 +15,7 @@
 
   const tasks = {
     short: "Give me the short, accurate explanation of Kaspa for a smart reader who is not a protocol engineer.",
-    blockdag: "Explain blockchain versus blockDAG. Use plain language first, then the technical version. Include why ordering still matters.",
+    blockdag: "Explain blockchain versus blockDAG. Use plain language first, then the technical version. Include how ordering works.",
     status: "Check the claim I provide and classify each part as live mainnet, testnet evidence, targeted upgrade, roadmap, research, or unverified.",
     builder: "Show the builder path for Kaspa: running a node, using hosted APIs, wallet or payment work, KRC tooling, and TN12 or covenant-related work. Separate live paths from future paths.",
     compare: "Compare Kaspa to Bitcoin, Ethereum, Solana, and other fast chains without tribal framing. Explain the actual design differences, tradeoffs, and claim boundaries.",

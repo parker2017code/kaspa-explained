@@ -36,6 +36,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - Keep judgment visible when evidence supports it.
 - Avoid defensive hedging. Use one clear status or timing label where the reader needs it, then write the product idea confidently. Hedge only when the uncertainty changes what a reader should do.
 - Do not announce that copy is clear, clean, public, practical, useful, important, or plain-language. Make it clear by stating the mechanism, evidence, constraint, consequence, or reader action.
+- Do not tell the reader what to think or feel about a sentence. Avoid bridges like `this matters because`, `why this matters`, `the key point is`, `this shows`, `this highlights`, or `this underscores`. State the mechanism, status, consequence, actor, constraint, or action directly.
 - Avoid community-site cues unless the page is explicitly collecting submissions. Replace funnel, chase, spark, passport, campaign, supporter hype, and builder excitement with the object being reviewed: status, evidence, activation, wallet support, indexer support, transaction evidence, source trail, or review queue.
 - Do not use public labels that expose editorial intent: `clean public summary`, `citable summary`, `plain-language explanation`, `why this matters`, `what this means`, `key takeaway`, `public-facing`, `reader-facing`, or `builder-facing`. Use reader labels such as `Summary`, `Status`, `Claim`, `Evidence`, `Current state`, `What changed`, `Developer summary`, or remove the label.
 - Do not name a concept unless the target field already uses that term, the source uses it, or the text immediately defines it with a concrete mechanism. Otherwise describe the physical object, protocol mechanism, measurement, constraint, or decision.
@@ -51,6 +52,7 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 - Usually avoid: seamless, robust, holistic, comprehensive, transformative, cutting-edge
 - Usually avoid: it is important to note
 - Usually avoid: this highlights, this underscores
+- Usually avoid: why X matters, this matters because, the key point is, the important part is, what this means, this shows, this signals.
 - Usually avoid: at its core, in essence, ultimately
 - Usually avoid: critical, significant, meaningful, impactful, advanced, dynamic when no measurement follows
 - Usually avoid: clean, useful, practical, important, serious, real, stronger, mature, simple, or clear when the word only adds tone.
@@ -64,6 +66,10 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 | `X is crucial for Y` | Say what breaks without X. |
 | `By leveraging X, teams can Y` | `Teams use X to Y.` |
 | `This highlights the importance of X` | State the next action or source boundary. |
+| `X matters because Y` | State Y directly. |
+| `Why X matters` | Name the mechanism or consequence. |
+| `The key point is X` | Say X. |
+| `This shows X` | Name the evidence or result. |
 | `A comprehensive approach to X` | List the actual parts. |
 | `X plays a vital role in Y` | Name the mechanism. |
 | `This can help stakeholders...` | Name the stakeholder and decision. |

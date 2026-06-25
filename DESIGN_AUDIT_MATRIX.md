@@ -93,7 +93,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Crypto translation | Use crypto terms only when they help precision, search, or source matching. | Encoded in `AGENTS.md` and `CONTENT_BRIEF.md`. | Translate each term into what someone tests, buys, builds, approves, measures, or avoids. |
 | Tone | Plain, direct, source-disciplined. | Good baseline. | Remove company-deck words and repeated "do not bundle" style copy. |
 | Evidence | Claims need source hierarchy or status label. | Very strong. | Keep `CLAIMS.yml`, `llms.txt`, status, and public HTML synchronized. |
-| Non-obvious value | Tell why Kaspa matters in normal use: self-custody, fast mined ordering, rules users can inspect. | App pages improved. | Make more examples problem-first before protocol-first. |
+| Non-obvious value | Explain Kaspa's normal-use case: self-custody, fast mined ordering, rules users can inspect. | App pages improved. | Make more examples problem-first before protocol-first. |
 | Error / empty states | 404 exists; search empty state exists. | Good enough. | Audit search messages and broken-link states after JS or source changes. |
 
 ## Trust, Accessibility, And Quality
