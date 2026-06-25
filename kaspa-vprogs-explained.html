@@ -69,7 +69,7 @@
   <main id="top" tabindex="-1" class="status-page app-page">
     <section class="sources-hero section">
       <p class="eyebrow">Roadmap architecture</p>
-      <h1>Kaspa vProgs explained.</h1>
+      <h1>Kaspa vProgs explained</h1>
       <p class="lead">vProgs are the later Kaspa app architecture for programs that prove richer logic while sharing Kaspa ordering. The model is simple: split app state into named resources, run independent work in parallel, and prove the result without asking Kaspa L1 to execute every app step.</p>
       <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Toccata is released and scheduled for mainnet activation; full vProgs and native Kaspa DeFi are not live mainnet behavior.</p>
       <div class="actions">
@@ -81,7 +81,7 @@
 
     <section class="section">
       <p class="eyebrow">One sentence</p>
-      <h2>The mental model.</h2>
+      <h2>The mental model</h2>
       <blockquote>vProgs turn app execution into a flow of resource-level dependencies: conflicting work waits on the same resource, while independent work keeps moving through the system.</blockquote>
       <div class="summary-grid">
         <article><span>Resource</span><p>A coin, balance, object, order, vault, game position, or app-specific state item that can be named and updated.</p></article>
@@ -92,7 +92,7 @@
 
     <section class="section">
       <p class="eyebrow">Scheduling</p>
-      <h2>Why resource lanes exist.</h2>
+      <h2>Why resource lanes exist</h2>
       <p>In a global account-style system, many app actions compete for the same shared state. vProgs push the design toward individually addressable resources. If Alice touches resource A and Bob touches resource Z, those actions do not have to wait for each other. If both touch resource A, their order still matters and the scheduler serializes that part.</p>
       <p>The scheduler builds a dependency graph from declared read/write metadata. Each resource acts like a small lane. A transaction attaches to the lanes it touches, waits for the values it needs, runs when its dependencies are ready, and then passes updated values forward. The result is a computational DAG: independent branches keep executing while congested resources only slow the work that actually conflicts.</p>
       <p>The Hans Moog vProgs walkthrough is not a raw "more TPS" claim. The narrower claim is that independent app state can keep moving while one resource or market is busy.</p>
@@ -100,7 +100,7 @@
 
     <section class="section">
       <p class="eyebrow">Layer map</p>
-      <h2>What the prototype repo shows.</h2>
+      <h2>What the prototype repo shows</h2>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository describes itself as an early-development Rust framework for based computation on Kaspa. Its README maps the framework into layers: core types, storage, state, scheduling, transaction runtime, and node integration. The workspace also includes L1 and ZK crates for bridge/types, ABI, transaction prover, batch prover, VM, and RISC Zero backend work.</p>
       <div class="table-wrap">
         <table class="reality-table">
@@ -122,7 +122,7 @@
 
     <section class="section">
       <p class="eyebrow">Toccata connection</p>
-      <h2>What comes before full vProgs.</h2>
+      <h2>What comes before full vProgs</h2>
       <p><a href="/toccata-explained">Toccata</a> is the near-term hard-fork track. Its release and KIP work target covenant-style spending rules, covenant IDs, ZK proof checks, and sequencing commitments. Those pieces give app builders concrete handles for UTXO state constraints, app-state identity, selected computation proofs, and app-local sequencing anchored to Kaspa evidence.</p>
       <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo adds early tooling evidence. It experiments with actor-style state machines that generate Silverscript for multi-contract covenant systems. Treat it as prototype work to study, not audited software, production code, or activation evidence.</p>
       <p>That still does not make full vProgs live. Toccata can support simpler covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full app-to-app composition is the later target: one combined action touching several app states and succeeding or failing as a unit.</p>
@@ -135,7 +135,7 @@
 
     <section class="section">
       <p class="eyebrow">Copy boundary</p>
-      <h2>Say this, not that.</h2>
+      <h2>Say this, not that</h2>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -153,7 +153,7 @@
 
     <section class="section">
       <p class="eyebrow">Builder filter</p>
-      <h2>When this architecture applies.</h2>
+      <h2>When this architecture applies</h2>
       <p>Use the vProgs mental model when a product has many independent pieces of state, many users touching the same app, or a proof requirement that belongs outside a simple covenant spend. Examples include trading state, auctions, games, coordination markets, app-specific ledgers, and proof-backed settlement flows.</p>
       <p>Do not start with vProgs when the product is only a payment, receipt, vault rule, refund path, allowance cap, or controlled asset. Those are simpler covenant or wallet problems first. A good Kaspa app chooses the smallest state model that can honestly do the job.</p>
       <div class="actions">
@@ -165,14 +165,14 @@
 
     <section class="next-step section">
       <p class="eyebrow">Primary sources</p>
-      <h2>Check the receipts.</h2>
+      <h2>Check the receipts</h2>
       <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21 sequencing commitments</a>, and <a href="https://github.com/michaelsutton/argent">Argent</a>.</p>
     </section>
   </main>
 
   <footer class="footer">
     <div class="footer-grid">
-      <p><strong>Independent Kaspa-positive research guide.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>

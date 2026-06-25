@@ -53,6 +53,7 @@
 
 ## Content Rules
 
+- Use an independent crypto-publication voice: reported, attributed, sober, and specific. The site should read like an informed crypto newsroom explainer, not holder copy, campaign copy, or an official project page.
 - Sentence test: every sentence should add an actor, action, evidence, source, status label, constraint, consequence, useful distinction, or judgment the reader can use. If it adds none of those, cut it.
 - Lead with the useful sentence. Skip ceremonial openings, throat-clearing, fake overviews, and broad claims about importance.
 - Write for the actual reader on that page: new crypto reader, crypto-native comparer, skeptical reader, builder, source-checker, or AI/crawler. "General audience" is not a reason to make claims vague.
@@ -83,6 +84,7 @@
 - Avoid corporate abstraction unless the sentence cashes it out. Do not leave terms like "institutional readiness," "ecosystem maturity," "enterprise adoption," "strategic," or "platform unlock" standing alone. Name the actor and requirement: an exchange needs node stability, wallet integration, liquidity, legal review, and support; a payments company needs payment APIs, refunds, accounting, uptime, and support; builders need docs, SDKs, indexers, and working examples.
 - Avoid clever authority voice. No dramatic adjective piles, faux-bold certainty, invented slogans, or lines that sound written to impress the writer while leaving the reader with less clarity.
 - Do not write cringey internal-process language in public copy or durable notes. Avoid vague words like "framing pass," "status theater," "polish pass," "move the narrative," and "unlock." Say the concrete task: shorten the page, link the card, move details to docs, show the command prereqs, or explain the app path.
+- Avoid community-site cues unless the page is explicitly collecting submissions. Replace funnel, chase, spark, passport, campaign, supporter hype, and builder excitement with the object being reviewed: status, evidence, activation, wallet support, indexer support, transaction evidence, source trail, or review queue.
 - One clean status label usually beats a stack of caveats. Use source links and status lanes instead of defensive paragraphs.
 - Do not over-hedge public copy. If a release, target, mechanism, or source-backed direction is sufficiently established, say it plainly. Put uncertainty where it belongs: activation timing, downstream product adoption, wallet/tooling readiness, or unsupported overclaims. Do not make every celebratory or explanatory sentence sound legally defensive.
 - Do not hedge facts the user directly provides, such as a URL, transcript, repo state, or artifact path. Treat it as real input, then verify only the claims that depend on external current state.

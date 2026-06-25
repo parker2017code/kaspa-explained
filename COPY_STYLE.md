@@ -27,6 +27,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 
 ## Required Voice
 
+- Use an independent crypto-publication voice: reported, attributed, sober, and specific. The site can understand Kaspa well without sounding like holder copy, campaign copy, or an official project page.
 - Put the practical point first.
 - Name what is live, testnet-only, targeted, roadmap, research, or unsupported.
 - Write for the actual reader: beginner, crypto-native comparer, skeptical reader, builder, source-checker, or AI/crawler.
@@ -35,6 +36,7 @@ It should add an actor, action, fact, source, status label, constraint, conseque
 - Keep judgment visible when evidence supports it.
 - Avoid defensive hedging. Use one clear status or timing label where the reader needs it, then write the product idea confidently. Hedge only when the uncertainty changes what a reader should do.
 - Do not announce that copy is clear, clean, public, practical, useful, important, or plain-language. Make it clear by stating the mechanism, evidence, constraint, consequence, or reader action.
+- Avoid community-site cues unless the page is explicitly collecting submissions. Replace funnel, chase, spark, passport, campaign, supporter hype, and builder excitement with the object being reviewed: status, evidence, activation, wallet support, indexer support, transaction evidence, source trail, or review queue.
 - Do not use public labels that expose editorial intent: `clean public summary`, `citable summary`, `plain-language explanation`, `why this matters`, `what this means`, `key takeaway`, `public-facing`, `reader-facing`, or `builder-facing`. Use reader labels such as `Summary`, `Status`, `Claim`, `Evidence`, `Current state`, `What changed`, `Developer summary`, or remove the label.
 - Do not name a concept unless the target field already uses that term, the source uses it, or the text immediately defines it with a concrete mechanism. Otherwise describe the physical object, protocol mechanism, measurement, constraint, or decision.
 - For Kaspa pages, use field-native language: blockDAG, GHOSTDAG, pruning, UTXO, mempool, confirmations, finality, KIPs, covenants, TSP, vProgs, Toccata, nodes, miners, wallets, indexers, explorers, exchanges, bridges, fees, blockspace, throughput, latency, reorg risk, archival data, and transaction ordering.

@@ -69,7 +69,7 @@
   <main id="top" tabindex="-1" class="status-page app-page">
     <section class="sources-hero section">
       <p class="eyebrow">Capacity question</p>
-      <h1>Kaspa TPS, explained by workload.</h1>
+      <h1>Kaspa TPS, explained by workload</h1>
       <p class="lead">There is no single Kaspa TPS number. For ordinary simple L1 payment transfers, the current mainnet estimate is roughly 2,500 to 3,400 transactions per second at 10 BPS, depending on transaction shape. That range does not carry over to covenant apps, ZK settlements, token rules, or future vProg-style systems.</p>
       <p class="fit-note"><strong>Status checked June 25, 2026:</strong> Kaspa mainnet is the Crescendo-era 10 BPS network. Toccata is released and scheduled for DAA 474,165,565, but mainnet was still below that activation score during this check.</p>
       <div class="actions">
@@ -100,7 +100,7 @@
 
     <section class="section">
       <p class="eyebrow">Simple payments</p>
-      <h2>Current simple-payment capacity.</h2>
+      <h2>Current simple-payment capacity</h2>
       <p>Kaspa mainnet currently produces roughly ten blocks per second. In the current mainnet parameters, the shared block mass limit is 500,000. That gives a rough budget of 5,000,000 transaction mass per second before policy, fees, propagation, storage shape, and real mempool behavior enter the discussion.</p>
       <p>A signed ordinary P2PK-style 1-input, 1-output payment is roughly 1.6k mass in conservative code-based arithmetic. A 1-input, 2-output payment with change is closer to 2.0k mass. Divide the block budget by those shapes and the mental model lands around 250 to 300 simple transactions per block, or the mid-2k to low-3k TPS lane at 10 BPS. Leaner simple shapes and rounding explain why the upper end is often stated around 3.4k TPS.</p>
       <p>For current simple payments, use roughly 2.5k to 3.4k TPS and state the assumption: transaction shape plus block mass. Artificial minimum-transaction ceilings can be higher, but they describe lab envelopes better than ordinary payment throughput.</p>
@@ -113,7 +113,7 @@
 
     <section class="section">
       <p class="eyebrow">Mass model</p>
-      <h2>Why simple tx/block does not generalize.</h2>
+      <h2>Why simple tx/block does not generalize</h2>
       <p>Kaspa capacity is constrained by transaction mass, not by a count of transaction envelopes. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. Larger transactions consume more of the block budget.</p>
       <p>Apps change the footprint. A transaction carrying more inputs, more outputs, larger scripts, covenant metadata, payload data, proof bytes, or state-transition evidence can crowd out simple transfers. Node-side repeated work also changes the ceiling: validation cost, propagation size, UTXO access patterns, storage effects, and app-specific indexing.</p>
       <p>Payloads are bounded too. The Kaspa docs describe a payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply. App data consumes block capacity.</p>
@@ -121,7 +121,7 @@
 
     <section class="section">
       <p class="eyebrow">Toccata</p>
-      <h2>What Toccata changes.</h2>
+      <h2>What Toccata changes</h2>
       <p><a href="/toccata-explained">Toccata</a> is mainly a programmability upgrade. It changes what Kaspa L1 transactions can express and verify: covenant-style spending rules, covenant IDs, ZK verifier infrastructure, sequencing-commitment access, and the first base-layer foundations for based-ZK apps. It should not be described as a raw payment-TPS multiplier.</p>
       <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 after activation, while the compute and storage reference limit remains 500,000. The guide frames this around fitting STARK-sized proofs, not doubling ordinary payment throughput. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and it raises the standard minimum relay fee after activation.</p>
       <div class="table-wrap">
@@ -141,7 +141,7 @@
 
     <section class="section">
       <p class="eyebrow">Covenants and assets</p>
-      <h2>Programmable transactions consume capacity differently.</h2>
+      <h2>Programmable transactions consume capacity differently</h2>
       <p>A covenant transaction is a transaction with rules about how its coins or state can be spent next. That supports vaults, escrow, assurance contracts, controlled assets, and token-like rules. It also means the L1 transaction can carry more structure than a simple payment.</p>
       <p>A token transfer may look like one user action in a wallet, but the L1 footprint depends on the asset rule. The transaction might need covenant state, covenant IDs, authorization rules, extra outputs, witness data, app payloads, or indexer-readable state. Counting that as one ordinary payment transaction hides the capacity cost.</p>
       <p>Simple-payment TPS is a payment metric. Covenant-app throughput must be measured by the actual transaction shape and state pattern.</p>
@@ -149,7 +149,7 @@
 
     <section class="section">
       <p class="eyebrow">ZK proofs</p>
-      <h2>ZK changes the metric.</h2>
+      <h2>ZK changes the metric</h2>
       <p>ZK proof systems can move app execution away from the base layer while keeping a compact verification path on L1. A proof or settlement transaction can update an app commitment after many off-chain actions. In that design, the L1 transaction count may be small while the app action count is large.</p>
       <p>That does not make TPS unlimited. Effective app throughput depends on the app, proof system, batch size, proof size, proving hardware, proof-generation time, data availability, settlement cadence, exit rules, and bridge/oracle assumptions. A ZK proof proves a statement about chosen inputs. External facts still need anchors such as a light client, finality certificate, accumulated-work view, reporter set, oracle, or challenge process.</p>
       <p>The better metric for a ZK app is usually app actions per settlement cycle, with L1 proof verification as one bottleneck. That metric can be far above L1 transaction TPS for one app, yet still bounded by proof economics and state design.</p>
@@ -157,7 +157,7 @@
 
     <section class="section">
       <p class="eyebrow">vProgs</p>
-      <h2>vProgs remain roadmap architecture.</h2>
+      <h2>vProgs remain roadmap architecture</h2>
       <p>Toccata gives Kaspa pieces that vProg-style systems need: covenants, proof checks, covenant IDs, and partitioned sequencing commitments. Full vProgs are still a later architecture for app programs that prove richer logic while sharing Kaspa ordering.</p>
       <p>KIP-21 avoids making every prover follow the entire DAG for every app. The partitioned commitment design targets O(activity) proving: a prover for one app lane follows that lane's activity, not total network activity. Current parameters also bound user-lane churn with 50 non-coinbase lanes per block and 1,000,000,000 gas per lane. At 10 BPS, that is a worst-case 500 user-lane updates per second bound, not a claim about 500 user transactions per second.</p>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository shows the implementation direction: resource access, scheduling, batches, state diffs, transaction runtime, L1, and ZK components. Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is related tooling research for composing multi-contract covenant apps into Silverscript. Those repos are not mainnet activation evidence for full vProgs.</p>
@@ -165,7 +165,7 @@
 
     <section class="section">
       <p class="eyebrow">Checklist</p>
-      <h2>How to discuss Kaspa capacity.</h2>
+      <h2>How to discuss Kaspa capacity</h2>
       <div class="summary-grid">
         <article><span>Workload</span><p>Say whether the number is for simple payments, covenant spends, token rules, proof settlements, or app actions.</p></article>
         <article><span>Transaction shape</span><p>List inputs, outputs, scripts, payload, covenant fields, proof bytes, and storage effects.</p></article>
@@ -177,7 +177,7 @@
 
     <section class="next-step section">
       <p class="eyebrow">Primary references</p>
-      <h2>Where the claims come from.</h2>
+      <h2>Where the claims come from</h2>
       <p class="source-inline">Site context: <a href="/status">current status</a>, <a href="/toccata-status">Toccata status</a>, <a href="/kaspa-smart-contracts-status">smart-contract status</a>, <a href="/kaspa-covenants-explained">covenants explained</a>, <a href="/kaspa-vprogs-explained">vProgs explained</a>, and <a href="/sources#code-tracking">implementation links</a>.</p>
       <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://kaspa.org/lore">Kaspa.org lore</a>, <a href="https://kaspa.org/build">Kaspa.org build</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/michaelsutton/argent">michaelsutton/argent</a>.</p>
     </section>
@@ -185,7 +185,7 @@
 
   <footer class="footer">
     <div class="footer-grid">
-      <p><strong>Independent Kaspa-positive research guide.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>

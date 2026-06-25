@@ -49,7 +49,7 @@
   }
 
   function buildSummary(root, grouped, score, maxScore) {
-    const type = root.dataset.surveyType === "supporter" ? "Kaspa supporter survey" : "Kaspa builder fit survey";
+    const type = root.dataset.surveyType === "contributor" ? "Kaspa contributor survey" : "Kaspa builder fit survey";
     const lines = [
       type,
       `Score: ${Math.min(score, maxScore)}/${maxScore}`,
@@ -84,7 +84,7 @@
       verdictEl.textContent = verdict(score);
       summaryEl.value = summary;
       if (mailLink) {
-        const subject = root.dataset.surveyType === "supporter" ? "Kaspa supporter survey" : "Kaspa builder fit submission";
+        const subject = root.dataset.surveyType === "contributor" ? "Kaspa contributor survey" : "Kaspa builder fit submission";
         mailLink.href = `mailto:${reviewEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
         mailLink.textContent = "Open email draft";
       }
