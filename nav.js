@@ -16,7 +16,7 @@
     savedTheme = null;
   }
   const initialTheme = themeParam === "light" || themeParam === "dark" ? themeParam : savedTheme;
-  document.documentElement.dataset.theme = initialTheme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = initialTheme === "dark" ? "dark" : "light";
 
   const themeToggle = nav.querySelector(".theme-toggle");
 
