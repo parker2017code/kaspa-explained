@@ -165,7 +165,7 @@ function auditSelectivePolish() {
   if (sheenVars.length < 2) fail("styles.css should define dark and light --glass-sheen values");
 
   for (const value of sheenVars) {
-    if (/^none$/i.test(value)) fail("--glass-sheen should stay subtle, not disabled");
+    if (/^none$/i.test(value)) fail("--glass-sheen should stay subtle and enabled");
     if (!/linear-gradient\(/i.test(value)) fail("--glass-sheen should use a restrained linear gradient");
   }
 
@@ -312,7 +312,7 @@ function auditCardPadding() {
 
   const originProofBlock = declarationBlock(/\n\.origin-proof-strip\s*\{([\s\S]*?)\n\}/, "origin proof strip spacing");
   if (declarationValue(originProofBlock, "padding-top")) {
-    fail(".origin-proof-strip needs full card padding, not only padding-top");
+    fail(".origin-proof-strip needs full card padding on all relevant sides");
   }
   const originProofPadding = declarationValue(originProofBlock, "padding");
   if (

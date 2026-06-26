@@ -98,7 +98,7 @@
         </article>
         <article>
           <h3>Practice safely</h3>
-          <p>Use testnet or TN12 before mainnet. Testnet coins are for learning, not value storage.</p>
+          <p>Use testnet or TN12 before mainnet. Testnet coins are for learning and have no storage-of-value role.</p>
           <p><a href="#testnet">Start with testnet</a></p>
         </article>
         <article>
@@ -120,7 +120,7 @@
       <div class="reference-grid">
         <article>
           <h3>1. Explorer</h3>
-          <p>Use an explorer to see whether a transaction appears accepted. This is convenient, not the final trust model.</p>
+      <p>Use an explorer to see whether a transaction appears accepted. Final verification comes from your own node or a trusted verification path.</p>
         </article>
         <article>
           <h3>2. Second source</h3>
@@ -181,7 +181,7 @@
         <article class="api-command-card api-command-card-note">
           <span class="command-method command-method-note">DATA</span>
           <h3>API data rules</h3>
-          <p>Amounts are sompi strings, not floats. Hashes are 64-character hex strings. Addresses use the <code>kaspa:</code> prefix. API timestamps are Unix milliseconds.</p>
+          <p>Amounts use sompi strings. Hashes are 64-character hex strings. Addresses use the <code>kaspa:</code> prefix. API timestamps are Unix milliseconds.</p>
           <pre><code>1 KAS = 100000000 SOMPI
 amount: "31112708372"
 blockTime: 1749531022210</code></pre>
@@ -246,7 +246,7 @@ cargo run --release</code></pre>
       <h2>Enable a JSON WebSocket RPC endpoint</h2>
       <p>Rusty Kaspa documents wRPC as optional and disabled by default. For JSON wRPC:</p>
       <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
-      <p>This lets SDKs and scripts query node state over WebSocket. Bind carefully on public machines. A public RPC endpoint is infrastructure, not a wallet safety boundary.</p>
+      <p>This lets SDKs and scripts query node state over WebSocket. Bind carefully on public machines. A public RPC endpoint is infrastructure. Wallet safety needs key isolation, signing discipline, and verification paths.</p>
       <p>Use wRPC when an app needs to read accepted transactions, inspect payload-capable routes, or compare indexer state against node-observed chain state.</p>
     </section>
 

@@ -51,6 +51,22 @@ const rules = [
     pattern: /\b(?:does|do|did)\s+not\s+[^.!?\n]{1,120}\s+but\s+[^.!?\n]{1,120}/i,
   },
   {
+    name: "comma-not-reframe",
+    pattern: /\b(?:this|that|it|they|we|you|i|the\s+(?:answer|goal|point|question|claim|site|page|demo|repo|product|value|story|idea|thesis|risk|tradeoff|difference|distinction|path|rule|design|upgrade|model|network|chain|protocol))\s+(?:is|are|was|were|means|becomes|stays|remains|gets|gives|uses|should\s+be|can\s+be)\s+[^.!?\n]{1,100},\s+not\s+[^.!?\n]{1,120}/i,
+  },
+  {
+    name: "imperative-comma-not",
+    pattern: /\b(?:use|write|say|choose|show|name|state|start\s+with|lead\s+with|treat|call|replace)\s+[^.!?\n]{1,90},\s+not\s+[^.!?\n]{1,120}/i,
+  },
+  {
+    name: "comma-not-contrast",
+    pattern: /,\s+not\s+[^.!?\n]{1,120}/i,
+  },
+  {
+    name: "not-only-bridge",
+    pattern: /\bnot\s+(?:just|only)\s+[^.!?\n]{1,120}/i,
+  },
+  {
     name: "more-than-reframe",
     pattern: /\bmore\s+than\s+(?![\d.,$%])[^.!?\n]{1,120}/i,
   },
@@ -64,7 +80,7 @@ const rules = [
   },
   {
     name: "rather-than-reframe",
-    pattern: /\brather\s+than\s+(?:merely|simply|just)\s+[^.!?\n]{1,120}/i,
+    pattern: /\brather\s+than\s+[^.!?\n]{1,120}/i,
   },
   {
     name: "throat-clearing",
@@ -77,6 +93,10 @@ const rules = [
   {
     name: "generic-platform-copy",
     pattern: /\b(platform capabilities|technology overview|where the platform applies|start a conversation|complete picture|all-in-one|end-to-end|valuable insights|drive innovation|enhance efficiency|comprehensive solution)\b/i,
+  },
+  {
+    name: "unearned-scope-label",
+    pattern: /\b(explain fully|fully explain|full explanation|complete overview|comprehensive overview|comprehensive guide|everything you need to know|ultimate guide|deep dive|thorough overview|full breakdown|long-form overview)\b/i,
   },
   {
     name: "process-narration",

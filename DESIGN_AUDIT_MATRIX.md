@@ -2,7 +2,7 @@
 
 Reviewed locally: 2026-05-13
 
-Use this before broad UI or copy changes. Kaspa Explained is a protocol field guide, not a startup landing page, price site, or generic crypto brochure.
+Use this before broad UI or copy changes. Kaspa Explained is a protocol field guide. Avoid startup landing-page, price-site, and generic crypto-brochure patterns.
 
 ## Product Stance
 
@@ -17,7 +17,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 | Area | Choice | Current check | Next action |
 |---|---|---|---|
-| Navigation | Few top-level routes; source/status routes always reachable. | Current nav is coherent. | Keep AI/source-pack material in docs, not as a floating homepage widget. |
+| Navigation | Few top-level routes; source/status routes always reachable. | Current nav is coherent. | Keep AI/source-pack material in docs. |
 | Page hierarchy | Beginner path, compact thesis, apps/builders, status, sources, search. | Strong. | Add cross-links where cards read like dead text. |
 | Search | Static site search is useful. | Search page exists. | Keep labels human-readable and avoid internal-only terms in result cards. |
 | Footer | Simple source/trust links. | Fine. | Avoid deep commercial footer. |
@@ -26,7 +26,7 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 
 | Area | Choice | Current check | Next action |
 |---|---|---|---|
-| Layout system | Static HTML field guide with workbench panels where technical. | App layer and builder guide now have mechanics/workbench visuals. | Apply same grammar selectively to key pages, not everywhere. |
+| Layout system | Static HTML field guide with workbench panels where technical. | App layer and builder guide now have mechanics/workbench visuals. | Apply the same grammar selectively to key pages. |
 | Above fold | Page job, plain summary, one visual where it clarifies mechanics. | Start/application/builder improved. | Avoid huge H1 plus long caveats on mobile. |
 | Tables | Status/source/detail only. | Many tables remain, but many are behind drawers. | Move encyclopedic tables lower or behind details where possible. |
 | Mobile | Hamburger, stacked sections, compact sections. | Screenshots should show no overflow. | Keep checking dense cards, command blocks, and diagrams after every layout edit. |
@@ -39,14 +39,14 @@ Use this before broad UI or copy changes. Kaspa Explained is a protocol field gu
 | Branding | Kaspa mark, serious technical voice. | Top nav and favicon set carry the brand. | Keep logo sizing and top nav consistent across pages. |
 | Color | Teal for source/action, muted text for context, amber only for warnings/highlights. | Generally consistent. | Audit any color-only status labels. |
 | Typography | Human-readable first, monospace only for code/hashes. | Good. | Avoid long technical headings on public pages. |
-| Spacing | Moderate-density field guide, not airy marketing page. | New builder console is dense but readable. | Keep cards 8px radius or less. |
+| Spacing | Moderate-density field guide. | New builder console is dense but readable. | Keep cards 8px radius or less. |
 | Motion | Light CSS/SVG motion only where it explains mechanics. | BlockDAG map pulse is acceptable. | Add reduced-motion guard if animation expands. |
 
 ## Components
 
 | Area | Choice | Current check | Next action |
 |---|---|---|---|
-| Buttons / CTAs | Route to status, sources, start, builder paths, not conversion funnels. | Current CTAs are mostly informational. | Avoid "book demo / join / launch" style language. |
+| Buttons / CTAs | Route to status, sources, start, and builder paths. | Current CTAs are mostly informational. | Avoid "book demo / join / launch" style language. |
 | Forms / inputs | Search is the main sitewide input; diagrams use local controls. | Search exists. | Ensure search has useful empty/error states. |
 | Cards | Use for reader paths, source groups, comparison items. | Heavy but manageable. | Make cards clickable when they look actionable. |
 | Tables | Use for status, comparisons, source hierarchy. | Strong but dense. | Keep beginner pages less table-heavy. |
@@ -68,7 +68,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Performance | Stay static and dependency-light. SVG/CSS visuals are preferred over JS-heavy interaction. | No framework or animation library for decoration. |
 | Security and privacy | Avoid surprise tracking, wallet-like UI, private data, or unverifiable assistant claims. | Search and source-pack docs must route back to source/status pages instead of becoming authority. |
 | SEO and source trail | Important explanations should remain crawlable HTML with metadata, canonical URLs, sitemap coverage, and llms context alignment. | Run site checks after public copy or route changes. |
-| Analytics, if added | Track useful learning paths and broken searches, not hype metrics. | Keep consent/privacy clear and avoid broad behavioral surveillance. |
+| Analytics, if added | Track useful learning paths and broken searches. | Keep consent/privacy clear and avoid broad behavioral surveillance. |
 | Maintainability | Keep repeated layout/copy patterns disciplined until a build step becomes clearly worth it. | Prefer shared CSS tokens/classes over page-specific styling. |
 
 ## Engineering Discipline Rules
@@ -93,7 +93,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | Crypto translation | Use crypto terms only when they help precision, search, or source matching. | Encoded in `AGENTS.md` and `CONTENT_BRIEF.md`. | Translate each term into what someone tests, buys, builds, approves, measures, or avoids. |
 | Tone | Plain, direct, source-disciplined. | Good baseline. | Remove company-deck words and repeated "do not bundle" style copy. |
 | Evidence | Claims need source hierarchy or status label. | Very strong. | Keep `CLAIMS.yml`, `llms.txt`, status, and public HTML synchronized. |
-| Non-obvious value | Explain Kaspa's normal-use case: self-custody, fast mined ordering, rules users can inspect. | App pages improved. | Make more examples problem-first before protocol-first. |
+| Value in normal use | Explain Kaspa's normal-use case: self-custody, fast mined ordering, rules users can inspect. | App pages improved. | Make more examples problem-first before protocol-first. |
 | Error / empty states | 404 exists; search empty state exists. | Good enough. | Audit search messages and broken-link states after JS or source changes. |
 
 ## Trust, Accessibility, And Quality
@@ -116,7 +116,7 @@ Use this section before coding visual or copy changes. Kaspa Explained is a stat
 | `builder-guide.html` | Builder decision path. | Improved with verification console. | Reduce table intimidation over time. |
 | `status.html` | Compact status truth table. | Strong. | Compress repeated lane-separation language. |
 | `sources.html` | Deep source hierarchy. | Dense by design. | Keep it navigable; avoid making it the first public path. |
-| `ai-guidance.html` | LLM/source discipline. | Useful but inherently meta. | Keep reachable, not dominant. |
+| `ai-guidance.html` | LLM/source discipline. | Useful but inherently meta. | Keep reachable and secondary. |
 | `search.html` | Static concept search. | Useful. | Add result copy in plain terms where needed. |
 
 ## Local Rule

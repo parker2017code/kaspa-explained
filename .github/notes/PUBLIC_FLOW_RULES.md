@@ -18,13 +18,13 @@ Lead with:
 - Home and overview pages should build confidence quickly.
 - Application and builder pages should route readers into money rails, covenants, based-app prototypes, and later vProgs.
 - Status/source pages can hold deeper evidence discipline.
-- Technical or crawler notes belong in support files, not the main reader flow.
+- Technical or crawler notes belong in support files.
 
 ## Public Copy
 
 - Do not make the reader decode roadmap taxonomy before they know what changed, what is live, and what still needs evidence.
 - Use "money rails -> covenants -> based-app prototypes -> later vProgs" as the default app path.
-- Say that based apps are a build lane, and ZK is one verification path, not the definition.
+- Say that based apps are a build lane. ZK is one verification path inside that lane.
 - Keep source discipline, but avoid defensive public repetition.
 - If a page says "open," "source," or "evidence," make it an actual link.
 

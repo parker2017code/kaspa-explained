@@ -37,7 +37,7 @@ Work in this order unless a visible regression appears:
 
 - The site is credible but slightly over-disciplined. It repeats live / targeted / roadmap / research too often.
 - Some pages sound like they are preventing misunderstandings instead of simply teaching.
-- The next quality jump is hierarchy and pruning, not more content.
+- The next quality jump is hierarchy and pruning.
 - Cards that look clickable must either be links or become clearly informational.
 - Static checks are strong, but they do not replace rendered mobile/desktop review.
 - The homepage is polished and the blockDAG visual helps, but first-time users still see a lot of navigation and status language.
@@ -67,7 +67,7 @@ Work in this order unless a visible regression appears:
 
 - Make homepage status summary cards link into the status page or make them visually static.
 - Review the longest pages for collapsible detail and stronger section hierarchy.
-- Spot-check mobile layout and light mode visually, not only with static gates.
+- Spot-check mobile layout and light mode visually as well as through static gates.
 - Move duplicated manual structures toward manifest-driven generation where drift risk is high.
 
 ## Reader groups
@@ -82,7 +82,7 @@ Work in this order unless a visible regression appears:
 
 - Coverage inflation: too many pages, cards, and labels instead of one decisive path.
 - Matrix addiction: status tables are useful, but they should not replace teaching.
-- Defensive copy loops: repeating not live, check status, not the same as, and do not confuse too often.
+- Defensive copy loops: repeating status warnings and distinction warnings too often.
 - Label churn: live, targeted, roadmap, research, status-labeled, evidence, and sources repeated until they become texture.
 - Big-file/manual-inventory drift: navigation, search, and page inventory should become more manifest-driven over time.
 
@@ -120,7 +120,7 @@ Work in this order unless a visible regression appears:
 
 ## Current UI Rule
 
-- Keep light/dark controls small and out of the main reading path. The theme toggle belongs as a bottom-corner utility, not as another nav item.
+- Keep light/dark controls small and out of the main reading path. The theme toggle belongs as a bottom-corner utility.
 - Keep Ask AI and theme controls on opposite corners when both are present.
 - Heavy tables, source lists, and reference grids should default to collapsed details unless the page's main job requires them visible.
 - If a page already links to Status or Sources, do not repeat the full caveat taxonomy in the body.

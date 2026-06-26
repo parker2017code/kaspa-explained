@@ -167,7 +167,7 @@
           </div>
           <div>
             <span>Boundary</span>
-            <strong>Fast inclusion, not instant finality</strong>
+            <strong>Fast inclusion with confirmation risk</strong>
           </div>
         </div>
       </div>
@@ -176,13 +176,13 @@
     <section id="toccata-status-preview" class="section status-workbench" aria-labelledby="toccata-status-preview-title">
       <div>
         <p class="eyebrow">Toccata status</p>
-        <h2 id="toccata-status-preview-title">Released and scheduled, not activated</h2>
+        <h2 id="toccata-status-preview-title">Activation scheduled</h2>
         <p class="lead">Rusty Kaspa v2.0.1 is the current Toccata release. Rusty Kaspa v2.0.0 set the activation target at DAA score <strong>474,165,565</strong>, roughly <strong>June 30, 2026 at 16:15 UTC</strong>. The June 25 check still had mainnet below that score.</p>
         <p class="source-inline">Open <a href="/toccata-explained">Toccata Explained</a> for what changes, <a href="/toccata-status">Toccata status</a> for the activation check, or <a href="/kaspa-smart-contracts-status">Smart-Contract Status</a> for app wording. Primary sources: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>.</p>
       </div>
       <div class="status-lane-grid">
         <a href="/toccata-status"><span>Scheduled</span><strong>Activation target</strong><small>DAA 474,165,565 is the number to watch.</small></a>
-        <a href="/toccata-explained"><span>What changes</span><strong>Expressiveness, not EVM</strong><small>Covenants, ZK checks, lanes, based apps, and vProgs boundaries.</small></a>
+        <a href="/toccata-explained"><span>What changes</span><strong>UTXO expressiveness</strong><small>Covenants, ZK checks, lanes, based apps, and vProgs boundaries.</small></a>
         <a href="/kaspa-tps-explained"><span>Capacity</span><strong>TPS of what?</strong><small>Payments, covenants, proofs, tokens, and future app throughput differ.</small></a>
         <a href="/sources#code-tracking"><span>Evidence</span><strong>Read the primary links</strong><small>Releases, KIPs, Testnet-10, vProgs, and Argent.</small></a>
       </div>
@@ -311,7 +311,7 @@
           <dl class="demo-metrics" aria-label="Teaching model assumptions">
             <div><dt>Model</dt><dd>Simulated</dd></div>
             <div><dt>Mainnet</dt><dd>10 BPS era</dd></div>
-            <div><dt>Boundary</dt><dd>Fast inclusion, not instant finality</dd></div>
+            <div><dt>Boundary</dt><dd>Fast inclusion with confirmation risk</dd></div>
           </dl>
         </aside>
       </div>
@@ -425,7 +425,7 @@
         <article><span>2</span><strong>Broadcast</strong><p>The transaction reaches nodes and miners.</p></article>
         <article><span>3</span><strong>Mine</strong><p>A miner includes it in a proof-of-work block.</p></article>
         <article><span>4</span><strong>Order</strong><p>The block joins the DAG and GHOSTDAG orders history.</p></article>
-        <article><span>5</span><strong>Confirm</strong><p>Confidence increases. It is fast, not instantly irreversible.</p></article>
+            <article><span>5</span><strong>Confirm</strong><p>Confidence increases with more accepted work and time.</p></article>
       </div>
     </section>
 
@@ -491,7 +491,7 @@
         simple: {
           chain: "A single chain has to choose one branch. When two honest blocks arrive close together, one path can fall out of the record.",
           dag: "Kaspa keeps more honest work in the graph. GHOSTDAG gives nodes a rule for turning that graph into one ordered payment history.",
-          pressure: "Higher block rate only helps when the graph stays bounded, readable, and ordered. The claim is controlled parallel work, not unlimited speed."
+      pressure: "Higher block rate only helps when the graph stays bounded, readable, and ordered. The claim is controlled parallel work with ordering constraints."
         },
         bitcoin: {
       chain: "Bitcoin keeps settlement conservative by making one chain dominant and treating competing branches as temporary. That simple and durable design limits block frequency.",
@@ -501,7 +501,7 @@
         builder: {
           chain: "A linear chain gives applications a simple ordering surface. The constraint appears when users want lower latency or higher activity without leaving Proof of Work.",
           dag: "The builder surface starts with accepted transactions, payloads, UTXOs, and ordering evidence. App claims still need source, status, and replay boundaries.",
-          pressure: "For apps, treat high-frequency ordering as an input, not a product guarantee. Record node, SDK, network, endpoint, tx shape, acceptance evidence, and failure class."
+      pressure: "For apps, high-frequency ordering is an input. Product guarantees need node, SDK, network, endpoint, tx shape, acceptance evidence, and failure-class records."
         }
       };
 

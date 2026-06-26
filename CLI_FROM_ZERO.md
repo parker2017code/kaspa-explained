@@ -32,12 +32,11 @@ Use the site to separate claim types:
 - Targeted or roadmap: planned protocol/application work that is not yet live mainnet behavior.
 - Research: ideas, papers, prototypes, or architecture directions that should not be described as shipped.
 
-For command-line TN12 experiments, use the TN12 repo. This site can link to that evidence, but it does not execute it.
+For command-line TN12 experiments, use the TN12 repo. This site can link to that evidence. Command execution lives in the TN12 repo.
 
 ## Mainnet Terminal Path
 
-This repo should help a reader know where to go, not invent private mainnet
-commands. A real mainnet terminal path usually has this shape:
+This repo should help a reader know where to go. Private mainnet commands need primary-source support. A real mainnet terminal path usually has this shape:
 
 ```txt
 install official node or wallet tooling
@@ -74,7 +73,7 @@ Useful source URLs:
 - `https://faucet-testnet.kaspanet.io/`
 
 Do not copy TN12 commands into mainnet. Testnet faucet wallets, covenant proof
-drafts, and local `.local/` keys are learning tools, not production wallets.
+drafts, and local `.local/` keys are learning tools. Production wallets need separate security review.
 
 ## Mainnet Commands
 
@@ -236,8 +235,7 @@ public Kaspa resources:
 - `status.html` says which claims are live, testnet-only, targeted, roadmap,
   or research.
 - Official mainnet work should start from public Kaspa wallet, node, SDK, and
-  explorer documentation. TN12 covenant commands are testnet practice, not a
-  mainnet substitute.
+  explorer documentation. TN12 covenant commands are testnet practice.
 - TN10/Toccata activation-test releases are also testnet evidence. Do not turn
   a Testnet-10 schedule into mainnet command guidance.
 - When Toccata or later mainnet tooling changes what can be done from a

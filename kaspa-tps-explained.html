@@ -89,7 +89,7 @@
             <tr><th>Workload</th><th>Answer</th><th>Why the number changes</th></tr>
           </thead>
           <tbody>
-            <tr><td>Simple L1 payments</td><td>Roughly 2.5k to 3.4k TPS for ordinary simple transfers.</td><td>This comes from 10 BPS, block-mass limits, and simple transaction mass. It is a payment estimate, not a universal app metric.</td></tr>
+      <tr><td>Simple L1 payments</td><td>Roughly 2.5k to 3.4k TPS for ordinary simple transfers.</td><td>This comes from 10 BPS, block-mass limits, and simple transaction mass. App metrics need workload-specific assumptions.</td></tr>
             <tr><td>Covenant or programmable L1 transactions</td><td>Workload-specific. L1 transaction-per-second capacity can be lower than simple-payment TPS.</td><td>Covenants add script work, state constraints, covenant identifiers, output rules, inputs, outputs, fees, and storage effects.</td></tr>
             <tr><td>ZK proof or settlement transactions</td><td>Usually fewer, heavier L1 transactions. One proof or settlement transaction can represent many off-chain app actions.</td><td>Capacity depends on proof system, proof size, verification cost, batch size, proving time, and settlement design.</td></tr>
             <tr><td>Effective ZK app or future vProg throughput</td><td>App-specific. It can exceed raw L1 transaction TPS for a given app design.</td><td>The metric becomes app actions per proof batch or per settlement cycle, with state access and prover work as the real limits.</td></tr>
@@ -114,7 +114,7 @@
     <section class="section">
       <p class="eyebrow">Mass model</p>
       <h2>Why simple tx/block does not generalize</h2>
-      <p>Kaspa capacity is constrained by transaction mass, not by a count of transaction envelopes. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. Larger transactions consume more of the block budget.</p>
+      <p>Kaspa capacity is constrained by transaction mass. A simple count of transaction envelopes hides the real limit. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. Larger transactions consume more of the block budget.</p>
       <p>Apps change the footprint. A transaction carrying more inputs, more outputs, larger scripts, covenant metadata, payload data, proof bytes, or state-transition evidence can crowd out simple transfers. Node-side repeated work also changes the ceiling: validation cost, propagation size, UTXO access patterns, storage effects, and app-specific indexing.</p>
       <p>Payloads are bounded too. The Kaspa docs describe a payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply. App data consumes block capacity.</p>
     </section>
@@ -123,7 +123,7 @@
       <p class="eyebrow">Toccata</p>
       <h2>What Toccata changes</h2>
       <p><a href="/toccata-explained">Toccata</a> is mainly a programmability upgrade. It changes what Kaspa L1 transactions can express and verify: covenant-style spending rules, covenant IDs, ZK verifier infrastructure, sequencing-commitment access, and the first base-layer foundations for based-ZK apps. It should not be described as a raw payment-TPS multiplier.</p>
-      <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 after activation, while the compute and storage reference limit remains 500,000. The guide frames this around fitting STARK-sized proofs, not doubling ordinary payment throughput. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and it raises the standard minimum relay fee after activation.</p>
+      <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 after activation, while the compute and storage reference limit remains 500,000. The guide frames this around fitting STARK-sized proofs. Ordinary payment-throughput claims need separate payment-specific assumptions. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and it raises the standard minimum relay fee after activation.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -159,7 +159,7 @@
       <p class="eyebrow">vProgs</p>
       <h2>vProgs remain roadmap architecture</h2>
       <p>Toccata gives Kaspa pieces that vProg-style systems need: covenants, proof checks, covenant IDs, and partitioned sequencing commitments. Full vProgs are still a later architecture for app programs that prove richer logic while sharing Kaspa ordering.</p>
-      <p>KIP-21 avoids making every prover follow the entire DAG for every app. The partitioned commitment design targets O(activity) proving: a prover for one app lane follows that lane's activity, not total network activity. Current parameters also bound user-lane churn with 50 non-coinbase lanes per block and 1,000,000,000 gas per lane. At 10 BPS, that is a worst-case 500 user-lane updates per second bound, not a claim about 500 user transactions per second.</p>
+    <p>KIP-21 avoids making every prover follow the entire DAG for every app. The partitioned commitment design targets O(activity) proving: a prover for one app lane follows that lane's activity instead of total network activity. Current parameters also bound user-lane churn with 50 non-coinbase lanes per block and 1,000,000,000 gas per lane. At 10 BPS, that is a worst-case 500 user-lane updates per second bound. User transaction throughput needs separate transaction-shape assumptions.</p>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository shows the implementation direction: resource access, scheduling, batches, state diffs, transaction runtime, L1, and ZK components. Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is related tooling research for composing multi-contract covenant apps into Silverscript. Those repos are not mainnet activation evidence for full vProgs.</p>
     </section>
 

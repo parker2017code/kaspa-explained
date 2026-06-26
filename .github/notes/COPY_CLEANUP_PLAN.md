@@ -30,7 +30,7 @@ Good copy answers four things quickly:
 3. Based-app prototypes third.
 4. Full vProgs / synchronous composition later.
 
-Say plainly that based apps are a real build lane. A based app anchors app-specific state to Kaspa ordering, commitments, proofs, settlement, or exits. ZK is one path, not the definition.
+Say plainly that based apps are a real build lane. A based app anchors app-specific state to Kaspa ordering, commitments, proofs, settlement, or exits. ZK is one path inside that design.
 
 Coordination markets should start with the product shape: people commit only if enough compatible people also commit. The first useful versions can be transparent and replay-backed. The harder research target adds privacy, reusable capital, solver incentives, censorship resistance, MEV resistance, and atomic execution.
 

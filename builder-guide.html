@@ -223,281 +223,20 @@
     </section>
 
     <section class="section">
-      <h2>Use the new BUIDL path as the start</h2>
-      <p class="lead">Kaspa.org now gives builders a starting route: try the SDK in-browser, pick an app or infrastructure path, then decide when public access is enough and when you need your own node.</p>
-      <details class="source-more">
-        <summary>Open builder runway table</summary>
-        <div class="table-wrap">
-          <table class="reality-table">
-            <thead>
-              <tr>
-                <th>Builder question</th>
-                <th>Start here</th>
-                <th>When to go deeper</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>I want to read chain data from a web app.</td>
-                <td>Use the Rusty Kaspa WASM browser examples and Public Node Network docs.</td>
-                <td>Run your own node or resolver path when the product needs reliability, privacy, or scale.</td>
-              </tr>
-              <tr>
-                <td>I want a wallet, payment, or transaction flow.</td>
-                <td>Start with the WASM SDK docs and upstream examples.</td>
-                <td>Move into native Rust or full-node RPC when signing, UTXO handling, or indexing becomes product-critical.</td>
-              </tr>
-              <tr>
-                <td>I want quick backend reads.</td>
-                <td>Use the community REST API or the Kaspa Developer Platform for prototypes and constrained environments.</td>
-                <td>Treat hosted APIs as dependencies. Production apps plan node/indexer ownership, provider redundancy, or both.</td>
-              </tr>
-              <tr>
-                <td>I want infrastructure or analytics.</td>
-                <td>Use Rusty Kaspa, Docker, DB dumps, indexer projects, and node-hosting tools.</td>
-                <td>Decide whether you need live consensus access, historical query speed, or both.</td>
-              </tr>
-              <tr>
-                <td>I want covenants or app programmability.</td>
-                <td>Follow Toccata, TN12, Silverscript, KIPs, and vProgs references.</td>
-                <td>Keep TN12/testnet demos separate from mainnet claims until activation evidence changes.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-      <p><a href="https://kaspa.org/build">Kaspa.org Build</a>, the <a href="https://docs.kaspa.org/integrate/getting-started">official getting-started docs</a>, the <a href="https://api.kaspa.org/docs">community REST API docs</a>, and the <a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a> are normal first references. Keep hosted APIs as prototype infrastructure until reliability, privacy, and scale requirements are clear.</p>
+      <h2>Builder tools</h2>
+      <p>Use <a href="https://kaspa.org/build">Kaspa.org Build</a> and the <a href="https://docs.kaspa.org/integrate/getting-started">official getting-started docs</a> for SDK and node entry points. Use <a href="/sources#code-tracking">Sources</a> for Toccata releases, KIPs, Silverscript, vProgs, ZK SDK, Python SDK, WASM docs, hosted APIs, indexers, and node infrastructure.</p>
+      <p>Hosted APIs are fine for prototypes and dashboards. Products that sign transactions, track balances, handle custody, or promise uptime need a node, indexer, provider-redundancy plan, or all three.</p>
     </section>
 
     <section class="section">
-      <h2>Public tools to track</h2>
-      <p>Start with official docs and examples. Open the full tool list only when you need a concrete implementation reference.</p>
-      <details class="source-more">
-        <summary>Open builder tool links</summary>
-        <div class="reference-grid">
-          <article>
-            <h3>TN10 Toccata tests</h3>
-            <p>Rusty Kaspa v2.0.1 is the current Toccata release, while v2.0.0 schedules mainnet activation at DAA score 474,165,565. The tn10-toc2 and tn10-toc3 pre-releases scheduled Testnet-10 activation and final ZK hardening; a June 25 check of the Testnet-10 REST API showed virtual DAA 500,129,160.</p>
-            <p>Use them to follow release and testnet evidence. Mainnet app claims still need the activation score and post-activation behavior.</p>
-            <p><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Open v2.0.1 release</a></p>
-          </article>
-          <article>
-            <h3>Toccata node guide</h3>
-            <p>Operator checklist for v2.0.1 upgrades, one-way database migration, fee-policy changes, transaction field changes, pools, miners, exchanges, wallets, explorers, and Testnet-10 testing.</p>
-            <p><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Open Toccata guide</a></p>
-          </article>
-          <article>
-            <h3>Official Kaspa docs</h3>
-            <p>Builder docs for choosing between programmability routes, connecting over RPC, wallet flows, transaction payloads, accepted-transaction listeners, and running node infrastructure.</p>
-            <p><a href="https://docs.kaspa.org/">Open Kaspa docs</a></p>
-          </article>
-          <article>
-            <h3>Getting started</h3>
-            <p>JavaScript, Rust, and Python examples for installing SDKs, connecting to a node over RPC, and reading live DAG data.</p>
-            <p><a href="https://docs.kaspa.org/integrate/getting-started">Open guide</a></p>
-          </article>
-          <article>
-            <h3>Programmability overview</h3>
-            <p>Decision path for covenants, based apps, inline ZK, and future full vProgs. Use it to route builder ideas; still verify activation status before making product claims.</p>
-            <p><a href="https://docs.kaspa.org/programmability">Open overview</a></p>
-          </article>
-          <article>
-            <h3>Silverscript</h3>
-            <p>Higher-level covenant tooling and examples for state transitions. Use it to learn the covenant direction; tooling and deployment workflows are still early.</p>
-            <p><a href="https://github.com/kaspanet/silverscript">Open Silverscript</a></p>
-          </article>
-          <article>
-            <h3>vProgs repo</h3>
-            <p>Early Rust framework work around based computation, scheduler/runtime/storage layers, L1 bridge concepts, and ZK proving components. The June 18 settlement-into-covenants merge gathered transaction, batch, and aggregation provers plus settlement and L1 bridge plumbing.</p>
-            <p><a href="https://github.com/kaspanet/vprogs">Open vProgs</a></p>
-          </article>
-          <article>
-            <h3>ZK SDK</h3>
-            <p>Merged Rusty Kaspa PR adding <code>R0ScriptBuilder</code>, a wrapper for converting RISC Zero receipts into native Kaspa scripts. Use it for Toccata-era proof experiments; still gated by activation and application design.</p>
-            <p><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Open PR #953</a></p>
-          </article>
-          <article>
-            <h3>KIP-24</h3>
-            <p>Open transaction-v1 KIP PR covering compute budgets, covenant bindings, user lanes, and the payload/rest txid split for ZK and based-executor workflows.</p>
-            <p><a href="https://github.com/kaspanet/kips/pull/41">Open KIP-24 PR</a></p>
-          </article>
-          <article>
-            <h3>Python SDK</h3>
-            <p>Standalone Python SDK. Version 2.0.0 added Toccata-aligned support and the full Rusty Kaspa managed-wallet API; version 2.0.1 added lane-proof RPC support, SMT sync progress events, covenant-binding fixes, and a Rusty Kaspa v2.0.1 dependency bump.</p>
-            <p><a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">Open v2.0.1 release</a></p>
-          </article>
-          <article>
-            <h3>WASM SDK</h3>
-            <p>Browser and Node.js bindings from Rusty Kaspa for wallet flows, transactions, RPC access, and live browser examples.</p>
-            <p><a href="https://kaspa.aspectron.org/docs/">Open WASM docs</a></p>
-          </article>
-          <article>
-            <h3>Rusty Kaspa release</h3>
-            <p>The released node and native Rust crates are the main path for full nodes, RPC, wallet internals, indexing, and node-adjacent services.</p>
-            <p><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Open v2.0.1 release</a></p>
-          </article>
-          <article>
-            <h3>TxIndex</h3>
-            <p>Open PR for optional transaction-history indexing and GetTransaction RPC support. Relevant for wallets, explorers, and app infrastructure if merged and released.</p>
-            <p><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">Open PR #860</a></p>
-          </article>
-          <article>
-            <h3>Transaction payloads and receipts</h3>
-            <p>Payload-aware payment flows can attach compact context to a transaction, then show accepted evidence, source labels, and fallback verification links. Treat payload context as L1 transaction data, not as proof that native smart contracts are live.</p>
-            <p><a href="https://docs.kaspa.org/integrate/transaction-payload">Open transaction payload docs</a></p>
-          </article>
-          <article>
-            <h3>KasSigner / KasSee</h3>
-            <p>Open-source air-gapped signing and watch-only wallet work by InKasWeRust. Use it to study wallet signing, PSKB/KSPT handoff, address verification, UTXO selection, and multisig wallet conventions.</p>
-            <p>Treat it as experimental wallet tooling, not protocol activation evidence or a recommendation to store large funds.</p>
-            <p><a href="https://github.com/InKasWeRust/KasSigner">Open KasSigner</a></p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <section class="section">
-      <h2>Builder surfaces</h2>
-      <p>Most builders only need one or two of these at a time. Keep the rest as a reference drawer.</p>
-      <details class="source-more">
-        <summary>Open infrastructure links</summary>
-        <div class="reference-grid">
-          <article>
-            <h3>Public Node Network</h3>
-            <p>Community-operated node pool fronted by the Kaspa Resolver. Use it for demos and light reads; not a replacement for production infrastructure.</p>
-            <p><a href="https://kaspa.aspectron.org/rpc/pnn.html">Open PNN docs</a></p>
-          </article>
-          <article>
-            <h3>Community REST API</h3>
-            <p>Lightweight hosted API for constrained environments and quick reads. Treat it as best-effort with no SLA.</p>
-            <p><a href="https://api.kaspa.org/docs">Open REST API docs</a></p>
-          </article>
-          <article>
-            <h3>Kaspa Developer Platform</h3>
-            <p>Hosted API-key path for address history, transaction acceptance, block ranges by blue/DAA score, and node RPC proxy access.</p>
-            <p>Use it for dashboards, exchange/wallet integrations, prototypes, and second-source checks. Amounts arrive as sompi strings, timestamps are Unix milliseconds, hashes are 64-character hex strings, and large lists use pagination.</p>
-            <p>Production systems still need a node/indexer plan, rate-limit handling, provider-failure behavior, secure API-key storage, and precision-safe amount math.</p>
-            <p><a href="https://docs.kas.fyi/">Open KDP docs</a></p>
-          </article>
-          <article>
-            <h3>Transaction payloads</h3>
-            <p>Official guide for attaching application data to standard Kaspa transactions within mempool mass limits. Use it for receipts, tags, and lightweight app data.</p>
-            <p><a href="https://docs.kaspa.org/integrate/transaction-payload">Open payload guide</a></p>
-          </article>
-          <article>
-            <h3>Accepted transactions</h3>
-            <p>Official guide for polling or subscribing to accepted transactions, including payload-aware reads and reorg handling near active DAG tips.</p>
-            <p><a href="https://docs.kaspa.org/integrate/accepted-transactions">Open listener guide</a></p>
-          </article>
-          <article>
-            <h3>Docker node</h3>
-            <p>Rusty Kaspa Docker images work for local node setup. Persistent production nodes still need explicit storage, networking, and operations choices.</p>
-            <p><a href="https://hub.docker.com/r/kaspanet/rusty-kaspad">Open Docker Hub</a></p>
-          </article>
-          <article>
-            <h3>Explorer data dumps</h3>
-            <p>Explorer/API database dumps can help analytics, indexing, and historical-data work when an app does not need live consensus access.</p>
-            <p><a href="https://db-dl.kaspa.org">Open DB dumps</a></p>
-          </article>
-          <article>
-            <h3>DAG visualizer</h3>
-            <p>A live way to inspect blockDAG behavior and help users see that parallel blocks are ordered instead of discarded.</p>
-            <p><a href="https://kgi.kaspad.net/">Open DAGVIZ</a></p>
-          </article>
-          <article>
-            <h3>DeepWiki</h3>
-            <p>Generated Rusty Kaspa code navigation can help orientation, but code, releases, and docs carry the status claims.</p>
-            <p><a href="https://deepwiki.com/kaspanet/rusty-kaspa">Open DeepWiki</a></p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <section class="section">
-      <h2>Infrastructure projects to inspect</h2>
-      <p>Use these as references after choosing a build path. They should not be the first thing a new reader has to parse.</p>
-      <details class="source-more">
-        <summary>Open infrastructure project links</summary>
-        <div class="reference-grid">
-          <article>
-            <h3>Simply Kaspa Indexer</h3>
-            <p>Standalone indexing project for Kaspa block and transaction data.</p>
-            <p><a href="https://github.com/supertypo/simply-kaspa-indexer">Open indexer</a></p>
-          </article>
-          <article>
-            <h3>DNS Seeder</h3>
-            <p>Bootstrapping infrastructure for the Kaspa peer-to-peer network.</p>
-            <p><a href="https://github.com/kaspanet/dnsseeder">Open DNS seeder</a></p>
-          </article>
-          <article>
-            <h3>kHost</h3>
-            <p>Tooling for running and contributing node capacity to the wider network.</p>
-            <p><a href="https://github.com/aspectron/khost">Open kHost</a></p>
-          </article>
-          <article>
-            <h3>kaspa-js</h3>
-            <p>Community-maintained JavaScript tooling around the Kaspa stack. Review current maintenance and fit before production use.</p>
-            <p><a href="https://github.com/K-Kluster/kaspa-js">Open kaspa-js</a></p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <section class="section">
-      <h2>What helps before prototyping</h2>
-      <p>Use TN12 when you need covenant-practice examples and use current TN10 release notes when checking the testnet activation path. Keep these as setup details, not the public explanation of Kaspa.</p>
-      <details class="source-more">
-        <summary>Open TN12 setup table</summary>
-        <div class="table-wrap">
-          <table class="reality-table">
-            <thead>
-              <tr>
-                <th>Need</th>
-                <th>Path</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Generate a test address</td>
-                <td>Use SDK or wallet tooling that produces a `kaspatest:` address, then paste that exact address into the TN12 faucet.</td>
-                <td>Testnet funds only. Do not reuse test keys for mainnet.</td>
-              </tr>
-              <tr>
-                <td>Get TN12 faucet tokens</td>
-                <td>Use the browser faucet at `faucet-tn12.kaspanet.io`. Automation may fail behind browser checks, so manual browser use is normal.</td>
-                <td>Faucet limits and availability can change.</td>
-              </tr>
-              <tr>
-                <td>Run a local TN12 node</td>
-                <td>Build or use a TN12-capable `rusty-kaspa` branch and start `kaspad --testnet --netsuffix=12 --utxoindex` with local RPC listeners.</td>
-                <td>Do not assume a generic stable mainnet binary supports every active TN12 setting.</td>
-              </tr>
-              <tr>
-                <td>Check balances locally</td>
-                <td>Query local wRPC JSON, often `127.0.0.1:18210`, after the node is synced and UTXO index is enabled.</td>
-                <td>Unsynced nodes can return misleading zero balances.</td>
-              </tr>
-              <tr>
-                <td>Move from mockup to app</td>
-                <td>Separate UI policy design from real Silverscript compilation, signing, transaction construction, broadcast, and explorer-visible outputs.</td>
-                <td>A simulator is not an enforced covenant until TN12 transactions prove it.</td>
-              </tr>
-              <tr>
-                <td>Prove a stateful covenant</td>
-                <td>Check compile output, local state transitions, signature-script wiring, continuation outputs, and the submit route before broadcasting.</td>
-                <td>Funding a script output is not the same as proving a valid state transition.</td>
-              </tr>
-              <tr>
-                <td>Reuse TN12 lab lessons</td>
-                <td>Start with accepted tx evidence, exact wallet review fields, endpoint details, and rollback-aware indexing.</td>
-                <td>Use testnet lessons as builder practice; keep mainnet status sourced separately.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-      <p class="fit-note">Mainnet builders use the released mainnet node and normal `kaspa:` addresses. TN12 builders label every address, token, and transaction as testnet-only.</p>
+      <h2>Before prototyping</h2>
+      <ol class="learning-steps">
+        <li><strong>Pick network first.</strong> <span>Mainnet uses <code>kaspa:</code>. TN12 uses <code>kaspatest:</code>. Never reuse test keys for mainnet.</span></li>
+        <li><strong>Use the right node.</strong> <span>Testnet covenant work needs a branch or release that supports that testnet. Mainnet builders use the released mainnet node.</span></li>
+        <li><strong>Check sync and UTXO index.</strong> <span>Unsynced local nodes and missing indexes can return misleading balances.</span></li>
+        <li><strong>Separate UI policy from consensus rules.</strong> <span>A mockup, planner state, or wallet warning is not an enforced covenant.</span></li>
+        <li><strong>Record exact submit details.</strong> <span>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</span></li>
+      </ol>
     </section>
 
     <section class="section">
@@ -551,7 +290,7 @@
         <li><strong>External anchors:</strong> <span>ZK can check a statement about chosen inputs; builders must still define how source-chain roots, prices, events, or attestations become trusted inputs.</span></li>
         <li><strong>Based-zk apps:</strong> <span>based apps that add proof-verified execution or bridge logic when deterministic replay is not enough.</span></li>
         <li><strong>Full vProgs:</strong> <span>future app-to-app atomic composition direction, beyond standalone based-app construction.</span></li>
-        <li><strong>Transaction payloads:</strong> <span>live L1 transaction data for receipts and app context, not native smart-contract activation.</span></li>
+        <li><strong>Transaction payloads:</strong> <span>live L1 transaction data for receipts and app context. Native smart-contract activation needs separate protocol evidence.</span></li>
       </ol>
       <p class="fit-note">Use the positive stage first. Add caveats only where a reader might confuse builder work with live mainnet functionality.</p>
     </section>
@@ -574,14 +313,14 @@
         <li><a href="https://progdoc.izio.fr/verified-actions.html">Izio on Inline ZK</a> for per-action proofs and proof-driven settlement.</li>
         <li><a href="https://progdoc.izio.fr/full-vprogs.html">Izio on Full vProgs</a> for future app-to-app synchronous composition.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">Rusty Kaspa tn10-toc3 pre-release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, and <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> for the May 2026 Testnet-10 Toccata activation and hardening path.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> for testnet covenant prototyping context. Treat these as testnet builder tools, not mainnet activation evidence.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR #953</a> for the merged <code>R0ScriptBuilder</code> helper around RISC Zero proof scripts. Treat it as builder tooling progress, not proof that ZK apps are mature mainnet products.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> for testnet covenant prototyping context. These are testnet builder tools. Mainnet activation needs separate mainnet evidence.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR #953</a> for the merged <code>R0ScriptBuilder</code> helper around RISC Zero proof scripts. This is builder tooling progress. Mature mainnet ZK apps need separate product evidence.</li>
         <li><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> for the open transaction-v1 fields and hashing PR, and <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> for the open P2MR quantum-resistance ScriptPublicKey proposal. Open KIP PRs are design/proposal evidence until merged and activated.</li>
         <li><a href="https://kaspa.org/build">Kaspa.org Build</a> for the current developer resource index: Rusty Kaspa, WASM SDK, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&amp;D links.</li>
-        <li><a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a> for hosted address history, transaction acceptance, block-range, and node RPC proxy APIs. Treat it as hosted infrastructure, not protocol-status authority.</li>
+        <li><a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a> for hosted address history, transaction acceptance, block-range, and node RPC proxy APIs. Hosted infrastructure does not set protocol status.</li>
         <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>, for current builder workflow guidance.</li>
         <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> for the JavaScript SDK request shape used by current builder examples.</li>
-        <li><a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a> for experimental external-signer and watch-only wallet references. Use them for wallet UX and signing-boundary research, not shipped protocol status.</li>
+        <li><a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a> for experimental external-signer and watch-only wallet references. They are wallet UX and signing-boundary research references. Shipped protocol status needs release and activation evidence.</li>
         <li><a href="/status">Kaspa Explained status</a> and <a href="/sources">source hierarchy</a> for live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>

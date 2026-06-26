@@ -112,7 +112,7 @@
     <section class="section">
       <p class="eyebrow">ZK apps</p>
       <h2>Proofs move computation off L1, then settle back</h2>
-      <p>ZK verification changes the app-capacity question. A proof transaction may be heavier than a simple payment, but one proof can represent many off-chain app actions if the app is designed that way. The L1 transaction is then a settlement or verification event, not one user action.</p>
+      <p>ZK verification changes the app-capacity question. A proof transaction may be heavier than a simple payment, but one proof can represent many off-chain app actions if the app is designed that way. The L1 transaction then serves as a settlement or verification event.</p>
       <p>KIP-16 introduces <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths. That lets a script verify a proof about chosen public inputs. The proof still needs a defined statement, app design, and anchor for outside facts. ZK does not magically prove prices, bridge truth, game integrity, or real-world events unless the inputs and trust boundary are defined.</p>
       <p>This is why "Kaspa TPS" needs workload labels. Payment TPS, covenant transaction capacity, proof-settlement capacity, and effective app actions per settlement cycle are different measurements.</p>
     </section>
@@ -121,7 +121,7 @@
       <p class="eyebrow">KIP-21</p>
       <h2>Sequencing without proving the whole DAG</h2>
       <p>Based apps use Kaspa L1 ordering. A naive design is expensive: every app would need to prove which L1 transactions were for it and which were not. At scale, "not for me" evidence becomes the burden.</p>
-      <p>KIP-21 addresses that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, not the full network. Proving cost tracks the app's own activity rather than total network activity.</p>
+      <p>KIP-21 addresses that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity. Proving cost tracks the app's own activity.</p>
       <p>This gives based apps and later vProg-style systems a way to avoid proving unrelated network activity. It is not a consumer slogan and not proof that full synchronous app composition is live.</p>
     </section>
 
@@ -137,8 +137,8 @@
       <p class="eyebrow">Fees and nodes</p>
       <h2>Operator changes</h2>
       <p>The Toccata guide is operational. It tells node operators to upgrade to v2.0.1 or newer before activation, notes the node database upgrade is one-way without resync, and tells service providers to test against Testnet-10.</p>
-      <p>It also changes standard fee policy for direct RPC submission: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. That is mempool policy, not consensus. Consensus-valid zero-fee transactions remain possible, but upgraded nodes can reject underpriced standard transactions from relay or RPC according to policy.</p>
-      <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as a reason updated hardware specs changed, specifically to allow ZK-STARK proofs. Read that as proof-transaction capacity work, not as a blanket payment-throughput multiplier. It expands the size envelope needed for proof transactions and adds programmability machinery.</p>
+    <p>It also changes standard fee policy for direct RPC submission: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Mempool policy and consensus are separate rule sets. Consensus-valid zero-fee transactions remain possible, but upgraded nodes can reject underpriced standard transactions from relay or RPC according to policy.</p>
+      <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as a reason updated hardware specs changed, specifically to allow ZK-STARK proofs. That is proof-transaction capacity work. Ordinary payment-throughput claims need separate payment-specific assumptions. It expands the size envelope needed for proof transactions and adds programmability machinery.</p>
     </section>
 
     <section class="section">

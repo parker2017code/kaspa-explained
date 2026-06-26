@@ -23,6 +23,15 @@ const buttonHeavyAllowed = new Set([
   "sources.html",
 ]);
 
+const longReferenceAllowed = new Set([
+  "claims-reference.html",
+  "glossary.html",
+  "sources.html",
+  "status.html",
+]);
+
+const normalPageWordLimit = 2400;
+
 function fail(message) {
   failures.push(message);
 }
@@ -72,7 +81,7 @@ function auditHomepage() {
 
   for (const button of buttons) {
     if (/\b(?:April|May)\b/i.test(button.label)) {
-      fail(`index.html should not feature old dated archive button: ${button.label}`);
+      fail(`index.html still features old dated archive button: ${button.label}`);
     }
   }
 
@@ -122,9 +131,25 @@ function auditButtonsAndDates() {
   }
 }
 
+function countWords(text) {
+  return (text.match(/\b[\w'-]+\b/g) ?? []).length;
+}
+
+function auditAttentionBudget() {
+  for (const page of pages) {
+    if (longReferenceAllowed.has(page)) continue;
+
+    const words = countWords(visibleText(read(page)));
+    if (words > normalPageWordLimit) {
+      fail(`${page} has ${words} visible words; cut or move reference material behind a dedicated reference page`);
+    }
+  }
+}
+
 auditHomepage();
 auditBuildHub();
 auditButtonsAndDates();
+auditAttentionBudget();
 
 if (failures.length > 0) {
   console.error("\nContent-flow audit failed:\n");
