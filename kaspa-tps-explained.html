@@ -113,7 +113,7 @@
 
     <section class="section">
       <p class="eyebrow">Mass model</p>
-      <h2>Why simple tx/block does not generalize</h2>
+      <h2>Simple tx/block stops at payments</h2>
       <p>Kaspa capacity is constrained by transaction mass. A simple count of transaction envelopes hides the real limit. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. Larger transactions consume more of the block budget.</p>
       <p>Apps change the footprint. A transaction carrying more inputs, more outputs, larger scripts, covenant metadata, payload data, proof bytes, or state-transition evidence can crowd out simple transfers. Node-side repeated work also changes the ceiling: validation cost, propagation size, UTXO access patterns, storage effects, and app-specific indexing.</p>
       <p>Payloads are bounded too. The Kaspa docs describe a payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply. App data consumes block capacity.</p>
@@ -122,7 +122,7 @@
     <section class="section">
       <p class="eyebrow">Toccata</p>
       <h2>What Toccata changes</h2>
-      <p><a href="/toccata-explained">Toccata</a> is mainly a programmability upgrade. It changes what Kaspa L1 transactions can express and verify: covenant-style spending rules, covenant IDs, ZK verifier infrastructure, sequencing-commitment access, and the first base-layer foundations for based-ZK apps. It should not be described as a raw payment-TPS multiplier.</p>
+      <p><a href="/toccata-explained">Toccata</a> is mainly a programmability upgrade. It changes what Kaspa L1 transactions can express and verify: covenant-style spending rules, covenant IDs, ZK verifier infrastructure, sequencing-commitment access, and the first base-layer foundations for based-ZK apps. Treat TPS claims as workload-specific.</p>
       <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 after activation, while the compute and storage reference limit remains 500,000. The guide frames this around fitting STARK-sized proofs. Ordinary payment-throughput claims need separate payment-specific assumptions. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and it raises the standard minimum relay fee after activation.</p>
       <div class="table-wrap">
         <table class="reality-table">

@@ -111,6 +111,10 @@ const rules = [
     pattern: /\b(clean public summary|citable summary|plain[- ]language explanation|source of truth|highest[- ]signal|operating spec|useful framing|why this matters|what this means|key takeaway|broader point|immediate point|stronger version|practical implication|public[- ]facing|reader[- ]facing|builder[- ]facing|copy tone)\b/i,
   },
   {
+    name: "contrast-label",
+    pattern: /\b(say this|not this|bad shortcut|better version|use this wording|avoid this wording|loose wording to avoid|do not say|do not copy the category|do not let the model bluff|do not build shallow demos)\b/i,
+  },
+  {
     name: "llm-transition-scaffold",
     pattern: /\b(put simply|in plain language|more importantly|it(?:'|\u2019)?s worth noting|it is worth noting|this matters because|at the end of the day)\b/i,
   },
