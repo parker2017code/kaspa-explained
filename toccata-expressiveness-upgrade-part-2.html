@@ -145,16 +145,8 @@
             <figcaption>Locks into lattice</figcaption>
           </figure>
           <figure class="essay-visual essay-visual-small">
-            <img src="assets/toccata-expressiveness/15-switch-pattern.webp" alt="A grid of switches forming an emergent lit pattern.">
-            <figcaption>Simple pieces, complex behavior</figcaption>
-          </figure>
-          <figure class="essay-visual essay-visual-small">
             <img src="assets/toccata-expressiveness/09-compiler-prism.webp" alt="Silver flow passing through a prism and becoming structured machine glyphs.">
             <figcaption>SilverScript compiler path</figcaption>
-          </figure>
-          <figure class="essay-visual essay-visual-small">
-            <img src="assets/toccata-expressiveness/16-argent-prisms.webp" alt="Stacked silver prisms weaving separate script ribbons together.">
-            <figcaption>Argent stitching covenants</figcaption>
           </figure>
           <figure class="essay-visual essay-visual-small">
             <img src="assets/toccata-expressiveness/10-covenant-lineage.webp" alt="A glowing seal rooted into dark bedrock.">
@@ -173,10 +165,6 @@
           <p>If the answer is "it checks every single transaction on the entire network," you are cooked, because almost none of them are yours. Imagine proving, every few minutes, that you read the whole post office and only one envelope had your name on it. That does not scale.</p>
           <p>KIP-21 fixes the addressing. Instead of grinding over the whole DAG to find your sliver of relevant activity, your app follows its own lane and proves the chain of events that actually pertain to it. That is the difference between a cute whiteboard idea and something a builder can ship without lighting money on fire. On a VM chain you would usually solve this with some core contract inside the VM that hoovers up the app's data. Works, but now a user-level contract is quietly doing system-level sequencing. Kaspa takes that job at the protocol level and skips the full VM.</p>
           <p>As far as I can tell, no other non-VM base layer has actually solved this cleanly. It is also one of the heaviest pieces of engineering in the whole upgrade, and a big chunk of what vProgs will eventually need, quietly shipping now. The thing you trade away is composability: based apps cannot reach into each other mid-transaction the way contracts sharing one VM can. That is the deliberate call, more sovereignty now, less synchronous composability. vProgs are the later step that buys some of that composability back without surrendering the rest. Different article.</p>
-          <p>So has nobody else done this?</p>
-          <p>People have: Bitcoin Cash got there first. It added native introspection back in 2022 and has had real, working covenants ever since. SilverScript is openly modeled on CashScript, BCH's covenant language. Covenants on a UTXO chain are not a Kaspa invention. Credit where it is due.</p>
-          <p>Bitcoin itself is the holdout, still refusing the opcodes that make this easy (OP_CAT and friends), partly on philosophy and partly on real worries about security and recursive-covenant risk. Litecoin, Monero, and Zcash mostly went the other way entirely, toward payments or privacy, not expression.</p>
-          <p>So the real question is not "why did nobody do covenants," it is "why is doing them well so rare." Two reasons. One, the base layer has to be fast. Slow chains can technically run covenants but cannot run the good stuff: multi-phase apps, a chess league flipping through states quickly, anything that only works when blocks come fast and parallel. Bitcoin Cash has covenants; it does not have Kaspa's speed. Two, lineage. Without covenant IDs you prove a coin's origin by dragging its whole history along behind it, which works and is miserable. Kaspa needed the full Rust rewrite and Crescendo's 10 blocks per second before any of this was worth attempting. Crescendo bought the speed. Toccata spends it: covenants, plus covenant IDs to keep lineage clean, plus native ZK to push the heavy work off chain. The covenant idea is old. This combination, on a fast parallel proof-of-work base layer, is not.</p>
         </div>
         <div class="essay-visual-stack essay-visual-rail">
           <figure class="essay-visual">
@@ -186,6 +174,24 @@
           <figure class="essay-visual essay-visual-small">
             <img src="assets/toccata-expressiveness/02-shared-state-locality.webp" alt="A field of separated local cells.">
             <figcaption>Local app state</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>So has nobody else done this?</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>People have: Bitcoin Cash got there first. It added native introspection back in 2022 and has had real, working covenants ever since. SilverScript is openly modeled on CashScript, BCH's covenant language. Covenants on a UTXO chain are not a Kaspa invention. Credit where it is due.</p>
+          <p>Bitcoin itself is the holdout, still refusing the opcodes that make this easy (OP_CAT and friends), partly on philosophy and partly on real worries about security and recursive-covenant risk. Litecoin, Monero, and Zcash mostly went the other way entirely, toward payments or privacy, not expression.</p>
+          <p>So the real question is not "why did nobody do covenants," it is "why is doing them well so rare." Two reasons. One, the base layer has to be fast. Slow chains can technically run covenants but cannot run the good stuff: multi-phase apps, a chess league flipping through states quickly, anything that only works when blocks come fast and parallel. Bitcoin Cash has covenants; it does not have Kaspa's speed. Two, lineage. Without covenant IDs you prove a coin's origin by dragging its whole history along behind it, which works and is miserable. Kaspa needed the full Rust rewrite and Crescendo's 10 blocks per second before any of this was worth attempting. Crescendo bought the speed. Toccata spends it: covenants, plus covenant IDs to keep lineage clean, plus native ZK to push the heavy work off chain. The covenant idea is old. This combination, on a fast parallel proof-of-work base layer, is not.</p>
+          <p>Bitcoin Cash got covenants first. Zcash got ZK privacy first. Kaspa's value proposition is the bundle: covenants, covenant IDs, native ZK verification, and KIP-21, on a fast parallel proof-of-work base layer.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/15-switch-pattern.webp" alt="A grid of switches forming an emergent lit pattern.">
+            <figcaption>Simple pieces, complex behavior</figcaption>
           </figure>
         </div>
       </div>
