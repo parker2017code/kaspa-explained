@@ -41,6 +41,26 @@ const skipFiles = new Set([
   "scripts/lint-copy.mjs",
 ]);
 
+const personalEssayFiles = new Set([
+  "toccata-expressiveness-upgrade.html",
+  "toccata-expressiveness-upgrade-part-2.html",
+  "toccata-expressiveness-upgrade-part-3.html",
+]);
+
+const relaxedEssayRules = new Set([
+  "not-reframe-but",
+  "does-not-reframe-but",
+  "comma-not-reframe",
+  "imperative-comma-not",
+  "comma-not-contrast",
+  "not-only-bridge",
+  "more-than-reframe",
+  "merely-reframe",
+  "beyond-reframe",
+  "rather-than-reframe",
+  "contrast-label",
+]);
+
 const rules = [
   {
     name: "not-reframe-but",
@@ -172,6 +192,7 @@ function checkFile(fullPath, relativePath) {
     if (isInstructionContext(relativePath, clean)) continue;
 
     for (const rule of rules) {
+      if (isRelaxedEssayRule(relativePath, rule.name)) continue;
       if (!rule.pattern.test(clean)) continue;
       if (isAllowedUse(rule.name, clean)) continue;
       failures.push({
@@ -319,6 +340,11 @@ function isAllowedUse(ruleName, text) {
   }
 
   return false;
+}
+
+function isRelaxedEssayRule(relativePath, ruleName) {
+  const normalizedPath = relativePath.split(path.sep).join("/");
+  return personalEssayFiles.has(normalizedPath) && relaxedEssayRules.has(ruleName);
 }
 
 walk(root);

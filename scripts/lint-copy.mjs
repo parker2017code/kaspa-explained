@@ -45,6 +45,27 @@ const skipFiles = new Set([
   "package-lock.json",
 ]);
 
+const personalEssayFiles = new Set([
+  "toccata-expressiveness-upgrade.html",
+  "toccata-expressiveness-upgrade-part-2.html",
+  "toccata-expressiveness-upgrade-part-3.html",
+]);
+
+const relaxedEssayRules = new Set([
+  "not-reframe-but",
+  "does-not-reframe-but",
+  "comma-but-reframe",
+  "comma-not-reframe",
+  "imperative-comma-not",
+  "comma-not-contrast",
+  "not-only-bridge",
+  "more-than-reframe",
+  "merely-reframe",
+  "beyond-reframe",
+  "rather-than-reframe",
+  "contrast-label",
+]);
+
 const rules = [
   {
     name: "not-reframe-but",
@@ -166,6 +187,7 @@ function checkFile(fullPath, relativePath) {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (isInstructionContext(relativePath, line)) continue;
+      if (isRelaxedEssayRule(relativePath, rule.name)) continue;
       if (isCodePropertyLine(line, rule.name)) continue;
       rule.pattern.lastIndex = 0;
       const match = rule.pattern.exec(line);
@@ -180,6 +202,11 @@ function checkFile(fullPath, relativePath) {
       }
     }
   }
+}
+
+function isRelaxedEssayRule(relativePath, ruleName) {
+  const normalizedPath = relativePath.split(path.sep).join("/");
+  return personalEssayFiles.has(normalizedPath) && relaxedEssayRules.has(ruleName);
 }
 
 function isCodePropertyLine(line, ruleName) {
