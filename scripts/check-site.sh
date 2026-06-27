@@ -145,6 +145,17 @@ for page in "${expected_pages[@]}"; do
     echo "$page missing canonical nav-links container" >&2
     exit 1
   }
+
+  related_count="$(grep -c '<!-- related-links:start -->' "$page")"
+  [[ "$related_count" == "1" ]] || {
+    echo "$page must contain exactly one generated related-links block" >&2
+    exit 1
+  }
+
+  grep -q 'class="section site-related"' "$page" || {
+    echo "$page missing site-related section" >&2
+    exit 1
+  }
 done
 
 if grep -q 'Ask AI\|llm-widget\|llm-launch' nav.js styles.css; then
