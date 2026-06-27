@@ -59,6 +59,7 @@ const relaxedEssayRules = new Set([
   "beyond-reframe",
   "rather-than-reframe",
   "contrast-label",
+  "importance-signpost",
 ]);
 
 const rules = [

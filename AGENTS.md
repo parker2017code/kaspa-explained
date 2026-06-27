@@ -54,6 +54,8 @@
 ## Content Rules
 
 - Use an independent crypto-publication voice: reported, attributed, sober, and specific. The site should read like an informed crypto newsroom explainer. Avoid holder copy, campaign copy, and official-project voice.
+- Personal essays are different from reference pages. When the user supplies essay prose, preserve the author's contractions, fragments, parentheticals, brackets, caps, jokes, slang, profanity, spacing, and cadence unless the user explicitly asks for an editorial rewrite or a factual/status error must be corrected.
+- For personal essays, do not normalize grammar, remove asides, smooth sentence fragments, formalize contractions, change punctuation for polish, or satisfy copy lint by rewriting the author's voice. If the prose needs an accuracy fix, make the smallest possible change and name it.
 - Sentence test: every sentence should add an actor, action, evidence, source, status label, constraint, consequence, useful distinction, or judgment the reader can use. If it adds none of those, cut it.
 - Attention budget: reader attention is the scarce resource. Length is fine only when each paragraph earns it with a fact, distinction, consequence, image, argument, source, or decision. If deleting a sentence would cost the reader nothing, delete it.
 - Default to the necessary claim, enough evidence to trust it, and a stop. Add depth only when compression would damage meaning.
