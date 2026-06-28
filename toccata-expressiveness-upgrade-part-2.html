@@ -107,37 +107,14 @@
     </section>
 
     <section class="section article-body">
-      <h2>The elegant part: keep what's actually unique, ship the rest off-chain</h2>
-      <div class="essay-section-grid">
-        <div>
-          <p>Unlike other chains I'm aware of, Kaspa looks at this whole process and asks which part is even special. And computation, it turns out, is not the special part. Computers are everywhere. AWS will rent you all the computation you could ever want, and so will a pile of other providers. You can buy plenty of compute at an electronics store too. Doing computation is not crypto's unique selling point. So Kaspa takes the expensive part (computation) and moves it off chain, and keeps the part that's actually unique to crypto (verification, ordering, censorship resistance, proof-of-work security) on chain.</p>
-          <p>This is where zero-knowledge proofs come in, and I want to be careful here, because ZK in Toccata doesn't mean "private transactions for everyone tomorrow." It means Kaspa gains the ability to verify proofs. An app does its heavy lifting off chain, then hands Kaspa a compact proof, and Kaspa checks the proof instead of re-running the entire program. You keep the thing that matters (anyone can verify the result) and drop the thing that's wasteful (everyone re-computing the same work).</p>
-          <p>Here's the example that made this click for me. Picture an on-chain chess game where you win real value. Almost all of it can run as plain on-chain rules, except for one ugly problem: bots. You're not going to bet real money against a stranger who might be running an engine, and catching cheaters is exactly the kind of messy pattern-matching you can't put on chain (chess.com keeps its bot-detection secret precisely because publishing it would let people dodge it). So an outside watcher runs that detection off chain, and when it catches a bot it posts a ZK proof to L1 that says "this player cheated." The chain never sees the algorithm. It just checks the proof, and the game's own rules dock the cheater automatically. Off-chain work, small proof back, Kaspa verifies. That's the whole pattern.</p>
-          <p>Strip the chess out and the principle is plain: any time the real work is too heavy, too private, or both, you do it off chain and hand Kaspa a proof instead of the work itself. A trading app could match orders off chain and prove it matched them fairly. A sealed-bid auction could prove who won without ever revealing the bids. A game could run a thousand moves off chain and settle the whole thing with one proof. Kaspa never does the work. It just refuses to believe you until the math checks out.</p>
-          <p>The proof systems here include a STARK-based RISC Zero path, plus a Groth16 verifier. The plain idea is the same either way: heavy computation happens off chain, and Kaspa verifies a compact proof on chain. To my knowledge, this puts Kaspa among the first proof-of-work L1s to support native STARK-based proof verification, and possibly the first major one.</p>
-          <p>Then there's the other tool, and this one I find genuinely beautiful: covenants.</p>
-        </div>
-        <div class="essay-visual-stack essay-visual-rail">
-          <figure class="essay-visual">
-            <img src="assets/toccata-expressiveness/03-chess-proof.webp" alt="A chessboard under a verifier's beam with a hidden robotic piece.">
-            <figcaption>Chess bot proof</figcaption>
-          </figure>
-          <figure class="essay-visual essay-visual-small">
-            <img src="assets/toccata-expressiveness/11-proof-container.webp" alt="A technical block-shaped container sized around a faceted proof.">
-            <figcaption>Room for a proof</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="section article-body">
       <h2>Covenants</h2>
       <div class="essay-section-grid">
         <div>
+          <p>The first piece is the one I find genuinely beautiful: covenants.</p>
           <p>Quick word-nerd detour, because the name is doing work here. A covenant is a promise (the word's from Latin, roughly "to come together," an agreement you're bound to). A binding agreement that follows you forward. In a plain old boring UTXO the script is basically "if you have the key, spend it, do whatever you want afterward, I don't care." A covenant changes this deal to "you can spend this only if the next output also obeys these rules." The coin starts carrying a promise about its own future. This is REALLY cool.</p>
           <p>Sounds like a small grammatical tweak. It's enormous. Once a coin can constrain what the next coin must look like, you can chain those constraints, and chained constraints are how you get state that evolves while the rules stay locked. Vaults, escrow, assets, payout logic, a chess game. Picture a wall of locks and keys where each lock also dictates what the next lock is allowed to be. Like switches flipping on and off in a semiconductor, or 0s and 1s in code: the individual pieces are stupid-simple, and the whole expressiveness lives in how you arrange them. Very complex behavior out of very simple operations. That's the trick the entire field of computing is built on, and Kaspa just brought it to its UTXO model.</p>
           <p>A quick word on how anyone actually writes these, because the tooling matters as much as the upgrade (otherwise you can't do anything with said upgrade). Raw Kaspa script is low-level and miserable to write by hand, roughly the way nobody wants to write a program directly in 0s and 1s. So there's an experimental high-level language for covenants called SilverScript: you write something readable, and a compiler translates it down into the low-level script the network actually runs. A compiler is just a translator; human-friendly code in, machine-friendly code out, the same reason you get to write Python instead of raw processor instructions. When one covenant isn't enough and you need several of them referring to each other (the chess system needs exactly this), there's an early prototype Michael made called Argent that generates the plumbing between them.</p>
-          <p>One more piece that sounds boring and absolutely is not: covenant IDs. If a covenant is just "a set of rules," then nothing stops some guy from copying rules that look identical and walking in with fake state. Fine for a toy, fatal if that covenant is guarding a real asset. You need to know this coin descends from the real covenant and not a convincing knockoff. Covenant IDs put that lineage into consensus itself, so a UTXO is recognized as belonging to a specific covenant's bloodline rather than something that merely resembles it. Chains without covenant IDs have to do this the hard way: to prove a coin came from the right origin, you carry the previous transaction along and show it on chain, and the one before that, proving the whole bloodline by induction every single step back. Bitcoin Cash does exactly this in production today. It works and it's miserable. Covenant IDs just let consensus remember the lineage for you. Deeply unsexy. One of the most important parts.</p>
+          <p>One more piece that sounds boring and absolutely is not: covenant IDs. If a covenant is just "a set of rules," then nothing stops some guy from copying rules that look identical and walking in with fake state. Fine for a toy, fatal if that covenant is guarding a real asset. You need to know this coin descends from the real covenant and not a convincing knockoff. Covenant IDs put that lineage into consensus itself, so a UTXO is recognized as belonging to a specific covenant's bloodline rather than something that merely resembles it. Chains without covenant IDs do this the hard way, and Bitcoin Cash gets closest. CashTokens give every category an ID equal to its genesis transaction ID, stamped into the coin and enforced by consensus, so identity is handled for tokens. A covenant's own state lineage still rides on inductive proofs (each spend carries the parent transaction and trusts that the parent already proved itself), and the clean anchor leans on the token system to exist at all. It works, it's in production today, and it's miserable. Covenant IDs just let consensus remember the lineage for you directly, for any covenant, no token required. Deeply unsexy. One of the most important parts.</p>
         </div>
         <div class="essay-visual-stack essay-visual-rail">
           <figure class="essay-visual">
@@ -151,6 +128,29 @@
           <figure class="essay-visual essay-visual-small">
             <img src="assets/toccata-expressiveness/10-covenant-lineage.webp" alt="A glowing seal rooted into dark bedrock.">
             <figcaption>Covenant lineage</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>The elegant part: keep what's actually unique, ship the rest off-chain</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>Unlike other chains I'm aware of, Kaspa looks at this whole process and asks which part is even special. And computation, it turns out, is not the special part. Computers are everywhere. AWS will rent you all the computation you could ever want, and so will a pile of other providers. You can buy plenty of compute at an electronics store too. Doing computation is not crypto's unique selling point. So Kaspa takes the expensive part (computation) and moves it off chain, and keeps the part that's actually unique to crypto (verification, ordering, censorship resistance, proof-of-work security) on chain.</p>
+          <p>This is where zero-knowledge proofs come in, and I want to be careful here, because ZK in Toccata doesn't mean "private transactions for everyone tomorrow." It means Kaspa gains the ability to verify proofs. An app does its heavy lifting off chain, then hands Kaspa a compact proof, and Kaspa checks the proof instead of re-running the entire program. You keep the thing that matters (anyone can verify the result) and drop the thing that's wasteful (everyone re-computing the same work).</p>
+          <p>Here's the example that made this click for me, the chess game I mentioned earlier. You're playing on chain for real value. Almost all of it is covenants doing their thing (board state, legal moves, locked payout), except for one ugly problem: bots. You're not going to bet real money against a stranger who might be running an engine, and catching cheaters is exactly the kind of messy pattern-matching you can't put on chain (chess.com keeps its bot-detection secret precisely because publishing it would let people dodge it). So an outside watcher runs that detection off chain, and when it catches a bot it posts a ZK proof to L1 that says "this player cheated." The chain never sees the algorithm. It just checks the proof, and the game's own rules dock the cheater automatically. Off-chain work, small proof back, Kaspa verifies. That's the whole pattern.</p>
+          <p>Strip the chess out and the principle is plain: any time the real work is too heavy, too private, or both, you do it off chain and hand Kaspa a proof instead of the work itself. A trading app could match orders off chain and prove it matched them fairly. A sealed-bid auction could prove who won without ever revealing the bids. A game could run a thousand moves off chain and settle the whole thing with one proof. Kaspa never does the work. It just refuses to believe you until the math checks out.</p>
+          <p>The proof systems here include a STARK-based RISC Zero path, plus a Groth16 verifier. The plain idea is the same either way: heavy computation happens off chain, and Kaspa verifies a compact proof on chain. To my knowledge, this puts Kaspa among the first proof-of-work L1s to support native STARK-based proof verification, and possibly the first major one.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/03-chess-proof.webp" alt="A chessboard under a verifier's beam with a hidden robotic piece.">
+            <figcaption>Chess bot proof</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/11-proof-container.webp" alt="A technical block-shaped container sized around a faceted proof.">
+            <figcaption>Room for a proof</figcaption>
           </figure>
         </div>
       </div>

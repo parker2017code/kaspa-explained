@@ -31,6 +31,13 @@ const longReferenceAllowed = new Set([
 ]);
 
 const normalPageWordLimit = 2400;
+const essayPageWordLimit = 3200;
+
+const personalEssayFiles = new Set([
+  "toccata-expressiveness-upgrade.html",
+  "toccata-expressiveness-upgrade-part-2.html",
+  "toccata-expressiveness-upgrade-part-3.html",
+]);
 
 function fail(message) {
   failures.push(message);
@@ -140,7 +147,8 @@ function auditAttentionBudget() {
     if (longReferenceAllowed.has(page)) continue;
 
     const words = countWords(visibleText(read(page)));
-    if (words > normalPageWordLimit) {
+    const wordLimit = personalEssayFiles.has(page) ? essayPageWordLimit : normalPageWordLimit;
+    if (words > wordLimit) {
       fail(`${page} has ${words} visible words; cut or move reference material behind a dedicated reference page`);
     }
   }
