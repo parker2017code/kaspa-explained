@@ -109,7 +109,7 @@
       <p class="eyebrow">Quick path</p>
       <h2>The beginner setup</h2>
       <p>Use one computer for the node and bridge. Keep two terminal windows open on that computer, then open the miner web screen in your browser.</p>
-      <ol class="checklist">
+      <ol class="learning-steps">
         <li>Download the Rusty Kaspa zip for the node computer.</li>
         <li>Extract the zip and open a terminal in that folder.</li>
         <li>Terminal window A runs <code>kaspad</code>. Leave it open.</li>
@@ -154,7 +154,19 @@
           </tbody>
         </table>
       </div>
-      <p class="fit-note">The WASM SDK zip is for developers building browser or JavaScript tools. It is not the solo-mining download.</p>
+      <p class="fit-note">Use the release asset for your operating system. Skip the GitHub Source code zip and the WASM SDK zip; they are for different jobs.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Extract</p>
+      <h2>Get from zip file to working folder</h2>
+      <p>The commands below run from the extracted Rusty Kaspa folder on your computer. GitHub supplies the download. The unopened zip stores the files. The terminal needs the extracted folder.</p>
+      <div class="summary-grid">
+        <article><span>Windows</span><p>Right-click the downloaded zip, choose Extract All, then open the extracted folder. You should see <code>kaspad.exe</code>, <code>stratum-bridge.exe</code>, and a <code>bridge</code> folder.</p></article>
+        <article><span>macOS</span><p>Double-click the zip. Safari may already have made the folder for you. Open the extracted folder and look for <code>kaspad</code>, <code>stratum-bridge</code>, and <code>bridge/config.yaml</code>.</p></article>
+        <article><span>Linux</span><p>Use your file manager's Extract option, or run <code>unzip rusty-kaspa-v2.0.1-linux-amd64.zip</code>. Then enter the extracted folder before running commands.</p></article>
+      </div>
+      <p class="fit-note">When this guide says "open a terminal in that folder," it means the extracted Rusty Kaspa folder that contains the node, bridge, and <code>bridge/config.yaml</code>.</p>
     </section>
 
     <section class="section">
@@ -196,13 +208,17 @@
           <pre><code>./kaspad --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
         </article>
       </div>
-      <p class="fit-note">If your node already runs with your own flags, keep your normal flags and add the RPC listen setting only if the bridge cannot reach the node. The official bridge docs use <code>127.0.0.1:16110</code> for the node RPC address.</p>
+      <p class="fit-note">Let the node sync before expecting useful mining results. If your node already runs with your own flags, keep your normal flags and add the RPC listen setting only if the bridge cannot reach the node. The official bridge docs use <code>127.0.0.1:16110</code> for the node RPC address.</p>
     </section>
 
-    <section id="windows" class="section">
-      <p class="eyebrow">Step 2A</p>
-      <h2>Open terminal window B and run the bridge on Windows</h2>
-      <ol class="checklist">
+    <details id="windows" class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Step 2A</span>
+        <h2>Open terminal window B and run the bridge on Windows</h2>
+        <span class="guide-detail-preview">PowerShell command, dashboard check, port check, and debug logs.</span>
+      </summary>
+      <div class="guide-detail-body">
+      <ol class="learning-steps">
         <li>Leave the node running in terminal window A.</li>
         <li>Open a second PowerShell window in the same extracted Rusty Kaspa folder.</li>
         <li>Run the bridge in external-node mode.</li>
@@ -216,12 +232,17 @@
       <p>To turn on more detailed bridge logs before starting it:</p>
       <pre><code>$env:RUST_LOG="info,kaspa_stratum_bridge=debug"</code></pre>
       <p class="fit-note">If PowerShell says it cannot find <code>bridge/config.yaml</code>, you are probably in the wrong folder. If the dashboard does not open, the sample config may not be loaded or the bridge may have stopped. Read the last few lines in terminal window B.</p>
-    </section>
+      </div>
+    </details>
 
-    <section id="mac-linux" class="section">
-      <p class="eyebrow">Step 2B</p>
-      <h2>Open terminal window B and run the bridge on macOS or Linux</h2>
-      <ol class="checklist">
+    <details id="mac-linux" class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Step 2B</span>
+        <h2>Open terminal window B and run the bridge on macOS or Linux</h2>
+        <span class="guide-detail-preview">Terminal command, dashboard check, port check, and debug logs.</span>
+      </summary>
+      <div class="guide-detail-body">
+      <ol class="learning-steps">
         <li>Leave the node running in terminal window A.</li>
         <li>Open a second Terminal window in the same extracted Rusty Kaspa folder.</li>
         <li>If needed, allow the binary to run.</li>
@@ -237,11 +258,16 @@
       <p>To turn on more detailed bridge logs for one run:</p>
       <pre><code>RUST_LOG="info,kaspa_stratum_bridge=debug" ./stratum-bridge --config bridge/config.yaml --node-mode external</code></pre>
       <p class="fit-note">If Terminal says it cannot find <code>bridge/config.yaml</code>, you are probably in the wrong folder. On macOS, Gatekeeper may ask you to approve a downloaded binary. Use your normal security process and only run binaries from the official Rusty Kaspa release page.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Other route</p>
-      <h2>If the bridge should start its own node</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Other route</span>
+        <h2>If the bridge should start its own node</h2>
+        <span class="guide-detail-preview">In-process mode from the official bridge docs.</span>
+      </summary>
+      <div class="guide-detail-body">
       <p>The official bridge docs also show in-process mode. In that mode the bridge starts <code>kaspad</code> in the same process.</p>
       <div class="api-command-grid">
         <article class="api-command-card">
@@ -256,7 +282,8 @@
         </article>
       </div>
       <p class="fit-note">Use the <code>--</code> separator exactly as shown. Bridge flags go before it. Node flags go after it.</p>
-    </section>
+      </div>
+    </details>
 
 
     <section class="section">
@@ -291,7 +318,7 @@
       <p>Open your miner's web screen. If you do not know the miner's IP address, check your router's connected-device list or the setup tool from the miner manufacturer. Type the miner IP into a browser, sign in, then find the mining or pool configuration page.</p>
       <p>Use the bridge computer's local IP address and one of the Stratum ports from the sample config. Start with port <code>5555</code>.</p>
       <div class="table-wrap">
-        <table class="reality-table">
+        <table class="reality-table miner-settings-table">
           <thead>
             <tr>
               <th>Miner field</th>
@@ -321,9 +348,13 @@
       <p class="fit-note">A Kaspa address already starts with <code>kaspa:</code>, so the username can look like <code>kaspa:kaspa:...</code>. That matches the official bridge format. Some miner screens want a URL prefix. The official bridge docs show the pool URL as <code>&lt;your_pc_IPv4&gt;:&lt;stratum_port&gt;</code>. If your miner rejects that, check its manual for the exact Stratum URL format.</p>
     </section>
 
-    <section class="section">
-      <p class="eyebrow">Miner brands</p>
-      <h2>What changes by miner or software type?</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Miner brands</span>
+        <h2>What changes by miner or software type?</h2>
+        <span class="guide-detail-preview">IceRiver, Bitmain, BzMiner, Goldshell, and field-name differences.</span>
+      </summary>
+      <div class="guide-detail-body">
       <p>The bridge docs say the bridge automatically detects several miner and mining-software types and adjusts the protocol handling. The setup screen still belongs to the miner manufacturer, so labels can differ.</p>
       <div class="summary-grid">
         <article><span>IceRiver</span><p>The bridge docs list IceRiver support and say these miners require extranonce plus a single hex string job format.</p></article>
@@ -332,11 +363,16 @@
         <article><span>Goldshell</span><p>The bridge docs list Goldshell support and say it requires extranonce plus a single hex string job format.</p></article>
       </div>
       <p class="fit-note">For a beginner, the practical fields are still the same: pool URL, username or wallet field, and password if the miner UI requires one.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Ports</p>
-      <h2>Pick the first port</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Ports</span>
+        <h2>Pick the first port</h2>
+        <span class="guide-detail-preview">Start with 5555, then use lower difficulty ports only for troubleshooting.</span>
+      </summary>
+      <div class="guide-detail-body">
       <p>The sample config exposes several Stratum ports. Start with <code>5555</code>. Use lower difficulty ports only when you are troubleshooting a connection or the bridge docs tell you to match a weaker worker.</p>
       <div class="table-wrap">
         <table class="reality-table">
@@ -355,11 +391,16 @@
           </tbody>
         </table>
       </div>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Step 5</p>
-      <h2>Check that it is working</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Step 5</span>
+        <h2>Check that it is working</h2>
+        <span class="guide-detail-preview">Bridge window, dashboard, miner screen, and node checks.</span>
+      </summary>
+      <div class="guide-detail-body">
       <div class="summary-grid">
         <article><span>Bridge window</span><p>The bridge should keep running and show miner connection or job activity.</p></article>
         <article><span>Dashboard</span><p>Open <code>http://127.0.0.1:3030/</code>. Look for active workers, shares, hashrate, and recent activity.</p></article>
@@ -367,11 +408,16 @@
         <article><span>Node</span><p>The node should stay synced and continue receiving network updates.</p></article>
       </div>
       <p class="fit-note">Accepted shares are a setup signal. A found block is the reward event. Solo mining can be configured correctly while rewards remain rare.</p>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Toccata</p>
-      <h2>Toccata mining checks</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Toccata</span>
+        <h2>Toccata mining checks</h2>
+        <span class="guide-detail-preview">Version, DAA gate, post-Toccata template fields, and testnet checks.</span>
+      </summary>
+      <div class="guide-detail-body">
       <p>Toccata changes the mining path because post-activation block templates can contain new transaction fields. The official node guide warns pools and custom mining stacks to preserve those fields from block template to solved block submission.</p>
       <div class="summary-grid">
         <article><span>Upgrade</span><p>Use Rusty Kaspa v2.0.1 or newer for the node and bridge path.</p></article>
@@ -379,11 +425,16 @@
         <article><span>Template fields</span><p>Custom mining software must preserve post-Toccata fields such as transaction version, storage mass, compute budget, and covenant outputs.</p></article>
         <article><span>Test first</span><p>Use Testnet-10 where possible before relying on a mainnet mining path after activation.</p></article>
       </div>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Fixes</p>
-      <h2>If it does not connect</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Fixes</span>
+        <h2>If it does not connect</h2>
+        <span class="guide-detail-preview">Pool dead, empty dashboard, bridge-node RPC, firewall, rewards, and activation-day checks.</span>
+      </summary>
+      <div class="guide-detail-body">
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -402,11 +453,16 @@
           </tbody>
         </table>
       </div>
-    </section>
+      </div>
+    </details>
 
-    <section class="section">
-      <p class="eyebrow">Safer setup</p>
-      <h2>What to avoid</h2>
+    <details class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Safer setup</span>
+        <h2>What to avoid</h2>
+        <span class="guide-detail-preview">Network exposure, wallet safety, shares versus blocks, and Toccata compatibility.</span>
+      </summary>
+      <div class="guide-detail-body">
       <div class="summary-grid">
         <article>
           <span>Network exposure</span>
@@ -425,11 +481,16 @@
           <p>After Toccata activation, use current node, bridge, pool, and custom mining software. Old software can drop new block-template fields.</p>
         </article>
       </div>
-    </section>
+      </div>
+    </details>
 
-    <section id="sources" class="section">
-      <p class="eyebrow">Sources</p>
-      <h2>Official references</h2>
+    <details id="sources" class="section guide-detail">
+      <summary>
+        <span class="eyebrow">Sources</span>
+        <h2>Official references</h2>
+        <span class="guide-detail-preview">Rusty Kaspa bridge docs, config, node guide, release files, and activation status.</span>
+      </summary>
+      <div class="guide-detail-body">
       <div class="reference-grid">
         <article>
           <h3>Bridge how-to</h3>
@@ -452,7 +513,8 @@
           <p><a href="/toccata-status">Kaspa Explained Toccata status</a> tracks the DAA-gated activation check separately from the setup instructions.</p>
         </article>
       </div>
-    </section>
+      </div>
+    </details>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
