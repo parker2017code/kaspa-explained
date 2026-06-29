@@ -107,17 +107,17 @@
 
     <section id="quick-path" class="section">
       <p class="eyebrow">Quick path</p>
-      <h2>If your node is already running</h2>
-      <p>This is the simplest route: run the bridge on the same computer as your node, then point the miner at that computer on your home network.</p>
+      <h2>The beginner setup</h2>
+      <p>Use one computer for the node and bridge. Keep two terminal windows open on that computer, then open the miner web screen in your browser.</p>
       <ol class="checklist">
-        <li>Upgrade the node computer to Rusty Kaspa v2.0.1 or newer.</li>
-        <li>Run your node with UTXO index and RPC listening locally.</li>
-        <li>Start the Stratum Bridge in external-node mode.</li>
-        <li>Find the local IP address of the node computer.</li>
-        <li>Open the miner web screen.</li>
-        <li>Set the miner pool URL to that IP address plus a bridge port, usually <code>5555</code>.</li>
-        <li>Set the miner username to your Kaspa address plus a worker name.</li>
-        <li>Open the bridge dashboard and check that the worker appears.</li>
+        <li>Download the Rusty Kaspa zip for the node computer.</li>
+        <li>Extract the zip and open a terminal in that folder.</li>
+        <li>Terminal window A runs <code>kaspad</code>. Leave it open.</li>
+        <li>Terminal window B runs <code>stratum-bridge</code>. Leave it open.</li>
+        <li>The bridge dashboard opens at <code>http://127.0.0.1:3030/</code> on the node computer.</li>
+        <li>The miner points to the node computer's local IP plus port <code>5555</code>.</li>
+        <li>The miner username is your Kaspa receive address plus a worker name.</li>
+        <li>The dashboard should show a worker, shares, and hashrate.</li>
       </ol>
       <p class="fit-note">Keep the node, bridge, and miner on the same local network for the first setup. Do not expose RPC, dashboard, or Stratum ports to the public internet while learning.</p>
     </section>
@@ -126,7 +126,7 @@
       <p class="eyebrow">What you need</p>
       <h2>Before touching the miner</h2>
       <div class="summary-grid">
-        <article><span>ASIC</span><p>An IceRiver, Bitmain, BzMiner, Goldshell, or another compatible Kaspa miner. The bridge docs list automatic detection for those miner types.</p></article>
+        <article><span>ASIC</span><p>An IceRiver, Bitmain, Goldshell, or another compatible Kaspa ASIC. The bridge docs also list BzMiner support.</p></article>
         <article><span>Node computer</span><p>A computer running Rusty Kaspa v2.0.1 or newer. The safer beginner setup runs bridge and node on the same machine.</p></article>
         <article><span>Wallet address</span><p>A Kaspa address for rewards. Copy it carefully. Never paste a private key into miner or bridge settings.</p></article>
         <article><span>Local IP</span><p>The IP address of the node computer on your home network, such as <code>192.168.1.10</code>.</p></article>
@@ -181,17 +181,18 @@
 
     <section class="section">
       <p class="eyebrow">Step 1</p>
-      <h2>Get the node ready</h2>
-      <p>Use the current Rusty Kaspa release. If your node is already running, make sure it is v2.0.1 or newer and that RPC is available on the same computer.</p>
+      <h2>Open terminal window A and run the node</h2>
+      <p>First, get into the extracted Rusty Kaspa folder. On Windows, open the folder in File Explorer, click the address bar, type <code>powershell</code>, and press Enter. On macOS or Linux, open Terminal, type <code>cd </code>, drag the extracted folder into Terminal, and press Enter.</p>
+      <p>Run the node command for your system. Keep this window open. The bridge needs the node to stay running.</p>
       <div class="api-command-grid">
         <article class="api-command-card">
           <span class="command-method">Windows PowerShell</span>
-          <h3>Start or restart the node</h3>
+          <h3>Terminal window A</h3>
           <pre><code>.\kaspad.exe --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
         </article>
         <article class="api-command-card">
           <span class="command-method">macOS / Linux</span>
-          <h3>Start or restart the node</h3>
+          <h3>Terminal window A</h3>
           <pre><code>./kaspad --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
         </article>
       </div>
@@ -200,12 +201,12 @@
 
     <section id="windows" class="section">
       <p class="eyebrow">Step 2A</p>
-      <h2>Run the bridge on Windows</h2>
+      <h2>Open terminal window B and run the bridge on Windows</h2>
       <ol class="checklist">
-        <li>Download the current Rusty Kaspa release for Windows from GitHub.</li>
-        <li>Extract the archive.</li>
-        <li>Open PowerShell in the extracted folder.</li>
+        <li>Leave the node running in terminal window A.</li>
+        <li>Open a second PowerShell window in the same extracted Rusty Kaspa folder.</li>
         <li>Run the bridge in external-node mode.</li>
+        <li>Leave this window open too.</li>
       </ol>
       <pre><code>.\stratum-bridge.exe --config bridge/config.yaml --node-mode external</code></pre>
       <p>Then open the dashboard in a browser on the node computer:</p>
@@ -214,18 +215,18 @@
       <pre><code>netstat -ano | findstr :5555</code></pre>
       <p>To turn on more detailed bridge logs before starting it:</p>
       <pre><code>$env:RUST_LOG="info,kaspa_stratum_bridge=debug"</code></pre>
-      <p class="fit-note">If the dashboard does not open, the sample config may not be loaded or the bridge may have stopped. Keep the PowerShell window open and read the last few lines.</p>
+      <p class="fit-note">If PowerShell says it cannot find <code>bridge/config.yaml</code>, you are probably in the wrong folder. If the dashboard does not open, the sample config may not be loaded or the bridge may have stopped. Read the last few lines in terminal window B.</p>
     </section>
 
     <section id="mac-linux" class="section">
       <p class="eyebrow">Step 2B</p>
-      <h2>Run the bridge on macOS or Linux</h2>
+      <h2>Open terminal window B and run the bridge on macOS or Linux</h2>
       <ol class="checklist">
-        <li>Download the current Rusty Kaspa release for your system from GitHub.</li>
-        <li>Extract the archive.</li>
-        <li>Open Terminal in the extracted folder.</li>
+        <li>Leave the node running in terminal window A.</li>
+        <li>Open a second Terminal window in the same extracted Rusty Kaspa folder.</li>
         <li>If needed, allow the binary to run.</li>
         <li>Run the bridge in external-node mode.</li>
+        <li>Leave this window open too.</li>
       </ol>
       <pre><code>chmod +x ./stratum-bridge
 ./stratum-bridge --config bridge/config.yaml --node-mode external</code></pre>
@@ -235,7 +236,7 @@
       <pre><code>lsof -i :5555</code></pre>
       <p>To turn on more detailed bridge logs for one run:</p>
       <pre><code>RUST_LOG="info,kaspa_stratum_bridge=debug" ./stratum-bridge --config bridge/config.yaml --node-mode external</code></pre>
-      <p class="fit-note">On macOS, Gatekeeper may ask you to approve a downloaded binary. Use your normal security process and only run binaries from the official Rusty Kaspa release page.</p>
+      <p class="fit-note">If Terminal says it cannot find <code>bridge/config.yaml</code>, you are probably in the wrong folder. On macOS, Gatekeeper may ask you to approve a downloaded binary. Use your normal security process and only run binaries from the official Rusty Kaspa release page.</p>
     </section>
 
     <section class="section">
@@ -287,7 +288,8 @@
     <section id="miner" class="section">
       <p class="eyebrow">Step 4</p>
       <h2>Point the ASIC at the bridge</h2>
-      <p>Open your miner's web screen. Find the mining or pool configuration page. Use the bridge computer's local IP address and one of the Stratum ports from the sample config.</p>
+      <p>Open your miner's web screen. If you do not know the miner's IP address, check your router's connected-device list or the setup tool from the miner manufacturer. Type the miner IP into a browser, sign in, then find the mining or pool configuration page.</p>
+      <p>Use the bridge computer's local IP address and one of the Stratum ports from the sample config. Start with port <code>5555</code>.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -316,13 +318,13 @@
           </tbody>
         </table>
       </div>
-      <p class="fit-note">Some miner screens want a URL prefix. The official bridge docs show the pool URL as <code>&lt;your_pc_IPv4&gt;:&lt;stratum_port&gt;</code>. If your miner rejects that, check its manual for the exact Stratum URL format.</p>
+      <p class="fit-note">A Kaspa address already starts with <code>kaspa:</code>, so the username can look like <code>kaspa:kaspa:...</code>. That matches the official bridge format. Some miner screens want a URL prefix. The official bridge docs show the pool URL as <code>&lt;your_pc_IPv4&gt;:&lt;stratum_port&gt;</code>. If your miner rejects that, check its manual for the exact Stratum URL format.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Miner brands</p>
-      <h2>What changes by miner type?</h2>
-      <p>The bridge docs say the bridge automatically detects several miner types and adjusts the protocol handling. The setup screen still belongs to the miner manufacturer, so labels can differ.</p>
+      <h2>What changes by miner or software type?</h2>
+      <p>The bridge docs say the bridge automatically detects several miner and mining-software types and adjusts the protocol handling. The setup screen still belongs to the miner manufacturer, so labels can differ.</p>
       <div class="summary-grid">
         <article><span>IceRiver</span><p>The bridge docs list IceRiver support and say these miners require extranonce plus a single hex string job format.</p></article>
         <article><span>Bitmain</span><p>The bridge docs list Bitmain and GodMiner support and say these miners use no extranonce, with array plus timestamp job format.</p></article>
@@ -369,7 +371,7 @@
 
     <section class="section">
       <p class="eyebrow">Toccata</p>
-      <h2>Release-tomorrow checks</h2>
+      <h2>Toccata mining checks</h2>
       <p>Toccata changes the mining path because post-activation block templates can contain new transaction fields. The official node guide warns pools and custom mining stacks to preserve those fields from block template to solved block submission.</p>
       <div class="summary-grid">
         <article><span>Upgrade</span><p>Use Rusty Kaspa v2.0.1 or newer for the node and bridge path.</p></article>
@@ -405,25 +407,51 @@
     <section class="section">
       <p class="eyebrow">Safer setup</p>
       <h2>What to avoid</h2>
-      <ul class="source-list">
-        <li>Do not expose your node RPC port to the public internet while learning.</li>
-        <li>Do not expose the bridge dashboard publicly.</li>
-        <li>Do not paste seed phrases or private keys into miner settings.</li>
-        <li>Do not assume shares mean a payout is coming soon.</li>
-        <li>Do not use old pool or bridge software after Toccata activation without checking compatibility.</li>
-      </ul>
+      <div class="summary-grid">
+        <article>
+          <span>Network exposure</span>
+          <p>Keep node RPC, the bridge dashboard, and Stratum ports on your local network while learning. Public ports invite avoidable trouble.</p>
+        </article>
+        <article>
+          <span>Wallet safety</span>
+          <p>Use a public Kaspa receive address for the miner username. Never paste a seed phrase or private key into miner, bridge, or dashboard settings.</p>
+        </article>
+        <article>
+          <span>Shares versus blocks</span>
+          <p>Accepted shares show the miner is talking to the bridge. They do not mean a payout is coming soon. Solo rewards need a found block.</p>
+        </article>
+        <article>
+          <span>Toccata compatibility</span>
+          <p>After Toccata activation, use current node, bridge, pool, and custom mining software. Old software can drop new block-template fields.</p>
+        </article>
+      </div>
     </section>
 
     <section id="sources" class="section">
       <p class="eyebrow">Sources</p>
       <h2>Official references</h2>
-      <ul class="source-list">
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a> for beta status, release commands, external and in-process modes, ports, dashboard, and miner connection format.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Rusty Kaspa Stratum Bridge sample config</a> for default dashboard and Stratum ports.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Rusty Kaspa Toccata node setup guide</a> for v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> for current Toccata upgrade release notes.</li>
-        <li><a href="/toccata-status">Kaspa Explained Toccata status</a> for the current DAA-gated activation check.</li>
-      </ul>
+      <div class="reference-grid">
+        <article>
+          <h3>Bridge how-to</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a> cover beta status, external-node mode, in-process mode, dashboard, ports, miner setup, and the username format.</p>
+        </article>
+        <article>
+          <h3>Bridge config</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a> shows the default dashboard port, Stratum ports, and bridge settings.</p>
+        </article>
+        <article>
+          <h3>Toccata node guide</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> covers v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</p>
+        </article>
+        <article>
+          <h3>Release files</h3>
+          <p><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> has the Windows, macOS, and Linux archives used in this guide.</p>
+        </article>
+        <article>
+          <h3>Activation status</h3>
+          <p><a href="/toccata-status">Kaspa Explained Toccata status</a> tracks the DAA-gated activation check separately from the setup instructions.</p>
+        </article>
+      </div>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
