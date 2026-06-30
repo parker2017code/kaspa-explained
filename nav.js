@@ -47,9 +47,7 @@
   const TOCCATA_DAA_API = "https://api.kaspa.org/info/blockdag";
   const numberFormat = new Intl.NumberFormat("en-US");
   const params = new URLSearchParams(window.location.search);
-  const localHostnames = new Set(["localhost", "127.0.0.1", "::1"]);
-  const isLocalPreview = localHostnames.has(window.location.hostname) || window.location.protocol === "file:";
-  const shouldShowToccataWatch = isLocalPreview && params.get("toccataWatch") !== "0";
+  const shouldShowToccataWatch = params.get("toccataWatch") !== "0";
   let fireworksStarted = false;
 
   const formatNumber = (value) => numberFormat.format(Math.max(0, Math.floor(Number(value) || 0)));
@@ -142,20 +140,20 @@
     watch.setAttribute("aria-live", "polite");
     watch.innerHTML = `
       <div class="toccata-launch-copy">
-        <span class="toccata-launch-kicker">Local activation draft</span>
-        <strong>Toccata watch armed</strong>
-        <p>Reading mainnet DAA. Push only after ${formatNumber(TOCCATA_TARGET_DAA)} and a normal post-target network check.</p>
-        <small>After launch week, remove this local watch and fireworks.</small>
+        <span class="toccata-launch-kicker">Toccata activated</span>
+        <strong>DAA ${formatNumber(TOCCATA_TARGET_DAA)} crossed</strong>
+        <p>Kaspa mainnet crossed the activation score on June 30, 2026. Current DAA reads live from mainnet.</p>
+        <small>Wallets, explorers, SDKs, examples, and app use still need separate receipts.</small>
       </div>
       <div class="toccata-launch-score">
-        <span data-toccata-status>Checking</span>
+        <span data-toccata-status>Checking mainnet</span>
         <b data-toccata-daa>...</b>
-        <small data-toccata-remaining>Waiting for REST status.</small>
+        <small data-toccata-remaining>Reading current DAA.</small>
         <div class="toccata-launch-meter" aria-hidden="true"><i data-toccata-meter></i></div>
       </div>
       <div class="toccata-launch-actions">
-        <a href="/toccata-status">Status</a>
-        <button type="button" data-toccata-party>Rehearse</button>
+        <a href="/toccata-status">Activation record</a>
+        <button type="button" data-toccata-party>Fireworks</button>
       </div>
     `;
     header.insertAdjacentElement("afterend", watch);
@@ -187,20 +185,20 @@
         daa.textContent = formatNumber(currentDaa);
         meter.style.width = `${isReached ? 100 : progress}%`;
         if (isReached) {
-          status.textContent = "DAA target reached";
-          remaining.textContent = "Post-target network checks are now required before publish.";
+          status.textContent = "Current DAA";
+          remaining.textContent = "Activation score crossed. Check tooling and app evidence next.";
           party.textContent = "Fireworks";
           watch.classList.add("is-reached");
           launchFireworks();
         } else {
-          status.textContent = "Push blocked";
-          remaining.textContent = `${formatNumber(distance)} DAA remaining. Local preview only.`;
+          status.textContent = "Awaiting DAA";
+          remaining.textContent = `${formatNumber(distance)} DAA remaining to the activation score.`;
         }
       })
       .catch(() => {
-        status.textContent = "DAA unavailable";
-        daa.textContent = "Check manually";
-        remaining.textContent = "Push stays blocked if the guard cannot read DAA.";
+        status.textContent = "DAA read unavailable";
+        daa.textContent = "Activation crossed";
+        remaining.textContent = "Use the activation record while REST status is unavailable.";
       });
   };
 
