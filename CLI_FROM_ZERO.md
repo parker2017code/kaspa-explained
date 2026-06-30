@@ -157,7 +157,7 @@ flags from the active public Toccata/TN12 docs before running. Do not assume a
 TN10 command is the right TN12 command.
 
 As of June 26, 2026, Rusty Kaspa v2.0.1 is the current Toccata release, and
-v2.0.0 still provides the mainnet activation target. Rusty Kaspa's
+v2.0.0 still provides the mainnet activation record. Rusty Kaspa's
 `tn10-toc2` pre-release scheduled Testnet-10 Toccata activation at DAA score
 467,579,632, and `tn10-toc3` scheduled final Toccata ZK hardening at DAA score
 476,232,000. A June 26 API check showed Testnet-10 virtual DAA 501,408,970,
@@ -244,7 +244,7 @@ public Kaspa resources:
 
 ## Maintainer Reminder
 
-At the Toccata DAA gate, update this file, `status.html`,
+After Toccata activation, update this file, `status.html`,
 `builder-guide.html`, `sources.html`, `CLAIMS.yml`, and `llms.txt` from public
 activation evidence, Rusty Kaspa releases, official docs, and working tool
 commands. Until that evidence exists, keep Toccata/TN12 command examples in the

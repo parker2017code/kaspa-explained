@@ -144,7 +144,7 @@
       <div class="toccata-launch-copy">
         <span class="toccata-launch-kicker">Local activation draft</span>
         <strong>Toccata watch armed</strong>
-        <p>Reading mainnet DAA. Public push stays blocked until ${formatNumber(TOCCATA_TARGET_DAA)}.</p>
+        <p>Reading mainnet DAA. Push only after ${formatNumber(TOCCATA_TARGET_DAA)} and a normal post-target network check.</p>
         <small>After launch week, remove this local watch and fireworks.</small>
       </div>
       <div class="toccata-launch-score">
@@ -188,7 +188,7 @@
         meter.style.width = `${isReached ? 100 : progress}%`;
         if (isReached) {
           status.textContent = "DAA target reached";
-          remaining.textContent = "Verify post-activation behavior before publish.";
+          remaining.textContent = "Post-target network checks are now required before publish.";
           party.textContent = "Fireworks";
           watch.classList.add("is-reached");
           launchFireworks();

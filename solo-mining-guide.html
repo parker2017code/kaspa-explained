@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Kaspa Solo Mining Guide">
   <meta name="twitter:description" content="A plain guide for pointing your ASIC at your own Kaspa node through the Rusty Kaspa Stratum Bridge.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-29">
+  <meta name="dateModified" content="2026-06-30">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,7 +42,7 @@
   }
   </script>
   <link rel="stylesheet" href="styles.css?v=20260627-next-card-fix">
-  <script defer src="nav.js?v=20260606-anchor-clearance"></script>
+  <script defer src="nav.js?v=20260630-toccata-activated"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -71,7 +71,7 @@
       <p class="eyebrow">Release prep</p>
       <h1>Kaspa solo mining guide</h1>
       <p class="lead">You have a Kaspa ASIC and a node. The missing piece is a Stratum bridge. Your miner speaks Stratum. Your Kaspa node speaks Kaspa RPC. The bridge sits between them.</p>
-      <p class="fit-note"><strong>Status checked June 29, 2026:</strong> Rusty Kaspa v2.0.1 can be used as the Toccata upgrade release. The Rusty Kaspa Stratum Bridge is marked beta in the official docs. Toccata remains DAA-gated at 474,165,565 until mainnet reaches the activation score.</p>
+      <p class="fit-note"><strong>Status checked June 30, 2026:</strong> Rusty Kaspa v2.0.1 can be used as the Toccata upgrade release. The Rusty Kaspa Stratum Bridge is marked beta in the official docs. Toccata activated at DAA 474,165,565 after mainnet reached the activation score.</p>
       <div class="actions">
         <a class="button primary" href="#quick-path">Start</a>
         <a class="button" href="#windows">Windows</a>
@@ -415,15 +415,15 @@
       <summary>
         <span class="eyebrow">Toccata</span>
         <h2>Toccata mining checks</h2>
-        <span class="guide-detail-preview">Version, DAA gate, post-Toccata template fields, and testnet checks.</span>
+        <span class="guide-detail-preview">Version, activation record, post-Toccata template fields, and testnet checks.</span>
       </summary>
       <div class="guide-detail-body">
       <p>Toccata changes the mining path because post-activation block templates can contain new transaction fields. The official node guide warns pools and custom mining stacks to preserve those fields from block template to solved block submission.</p>
       <div class="summary-grid">
         <article><span>Upgrade</span><p>Use Rusty Kaspa v2.0.1 or newer for the node and bridge path.</p></article>
-        <article><span>DAA gate</span><p>Mainnet activation is scheduled at DAA score <code>474,165,565</code>. Check <a href="/toccata-status">Toccata status</a> before calling it live.</p></article>
+        <article><span>activation record</span><p>Mainnet activation crossed DAA score <code>474,165,565</code>. Check <a href="/toccata-status">Toccata status</a> for post-activation checks.</p></article>
         <article><span>Template fields</span><p>Custom mining software must preserve post-Toccata fields such as transaction version, storage mass, compute budget, and covenant outputs.</p></article>
-        <article><span>Test first</span><p>Use Testnet-10 where possible before relying on a mainnet mining path after activation.</p></article>
+        <article><span>Test first</span><p>Use Testnet-10 where possible before relying on a mainnet mining path after the activation score.</p></article>
       </div>
       </div>
     </details>
@@ -449,7 +449,7 @@
             <tr><td>Bridge cannot reach node</td><td>Confirm the node is running with RPC at <code>127.0.0.1:16110</code> or update the bridge config to the node's RPC address.</td></tr>
             <tr><td>Firewall blocks connection</td><td>Allow the Stratum port on the node computer for your local network.</td></tr>
             <tr><td>No rewards</td><td>Check shares first. Rewards need a solved block, and solo mining variance can be brutal.</td></tr>
-            <tr><td>Toccata activation day</td><td>Recheck versions and logs. After activation, blocks that strip new fields can be invalid.</td></tr>
+            <tr><td>Toccata activation day</td><td>Recheck versions and logs. After the activation score, blocks that strip new fields can be invalid.</td></tr>
           </tbody>
         </table>
       </div>
@@ -510,7 +510,7 @@
         </article>
         <article>
           <h3>Activation status</h3>
-          <p><a href="/toccata-status">Kaspa Explained Toccata status</a> tracks the DAA-gated activation check separately from the setup instructions.</p>
+          <p><a href="/toccata-status">Kaspa Explained Toccata status</a> tracks activation separately from the setup instructions.</p>
         </article>
       </div>
       </div>

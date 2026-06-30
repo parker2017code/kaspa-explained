@@ -100,7 +100,7 @@ These are not literal bans. Keep a phrase when it carries a real technical, stat
 - `Fast inclusion is different from instant finality.`
 - `App/project activity is not L1 activation evidence unless the claim is specifically about L1 transaction data, accepted transactions, or miner fees.`
 - `TN12 evidence is useful builder evidence; it is not mainnet activation.`
-- `Toccata is DAA-gated at 474,165,565. After the gate, separate protocol activation from wallet, explorer, SDK, app, liquidity, and user evidence.`
+- `Toccata activated at DAA 474,165,565. Separate protocol activation from wallet, explorer, SDK, app, liquidity, and user evidence.`
 - `vProgs are later app architecture. Live app-ecosystem claims need shipped app and usage evidence.`
 - `DAGKnight is research/future consensus direction. Current mainnet behavior uses GHOSTDAG.`
 - Public Kaspa sentences should usually name a protocol mechanism, implementation status, user or infrastructure consequence, unresolved limitation, source/evidence, or decision for builders, users, miners, exchanges, wallets, explorers, or indexers.
