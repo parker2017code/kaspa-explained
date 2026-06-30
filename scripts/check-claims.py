@@ -17,6 +17,7 @@ TOP_FIELD_RE = re.compile(r"^([a-zA-Z0-9_]+):\s*(.*)$")
 
 ALLOWED_STATUSES = {
     "builder_guardrail",
+    "daa_gated",
     "ecosystem_live",
     "live",
     "live_design",
@@ -33,6 +34,7 @@ ALLOWED_STATUSES = {
 
 DRIFT_SENSITIVE_STATUSES = {
     "builder_guardrail",
+    "daa_gated",
     "ecosystem_live",
     "measurement_sensitive",
     "research",
@@ -150,7 +152,7 @@ def main() -> None:
             if parsed_recheck < today:
                 fail(f"{claim_id}.recheck_after is stale: {parsed_recheck.isoformat()}")
 
-        if status in {"targeted", "testnet_only", "roadmap", "research_direction"}:
+        if status in {"daa_gated", "targeted", "testnet_only", "roadmap", "research_direction"}:
             if not forbidden.get(claim_id):
                 fail(f"{claim_id} is {status} and needs forbidden_copy guardrails")
 

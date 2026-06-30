@@ -32,6 +32,8 @@ const skipDirs = new Set([
   "artifacts",
   "fixtures",
   "generated",
+  "exports",
+  "visual-audit",
   "vendor",
   "private-review",
 ]);

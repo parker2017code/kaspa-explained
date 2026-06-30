@@ -244,7 +244,7 @@ public Kaspa resources:
 
 ## Maintainer Reminder
 
-When Toccata becomes mainnet behavior, update this file, `status.html`,
+At the Toccata DAA gate, update this file, `status.html`,
 `builder-guide.html`, `sources.html`, `CLAIMS.yml`, and `llms.txt` from public
 activation evidence, Rusty Kaspa releases, official docs, and working tool
 commands. Until that evidence exists, keep Toccata/TN12 command examples in the

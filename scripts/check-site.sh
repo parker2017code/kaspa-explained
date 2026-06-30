@@ -231,7 +231,7 @@ done < <(
 claim_checks=(
   "status.html|Toccata|target"
   "llms.txt|Near-term: Toccata"
-  "CONTENT_BRIEF.md|Toccata should not be described as live"
+  "CONTENT_BRIEF.md|Toccata is DAA-gated"
   "status.html|DAGKnight|research"
   "status.html|vProgs|roadmap"
 )
