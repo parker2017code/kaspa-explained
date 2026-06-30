@@ -49,6 +49,10 @@ function read(page) {
 
 function visibleText(html) {
   return html
+    .replace(/<details\b(?![^>]*\bopen\b)[^>]*>([\s\S]*?)<\/details>/gi, (_match, body) => {
+      const summary = /<summary\b[^>]*>([\s\S]*?)<\/summary>/i.exec(body);
+      return summary?.[0] ?? "\n";
+    })
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "\n")
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "\n")
     .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, "\n")

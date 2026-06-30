@@ -3712,6 +3712,59 @@ blockquote {
   font-weight: 900;
 }
 
+.guide-detail {
+  overflow: hidden;
+}
+
+.guide-detail summary {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  list-style: none;
+  padding-right: 96px;
+}
+
+.guide-detail summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-detail summary::after {
+  content: "Open";
+  position: absolute;
+  top: 4px;
+  right: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: var(--text);
+  background: var(--control-bg);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.guide-detail[open] summary::after {
+  content: "Close";
+}
+
+.guide-detail summary h2 {
+  margin: 14px 0 0;
+}
+
+.guide-detail-preview {
+  display: block;
+  max-width: 70ch;
+  margin-top: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.guide-detail-body {
+  margin-top: clamp(18px, 3vw, 28px);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(18px, 3vw, 28px);
+}
+
 .source-more ul {
   margin: 14px 0 0;
   padding-left: 20px;
@@ -7787,6 +7840,13 @@ main > :first-child {
   .reality-table td:nth-child(2) {
     overflow-wrap: normal;
   }
+}
+
+.miner-settings-table td code,
+#miner .fit-note code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @media (max-width: 760px) {
