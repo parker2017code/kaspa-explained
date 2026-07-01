@@ -42,168 +42,6 @@
     renderThemeToggle();
   }
 
-  const TOCCATA_TARGET_DAA = 474165565;
-  const TOCCATA_WATCH_START_DAA = 473005279;
-  const TOCCATA_DAA_API = "https://api.kaspa.org/info/blockdag";
-  const numberFormat = new Intl.NumberFormat("en-US");
-  const params = new URLSearchParams(window.location.search);
-  const shouldShowToccataWatch = params.get("toccataWatch") !== "0";
-  let fireworksStarted = false;
-
-  const formatNumber = (value) => numberFormat.format(Math.max(0, Math.floor(Number(value) || 0)));
-
-  const launchFireworks = () => {
-    if (fireworksStarted || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    fireworksStarted = true;
-
-    const canvas = document.createElement("canvas");
-    canvas.className = "toccata-fireworks";
-    canvas.setAttribute("aria-hidden", "true");
-    document.body.appendChild(canvas);
-
-    const context = canvas.getContext("2d");
-    const colors = ["#6fc7ba", "#8cc8ff", "#f2b86f", "#f4fbf9"];
-    const particles = [];
-    const resize = () => {
-      canvas.width = window.innerWidth * window.devicePixelRatio;
-      canvas.height = window.innerHeight * window.devicePixelRatio;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      context.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-    };
-    const burst = (x, y) => {
-      for (let index = 0; index < 42; index += 1) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1.8 + Math.random() * 4.8;
-        particles.push({
-          x,
-          y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 58 + Math.random() * 26,
-          color: colors[index % colors.length],
-          size: 1.4 + Math.random() * 2.6
-        });
-      }
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-
-    let frame = 0;
-    let burstsOpen = true;
-    const interval = window.setInterval(() => {
-      burst(70 + Math.random() * (window.innerWidth - 140), 100 + Math.random() * Math.min(320, window.innerHeight * 0.5));
-    }, 420);
-    window.setTimeout(() => {
-      burstsOpen = false;
-      window.clearInterval(interval);
-    }, 6200);
-
-    const animate = () => {
-      frame += 1;
-      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-      for (let index = particles.length - 1; index >= 0; index -= 1) {
-        const particle = particles[index];
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.vy += 0.035;
-        particle.life -= 1;
-        context.globalAlpha = Math.max(0, particle.life / 84);
-        context.fillStyle = particle.color;
-        context.beginPath();
-        context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        context.fill();
-        if (particle.life <= 0) particles.splice(index, 1);
-      }
-      context.globalAlpha = 1;
-      if (burstsOpen || particles.length > 0) {
-        requestAnimationFrame(animate);
-      } else {
-        window.removeEventListener("resize", resize);
-        canvas.remove();
-        fireworksStarted = false;
-      }
-    };
-
-    burst(window.innerWidth * 0.5, 150);
-    animate();
-  };
-
-  const createToccataWatch = () => {
-    if (!shouldShowToccataWatch || document.querySelector(".toccata-launch-watch")) return;
-    const header = document.querySelector(".site-header");
-    if (!header) return;
-
-    const watch = document.createElement("aside");
-    watch.className = "toccata-launch-watch";
-    watch.setAttribute("aria-live", "polite");
-    watch.innerHTML = `
-      <div class="toccata-launch-copy">
-        <span class="toccata-launch-kicker">Toccata activated</span>
-        <strong>DAA ${formatNumber(TOCCATA_TARGET_DAA)} crossed</strong>
-        <p>Kaspa mainnet crossed the activation score on June 30, 2026. Current DAA reads live from mainnet.</p>
-        <small>Wallets, explorers, SDKs, examples, and app use still need separate receipts.</small>
-      </div>
-      <div class="toccata-launch-score">
-        <span data-toccata-status>Checking mainnet</span>
-        <b data-toccata-daa>...</b>
-        <small data-toccata-remaining>Reading current DAA.</small>
-        <div class="toccata-launch-meter" aria-hidden="true"><i data-toccata-meter></i></div>
-      </div>
-      <div class="toccata-launch-actions">
-        <a href="/toccata-status">Activation record</a>
-        <button type="button" data-toccata-party>Fireworks</button>
-      </div>
-    `;
-    header.insertAdjacentElement("afterend", watch);
-    document.body.classList.add("toccata-watch-active");
-
-    const status = watch.querySelector("[data-toccata-status]");
-    const daa = watch.querySelector("[data-toccata-daa]");
-    const remaining = watch.querySelector("[data-toccata-remaining]");
-    const meter = watch.querySelector("[data-toccata-meter]");
-    const party = watch.querySelector("[data-toccata-party]");
-
-    party.addEventListener("click", launchFireworks);
-    if (params.get("party") === "1") launchFireworks();
-
-    fetch(TOCCATA_DAA_API, { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error(`DAA read failed: ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        const currentDaa = Number(data.virtualDaaScore);
-        const isReached = currentDaa >= TOCCATA_TARGET_DAA;
-        const distance = TOCCATA_TARGET_DAA - currentDaa;
-        const progress = Math.max(
-          0,
-          Math.min(100, ((currentDaa - TOCCATA_WATCH_START_DAA) / (TOCCATA_TARGET_DAA - TOCCATA_WATCH_START_DAA)) * 100)
-        );
-
-        daa.textContent = formatNumber(currentDaa);
-        meter.style.width = `${isReached ? 100 : progress}%`;
-        if (isReached) {
-          status.textContent = "Current DAA";
-          remaining.textContent = "Activation score crossed. Check tooling and app evidence next.";
-          party.textContent = "Fireworks";
-          watch.classList.add("is-reached");
-          launchFireworks();
-        } else {
-          status.textContent = "Awaiting DAA";
-          remaining.textContent = `${formatNumber(distance)} DAA remaining to the activation score.`;
-        }
-      })
-      .catch(() => {
-        status.textContent = "DAA read unavailable";
-        daa.textContent = "Activation crossed";
-        remaining.textContent = "Use the activation record while REST status is unavailable.";
-      });
-  };
-
-  createToccataWatch();
-
   const normalizePath = (href) => {
     const path = new URL(href, window.location.origin).pathname
       .replace(/\/$/, "")
@@ -252,4 +90,66 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setOpen(false);
   });
+
+  const imageFigures = Array.from(document.querySelectorAll(".article-visual"));
+  if (imageFigures.length) {
+    const viewer = document.createElement("div");
+    viewer.className = "image-viewer";
+    viewer.setAttribute("role", "dialog");
+    viewer.setAttribute("aria-modal", "true");
+    viewer.setAttribute("aria-hidden", "true");
+    viewer.innerHTML = `
+      <button class="image-viewer-close" type="button" aria-label="Close expanded image">Close</button>
+      <figure>
+        <img alt="">
+        <figcaption></figcaption>
+      </figure>
+    `;
+    document.body.appendChild(viewer);
+
+    const viewerImage = viewer.querySelector("img");
+    const viewerCaption = viewer.querySelector("figcaption");
+    const closeViewer = () => {
+      viewer.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("image-viewer-open");
+      viewerImage.removeAttribute("src");
+    };
+    const openViewer = (image, captionText) => {
+      viewerImage.src = image.currentSrc || image.src;
+      viewerImage.alt = image.alt || "";
+      viewerCaption.textContent = captionText || "";
+      viewer.setAttribute("aria-hidden", "false");
+      document.body.classList.add("image-viewer-open");
+    };
+
+    viewer.addEventListener("click", (event) => {
+      if (event.target === viewer || event.target.closest(".image-viewer-close")) closeViewer();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && viewer.getAttribute("aria-hidden") === "false") closeViewer();
+    });
+
+    imageFigures.forEach((figure) => {
+      const image = figure.querySelector("img");
+      if (!image || figure.querySelector(".image-expand-button")) return;
+      const captionText = figure.querySelector("figcaption")?.textContent?.trim() || "";
+      const expand = document.createElement("button");
+      expand.className = "image-expand-button";
+      expand.type = "button";
+      expand.textContent = "Expand";
+      expand.setAttribute("aria-label", "Expand image");
+      expand.addEventListener("click", () => openViewer(image, captionText));
+      image.addEventListener("click", () => openViewer(image, captionText));
+      image.tabIndex = 0;
+      image.setAttribute("role", "button");
+      image.setAttribute("aria-label", "Expand image");
+      image.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openViewer(image, captionText);
+        }
+      });
+      figure.appendChild(expand);
+    });
+  }
 })();

@@ -26,6 +26,7 @@ const buttonHeavyAllowed = new Set([
 const longReferenceAllowed = new Set([
   "claims-reference.html",
   "glossary.html",
+  "kaspa-mining-cycle.html",
   "sources.html",
   "status.html",
 ]);
