@@ -3,8 +3,86 @@
 ## Scope
 
 - This repo is the public static GitHub Pages site for Kaspa Explained.
+- These instructions apply to all agent work in this repository unless a deeper `AGENTS.md` overrides them.
+- Follow the user request first, then these repo instructions, then existing code and style conventions.
+- Do not invent project goals, product claims, source status, or architectural intent.
 - Keep it plain HTML/CSS. Do not add a build system unless a requested feature truly needs one.
 - Preserve `CNAME` exactly as `kaspaexplained.com`.
+
+## Success Criteria
+
+- The requested reader or site job is handled. A nearby easier job is a failure.
+- Claims are source-backed, status-labeled, or explicitly marked unknown.
+- The diff is narrow enough to explain file by file.
+- Local checks pass for the touched surface.
+- Public changes are verified after deploy when pushed.
+- Visual changes are inspected in a rendered browser or screenshot. Code inspection does not prove layout.
+- The final response says what changed, what was checked, what was not checked, and where the work landed.
+
+## Commands
+
+Use these commands when relevant:
+
+- Local clean-URL preview: `python3 scripts/serve-local.py --port 4187`
+- Rebuild agent index: `python3 scripts/build-agent-index.py`
+- Rebuild sitemap: `python3 scripts/build-sitemap.py`
+- Copy lint: `npm run lint:copy`
+- Facing-copy audit: `npm run audit:copy`
+- Domain-term audit: `npm run audit:terms`
+- Visual guardrail audit: `npm run audit:visual`
+- Full publish gate: `bash scripts/check-site.sh`
+- External link audit, when source/reference URLs change: `bash scripts/check-links.sh`
+
+If the host shell lacks `node` or `npm`, use the bundled Codex runtime path before declaring the command unavailable.
+
+Before finishing, run the smallest command set that proves the changed behavior. Before pushing public content, run the full publish gate.
+
+## Verification Contract
+
+- Do not claim something works unless it was checked.
+- Do not upgrade a shallow check into a stronger claim. A grep proves bytes. A DOM tree proves structure. A screenshot proves rendered appearance.
+- If verification was skipped, blocked, or partial, say exactly what was not verified.
+- After pushing, check the live page with a cache-busting URL for the exact changed copy.
+- For UI/layout/design changes, use Chrome, the in-app browser, Computer Use, or a rendered screenshot path. If all visual routes fail, report that failure.
+
+## Recurring Failure Modes
+
+These are stable operating rules because these failures have already happened in this repo.
+
+- When the user asks for a specific artifact, identify the artifact before answering. "Toccata posts" might mean the X post calendar instead of the website article sequence. Search the workspace before guessing.
+- When the user asks for "today's" post, use the current date and the actual draft file. For the Toccata X calendar, use `kaspa-toccata-50-post-series.md`.
+- Do not answer a nearby easier question. If the user asks for X copy, do not give site links. If the user asks whether something is deployed, do not report only the local commit.
+- Local, pushed, deployed, and visually checked are four different states. Name which one is true.
+- A successful `git push` is not a live-site check. After pushing, fetch the deployed page with a cache-busting URL and verify the exact changed string.
+- A grep is not a visual check. A DOM or accessibility tree is not a screenshot. For layout or design work, inspect the rendered page in Chrome or with a real screenshot.
+- If Chrome extension control fails, use the in-app browser, Computer Use, or a rendered screenshot path. If all visual routes fail, say which visual check was not performed.
+- Always reload local pages with a cache-busting URL after edits. Stale localhost pages have caused false reads.
+- If `127.0.0.1` returns `ERR_EMPTY_RESPONSE`, check the local server before judging the page. Use `python3 scripts/serve-local.py --port 4187` for clean URLs.
+- Never let local-only review pages or labels leak into public pages. Text like "local only," "review options," "what changed in this article," or process notes belongs outside the public site unless explicitly requested.
+- Keep `exports/` and `visual-audit/` treated as local artifacts. Do not commit them unless the user explicitly asks.
+- For Toccata, separate protocol activation from app/tooling/user evidence. Toccata activation can be live while wallets, explorers, SDKs, apps, liquidity, and usage still need receipts.
+- After Toccata activation, remove scheduled/countdown language only where the activation record and post-activation behavior support it. Do not turn every roadmap item live.
+- Do not flatten all Toccata-adjacent work into "smart contracts are live." Name the layer: covenants, covenant IDs, ZK verification, sequencing commitments, based-app foundations, vProgs, wallet support, explorer support, or app usage.
+- When editing the user's essays, do not over-cut. Fix the defect the user named, preserve the connective argument, and leave the voice intact unless the user asks for a rewrite.
+- When the user gives an exact find/replace, execute the exact replacement. If the text is not found, stop and report that instead of approximating.
+- Do not normalize Parker's prose into generic AI polish. Preserve rough cadence, jokes, fragments, profanity, and parenthetical energy when they are intentional.
+- For generated images, do not make them giant article interruptions by default. Use small side visuals, expanders, visual shelves, or a separate visual library when that keeps the article readable.
+- Cropping and aspect ratio are part of the claim. A bad crop can make an explanatory image meaningless. Inspect rendered image placement and file existence.
+- Long guides need collapsible depth where it helps the reader. The visible path should teach the minimum; foldouts should carry optional context, caveats, examples, and source trails.
+- Copy tone is part of implementation. The site should teach like a patient, curious human: visible behavior first, hidden mechanism second, trap third, evidence boundary last.
+- In direct replies, use the same teaching voice. Avoid robotic process summaries unless the user asks for a strict checklist.
+
+## Final Response Contract
+
+End with:
+
+- files changed;
+- commands run;
+- verification results;
+- live/deploy status when relevant;
+- risks, assumptions, skipped checks, or remaining follow-up only when they genuinely matter.
+
+Do not hide failures. Do not imply unrun tests passed.
 
 ## Codex Operating Spine
 
