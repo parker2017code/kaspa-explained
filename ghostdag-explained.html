@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>GHOSTDAG Explained | Kaspa Explained</title>
-  <meta name="description" content="GHOSTDAG explained in plain English: how Kaspa orders parallel proof-of-work blocks in a blockDAG without claiming instant finality.">
+  <meta name="description" content="How GHOSTDAG orders parallel proof-of-work blocks in Kaspa's blockDAG, why losing blocks still count toward security, and what it doesn't buy you: instant finality.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/ghostdag-explained">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="GHOSTDAG Explained | Kaspa Explained">
-  <meta property="og:description" content="A plain model of GHOSTDAG, blockDAG ordering, selected-chain confusion, and finality boundaries.">
+  <meta property="og:description" content="GHOSTDAG keeps blocks that lose the mining race instead of discarding them. How the blue set and ordering rule work, and where finality still isn't instant.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/ghostdag-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GHOSTDAG Explained | Kaspa Explained">
-  <meta name="twitter:description" content="How Kaspa orders parallel blocks, and what GHOSTDAG does not mean.">
+  <meta name="twitter:description" content="How Kaspa orders parallel blocks by blue set, and why that isn't the same as instant finality.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-06-25">
   <script type="application/ld+json">
@@ -38,22 +38,22 @@
       {
         "@type": "Question",
         "name": "What is GHOSTDAG?",
-        "acceptedAnswer": {"@type": "Answer", "text": "GHOSTDAG is Kaspa's live ordering rule for its blockDAG. It lets parallel proof-of-work blocks stay in the graph and gives nodes a shared way to order them."}
+        "acceptedAnswer": {"@type": "Answer", "text": "GHOSTDAG is Kaspa's live ordering rule for its blockDAG. Instead of discarding blocks that lose the mining race, it classifies them into a blue set and gives every node the same procedure for ordering the whole graph."}
       },
       {
         "@type": "Question",
         "name": "Is GHOSTDAG the same as DAGKnight?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG is current mainnet behavior. DAGKnight is a later consensus research and upgrade direction."}
+        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG runs on mainnet today. DAGKnight is a separate, later consensus design still in research and testnet work."}
       },
       {
         "@type": "Question",
         "name": "Does GHOSTDAG give instant finality?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG helps Kaspa include and order parallel blocks quickly, but confirmation confidence is still probabilistic."}
+        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG orders parallel blocks fast, but confirmation confidence still builds probabilistically as more blocks stack on top."}
       }
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -79,43 +79,43 @@
     <section class="sources-hero section">
       <p class="eyebrow">Protocol explainer</p>
       <h1>GHOSTDAG explained</h1>
-      <p class="lead">GHOSTDAG is the live Kaspa rule that turns a graph of parallel proof-of-work blocks into one ordered payment history.</p>
-      <p class="fit-note"><strong>Summary:</strong> GHOSTDAG is Kaspa's current blockDAG ordering rule; it is not DAGKnight and it does not mean instant finality.</p>
+      <p class="lead">Kaspa's losing blocks still count toward security. GHOSTDAG is the rule that keeps them in the graph and turns a tangle of parallel proof-of-work blocks into one ordered history.</p>
+      <p class="fit-note"><strong>Summary:</strong> GHOSTDAG is Kaspa's live blockDAG ordering rule. It is not DAGKnight, and it does not produce instant finality.</p>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Plain model</p>
+      <p class="eyebrow">The mechanism</p>
       <h2>Why Kaspa needs it</h2>
       <div class="summary-grid">
-        <article><span>Problem</span><p>If blocks arrive quickly, honest miners can find blocks at nearly the same time.</p></article>
-        <article><span>Old shape</span><p>A single chain has to choose one path. Some honest work can become stale or orphaned.</p></article>
-        <article><span>Kaspa shape</span><p>A blockDAG keeps more parallel blocks visible in the record.</p></article>
-        <article><span>Ordering rule</span><p>GHOSTDAG gives nodes a shared way to classify and order the graph.</p></article>
-        <article><span>User effect</span><p>Transactions can appear quickly while confirmation confidence increases over time.</p></article>
-          <article><span>Boundary</span><p>Fast mined ordering increases confirmation speed. Irreversibility still depends on confirmation depth and risk tolerance.</p></article>
+        <article><span>Problem</span><p>Fast block times mean honest miners regularly find blocks within moments of each other.</p></article>
+        <article><span>Old shape</span><p>A single chain has to pick one branch. The losing branch's work gets thrown away as orphaned or stale.</p></article>
+        <article><span>Kaspa shape</span><p>A blockDAG keeps both blocks. Neither gets discarded.</p></article>
+        <article><span>Ordering rule</span><p>GHOSTDAG sorts the graph into a blue set and a red set, then gives every node the same procedure for ranking it.</p></article>
+        <article><span>User effect</span><p>Transactions show up in a block fast. Confidence that the block stays in the blue set builds as more blocks reference it.</p></article>
+          <article><span>Boundary</span><p>Fast inclusion is not the same as irreversibility. How final a transaction is still depends on confirmation depth and how much risk the recipient will tolerate.</p></article>
       </div>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Confusions</p>
-      <h2>Say it safely</h2>
+      <p class="eyebrow">Common mix-ups</p>
+      <h2>What GHOSTDAG is not</h2>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Question</th><th>Answer</th><th>Best wording</th></tr></thead>
           <tbody>
             <tr><td>Is GHOSTDAG live?</td><td><span class="status-pill live">Live</span></td><td>GHOSTDAG is Kaspa's live blockDAG ordering rule.</td></tr>
-            <tr><td>Is it DAGKnight?</td><td><span class="status-pill not-live">No</span></td><td>DAGKnight is a separate future consensus direction.</td></tr>
-            <tr><td>Does it remove finality risk?</td><td><span class="status-pill not-live">No</span></td><td>Kaspa has fast inclusion and probabilistic confirmation confidence.</td></tr>
-            <tr><td>Does it mean unlimited TPS?</td><td><span class="status-pill not-live">No</span></td><td>Throughput depends on block capacity, policy, fees, demand, and network conditions.</td></tr>
+            <tr><td>Is it DAGKnight?</td><td><span class="status-pill not-live">No</span></td><td>DAGKnight is a separate, later consensus design.</td></tr>
+            <tr><td>Does it remove finality risk?</td><td><span class="status-pill not-live">No</span></td><td>Inclusion is fast. Confirmation confidence is still probabilistic.</td></tr>
+            <tr><td>Does it mean unlimited TPS?</td><td><span class="status-pill not-live">No</span></td><td>Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
     <section class="next-step section">
-      <p class="eyebrow">Source list</p>
-      <h2>Verify the claim</h2>
-      <p>Use Kaspa Research for protocol lineage, Rusty Kaspa for implementation, the status page for current labels, and the finality page for payment-confidence wording.</p>
+      <p class="eyebrow">Sources</p>
+      <h2>Check the mechanism against the primary sources</h2>
+      <p>Kaspa Research covers the protocol lineage, Rusty Kaspa is the implementation, the status page tracks current labels, and the finality page works through payment-confidence wording in detail.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
@@ -128,7 +128,7 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/kaspa-confirmations-finality"><span>Previous</span><strong>Fast inclusion is different from instant finality</strong><p>Kaspa finality explained: fast inclusion, GHOSTDAG ordering, probabilistic confirmation confidence, 10 BPS limits, and why real-time does...</p></a>
+        <a href="/kaspa-confirmations-finality"><span>Previous</span><strong>Fast inclusion is not instant finality</strong><p>How confirmation confidence builds on GHOSTDAG ordering, what 10 BPS bounds, and why real-time inclusion doesn't...</p></a>
         <a href="/faq"><span>Next</span><strong>Direct answers to common Kaspa questions</strong><p>Direct answers to common Kaspa questions and misconceptions: Toccata, DAGKnight, smart contracts, TPS, 10 BPS, GHOSTDAG, blockDAG, vProgs,...</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
       </div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kaspa Finality: Fast Inclusion vs Confirmation Confidence | Kaspa Explained</title>
-  <meta name="description" content="Kaspa finality explained: fast inclusion, GHOSTDAG ordering, probabilistic confirmation confidence, 10 BPS limits, and why real-time does not mean instant finality.">
+  <meta name="description" content="A transaction can land in a block in under a second on Kaspa. It still isn't final the moment it lands. How GHOSTDAG ordering, 10 BPS, and accumulated work turn inclusion into confidence.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/kaspa-confirmations-finality">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa Finality | Kaspa Explained">
-  <meta property="og:description" content="Fast inclusion is not instant finality. A plain guide to Kaspa transaction confidence.">
+  <meta property="og:description" content="A block lands fast. Finality still builds over time. How Kaspa's confirmation confidence actually works.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-confirmations-finality">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Finality | Kaspa Explained">
-  <meta name="twitter:description" content="Fast inclusion, ordering, and probabilistic confidence on Kaspa.">
+  <meta name="twitter:description" content="Inclusion is fast. Confidence still accumulates. How ordering and work combine on Kaspa.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-06-25">
   <script type="application/ld+json">
@@ -38,22 +38,22 @@
       {
         "@type": "Question",
         "name": "Does Kaspa have instant finality?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. Kaspa has fast inclusion and probabilistic confirmation confidence. Real-time does not mean every transaction is instantly irreversible."}
+        "acceptedAnswer": {"@type": "Answer", "text": "No. Kaspa has fast inclusion and probabilistic confirmation confidence that builds over time. A transaction landing in a block is not the same as that transaction being irreversible."}
       },
       {
         "@type": "Question",
         "name": "What does fast inclusion mean?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Fast inclusion means a transaction can be mined into a block quickly. It still needs ordering and increasing confirmation confidence."}
+        "acceptedAnswer": {"@type": "Answer", "text": "A miner can mine a transaction into a block within seconds. That block still needs GHOSTDAG ordering and accumulating work before the transaction carries strong confirmation confidence."}
       },
       {
         "@type": "Question",
         "name": "Does 10 BPS mean 10x finality?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. 10 BPS is live, but confirmation confidence also depends on accumulated work and network conditions."}
+        "acceptedAnswer": {"@type": "Answer", "text": "No. 10 BPS is live and speeds up inclusion, but confirmation confidence depends on accumulated proof-of-work and network conditions, not block rate alone."}
       }
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -78,34 +78,34 @@
   <main id="top" tabindex="-1" class="status-page">
     <section class="sources-hero section">
       <p class="eyebrow">Claim correction</p>
-      <h1>Fast inclusion is different from instant finality</h1>
-      <p class="lead">Kaspa can feel fast because blocks arrive quickly and GHOSTDAG orders parallel work. A payment can appear quickly while reversal risk still declines over later confirmations.</p>
-      <p class="fit-note"><strong>Summary:</strong> Kaspa has fast mined inclusion and probabilistic confirmation confidence; "real-time" should not be repeated as "instant finality."</p>
+      <h1>A transaction can land in a block before you finish reading this sentence. That is not the same as final.</h1>
+      <p class="lead">Kaspa mines blocks fast enough that inclusion feels instant, and GHOSTDAG keeps ordering parallel blocks as they arrive instead of forcing miners to wait their turn. What it doesn't do is make a transaction irreversible the moment it's included. Reversal risk drops as more proof-of-work piles on top of it.</p>
+      <p class="fit-note"><strong>Summary:</strong> Kaspa has fast mined inclusion and confirmation confidence that rises with accumulated work. "Real-time" describes inclusion speed, not finality.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Payment path</p>
-      <h2>What happens to a transaction</h2>
+      <h2>Five steps from broadcast to trustworthy</h2>
       <div class="transaction-rail" aria-label="Simplified Kaspa transaction confidence path">
-        <article><span>1</span><strong>Seen</strong><p>The wallet or node sees a transaction.</p></article>
-        <article><span>2</span><strong>Included</strong><p>A miner includes it in a proof-of-work block.</p></article>
-        <article><span>3</span><strong>Ordered</strong><p>The block joins the DAG and GHOSTDAG orders history.</p></article>
-        <article><span>4</span><strong>Accepted</strong><p>Nodes accept the ordered transaction under consensus rules.</p></article>
-        <article><span>5</span><strong>Confidence</strong><p>Confidence increases as more work builds around the history.</p></article>
+        <article><span>1</span><strong>Seen</strong><p>A wallet or node picks up the broadcast transaction.</p></article>
+        <article><span>2</span><strong>Included</strong><p>A miner mines it into a proof-of-work block.</p></article>
+        <article><span>3</span><strong>Ordered</strong><p>The block joins the DAG alongside blocks mined in parallel, and GHOSTDAG orders the history.</p></article>
+        <article><span>4</span><strong>Accepted</strong><p>Nodes accept the ordered transaction under Kaspa's consensus rules.</p></article>
+        <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
     </section>
 
     <section class="section">
       <p class="eyebrow">Copy block</p>
-      <h2>Claim wording</h2>
-      <blockquote>Kaspa improves proof-of-work payment latency through a 10 BPS blockDAG and GHOSTDAG ordering. Transactions can be included quickly, while confidence still increases probabilistically over time.</blockquote>
+      <h2>How to state the claim</h2>
+      <blockquote>Kaspa's 10 BPS blockDAG and GHOSTDAG ordering cut payment latency: a transaction can be mined into a block in a fraction of a second. Confirmation confidence still rises probabilistically as more work accumulates on top of it.</blockquote>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Shortcut</th><th>Safer version</th></tr></thead>
           <tbody>
-            <tr><td>Kaspa payments are irreversible immediately.</td><td>Kaspa has fast inclusion and increasing probabilistic confidence.</td></tr>
-            <tr><td>10 BPS means 10x finality.</td><td>10 BPS is live; finality confidence also depends on accumulated work and network conditions.</td></tr>
-            <tr><td>Real-time means irreversible now.</td><td>Real-time means fast mined user feel with confirmation risk.</td></tr>
+            <tr><td>Kaspa payments are irreversible immediately.</td><td>Inclusion is fast; reversal risk drops as confirmation confidence rises.</td></tr>
+            <tr><td>10 BPS means 10x finality.</td><td>10 BPS is live and speeds up inclusion. Finality confidence still depends on accumulated proof-of-work and network conditions.</td></tr>
+            <tr><td>Real-time means irreversible now.</td><td>Real-time describes how fast a block gets mined, not how final the transaction inside it is.</td></tr>
           </tbody>
         </table>
       </div>
@@ -113,7 +113,7 @@
 
     <section class="next-step section">
       <p class="eyebrow">Read next</p>
-      <h2>Check related claims</h2>
+      <h2>Related claims worth checking</h2>
       <div class="actions">
         <a class="button primary" href="/ghostdag-explained">GHOSTDAG explained</a>
         <a class="button" href="/kaspa-claims-checker">Claims checker</a>
@@ -126,9 +126,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/kaspa-smart-contracts-status"><span>Previous</span><strong>Does Kaspa have smart contracts?</strong><p>Does Kaspa have smart contracts? L1 status guide to Toccata covenants, Silverscript, ZK hooks, vProgs, and native DeFi claims.</p></a>
-        <a href="/ghostdag-explained"><span>Next</span><strong>GHOSTDAG explained</strong><p>GHOSTDAG explained in plain English: how Kaspa orders parallel proof-of-work blocks in a blockDAG without claiming instant finality.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
+        <a href="/kaspa-smart-contracts-status"><span>Previous</span><strong>Does Kaspa have smart contracts?</strong><p>What's actually live: Toccata covenants, Silverscript, ZK hooks, vProgs, and where native DeFi claims outrun the evidence.</p></a>
+        <a href="/ghostdag-explained"><span>Next</span><strong>GHOSTDAG explained</strong><p>How GHOSTDAG orders parallel proof-of-work blocks in a blockDAG, and why that ordering doesn't mean instant finality.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What's live, what's targeted, what's roadmap, what's research, and which claims still need a caveat.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

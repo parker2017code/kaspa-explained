@@ -41,7 +41,7 @@
     "about": ["Kaspa", "Rusty Kaspa", "RPC", "Wallets", "Testnet", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -70,7 +70,7 @@
     <section class="section">
       <p class="eyebrow">Verify yourself</p>
       <h1>How to verify a Kaspa transaction yourself</h1>
-      <p class="lead">A wallet screen asks for trust. A reproducible check asks for work. This path moves from explorer output to a node, CLI, hosted API, or testnet check a reader can repeat.</p>
+      <p class="lead">A wallet screen shows a balance and asks you to believe it. A node, an RPC call, or a second explorer either agrees or doesn't. This path moves from explorer output to a node, CLI, hosted API, or testnet check you can run yourself.</p>
       <div class="actions">
         <a class="button primary" href="#mainnet-node">Run a node</a>
         <a class="button" href="#wallet-cli">Open CLI</a>
@@ -79,7 +79,7 @@
         <a class="button" href="#tn12">TN12 practice</a>
         <a class="button" href="#sources">Sources</a>
       </div>
-      <p class="fit-note">Mainnet commands move around with releases. Check the source links before touching real funds.</p>
+      <p class="fit-note">Mainnet commands change with releases. Check the source links before touching real funds.</p>
     </section>
 
     <section class="section">
@@ -88,27 +88,27 @@
       <div class="reference-grid">
         <article>
           <h3>Verify chain state</h3>
-          <p>Run or query a node, compare explorers, and check accepted transactions without trusting one hosted screen.</p>
+          <p>Run or query a node, compare explorers side by side, and check whether a transaction is actually accepted rather than just displayed.</p>
           <p><a href="#mainnet-node">Start with node commands</a></p>
         </article>
         <article>
           <h3>Use a wallet from terminal</h3>
-          <p>Open the Rusty Kaspa CLI route, inspect help, confirm network, and avoid signing until key storage is clear.</p>
+          <p>Open the Rusty Kaspa CLI, read its help output, confirm which network it's pointed at, and hold off on signing until you know where keys are stored.</p>
           <p><a href="#wallet-cli">Start with kaspa-cli</a></p>
         </article>
         <article>
           <h3>Practice safely</h3>
-          <p>Use testnet or TN12 before mainnet. Testnet coins are for learning and have no storage-of-value role.</p>
+          <p>Testnet and TN12 coins carry no value and exist for learning. Break things there first.</p>
           <p><a href="#testnet">Start with testnet</a></p>
         </article>
         <article>
           <h3>Build app checks</h3>
-          <p>Use wRPC and accepted-transaction replay when an app needs to prove that a txid, payload, or output really landed.</p>
+          <p>Use wRPC and accepted-transaction replay to prove a txid, payload, or output actually landed, instead of taking an app's word for it.</p>
           <p><a href="#wrpc">Start with wRPC</a></p>
         </article>
         <article>
           <h3>Use a hosted API</h3>
-          <p>Use a documented API for address history, acceptance checks, and block ranges when a prototype cannot run its own indexer yet.</p>
+          <p>A documented API covers address history, acceptance checks, and block ranges for a prototype that has no indexer of its own yet.</p>
           <p><a href="#hosted-api">Start with KDP</a></p>
         </article>
       </div>
@@ -120,28 +120,28 @@
       <div class="reference-grid">
         <article>
           <h3>1. Explorer</h3>
-      <p>Use an explorer to see whether a transaction appears accepted. Final verification comes from your own node or a trusted verification path.</p>
+      <p>An explorer shows whether a transaction appears accepted. It is one interface's read of the chain, not the chain itself.</p>
         </article>
         <article>
           <h3>2. Second source</h3>
-          <p>Compare another explorer, API, wallet, or indexer view. If two hosted views disagree, slow down.</p>
+          <p>Check a second explorer, API, wallet, or indexer. Two hosted views that disagree are a signal to slow down, not a coincidence to ignore.</p>
         </article>
         <article>
           <h3>3. Your wallet</h3>
-          <p>Check network, address, balance, transaction history, fee, and signing intent inside wallet software you control.</p>
+          <p>Network, address, balance, transaction history, fee, and signing intent, read from wallet software you control.</p>
         </article>
         <article>
           <h3>4. Your node</h3>
-          <p>Run or query a node when you need to verify chain state without depending on a hosted interface.</p>
+          <p>Run or query a node to check chain state directly, with no hosted interface in between.</p>
         </article>
       </div>
-      <p class="fit-note">Independent verification means climbing this ladder when the situation demands it. It does not mean every normal payment requires every step.</p>
+      <p class="fit-note">Climb the ladder when the situation calls for it. A normal payment doesn't need every rung.</p>
     </section>
 
     <section id="hosted-api" class="section">
       <p class="eyebrow">Hosted API</p>
       <h2>KDP commands and boundaries</h2>
-      <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, block queries, and a node RPC proxy. It supports prototypes, dashboards, exchange/wallet integrations, and second-source checks.</p>
+      <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, block queries, and a node RPC proxy. It works for prototypes, dashboards, exchange and wallet integrations, and second-source checks.</p>
       <div class="api-command-grid" aria-label="Kaspa Developer Platform command examples">
         <article class="api-command-card">
           <span class="command-method command-method-post">POST</span>
@@ -156,16 +156,16 @@
         <article class="api-command-card">
           <span class="command-method">GET</span>
           <h3>DAA-score blocks</h3>
-          <p>Read a bounded DAA-score range. KDP limits these ranges to 100 scores per request.</p>
+          <p>Read a bounded DAA-score range. KDP caps each request at 100 scores.</p>
           <pre><code>curl --request GET \
   --url https://api.kas.fyi/v1/blocks/daa-score/{daa_score_start}/{daa_score_end} \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
-          <p class="api-command-note">For paginated jobs, advance the range deliberately and record the last checked score.</p>
+          <p class="api-command-note">For paginated jobs, advance the range one block at a time and record the last checked score.</p>
         </article>
         <article class="api-command-card">
           <span class="command-method">GET</span>
           <h3>Blue-score blocks</h3>
-          <p>Read blocks by blue score when that is the progress marker your app stores.</p>
+          <p>Read blocks by blue score when that's the progress marker your app already tracks.</p>
           <pre><code>curl --request GET \
   --url https://api.kas.fyi/v1/blocks/blue-score/{blue_score_start}/{blue_score_end} \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
@@ -173,7 +173,7 @@
         <article class="api-command-card">
           <span class="command-method">GET</span>
           <h3>Address history</h3>
-          <p>Use cursor pagination for large address histories. Cache carefully and handle rate limits.</p>
+          <p>Large address histories need cursor pagination. Cache results and handle rate limits, or the requests pile up fast.</p>
           <pre><code>curl --request GET \
   --url 'https://api.kas.fyi/v1/addresses/&lt;address&gt;/transactions?limit=100' \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
@@ -181,7 +181,7 @@
         <article class="api-command-card api-command-card-note">
           <span class="command-method command-method-note">DATA</span>
           <h3>API data rules</h3>
-          <p>Amounts use sompi strings. Hashes are 64-character hex strings. Addresses use the <code>kaspa:</code> prefix. API timestamps are Unix milliseconds.</p>
+          <p>Amounts arrive as sompi strings. Hashes are 64-character hex. Addresses carry the <code>kaspa:</code> prefix. Timestamps are Unix milliseconds.</p>
           <pre><code>1 KAS = 100000000 SOMPI
 amount: "31112708372"
 blockTime: 1749531022210</code></pre>
@@ -189,7 +189,7 @@ blockTime: 1749531022210</code></pre>
         <article class="api-command-card api-command-card-note">
           <span class="command-method command-method-note">LIMITS</span>
           <h3>Rate limits and keys</h3>
-          <p>Send the API key in <code>x-api-key</code>. Watch rate-limit headers, request-unit cost, 401 errors for key issues, and 429 errors for backoff.</p>
+          <p>Send the API key in <code>x-api-key</code>. A 401 means the key is wrong; a 429 means back off. Watch the rate-limit headers and request-unit cost to see it coming first.</p>
           <pre><code>ratelimit-limit: 500;w=1
 ratelimit-remaining: 490
 x-request-cost-ru: 10</code></pre>
@@ -197,16 +197,16 @@ x-request-cost-ru: 10</code></pre>
         <article class="api-command-card api-command-card-note">
           <span class="command-method command-method-note">BOUNDARY</span>
           <h3>Production boundary</h3>
-          <p>API keys, rate limits, pricing, and provider uptime are product dependencies. Production apps should plan their own node, indexer, or redundant provider path when they need reliability, privacy, or scale.</p>
+          <p>API keys, rate limits, pricing, and provider uptime are dependencies on someone else's infrastructure. A production app that needs reliability, privacy, or scale should plan its own node, indexer, or a redundant provider path.</p>
         </article>
       </div>
-      <p class="fit-note">KDP is a hosted read path. Protocol status still comes from source, releases, KIPs, nodes, and network evidence.</p>
+      <p class="fit-note">KDP is a hosted read path, not a source of truth. Protocol status comes from source, releases, KIPs, nodes, and network evidence.</p>
     </section>
 
     <section id="mainnet-node" class="section">
       <p class="eyebrow">Mainnet</p>
       <h2>Run a Rusty Kaspa node</h2>
-      <p>Prerequisites: Docker for the container route, or Rust/Cargo for the source route. A node can verify chain state; it does not create or protect wallet keys by itself.</p>
+      <p>Prerequisites: Docker for the container route, or Rust/Cargo for the source route. A node verifies chain state. It does not create or protect wallet keys on its own.</p>
       <p>Docker route with persistent storage:</p>
       <pre><code>docker pull kaspanet/rusty-kaspad:latest
 mkdir -p ~/kaspa-data
@@ -223,7 +223,7 @@ cd rusty-kaspa
 cargo run --release --bin kaspad</code></pre>
       <p>Mainnet node with UTXO indexing:</p>
       <pre><code>cargo run --release --bin kaspad -- --utxoindex</code></pre>
-      <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed UTXO state. Let the node sync before treating its answers as current.</p>
+      <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed UTXO state. A node that hasn't finished syncing will answer confidently and wrongly, so wait for sync before trusting what it says.</p>
     </section>
 
     <section id="wallet-cli" class="section">
@@ -232,22 +232,22 @@ cargo run --release --bin kaspad</code></pre>
       <p>From a Rusty Kaspa checkout:</p>
       <pre><code>cd cli
 cargo run --release</code></pre>
-      <p>Use this as the current source-backed entry into the Rusty Kaspa terminal RPC and wallet runtime. Before creating wallets or signing anything:</p>
+      <p>This is the current entry point into the Rusty Kaspa terminal RPC and wallet runtime. Before creating wallets or signing anything:</p>
       <div class="reference-grid">
-        <article><h3>Check network</h3><p>Confirm whether the CLI is connected to mainnet or testnet before creating or importing wallet material.</p></article>
-        <article><h3>Check files</h3><p>Find where wallet files, keys, and local state are stored. Do not guess.</p></article>
-        <article><h3>Check intent</h3><p>For every transaction, inspect address, amount, fee, network, and whether it is a send, sweep, or self-transfer.</p></article>
-        <article><h3>Test small</h3><p>Use tiny amounts first, then verify the accepted txid through independent sources.</p></article>
+        <article><h3>Check network</h3><p>Confirm mainnet or testnet before creating or importing wallet material. Wrong network, wrong keys.</p></article>
+        <article><h3>Check files</h3><p>Find where wallet files, keys, and local state actually live before you need them in a hurry.</p></article>
+        <article><h3>Check intent</h3><p>For every transaction, read the address, amount, fee, network, and whether it's a send, sweep, or self-transfer.</p></article>
+        <article><h3>Test small</h3><p>Send a tiny amount first, then confirm the accepted txid through an independent source before sending more.</p></article>
       </div>
     </section>
 
     <section id="wrpc" class="section">
       <p class="eyebrow">wRPC</p>
       <h2>Enable a JSON WebSocket RPC endpoint</h2>
-      <p>Rusty Kaspa documents wRPC as optional and disabled by default. For JSON wRPC:</p>
+      <p>wRPC is optional and off by default in Rusty Kaspa. For JSON wRPC:</p>
       <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
-      <p>This lets SDKs and scripts query node state over WebSocket. Bind carefully on public machines. A public RPC endpoint is infrastructure. Wallet safety needs key isolation, signing discipline, and verification paths.</p>
-      <p>Use wRPC when an app needs to read accepted transactions, inspect payload-capable routes, or compare indexer state against node-observed chain state.</p>
+      <p>This opens a WebSocket that SDKs and scripts can query for node state. Bind it carefully on public machines: a public RPC endpoint is infrastructure, and exposing it doesn't touch key isolation, signing discipline, or verification, which still have to be handled separately.</p>
+      <p>Use wRPC when an app needs to read accepted transactions, inspect payload-capable routes, or compare indexer state against what the node itself observes.</p>
     </section>
 
     <section id="testnet" class="section">
@@ -258,28 +258,28 @@ cargo run --release</code></pre>
       <p>Older hard-fork testnet guides used explicit suffixes, for example:</p>
       <pre><code>kaspad --testnet --netsuffix=10 --utxoindex
 cargo run --bin kaspad --release -- --testnet --netsuffix=10 --utxoindex</code></pre>
-      <p>For TN12/Toccata work, verify the current netsuffix, release, endpoint, and flags from active public docs before running. Older TN10 examples are Crescendo-era context. The Rusty Kaspa <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a> pre-releases plus <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> are the current Testnet-10 Toccata activation and hardening evidence.</p>
-      <p><a href="/builder-evidence">Builder Evidence</a> links the public site to the TN12 proof lab when you want accepted testnet examples.</p>
+      <p>For TN12/Toccata work, check the current netsuffix, release, endpoint, and flags against active public docs before running anything. The older TN10 examples are Crescendo-era context, not current instructions. The Rusty Kaspa <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a> pre-releases, plus the <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> endpoint, are the current Testnet-10 Toccata activation and hardening evidence.</p>
+      <p><a href="/builder-evidence">Builder Evidence</a> connects this site to the TN12 proof lab for accepted testnet examples.</p>
     </section>
 
     <section id="tn12" class="section">
       <p class="eyebrow">TN12 practice</p>
       <h2>Use the proof lab for covenant-shaped testnet work</h2>
-      <p>TN12 is where covenant, payload, and replay experiments can be practiced before mainnet behavior changes. In the TN12 repo, the basic route is:</p>
+      <p>TN12 is where covenant, payload, and replay experiments get tested before they touch mainnet behavior. In the TN12 repo, the basic route is:</p>
       <pre><code>git clone https://github.com/parker2017code/tn12-covenant-vault-demo
 cd tn12-covenant-vault-demo
 npm ci
 npm run check:all
 npm run check:tn12
 npm run playground:wallets</code></pre>
-      <p>Then fund only the printed <code>kaspatest:</code> addresses with faucet tKAS, inspect txids in the TN12 explorer, and replay before believing app state. Anything with <code>--submit</code> is a real TN12 broadcast.</p>
-      <p>Status: testnet practice. Mainnet wallet, custody, and Toccata activation claims need mainnet evidence.</p>
+      <p>Fund only the printed <code>kaspatest:</code> addresses with faucet tKAS, check txids in the TN12 explorer, and replay before trusting what the app reports as state. Anything run with <code>--submit</code> is a real TN12 broadcast, not a dry run.</p>
+      <p>Status: testnet practice. Mainnet wallet, custody, and Toccata activation claims need mainnet evidence, not testnet results.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Toccata reminder</p>
       <h2>Command examples need their own receipts</h2>
-      <p>Toccata activated at DAA 474,165,565. Command examples still need official mainnet docs and working commands before this page presents them as live mainnet instructions.</p>
+      <p>Toccata activated at DAA 474,165,565. This page still needs official mainnet docs and working commands verified against them before it presents anything here as live mainnet instructions.</p>
     </section>
 
     <section id="sources" class="section">
@@ -294,7 +294,7 @@ npm run playground:wallets</code></pre>
           <p><a href="https://docs.kas.fyi/api-reference/v1/block/get-block-blue-score">Blue-score blocks</a></p>
           <p><a href="https://docs.kas.fyi/essentials/data-types">Data types</a></p>
           <p><a href="https://docs.kas.fyi/rate-limits">Rate limits</a></p>
-          <p>Hosted API for address history, transaction acceptance, block ranges, and node RPC proxy access. Use it for prototypes and second-source checks.</p>
+          <p>Hosted API for address history, transaction acceptance, block ranges, and node RPC proxy access. Good for prototypes and second-source checks.</p>
         </article>
         <article>
           <h3>Kaspa Build</h3>
@@ -315,7 +315,7 @@ npm run playground:wallets</code></pre>
           <h3>TN10 Toccata tests</h3>
           <p><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3 release</a></p>
           <p><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2 release</a></p>
-          <p>Testnet-10 Toccata activation and hardening schedules. Use them as testnet evidence and check current release notes before running commands.</p>
+          <p>Testnet-10 Toccata activation and hardening schedules. Treat them as testnet evidence and check current release notes before running commands.</p>
         </article>
         <article>
           <h3>Releases and explorers</h3>
@@ -330,9 +330,9 @@ npm run playground:wallets</code></pre>
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/build-this-now"><span>Previous</span><strong>What can you build on Kaspa now?</strong><p>Kaspa builder recipes: read DAG data, watch accepted transactions, track UTXOs, generate receipts, verify a txid, and replay TN12 evidence.</p></a>
-        <a href="/solo-mining-guide"><span>Next</span><strong>Kaspa solo mining guide</strong><p>A plain Kaspa solo mining guide for connecting an ASIC miner to your own node through the Rusty Kaspa Stratum Bridge.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
+        <a href="/build-this-now"><span>Previous</span><strong>What can you build on Kaspa now?</strong><p>Builder recipes for reading DAG data, watching accepted transactions, tracking UTXOs, generating receipts, verifying a txid, and replaying TN12 evidence.</p></a>
+        <a href="/solo-mining-guide"><span>Next</span><strong>Kaspa solo mining guide</strong><p>Connect an ASIC miner to your own node through the Rusty Kaspa Stratum Bridge.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What's live, what's targeted, what's roadmap, what's research, and which claims still need caveats.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

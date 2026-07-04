@@ -30,7 +30,7 @@
   <meta name="twitter:description" content="Why crypto needs records, keys, transactions, blocks, consensus, incentives, tokens, and tradeoffs before Kaspa is introduced.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-06-23">
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -59,8 +59,8 @@
     <section class="knowledge-hero section">
       <p class="eyebrow">Crypto from zero</p>
       <h1>Crypto starts with shared records</h1>
-      <p class="lead">Money, balances, tickets, game items, stablecoins, and crypto all depend on records. The hard question is who can update the record, who checks the update, and why everyone else should accept it.</p>
-      <blockquote>Crypto keeps one shared digital record without one trusted operator. That creates new problems around keys, consensus, incentives, markets, and group action.</blockquote>
+      <p class="lead">Money, balances, tickets, game items, stablecoins, and crypto all depend on records. The hard question was never storage. It is who can change the record, who checks the change, and why everyone else has to accept it.</p>
+      <blockquote>Crypto keeps one shared digital record without one trusted operator. Remove the operator and you inherit their old job: keys, consensus, incentives, markets, and group action all have to be rebuilt from scratch.</blockquote>
     </section>
 
     <section class="section">
@@ -84,20 +84,20 @@
       <div class="fit-grid">
         <article class="section">
           <h3>Physical cash has location</h3>
-          <p>If Alice hands Bob a banknote, Alice no longer has that same banknote. The physical object cannot be in both wallets at once.</p>
+          <p>Hand someone a banknote and you no longer hold it. The physical object cannot sit in two wallets at once: scarcity is a property of matter, free of charge.</p>
         </article>
         <article class="section">
-          <h3>Digital data copies easily</h3>
-          <p>A file can be copied. A database row can be edited. A screenshot can be duplicated. Digital money therefore needs rules that make one accepted ownership state hard to fake.</p>
+          <h3>Digital data copies for free</h3>
+          <p>A file copies. A database row edits. A screenshot duplicates. None of that scarcity survives the jump to bits, so digital money has to manufacture it with rules instead of physics.</p>
         </article>
       </div>
-      <p class="fit-note"><strong>Beginner summary:</strong> Coins do not fly through the internet. A valid transaction changes an accepted record.</p>
+      <p class="fit-note"><strong>Beginner summary:</strong> Coins do not fly through the internet. A valid transaction changes an accepted record, and that record is the whole asset.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Trusted operator</p>
       <h2>Why a bank database is simpler</h2>
-      <p>A normal system has an operator. A bank, exchange, payment app, game company, or platform runs the database and decides which updates count. This is efficient because one authority can fix mistakes, block fraud, reverse payments, close accounts, and coordinate upgrades.</p>
+      <p>Most systems solve the ownership problem with an operator. A bank, exchange, payment app, or platform runs the database and decides which updates count. One authority fixing mistakes, blocking fraud, reversing payments, and pushing upgrades is a cheaper design than the alternative, right up until you need something the authority won't give you.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Operator model</th><th>What it gives you</th><th>What it can cost</th></tr></thead>
@@ -116,22 +116,22 @@
       <div class="reference-grid">
         <article>
           <h3>Private key</h3>
-          <p>The secret that controls spending authority. If someone steals it, the network cannot magically know they are not the owner.</p>
+          <p>The secret that controls spending authority. Steal it and the network cannot tell the thief from the owner: there is no ID check behind the math.</p>
         </article>
         <article>
           <h3>Public key or address</h3>
-          <p>A way for others to verify that a valid signature was produced without learning the private key.</p>
+          <p>Lets anyone verify a signature is valid without ever seeing the private key that produced it.</p>
         </article>
         <article>
           <h3>Signature</h3>
-          <p>Proof that the holder of the key authorized a transaction. This replaces usernames, passwords, and a central account admin at the protocol layer.</p>
+          <p>Proof that the key holder authorized this specific transaction. It stands in for the username, password, and account admin a normal platform would use.</p>
         </article>
         <article>
           <h3>Hash</h3>
-          <p>A fingerprint for data. Hashes let blocks link to prior history and make tampering detectable.</p>
+          <p>A fingerprint for data. Change one byte of the input and the fingerprint changes completely, which is what lets a block chain to its history and makes tampering visible.</p>
         </article>
       </div>
-      <p class="verified-note"><strong>What breaks without keys:</strong> the system needs a central login authority or real-world identity registry to decide who can update balances.</p>
+      <p class="verified-note"><strong>What breaks without keys:</strong> the system falls back on a central login authority or an identity registry to decide who can move a balance.</p>
     </section>
 
     <section id="transactions" class="section">
@@ -140,13 +140,13 @@
       <div class="fit-grid">
         <article class="section">
           <h3>Transaction</h3>
-          <p>A signed update request. It says, in effect: given the current rules, spend this value, create that new value, and pay this fee.</p>
-          <p><strong>Why it exists:</strong> the network needs a precise object to validate.</p>
+          <p>A signed instruction: spend this value, create that new value, pay this fee. Every field in it exists so a stranger's node can check it without asking the sender anything else.</p>
+          <p><strong>Why it exists:</strong> the network needs one precise object to validate, not a conversation.</p>
         </article>
         <article class="section">
           <h3>Block</h3>
-          <p>A proposed batch of valid transactions linked to prior history. A block is a consensus object that nodes validate under protocol rules.</p>
-          <p><strong>Why it exists:</strong> the network needs a shared unit of history to accept or reject.</p>
+          <p>A batch of valid transactions linked to prior history. Nodes either accept the whole batch under the protocol's rules or reject it. There is no partial credit.</p>
+          <p><strong>Why it exists:</strong> the network needs a shared unit of history that a majority can agree happened.</p>
         </article>
       </div>
     </section>
@@ -154,7 +154,7 @@
     <section id="consensus" class="section">
       <p class="eyebrow">Consensus</p>
       <h2>Why records need agreement</h2>
-      <p>A record only has value if other people accept it. If Alice can show Bob one ledger and Carol another, Alice can attempt a double-spend. Consensus exists because independent computers see messages in different orders and still need one accepted state.</p>
+      <p>A record is only worth something if strangers agree it's the record. Show Bob one ledger and Carol another and you've just spent the same coin twice. Consensus exists because thousands of independent computers see network messages arrive in different orders, and they still have to converge on one shared state anyway.</p>
       <div class="check-grid">
         <span>Which transaction came first?</span>
         <span>Which block counts?</span>
@@ -188,13 +188,13 @@
       <div class="fit-grid">
         <article class="section">
           <h3>Proof of Work</h3>
-          <p>PoW makes fake history expensive through external cost: hardware, electricity, time, operations, and competition. Miners propose blocks and earn rewards if their work becomes part of accepted history.</p>
-          <p><strong>Tradeoff:</strong> energy use, ASICs, mining pools, and industrial concentration pressure.</p>
+          <p>PoW prices out fake history with a cost outside the system: hardware, electricity, time. Miners propose blocks and get paid only if that work sticks in accepted history.</p>
+          <p><strong>Tradeoff:</strong> energy use, ASICs, mining pools, industrial concentration pressure.</p>
         </article>
         <article class="section">
           <h3>Proof of Stake</h3>
-          <p>PoS makes fake history expensive through internal collateral: validators lock the native asset and can lose rewards or stake for bad behavior, depending on the design.</p>
-          <p><strong>Tradeoff:</strong> wealth concentration, delegation, staking-provider power, and more complex social recovery questions.</p>
+          <p>PoS prices out fake history with a cost inside the system: validators post the native asset as collateral and can lose it for provable bad behavior, depending on the design.</p>
+          <p><strong>Tradeoff:</strong> wealth concentration, delegation, staking-provider power, harder social-recovery questions when things go wrong.</p>
         </article>
       </div>
     </section>
@@ -202,14 +202,14 @@
     <section id="tokens" class="section">
       <p class="eyebrow">Tokens</p>
       <h2>Why public networks often use tokens</h2>
-      <p>A permissionless network often needs an internal economic unit for value, fees, rewards, spam resistance, collateral, governance, or security budget. A project wanting a token is not enough.</p>
+      <p>A permissionless network needs some internal economic unit to price fees, pay rewards, resist spam, and fund its own security. Wanting a token is not the same as needing one.</p>
       <div class="reference-grid">
         <article><h3>Object tracked</h3><p>The ledger records ownership of the asset itself.</p></article>
         <article><h3>Fee asset</h3><p>Users pay for scarce block space and avoid free spam.</p></article>
         <article><h3>Security reward</h3><p>Miners or validators are paid to operate and defend the system.</p></article>
         <article><h3>Market entry</h3><p>Open markets let users, miners, validators, apps, and investors enter or exit without one issuer approving every participant.</p></article>
       </div>
-      <p class="fit-note"><strong>Simple check:</strong> many tokens do not need to exist. Ask what the token does that BTC, ETH, USDC, or a normal database cannot already do.</p>
+      <p class="fit-note"><strong>Simple check:</strong> most tokens don't need to exist. Ask what this one does that BTC, ETH, USDC, or a plain database doesn't already do.</p>
     </section>
 
     <section class="section">
@@ -218,14 +218,14 @@
       <div class="fit-grid">
         <article class="section">
           <h3>Account model</h3>
-      <p>Looks like a balance table. Alice has 10, sends 3, and now Alice has 7 while Bob has 3. This is intuitive and common for smart-contract platforms. Shared mutable state can become complex.</p>
+      <p>A balance table. Alice has 10, sends 3, and now Alice has 7 while Bob has 3. Intuitive, and the default for smart-contract platforms, until two transactions touch the same shared balance at once and ordering starts to matter.</p>
         </article>
         <article class="section">
           <h3>UTXO model</h3>
-          <p>Looks more like cash notes. Alice spends a 10-coin output, Bob receives a 3-coin output, and Alice receives a 7-coin change output. The old output becomes spent forever.</p>
+          <p>More like cash notes than a ledger. Alice spends a 10-coin output, Bob receives a 3-coin output, Alice receives a 7-coin change output, and the original 10-coin note is gone for good.</p>
         </article>
       </div>
-      <p>Kaspa, like Bitcoin, uses a UTXO model. That shapes validation, parallelism potential, and the form future programmability can take.</p>
+      <p>Kaspa uses a UTXO model, same as Bitcoin. That single choice shapes how validation works, how much can run in parallel, and what shape future programmability can even take.</p>
       <div class="concept-diagram" role="img" aria-label="UTXO transaction spends one old output and creates recipient and change outputs">
         <svg viewBox="0 0 760 230" aria-hidden="true">
           <defs>
@@ -256,7 +256,7 @@
     <section id="kaspa-appears" class="section">
       <p class="eyebrow">Kaspa appears here</p>
       <h2>Where Kaspa enters</h2>
-      <p>Bitcoin-style chains usually choose one block path at a time. That conservative design makes high block rates difficult because honest blocks found in parallel can conflict. Kaspa tests whether a mined UTXO network can include more parallel honest work, order it with GHOSTDAG, and make payments feel closer to real time.</p>
+      <p>Bitcoin-style chains pick one block path at a time and throw away the rest. That's conservative and it works, but it caps how fast blocks can arrive: two honest miners who solve a block seconds apart start competing instead of both counting. Kaspa's bet is that a mined UTXO network can keep both blocks, order them with GHOSTDAG instead of discarding one, and get payments closer to real time without changing what PoW is securing.</p>
       <div class="actions">
         <a class="button primary" href="/why-kaspa-matters">Kaspa design case</a>
         <a class="button primary" href="/where-kaspa-fits">Where Kaspa fits</a>
@@ -267,7 +267,7 @@
     <section class="next-step section" aria-label="Suggested next step">
       <p class="eyebrow">Next step</p>
       <h2>Understand value and coin categories next</h2>
-      <p>After the mechanics, the next beginner gap is why tokens have prices and why major coins are not all trying to be the same thing.</p>
+      <p>Mechanics explain how a record changes hands. They don't explain why a token has a price, or why Bitcoin and Ethereum aren't competing for the same job.</p>
       <div class="actions">
         <a class="button primary" href="/why-crypto-has-value">Why crypto has value</a>
         <a class="button" href="/coin-atlas">Open coin atlas</a>

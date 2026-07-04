@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kaspa Price, Hash Rate, and the Mining Cycle | Kaspa Explained</title>
-  <meta name="description" content="Kaspa price decline, hash rate decline, ASIC cycles, emissions, fees, and how to judge proof-of-work security without pretending the next move is knowable.">
+  <meta name="description" content="Why Kaspa's price and hash rate move on different clocks: ASIC lead times, emission schedule, fee revenue, and what would actually prove the network stronger or weaker.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/kaspa-mining-cycle">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa Price, Hash Rate, and the Mining Cycle">
-  <meta property="og:description" content="A sober proof-of-work cycle frame for Kaspa price, hash rate, ASICs, emissions, fees, and security.">
+  <meta property="og:description" content="Kaspa's coin market and machine market run on different clocks. How ASICs, emissions, and fees actually connect price to hash rate.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-mining-cycle">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Price, Hash Rate, and the Mining Cycle">
-  <meta name="twitter:description" content="Kaspa price, hash rate, ASIC markets, emissions, fees, and what would prove strength or weakness.">
+  <meta name="twitter:description" content="Kaspa price, hash rate, ASIC markets, emissions, and fees: what actually connects them, and what would prove the network stronger or weaker.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-07-01">
   <script type="application/ld+json">
@@ -37,11 +37,11 @@
     "headline": "Kaspa Price, Hash Rate, and the Mining Cycle",
     "url": "https://kaspaexplained.com/kaspa-mining-cycle",
     "dateModified": "2026-07-01",
-    "description": "Kaspa price decline, hash rate decline, ASIC cycles, emissions, fees, and how to judge proof-of-work security without pretending the next move is knowable.",
+    "description": "Why Kaspa's price and hash rate move on different clocks: ASIC lead times, emission schedule, fee revenue, and what would actually prove the network stronger or weaker.",
     "about": ["Kaspa", "Proof of Work", "ASIC mining", "Hash rate", "Security budget", "Fees"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -70,8 +70,8 @@
     <section class="sources-hero section">
       <p class="eyebrow">Proof-of-work cycle</p>
       <h1>Kaspa price, hash rate, and the mining cycle</h1>
-      <p class="lead">A price chart is behavior. Hash rate is behavior. Before diagnosing either one, ask what machinery produced it: coins, machines, electricity, miners, holders, emissions, fees, panic, patience, and time.</p>
-      <p class="fit-note"><strong>Summary:</strong> This is a guided dissection of a proof-of-work market. It is not a price call, a miner-profitability calculator, or investment advice.</p>
+      <p class="lead">Price can fall while hash rate keeps climbing, and both charts can be telling the truth. A coin market reprices in minutes. A machine market (ASIC orders, shipping, hosting, wiring) answers weeks or months later.</p>
+      <p class="fit-note"><strong>Summary:</strong> This page traces how coin price, hash rate, ASIC supply, emissions, and fees pull on each other. It is not a price call or a miner-profitability calculator.</p>
       <div class="actions">
         <a class="button primary" href="#two-markets">Start with the two markets</a>
         <a class="button" href="#cycle">See the cycle</a>
@@ -79,9 +79,9 @@
         <a class="button" href="/kaspa-mining-cycle-visuals">Visual library</a>
       </div>
       <div class="learning-routes" aria-label="Ways to read this page">
-        <article><span>Fast read</span><p>Read the headings and boxed notes. You will get the skeleton.</p></article>
-        <article><span>Visual read</span><p>Use the side images and expand button. The diagrams show the joints.</p></article>
-        <article><span>Deep read</span><p>Open the foldouts when a chart, market-cap claim, or miner behavior needs anatomy.</p></article>
+        <article><span>Fast read</span><p>The headings and boxed notes carry the argument on their own.</p></article>
+        <article><span>Visual read</span><p>The diagrams trace where price, ASIC orders, and difficulty connect.</p></article>
+        <article><span>Deep read</span><p>The foldouts unpack a chart, a market-cap claim, or miner behavior in more detail.</p></article>
       </div>
     </section>
 
@@ -94,18 +94,17 @@
         <article><span>Supply</span><p>The public Kaspa API returned about <strong>27.546B KAS</strong> circulating out of about <strong>28.704B KAS</strong> maximum supply.</p></article>
         <article><span>Block reward</span><p>The public Kaspa API returned <strong>2.59565436 KAS</strong> per block after Toccata activation in the 10 BPS era.</p></article>
       </div>
-      <p class="fit-note">Treat these like a lab note. They age. The hash-rate comparison is deliberately rough: 350 PH/s is about 700 times the wiki's 500 TH/s milestone from late 2022.</p>
+      <p class="fit-note">These numbers move by the week. The hash-rate comparison is rough: 350 PH/s is roughly 700 times the wiki's 500 TH/s milestone from November 2022.</p>
     </section>
 
     <section id="two-markets" class="section prose-section">
       <h2>The two markets</h2>
-      <p>Start with the visible behavior: the price line moves, the hash-rate line moves, and everyone argues about what it means.</p>
-      <p>The first answer is almost always too simple. A proof-of-work coin has a coin market and a machine market. The coin market is nervous and fast. Buyers, sellers, holders, traders, exchanges, attention, fear, and leverage can reprice KAS before lunch.</p>
-      <p>The machine market is slow and stubborn. Miners order ASICs, wait for production, wait for shipping, find hosting, wire power, tune firmware, join pools, sell old machines, or shut machines off. This is where people get fooled. They expect the machine market to answer the coin market instantly. It cannot.</p>
-      <p>So you get strange-looking moments. Price can fall while hash rate keeps rising because machines ordered months earlier are still arriving. Hash rate can fall while the network remains far stronger than it was in an earlier era. Price can rise before miners can react. Used ASIC prices can collapse after new ASIC production overshoots demand. The charts are talking to each other, usually with a delay.</p>
-      <p>This is game theory with a power cord. Miners chase profit. Holders chase exits or patience. Buyers chase a price they can live with. ASIC makers chase demand. None of them needs to be evil or heroic. They only need incentives.</p>
-      <p>The dated snapshot shows the scale problem. Kaspa is far below its listed all-time high, and still far above the early exchange and OTC era. Hash rate is below recent peaks, and still hundreds of times above the late-2022 wiki milestone. A downtrend and a long-range buildout can sit on the same page.</p>
-      <p class="guide-note">If you only remember one thing, remember the lag: coins can move today, machines answer later.</p>
+      <p>Kaspa's price and its hash rate can move in opposite directions without either one lying to you.</p>
+      <p>A proof-of-work coin runs two markets at once. The coin market reprices on buyer and seller mood: exchanges, leverage, attention, fear. It can move before lunch. The machine market moves on hardware: miners order ASICs, wait for production, wait for shipping, find hosting, wire power, tune firmware, join pools. None of that happens in an afternoon.</p>
+      <p>The mismatch is the whole story. Price can fall while hash rate keeps rising, because machines ordered months earlier are still arriving on trucks. Hash rate can fall while the network sits far above where it stood a year prior. Used ASIC prices can collapse after new production overshoots demand that already cooled. Two charts, same network, different clocks.</p>
+      <p>Miners chase margin. Holders chase an exit or hold through it. Buyers chase a price they can stomach. ASIC makers chase order volume. None of them has to be irrational: the lag between the two markets does the rest of the work.</p>
+      <p>The July 1, 2026 snapshot carries that mismatch in one page: KAS at $0.0303 sits far below the $0.2075 all-time high, while hash rate at roughly 350.54 PH/s sits roughly 700 times above the 500 TH/s the wiki recorded in November 2022. A downtrend on price and a multi-year buildout on hash rate occupy the same chart.</p>
+      <p class="guide-note">The lag is the mechanism: coins can move today, machines answer weeks or months later.</p>
     </section>
 
     <section class="section">
@@ -113,7 +112,7 @@
       <h2>One system, different clocks</h2>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/02-two-clocks-generated-diagram.webp" alt="Two-market diagram showing the fast coin market and slower machine market" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>The coin market can reprice fast. The machine market answers later through orders, shipping, hosting, hash rate, and difficulty.</figcaption>
+        <figcaption>Coin price reprices in minutes. Orders, shipping, hosting, hash rate, and difficulty answer weeks to months later.</figcaption>
       </figure>
       <div class="clock-diagram" aria-label="Coin market and machine market move at different speeds">
         <div class="clock-lane fast-lane">
@@ -134,23 +133,23 @@
         </div>
       </div>
       <div class="market-flow" aria-label="Kaspa proof-of-work market loop">
-        <article><span>Coin demand</span><strong>The first twitch</strong><p>Demand, liquidity, attention, and holder behavior can move KAS quickly.</p></article>
-        <article><span>Miner revenue</span><strong>The miner feels it</strong><p>Price, reward, fees, difficulty, and power cost decide the miner's day.</p></article>
-        <article><span>ASIC demand</span><strong>Machines get ordered</strong><p>Profitable mining pulls capital toward hardware and hosting.</p></article>
-        <article><span>Hash rate</span><strong>The machines arrive late</strong><p>ASICs can keep coming online after the price signal that caused the order has faded.</p></article>
-        <article><span>Difficulty</span><strong>The crowd squeezes margins</strong><p>More machines compete for the same issuance schedule, so each machine earns less KAS.</p></article>
-        <article><span>Used machines</span><strong>The cold phase sorts people</strong><p>Hardware, coins, and conviction move to whoever can survive the bad part.</p></article>
+        <article><span>Coin demand</span><strong>Moves first</strong><p>Demand, liquidity, attention, and holder behavior reprice KAS within hours.</p></article>
+        <article><span>Miner revenue</span><strong>Sets the day's math</strong><p>Price, block reward, fees, difficulty, and power cost decide whether mining pays that day.</p></article>
+        <article><span>ASIC demand</span><strong>Capital follows margin</strong><p>Profitable mining pulls capital toward hardware orders and hosting contracts.</p></article>
+        <article><span>Hash rate</span><strong>Arrives late</strong><p>ASICs ordered on a price signal can come online after that signal has already faded.</p></article>
+        <article><span>Difficulty</span><strong>Compresses margin</strong><p>More machines compete for the same block reward, so each machine earns less KAS per unit of hash rate.</p></article>
+        <article><span>Used machines</span><strong>Sort the survivors</strong><p>The cold phase moves hardware, coins, and conviction to whoever can outlast it.</p></article>
       </div>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: market lag and miner margin</summary>
         <div class="visual-library-grid">
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/05-normalized-price-hash-chart.webp" alt="Conceptual normalized price and hash-rate chart" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>Price and hash rate</strong> Direction can diverge because hardware answers the coin market late.</figcaption>
+            <figcaption><strong>Price and hash rate</strong> The two lines diverge because hardware answers the coin market late, not because one of them is wrong.</figcaption>
           </figure>
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/08-miner-margin-flow.webp" alt="Miner margin flow diagram with price, reward, fees, difficulty, electricity, ASIC demand, and hash rate" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>Miner margin</strong> Price, reward, fees, difficulty, hardware, and electricity collide at the miner.</figcaption>
+            <figcaption><strong>Miner margin</strong> Price, block reward, fees, difficulty, hardware cost, and electricity price all land on the same miner at once.</figcaption>
           </figure>
         </div>
       </details>
@@ -160,38 +159,38 @@
       <h2>ASICs buy security, with a bill attached</h2>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/14-asic-attack-market-friction.webp" alt="Diagram showing ASIC scarcity, power, facilities, logistics, and time raising attack cost" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>Trying to buy enough ASICs is itself a market event. Hardware price, power, facilities, logistics, and time all push back.</figcaption>
+        <figcaption>Buying enough ASICs to threaten the network is itself a market event. Hardware price, power, facilities, logistics, and time push back on the buyer.</figcaption>
       </figure>
-      <p>ASICs are where the abstract crypto argument runs into a loading dock.</p>
-      <p>A Kaspa attacker cannot rent generic cloud compute and point it at the network. They need specialized KHeavyHash machines, electricity, facilities, cooling, firmware, logistics, pools or solo-mining paths, and time. The attack has to leave the spreadsheet and enter the world.</p>
-      <p>The bill is real. ASICs raise the cost of mining participation. They give ASIC manufacturers, large buyers, cheap-power operators, firmware vendors, pools, and hosting sites real influence. Used markets and more independent operators can spread that influence around. A few dominant actors can pull it inward again.</p>
-      <p>The precise claim: ASICs harden the network, and ASIC distribution still matters.</p>
+      <p>A Kaspa attacker cannot rent generic cloud compute and point it at the network.</p>
+      <p>They need specialized KHeavyHash machines, electricity, facilities, cooling, firmware, logistics, and a pool or solo-mining path. Every one of those steps takes time and leaves a trail. The attack has to leave the spreadsheet and enter a supply chain.</p>
+      <p>That raises the cost of mining participation generally, not just the cost of attacking it. It also concentrates leverage in ASIC manufacturers, large buyers, cheap-power operators, firmware vendors, pools, and hosting sites. Used markets and more independent operators spread that leverage out. A handful of dominant actors pull it back in.</p>
+      <p>ASICs harden the network. ASIC distribution still decides how hard.</p>
     </section>
 
     <section class="section prose-section">
       <h2>Electricity is the point</h2>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/09-physical-inputs-diagram.webp" alt="Diagram showing hardware, electricity, cooling, and time feeding network security" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>Digital security is tied to outside-world inputs. That is the point, and the tradeoff.</figcaption>
+        <figcaption>Network security runs through outside-world inputs: hardware, power, cooling, time.</figcaption>
       </figure>
-      <p>Proof of work turns digital security into a physical argument. Electricity, hardware, heat, buildings, shipping, capital, and time all become part of the security budget. The network has a metabolism.</p>
-      <p>Proof of stake asks holders to lock the asset and follow validator rules. Proof of work brings in a different cast of characters: miners with power bills, hosting contracts, repair problems, firmware choices, debt, taxes, and machines aging in the real world.</p>
-      <p>That is awkward. It is also the point. PoW lets outside actors enter through machines, power, hosting, firmware, pools, and repair. Those externalities bring cost, friction, and new power centers. They also make the system harder to fake because security has to be paid for outside the screen.</p>
+      <p>Proof of work turns digital security into a physical bill. Electricity, hardware, heat, buildings, shipping, capital, and time all get paid before a block gets mined.</p>
+      <p>Proof of stake asks holders to lock the asset and follow validator rules. Proof of work recruits a different cast: miners carrying power bills, hosting contracts, repair costs, firmware choices, debt, and taxes, running machines that age in the real world.</p>
+      <p>That friction is the security model, not a side effect of it. Outside actors enter through machines, power, hosting, firmware, pools, and repair, and every one of those entry points has to be paid for outside the screen. That outside-world cost is what makes the system hard to fake.</p>
       <details class="deep-dive">
         <summary>Go deeper: why electricity changes the social shape</summary>
-        <p>Imagine two games. In one game, people who already hold the coin help secure the coin. In the other game, people have to buy machines, find power, and run an operation. Kaspa is in the second game.</p>
-        <p>That creates mess. It also creates friction an attacker has to deal with. They need machines, power, and a wallet balance large enough to make the attack worth attempting.</p>
+        <p>In one security model, people who already hold the coin secure the coin by staking it. In Kaspa's model, people buy machines, find power, and run an operation to secure it.</p>
+        <p>Running an operation is messier than staking a balance. It also means an attacker needs machines, power, and a wallet deep enough to make the attempt worth running, not just a large stake to lock up.</p>
       </details>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: attack cost and physical inputs</summary>
         <div class="visual-library-grid">
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/06-attack-cost-diagram.webp" alt="Diagram of attack cost touching ASIC machines, power, facilities, and time" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>Attack cost</strong> A serious attack has to touch ASIC supply, power, facilities, logistics, and time.</figcaption>
+            <figcaption><strong>Attack cost</strong> A serious attack has to clear ASIC supply, power, facilities, logistics, and time: all of it, not one bottleneck.</figcaption>
           </figure>
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/11-systems-map.webp" alt="Systems map connecting coin demand, ASIC supply, miner margin, fees, and security budget" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>System map</strong> Coin demand, ASIC supply, miner margin, fees, and security budget feed each other.</figcaption>
+            <figcaption><strong>System map</strong> Coin demand, ASIC supply, miner margin, fees, and the security budget all feed back into each other.</figcaption>
           </figure>
         </div>
       </details>
@@ -200,10 +199,10 @@
     <section id="cycle" class="section">
       <p class="eyebrow">Cycle model</p>
       <h2>Coins and ASICs heat and cool at different times</h2>
-      <p class="lead">This framing borrows from @Themooseisloos5, who has written about Kaspa's coin-and-ASIC cycle as a Carnot-engine style model. I am using it as a picture of lagged incentives. Do not worship the metaphor. Watch the delay.</p>
+      <p class="lead">@Themooseisloos5 has framed Kaspa's coin-and-ASIC cycle as a Carnot-engine style model. The metaphor is secondary. The lag it's pointing at is the mechanism worth tracking: price moves first, machines answer later.</p>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/03-four-stage-loop-generated-diagram.webp" alt="Four-stage loop diagram for hot and cold coin and ASIC market phases" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>The useful idea is the lag: price moves first, machines answer later, and margins compress after the crowd arrives.</figcaption>
+        <figcaption>Price moves first, machines answer later, and margins compress once the crowd arrives.</figcaption>
       </figure>
       <div class="cycle-loop" aria-label="Four-phase coin and ASIC cycle">
         <article class="loop-card loop-one">
@@ -235,86 +234,85 @@
         <article>
           <span>1</span>
           <h3>Hot coins, cold ASICs</h3>
-          <p>Demand moves into KAS before hardware can fully respond. Price rises, mining margins expand, and cheap or idle machines suddenly look interesting.</p>
+          <p>Demand moves into KAS before hardware can respond. Price rises, mining margins expand, and idle or cheap machines suddenly pencil out.</p>
         </article>
         <article>
           <span>2</span>
           <h3>Hot coins, hot ASICs</h3>
-          <p>ASIC demand catches up. New machines get ordered, old machines get repriced, hash rate rises, and early holders or miners may take profit.</p>
+          <p>ASIC demand catches up. New machines get ordered, old machines get repriced upward, hash rate climbs, and early holders or miners start taking profit.</p>
         </article>
         <article>
           <span>3</span>
           <h3>Cold coins, hot ASICs</h3>
-          <p>Price cools, but machines already ordered keep arriving. Difficulty can rise into weakness. Miner margins get crushed.</p>
+          <p>Price cools while machines already on order keep arriving. Difficulty can rise into a weak market, which crushes miner margins further.</p>
         </article>
         <article>
           <span>4</span>
           <h3>Cold coins, cold ASICs</h3>
-          <p>Weak miners shut off or sell. Used machines get cheaper. Coins consolidate. The system compresses until demand, hardware, and conviction find another balance.</p>
+          <p>Weak miners shut off or sell. Used machines get cheaper. Coins consolidate. The system compresses until demand, hardware, and conviction find a new balance.</p>
         </article>
       </div>
     </section>
 
     <section class="section prose-section">
       <h2>Young networks move violently</h2>
-      <p>Markets have moods. Hardware has lead times. Miners have bills. ASIC manufacturers have inventory. Holders have different pain thresholds. Crypto takes all of that and runs it at unpleasant speed.</p>
-      <p>Kaspa's first cycle was compressed. Fair launch, fast emissions, GPU mining, ASICs, exchange discovery, price discovery, and a huge mining buildout all landed in a short historical window. Bitcoin had slower early distribution, slower hardware maturation, slower exchange access, and slower public understanding. Kaspa compressed several discovery phases into one violent first run. Toccata came later, into a network whose early cycle was already unusually fast.</p>
-      <p>That can create a bigger up and a bigger down. Maybe that becomes a stronger base. Maybe it does not. You only know one, two, five years later, if you know at all.</p>
-      <p>That uncertainty is uncomfortable, and it is real. The same outside-world constraints that make proof of work hard to fake also make it messy: hardware, electricity, miners, sellers, buyers, panic, and conviction.</p>
+      <p>Kaspa compressed several discovery phases that took Bitcoin years into one short window: fair launch, fast emissions, GPU mining, an ASIC transition, exchange discovery, and price discovery all landed close together, followed by a large mining buildout. Bitcoin's early distribution, hardware maturation, exchange access, and public understanding all spread out over a much longer stretch.</p>
+      <p>Compression cuts both ways. A bigger up and a bigger down both become more likely. Whether that produces a stronger base or a worse one is not visible in real time. It shows up one, two, five years later, if it shows up at all.</p>
+      <p>Toccata activated into a network whose early cycle was already unusually fast, not into a slow, settled one.</p>
     </section>
 
     <section class="section prose-section">
       <h2>Fast emissions helped distribution and made the cycle harsher</h2>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/16-pow-distribution.webp" alt="Diagram comparing proof-of-work distribution through work with capital-first early allocation" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>Proof of work changes who gets coins. People can earn coins with hardware, electricity, and time, and miners still have costs to cover.</figcaption>
+        <figcaption>Proof of work distributes coins through hardware, electricity, and time instead of a capital-first allocation, and miners still have to cover their costs.</figcaption>
       </figure>
-      <p>Kaspa's fast emission schedule is part of the hard-money thesis. The supply moves toward its cap quickly. The same design also front-loads distribution pressure.</p>
-      <p>Early miners and early participants got coins by showing up and doing the work. That fits the fair-launch story. It also means the early market has to absorb coins moving from early miners and early holders into later buyers. Some people take profit. Some miners sell to cover costs. Some holders panic. Some people accumulate. Distribution can look noble in a white paper and ugly on a chart.</p>
-      <p>People usually talk about conviction as holding through the downside. The upside is a test too. Rallies tempt profit-taking. Drawdowns test whether anyone actually believes the thing. Both directions move coins from one kind of holder to another.</p>
+      <p>Kaspa's fast emission schedule moves supply toward its cap quickly, which is part of the hard-money thesis. The same speed front-loads distribution pressure.</p>
+      <p>Early miners and early participants earned coins by running hardware, not by buying an allocation. That's the fair-launch case. It also means the early market absorbs a steady flow of coins moving from early miners and holders into later buyers: some take profit, some miners sell to cover power and hardware bills, some holders panic, some accumulate. Fair distribution on paper can still produce an ugly chart.</p>
+      <p>Conviction usually gets tested on the downside. The upside tests it too, since rallies tempt profit-taking the same way drawdowns tempt capitulation. Both directions move coins from one kind of holder to another.</p>
       <details class="deep-dive">
         <summary>Open the fairness-and-violence tradeoff</summary>
-        <p>Fast proof-of-work emissions can distribute coins without selling a giant insider allocation first. That is the fairness part.</p>
-        <p>The same speed can make the first cycle violent. Coins move from miners and early holders into later buyers quickly, and some of those people need cash. Fair launch does not mean gentle markets.</p>
+        <p>Fast proof-of-work emissions distribute coins without a large insider allocation sold up front. That's the fairness case.</p>
+        <p>The same speed makes the first cycle violent. Coins move from miners and early holders into later buyers quickly, and some of those sellers need the cash. Fair launch does not mean a gentle market.</p>
       </details>
     </section>
 
     <section class="section prose-section">
       <h2>Perspective checks</h2>
-      <p>Some arguments sound scarier or cleaner than they are because people use the wrong lens. Linear charts, market cap, total supply, and hash rate all tell part of the story. Each one leaves something important out.</p>
+      <p>A linear chart, a market-cap headline, and a falling hash-rate line can each make a claim sound scarier or cleaner than the mechanism behind it supports.</p>
       <details class="deep-dive">
         <summary>Go deeper: linear charts hide the thing people actually care about</summary>
         <figure class="article-visual">
           <img src="assets/mining-cycle-options/12-log-scale-perspective.webp" alt="Diagram comparing linear and log views of the same percentage move" width="1672" height="941" loading="lazy" decoding="async">
-          <figcaption>Linear charts make the dollar swing feel dominant. Log charts show percentage change, which is what holders actually experience.</figcaption>
+          <figcaption>A linear chart makes the dollar swing dominate the page. A log chart shows the percentage change a holder actually feels.</figcaption>
         </figure>
-        <p>People talk in dollars, but they usually care about multiples. A move from $10 to $20 and a move from $10,000 to $20,000 are both 2x. The dollar amounts feel different. The investment effect is the same percentage move.</p>
-        <p>Log scale fits young networks better. A linear chart makes the latest dollar swing dominate the page. A log chart shows proportional moves across time. On a linear chart, an 80% drawdown can look like death. On a log chart, it can look like one violent move inside a much larger compounding path.</p>
-        <p class="guide-note">How it fools you: your eye sees distance, but your portfolio feels percentage change.</p>
-        <p>That does not make drawdowns fake. It explains why two people can look at the same chart and feel different things. A top buyer sees loss. An early holder may see a brutal drawdown from absurd gains. Someone who bought near the beginning and still holds may be living through pain and life-changing profit at the same time. Both are real.</p>
+        <p>A move from $10 to $20 and a move from $10,000 to $20,000 are both 2x. The dollar amounts feel wildly different. The percentage effect on a holder's position is identical.</p>
+        <p>Log scale fits a young network better than linear, because a linear chart lets the latest dollar swing dominate the page while a log chart shows proportional moves across time. An 80% drawdown looks like death on a linear chart. On a log chart, the same drawdown can read as one violent move inside a much longer compounding path.</p>
+        <p class="guide-note">The eye tracks distance on the page. The portfolio tracks percentage change. Those are not the same measurement.</p>
+        <p>Drawdowns are still real losses for whoever is holding them. A top buyer sees a straight loss. An early holder may be looking at a brutal drawdown measured from absurd gains. Someone who bought early and never sold can be living through both pain and life-changing profit in the same chart.</p>
       </details>
       <details class="deep-dive">
         <summary>Go deeper: market cap is not a pile of cash</summary>
         <figure class="article-visual">
           <img src="assets/mining-cycle-options/15-market-cap-float.webp" alt="Diagram showing market cap as a marked price and active float as the part moving price" width="1672" height="941" loading="lazy" decoding="async">
-          <figcaption>Market cap marks the whole supply at the last price. Active float and buyer depth decide how easily the price moves.</figcaption>
+          <figcaption>Market cap marks the whole supply at the last trade. Active float and buyer depth decide how easily that price moves.</figcaption>
         </figure>
-        <p>Market cap is total supply marked at the marginal price. It is not a cash pile sitting somewhere.</p>
-        <p>If price falls 20%, sellers did not necessarily extract 20% of the market cap in cash. Sometimes a small amount of selling moves price a lot because buyers step away. Sometimes a liquidation moves coins into market inventory, and the market spends weeks or months absorbing them. Sometimes sellers keep leaning on the book because they need liquidity before they need conviction.</p>
-        <p class="guide-note">How it fools you: market cap looks like a pool of money, but price is set at the edge where the next buyer meets the next seller.</p>
-        <p>Float sets the selloff pressure. The question is how many coins are actively for sale, how urgent those sellers are, and how deep the buyers are at each price. Total supply matters for the monetary story. Active float matters in a selloff.</p>
-        <p>October 10 belongs in that category. A large liquidation event can change the market even after the candle is over because coins move from one kind of holder into another kind of inventory. The exact wallet-level story needs hard sourcing before naming names. The mechanism is still worth understanding.</p>
+        <p>Market cap is total supply marked at the marginal price, not a pool of cash sitting somewhere.</p>
+        <p>A 20% price drop does not mean sellers extracted 20% of the market cap in cash. A small amount of selling can move price a long way once buyers step back. A liquidation can dump coins into market inventory that takes the market weeks or months to absorb. Sellers can keep leaning on the order book because they need liquidity before they need conviction.</p>
+        <p class="guide-note">Market cap looks like a pool of money. Price is set at the edge, where the next buyer meets the next seller.</p>
+        <p>Active float, not total supply, sets selloff pressure: how many coins are actually for sale, how urgent those sellers are, and how deep the buyers sit at each price rung. Total supply matters for the monetary story. Float matters in a selloff.</p>
+        <p>October 10 fits that pattern: a large liquidation event that kept reshaping the market after the candle closed, as coins moved from one kind of holder into another kind of inventory. The wallet-level story needs stronger sourcing before naming actors. The mechanism itself still holds.</p>
       </details>
       <details class="deep-dive">
         <summary>Go deeper: miners do not get to be pure believers</summary>
         <figure class="article-visual">
           <img src="assets/mining-cycle-options/17-miner-forced-selling.webp" alt="Diagram showing miner revenue, operating costs, sell pressure, and market inventory" width="1672" height="941" loading="lazy" decoding="async">
-          <figcaption>Miners can believe and still sell. Hardware, hosting, power, repairs, taxes, debt, and profit-taking create pressure holders do not have.</figcaption>
+          <figcaption>A miner can believe in the network and still sell. Hardware, hosting, power, repairs, taxes, and debt create pressure a holder never faces.</figcaption>
         </figure>
-        <p>Holders can decide to sit still. Miners have bills. Electricity, hosting, hardware debt, repairs, taxes, pool fees, and upgrades all turn into cash needs. If margins are thin, miners can become sellers even when they like the network.</p>
-        <p>Mining was extremely attractive when price outran hash rate. ASICs were expensive because the revenue opportunity was real. Some machines cost tens of thousands of dollars during the hot phase. Those operators had to recoup costs, and some of that recouping happens through selling coins.</p>
-        <p class="guide-note">How it fools you: conviction and selling can coexist. A miner can believe in Kaspa and still need dollars by Friday.</p>
-        <p>This is not a moral failure. It is proof-of-work mechanics. The same process that secures the network also creates a real business cycle.</p>
+        <p>A holder can decide to sit still. A miner has bills: electricity, hosting, hardware debt, repairs, taxes, pool fees, upgrades. Thin margins turn a believer into a seller regardless of conviction.</p>
+        <p>Mining paid extremely well when price outran hash rate, and ASICs got expensive because that revenue opportunity was real: some machines ran tens of thousands of dollars during the hot phase. Operators with that cost basis recoup it partly by selling coins.</p>
+        <p class="guide-note">Conviction and selling coexist. A miner can believe in Kaspa and still need dollars by Friday.</p>
+        <p>None of this is a moral failure. It's proof-of-work mechanics: the same process that secures the network runs a real business cycle underneath it.</p>
       </details>
     </section>
 
@@ -331,11 +329,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Price down</td><td>The market lost interest.</td><td>Could be lost demand, miner selling, early-holder profit-taking, broad market weakness, leverage unwind, or all of them together.</td></tr>
-            <tr><td>Hash rate down</td><td>The network is failing.</td><td>Could be weaker security, or inefficient miners leaving after an overheated ASIC cycle. Compare against long-term history and attack cost.</td></tr>
-            <tr><td>Hash rate up while price falls</td><td>Security is fine, ignore price.</td><td>Could be delayed ASIC orders arriving into a weak market, raising difficulty and squeezing miner margins.</td></tr>
-            <tr><td>ASIC prices fall</td><td>Mining is dead.</td><td>Could be used-machine oversupply after manufacturers and miners overbuilt into a hot phase.</td></tr>
-            <tr><td>Fees rise</td><td>Higher fees are automatically good.</td><td>Fees help miners when they come from repeat use people value. Spam and one-off bursts are a weaker signal.</td></tr>
+            <tr><td>Price down</td><td>The market lost interest.</td><td>Lost demand, miner selling, early-holder profit-taking, broad market weakness, and leverage unwinds can all produce the same line, separately or together.</td></tr>
+            <tr><td>Hash rate down</td><td>The network is failing.</td><td>Weaker security is one explanation. Inefficient miners leaving after an overheated ASIC cycle is another. Compare against long-term history and attack cost before picking one.</td></tr>
+            <tr><td>Hash rate up while price falls</td><td>Security is fine, ignore price.</td><td>Delayed ASIC orders can be arriving into a weak market, raising difficulty and squeezing every miner's margin at once.</td></tr>
+            <tr><td>ASIC prices fall</td><td>Mining is dead.</td><td>Used-machine oversupply after manufacturers and miners overbuilt into a hot phase produces the same price drop.</td></tr>
+            <tr><td>Fees rise</td><td>Higher fees are automatically good.</td><td>Fees from repeat use people value help miners. Spam and one-off bursts push the number up without meaning the same thing.</td></tr>
           </tbody>
         </table>
       </div>
@@ -345,27 +343,27 @@
       <h2>Fees are the second revenue source</h2>
       <figure class="article-visual">
         <img src="assets/mining-cycle-options/13-one-use-case-demand.webp" alt="Diagram showing one strong use case producing repeat transactions, fees, miner revenue, and security budget" width="1672" height="941" loading="lazy" decoding="async">
-        <figcaption>Kaspa does not need every possible app to work. One repeated, valuable use case can change demand for blockspace, fees, liquidity, and KAS.</figcaption>
+        <figcaption>Kaspa does not need every possible app to work. One repeated, valuable use case can shift demand for blockspace, fees, liquidity, and KAS.</figcaption>
       </figure>
-      <p>Issuance pays miners first. Fees have to matter later.</p>
-      <p>That is the security-budget question. As block rewards decline, miners eventually need meaningful revenue from transaction fees, coin value, or both. Toccata expands the design space: covenants, covenant IDs, ZK proof verification, sequencing commitments, and based-app foundations.</p>
-      <p>That still does not create usage by itself. The fee side needs real applications, real users, real transactions, and real demand for blockspace. Toccata gives builders primitives to test. The market still has to prove people want them.</p>
-      <p>One strong use case is enough to matter. It does not have to be every app, every user, every theory. If one thing creates repeat demand for settlement, ordering, proofs, assets, or payments, that use can reprice blockspace and make fees part of the security budget. The hard part is finding that use case. That is where the experiment is now.</p>
+      <p>Issuance pays miners first. Fees have to matter later: that's the security-budget question, not a footnote to it.</p>
+      <p>As the block reward declines, miners need meaningful revenue from transaction fees, coin value, or both. Toccata widens the design space that could generate that fee demand: covenants, covenant IDs, ZK proof verification, sequencing commitments, and based-app foundations.</p>
+      <p>Primitives are not usage. The fee side still needs real applications, real users, real transactions, and real demand for blockspace. Toccata gives builders something to build with. The market still has to prove anyone wants what gets built.</p>
+      <p>One use case is enough, if it repeats. It doesn't have to be every app or every theory: one thing generating repeat demand for settlement, ordering, proofs, assets, or payments can reprice blockspace and pull fees into the security budget. Finding that use case is the open part of the experiment.</p>
       <details class="deep-dive">
         <summary>Go deeper: why one use case can be enough</summary>
-        <p>A network does not need to win every category to become valuable. It needs demand that repeats.</p>
-        <p>If one use case keeps producing transactions people are willing to pay for, miners get fee revenue, users need blockspace, and KAS gets pulled into that activity. That does not prove it will happen. It explains why the search for one serious use is enough to watch.</p>
+        <p>A network does not need to win every category. It needs demand that repeats.</p>
+        <p>One use case that keeps producing transactions people pay for gives miners fee revenue, gives users a reason to need blockspace, and pulls KAS into that activity. None of that guarantees it happens. That's exactly why one serious use case is worth watching closely instead of many shallow ones.</p>
       </details>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: fees and the second revenue source</summary>
         <div class="visual-library-grid">
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/07-security-budget-fees.webp" alt="Diagram showing miner revenue transitioning from issuance toward fees" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>Fees later</strong> Issuance pays miners first. Fees have to matter more as rewards decline.</figcaption>
+            <figcaption><strong>Fees later</strong> Issuance pays miners first. Fees carry more of the load as the block reward declines.</figcaption>
           </figure>
           <figure class="article-visual">
             <img src="assets/mining-cycle-options/10-hot-cold-matrix.webp" alt="Hot and cold matrix for coin market temperature and ASIC market temperature" width="1672" height="941" loading="lazy" decoding="async">
-            <figcaption><strong>Matrix view</strong> Coin temperature and ASIC temperature can move out of phase.</figcaption>
+            <figcaption><strong>Matrix view</strong> Coin-market temperature and ASIC-market temperature can sit out of phase for months at a time.</figcaption>
           </figure>
         </div>
       </details>
@@ -378,21 +376,21 @@
         <article>
           <h3>Healthier</h3>
           <ul>
-            <li>Hash rate stabilizes or grows with better pool and operator distribution.</li>
+            <li>Hash rate stabilizes or grows alongside better pool and operator distribution.</li>
             <li>ASIC ownership spreads through used markets and more independent operators.</li>
             <li>Wallets, explorers, SDKs, indexers, and solo-mining paths keep improving.</li>
-            <li>Toccata creates repeat app use, accepted transactions, and fees miners care about.</li>
-            <li>Liquidity improves without turning every claim into price worship.</li>
+            <li>Toccata generates repeat app use, accepted transactions, and fees miners actually collect.</li>
+            <li>Liquidity improves on its own terms, not as a proxy for every other claim.</li>
           </ul>
         </article>
         <article>
           <h3>Worse</h3>
           <ul>
-            <li>Hash rate keeps falling with worse mining concentration.</li>
-            <li>Pool, manufacturer, firmware, hosting, or geography chokepoints get worse.</li>
-            <li>Price, liquidity, and volume keep weakening without user demand replacing hype.</li>
+            <li>Hash rate keeps falling alongside worse mining concentration.</li>
+            <li>Pool, manufacturer, firmware, hosting, or geography chokepoints tighten further.</li>
+            <li>Price, liquidity, and volume keep weakening with no user demand replacing the hype that left.</li>
             <li>Fees stay irrelevant because apps do not appear or do not retain users.</li>
-            <li>Roadmap language outruns shipped product evidence.</li>
+            <li>Roadmap language keeps outrunning shipped product evidence.</li>
           </ul>
         </article>
         <article>
@@ -400,9 +398,9 @@
           <ul>
             <li>Whether this is healthy compression or a deeper failure phase.</li>
             <li>How much selling came from miners versus early holders versus broader market flows.</li>
-            <li>Whether future fees can replace enough issuance as rewards decline.</li>
-            <li>Whether a future research path such as Proof of Useful Work ever becomes real.</li>
-            <li>Whether the next major cycle is up, down, sideways, or stranger than expected.</li>
+            <li>Whether future fees can replace enough issuance as the block reward keeps declining.</li>
+            <li>Whether a research path such as Proof of Useful Work ever ships.</li>
+            <li>Whether the next major cycle runs up, down, sideways, or something stranger.</li>
           </ul>
         </article>
       </div>
@@ -410,8 +408,8 @@
 
     <section class="section prose-section">
       <h2>The bottom line</h2>
-      <p>Kaspa can be in a healthy compression phase, or it can be in a deeper failure phase. You do not know in real time. Anyone pretending to know is selling certainty crypto does not give you.</p>
-      <p>The useful move is to watch the whole machine: price, liquidity, hash rate, ASIC prices, pool distribution, miner revenue, emissions, fees, builder activity, and usage. A price chart is too narrow. A hash-rate chart is too narrow. Together, with the ASIC cycle and fee question, they tell you what kind of proof-of-work network you are actually looking at.</p>
+      <p>Whether Kaspa is in a healthy compression phase or a deeper failure phase is not knowable in real time. Anyone claiming otherwise is selling certainty the data does not have.</p>
+      <p>Price alone is too narrow a signal. Hash rate alone is too narrow. Watched together with ASIC prices, pool distribution, miner revenue, emissions, fees, and builder activity, they show what kind of proof-of-work network is actually running underneath the charts.</p>
     </section>
 
     <section class="section">
@@ -436,16 +434,16 @@
           </tbody>
         </table>
       </div>
-      <p class="fit-note">Community cycle framing is credited to @Themooseisloos5. X posts shaped the explanatory model. Price, hash-rate, supply, and protocol-status claims use the sources listed above.</p>
+      <p class="fit-note">The coin-and-ASIC cycle framing is credited to @Themooseisloos5's X posts. Price, hash-rate, supply, and protocol-status claims use the sources listed above.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/adoption-metrics"><span>Previous</span><strong>Kaspa adoption signals</strong><p>A non-price adoption framework for Kaspa: users, wallets, nodes, mining, liquidity, fees, developers, integrations, apps, and roadmap...</p></a>
-        <a href="/application-layer"><span>Next</span><strong>What to build on Kaspa</strong><p>Kaspa application paths: money movement now, constrained spend rules after Toccata, based apps for richer shared state, and later app...</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
+        <a href="/adoption-metrics"><span>Previous</span><strong>Kaspa adoption signals</strong><p>Adoption measured past price: users, wallets, nodes, mining, liquidity, fees, developers, integrations, apps, and roadmap progress.</p></a>
+        <a href="/application-layer"><span>Next</span><strong>What to build on Kaspa</strong><p>Kaspa's application paths: money movement today, constrained spend rules after Toccata, based apps for shared state, and later app layers.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status sorted into live, targeted, roadmap, research, and claims that still need caveats.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

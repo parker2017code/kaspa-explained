@@ -41,7 +41,7 @@
     "about": ["Kaspa", "Covenants", "Silverscript", "Based Apps", "Inline ZK", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -69,51 +69,51 @@
   <main id="top" tabindex="-1" class="builder-page">
     <section class="section">
       <h1>Kaspa builder guide</h1>
-      <p class="lead">Do not start with architecture. Start with the user action: a payment, vault rule, asset rule, market, proof, or later app-to-app flow. State comes after the action is specific.</p>
-      <p class="fit-note"><strong>Default:</strong> start with the smallest working path. Mainnet status still comes from activation, releases, and working applications.</p>
+      <p class="lead">Architecture is the wrong starting point. Start with the user action: a payment, a vault rule, an asset rule, a market, a proof, or a later app-to-app flow. Only ask about state once that action is specific.</p>
+      <p class="fit-note"><strong>Default:</strong> start with the smallest working path. Mainnet status comes from activation, releases, and working applications, not architecture diagrams.</p>
       <p class="fit-note">Need terminal commands first? Open <a href="/command-line">Kaspa Command Line From Zero</a>.</p>
       <div class="builder-console" aria-label="Kaspa builder verification path">
         <article>
           <span>1 / Job</span>
           <strong>Name the action</strong>
-          <p>Send, receive, lock, refund, issue, replay, prove, or settle.</p>
+          <p>Send, receive, lock, refund, issue, replay, prove, or settle: one verb, not a paragraph.</p>
         </article>
         <article>
           <span>2 / Path</span>
           <strong>Pick the smallest path</strong>
-          <p>Payment path, app receipt, covenant rule, based app, proof, or later app program.</p>
+          <p>Payment path, app receipt, covenant rule, based app, proof, or later app program: pick the cheapest one that still does the job.</p>
         </article>
         <article>
           <span>3 / Evidence</span>
           <strong>Show what landed</strong>
-          <p>Accepted txid, app receipt, state output, replay row, source, or release record.</p>
+          <p>Accepted txid, app receipt, state output, replay row, source, or release record: something a stranger can check without asking you.</p>
         </article>
         <article>
           <span>4 / Boundary</span>
           <strong>Say what is missing</strong>
-          <p>Mainnet activation, wallet support, liquidity, audit, indexer, oracle, or production custody.</p>
+          <p>Mainnet activation, wallet support, liquidity, audit, indexer, oracle, or production custody: name the actual gap, not "more work needed."</p>
         </article>
       </div>
     </section>
 
     <section class="section builder-workbench">
       <h2>Build around verifiable evidence</h2>
-      <p>A repeatable Kaspa example starts with the user action, submits or inspects a transaction, replays the result, and labels the evidence class before making a bigger claim.</p>
+      <p>A repeatable Kaspa example does four things in order: names the user action, submits or inspects a transaction, replays the result, and labels the evidence class before anyone makes a bigger claim on top of it.</p>
       <div class="builder-ledger" aria-label="Builder evidence ledger">
         <article>
           <span>Good first example</span>
           <strong>Payment or receipt</strong>
-          <p>A user sends tKAS or attaches app data, then the page links the accepted txid and explains what changed.</p>
+          <p>A user sends tKAS or attaches app data; the page links the accepted txid and states exactly what changed.</p>
         </article>
         <article>
           <span>Good covenant example</span>
           <strong>Rule that blocks a bad spend</strong>
-          <p>A cap, destination, required controller input, refund, or timeout is visible before the artifact details.</p>
+          <p>Put the cap, destination, required controller input, refund, or timeout in front of the reader before the artifact details.</p>
         </article>
         <article>
           <span>Weak example</span>
           <strong>Mechanism without a user need</strong>
-          <p>Lead with the user problem before internal mechanism names.</p>
+          <p>Naming the internal mechanism before the user problem is the tell of a weak example.</p>
         </article>
       </div>
     </section>
@@ -133,27 +133,27 @@
             <tr>
               <td>Many users touch the same app state at the same time.</td>
               <td>Start with based apps or vProgs-compatible runtime work.</td>
-              <td>Start with covenants and L1 state outputs.</td>
+              <td>Start with covenants and L1 state outputs instead.</td>
             </tr>
             <tr>
               <td>The product splits into independent states.</td>
-              <td>Covenants can still work for each separate state.</td>
-              <td>Shared-state app architecture becomes more natural.</td>
+              <td>Covenants still work, one per separate state.</td>
+              <td>Shared-state app architecture fits better here.</td>
             </tr>
             <tr>
               <td>Each action needs its own proof, privacy check, or custom validity rule.</td>
-              <td>Consider inline ZK, but expect more proof and operations work.</td>
-              <td>Use covenants or based apps first.</td>
+              <td>Inline ZK is the fit, but it costs more proof and operations work than the alternatives.</td>
+              <td>Covenants or based apps handle this more cheaply.</td>
             </tr>
             <tr>
               <td>The proof depends on another chain, an oracle, a price, or a real-world event.</td>
-              <td>Name the anchor first: source root, finality certificate, accumulated-work view, oracle, reporter set, or challenge process.</td>
-              <td>The proof can stay inside the app's own state rules.</td>
+              <td>Name the anchor first: source root, finality certificate, accumulated-work view, oracle, reporter set, or challenge process, before writing any proof code.</td>
+              <td>The proof stays inside the app's own state rules, no external anchor needed.</td>
             </tr>
             <tr>
               <td>The app needs synchronous composition with other independent apps.</td>
-              <td>That is the <a href="/kaspa-vprogs-explained">future full-vProgs direction</a>, especially if several app states must succeed or fail as one operation.</td>
-              <td>Build the narrow app first. Toccata-era apps can coordinate through L1 proofs and sequencing without claiming full atomic composition.</td>
+              <td>That's the <a href="/kaspa-vprogs-explained">future full-vProgs direction</a>, especially once several app states must succeed or fail as one operation.</td>
+              <td>Build the narrow app first. Toccata apps coordinate through L1 proofs and sequencing without full atomic composition.</td>
             </tr>
           </tbody>
         </table>
@@ -162,23 +162,23 @@
 
     <section class="section">
       <h2>Match app model to state model</h2>
-      <p>Covenants are for constrained spend rules: vaults, treasury controls, escrow-like flows, unlock conditions, issuance policy, and small UTXO state machines. One protected state advances one valid step at a time.</p>
-      <p>Based apps are for richer app state anchored to Kaspa ordering: balances, orders, packs, risk rows, task states, or market state. They can start with deterministic replay over accepted transactions and add ZK only when proof-verified execution, privacy, or trust-minimized bridge logic becomes the product boundary.</p>
-      <p>Inline ZK is for actions that need their own proof before settlement. <a href="/kaspa-vprogs-explained">Full vProgs</a> are the later app-to-app composition direction, where independent apps can read or call one another in one combined outcome.</p>
+      <p>Covenants handle constrained spend rules: vaults, treasury controls, escrow-like flows, unlock conditions, issuance policy, small UTXO state machines. One protected state advances one valid step at a time. That constraint is the entire mechanism.</p>
+      <p>Based apps carry richer app state anchored to Kaspa ordering: balances, orders, packs, risk rows, task states, market state. Start with deterministic replay over accepted transactions. Add ZK only once proof-verified execution, privacy, or trust-minimized bridge logic becomes the actual product boundary, not before.</p>
+      <p>Inline ZK covers actions that need their own proof before settlement. <a href="/kaspa-vprogs-explained">Full vProgs</a> are the later app-to-app composition direction, where independent apps read or call one another in one combined outcome.</p>
     </section>
 
     <section class="section">
       <h2>Say what the example buys the user</h2>
-      <p>A builder example needs the user job after the artifact: a budget that cannot be drained at once, an asset that moves only under a controller rule, a game turn that cannot get stuck forever, a payout that can be replayed, or a group payment that refunds if the condition fails.</p>
-      <p>Use this order before showing artifacts: what landed on TN12, what the reader can click or repeat, what the repo replayed from accepted rows, which rule is script-enforced versus replay-derived or wallet policy, and what remains missing before a real product claim.</p>
-      <p>Then keep the boundary honest. If the rule is script-enforced, name the script path. If it is wallet policy, planner state, replay-derived state, or testnet-only evidence, say that. The claim is strongest when the reader can see both the accepted path and the rejected path.</p>
-      <p>Use the same template for every covenant example: user need, spend rule, accepted path, rejected path, wallet review field, and remaining blocker. Say "budget that cannot drain at once," "step-by-step workflow," or "asset that needs its controller" before naming the mechanism.</p>
+      <p>Every builder example needs a user job attached to the artifact: a budget that can't be drained at once, an asset that only moves under a controller rule, a game turn that can't get stuck forever, a payout that can be replayed, a group payment that refunds if the condition fails.</p>
+      <p>Show artifacts in this order: what landed on TN12, what the reader can click or repeat, what the repo replayed from accepted rows, which rule is script-enforced versus replay-derived or wallet policy, and what's still missing before this becomes a real product claim.</p>
+      <p>Keep the boundary honest past that point. Name the script path if the rule is script-enforced. Say so plainly if it's wallet policy, planner state, replay-derived state, or testnet-only evidence. The claim is strongest when the reader can see both the accepted path and the rejected path side by side.</p>
+      <p>Run every covenant example through the same template: user need, spend rule, accepted path, rejected path, wallet review field, remaining blocker. Say "budget that cannot drain at once," "step-by-step workflow," or "asset that needs its controller" before naming the mechanism.</p>
       <p class="fit-note">For the public application framing, see <a href="/application-layer#tn12-covenant-tests">what TN12 covenant tests are teaching</a>. For the current testnet examples, open the <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/experiments.html">TN12 experiment map</a>.</p>
     </section>
 
     <section class="section">
       <h2>Map product ideas to a path</h2>
-      <p>Pick the smallest path that matches the product. Most first builds are a wallet/payment path, a covenant-shaped rule, or a narrow based app.</p>
+      <p>Pick the smallest path that matches the product. Most first builds land on a wallet/payment path, a covenant-shaped rule, or a narrow based app, not the full stack.</p>
       <details class="source-more">
         <summary>Open product-path table</summary>
         <div class="table-wrap">
@@ -194,27 +194,27 @@
               <tr>
                 <td>Vault, treasury, inheritance, recovery, escrow</td>
                 <td>Covenants</td>
-                <td>The product is mostly about who can move funds and how stateful outputs evolve.</td>
+                <td>Who can move funds, and how the stateful output evolves, is the whole product. Nothing else needed.</td>
               </tr>
               <tr>
                 <td>Native asset issuance or transfer policy</td>
                 <td>Covenants</td>
-                <td>The app logic is asset-native and can often stay close to L1 output rules.</td>
+                <td>Asset-native logic stays close to L1 output rules most of the time.</td>
               </tr>
               <tr>
                 <td>Trading venue, game economy, shared balance app</td>
                 <td>Based app</td>
-                <td>Many users need to update the same app record without waiting for one UTXO path to move first.</td>
+                <td>Many users update the same app record at once, without waiting for one UTXO path to clear first.</td>
               </tr>
               <tr>
                 <td>Private action, custom validity check, proof-gated workflow</td>
                 <td>Inline ZK</td>
-                <td>The proof is part of every action, so verification becomes the product boundary.</td>
+                <td>The proof rides along with every action, so verification is the product boundary, not a feature.</td>
               </tr>
               <tr>
                 <td>Composable app network with calls across independent apps</td>
                 <td><a href="/kaspa-vprogs-explained">Full vProgs later</a></td>
-                <td>The need is app-to-app synchronous composition, which belongs to the longer architecture target.</td>
+                <td>App-to-app synchronous composition is the longer architecture target, not a current option.</td>
               </tr>
             </tbody>
           </table>
@@ -224,24 +224,24 @@
 
     <section class="section">
       <h2>Builder tools</h2>
-      <p>Use <a href="https://kaspa.org/build">Kaspa.org Build</a> and the <a href="https://docs.kaspa.org/integrate/getting-started">official getting-started docs</a> for SDK and node entry points. Use <a href="/sources#code-tracking">Sources</a> for Toccata releases, KIPs, Silverscript, vProgs, ZK SDK, Python SDK, WASM docs, hosted APIs, indexers, and node infrastructure.</p>
-      <p>Hosted APIs are fine for prototypes and dashboards. Products that sign transactions, track balances, handle custody, or promise uptime need a node, indexer, provider-redundancy plan, or all three.</p>
+      <p>SDK and node entry points live at <a href="https://kaspa.org/build">Kaspa.org Build</a> and the <a href="https://docs.kaspa.org/integrate/getting-started">official getting-started docs</a>. Toccata releases, KIPs, Silverscript, vProgs, ZK SDK, Python SDK, WASM docs, hosted APIs, indexers, and node infrastructure are tracked in <a href="/sources#code-tracking">Sources</a>.</p>
+      <p>Hosted APIs work fine for prototypes and dashboards. Products that sign transactions, track balances, handle custody, or promise uptime need a node, an indexer, a provider-redundancy plan, usually all three.</p>
     </section>
 
     <section class="section">
       <h2>Before prototyping</h2>
       <ol class="learning-steps">
-        <li><strong>Pick network first.</strong> <span>Mainnet uses <code>kaspa:</code>. TN12 uses <code>kaspatest:</code>. Never reuse test keys for mainnet.</span></li>
-        <li><strong>Use the right node.</strong> <span>Testnet covenant work needs a branch or release that supports that testnet. Mainnet builders use the released mainnet node.</span></li>
-        <li><strong>Check sync and UTXO index.</strong> <span>Unsynced local nodes and missing indexes can return misleading balances.</span></li>
-        <li><strong>Separate UI policy from consensus rules.</strong> <span>A mockup, planner state, or wallet warning is not an enforced covenant.</span></li>
-        <li><strong>Record exact submit details.</strong> <span>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</span></li>
+        <li><strong>Pick network first.</strong> <span>Mainnet uses <code>kaspa:</code>. TN12 uses <code>kaspatest:</code>. Reusing test keys for mainnet is how funds get lost.</span></li>
+        <li><strong>Use the right node.</strong> <span>Testnet covenant work needs a branch or release built for that testnet. Mainnet builders run the released mainnet node, not a testnet fork.</span></li>
+        <li><strong>Check sync and UTXO index.</strong> <span>An unsynced local node or a missing index returns a balance that looks real and isn't.</span></li>
+        <li><strong>Separate UI policy from consensus rules.</strong> <span>A mockup, planner state, or wallet warning is not an enforced covenant. The chain doesn't know the UI exists.</span></li>
+        <li><strong>Record exact submit details.</strong> <span>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields every time, not just when something breaks.</span></li>
       </ol>
     </section>
 
     <section class="section">
       <h2>Prove the state change</h2>
-      <p>After submit, fetch accepted state and compare the exact result to the thing the app claims happened.</p>
+      <p>After submit, fetch accepted state and diff it against what the app claims happened. If they match, say so. If they don't, that's the bug report.</p>
       <details class="source-more">
         <summary>Open verification checklist</summary>
         <div class="table-wrap">
@@ -256,48 +256,48 @@
             <tbody>
               <tr>
                 <td>Fetch accepted state after submit</td>
-                <td>Local construction does not prove accepted app state.</td>
+                <td>Local construction proves you built a transaction. It doesn't prove the network accepted it.</td>
                 <td>Record `is_accepted`, accepting block data, output script type, address, and amount.</td>
               </tr>
               <tr>
                 <td>Pin the submit surface</td>
-                <td>REST, JSON wRPC, Borsh wRPC, SDK versions, and testnet branches can expose different transaction shapes.</td>
+                <td>REST, JSON wRPC, Borsh wRPC, SDK versions, and testnet branches can each hand back a different transaction shape for the same request.</td>
                 <td>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</td>
               </tr>
               <tr>
                 <td>Compare with a known working spend</td>
-                <td>Witness order, signature preimage, redeem-script shape, and constructor keys are easier to check against a sibling transaction that already worked.</td>
+                <td>Witness order, signature preimage, redeem-script shape, and constructor keys are far easier to debug against a sibling transaction that already worked than in isolation.</td>
                 <td>Diff the failing path against an accepted release, refund, or simple payment path before blaming protocol rules.</td>
               </tr>
               <tr>
                 <td>Label failed attempts narrowly</td>
-                <td>Tooling failures and consensus failures need different labels.</td>
+                <td>A tooling failure and a consensus failure look identical from the outside. They need different labels or the next builder repeats your mistake.</td>
                 <td>Keep the artifact, but mark it as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </details>
-      <p class="fit-note">Testnet lesson: teach the verification habit without turning one prototype into a mainnet claim.</p>
+      <p class="fit-note">Testnet lesson: the verification habit transfers, the prototype's status doesn't. One testnet demo is not a mainnet claim.</p>
     </section>
 
     <section class="section">
       <h2>Say the stage first</h2>
       <ol class="learning-steps">
-        <li><strong>Covenants:</strong> <span>nearer L1 state-output path for constrained asset and UTXO-state rules.</span></li>
+        <li><strong>Covenants:</strong> <span>the L1 state-output path, live on mainnet, for constrained asset and UTXO-state rules.</span></li>
         <li><strong>Based apps:</strong> <span>app-specific state anchored to Kaspa ordering, commitments, proofs, settlement, or exits.</span></li>
-        <li><strong>Inline ZK:</strong> <span>specialized proof path for actions whose validity or privacy proof is the product boundary.</span></li>
-        <li><strong>External anchors:</strong> <span>ZK can check a statement about chosen inputs; builders must still define how source-chain roots, prices, events, or attestations become trusted inputs.</span></li>
-        <li><strong>Based-zk apps:</strong> <span>based apps that add proof-verified execution or bridge logic when deterministic replay is not enough.</span></li>
-        <li><strong>Full vProgs:</strong> <span>future app-to-app atomic composition direction, beyond standalone based-app construction.</span></li>
-        <li><strong>Transaction payloads:</strong> <span>live L1 transaction data for receipts and app context. Native smart-contract activation needs separate protocol evidence.</span></li>
+        <li><strong>Inline ZK:</strong> <span>a specialized proof path for actions whose validity or privacy proof is the product boundary.</span></li>
+        <li><strong>External anchors:</strong> <span>ZK checks a statement about chosen inputs. Builders still have to define how source-chain roots, prices, events, or attestations become trusted inputs. That part isn't automatic.</span></li>
+        <li><strong>Based-zk apps:</strong> <span>based apps that add proof-verified execution or bridge logic once deterministic replay stops being enough.</span></li>
+        <li><strong>Full vProgs:</strong> <span>the future app-to-app atomic composition direction, beyond standalone based-app construction.</span></li>
+        <li><strong>Transaction payloads:</strong> <span>live L1 transaction data for receipts and app context today. Native smart-contract activation is a separate claim with its own evidence.</span></li>
       </ol>
-      <p class="fit-note">Use the positive stage first. Add caveats only where a reader might confuse builder work with live mainnet functionality.</p>
+      <p class="fit-note">State the stage plainly first. Add a caveat only where a reader could otherwise mistake builder work for live mainnet functionality.</p>
     </section>
 
     <section class="next-step section" aria-label="Suggested next step">
       <h2>Build from current status</h2>
-      <p>Choose the model, then verify current implementation state before writing docs or product claims.</p>
+      <p>Choose the model. Then verify current implementation state before writing docs or product claims, not after.</p>
       <div class="actions">
         <a class="button primary" href="/status">Open status</a>
         <a class="button" href="/application-layer">App ideas</a>
@@ -307,21 +307,21 @@
     <section class="section">
       <h2>Builder references</h2>
       <ol class="source-list">
-        <li><a href="https://progdoc.izio.fr/overview.html">Izio's Kaspa programmability overview</a> for the builder decision tree: covenants, based apps, inline ZK, and future full vProgs.</li>
-        <li><a href="https://progdoc.izio.fr/state-programs.html">Izio on Covenants</a> for sequential protected-output state, covenant IDs, and the current Silverscript builder reference.</li>
-        <li><a href="https://progdoc.izio.fr/app-vprogs.html">Izio on Based Apps</a> for shared-state app architecture and Rust app logic in a managed environment.</li>
-        <li><a href="https://progdoc.izio.fr/verified-actions.html">Izio on Inline ZK</a> for per-action proofs and proof-driven settlement.</li>
-        <li><a href="https://progdoc.izio.fr/full-vprogs.html">Izio on Full vProgs</a> for future app-to-app synchronous composition.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">Rusty Kaspa tn10-toc3 pre-release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, and <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> for the May 2026 Testnet-10 Toccata activation and hardening path.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> for testnet covenant prototyping context. These are testnet builder tools. Mainnet activation needs separate mainnet evidence.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR #953</a> for the merged <code>R0ScriptBuilder</code> helper around RISC Zero proof scripts. This is builder tooling progress. Mature mainnet ZK apps need separate product evidence.</li>
-        <li><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> for the open transaction-v1 fields and hashing PR, and <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> for the open P2MR quantum-resistance ScriptPublicKey proposal. Open KIP PRs are design/proposal evidence until merged and activated.</li>
-        <li><a href="https://kaspa.org/build">Kaspa.org Build</a> for the current developer resource index: Rusty Kaspa, WASM SDK, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, and R&amp;D links.</li>
-        <li><a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a> for hosted address history, transaction acceptance, block-range, and node RPC proxy APIs. Hosted infrastructure does not set protocol status.</li>
-        <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>, for current builder workflow guidance.</li>
-        <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> for the JavaScript SDK request shape used by current builder examples.</li>
-        <li><a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a> for experimental external-signer and watch-only wallet references. They are wallet UX and signing-boundary research references. Shipped protocol status needs release and activation evidence.</li>
-        <li><a href="/status">Kaspa Explained status</a> and <a href="/sources">source hierarchy</a> for live/targeted/roadmap/research boundaries.</li>
+        <li><a href="https://progdoc.izio.fr/overview.html">Izio's Kaspa programmability overview</a> lays out the builder decision tree: covenants, based apps, inline ZK, future full vProgs.</li>
+        <li><a href="https://progdoc.izio.fr/state-programs.html">Izio on Covenants</a> covers sequential protected-output state, covenant IDs, and the current Silverscript builder reference.</li>
+        <li><a href="https://progdoc.izio.fr/app-vprogs.html">Izio on Based Apps</a> covers shared-state app architecture and Rust app logic in a managed environment.</li>
+        <li><a href="https://progdoc.izio.fr/verified-actions.html">Izio on Inline ZK</a> covers per-action proofs and proof-driven settlement.</li>
+        <li><a href="https://progdoc.izio.fr/full-vprogs.html">Izio on Full vProgs</a> covers the future app-to-app synchronous composition direction.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">Rusty Kaspa tn10-toc3 pre-release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, and <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> document the May 2026 Testnet-10 Toccata activation and hardening path.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a> cover testnet covenant prototyping. These are testnet builder tools, separate from mainnet activation evidence.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR #953</a> merged the <code>R0ScriptBuilder</code> helper around RISC Zero proof scripts: tooling progress, not a claim about mature mainnet ZK apps.</li>
+        <li><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is the open transaction-v1 fields and hashing PR; <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> is the open P2MR quantum-resistance ScriptPublicKey proposal. Both stay design/proposal evidence until merged and activated.</li>
+        <li><a href="https://kaspa.org/build">Kaspa.org Build</a> indexes current developer resources: Rusty Kaspa, WASM SDK, public node access, REST API, Docker, DB dumps, testnet, KIPs, Silverscript, vProgs, community infra, R&amp;D links.</li>
+        <li><a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a> cover hosted address history, transaction acceptance, block-range, and node RPC proxy APIs. Hosted infrastructure doesn't set protocol status. That's a separate question.</li>
+        <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>, cover current builder workflow.</li>
+        <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> define the JavaScript SDK request shape used in current builder examples.</li>
+        <li><a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a> are experimental external-signer and watch-only wallet references: wallet UX and signing-boundary research, not shipped protocol status.</li>
+        <li><a href="/status">Kaspa Explained status</a> and <a href="/sources">source hierarchy</a> hold the live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>
 <!-- related-links:start -->

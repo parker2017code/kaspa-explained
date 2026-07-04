@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kaspa vProgs Explained: Resource Lanes, Proofs, and App Composition | Kaspa Explained</title>
-  <meta name="description" content="Kaspa vProgs explained: resource-level scheduling, based computation, ZK proofs, Toccata boundaries, and the roadmap boundary for native DeFi claims.">
+  <meta name="description" content="How Kaspa vProgs schedule app state by resource, prove execution with ZK, and where Toccata's covenants stop short of native DeFi.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/kaspa-vprogs-explained">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa vProgs Explained | Kaspa Explained">
-  <meta property="og:description" content="Resource-level scheduling, based computation, ZK proofs, and the roadmap boundary for Kaspa vProgs.">
+  <meta property="og:description" content="Two transactions touching different resources never wait on each other. That's the vProgs scheduling model, and why it's still roadmap work.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-vprogs-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa vProgs Explained | Kaspa Explained">
-  <meta name="twitter:description" content="Resource-level scheduling, based computation, ZK proofs, and the roadmap boundary for vProgs.">
+  <meta name="twitter:description" content="Resource-level scheduling, ZK proofs, and the roadmap line between Toccata's covenants and full vProgs.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-06-25">
   <script type="application/ld+json">
@@ -37,11 +37,11 @@
     "headline": "Kaspa vProgs Explained",
     "url": "https://kaspaexplained.com/kaspa-vprogs-explained",
     "dateModified": "2026-06-25",
-    "description": "Kaspa vProgs explained: resource-level scheduling, based computation, ZK proofs, Toccata boundaries, and the roadmap boundary for native DeFi claims.",
+    "description": "How Kaspa vProgs schedule app state by resource, prove execution with ZK, and where Toccata's covenants stop short of native DeFi.",
     "about": ["Kaspa", "vProgs", "Based Apps", "Toccata", "ZK", "Covenants"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -70,8 +70,8 @@
     <section class="sources-hero section">
       <p class="eyebrow">Roadmap architecture</p>
       <h1>Kaspa vProgs explained</h1>
-      <p class="lead">vProgs are the later Kaspa app architecture for programs that prove richer logic while sharing Kaspa ordering. The model is simple: split app state into named resources, run independent work in parallel, and prove the result without asking Kaspa L1 to execute every app step.</p>
-      <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Toccata is the activated L1 expressiveness surface; full vProgs and native Kaspa DeFi are not live mainnet behavior.</p>
+      <p class="lead">Two vProgs transactions touching different resources never wait on each other, no matter how busy the network is. That's the whole scheduling trick: name every piece of app state as a resource, let a transaction declare which ones it reads and writes, run the ones that don't collide in parallel, and prove the result to Kaspa L1 instead of replaying every step on it.</p>
+      <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Toccata is the activated L1 expressiveness surface. Full vProgs and native Kaspa DeFi are not live on mainnet.</p>
       <div class="actions">
         <a class="button primary" href="/builder-guide">Builder guide</a>
         <a class="button" href="/application-layer">Application layer</a>
@@ -82,39 +82,39 @@
     <section class="section">
       <p class="eyebrow">One sentence</p>
       <h2>The mental model</h2>
-      <blockquote>vProgs turn app execution into a flow of resource-level dependencies: conflicting work waits on the same resource, while independent work keeps moving through the system.</blockquote>
+      <blockquote>Work that touches the same resource waits in line. Work that doesn't, never sees the line.</blockquote>
       <div class="summary-grid">
-        <article><span>Resource</span><p>A coin, balance, object, order, vault, game position, or app-specific state item that can be named and updated.</p></article>
-        <article><span>Dependency</span><p>A transaction declares which resources it reads and writes, so the scheduler knows what can run together.</p></article>
-        <article><span>Proof</span><p>The app can produce proofs or journals that let later layers verify what happened without replaying everything on L1.</p></article>
+        <article><span>Resource</span><p>A coin, balance, object, order, vault, game position, or app-specific state item, named so the scheduler can track it.</p></article>
+        <article><span>Dependency</span><p>A transaction declares which resources it reads and writes. That declaration is what lets the scheduler decide what can run together.</p></article>
+        <article><span>Proof</span><p>The app produces proofs or journals so later layers can verify what happened without re-executing every step on L1.</p></article>
       </div>
     </section>
 
     <section class="section">
       <p class="eyebrow">Scheduling</p>
       <h2>Why resource lanes exist</h2>
-      <p>In a global account-style system, many app actions compete for the same shared state. vProgs push the design toward individually addressable resources. If Alice touches resource A and Bob touches resource Z, those actions do not have to wait for each other. If both touch resource A, their order still matters and the scheduler serializes that part.</p>
-      <p>The scheduler builds a dependency graph from declared read/write metadata. Each resource acts like a small lane. A transaction attaches to the lanes it touches, waits for the values it needs, runs when its dependencies are ready, and then passes updated values forward. The result is a computational DAG: independent branches keep executing while congested resources only slow the work that actually conflicts.</p>
-      <p>The Hans Moog vProgs walkthrough is not a raw "more TPS" claim. The narrower claim is that independent app state can keep moving while one resource or market is busy.</p>
+      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state apart into individually addressable resources instead. Alice touching resource A and Bob touching resource Z run at the same time, no queue between them. Two transactions touching the same resource A still have to settle their order, so the scheduler serializes only that piece.</p>
+      <p>The scheduler builds this from the read/write metadata a transaction declares up front. Each resource behaves like its own lane: a transaction attaches to the lanes it touches, waits only for the values it needs, runs the moment those are ready, then passes its updated state forward. The result is a computational DAG, not a single queue. Independent branches keep executing while a busy resource only slows the transactions that actually collide with it.</p>
+      <p>Hans Moog's vProgs walkthrough does not claim a raw TPS number. The claim is narrower and more useful: app state that doesn't conflict keeps moving even while one resource or market is under load.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Layer map</p>
       <h2>What the prototype repo shows</h2>
-      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository describes itself as an early-development Rust framework for based computation on Kaspa. Its README maps the framework into layers: core types, storage, state, scheduling, transaction runtime, and node integration. The workspace also includes L1 and ZK crates for bridge/types, ABI, transaction prover, batch prover, VM, and RISC Zero backend work.</p>
+      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository calls itself an early-development Rust framework for based computation on Kaspa. Its README splits the framework into six layers: core types, storage, state, scheduling, transaction runtime, and node integration, plus separate L1 and ZK crates for bridge/types, ABI, transaction prover, batch prover, VM, and a RISC Zero backend.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
-            <tr><th>Layer</th><th>Plain job</th><th>Why it exists</th></tr>
+            <tr><th>Layer</th><th>Job</th><th>Why it exists</th></tr>
           </thead>
           <tbody>
-            <tr><td>Core</td><td>Shared types such as resources, transactions, and access metadata.</td><td>Every layer needs the same basic language.</td></tr>
-            <tr><td>Storage</td><td>Read and write app state to disk.</td><td>The app needs persistence without making storage know app semantics.</td></tr>
-            <tr><td>State</td><td>Define what is stored and how versions or rollbacks work.</td><td>Execution needs a clear model for resource state.</td></tr>
-            <tr><td>Scheduling</td><td>Track resource access and orchestrate parallel execution.</td><td>Independent resource lanes should run without one global lock.</td></tr>
-            <tr><td>Runtime</td><td>Define what a transaction or program does when it executes.</td><td>Different VMs or app runtimes can plug into the scheduling model.</td></tr>
-            <tr><td>Node</td><td>Put the layers together into a concrete runnable system.</td><td>A framework needs an integrated runnable surface.</td></tr>
-            <tr><td>ZK / L1</td><td>Produce proofs and connect app results back to Kaspa evidence.</td><td>The app needs verification and settlement boundaries.</td></tr>
+            <tr><td>Core</td><td>Shared types for resources, transactions, and access metadata.</td><td>Every other layer reads and writes the same basic types.</td></tr>
+            <tr><td>Storage</td><td>Reads and writes app state to disk.</td><td>Persistence without storage code knowing app semantics.</td></tr>
+            <tr><td>State</td><td>Defines what gets stored and how versions or rollbacks work.</td><td>Execution needs a fixed model for resource state.</td></tr>
+            <tr><td>Scheduling</td><td>Tracks resource access and orchestrates parallel execution.</td><td>Independent resource lanes run without one global lock.</td></tr>
+            <tr><td>Runtime</td><td>Defines what a transaction or program does when it executes.</td><td>Different VMs or app runtimes plug into the same scheduling model.</td></tr>
+            <tr><td>Node</td><td>Assembles the layers into a runnable system.</td><td>A framework on paper still needs one integrated binary.</td></tr>
+            <tr><td>ZK / L1</td><td>Produces proofs and ties app results back to Kaspa evidence.</td><td>Verification and settlement have to land somewhere concrete.</td></tr>
           </tbody>
         </table>
       </div>
@@ -123,13 +123,13 @@
     <section class="section">
       <p class="eyebrow">Toccata connection</p>
       <h2>What comes before full vProgs</h2>
-      <p><a href="/toccata-explained">Toccata</a> is the near-term hard-fork track. Its release and KIP work target covenant-style spending rules, covenant IDs, ZK proof checks, and sequencing commitments. Those pieces give app builders concrete handles for UTXO state constraints, app-state identity, selected computation proofs, and app-local sequencing anchored to Kaspa evidence.</p>
-    <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo adds early tooling evidence. It experiments with actor-style state machines that generate Silverscript for multi-contract covenant systems. It is prototype work to study. Audit, production, and activation claims need separate evidence.</p>
-      <p>That still does not make full vProgs live. Toccata can support simpler covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full app-to-app composition is the later target: one combined action touching several app states and succeeding or failing as a unit.</p>
+      <p><a href="/toccata-explained">Toccata</a> is the hard-fork track that shipped before any of this: activated, not upcoming. Its release and KIP work delivered covenant-style spending rules, covenant IDs, ZK proof checks, and sequencing commitments, concrete handles for UTXO state constraints, app-state identity, selected computation proofs, and app-local sequencing anchored to Kaspa evidence.</p>
+      <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is early tooling evidence, not a finished product: actor-style state machines that generate Silverscript for multi-contract covenant systems. It's prototype work worth studying. Audit, production, and activation are separate claims that need separate evidence.</p>
+      <p>None of that makes full vProgs live. Toccata can carry simpler covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full app-to-app composition, one action touching several app states that succeeds or fails as a unit, is the later target.</p>
       <div class="summary-grid">
-        <article><span>Near-term</span><p>Covenants, spend constraints, asset rules, proof checks, and lane-friendly commitments.</p></article>
-        <article><span>Based app</span><p>One app anchors its state to Kaspa ordering, commitments, proofs, settlement, or exits.</p></article>
-        <article><span>Full vProgs</span><p>Later app architecture for richer logic and cross-app atomic composition.</p></article>
+        <article><span>Near-term</span><p>Covenants, spend constraints, asset rules, proof checks, lane-friendly commitments.</p></article>
+        <article><span>Based app</span><p>One app anchors its state to Kaspa ordering: commitments, proofs, settlement, exits.</p></article>
+        <article><span>Full vProgs</span><p>Later architecture for richer logic and cross-app atomic composition.</p></article>
       </div>
     </section>
 
@@ -142,10 +142,10 @@
             <tr><th>Use</th><th>Avoid</th><th>Reason</th></tr>
           </thead>
           <tbody>
-            <tr><td>vProgs are roadmap architecture for app programs that prove richer logic while sharing Kaspa ordering.</td><td>Treating vProgs as activated Kaspa smart contracts.</td><td>The public repo is explicit prototype evidence. Mainnet activation needs separate mainnet evidence.</td></tr>
-            <tr><td>Toccata gives Kaspa a path to L1 app rules and based-app foundations.</td><td>Toccata means full Kaspa DeFi is live.</td><td>Activation, wallets, liquidity, audits, custody, and app usage are separate evidence.</td></tr>
-            <tr><td>Independent resource lanes can execute without waiting on unrelated congested state.</td><td>Kaspa apps have unlimited throughput.</td><td>Parallelism depends on workload shape and declared resource conflicts.</td></tr>
-            <tr><td>ZK proves a statement about chosen public inputs.</td><td>A proof automatically proves prices, bridge truth, or real-world events.</td><td>External facts still need anchors such as a light client, oracle, reporter set, or challenge process.</td></tr>
+            <tr><td>vProgs are roadmap architecture for app programs that prove richer logic while sharing Kaspa ordering.</td><td>Treating vProgs as activated Kaspa smart contracts.</td><td>The public repo is prototype code. Mainnet activation needs its own mainnet evidence.</td></tr>
+            <tr><td>Toccata gives Kaspa a path to L1 app rules and based-app foundations.</td><td>Toccata means full Kaspa DeFi is live.</td><td>Activation, wallets, liquidity, audits, custody, and app usage are each separate evidence.</td></tr>
+            <tr><td>Independent resource lanes execute without waiting on unrelated congested state.</td><td>Kaspa apps have unlimited throughput.</td><td>Parallelism depends on workload shape and which resources a transaction declares.</td></tr>
+            <tr><td>ZK proves a statement about chosen public inputs.</td><td>A proof automatically proves prices, bridge truth, or real-world events.</td><td>External facts need an anchor: a light client, oracle, reporter set, or challenge process.</td></tr>
           </tbody>
         </table>
       </div>
@@ -154,8 +154,8 @@
     <section class="section">
       <p class="eyebrow">Builder filter</p>
       <h2>When this architecture applies</h2>
-      <p>Use the vProgs mental model when a product has many independent pieces of state, many users touching the same app, or a proof requirement that belongs outside a simple covenant spend. Examples include trading state, auctions, games, coordination markets, app-specific ledgers, and proof-backed settlement flows.</p>
-      <p>Start with payments, receipts, vault rules, refund paths, allowance caps, or controlled assets before reaching for vProgs. A good Kaspa app chooses the smallest state model that can honestly do the job.</p>
+      <p>The vProgs model fits products with many independent pieces of state, many users hitting the same app, or a proof requirement bigger than a covenant spend can carry: trading state, auctions, games, coordination markets, app-specific ledgers, proof-backed settlement.</p>
+      <p>Most Kaspa apps do not need it yet. Payments, receipts, vault rules, refund paths, allowance caps, and controlled assets fit inside covenants today. Pick the smallest state model that does the job honestly, and reach for vProgs only when the app actually outgrows it.</p>
       <div class="actions">
         <a class="button primary" href="/kaspa-covenants-explained">Covenants first</a>
         <a class="button" href="/builder-evidence">Builder evidence</a>
@@ -165,7 +165,7 @@
 
     <section class="next-step section">
       <p class="eyebrow">Primary sources</p>
-      <h2>Check the receipts</h2>
+      <h2>Sources</h2>
       <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21 sequencing commitments</a>, and <a href="https://github.com/michaelsutton/argent">Argent</a>.</p>
     </section>
 <!-- related-links:start -->
@@ -173,9 +173,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>Toccata explained plainly: how Kaspa&#x27;s activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and...</p></a>
-        <a href="/kaspa-tps-explained"><span>Next</span><strong>Kaspa TPS, explained by workload</strong><p>Kaspa TPS explained by workload: simple L1 payments, Toccata covenant transactions, ZK proof settlements, and future vProg-style app...</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
+        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>How Kaspa&#x27;s activated hard fork adds covenants, covenant IDs, ZK verification, and sequencing lanes, and where that stops...</p></a>
+        <a href="/kaspa-tps-explained"><span>Next</span><strong>Kaspa TPS, explained by workload</strong><p>Kaspa throughput broken down by workload: plain L1 payments, Toccata covenant transactions, ZK proof settlements, and future vProg-style...</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What's live, targeted, roadmap, or research on Kaspa right now, with the caveats attached to each claim.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

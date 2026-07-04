@@ -2,6 +2,11 @@
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import argparse
+import os
+
+# Serve the site root regardless of the shell's current directory so the
+# preview works when launched from anywhere (repo root is scripts/'s parent).
+SITE_ROOT = Path(__file__).resolve().parent.parent
 
 
 class CleanUrlHandler(SimpleHTTPRequestHandler):
@@ -27,6 +32,7 @@ def main():
     parser.add_argument("--port", default=8783, type=int)
     args = parser.parse_args()
 
+    os.chdir(SITE_ROOT)
     server = ThreadingHTTPServer((args.host, args.port), CleanUrlHandler)
     print(f"Serving clean URLs at http://{args.host}:{args.port}/")
     server.serve_forever()

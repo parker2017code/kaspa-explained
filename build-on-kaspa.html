@@ -59,7 +59,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -88,39 +88,39 @@
     <section class="sources-hero section">
       <p class="eyebrow">Build on Kaspa</p>
       <h1>Build Kaspa apps</h1>
-      <p class="lead">Toccata is the activated hard fork for Kaspa app rules: spend limits, escrow paths, asset rules, proof checks, and payment conditions that users can inspect before funds move.</p>
+      <p class="lead">Toccata activated at DAA 474,165,565. That's the hard fork that put spend limits, escrow paths, asset rules, and proof checks into the L1 rule surface: conditions a user can inspect before funds move, not after.</p>
       <p class="fit-note"><strong>Status:</strong> payments are live today. Toccata added the L1 rule surface at DAA 474,165,565. Start with <a href="/toccata-explained">Toccata Explained</a> if the app needs covenants, proof checks, activity lanes, or based-app foundations.</p>
-      <p class="fit-note"><strong>Before pitching:</strong> use <a href="/reality-check">Reality Check</a> for product claims and <a href="/skeptical-case">Risks and Open Questions</a> for protocol and adoption risks.</p>
+      <p class="fit-note"><strong>Before pitching:</strong> run product claims through <a href="/reality-check">Reality Check</a> and protocol/adoption risk through <a href="/skeptical-case">Risks and Open Questions</a>.</p>
     </section>
 
     <section class="section toccata-builder-party" aria-labelledby="toccata-builder-party-title">
       <div>
         <p class="eyebrow">Build filter</p>
         <h2 id="toccata-builder-party-title">Start with the user job, then pick the rule</h2>
-        <p class="lead">Some Kaspa products only need payments, receipts, API reads, or better wallet UX. Toccata becomes relevant when the product needs a spend rule users can inspect before funds move.</p>
+        <p class="lead">Plenty of Kaspa products need nothing more than payments, receipts, API reads, or better wallet UX. Toccata only matters once the product needs a spend rule the user can inspect before funds move.</p>
       </div>
       <div class="toccata-audience-lanes" aria-label="Toccata builder audience levels">
         <article>
           <span>Live now</span>
           <strong>Payments and receipts</strong>
-          <p>Wallets, support tools, exchange flows, receipt pages, node monitors, and source-verifiable reads can use current mainnet.</p>
+          <p>Wallets, support tools, exchange flows, receipt pages, node monitors, and source-verifiable reads run on current mainnet today, no fork required.</p>
         </article>
         <article>
           <span>Toccata</span>
           <strong>Spend rules</strong>
-          <p>Vaults, escrow, spend limits, controlled assets, proof checks, and safer payouts need the Toccata rule surface plus wallet, explorer, and app support.</p>
+          <p>Vaults, escrow, spend limits, controlled assets, proof checks, and safer payouts need the Toccata rule surface, plus a wallet, an explorer, and an app that actually support it.</p>
         </article>
         <article>
           <span>Later</span>
           <strong>Richer app state</strong>
-          <p>Based-ZK apps and vProg-style systems need tooling, app design, proof paths, and users.</p>
+          <p>Based-ZK apps and vProg-style systems are waiting on tooling, app design, proof paths, and a first cohort of users to build against.</p>
         </article>
       </div>
       <div class="toccata-builder-grid">
         <a href="/kaspa-app-ideas"><span>Explore</span><strong>Browse app ideas</strong><small>Vaults, receipts, escrow, assets, and proof checks.</small></a>
-        <a href="/build-this-now"><span>Build now</span><strong>Use live mainnet first</strong><small>Start with payments, receipts, API reads, and accepted-transaction evidence.</small></a>
+        <a href="/build-this-now"><span>Build now</span><strong>Use live mainnet first</strong><small>Payments, receipts, API reads, and accepted-transaction evidence, nothing waiting on activation.</small></a>
         <a href="/solo-mining-guide"><span>Mining</span><strong>Mine to your own node</strong><small>Connect an ASIC to your own node through the Rusty Kaspa Stratum Bridge.</small></a>
-        <a href="/builder-evidence"><span>Evidence</span><strong>Show what can be checked</strong><small>Separate protocol status, product claims, and demo artifacts.</small></a>
+        <a href="/builder-evidence"><span>Evidence</span><strong>Show what can be checked</strong><small>Protocol status, product claims, and demo artifacts don't get to share a paragraph.</small></a>
         <a href="/toccata-explained"><span>Toccata</span><strong>Understand the upgrade</strong><small>Expressiveness, covenant IDs, ZK checks, lanes, and vProgs boundaries.</small></a>
       </div>
     </section>
@@ -128,12 +128,12 @@
     <section class="section">
       <p class="eyebrow">Infrastructure note</p>
       <h2>Some builders need Toccata readiness work</h2>
-      <p class="lead">The Toccata node guide is for teams running nodes, wallets, pools, exchanges, explorers, indexers, or custom RPC/protobuf integrations. Ordinary users do not need this checklist.</p>
+      <p class="lead">The Toccata node guide targets teams running nodes, wallets, pools, exchanges, explorers, indexers, or custom RPC/protobuf integrations. Ordinary users can skip this section entirely.</p>
       <div class="summary-grid">
-        <article><span>Nodes</span><p>Run Rusty Kaspa v2.0.1 or newer. The node database upgrade is one-way, so operators who might roll back should plan for resync cost.</p></article>
-        <article><span>Fees</span><p>Direct RPC submission now uses the upcoming standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Mempool policy and consensus are separate rule sets.</p></article>
-        <article><span>APIs</span><p>New integrations should use <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> where relevant.</p></article>
-        <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, block submission, indexing, wallet balances, and fee estimation against Testnet-10 and mainnet behavior after activation.</p></article>
+        <article><span>Nodes</span><p>Run Rusty Kaspa v2.0.1 or newer. The node database upgrade only runs one direction. Operators who might need to roll back should budget for a full resync, not a quick revert.</p></article>
+        <article><span>Fees</span><p>Direct RPC submission now runs on the upcoming standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. That's a mempool policy number. Consensus rules are a separate calculation entirely.</p></article>
+        <article><span>APIs</span><p>New integrations need <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> wherever those fields apply.</p></article>
+        <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, block submission, indexing, wallet balances, and fee estimation against Testnet-10 behavior, then against mainnet behavior after activation. The two won't match on every edge case.</p></article>
       </div>
       <p class="source-inline">Primary reference: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Rusty Kaspa Toccata node setup guide</a>.</p>
     </section>
@@ -142,13 +142,13 @@
       <p class="eyebrow">Start here</p>
       <h2>Pick the next step</h2>
       <div class="summary-grid">
-        <article><span>I have an idea</span><p><a href="/builder-guide">Use the builder guide to turn it into a concrete path.</a></p></article>
-        <article><span>I need inspiration</span><p><a href="/kaspa-app-ideas">Browse payments, receipts, vaults, escrow, assets, and coordination ideas.</a></p></article>
-        <article><span>I need timing</span><p><a href="/toccata-status">See the Toccata activation record.</a></p></article>
+        <article><span>I have an idea</span><p><a href="/builder-guide">The builder guide turns it into a concrete path.</a></p></article>
+        <article><span>I need inspiration</span><p><a href="/kaspa-app-ideas">Payments, receipts, vaults, escrow, assets, and coordination ideas, sorted by status.</a></p></article>
+        <article><span>I need timing</span><p><a href="/toccata-status">The Toccata activation record has the exact DAA score.</a></p></article>
         <article><span>I have a miner</span><p><a href="/solo-mining-guide">Connect an ASIC to your own node with the Stratum Bridge.</a></p></article>
-        <article><span>I want comparisons</span><p><a href="/kaspa-vs-solana-builders">Compare Kaspa with Solana, Ethereum, and ordinary servers.</a></p></article>
-        <article><span>I need evidence</span><p><a href="/builder-evidence">Check what a build artifact proves before it becomes public copy.</a></p></article>
-        <article><span>I need product discipline</span><p><a href="/reality-check">Pressure-test the user, liquidity, wallet flow, and failure modes.</a></p></article>
+        <article><span>I want comparisons</span><p><a href="/kaspa-vs-solana-builders">Kaspa against Solana, Ethereum, and an ordinary server.</a></p></article>
+        <article><span>I need evidence</span><p><a href="/builder-evidence">What a build artifact actually proves before it becomes public copy.</a></p></article>
+        <article><span>I need product discipline</span><p><a href="/reality-check">Pressure-test the user, liquidity, wallet flow, and failure modes before shipping the pitch.</a></p></article>
       </div>
       <div class="actions">
         <a class="button primary" href="/builder-guide">Builder guide</a>
@@ -161,14 +161,14 @@
       <p class="eyebrow">Keep exploring</p>
       <h2>Follow the path that matches your curiosity</h2>
       <div class="summary-grid">
-        <article><span>Founder fit</span><p><a href="/kaspa-for-fintech-founders">Fintech/payment/custody workflows where Kaspa fits.</a></p></article>
-        <article><span>Product ideas</span><p><a href="/kaspa-app-ideas">Apps tied to spend rules, proofs, receipts, and coordination.</a></p></article>
-        <article><span>Toccata ideas</span><p><a href="/kaspa-toccata-use-cases">Vaults, escrow, assets, proof checks, and ordered commitments.</a></p></article>
-        <article><span>Spend rules</span><p><a href="/kaspa-covenants-explained">A plain explanation of money that can carry a rule with it.</a></p></article>
-        <article><span>Compare</span><p><a href="/kaspa-vs-solana-builders">Kaspa versus Solana for execution, ordering, liquidity, and UX.</a></p></article>
-        <article><span>Compare</span><p><a href="/kaspa-vs-ethereum-apps">Kaspa versus Ethereum for app maturity, settlement, proofs, and roadmap boundary.</a></p></article>
-        <article><span>Product lane</span><p><a href="/kaspa-coordination-markets">Conditional commitments, assurance funding, auctions, and oracle limits.</a></p></article>
-        <article><span>Evidence</span><p><a href="/builder-evidence">What artifacts, txids, source links, and demos prove.</a></p></article>
+        <article><span>Founder fit</span><p><a href="/kaspa-for-fintech-founders">Where fintech, payment, and custody workflows actually gain from Kaspa.</a></p></article>
+        <article><span>Product ideas</span><p><a href="/kaspa-app-ideas">Apps tied to spend rules, proofs, receipts, and coordination, sorted by what ships now versus later.</a></p></article>
+        <article><span>Toccata ideas</span><p><a href="/kaspa-toccata-use-cases">Vaults, escrow, assets, proof checks, and ordered commitments, each with a status label.</a></p></article>
+        <article><span>Spend rules</span><p><a href="/kaspa-covenants-explained">Money that carries a rule with it: what that means mechanically.</a></p></article>
+        <article><span>Compare</span><p><a href="/kaspa-vs-solana-builders">Kaspa against Solana on execution, ordering, liquidity, and UX.</a></p></article>
+        <article><span>Compare</span><p><a href="/kaspa-vs-ethereum-apps">Kaspa against Ethereum on app maturity, settlement, proofs, and the roadmap boundary.</a></p></article>
+        <article><span>Product lane</span><p><a href="/kaspa-coordination-markets">Conditional commitments, assurance funding, auctions, and where oracle trust breaks down.</a></p></article>
+        <article><span>Evidence</span><p><a href="/builder-evidence">What artifacts, txids, source links, and demos actually prove, and what they don't.</a></p></article>
         <article><span>Reality check</span><p><a href="/reality-check">Pressure-test claims before they become public posts.</a></p></article>
       </div>
     </section>
@@ -180,11 +180,11 @@
         <table class="reality-table">
           <thead><tr><th>Question</th><th>Good answer</th><th>Route</th></tr></thead>
           <tbody>
-            <tr><td>Who needs it?</td><td>A real person or team repeats the problem enough to care.</td><td><a href="/builder-guide">Builder guide</a></td></tr>
-            <tr><td>Why Kaspa?</td><td>The product gets better from self-custody, fast mined ordering, visible receipts, or spend rules.</td><td><a href="/builder-guide">Builder guide</a></td></tr>
-            <tr><td>Current path</td><td>The first version can use live payment, receipt, API, wallet, or accepted-transaction evidence.</td><td><a href="/build-this-now">Build now</a></td></tr>
-            <tr><td>Toccata piece</td><td>The idea names the rule it needs: vault, escrow, asset, proof check, or ordered commitment.</td><td><a href="/toccata-status">Toccata status</a></td></tr>
-            <tr><td>Intro readiness</td><td>The founder opts into contact sharing and names the exact help needed.</td><td><a href="/reality-check">Reality check</a></td></tr>
+            <tr><td>Who needs it?</td><td>A real person or team hits this problem often enough to care about a fix.</td><td><a href="/builder-guide">Builder guide</a></td></tr>
+            <tr><td>Why Kaspa?</td><td>Self-custody, fast mined ordering, visible receipts, or a spend rule makes the product better than the ordinary-server version.</td><td><a href="/builder-guide">Builder guide</a></td></tr>
+            <tr><td>Current path</td><td>The first version runs on live payment, receipt, API, wallet, or accepted-transaction evidence, nothing waiting on a fork.</td><td><a href="/build-this-now">Build now</a></td></tr>
+            <tr><td>Toccata piece</td><td>The idea names the exact rule it needs: vault, escrow, asset, proof check, or ordered commitment.</td><td><a href="/toccata-status">Toccata status</a></td></tr>
+            <tr><td>Intro readiness</td><td>The founder opts into contact sharing and names the exact help needed, not "any support."</td><td><a href="/reality-check">Reality check</a></td></tr>
           </tbody>
         </table>
       </div>
@@ -193,16 +193,16 @@
     <section class="section">
       <p class="eyebrow">Before vProgs</p>
       <h2>Many ideas start before the full app layer</h2>
-      <p>Some apps need only a payment, a receipt, a vault rule, an escrow path, or an asset rule. Save richer app-state ideas for products that truly need apps to compose with each other.</p>
+      <p>A payment, a receipt, a vault rule, an escrow path, an asset rule: most apps stop there. Save the richer app-state ideas for products that actually need apps to compose with each other.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>App need</th><th>Better first route</th><th>Why</th></tr></thead>
           <tbody>
-            <tr><td>Payment, receipt, balance, withdrawal, or support evidence</td><td><a href="/build-this-now">Live network work</a></td><td>Use current wallets, APIs, nodes, txids, and accepted-transaction checks.</td></tr>
-            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="/kaspa-covenants-explained">Toccata covenants</a></td><td>A bounded spend rule is simpler than a full app runtime.</td></tr>
-            <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td><a href="/builder-guide">Based app or replay path</a></td><td>The app can prove or replay its own state without requiring cross-app atomicity.</td></tr>
-            <tr><td>A statement needs proof before settlement</td><td><a href="/application-layer">ZK or proof-check path</a></td><td>Use proof verification for a specific statement, then define external anchors separately.</td></tr>
-            <tr><td>Several independent app states must succeed or fail together</td><td><a href="/kaspa-vprogs-explained">Future full vProgs</a></td><td>This is the app-to-app composition case for the later roadmap.</td></tr>
+            <tr><td>Payment, receipt, balance, withdrawal, or support evidence</td><td><a href="/build-this-now">Live network work</a></td><td>Current wallets, APIs, nodes, txids, and accepted-transaction checks already handle this.</td></tr>
+            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="/kaspa-covenants-explained">Toccata covenants</a></td><td>A bounded spend rule is simpler to build and to audit than a full app runtime.</td></tr>
+            <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td><a href="/builder-guide">Based app or replay path</a></td><td>The app proves or replays its own state without needing cross-app atomicity at all.</td></tr>
+            <tr><td>A statement needs proof before settlement</td><td><a href="/application-layer">ZK or proof-check path</a></td><td>Proof verification covers one specific statement; external anchors get defined separately, not folded in.</td></tr>
+            <tr><td>Several independent app states must succeed or fail together</td><td><a href="/kaspa-vprogs-explained">Future full vProgs</a></td><td>App-to-app composition is the later roadmap case, not a current one.</td></tr>
           </tbody>
         </table>
       </div>
@@ -211,7 +211,7 @@
     <section class="next-step section">
       <p class="eyebrow">Next action</p>
       <h2>Turn ideas into artifacts</h2>
-      <p>Start with the product path, evidence, and status label. Share only claims that survive a reality check.</p>
+      <p>Name the product path, the evidence, and the status label before writing the pitch. Publish only the claims that survive a reality check.</p>
       <div class="actions">
         <a class="button primary" href="/builder-guide">Builder guide</a>
         <a class="button" href="/builder-evidence">Builder evidence</a>

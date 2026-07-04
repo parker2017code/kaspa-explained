@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kaspa Covenants Explained: Spend Rules for UTXO Apps | Kaspa Explained</title>
-  <meta name="description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="description" content="How Kaspa covenants restrict a UTXO's next spend: vaults, escrow, controlled assets, and assurance contracts, with Toccata status on each.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/kaspa-covenants-explained">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
-  <meta property="og:description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta property="og:description" content="How Kaspa covenants restrict a UTXO's next spend: vaults, escrow, controlled assets, and assurance contracts, with Toccata status on each.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-covenants-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Covenants Explained: Spend Rules for UTXO Apps">
-  <meta name="twitter:description" content="Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.">
+  <meta name="twitter:description" content="How Kaspa covenants restrict a UTXO's next spend: vaults, escrow, controlled assets, and assurance contracts, with Toccata status on each.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-06-25">
   <script type="application/ld+json">
@@ -37,7 +37,7 @@
     "headline": "Kaspa Covenants Explained: Spend Rules for UTXO Apps",
     "url": "https://kaspaexplained.com/kaspa-covenants-explained",
     "dateModified": "2026-06-25",
-    "description": "Kaspa covenants explained through constrained spends, UTXO state, vaults, escrow, assets, assurance contracts, and Toccata status boundaries.",
+    "description": "How Kaspa covenants restrict a UTXO's next spend: vaults, escrow, controlled assets, and assurance contracts, with Toccata status on each.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
   </script>
@@ -49,17 +49,17 @@
       {
         "@type": "Question",
         "name": "What are Kaspa covenants?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Kaspa covenants are targeted spending rules that can restrict how a UTXO is spent next. Product examples include vaults, budgets, escrow, controlled assets, and threshold funding rules."}
+        "acceptedAnswer": {"@type": "Answer", "text": "A Kaspa covenant is a rule attached to a UTXO that constrains how it can be spent next, beyond a normal signature check. It can force the next output to preserve a rule, cap value, route funds, or carry state forward. Vaults, budgets, escrow, controlled assets, and threshold funding rules are built from this."}
       },
       {
         "@type": "Question",
         "name": "Are Kaspa covenants live on mainnet?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Toccata covenants are the activated Kaspa L1 covenant surface. Use status labels for covenant demos, testnet artifacts, tooling, wallet support, and app ideas."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Toccata activated the covenant surface on Kaspa L1. Individual covenant demos, testnet artifacts, tooling, wallet support, and app ideas each carry their own status label rather than inheriting Toccata's."}
       }
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -88,26 +88,26 @@
     <section class="sources-hero section">
       <p class="eyebrow">Builder intake</p>
       <h1>Kaspa covenants explained</h1>
-      <p class="lead">Kaspa covenants are spending rules that can restrict how a coin or UTXO is spent next. In product terms, they can make a budget, vault, asset, escrow, or commitment follow visible rules.</p>
-      <p class="fit-note"><strong>Status:</strong> payments are live today. Toccata app-layer rules need wallet support, tooling support, and app receipts.</p>
+      <p class="lead">A Kaspa covenant restricts how a coin can be spent next, not just who can spend it. A budget that can't be drained in one transaction, a vault with a separate recovery path, an asset that requires an issuer's signature to move: each is the same primitive applied to a different rule.</p>
+      <p class="fit-note"><strong>Status:</strong> payments are live today. Toccata's app-layer rules still need wallet support, tooling support, and app receipts before builders can ship on them.</p>
     </section>
 
     <section class="section">
       <h2>How covenants work</h2>
-      <p>A normal wallet signature says who is allowed to spend. A covenant-style rule can also inspect the spending transaction and require the next output to preserve a rule, route funds, limit value, or carry state forward.</p>
-      <p>That turns some app logic into a money rule users can inspect. It does not remove wallet UX, audits, liquidity, legal risk, or oracle design.</p>
+      <p>A normal signature answers one question: is this spender authorized? A covenant answers a second one: does the next output preserve the rule? Consensus inspects the spending transaction itself and can require the following output to route funds a certain way, cap the value that moves, or carry state forward into the next UTXO.</p>
+      <p>That turns a piece of app logic into a rule the chain enforces directly, one a user can check without trusting an operator. It does not remove wallet UX work, audits, liquidity, legal exposure, or oracle design. Those stay separate problems.</p>
     </section>
 
     <section class="section">
       <h2>Covenant IDs prove lineage</h2>
-      <p>A covenant can enforce how one protected UTXO moves next. A covenant ID adds lineage: consensus can mark that a UTXO belongs to the authorized covenant family and reject fake state with similar-looking rules.</p>
+      <p>A covenant constrains how one UTXO moves next. On its own, that's not enough to stop someone from forging a lookalike UTXO with similar-looking rules but no real history. A covenant ID closes that gap: consensus tags a UTXO as belonging to a specific covenant family, so a fake with copied logic still fails the lineage check.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Piece</th><th>Plain job</th><th>Consequence</th></tr></thead>
           <tbody>
-            <tr><td>Normal script</td><td>Checks whether this spend is allowed.</td><td>Good for ownership and ordinary payment rules.</td></tr>
-            <tr><td>Covenant</td><td>Checks whether the next output preserves a rule.</td><td>Applies to vaults, escrow paths, controlled assets, and state transitions.</td></tr>
-            <tr><td>Covenant ID</td><td>Tracks a covenant family across valid continuations.</td><td>Makes covenant membership harder to fake and easier to index.</td></tr>
+            <tr><td>Normal script</td><td>Checks who is allowed to spend.</td><td>Handles ownership and ordinary payments.</td></tr>
+            <tr><td>Covenant</td><td>Checks whether the next output preserves a rule.</td><td>Builds vaults, escrow paths, controlled assets, and state transitions.</td></tr>
+            <tr><td>Covenant ID</td><td>Tags a UTXO's covenant family across valid continuations.</td><td>Stops lookalike forgeries and makes membership indexable.</td></tr>
           </tbody>
         </table>
       </div>
@@ -117,21 +117,21 @@
     <section class="section">
       <h2>Examples</h2>
       <div class="reference-grid">
-        <article><h3>Budget that cannot drain at once</h3><p>A treasury output can require each next spend to leave enough value or respect a cap.</p></article>
-        <article><h3>Withdrawal with recovery</h3><p>A vault can route normal withdrawal and emergency recovery through different paths.</p></article>
-        <article><h3>Asset with controller</h3><p>A ticket or pass can require an issuer or controller input before transfer or redemption.</p></article>
-        <article><h3>Commitment with refund</h3><p>A funding rule can release only after a threshold, then refund if the threshold is missed.</p></article>
+        <article><h3>Budget that can't be drained at once</h3><p>A treasury output requires each next spend to leave a minimum balance or stay under a cap, so no single transaction empties it.</p></article>
+        <article><h3>Withdrawal with recovery</h3><p>A vault splits normal withdrawal and emergency recovery into separate paths, each with its own conditions.</p></article>
+        <article><h3>Asset with controller</h3><p>A ticket or pass requires an issuer or controller signature on the input before it can transfer or redeem.</p></article>
+        <article><h3>Commitment with refund</h3><p>A funding rule releases only after a value threshold is met, and refunds automatically if the threshold is missed.</p></article>
       </div>
     </section>
 
     <section class="section">
       <h2>Covenant evidence checklist</h2>
       <ol class="learning-steps">
-        <li><strong>User need.</strong> <span>Say what the user does before naming the opcode or compiler.</span></li>
-        <li><strong>Accepted path.</strong> <span>Show the accepted transaction or test artifact.</span></li>
+        <li><strong>User need.</strong> <span>Name what the user is doing before naming the opcode or compiler.</span></li>
+        <li><strong>Accepted path.</strong> <span>Point to the accepted transaction or test artifact.</span></li>
         <li><strong>Rejected path.</strong> <span>Show what fails when the rule is violated.</span></li>
-        <li><strong>Status label.</strong> <span>Say live, testnet, targeted, roadmap, or research.</span></li>
-        <li><strong>Missing product work.</strong> <span>Name wallet signing, audits, indexing, support, liquidity, and custody gaps.</span></li>
+        <li><strong>Status label.</strong> <span>Live, testnet, targeted, roadmap, or research.</span></li>
+        <li><strong>Missing product work.</strong> <span>Wallet signing, audits, indexing, support, liquidity, and custody gaps that still need filling.</span></li>
       </ol>
     </section>
 
@@ -149,9 +149,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/kaspa-toccata-use-cases"><span>Previous</span><strong>Kaspa Toccata use cases</strong><p>Kaspa Toccata use cases explained with status labels: vaults, escrow, assets, assurance contracts, ZK hooks, sequencing commitments, and...</p></a>
-        <a href="/kaspa-vs-solana-builders"><span>Next</span><strong>Kaspa vs Solana for builders</strong><p>Kaspa vs Solana for builders: compare fast Proof of Work ordering, Solana execution maturity, liquidity, wallets, app UX, and status...</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Kaspa status in plain buckets: live, targeted, roadmap, research, and claims that need caveats.</p></a>
+        <a href="/kaspa-toccata-use-cases"><span>Previous</span><strong>Kaspa Toccata use cases</strong><p>Vaults, escrow, assets, assurance contracts, ZK hooks, and sequencing commitments, each with its own status label.</p></a>
+        <a href="/kaspa-vs-solana-builders"><span>Next</span><strong>Kaspa vs Solana for builders</strong><p>Fast Proof of Work ordering against Solana's execution maturity, liquidity, wallets, and app UX, status by status.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What's live, targeted, roadmap, or research right now, with the caveats attached to each claim.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

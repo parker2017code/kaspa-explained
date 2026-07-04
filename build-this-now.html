@@ -48,7 +48,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260701-mining-cycle-layout">
+  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
   <script defer src="nav.js?v=20260701-no-global-toccata"></script>
 </head>
 <body>
@@ -74,7 +74,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Build now</p>
       <h1>What can you build on Kaspa now?</h1>
-      <p class="lead">A build starts where the chain can answer back: network reads, accepted transactions, wallet flows, UTXOs, receipts, and testnet practice. Toccata adds new surfaces. Products still need receipts, tooling, wallets, and users.</p>
+      <p class="lead">Start where the chain answers back: network reads, accepted transactions, wallet flows, UTXOs, receipts, testnet practice. Toccata adds new rule surfaces on top, but it doesn't replace the need for receipts, tooling, wallets, and actual users.</p>
       <p class="fit-note"><strong>Summary:</strong> Kaspa builds today are payment, read, receipt, monitoring, API, UTXO, and verification tools. Toccata expands the app rule surface after activation.</p>
     </section>
 
@@ -85,14 +85,14 @@
         <table class="reality-table">
           <thead><tr><th>Build</th><th>Status</th><th>First proof</th></tr></thead>
           <tbody>
-            <tr><td>Read current DAG information</td><td><span class="status-pill live">Live</span></td><td>Fetch server info, block count, DAA score, or blue score from a node, public node, or documented API.</td></tr>
-            <tr><td>Watch accepted transactions</td><td><span class="status-pill live">Live</span></td><td>Listen or poll for accepted transaction IDs and record the accepting block context.</td></tr>
-            <tr><td>Track address UTXOs</td><td><span class="status-pill live">Live</span></td><td>Use wallet software, your own node with UTXO index, or a documented hosted API for a prototype.</td></tr>
-            <tr><td>Generate a payment receipt page</td><td><span class="status-pill live">Live</span></td><td>Show amount, address, txid, accepted status, source, timestamp, and fallback verification links.</td></tr>
-            <tr><td>Build wallet-confirmation UX</td><td><span class="status-pill live">Live</span></td><td>Separate seen, included, ordered, accepted, and confidence-increasing states.</td></tr>
-            <tr><td>Plan a data/indexer path</td><td><span class="status-pill live">Live</span></td><td>Use the community API or public nodes for prototypes, then decide when production needs its own node, indexer, archival data, or provider redundancy.</td></tr>
-            <tr><td>Build payload-aware receipts</td><td><span class="status-pill live">Live</span></td><td>Use transaction payload docs, accepted-transaction evidence, and explicit source labels so users can verify what the receipt claims.</td></tr>
-            <tr><td>Replay a TN12 covenant proof</td><td><span class="status-pill target">Testnet</span></td><td>Record network, txid, accepted evidence, script path, and what remains testnet-only.</td></tr>
+            <tr><td>Read current DAG information</td><td><span class="status-pill live">Live</span></td><td>Server info, block count, DAA score, or blue score: pull any of these from a node, a public node, or a documented API.</td></tr>
+            <tr><td>Watch accepted transactions</td><td><span class="status-pill live">Live</span></td><td>Listen or poll for accepted transaction IDs, then record the accepting block context alongside each one.</td></tr>
+            <tr><td>Track address UTXOs</td><td><span class="status-pill live">Live</span></td><td>Wallet software, your own node with a UTXO index, or a documented hosted API each cover a prototype.</td></tr>
+            <tr><td>Generate a payment receipt page</td><td><span class="status-pill live">Live</span></td><td>Amount, address, txid, accepted status, source, timestamp, fallback verification links: a receipt page needs all seven.</td></tr>
+            <tr><td>Build wallet-confirmation UX</td><td><span class="status-pill live">Live</span></td><td>Seen, included, ordered, accepted, and confidence-increasing are five distinct states, not one blur called "pending."</td></tr>
+            <tr><td>Plan a data/indexer path</td><td><span class="status-pill live">Live</span></td><td>The community API or public nodes cover prototypes. Production forces the decision on a dedicated node, indexer, archival data, or provider redundancy.</td></tr>
+            <tr><td>Build payload-aware receipts</td><td><span class="status-pill live">Live</span></td><td>Transaction payload docs plus accepted-transaction evidence plus an explicit source label lets the user verify the receipt's claim independently.</td></tr>
+            <tr><td>Replay a TN12 covenant proof</td><td><span class="status-pill target">Testnet</span></td><td>Record network, txid, accepted evidence, script path, and exactly what stays testnet-only.</td></tr>
           </tbody>
         </table>
       </div>
@@ -101,24 +101,25 @@
     <section class="section">
       <p class="eyebrow">Infrastructure</p>
       <h2>Pick the evidence path early</h2>
-      <p>Apps need address history, accepted-transaction state, UTXO views, timestamps, pagination, and a plan for stale or unavailable APIs.</p>
+      <p>Every app needs address history, accepted-transaction state, UTXO views, timestamps, pagination, and a fallback for the moment an API goes stale or drops offline.</p>
       <div class="summary-grid">
-        <article><span>Prototype</span><p>Use documented hosted APIs, public nodes, explorers, and database dumps for quick reads and demos.</p></article>
-        <article><span>Production</span><p>Decide when to run Rusty Kaspa, a UTXO index, a transaction indexer, archival storage, or redundant providers.</p></article>
-        <article><span>User trust</span><p>Show the source used for each receipt or status check, and give a fallback path when one API disagrees or times out.</p></article>
+        <article><span>Prototype</span><p>Documented hosted APIs, public nodes, explorers, and database dumps are fine for quick reads and demos. No infrastructure commitment needed yet.</p></article>
+        <article><span>Production</span><p>Running Rusty Kaspa, a UTXO index, a transaction indexer, archival storage, or redundant providers becomes a decision, not an option, once uptime matters.</p></article>
+        <article><span>User trust</span><p>Show the exact source behind each receipt or status check. Give a fallback path for the moment one API disagrees with another or simply times out.</p></article>
       </div>
     </section>
 
     <section class="section">
       <p class="eyebrow">Builder loop</p>
       <h2>Turn each build into a source-linked page</h2>
+      <p class="lead">Six things a reviewer needs before believing a Kaspa build claim.</p>
       <div class="summary-grid">
-        <article><span>Input</span><p>Name the user action: send, receive, watch, verify, issue, redeem, refund, or replay.</p></article>
-        <article><span>Evidence</span><p>Show the source: node, API, wallet, accepted transaction, code, release, or testnet proof.</p></article>
-        <article><span>Status</span><p>Label it live, testnet, targeted, roadmap, research, wrong, or unsupported.</p></article>
-        <article><span>Failure mode</span><p>Name what could go wrong: stale API, unsynced node, wallet support, indexer mismatch, or activation gap.</p></article>
-        <article><span>Share link</span><p>Make the page short enough to paste in Discord, Reddit, Telegram, X, docs, or a GitHub issue.</p></article>
-        <article><span>Next source</span><p>Route builders to docs, command-line verification, status, and sources.</p></article>
+        <article><span>Input</span><p>Name the exact user action: send, receive, watch, verify, issue, redeem, refund, or replay.</p></article>
+        <article><span>Evidence</span><p>Name the source: node, API, wallet, accepted transaction, code, release, or testnet proof.</p></article>
+        <article><span>Status</span><p>Live, testnet, targeted, roadmap, research, wrong, or unsupported: pick one.</p></article>
+        <article><span>Failure mode</span><p>Name the specific risk: stale API, unsynced node, wallet support, indexer mismatch, or activation gap.</p></article>
+        <article><span>Share link</span><p>Short enough to paste whole into Discord, Reddit, Telegram, X, docs, or a GitHub issue.</p></article>
+        <article><span>Next source</span><p>Point the reader to docs, command-line verification, status, and sources, not a dead end.</p></article>
       </div>
     </section>
 
