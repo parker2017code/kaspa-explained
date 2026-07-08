@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#09090b">
   <meta property="og:title" content="Toccata Explained | Kaspa Explained">
-  <meta property="og:description" content="Covenants, covenant IDs, ZK verification, sequencing lanes, based apps, and where the vProgs boundary sits.">
+  <meta property="og:description" content="How Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and based-app foundations, without turning Kaspa into an EVM.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/toccata-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,7 +27,7 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Toccata Explained | Kaspa Explained">
-  <meta name="twitter:description" content="Covenants, ZK verification, sequencing lanes, based apps, and the vProgs boundary.">
+  <meta name="twitter:description" content="How Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and based-app foundations, without turning Kaspa into an EVM.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-07-08">
   <script type="application/ld+json">
@@ -88,7 +88,7 @@
         <article><span>KIP-17</span><p>Covenant scripting lets a UTXO inspect the spending transaction and constrain what the next output must look like.</p></article>
         <article><span>KIP-20</span><p>Covenant IDs give covenant state a consensus-tracked lineage, so a fake lookalike state can't be conjured out of thin air.</p></article>
         <article><span>KIP-16</span><p>ZK verification lets a script check selected proof systems instead of asking L1 to run every app step itself.</p></article>
-        <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane of activity, instead of proving that almost the entire DAG is irrelevant to it.</p></article>
+        <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane of activity; without them, it would have to prove that almost the entire DAG is irrelevant to it.</p></article>
         <article><span>Based apps</span><p>Apps can anchor state to Kaspa ordering, commitments, settlement, exits, or proofs without relying on an independent sequencer.</p></article>
         <article><span>vProgs</span><p>Full vProgs are separate, later architecture for richer app execution and cross-app composition. They are not part of what activated.</p></article>
       </div>
@@ -97,7 +97,7 @@
     <section class="section">
       <p class="eyebrow">Design frame</p>
       <h2>It is not an EVM turn</h2>
-      <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction, instead of hidden behind a shared global account state.</p>
+      <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction, not hidden behind a shared global account state.</p>
       <p>The design target is narrow: add enough rule expressiveness for money flows while keeping the base layer lean. A covenant can say, for example, "this next output must preserve the rule," "this spend needs a controller input," or "this refund path opens after the timeout." The app logic lives in constrained UTXO transitions, proofs, or app-side execution anchored back to L1.</p>
       <p>Call Toccata an expressiveness upgrade, not a platform migration. It expands what L1 transactions can enforce and verify. Mature wallets, DeFi liquidity, audits, custody flows, and full app composition are separate claims that still need their own evidence.</p>
     </section>
@@ -122,7 +122,7 @@
       <p class="eyebrow">KIP-21</p>
       <h2>Sequencing without proving the whole DAG</h2>
       <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, "not for me" evidence becomes the burden, not the useful work.</p>
-      <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity instead of the whole DAG.</p>
+      <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity, not the whole DAG's.</p>
       <p>That gives based apps and later vProg-style systems a way to skip proving unrelated network activity. It is not proof that full synchronous app composition runs today: that's still separate, later work.</p>
     </section>
 

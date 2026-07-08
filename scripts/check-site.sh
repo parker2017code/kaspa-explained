@@ -18,14 +18,24 @@ done
 
 bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
+python3 scripts/check-status-freshness.py
 python3 scripts/build-sitemap.py --check
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py
-node scripts/audit-domain-terms.mjs
-node scripts/audit-content-flow.mjs
-node scripts/audit-visual-guardrails.mjs
+
+# The node audits are per-machine optional, but they must not kill the gate:
+# with set -e, a missing node binary used to abort right here and silently
+# skip every check below this line (claim consistency, anchors, forbidden
+# copy). That dead zone is how status drift survived the enforcement layer.
+if command -v node >/dev/null 2>&1; then
+  node scripts/audit-domain-terms.mjs
+  node scripts/audit-content-flow.mjs
+  node scripts/audit-visual-guardrails.mjs
+else
+  echo "SKIPPED (node not installed): audit-domain-terms, audit-content-flow, audit-visual-guardrails" >&2
+fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
   echo "CNAME must remain kaspaexplained.com" >&2
