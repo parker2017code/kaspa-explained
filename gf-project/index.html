@@ -305,6 +305,7 @@ function renderCard(){
   state.flipped=false;
   againBtn.disabled=false; knowBtn.disabled=false;
   updateGlobalCount();
+  cardEl.focus({preventScroll:true});
 }
 
 function updateGlobalCount(){
@@ -349,7 +350,10 @@ function advance(known){
 }
 
 cardEl.addEventListener('click', flip);
-cardEl.addEventListener('keydown', function(e){
+document.addEventListener('keydown', function(e){
+  var ae = document.activeElement;
+  var isOtherControl = ae && ae !== cardEl && (ae.tagName==='BUTTON'||ae.tagName==='INPUT'||ae.tagName==='SELECT'||ae.tagName==='TEXTAREA'||ae.isContentEditable);
+  if(isOtherControl) return;
   if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flip(); }
   else if(e.key==='ArrowLeft'){ e.preventDefault(); advance(false); }
   else if(e.key==='ArrowRight'){ e.preventDefault(); advance(true); }
@@ -369,6 +373,7 @@ shuffleBtn.addEventListener('click', function(){
 document.getElementById('okReset').addEventListener('click', function(){
   mastered={}; saveMastered(); renderTabs(); updateGlobalCount();
   state.session=[0]; drawCum();
+  cardEl.focus({preventScroll:true});
 });
 
 buildOrder();
