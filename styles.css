@@ -9329,3 +9329,81 @@ code {
 .glossary-hero > * {
   margin-inline: auto;
 }
+
+/* prose-section is a narrow reading column; center it (it was left-anchored) */
+.prose-section {
+  margin-inline: auto;
+}
+
+/* the search results cards are classless articles the card system missed */
+.search-results article {
+  border: 0;
+  border-radius: 18px;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 6px 16px rgba(0, 0, 0, .04);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ---- glass eradication, verified by the sheen hunter ----
+   Nothing inside main or footer blurs in the flat system; the header and
+   the mobile nav sheet (both outside main) keep their blur. !important is
+   deliberate: dozens of legacy glass rules at varied specificity set this. */
+main *,
+footer,
+footer * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* the grids whose classless <article> children still carried sheen */
+.overview-grid article,
+.lane-grid article,
+.reference-grid article,
+.article-path-grid article {
+  border: 0;
+  border-radius: 18px;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 6px 16px rgba(0, 0, 0, .04);
+}
+
+.overview-grid article::before,
+.lane-grid article::before,
+.reference-grid article::before {
+  display: none;
+}
+
+/* prose reading columns are flat and quiet */
+.section.prose-section {
+  background: transparent;
+  box-shadow: none;
+}
+
+.section.prose-section::before {
+  display: none;
+}
+
+/* stray sheen holdouts */
+.signal-line {
+  border: 0;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+
+.ai-ask-controls {
+  border: 0;
+  border-radius: 18px;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 6px 16px rgba(0, 0, 0, .04);
+}
+
+.reality-grid article {
+  border: 0;
+  border-radius: 18px;
+  background: var(--card-bg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 6px 16px rgba(0, 0, 0, .04);
+}
+
+.reality-grid article::before {
+  display: none;
+}
