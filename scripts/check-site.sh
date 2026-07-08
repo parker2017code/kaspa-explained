@@ -131,7 +131,7 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
-  grep -q '<meta name="theme-color" content="#09090b">' "$page" || {
+  grep -q '<meta name="theme-color" content="#000000">' "$page" || {
     echo "$page missing theme-color metadata" >&2
     exit 1
   }

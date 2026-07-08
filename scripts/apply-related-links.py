@@ -51,7 +51,7 @@ def page_meta(page):
     title = compact(" ".join(parser.h1)) or page[:-5].replace("-", " ").title()
     description = compact(parser.description)
     if len(description) > 142:
-        description = description[:139].rsplit(" ", 1)[0] + "..."
+        description = description[:139].rsplit(" ", 1)[0].rstrip(",;:.") + "..."
     return {"title": title, "description": description}
 
 
