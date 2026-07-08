@@ -27,6 +27,7 @@ const skipDirs = new Set([
   "generated",
   "vendor",
   "private-review",
+  "gf-project",
 ]);
 
 const skipFiles = new Set([

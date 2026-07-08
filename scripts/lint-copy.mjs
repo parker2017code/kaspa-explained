@@ -36,6 +36,7 @@ const skipDirs = new Set([
   "visual-audit",
   "vendor",
   "private-review",
+  "gf-project",
 ]);
 
 const skipFiles = new Set([
