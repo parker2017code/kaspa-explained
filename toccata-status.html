@@ -116,18 +116,11 @@
       <h1>Kaspa Toccata status</h1>
       <p class="lead">Toccata is live on Kaspa mainnet. It activated at DAA score 474,165,565 on June 30, 2026, and brought covenant-style programmability to Kaspa's L1.</p>
       <p class="fit-note"><strong>Summary:</strong> Rusty Kaspa v2.0.1 is the current upgrade release; v2.0.0 set the activation parameters. Toccata adds Kaspa L1 covenants, covenant IDs, ZK proof hooks, sequencing commitments, and based-app foundations. Next to check: upgraded-node behavior, wallets, explorers, SDKs, examples, real app use.</p>
-      <p class="fit-note"><strong>Read the limits too:</strong> <a href="/skeptical-case">Risks and Open Questions</a> covers adoption and roadmap execution; <a href="/kaspa-smart-contracts-status">Smart-Contract Status</a> separates Toccata from mature live app infrastructure.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Current state</p>
       <h2>Status by area</h2>
-      <div class="summary-grid">
-        <article><span>Upgrade release</span><p>Rusty Kaspa v2.0.1 is the current Toccata upgrade release; v2.0.0 remains the activation-parameter release.</p></article>
-        <article><span>Activation</span><p>Toccata activated on mainnet at DAA score 474,165,565, June 30, 2026, roughly 16:15 UTC.</p></article>
-        <article><span>Downstream layers</span><p>Separate from activation itself: upgraded-node behavior, transaction fields, covenant data, ZK proof paths, wallet support, explorer support, builder examples.</p></article>
-      </div>
-      <p class="fit-note"><strong>Confirmed:</strong> public API checks read <code>kaspa-mainnet</code> above DAA 474,165,565, with block and header counts still climbing past the score.</p>
       <div class="table-wrap">
         <table class="reality-table toccata-status-table">
           <thead><tr><th>Area</th><th>Status</th><th>What it means</th></tr></thead>
@@ -158,26 +151,14 @@
         <article><span>ZK proof checks</span><p>A script can verify selected proof systems. App truth still rests on the statement and inputs being proved, not the proof mechanism alone.</p></article>
         <article><span>KIP-21 lanes</span><p>App-local activity commitments let a prover follow its own lane instead of the whole DAG.</p></article>
         <article><span>Based apps</span><p>Standalone apps can anchor state to Kaspa ordering, proofs, settlement, or exits.</p></article>
-        <article><span>vProgs later</span><p>Full app-to-app composition stays future architecture. Toccata's mainnet activation covers a narrower slice.</p></article>
       </div>
       <p class="source-inline">Explainer: <a href="/toccata-explained">Toccata Explained</a>.</p>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Wording</p>
-      <h2>Claim wording</h2>
-      <blockquote>Toccata is live. It activated at DAA score 474,165,565. Wallets, explorers, SDKs, examples, and app use are separate, still-developing claims.</blockquote>
-      <div class="summary-grid">
-        <article><span>What it can enable</span><p>Vault rules, asset rules, escrow paths, assurance contracts, proof checks, sequencing commitments, standalone based-app foundations.</p></article>
-        <article><span>Separate evidence needed</span><p>Mature native DeFi, <a href="/kaspa-vprogs-explained">full vProgs</a>, full app-to-app atomic composition, and mainnet production readiness don't follow automatically from activation.</p></article>
-        <article><span>What to verify next</span><p>Node behavior, transaction submission, wallet support, explorer support, SDK support, mainnet transactions using the new rules.</p></article>
-      </div>
-    </section>
-
-    <section class="section">
       <p class="eyebrow">Operator checklist</p>
       <h2>Who needs to check their path</h2>
-      <p class="lead">The Toccata guide reads as an operator and integrator checklist. After activation, the work shifts from upgrade readiness to field checks: node behavior, transaction submission, wallet support, explorer support, app receipts.</p>
+      <p class="lead">After activation, the work shifts from upgrade readiness to field checks. Find your row.</p>
       <div class="summary-grid">
         <article><span>Ordinary users</span><p>If you hold or send KAS from a normal wallet, there is nothing to do. Node upgrades are for people running infrastructure.</p></article>
         <article><span>Node operators</span><p>Run Rusty Kaspa v2.0.1 or newer. The node database upgrade only goes one way: the only path back is a resync.</p></article>
@@ -186,7 +167,7 @@
         <article><span>Miners and pools</span><p>Test block templates, job distribution, solved block reconstruction, and <code>SubmitBlock</code> against Testnet-10. A block that strips post-Toccata fields can turn invalid after the activation score.</p></article>
         <article><span>Pool accounting</span><p>Check <code>GetBlockRewardInfo</code>, and <code>GetSeqCommitLaneProof</code> where lane-proof data matters. Infrastructure detail, but the kind that breaks payouts if skipped.</p></article>
       </div>
-      <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, and <a href="https://github.com/kaspanet/kaspad/releases/tag/v0.12.23">Go Kaspad v0.12.23</a>.</p>
+      <p class="source-inline">Operator references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> and <a href="https://github.com/kaspanet/kaspad/releases/tag/v0.12.23">Go Kaspad v0.12.23</a>.</p>
     </section>
 
     <section class="next-step section">
@@ -195,8 +176,6 @@
       <div class="actions">
         <a class="button primary" href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 release</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation record</a>
-        <a class="button" href="/kaspa-smart-contracts-status">Smart-contract status</a>
-        <a class="button" href="/status">Full status</a>
       </div>
       <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://api.kaspa.org/info/blockdag">mainnet REST status</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, <a href="https://api-tn10.kaspa.org/info/blockdag">TN10 REST status</a>, <a href="https://kaspa.org/lore">Kaspa.org lore</a>, <a href="https://kaspa.org/build#developments">Kaspa build page</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/kips/pull/41">KIP-24 PR</a>, <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">ZK SDK PR</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://github.com/michaelsutton/argent">Argent</a>.</p>
     </section>

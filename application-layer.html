@@ -129,7 +129,7 @@
       <p>TN12 covenant tests count as evidence only when they make a money rule visible at the spend layer. Start with what happened: testnet transactions landed, artifacts link to the txids, replay explains the resulting state. Only then ask which rule controlled the spend.</p>
       <p>A wallet or app should explain the rule before the user signs: this spend is under the cap, this asset has the required controller input, this payout matches accepted evidence, this withdrawal is blocked. An ordinary server can display those same claims. What's different here is that the money movement and the rule sit in the same public record.</p>
       <p>Keep the evidence classes separate. An accepted TN12 transaction landed on testnet. A local reject failed in a local script or covenant engine. Replay-derived state explains accepted rows but does not itself control funds. Wallet policy is a signer warning or refusal before broadcast: four different things, four different weights of proof.</p>
-      <p>The product path runs through allowance wallets, team treasuries, controlled assets, staged approvals, refunds, and turn-based workflows where both the allowed move and the refused move can be reviewed side by side. Keep the status label next to the demo, not buried in a footnote.</p>
+      <p>The product path runs through workflows where both the allowed move and the refused move can be reviewed side by side. Keep the status label next to the demo, not buried in a footnote.</p>
       <div class="use-source-grid">
         <article>
           <strong>Budget that cannot drain at once</strong>
@@ -237,11 +237,6 @@
       </details>
     </section>
 
-    <section class="section">
-      <h2>Choose the app model first</h2>
-      <p>Pick the smallest model that can honestly run the product: covenants for bounded spend rules, based apps for shared app state, inline ZK when a proof is the product boundary, later app programs for cross-app atomicity.</p>
-    </section>
-
     <section id="rtd" class="section">
       <h2>The unusual app job is rules strangers can rely on</h2>
       <p>RTD and Staghunt framing point to markets where people need credible commitment before they act. An ordinary website can collect promises too. The difference is that users worry the operator can censor, reorder, change terms, or disappear.</p>
@@ -274,9 +269,9 @@
       </details>
     </section>
 
-    <section class="section">
-      <h2>Start with what works today</h2>
-      <p>Live network UX, receipts, and source-verifiable reads are the starting point, full stop. Covenants, ZK hooks, later app programs, and higher-density RTD ideas stay in the later build path until their activation evidence changes.</p>
+    <section id="execution-order" class="section">
+      <h2>Build order</h2>
+      <p>Build in this order: wallet and payment paths first, small covenant-shaped products second, richer based-app or later app-program paths only once the product genuinely needs shared state or composition.</p>
       <details class="source-more">
         <summary>Open capability table</summary>
         <div class="table-wrap">
@@ -295,11 +290,6 @@
           </table>
         </div>
       </details>
-    </section>
-
-    <section id="execution-order" class="section">
-      <h2>Build order</h2>
-      <p>Build in this order: wallet and payment paths first, small covenant-shaped products second, richer based-app or later app-program paths only once the product genuinely needs shared state or composition.</p>
       <details class="source-more">
         <summary>Open build-order table</summary>
         <div class="table-wrap">

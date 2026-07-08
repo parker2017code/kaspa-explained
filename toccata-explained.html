@@ -73,10 +73,8 @@
       <p class="lead">Crescendo made 10 BPS live. Toccata is live too: the hard fork that adds covenants, covenant IDs, ZK proof checks, sequencing lanes, and based-app foundations, all without turning Kaspa into an EVM.</p>
       <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See <a href="/toccata-status">Toccata status</a> for what's checked since.</p>
       <div class="actions">
-        <a class="button primary" href="/toccata-status">Activation status</a>
-        <a class="button" href="/kaspa-tps-explained">TPS by workload</a>
+        <a class="button primary" href="/kaspa-tps-explained">TPS by workload</a>
         <a class="button" href="/builder-guide">Builder guide</a>
-        <a class="button" href="/solo-mining-guide">Solo mining guide</a>
         <a class="button" href="/sources#code-tracking">Primary links</a>
       </div>
     </section>
@@ -107,7 +105,6 @@
       <h2>Spend rules become state rules</h2>
       <p>A normal payment proves the spender is allowed to move funds. A covenant-style spend can also inspect the spending transaction and require the next output to preserve a rule. That turns a UTXO into a small state machine: the coin moves, but the rule keeps going.</p>
       <p>KIP-17 adds the script tools for transaction introspection, byte manipulation, hashing, signatures from stack, and ZK precompile access. KIP-20 adds covenant IDs, so a covenant family carries a stable 32-byte identity through valid continuations. Together, they make stateful UTXO rules easier to inspect and harder to fake.</p>
-      <p>Good examples: vaults, spend limits, refund paths, controlled assets, assurance funding, escrow-like flows, proof-gated payouts. The claim stays narrower than "smart-contract infrastructure is finished": Toccata gives Kaspa better L1 rule surfaces, not a finished app stack.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
@@ -161,31 +158,12 @@
       <p>ASIC miners speak Stratum. Kaspa nodes speak Kaspa RPC. The Rust Stratum Bridge gives miners and pools a maintained path for connecting mining hardware to an upgraded Kaspa node through the Rusty Kaspa stack.</p>
       <p>The operational point: miners and pools need to preserve post-Toccata block-template fields and test mining flows. The sovereignty point: a miner who can point hardware at their own node depends less on a pool interface.</p>
       <p class="source-inline">Hands-on path: <a href="/solo-mining-guide">Kaspa solo mining guide</a>.</p>
-      <p>Miner-side plugins and external-claim verification ideas stay future architecture until shipped code and activation evidence exist for them specifically.</p>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow">Wording boundary</p>
-      <h2>Summary</h2>
-      <blockquote>Toccata is live. It adds covenant-based L1 rules, covenant IDs, ZK proof verification, sequencing commitments, and foundations for based apps. It does not turn Kaspa into an EVM, and full vProgs remain roadmap architecture.</blockquote>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead><tr><th>Say</th><th>Avoid</th><th>Reason</th></tr></thead>
-          <tbody>
-            <tr><td>Crescendo made 10 BPS live; Toccata adds expressiveness.</td><td>Toccata is the speed upgrade.</td><td>It blurs Crescendo and Toccata.</td></tr>
-            <tr><td>Covenants can enforce bounded spend and state-transition rules.</td><td>Kaspa production smart contracts are live now.</td><td>Wallets, audits, liquidity, tooling, and apps are separate work.</td></tr>
-            <tr><td>ZK proof verification can settle many app actions through one L1 proof path.</td><td>ZK removes every app-throughput limit.</td><td>Proof size, proving cost, data availability, and settlement design still bind the app.</td></tr>
-            <tr><td>vProgs are later architecture for richer app composition.</td><td>Full vProgs already run on mainnet because Toccata shipped pieces they need.</td><td>Foundations and full app runtime are different claims.</td></tr>
-          </tbody>
-        </table>
-      </div>
     </section>
 
     <section class="next-step section">
       <p class="eyebrow">Primary references</p>
       <h2>The underlying material</h2>
       <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, and <a href="https://github.com/michaelsutton/argent">Argent</a>.</p>
-      <p class="source-inline">Related site pages: <a href="/toccata-status">Toccata Status</a>, <a href="/kaspa-covenants-explained">Covenants Explained</a>, <a href="/kaspa-tps-explained">Kaspa TPS Explained</a>, <a href="/kaspa-vprogs-explained">vProgs Explained</a>, and <a href="/builder-guide">Builder Guide</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
