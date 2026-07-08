@@ -105,6 +105,27 @@ def main() -> None:
                     f"'{claim}': \"{phrase}\""
                 )
 
+    # Public, sitemap-listed text surfaces drift the same way pages do, and
+    # they are the ones LLMs read first. These files legitimately QUOTE the
+    # banned wordings while forbidding them, so scan line by line and skip
+    # lines that are plainly negating or quoting.
+    negation = re.compile(r"do not|don't|avoid|forbidden|never|should not|banned", re.I)
+    for name in ("llms.txt", "README.md", "CONTENT_BRIEF.md"):
+        path = Path(name)
+        if not path.exists():
+            continue
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if negation.search(line):
+                continue
+            lowered = line.lower()
+            for claim, phrase in phrases:
+                p = phrase.lower()
+                if p in lowered and f'"{p}"' not in lowered:
+                    problems.append(
+                        f"{name}:{lineno}: contains forbidden wording from "
+                        f"claim '{claim}': \"{phrase}\""
+                    )
+
     if problems:
         fail(problems)
     print(
