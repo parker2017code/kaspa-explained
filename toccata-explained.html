@@ -41,7 +41,7 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260708-apple-4">
+  <link rel="stylesheet" href="styles.css?v=20260708-apple-5">
   <script defer src="nav.js?v=20260708-dark-default"></script>
 </head>
 <body>
@@ -108,6 +108,19 @@
       <p>A normal payment proves the spender is allowed to move funds. A covenant-style spend can also inspect the spending transaction and require the next output to preserve a rule. That turns a UTXO into a small state machine: the coin moves, but the rule keeps going.</p>
       <p>KIP-17 adds the script tools for transaction introspection, byte manipulation, hashing, signatures from stack, and ZK precompile access. KIP-20 adds covenant IDs, so a covenant family carries a stable 32-byte identity through valid continuations. Together, they make stateful UTXO rules easier to inspect and harder to fake.</p>
       <p>Good examples: vaults, spend limits, refund paths, controlled assets, assurance funding, escrow-like flows, proof-gated payouts. The claim stays narrower than "smart-contract infrastructure is finished": Toccata gives Kaspa better L1 rule surfaces, not a finished app stack.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Vault</td><td>Withdrawal delay, recovery key, spend cap, destination, or emergency path.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Escrow</td><td>Release, refund, cancel, timeout, or dispute transition.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Assurance funding</td><td>Payout only after enough compatible commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Controlled assets</td><td>Transfer policy, controller input, redemption path, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>ZK proof checks</td><td>A statement about chosen public inputs, with external facts handled by separate anchors.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Full app composition</td><td>Several app states succeed or fail together.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="section">
@@ -180,8 +193,8 @@
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
         <a href="/toccata-expressiveness-upgrade-part-3"><span>Previous</span><strong>Fees, mining, and what it adds up to</strong><p>Part 3 of Parker Schmidt&#x27;s Toccata essay: proof room, fees, the Rust Stratum Bridge, OP_CAT, source notes, and what Kaspa Toccata adds up to.</p></a>
-        <a href="/kaspa-vprogs-explained"><span>Next</span><strong>Kaspa vProgs explained</strong><p>Resource-level scheduling, based computation, ZK proofs, and where the roadmap boundary sits for native app execution.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Live network behavior, targeted upgrades, roadmap architecture, and research, kept in separate lanes.</p></a>
+        <a href="/kaspa-vprogs-explained"><span>Next</span><strong>vProgs, explained.</strong><p>How Kaspa vProgs schedule app state by resource, prove execution with ZK, and where Toccata&#x27;s covenants stop short of native DeFi.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
