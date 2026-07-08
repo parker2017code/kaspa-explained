@@ -29,20 +29,20 @@
   <meta name="twitter:title" content="Kaspa TPS Explained | Kaspa Explained">
   <meta name="twitter:description" content="Kaspa TPS by workload: simple payments, Toccata covenants, ZK settlements, and vProgs each hit a different ceiling.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-06-30">
+  <meta name="dateModified" content="2026-07-08">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa TPS Explained",
     "url": "https://kaspaexplained.com/kaspa-tps-explained",
-    "dateModified": "2026-06-29",
+    "dateModified": "2026-07-08",
     "description": "Kaspa TPS is not one number. Simple L1 payments run 2.5k-3.4k TPS at 10 BPS. Covenant transactions, ZK settlements, and vProg throughput each need their own math.",
     "about": ["Kaspa", "TPS", "Toccata", "Covenants", "ZK proofs", "vProgs", "Block mass"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260704-visual-refresh-4">
-  <script defer src="nav.js?v=20260701-no-global-toccata"></script>
+  <link rel="stylesheet" href="styles.css?v=20260708-apple-4">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -68,9 +68,9 @@
 
   <main id="top" tabindex="-1" class="status-page app-page">
     <section class="sources-hero section">
-      <p class="eyebrow">Capacity question</p>
-      <h1>Kaspa TPS, explained by workload</h1>
-      <p class="lead">A single Kaspa TPS number does not exist. Simple L1 payments sit in one range. Covenant apps, ZK settlements, token rules, and future vProg-style systems each run their own math against a different bottleneck.</p>
+      <p class="eyebrow">Throughput</p>
+      <h1>Kaspa TPS, explained.</h1>
+      <p class="lead">There is no single Kaspa TPS number. Simple payments run roughly 2.5k to 3.4k TPS at 10 BPS, and covenant apps, ZK settlements, and future vProg-style systems each run their own math against a different bottleneck.</p>
       <p class="fit-note"><strong>Status checked June 30, 2026:</strong> Kaspa mainnet runs the Crescendo-era 10 BPS network. Toccata activated at DAA 474,165,565 and changed proof and covenant capacity. Ordinary payment TPS tracks the 10 BPS network and transaction mix.</p>
       <div class="actions">
         <a class="button primary" href="/status">Current status</a>
@@ -89,8 +89,8 @@
             <tr><th>Workload</th><th>Answer</th><th>Why the number changes</th></tr>
           </thead>
           <tbody>
-      <tr><td>Simple L1 payments</td><td>Roughly 2.5k to 3.4k TPS for ordinary simple transfers.</td><td>Set by 10 BPS and block-mass limits against simple transaction mass. Other workloads need their own assumptions.</td></tr>
-            <tr><td>Covenant or programmable L1 transactions</td><td>Workload-specific, often below simple-payment TPS.</td><td>Covenants add script work, state constraints, covenant identifiers, output rules, inputs, outputs, fees, and storage effects.</td></tr>
+      <tr><td>Simple L1 payments</td><td>Roughly 2.5k to 3.4k TPS for ordinary simple transfers.</td><td>Set by 10 BPS and block-mass limits against simple transaction mass.</td></tr>
+            <tr><td>Covenant or programmable L1 transactions</td><td>Workload-specific, often below simple-payment TPS.</td><td>Covenants add script work, state constraints, covenant IDs, extra outputs, and storage effects.</td></tr>
             <tr><td>ZK proof or settlement transactions</td><td>Fewer, heavier L1 transactions. One proof or settlement transaction can carry many off-chain app actions.</td><td>Bounded by proof system, proof size, verification cost, batch size, proving time, and settlement design.</td></tr>
             <tr><td>Effective ZK app or future vProg throughput</td><td>App-specific, and can exceed raw L1 transaction TPS for a given design.</td><td>The metric is app actions per proof batch or settlement cycle, with state access and prover work as the real limits.</td></tr>
           </tbody>
@@ -102,7 +102,7 @@
       <p class="eyebrow">Simple payments</p>
       <h2>Current simple-payment capacity</h2>
       <p>Kaspa mainnet produces ten blocks per second. The shared block mass limit in current mainnet parameters is 500,000, which sets a budget of 5,000,000 transaction mass per second before policy, fees, propagation, storage shape, and real mempool behavior enter the picture.</p>
-      <p>A signed ordinary P2PK-style 1-input, 1-output payment costs roughly 1.6k mass in conservative code-based arithmetic. Add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block: the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the upper end to the commonly cited 3.4k TPS.</p>
+      <p>A signed ordinary P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's conservative arithmetic. Add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block: the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the upper end to the commonly cited 3.4k TPS.</p>
       <p>Use roughly 2.5k to 3.4k TPS for current simple payments, and name the assumption behind it: transaction shape times block mass. Artificial minimum-transaction ceilings can score higher, but they measure a lab envelope, not ordinary payment throughput.</p>
       <div class="summary-grid">
         <article><span>Mental model</span><p>About 250 to 300 simple payment transactions per block at 10 BPS.</p></article>
@@ -113,7 +113,7 @@
 
     <section class="section">
       <p class="eyebrow">Mass model</p>
-      <h2>Simple tx/block stops at payments</h2>
+      <h2>Mass is the real limit</h2>
       <p>A raw count of transactions per block hides Kaspa's real limit: mass, not envelope count. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. A larger transaction eats a larger slice of the block budget regardless of how the mempool counts it.</p>
       <p>App transactions change the footprint. More inputs, more outputs, larger scripts, covenant metadata, payload data, proof bytes, or state-transition evidence all crowd out simple transfers competing for the same mass budget. Node-side repeated work moves the ceiling further: validation cost, propagation size, UTXO access patterns, storage effects, and app-specific indexing.</p>
       <p>Payload data has its own bound. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it. App data spends the same block capacity payments spend.</p>
@@ -141,9 +141,9 @@
 
     <section class="section">
       <p class="eyebrow">Covenants and assets</p>
-      <h2>Programmable transactions consume capacity differently</h2>
-      <p>One token transfer in a wallet can cost several times the mass of a plain payment. A covenant transaction carries rules about how its coins or state can be spent next, which is what makes vaults, escrow, assurance contracts, controlled assets, and token-like rules possible. That structure costs more than a simple payment.</p>
-      <p>The user sees one action. The L1 footprint depends on the asset rule underneath it: covenant state, covenant IDs, authorization rules, extra outputs, witness data, app payloads, or indexer-readable state. Counting that transaction as equivalent to an ordinary payment hides its real capacity cost.</p>
+      <h2>Covenant transactions run heavier</h2>
+      <p>One token transfer in your wallet can cost several times the mass of a plain payment. A covenant transaction carries rules about how its coins or state can be spent next, which is what makes vaults, escrow, assurance contracts, controlled assets, and token-like rules possible. That structure costs more than a simple payment.</p>
+      <p>You see one action. The L1 footprint depends on the asset rule underneath it: covenant state, covenant IDs, authorization rules, extra outputs, witness data, app payloads, or indexer-readable state. Counting that transaction as equivalent to an ordinary payment hides its real capacity cost.</p>
       <p>Simple-payment TPS is a payment metric. Covenant-app throughput needs its own count, built from the actual transaction shape and state pattern.</p>
     </section>
 
@@ -165,7 +165,7 @@
 
     <section class="section">
       <p class="eyebrow">Checklist</p>
-      <h2>How to discuss Kaspa capacity</h2>
+      <h2>How to talk about Kaspa capacity</h2>
       <div class="summary-grid">
         <article><span>Workload</span><p>Name whether the number covers simple payments, covenant spends, token rules, proof settlements, or app actions.</p></article>
         <article><span>Transaction shape</span><p>List inputs, outputs, scripts, payload, covenant fields, proof bytes, and storage effects.</p></article>

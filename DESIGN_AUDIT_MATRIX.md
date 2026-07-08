@@ -2,6 +2,8 @@
 
 Reviewed locally: 2026-05-13
 
+> **Superseded in part, 2026-07-08.** The owner approved an Apple-style redesign that replaces this file's visual direction: dark-by-default (Apple black, graphite tiles) with a light toggle, full-width translucent blur nav instead of the floating pill, flat surfaces with no glass sheens or glows, large tight-tracked centered headlines, 1-2 sentence hero leads, pill buttons, and white/graphite cards inside soft tiles. The system lives in the appended "APPLE DESIGN LAYER" at the end of `styles.css`. The visual-style rows below ("graphite/off-white field guide," "avoid generic SaaS hero") no longer bind. Everything else here still applies: status-label discipline, accessibility, click-target rules, mobile overflow checks, and the engineering rows.
+
 Use this before broad UI or copy changes. Kaspa Explained is a protocol field guide. Avoid startup landing-page, price-site, and generic crypto-brochure patterns.
 
 ## Product Stance
