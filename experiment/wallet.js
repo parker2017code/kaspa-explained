@@ -140,7 +140,8 @@ function renderActive() {
   const address = addressFor(pk);
   $("#address").textContent = address;
   $("#privkey").textContent = pk;
-  refreshBalance();
+  if (rpc) refreshBalance();
+  else $("#balance").textContent = "connecting…";
 }
 
 async function loadUtxos() {
