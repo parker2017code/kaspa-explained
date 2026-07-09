@@ -51,6 +51,35 @@
     </section>
 
     <section class="panel">
+      <h2>Messaging (encrypted, on-chain)</h2>
+      <p class="hint">Same design as the open-source Kasia messaging app: an encrypted payload riding inside an ordinary TN10 transaction, no server. Uses the official SDK's own CryptoBox (X25519 + XChaCha20Poly1305) instead of Kasia's forked cipher-wasm. A wallet must publish its messaging key once before others can message it.</p>
+      <div class="row">
+        <button id="btnPublishKey" class="button">Publish my messaging key</button>
+      </div>
+      <div id="msgKeyStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Send a message</h2>
+      <div class="row">
+        <input id="msgTo" placeholder="kaspatest:... recipient address">
+      </div>
+      <div class="row">
+        <textarea id="msgText" rows="3" placeholder="message text"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnSendMsg" class="button primary">Send encrypted message</button>
+      </div>
+      <div id="msgSendStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Inbox</h2>
+      <button id="btnCheckInbox" class="button">Check inbox</button>
+      <div id="inboxList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
       <h2>UTXOs (current holdings)</h2>
       <button id="btnLoadUtxos" class="button">Load UTXOs</button>
       <table id="utxoTable">
