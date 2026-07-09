@@ -11,6 +11,8 @@ import init, {
   CryptoBoxPrivateKey,
   CryptoBoxPublicKey,
   sha256FromText,
+  encryptXChaCha20Poly1305,
+  decryptXChaCha20Poly1305,
 } from "./sdk/kaspa/kaspa.js";
 
 // Wallet-to-wallet encrypted messaging over TN10 L1 transaction payloads.
@@ -29,6 +31,29 @@ const MSG_DUST = 20000000n; // 0.2 tKAS carrier amount for message/announce txs
 function deriveMsgPrivateKey(walletPrivKeyHex) {
   const seedHex = sha256FromText(`kaspaexplained-tn10-msgkey:v1:${walletPrivKeyHex}`);
   return new CryptoBoxPrivateKey(seedHex);
+}
+
+// Public social feed: every wallet posts to the same well-known TN10 address
+// (deterministically derived, not owned by anyone in particular) and every
+// reader scans that one address's transactions. Same "L1 tx as public post"
+// pattern as thesheepcat/K and Kasia's own history, just unencrypted since
+// a feed is meant to be public. Posts embed the poster's own address in the
+// payload text so the feed doesn't need to resolve tx input addresses.
+const FEED_PREFIX = "post:1:";
+let FEED_ADDRESS = null; // set in boot() once the WASM module is initialized
+
+// Group chat rooms: a room name derives both a shared posting address and a
+// shared symmetric password (encryptXChaCha20Poly1305/decrypt, the SDK's own
+// password-based cipher, not hand-rolled). Anyone who knows the room name can
+// join, same trust model as an unlisted invite link/shared passphrase group.
+// Each member posts from their own funded wallet so no shared/custodial
+// wallet is needed to pay fees.
+const ROOM_PREFIX = "grp-msg:1:";
+function deriveRoom(roomName) {
+  const addrSeed = sha256FromText(`kaspaexplained-tn10-room-address:v1:${roomName}`);
+  const password = sha256FromText(`kaspaexplained-tn10-room-password:v1:${roomName}`);
+  const address = new PrivateKey(addrSeed).toAddress("testnet-10").toString();
+  return { address, password };
 }
 
 function textToPayloadBytes(text) {
@@ -407,6 +432,172 @@ async function checkInbox() {
   }
 }
 
+// ---- Public feed ----
+
+async function postToFeed() {
+  const text = $("#feedText").value;
+  const statusEl = $("#feedStatus");
+  statusEl.className = "status";
+  statusEl.textContent = "";
+  if (!text) {
+    statusEl.className = "status err";
+    statusEl.textContent = "post is empty";
+    return;
+  }
+  const pk = wallets[activeIndex];
+  const address = addressFor(pk);
+  try {
+    const payload = textToPayloadBytes(`${FEED_PREFIX}${address}:${text}`);
+    await buildSignSubmit({ toAddress: FEED_ADDRESS, sompiAmount: MSG_DUST, payloadBytes: payload, statusEl });
+    $("#feedText").value = "";
+    loadFeed();
+  } catch (e) {
+    statusEl.className = "status err";
+    statusEl.textContent = String(e);
+    log(`post failed: ${e}`);
+  }
+}
+
+async function loadFeed() {
+  const listEl = $("#feedList");
+  listEl.innerHTML = "<p>loading…</p>";
+  try {
+    const res = await fetch(`${REST_BASE}/addresses/${FEED_ADDRESS}/full-transactions?limit=50`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const txs = await res.json();
+    const posts = [];
+    for (const tx of txs) {
+      if (!tx.payload) continue;
+      if (!tx.outputs.some((o) => o.script_public_key_address === FEED_ADDRESS)) continue;
+      const text = safePayloadText(tx.payload);
+      if (!text || !text.startsWith(FEED_PREFIX)) continue;
+      const rest = text.slice(FEED_PREFIX.length);
+      // rest starts with a full "kaspatest:..." address, which has its own
+      // colon, so skip past that fixed prefix before finding our separator.
+      const sep = rest.indexOf(":", "kaspatest:".length);
+      if (sep === -1) continue;
+      posts.push({
+        poster: rest.slice(0, sep),
+        text: rest.slice(sep + 1),
+        time: Number(tx.block_time || 0),
+        txid: tx.transaction_id,
+      });
+    }
+    posts.sort((a, b) => b.time - a.time);
+    if (posts.length === 0) {
+      listEl.innerHTML = "<p>no posts yet</p>";
+      return;
+    }
+    listEl.innerHTML = "";
+    for (const p of posts) {
+      const div = document.createElement("div");
+      div.className = "msg-item";
+      const when = p.time ? new Date(p.time).toLocaleString() : "unknown time";
+      div.innerHTML = `<div class="msg-meta">${p.poster.slice(0, 18)}… · ${when} · <code>${p.txid.slice(0, 12)}…</code></div><div class="msg-text"></div>`;
+      div.querySelector(".msg-text").textContent = p.text;
+      listEl.appendChild(div);
+    }
+    log(`feed: loaded ${posts.length} post(s) from ${FEED_ADDRESS.slice(0, 14)}…`);
+  } catch (e) {
+    listEl.innerHTML = `<p>error: ${e}</p>`;
+    log(`feed load failed: ${e}`);
+  }
+}
+
+// ---- Group chat rooms ----
+
+let currentRoom = null; // { name, address, password }
+
+function joinRoom() {
+  const name = $("#roomName").value.trim();
+  if (!name) return;
+  currentRoom = { name, ...deriveRoom(name) };
+  $("#roomStatus").textContent = `joined room "${name}" -> posting address ${currentRoom.address.slice(0, 18)}…`;
+  log(`joined room "${name}": address ${currentRoom.address}, derived from room name (shared-passphrase trust model, same as an unlisted invite link)`);
+  loadRoomMessages();
+}
+
+async function sendRoomMessage() {
+  const statusEl = $("#roomSendStatus");
+  statusEl.className = "status";
+  statusEl.textContent = "";
+  if (!currentRoom) {
+    statusEl.className = "status err";
+    statusEl.textContent = "join a room first";
+    return;
+  }
+  const text = $("#roomText").value;
+  if (!text) {
+    statusEl.className = "status err";
+    statusEl.textContent = "message is empty";
+    return;
+  }
+  const pk = wallets[activeIndex];
+  const address = addressFor(pk);
+  try {
+    const ciphertextB64 = encryptXChaCha20Poly1305(text, currentRoom.password);
+    const payload = textToPayloadBytes(`${ROOM_PREFIX}${address}:${ciphertextB64}`);
+    await buildSignSubmit({ toAddress: currentRoom.address, sompiAmount: MSG_DUST, payloadBytes: payload, statusEl });
+    $("#roomText").value = "";
+    loadRoomMessages();
+  } catch (e) {
+    statusEl.className = "status err";
+    statusEl.textContent = String(e);
+    log(`room send failed: ${e}`);
+  }
+}
+
+async function loadRoomMessages() {
+  const listEl = $("#roomList");
+  if (!currentRoom) {
+    listEl.innerHTML = "<p>join a room first</p>";
+    return;
+  }
+  listEl.innerHTML = "<p>loading…</p>";
+  try {
+    const res = await fetch(`${REST_BASE}/addresses/${currentRoom.address}/full-transactions?limit=50`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const txs = await res.json();
+    const messages = [];
+    for (const tx of txs) {
+      if (!tx.payload) continue;
+      if (!tx.outputs.some((o) => o.script_public_key_address === currentRoom.address)) continue;
+      const text = safePayloadText(tx.payload);
+      if (!text || !text.startsWith(ROOM_PREFIX)) continue;
+      const rest = text.slice(ROOM_PREFIX.length);
+      // Same fixed-address-prefix skip as the feed parser above.
+      const sep = rest.indexOf(":", "kaspatest:".length);
+      if (sep === -1) continue;
+      const sender = rest.slice(0, sep);
+      const ciphertextB64 = rest.slice(sep + 1);
+      try {
+        const plaintext = decryptXChaCha20Poly1305(ciphertextB64, currentRoom.password);
+        messages.push({ sender, plaintext, time: Number(tx.block_time || 0), txid: tx.transaction_id });
+      } catch (e) {
+        log(`room decrypt failed for ${tx.transaction_id}: ${e}`);
+      }
+    }
+    messages.sort((a, b) => b.time - a.time);
+    if (messages.length === 0) {
+      listEl.innerHTML = "<p>no messages in this room yet</p>";
+      return;
+    }
+    listEl.innerHTML = "";
+    for (const m of messages) {
+      const div = document.createElement("div");
+      div.className = "msg-item";
+      const when = m.time ? new Date(m.time).toLocaleString() : "unknown time";
+      div.innerHTML = `<div class="msg-meta">${m.sender.slice(0, 18)}… · ${when} · <code>${m.txid.slice(0, 12)}…</code></div><div class="msg-text"></div>`;
+      div.querySelector(".msg-text").textContent = m.plaintext;
+      listEl.appendChild(div);
+    }
+    log(`room "${currentRoom.name}": decrypted ${messages.length} message(s)`);
+  } catch (e) {
+    listEl.innerHTML = `<p>error: ${e}</p>`;
+    log(`room load failed: ${e}`);
+  }
+}
+
 function bindUI() {
   $("#walletSelect").addEventListener("change", (e) => {
     activeIndex = Number(e.target.value);
@@ -467,6 +658,11 @@ function bindUI() {
   $("#btnPublishKey").addEventListener("click", publishMsgKey);
   $("#btnSendMsg").addEventListener("click", sendMessage);
   $("#btnCheckInbox").addEventListener("click", checkInbox);
+  $("#btnPost").addEventListener("click", postToFeed);
+  $("#btnLoadFeed").addEventListener("click", loadFeed);
+  $("#btnJoinRoom").addEventListener("click", joinRoom);
+  $("#btnSendRoomMsg").addEventListener("click", sendRoomMessage);
+  $("#btnLoadRoom").addEventListener("click", loadRoomMessages);
 
   document.querySelectorAll(".copy").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -482,11 +678,14 @@ async function boot() {
   log("loading kaspa-wasm SDK (v2.0.1, official rusty-kaspa browser build)…");
   await init();
   log(`SDK ready, kaspa-wasm version ${version()}`);
+  FEED_ADDRESS = new PrivateKey(sha256FromText("kaspaexplained-tn10-public-feed:v1")).toAddress(NETWORK_ID).toString();
+  log(`public feed address: ${FEED_ADDRESS}`);
   loadWallets();
   saveWallets();
   renderWalletSelect();
   bindUI();
   renderActive();
+  loadFeed();
   try {
     await connectRpc();
     refreshBalance();

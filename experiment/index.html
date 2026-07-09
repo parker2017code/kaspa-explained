@@ -51,6 +51,39 @@
     </section>
 
     <section class="panel">
+      <h2>Public feed</h2>
+      <p class="hint">One shared TN10 address everyone posts to and reads from, unencrypted since a feed is meant to be public. Same "L1 transaction as a public post" pattern as the open-source thesheepcat/K microblogging app.</p>
+      <div class="row">
+        <textarea id="feedText" rows="2" placeholder="what's happening on TN10?"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnPost" class="button primary">Post</button>
+        <button id="btnLoadFeed" class="button">Refresh feed</button>
+      </div>
+      <div id="feedStatus" class="status"></div>
+      <div id="feedList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Group chat room</h2>
+      <p class="hint">A room name derives a shared posting address and a shared password (SDK's own password-based cipher). Anyone who knows the room name can join, same trust model as an unlisted invite link. Try "kaspa-builders" from two different wallets.</p>
+      <div class="row">
+        <input id="roomName" placeholder="room name">
+        <button id="btnJoinRoom" class="button">Join / create room</button>
+      </div>
+      <div id="roomStatus" class="hint"></div>
+      <div class="row">
+        <textarea id="roomText" rows="2" placeholder="message to the room"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnSendRoomMsg" class="button primary">Send to room</button>
+        <button id="btnLoadRoom" class="button">Refresh room</button>
+      </div>
+      <div id="roomSendStatus" class="status"></div>
+      <div id="roomList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
       <h2>Messaging (encrypted, on-chain)</h2>
       <p class="hint">Same design as the open-source Kasia messaging app: an encrypted payload riding inside an ordinary TN10 transaction, no server. Uses the official SDK's own CryptoBox (X25519 + XChaCha20Poly1305) instead of Kasia's forked cipher-wasm. A wallet must publish its messaging key once before others can message it.</p>
       <div class="row">
