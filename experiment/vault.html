@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>TN10 Vault | Kaspa Explained</title>
+<link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+  <div class="banner">
+    Experimental. Testnet-10 only, not part of the Kaspa Explained guide, not linked from site navigation or search. Keys are generated and stored only in your browser. Do not use mainnet funds here.
+  </div>
+
+  <main class="wrap">
+    <p class="eyebrow">Kaspa Explained · Experiment</p>
+    <h1>TN10 Vault</h1>
+    <p class="lead">Pay to unlock, enforced by the script engine instead of a server's word. A creator locks a small TN10 payment behind a hash-lock spending condition. The only way to claim that payment is to publish the secret that unlocks it, on-chain, in public. Once that secret is published, anyone who was waiting for it can use it.</p>
+    <p class="hint"><a href="./index.html">&larr; Back to the main wallet, messaging, feed, and rooms experiment</a></p>
+
+    <section class="panel">
+      <h2>What this actually is</h2>
+      <p class="hint">The locking script is <code>OP_SHA256 &lt;hash&gt; OP_EQUALVERIFY &lt;pubkey&gt; OP_CHECKSIG</code>, wrapped as pay-to-script-hash (P2SH) with the official SDK's <code>ScriptBuilder</code>, <code>payToScriptHashScript</code>, and <code>createTransaction</code>. This is the same hash-lock shape atomic swaps use, not a hand-rolled cipher. It is a different, older primitive than Kaspa's newer covenant-ID mechanism (<code>CovenantBinding</code>, <code>covenantId()</code>, the <code>OpInputCovenantId</code>/<code>OpOutputCovenantId</code> opcodes), which this page does not use. Both are real script-level primitives in the same SDK; this page names which one it built so the two don't get flattened into one vague "smart contracts" claim.</p>
+      <p class="hint">The mechanism generalizes past this demo: the same pay-to-reveal pattern is what would gate a music or video file (buyer pays, creator's claim reveals the decryption key), a pay-per-call AI model, or a paywalled article. Escrow and assurance-contract refunds are the same idea with a second, timeout-gated spending path (<code>OP_CHECKLOCKTIMEVERIFY</code>) added to the script, not a different system. This page demonstrates the core primitive end to end with real TN10 transactions; it does not claim to be a finished marketplace.</p>
+    </section>
+
+    <section class="panel" id="walletPanel">
+      <h2>Your wallet</h2>
+      <div class="kv"><span>Address</span><code id="address">loading…</code><button class="button copy" data-copy="#address">copy</button></div>
+      <div class="kv"><span>Private key</span><code id="privkey">loading…</code><button class="button copy" data-copy="#privkey">copy</button></div>
+      <div class="kv"><span>Balance</span><strong id="balance">loading…</strong><button id="btnRefreshBalance" class="button copy">refresh</button></div>
+      <p class="hint">Network: <code>testnet-10</code>. This page keeps its own single wallet (localStorage key <code>kaspaexplained-tn10-vault-wallet</code>), separate from the main experiment wallet(s). Fund it with TN10 test coins to lock or unlock items.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Lock an item</h2>
+      <div class="row">
+        <input id="itemTitle" placeholder="title (e.g. a track name)">
+      </div>
+      <div class="row">
+        <textarea id="itemContent" placeholder="the content itself: a short text stand-in for a track, clip, or file link"></textarea>
+      </div>
+      <div class="row">
+        <input id="itemPrice" placeholder="price in tKAS" value="0.5">
+        <button id="btnLock" class="button primary">Lock item</button>
+      </div>
+      <p class="hint">Content is capped at 300 characters for this demo (it stands in for a link or a decryption key you'd hand out for real media, not the media itself). It is encrypted client-side with a random 32-byte secret before anything is published. Only this secret's SHA-256 hash goes into the locking script; the secret itself stays local to your browser until you claim a payment.</p>
+      <div id="lockStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Listings</h2>
+      <div class="row">
+        <button id="btnRefreshListings" class="button">Refresh listings</button>
+      </div>
+      <div id="listingsStatus" class="status"></div>
+      <div id="listings" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Items you locked</h2>
+      <p class="hint">Payments to your own locked items, and a claim button once one arrives. Claiming builds a transaction that spends the vault's P2SH output directly, with a hand-built signature script, no wallet-generator autopilot for this part.</p>
+      <div class="row">
+        <button id="btnRefreshMine" class="button">Check my items for payments</button>
+      </div>
+      <div id="mineStatus" class="status"></div>
+      <div id="mine" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Verification log</h2>
+      <p class="hint">Every submit is checked against accepted-transaction evidence before this page calls it done: don't trust local "submitted," fetch acceptance from the REST API.</p>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <script type="module" src="./vault.js?v=6"></script>
+</body>
+</html>

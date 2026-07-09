@@ -20,6 +20,7 @@
     <section class="panel">
       <h2>What's built here, with receipts</h2>
       <p class="hint">Not a mockup. Every row below is a real accepted TN10 transaction from building this page. Click a txid to verify it independently against the public REST API, the same "don't trust local state" habit this page's own send flow follows.</p>
+      <div class="table-wrap">
       <table class="receipts-table">
         <thead><tr><th>App / feature</th><th>What it proves</th><th>Receipt</th></tr></thead>
         <tbody>
@@ -68,8 +69,14 @@
             <td>Posted a task, claimed it, and marked it complete, three separate transactions whose replayed order correctly moved the task through Open, Claimed, and Completed, no database involved</td>
             <td><a href="https://api-tn10.kaspa.org/transactions/31ba4c503a7761fda127afe9d482803db894956adc72c8226352c676ec659764" target="_blank" rel="noopener">31ba4c50…</a></td>
           </tr>
+          <tr>
+            <td>Vault</td>
+            <td>Locked content behind a real pay-to-script-hash hash-lock (ScriptBuilder, OP_SHA256/OP_EQUALVERIFY/OP_CHECKSIG), a second wallet paid into it, and the claim spent it with a hand-built signature script the network verified, publishing the unlock secret on-chain in the process</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/73926bffefb7bb39d5f4f4753dd4f1314713fd4f7c9d9093d4102e52208efadf" target="_blank" rel="noopener">73926bff…</a></td>
+          </tr>
         </tbody>
       </table>
+      </div>
       <p class="hint">Try the app grid below: create a wallet, send yourself testnet coins, post to the feed, join room "kaspa-builders," or send an encrypted DM to another wallet you control. Everything above happened through this exact interface, nothing staged separately.</p>
     </section>
 
@@ -92,6 +99,10 @@
         <a class="app-card" href="./board.html">
           <strong>Task board</strong>
           <p>Post, claim, and complete tasks. State is computed by replaying the chain, no database.</p>
+        </a>
+        <a class="app-card" href="./vault.html">
+          <strong>Vault</strong>
+          <p>Pay-to-unlock content locked behind a real hash-lock script, not a database flag. Claiming a payment means publishing the secret that unlocks it, on-chain.</p>
         </a>
         <a class="app-card" href="./discover.html">
           <strong>Discover</strong>
@@ -204,10 +215,12 @@
     <section class="panel">
       <h2>UTXOs (current holdings)</h2>
       <button id="btnLoadUtxos" class="button">Load UTXOs</button>
+      <div class="table-wrap">
       <table id="utxoTable">
         <thead><tr><th>Amount (KAS)</th><th>Transaction ID</th><th>DAA score</th></tr></thead>
         <tbody></tbody>
       </table>
+      </div>
     </section>
 
     <section class="panel">
