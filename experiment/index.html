@@ -18,6 +18,47 @@
     <p class="lead">Multi-wallet Testnet-10 client. Runs entirely client-side against the official Rusty Kaspa WASM SDK (v2.0.1) and public TN10 infrastructure. No backend, no custody, nothing leaves your browser except signed transactions.</p>
 
     <section class="panel">
+      <h2>What's built here, with receipts</h2>
+      <p class="hint">Not a mockup. Every row below is a real accepted TN10 transaction from building this page — click a txid to verify it independently against the public REST API, the same "don't trust local state" habit this page's own send flow follows.</p>
+      <table class="receipts-table">
+        <thead><tr><th>App / feature</th><th>What it proves</th><th>Receipt</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Wallet</td>
+            <td>Real key generation, funding, and P2P send between two independently created wallets (25 tKAS)</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/ad2ab61647de9047b0fa1103293878cc95b22adcdf6a807e12144b9666d0d320" target="_blank" rel="noopener">ad2ab616…</a></td>
+          </tr>
+          <tr>
+            <td>Send cap</td>
+            <td>10 tKAS/tx limit enforced client-side (a 15 tKAS attempt is rejected with no transaction built); a 5 tKAS send within the cap goes through normally</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/d5c53eb55417c816ef3c45ca9284608fd044fe3961e920ead9e0dd0956f3ea87" target="_blank" rel="noopener">d5c53eb5…</a></td>
+          </tr>
+          <tr>
+            <td>Encrypted DM</td>
+            <td>Wallet-to-wallet CryptoBox (X25519 + XChaCha20Poly1305) encrypted message, published key lookup, decrypted back to the original plaintext on the recipient's device</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/62ce7e68a97ecae5fee5498cdf8c484bba38fd0528a554bef7d03f61b7562797" target="_blank" rel="noopener">62ce7e68…</a></td>
+          </tr>
+          <tr>
+            <td>Group chat room</td>
+            <td>Two independent wallets joined room "kaspa-builders" from just a shared name, exchanged messages, each decrypted the other's using the SDK's own password cipher</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/fc04bcb1f13d0aa82548915d1e759ee2692dc08d65083f26cf321cc56828ba2e" target="_blank" rel="noopener">fc04bcb1…</a></td>
+          </tr>
+          <tr>
+            <td>Public feed</td>
+            <td>Unencrypted post to a well-known shared address, readable by anyone, poster's address resolved to a published display name</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/c31fc6e3fd97c712f37a5c11bb2e6e9648ad22d675db858e23bd375440aa70c3" target="_blank" rel="noopener">c31fc6e3…</a></td>
+          </tr>
+          <tr>
+            <td>Display name / profile</td>
+            <td>Self-send payload announcing a name for an address, resolved and cached by the feed/room views</td>
+            <td><a href="https://api-tn10.kaspa.org/transactions/725685f2137719502c4cab5ab6810a7c73b30fcf337bf1c53e60ad8cf5fa91e9" target="_blank" rel="noopener">725685f2…</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="hint">Try the app grid below: create a wallet, send yourself testnet coins, post to the feed, join room "kaspa-builders," or send an encrypted DM to another wallet you control. Everything above happened through this exact interface — nothing staged separately.</p>
+    </section>
+
+    <section class="panel">
       <h2>Wallets</h2>
       <div class="row">
         <select id="walletSelect"></select>
