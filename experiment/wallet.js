@@ -28,6 +28,13 @@ const MSG_KEY_PREFIX = "kx-key:1:";
 const MSG_PREFIX = "kx-msg:1:";
 const MSG_DUST = 20000000n; // 0.2 tKAS carrier amount for message/announce txs
 
+// Public-deployment safety valve: this is a play/testnet faucet-funded
+// wallet meant for people to poke at, not a real-money app. Cap manual
+// sends so a typo or a script kiddie can't drain the whole seed wallet in
+// one shot. Message/room/feed/profile carrier amounts (MSG_DUST) are far
+// below this and unaffected.
+const MAX_SEND_KAS = 10;
+
 function deriveMsgPrivateKey(walletPrivKeyHex) {
   const seedHex = sha256FromText(`kaspaexplained-tn10-msgkey:v1:${walletPrivKeyHex}`);
   return new CryptoBoxPrivateKey(seedHex);
@@ -55,6 +62,13 @@ function deriveRoom(roomName) {
   const address = new PrivateKey(addrSeed).toAddress("testnet-10").toString();
   return { address, password };
 }
+
+// Display names: a self-send payload announcing "this address goes by this
+// name," same publish pattern as the messaging key. Feed/room/inbox views
+// resolve and cache names per address so the app reads like a social app
+// instead of raw bech32 strings everywhere.
+const PROFILE_PREFIX = "profile:1:";
+const profileCache = new Map(); // address -> name | null (null = looked up, none found)
 
 function textToPayloadBytes(text) {
   return new TextEncoder().encode(text);
@@ -283,6 +297,11 @@ async function send() {
     statusEl.textContent = "invalid amount";
     return;
   }
+  if (sompiAmount > kaspaToSompi(String(MAX_SEND_KAS))) {
+    statusEl.className = "status err";
+    statusEl.textContent = `this is a public play wallet — sends are capped at ${MAX_SEND_KAS} tKAS per transaction`;
+    return;
+  }
 
   try {
     await buildSignSubmit({ toAddress: to, sompiAmount, statusEl });
@@ -432,6 +451,73 @@ async function checkInbox() {
   }
 }
 
+// ---- Profiles (display names) ----
+
+async function publishProfile() {
+  const name = $("#profileName").value.trim();
+  const statusEl = $("#profileStatus");
+  statusEl.className = "status";
+  statusEl.textContent = "";
+  if (!name) {
+    statusEl.className = "status err";
+    statusEl.textContent = "enter a display name";
+    return;
+  }
+  const pk = wallets[activeIndex];
+  const address = addressFor(pk);
+  try {
+    const payload = textToPayloadBytes(`${PROFILE_PREFIX}${name}`);
+    await buildSignSubmit({ toAddress: address, sompiAmount: MSG_DUST, payloadBytes: payload, statusEl });
+    profileCache.set(address, name);
+    log(`set display name "${name}" for ${address}`);
+  } catch (e) {
+    statusEl.className = "status err";
+    statusEl.textContent = String(e);
+    log(`publish profile failed: ${e}`);
+  }
+}
+
+async function resolveProfileName(address) {
+  if (profileCache.has(address)) return profileCache.get(address);
+  try {
+    const res = await fetch(`${REST_BASE}/addresses/${address}/full-transactions?limit=50`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const txs = await res.json();
+    const hits = txs
+      .filter((tx) => tx.payload)
+      .filter((tx) => tx.outputs.some((o) => o.script_public_key_address === address))
+      .map((tx) => ({ tx, text: safePayloadText(tx.payload) }))
+      .filter((x) => x.text && x.text.startsWith(PROFILE_PREFIX))
+      .sort((a, b) => Number(b.tx.block_time || 0) - Number(a.tx.block_time || 0));
+    const name = hits.length ? hits[0].text.slice(PROFILE_PREFIX.length) : null;
+    profileCache.set(address, name);
+    return name;
+  } catch {
+    return null;
+  }
+}
+
+// Renders "shortAddress · when · txid" immediately, then swaps in a
+// resolved display name asynchronously if one shows up (feed/room posts
+// embed the poster's real address, so this works for both).
+function buildMetaLine(address, when, txid) {
+  const span = document.createElement("span");
+  span.className = "msg-meta";
+  const who = document.createElement("span");
+  who.className = "who";
+  who.textContent = `${address.slice(0, 18)}…`;
+  who.title = address;
+  span.appendChild(who);
+  span.append(` · ${when} · `);
+  const code = document.createElement("code");
+  code.textContent = `${txid.slice(0, 12)}…`;
+  span.appendChild(code);
+  resolveProfileName(address).then((name) => {
+    if (name) who.textContent = name;
+  });
+  return span;
+}
+
 // ---- Public feed ----
 
 async function postToFeed() {
@@ -493,8 +579,11 @@ async function loadFeed() {
       const div = document.createElement("div");
       div.className = "msg-item";
       const when = p.time ? new Date(p.time).toLocaleString() : "unknown time";
-      div.innerHTML = `<div class="msg-meta">${p.poster.slice(0, 18)}… · ${when} · <code>${p.txid.slice(0, 12)}…</code></div><div class="msg-text"></div>`;
-      div.querySelector(".msg-text").textContent = p.text;
+      div.appendChild(buildMetaLine(p.poster, when, p.txid));
+      const textDiv = document.createElement("div");
+      textDiv.className = "msg-text";
+      textDiv.textContent = p.text;
+      div.appendChild(textDiv);
       listEl.appendChild(div);
     }
     log(`feed: loaded ${posts.length} post(s) from ${FEED_ADDRESS.slice(0, 14)}…`);
@@ -587,8 +676,11 @@ async function loadRoomMessages() {
       const div = document.createElement("div");
       div.className = "msg-item";
       const when = m.time ? new Date(m.time).toLocaleString() : "unknown time";
-      div.innerHTML = `<div class="msg-meta">${m.sender.slice(0, 18)}… · ${when} · <code>${m.txid.slice(0, 12)}…</code></div><div class="msg-text"></div>`;
-      div.querySelector(".msg-text").textContent = m.plaintext;
+      div.appendChild(buildMetaLine(m.sender, when, m.txid));
+      const textDiv = document.createElement("div");
+      textDiv.className = "msg-text";
+      textDiv.textContent = m.plaintext;
+      div.appendChild(textDiv);
       listEl.appendChild(div);
     }
     log(`room "${currentRoom.name}": decrypted ${messages.length} message(s)`);
@@ -663,6 +755,8 @@ function bindUI() {
   $("#btnJoinRoom").addEventListener("click", joinRoom);
   $("#btnSendRoomMsg").addEventListener("click", sendRoomMessage);
   $("#btnLoadRoom").addEventListener("click", loadRoomMessages);
+  $("#btnSetProfile").addEventListener("click", publishProfile);
+  $("#btnGetWeather").addEventListener("click", getWeather);
 
   document.querySelectorAll(".copy").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -672,6 +766,57 @@ function bindUI() {
       setTimeout(() => (btn.textContent = "copy"), 1000);
     });
   });
+}
+
+// ---- Weather ----
+// Not a Kaspa feature; a plain widget using Open-Meteo's free, no-API-key
+// geocoding + forecast endpoints, same "reuse an existing open service
+// instead of reinventing it" approach as the rest of this experiment.
+
+const WMO_CODES = {
+  0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+  45: "Fog", 48: "Depositing rime fog",
+  51: "Light drizzle", 53: "Drizzle", 55: "Dense drizzle",
+  61: "Light rain", 63: "Rain", 65: "Heavy rain",
+  71: "Light snow", 73: "Snow", 75: "Heavy snow",
+  80: "Rain showers", 81: "Rain showers", 82: "Violent rain showers",
+  95: "Thunderstorm", 96: "Thunderstorm with hail", 99: "Severe thunderstorm with hail",
+};
+
+async function getWeather() {
+  const place = $("#weatherPlace").value.trim();
+  const resultEl = $("#weatherResult");
+  resultEl.textContent = "";
+  if (!place) {
+    resultEl.textContent = "enter a place name";
+    return;
+  }
+  resultEl.textContent = "looking up…";
+  try {
+    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1`);
+    const geo = await geoRes.json();
+    if (!geo.results || geo.results.length === 0) {
+      resultEl.textContent = `no location found for "${place}"`;
+      return;
+    }
+    const { latitude, longitude, name, country } = geo.results[0];
+    const wxRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m`);
+    const wx = await wxRes.json();
+    const c = wx.current;
+    const condition = WMO_CODES[c.weather_code] || `code ${c.weather_code}`;
+    resultEl.innerHTML = "";
+    const strong = document.createElement("strong");
+    strong.textContent = `${c.temperature_2m}°C, ${condition}`;
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = `${name}, ${country} · wind ${c.wind_speed_10m} km/h · via Open-Meteo (free, no API key)`;
+    resultEl.appendChild(strong);
+    resultEl.appendChild(p);
+    log(`weather(${name}, ${country}) = ${c.temperature_2m}°C, ${condition}`);
+  } catch (e) {
+    resultEl.textContent = `error: ${e}`;
+    log(`weather lookup failed: ${e}`);
+  }
 }
 
 async function boot() {
