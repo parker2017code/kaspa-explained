@@ -147,7 +147,7 @@ async function connectRpc() {
 
 // The public-resolver websocket can drop between UI actions. Every call site
 // that touches rpc goes through this first instead of assuming the earlier
-// connect() still holds — matches the site's own "don't trust local state,
+// connect() still holds. Matches the site's own "don't trust local state,
 // check the real connection" verification habit.
 async function ensureConnected() {
   if (rpc && rpc.isConnected) return;
@@ -299,7 +299,7 @@ async function send() {
   }
   if (sompiAmount > kaspaToSompi(String(MAX_SEND_KAS))) {
     statusEl.className = "status err";
-    statusEl.textContent = `this is a public play wallet — sends are capped at ${MAX_SEND_KAS} tKAS per transaction`;
+    statusEl.textContent = `this is a public play wallet, sends are capped at ${MAX_SEND_KAS} tKAS per transaction`;
     return;
   }
 

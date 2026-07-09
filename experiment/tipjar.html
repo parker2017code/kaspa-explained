@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>TN10 Tip Jar | Kaspa Explained</title>
+<link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+  <div class="banner">
+    Experimental. Testnet-10 only, not part of the Kaspa Explained guide, not linked from site navigation or search. Keys are generated and stored only in your browser. Do not use mainnet funds here.
+  </div>
+
+  <main class="wrap">
+    <p class="eyebrow">Kaspa Explained · Experiment</p>
+    <h1>TN10 Tip Jar</h1>
+    <p class="lead">Send a small tip and a short message to one shared Testnet-10 address, and see who else has tipped. Runs entirely client-side against the official Rusty Kaspa WASM SDK (v2.0.1) and public TN10 infrastructure. No backend, no custody, nothing leaves your browser except signed transactions.</p>
+
+    <section class="panel" id="walletPanel">
+      <h2>Your tip jar wallet</h2>
+      <p class="hint">Generated in your browser on first visit and stored only in <code>localStorage</code>, separate from the main wallet experiment's storage. This wallet starts at 0 balance. Fund it from a TN10 faucet or another wallet before tipping.</p>
+      <div class="kv"><span>Address</span><code id="address">loading…</code><button class="button copy" data-copy="#address">copy</button></div>
+      <div class="kv"><span>Private key</span><code id="privkey">loading…</code><button class="button copy" data-copy="#privkey">copy</button></div>
+      <div class="kv"><span>Balance</span><strong id="balance">loading…</strong><button id="btnRefreshBalance" class="button copy">refresh</button></div>
+      <p class="hint">Network: <code>testnet-10</code>. Address prefix <code>kaspatest:</code>. Source: <code>api-tn10.kaspa.org</code> REST.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Send a tip</h2>
+      <p class="hint">Tips go to the shared tip jar address below as an ordinary TN10 transaction carrying a <code>tip:1:</code> payload with your address and message, the same "L1 transaction as a public post" pattern the main experiment uses for its feed and rooms.</p>
+      <div class="kv"><span>Tip jar</span><code id="tipjarAddress">loading…</code></div>
+      <div class="row">
+        <input id="tipAmount" placeholder="amount in KAS" inputmode="decimal" value="0.2">
+      </div>
+      <div class="row">
+        <textarea id="tipMessage" rows="2" placeholder="say something with your tip" maxlength="280"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnSendTip" class="button primary">Send tip</button>
+      </div>
+      <p class="hint">This is a public play wallet. Tips are floored at 0.2 tKAS and capped at 10 tKAS per transaction. Testnet coins, no real value, but let's keep it sane.</p>
+      <div id="tipStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Leaderboard</h2>
+      <p class="hint">Top tippers to the shared tip jar address, ranked by total tKAS sent.</p>
+      <button id="btnLoadLeaderboard" class="button">Refresh leaderboard</button>
+      <table id="leaderboardTable">
+        <thead><tr><th>Address</th><th>Total tipped</th><th>Tips</th></tr></thead>
+        <tbody><tr><td colspan="3">loading…</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Recent tips</h2>
+      <div id="recentTips" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Verification log</h2>
+      <p class="hint">Every submit is checked against accepted-transaction evidence before this page calls it done, per the site's own builder-verification rule: don't trust local "submitted," fetch acceptance.</p>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <script type="module" src="./tipjar.js"></script>
+</body>
+</html>
