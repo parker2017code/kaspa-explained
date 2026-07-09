@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>TN10 Wallet Experiment | Kaspa Explained</title>
+<link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+  <div class="banner">
+    Experimental — Testnet-10 only, not part of the Kaspa Explained guide, not linked from site navigation or search. Keys are generated and stored only in your browser. Do not use mainnet funds here.
+  </div>
+
+  <main class="wrap">
+    <p class="eyebrow">Kaspa Explained · Experiment</p>
+    <h1>TN10 Wallet</h1>
+    <p class="lead">Multi-wallet Testnet-10 client. Runs entirely client-side against the official Rusty Kaspa WASM SDK (v2.0.1) and public TN10 infrastructure. No backend, no custody, nothing leaves your browser except signed transactions.</p>
+
+    <section class="panel">
+      <h2>Wallets</h2>
+      <div class="row">
+        <select id="walletSelect"></select>
+        <button id="btnNew" class="button">New wallet</button>
+        <button id="btnImport" class="button">Import private key</button>
+        <button id="btnRemove" class="button danger">Remove</button>
+      </div>
+      <div id="importForm" class="row hidden">
+        <input id="importKey" placeholder="private key hex" spellcheck="false">
+        <button id="btnImportConfirm" class="button primary">Add</button>
+        <button id="btnImportCancel" class="button">Cancel</button>
+      </div>
+    </section>
+
+    <section class="panel" id="walletPanel">
+      <h2>Active wallet</h2>
+      <div class="kv"><span>Address</span><code id="address">—</code><button class="button copy" data-copy="#address">copy</button></div>
+      <div class="kv"><span>Private key</span><code id="privkey">—</code><button class="button copy" data-copy="#privkey">copy</button></div>
+      <div class="kv"><span>Balance</span><strong id="balance">—</strong><button id="btnRefresh" class="button copy">refresh</button></div>
+      <p class="hint">Network: <code>testnet-10</code>. Address prefix <code>kaspatest:</code>. Source: <code>api-tn10.kaspa.org</code> REST.</p>
+      <div class="row">
+        <input id="profileName" placeholder="display name for this wallet">
+        <button id="btnSetProfile" class="button">Set display name</button>
+      </div>
+      <div id="profileStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Send</h2>
+      <div class="row">
+        <input id="sendTo" placeholder="kaspatest:... recipient address">
+        <input id="sendAmount" placeholder="amount in KAS" inputmode="decimal">
+        <button id="btnSend" class="button primary">Send</button>
+      </div>
+      <p class="hint">This is a public play wallet. Sends are capped at 10 tKAS per transaction — testnet coins, no real value, but let's keep it sane.</p>
+      <div id="sendStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Public feed</h2>
+      <p class="hint">One shared TN10 address everyone posts to and reads from, unencrypted since a feed is meant to be public. Same "L1 transaction as a public post" pattern as the open-source thesheepcat/K microblogging app.</p>
+      <div class="row">
+        <textarea id="feedText" rows="2" placeholder="what's happening on TN10?"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnPost" class="button primary">Post</button>
+        <button id="btnLoadFeed" class="button">Refresh feed</button>
+      </div>
+      <div id="feedStatus" class="status"></div>
+      <div id="feedList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Group chat room</h2>
+      <p class="hint">A room name derives a shared posting address and a shared password (SDK's own password-based cipher). Anyone who knows the room name can join, same trust model as an unlisted invite link. Try "kaspa-builders" from two different wallets.</p>
+      <div class="row">
+        <input id="roomName" placeholder="room name">
+        <button id="btnJoinRoom" class="button">Join / create room</button>
+      </div>
+      <div id="roomStatus" class="hint"></div>
+      <div class="row">
+        <textarea id="roomText" rows="2" placeholder="message to the room"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnSendRoomMsg" class="button primary">Send to room</button>
+        <button id="btnLoadRoom" class="button">Refresh room</button>
+      </div>
+      <div id="roomSendStatus" class="status"></div>
+      <div id="roomList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Messaging (encrypted, on-chain)</h2>
+      <p class="hint">Same design as the open-source Kasia messaging app: an encrypted payload riding inside an ordinary TN10 transaction, no server. Uses the official SDK's own CryptoBox (X25519 + XChaCha20Poly1305) instead of Kasia's forked cipher-wasm. A wallet must publish its messaging key once before others can message it.</p>
+      <div class="row">
+        <button id="btnPublishKey" class="button">Publish my messaging key</button>
+      </div>
+      <div id="msgKeyStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Send a message</h2>
+      <div class="row">
+        <input id="msgTo" placeholder="kaspatest:... recipient address">
+      </div>
+      <div class="row">
+        <textarea id="msgText" rows="3" placeholder="message text"></textarea>
+      </div>
+      <div class="row">
+        <button id="btnSendMsg" class="button primary">Send encrypted message</button>
+      </div>
+      <div id="msgSendStatus" class="status"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Inbox</h2>
+      <button id="btnCheckInbox" class="button">Check inbox</button>
+      <div id="inboxList" class="inbox-list"></div>
+    </section>
+
+    <section class="panel">
+      <h2>UTXOs (current holdings)</h2>
+      <button id="btnLoadUtxos" class="button">Load UTXOs</button>
+      <table id="utxoTable">
+        <thead><tr><th>Amount (KAS)</th><th>Transaction ID</th><th>DAA score</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Weather</h2>
+      <p class="hint">Not a Kaspa feature, just closing out the original wishlist honestly: a plain widget on Open-Meteo's free, no-key geocoding + forecast API rather than anything invented here.</p>
+      <div class="row">
+        <input id="weatherPlace" placeholder="city name">
+        <button id="btnGetWeather" class="button">Get forecast</button>
+      </div>
+      <div id="weatherResult" class="hint"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Verification log</h2>
+      <p class="hint">Every submit is checked against accepted-transaction evidence before this page calls it done, per the site's own builder-verification rule: don't trust local "submitted," fetch acceptance.</p>
+      <pre id="log"></pre>
+    </section>
+  </main>
+
+  <script type="module" src="./wallet.js"></script>
+</body>
+</html>
