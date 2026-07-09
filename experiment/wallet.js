@@ -440,8 +440,21 @@ async function checkInbox() {
       const div = document.createElement("div");
       div.className = "msg-item";
       const when = m.time ? new Date(m.time).toLocaleString() : "unknown time";
-      div.innerHTML = `<div class="msg-meta">from key ${m.senderPubKeyHex.slice(0, 10)}… · ${when} · <code>${m.txid.slice(0, 12)}…</code></div><div class="msg-text"></div>`;
-      div.querySelector(".msg-text").textContent = m.plaintext;
+      // Built via textContent/DOM, not innerHTML with interpolation: senderPubKeyHex
+      // only reaches this point after successfully constructing a CryptoBoxPublicKey
+      // and decrypting with it, which already constrains it to valid hex, but that's
+      // an upstream invariant this render code shouldn't have to rely on to be safe.
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+      meta.append(`from key ${m.senderPubKeyHex.slice(0, 10)}… · ${when} · `);
+      const code = document.createElement("code");
+      code.textContent = `${m.txid.slice(0, 12)}…`;
+      meta.appendChild(code);
+      div.appendChild(meta);
+      const textDiv = document.createElement("div");
+      textDiv.className = "msg-text";
+      textDiv.textContent = m.plaintext;
+      div.appendChild(textDiv);
       listEl.appendChild(div);
     }
     log(`inbox: decrypted ${messages.length} message(s) for ${address.slice(0, 14)}…`);
