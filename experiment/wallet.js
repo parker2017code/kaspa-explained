@@ -66,6 +66,8 @@ function renderWalletSelect() {
 
 async function connectRpc() {
   rpc = new RpcClient({ resolver: new Resolver(), networkId: NETWORK_ID });
+  rpc.addEventListener("disconnect", () => log("RPC disconnected, will reconnect on next request"));
+  rpc.addEventListener("connect", () => log(`RPC (re)connected -> ${rpc.url || "resolved node"}`));
   await rpc.connect();
   const info = await rpc.getServerInfo();
   log(
@@ -73,15 +75,26 @@ async function connectRpc() {
   );
 }
 
-async function refreshBalance() {
+// The public-resolver websocket can drop between UI actions. Every call site
+// that touches rpc goes through this first instead of assuming the earlier
+// connect() still holds — matches the site's own "don't trust local state,
+// check the real connection" verification habit.
+async function ensureConnected() {
+  if (rpc && rpc.isConnected) return;
+  log("RPC not connected, reconnecting…");
   if (!rpc) {
-    $("#balance").textContent = "connecting…";
+    await connectRpc();
     return;
   }
+  await rpc.connect();
+}
+
+async function refreshBalance() {
   const pk = wallets[activeIndex];
   const address = addressFor(pk);
   $("#balance").textContent = "loading…";
   try {
+    await ensureConnected();
     const res = await rpc.getBalanceByAddress({ address });
     $("#balance").textContent = `${sompiToKaspaString(res.balance)} tKAS`;
     log(`balance(${address.slice(0, 14)}…) = ${res.balance} sompi`);
@@ -100,15 +113,12 @@ function renderActive() {
 }
 
 async function loadUtxos() {
-  if (!rpc) {
-    alert("Still connecting to a TN10 node, try again in a moment.");
-    return;
-  }
   const pk = wallets[activeIndex];
   const address = addressFor(pk);
   const tbody = $("#utxoTable tbody");
   tbody.innerHTML = `<tr><td colspan="3">loading…</td></tr>`;
   try {
+    await ensureConnected();
     const res = await rpc.getUtxosByAddresses([address]);
     if (res.entries.length === 0) {
       tbody.innerHTML = `<tr><td colspan="3">no UTXOs</td></tr>`;
@@ -146,10 +156,6 @@ async function fetchAcceptance(txid, attempts = 6) {
 }
 
 async function send() {
-  if (!rpc) {
-    alert("Still connecting to a TN10 node, try again in a moment.");
-    return;
-  }
   const to = $("#sendTo").value.trim();
   const amountStr = $("#sendAmount").value.trim();
   const statusEl = $("#sendStatus");
@@ -173,6 +179,7 @@ async function send() {
   const privateKey = new PrivateKey(pk);
 
   try {
+    await ensureConnected();
     statusEl.textContent = "fetching UTXOs…";
     const { entries } = await rpc.getUtxosByAddresses([address]);
     if (entries.length === 0) throw new Error("no spendable UTXOs on this wallet");
