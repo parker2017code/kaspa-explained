@@ -103,22 +103,22 @@
       <h2>Current simple-payment capacity</h2>
       <p>Kaspa mainnet produces ten blocks per second. The shared block mass limit in current mainnet parameters is 500,000, which sets a budget of 5,000,000 transaction mass per second before policy, fees, propagation, storage shape, and real mempool behavior enter the picture.</p>
       <p>A signed ordinary P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's conservative arithmetic. Add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block: the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the upper end to the commonly cited 3.4k TPS.</p>
-      <p>Use roughly 2.5k to 3.4k TPS for current simple payments, and name the assumption behind it: transaction shape times block mass. Artificial minimum-transaction ceilings can score higher, but they measure a lab envelope, not ordinary payment throughput.</p>
+      <p>Roughly 2.5k to 3.4k TPS covers current simple payments, set by transaction shape times block mass. Benchmarks built on artificial minimum-size transactions can score higher: they measure a lab envelope rather than ordinary payment throughput.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Mass model</p>
       <h2>Mass is the real limit</h2>
-      <p>A raw count of transactions per block hides Kaspa's real limit: mass, not envelope count. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. A larger transaction eats a larger slice of the block budget regardless of how the mempool counts it.</p>
+      <p>A raw count of transactions per block hides Kaspa's real limit: mass. The implementation charges for serialized bytes, script-public-key bytes, signature-operation or compute-budget work, transient byte mass, and storage mass effects. A larger transaction eats a larger slice of the block budget regardless of how the mempool counts it.</p>
       <p>App transactions change the footprint. More inputs, more outputs, larger scripts, covenant metadata, payload data, proof bytes, or state-transition evidence all crowd out simple transfers competing for the same mass budget. Node-side repeated work moves the ceiling further: validation cost, propagation size, UTXO access patterns, storage effects, and app-specific indexing.</p>
-      <p>Payload data has its own bound. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it. App data spends the same block capacity payments spend.</p>
+      <p>Payload data has its own bound. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Toccata</p>
       <h2>What Toccata changes</h2>
       <p><a href="/toccata-explained">Toccata</a> doubles the transient mass budget without touching the payment-relevant limit. It is mainly a programmability upgrade: it changes what Kaspa L1 transactions can express and verify, covenant-style spending rules, covenant IDs, ZK verifier infrastructure, sequencing-commitment access, and the first base-layer foundations for based-ZK apps.</p>
-      <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000. The guide frames the increase around fitting STARK-sized proofs, not around raising payment throughput. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee.</p>
+      <p>The Toccata guide and current params show one throughput-relevant change: transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000. The guide frames the increase around fitting STARK-sized proofs; payment throughput doesn't move. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -127,7 +127,7 @@
           <tbody>
             <tr><td>KIP-17 covenants</td><td>Transaction introspection, byte operations, hashing tools, signature checks from stack, and script tools for stateful UTXO rules.</td><td>More expressive transactions run heavier than simple payments.</td></tr>
             <tr><td>KIP-20 covenant IDs</td><td>Stable covenant lineage through a 32-byte covenant identifier and authorizing input binding.</td><td>Backs asset rules and state machines at the cost of extra metadata and validation work.</td></tr>
-            <tr><td>KIP-16 ZK precompile</td><td><code>OpZkPrecompile</code> for proof verification paths such as Groth16 and RISC0-Succinct.</td><td>Proof transactions spend L1 capacity on verification, not transfer count.</td></tr>
+            <tr><td>KIP-16 ZK precompile</td><td><code>OpZkPrecompile</code> for proof verification paths such as Groth16 and RISC0-Succinct.</td><td>Proof transactions spend L1 capacity on verification work, separate from transfer count.</td></tr>
             <tr><td>KIP-21 sequencing commitments</td><td>Partitioned lane commitments so app proving can track app activity instead of the entire DAG.</td><td>Cuts app proving cost. It is not itself an end-user TPS number.</td></tr>
           </tbody>
         </table>
@@ -154,7 +154,7 @@
       <p class="eyebrow">vProgs</p>
       <h2>vProgs remain roadmap architecture</h2>
       <p>Toccata ships the parts vProg-style systems need without shipping vProgs: covenants, proof checks, covenant IDs, and partitioned sequencing commitments. Full vProgs are a later architecture for app programs that prove richer logic while sharing Kaspa ordering.</p>
-    <p>KIP-21 stops every prover from having to follow the entire DAG for every app. Its partitioned commitment design targets O(activity) proving: a prover for one app lane follows that lane's activity, not total network activity. Current parameters cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane. At 10 BPS, that is a worst-case bound of 500 user-lane updates per second. User transaction throughput still needs its own transaction-shape assumptions on top.</p>
+    <p>KIP-21 stops every prover from having to follow the entire DAG for every app. Its partitioned commitment design targets O(activity) proving: a prover for one app lane tracks only that lane's activity. Current parameters cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane. At 10 BPS, that is a worst-case bound of 500 user-lane updates per second. User transaction throughput still needs its own transaction-shape assumptions on top.</p>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repository shows the implementation direction: resource access, scheduling, batches, state diffs, transaction runtime, L1, and ZK components. Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is related tooling research for composing multi-contract covenant apps into Silverscript. Neither repo is mainnet activation evidence for full vProgs.</p>
     </section>
 
