@@ -56,7 +56,7 @@ Use first-party sources first for L1 and status-sensitive claims: kaspanet GitHu
 Use these files instead of turning the README into the source guide:
 
 - `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
-- `claims-reference.html` for a browser-readable version of the status-label rules.
+- `kaspa-claims-checker.html` for a browser-readable version of the status-label rules.
 - `COPY_STYLE.md` for the repo-wide anti-filler sentence standard.
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
@@ -80,27 +80,20 @@ Use the public site itself for the page map:
 - `what-is-kaspa.html` answers the highest-intent beginner search directly.
 - `kaspa-claims-checker.html` is the shareable live / testnet / targeted / roadmap / research reference.
 - `toccata-status.html` tracks Toccata status and safe wording.
-- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims.
-- `kaspa-status-updates.html` is the index for dated status updates.
+- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and now carries the dated-update changelog (the old `kaspa-status-updates.html` index merged here; that URL redirects to this page).
 - `kaspa-status-check-may-2026.html` is the current dated status snapshot.
 - `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
 - `kaspa-vprogs-explained.html` explains resource-level scheduling, based computation, and the vProgs roadmap boundary.
 - `kaspa-tps-explained.html` answers the max-TPS question by workload: simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
-- `build-this-now.html` turns the builder loop into short practical recipes.
-- `build-on-kaspa.html` is the founder, builder, supporter, and matching-board funnel.
-- `builder-fit-survey.html` is the local founder/app idea intake survey.
-- `investor-supporter-survey.html` is the local supporter intake survey.
-- `kaspa-for-fintech-founders.html`, `kaspa-app-ideas.html`,
-  `kaspa-toccata-use-cases.html`, `kaspa-covenants-explained.html`,
-  `kaspa-vs-solana-builders.html`, `kaspa-vs-ethereum-apps.html`,
-  `kaspa-coordination-markets.html`, `kaspa-hackathon-challenges.html`, and
-  `kaspa-founder-investor-matching.html` are the founder/search page cluster.
+- `build-on-kaspa.html` routes a builder from an app idea to the builder guide, `kaspa-app-ideas.html`, Toccata status, and a `reality-check.html` gate before publishing publicly (the old `build-this-now.html` recipes and the founder/supporter survey and matching-board pages were retired into this single builder path; those URLs redirect to `build-on-kaspa.html` or `about.html`).
+- `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`,
+  `kaspa-vs-ethereum-apps.html`, and `kaspa-coordination-markets.html` are the founder/search page cluster.
 - `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
 - `skeptical-case.html` is the risks and open-questions page.
 - `sources.html` is the human source guide.
 - `search.html` is the quickest concept/page finder.
 - `ai-guidance.html` is the public prompt builder for source-checking AI questions.
-- `claims-reference.html` is the human-readable companion to `CLAIMS.yml`.
+- `kaspa-claims-checker.html` is the human-readable companion to `CLAIMS.yml`.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `agent-index.json` is the generated static retrieval index for AI agents.
@@ -190,7 +183,7 @@ Narrative update from Junny Ho's Web3 Festival HK 2026 talk (`https://www.youtub
 
 Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-app foundations. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path for based apps. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components. Michael Sutton's `michaelsutton/argent` repo is experimental actor-style Silverscript tooling research. Production readiness and activation claims need separate evidence. Full synchronous vProgs need separate activation evidence. Frame Kaspa around L1-first shared sequencing, settlement, commitments, and verification.
 
-Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. Apply Concrete-First Translation: "one shared record without one operator" before "credible shared state," "apps that prove their rules" before "verification-oriented programmability," and "fast mined ordering" before "settlement layer." The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
+Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. Apply Concrete-First Translation as defined in `CONTENT_BRIEF.md`. The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
 
 Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
 
