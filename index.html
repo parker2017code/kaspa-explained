@@ -105,7 +105,7 @@
       <div>
         <p class="eyebrow">Toccata status</p>
         <h2 id="toccata-status-preview-title">Toccata activation record</h2>
-        <p class="lead">Toccata is live. It activated at DAA score <strong>474,165,565</strong> under Rusty Kaspa v2.0.1, and mainnet now runs L1 covenants, covenant IDs, ZK proof verification, sequencing commitments, and the based-app groundwork. Wallets, explorers, SDKs, and actual app usage are separate layers on top, each with its own evidence to check.</p>
+        <p class="lead">Toccata is live. It activated at DAA score <strong>474,165,565</strong> under Rusty Kaspa v2.0.1, and mainnet now runs L1 covenants, covenant IDs, ZK proof verification, sequencing commitments, and the based-app groundwork. Wallet, explorer, SDK, and app support still need their own receipts.</p>
         <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>.</p>
       </div>
       <div class="status-lane-grid">
@@ -239,7 +239,7 @@
           <dl class="demo-metrics" aria-label="Teaching model assumptions">
             <div><dt>Model</dt><dd>Simulated</dd></div>
             <div><dt>Mainnet</dt><dd>10 BPS era</dd></div>
-            <div><dt>Boundary</dt><dd>Fast inclusion, not instant finality</dd></div>
+            <div><dt>Boundary</dt><dd>Fast inclusion, slower finality</dd></div>
           </dl>
         </aside>
       </div>
@@ -251,7 +251,7 @@
           <p class="eyebrow">Network snapshot</p>
           <h2 id="live-network-title">Current network numbers</h2>
           <p class="lead">Pulled live from the public API for orientation. Cross-check anything that matters against a node, an explorer, or the source path below.</p>
-          <p class="fit-note">If these numbers stop updating, they're stale, not proof of anything. Use <a href="/status">Status</a> and <a href="/sources">Sources</a> for claims that need to hold up.</p>
+          <p class="fit-note">If these numbers stop updating, that just means they're stale. Use <a href="/status">Status</a> and <a href="/sources">Sources</a> for claims that need to hold up.</p>
         </div>
         <div class="live-status-light" id="live-status-light" aria-live="polite">
           <span aria-hidden="true"></span>
@@ -422,17 +422,17 @@
         simple: {
           chain: "A single chain has to pick one branch. When two honest blocks arrive close together, one of them falls out of the record entirely.",
           dag: "Kaspa's losing blocks still count toward security. GHOSTDAG keeps them in the graph and orders everything into one payment history.",
-      pressure: "A higher block rate only helps if the graph stays bounded and ordered. The claim is controlled parallel work, not unlimited throughput."
+      pressure: "A higher block rate only helps if the graph stays bounded and ordered. That's what bounds how much parallel work turns into usable throughput."
         },
         bitcoin: {
       chain: "Bitcoin keeps one chain dominant and treats competing branches as temporary. That conservative design is exactly what limits how often blocks can appear.",
           dag: "Kaspa keeps Proof of Work and UTXOs but changes the structure underneath them. Parallel blocks get folded into the record and ordered, instead of being orphaned as waste.",
-          pressure: "The tradeoff is engineering, not magic: block rate, propagation delay, pruning, and ordering depth set the safety boundary. Fast blocks are not a free security upgrade."
+          pressure: "The tradeoff is engineering: block rate, propagation delay, pruning, and ordering depth set the safety boundary. Fast blocks are not a free security upgrade."
         },
         builder: {
           chain: "A linear chain gives applications a simple ordering surface. The constraint shows up the moment users want lower latency or higher activity without leaving Proof of Work.",
           dag: "The builder surface starts with accepted transactions, payloads, UTXOs, and ordering evidence. App claims still need source, status, and replay boundaries.",
-      pressure: "For apps, high-frequency ordering is an input, not a guarantee. Product claims need node, SDK, network, endpoint, tx-shape, and failure-class evidence behind them."
+      pressure: "For apps, high-frequency ordering is only an input, and product claims still need node, SDK, network, endpoint, tx-shape, and failure-class evidence behind them."
         }
       };
 
