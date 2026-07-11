@@ -8282,12 +8282,15 @@ main > :first-child {
   }
 }
 
-/* Final table readability guard: keep row labels and status pills from
-   splitting mid-word while allowing long descriptions and links to wrap. */
+/* Final table readability guard: keep row labels, status pills, and source
+   links from splitting mid-word. Long descriptions (column 3) still wrap
+   freely since prose benefits from breaking anywhere it needs to. */
 .reality-table th:first-child,
 .reality-table td:first-child,
 .reality-table th:nth-child(2),
 .reality-table td:nth-child(2),
+.reality-table th:last-child,
+.reality-table td:last-child,
 .reality-table .status-pill {
   overflow-wrap: normal;
   word-break: normal;
@@ -8301,6 +8304,15 @@ main > :first-child {
 .reality-table td:nth-child(2):has(.status-pill),
 .reality-table th:nth-child(2) {
   min-width: 9rem;
+}
+
+.reality-table td:last-child {
+  min-width: 8rem;
+}
+
+.reality-table td:last-child a {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .reality-table .status-pill {
