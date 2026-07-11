@@ -95,9 +95,9 @@
     <section class="section">
       <p class="eyebrow">Design frame</p>
       <h2>It is not an EVM turn</h2>
-      <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction, not hidden behind a shared global account state.</p>
+      <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction. No shared global account layer sits behind it.</p>
       <p>The design target is narrow: add enough rule expressiveness for money flows while keeping the base layer lean. A covenant can say, for example, "this next output must preserve the rule," "this spend needs a controller input," or "this refund path opens after the timeout." The app logic lives in constrained UTXO transitions, proofs, or app-side execution anchored back to L1.</p>
-      <p>Call Toccata an expressiveness upgrade, not a platform migration. It expands what L1 transactions can enforce and verify. Mature wallets, DeFi liquidity, audits, custody flows, and full app composition are separate claims that still need their own evidence.</p>
+      <p>Toccata is an expressiveness upgrade. It expands what L1 transactions can enforce and verify, without migrating Kaspa to a different platform. Mature wallets, DeFi liquidity, audits, custody flows, and full app composition are separate claims that still need their own evidence.</p>
     </section>
 
     <section class="section">
@@ -131,17 +131,17 @@
     <section class="section">
       <p class="eyebrow">KIP-21</p>
       <h2>Sequencing without proving the whole DAG</h2>
-      <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, "not for me" evidence becomes the burden, not the useful work.</p>
-      <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity, not the whole DAG's.</p>
+      <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, proving what isn't yours turns into the real burden, crowding out the useful work.</p>
+      <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity instead of the whole DAG's.</p>
       <p>That gives based apps and later vProg-style systems a way to skip proving unrelated network activity. It is not proof that full synchronous app composition runs today: that's still separate, later work.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">vProgs boundary</p>
       <h2>Based apps first, full vProgs later</h2>
-      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo describes an early Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction runtime, node, L1, and ZK pieces. It's a research and roadmap project, not shipped software, showing the implementation direction only.</p>
+      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo describes an early Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction runtime, node, L1, and ZK pieces. It's research and roadmap work that shows the implementation direction only; it hasn't shipped as software.</p>
       <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is related research tooling: an actor-style frontend that aims to generate Silverscript for multi-contract covenant systems. It names the real developer-experience problem directly: writing many linked covenant contracts by hand is the hard part.</p>
-      <p>The boundary stays clear: Toccata, activated, supports covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full vProgs are separate, later, roadmap architecture for richer execution and cross-app composition, not yet on testnet.</p>
+      <p>The boundary stays clear: Toccata, activated, supports covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full vProgs are separate, later, roadmap architecture for richer execution and cross-app composition. It hasn't reached testnet yet.</p>
     </section>
 
     <section class="section">

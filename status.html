@@ -79,7 +79,7 @@
         <span class="status-pill research">Research</span>
         <span class="status-pill not-live">Not live</span>
       </div>
-      <p class="fit-note"><strong>Checked:</strong> July 8, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code>, virtual DAA score 481,069,746, well above the activation score, matching block and header counts, about 27.56 billion KAS from the supply endpoint, and a block reward of about 2.44997147 KAS under the July 7 emission step. <strong>Toccata:</strong> Rusty Kaspa v2.0.1 is the current Toccata release; v2.0.0 set activation at DAA score 474,165,565. Use <a href="/toccata-status">Toccata status</a> for post-activation checks.</p>
+      <p class="fit-note"><strong>Checked:</strong> July 8, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code>, virtual DAA score 481,069,746, well above the activation score, matching block and header counts, about 27.56 billion KAS from the supply endpoint, and a block reward of about 2.44997147 KAS under the July 7 emission step. <strong>Toccata:</strong> see the status table below for the release and activation record, and <a href="/toccata-status">Toccata status</a> for post-activation checks.</p>
       <nav class="jump-list" aria-label="Status page shortcuts">
         <a href="#usable-now">Usable now</a>
         <a href="#status-snapshot">Status table</a>
@@ -114,7 +114,7 @@
         </article>
         <article>
           <span>Check the L1 state</span>
-          <p>A public REST reading is a snapshot, not a claim. Cross it against a node, release notes, KIP status, and accepted mainnet behavior first.</p>
+          <p>A public REST reading is a snapshot. Cross it against a node, release notes, KIP status, and accepted mainnet behavior before treating it as a claim.</p>
         </article>
       </div>
     </section>
@@ -136,13 +136,13 @@
             <tr>
               <td>Proof of Work</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Kaspa is mined, not staked. Work and issuance never depend on a validator identity set.</td>
+              <td>Kaspa runs on Proof-of-Work mining. Work and issuance never depend on a validator identity set.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa</a></td>
             </tr>
             <tr>
               <td>UTXO model</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Kaspa tracks spendable outputs, not account balances. That's the same model Bitcoin uses; Ethereum tracks balances instead.</td>
+              <td>Kaspa tracks spendable outputs. That's the same model Bitcoin uses; Ethereum tracks balances instead.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa</a></td>
             </tr>
             <tr>
@@ -190,7 +190,7 @@
             <tr>
               <td>Native DeFi</td>
               <td><span class="status-pill roadmap">Roadmap</span></td>
-              <td>A design target that follows Toccata-era L1 foundations. A live Kaspa-native app layer needs shipped apps and usage evidence, not just the architecture for it.</td>
+              <td>A design target that follows Toccata-era L1 foundations. A live Kaspa-native app layer needs shipped apps and usage evidence beyond the architecture.</td>
               <td><a href="/why-kaspa-matters">Design case</a></td>
             </tr>
             <tr>
@@ -242,7 +242,7 @@
             </tr>
             <tr>
               <td>Testnet or lab numbers are mainnet guarantees.</td>
-              <td>Testnets and experiments are signals, not commitments. They need a current source check before they become a live public claim.</td>
+              <td>Testnets and experiments signal direction. They aren't commitments, and need a current source check before they become a live public claim.</td>
               <td>Future capability, engineering tests, and shipped network behavior are three different things.</td>
             </tr>
             <tr>
@@ -253,7 +253,7 @@
             <tr>
               <td>DAGKnight, vProgs, or native DeFi are live because code or talks exist.</td>
               <td>Code, talks, branches, and demos prove work happened. Activation or production status needs stronger evidence than that.</td>
-              <td>Development evidence sits below release or activation evidence, not on top of it.</td>
+              <td>Development evidence sits below release or activation evidence in the proof hierarchy.</td>
             </tr>
             <tr>
               <td>Toccata means one atomic action can already span several independent apps.</td>
@@ -263,7 +263,7 @@
             <tr>
               <td>July 2026 is a sudden emission cliff.</td>
               <td>Emission steps down monthly. The status table above lists the exact steps; there is no single-day July cliff.</td>
-              <td>The scarcity story is the schedule, not a one-day cliff.</td>
+              <td>The scarcity story is the monthly step-down schedule.</td>
             </tr>
           </tbody>
         </table>
@@ -299,7 +299,7 @@
               <tr>
                 <td>Open KIP PRs</td>
                 <td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is open for transaction version 1 fields and hashing; its draft text says v1 transactions add per-input compute budgets, optional output covenant bindings, user-lane subnetworks, and a BLAKE3 payload/rest txid split for ZK and based-executor workflows. <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> is open for P2MR ScriptPublicKey, described as a Merkle-root pay-to-script form meant to hide public keys until spend time and support quantum-resistance and MAST-style conditional scripts.</td>
-                <td>Design and implementation evidence, not merged-KIP or mainnet activation evidence. KIP-24 sits closer to Toccata transaction plumbing; KIP-22 is future cryptography and script-design work.</td>
+                <td>Design and implementation evidence, short of merged-KIP or mainnet activation status. KIP-24 sits closer to Toccata transaction plumbing; KIP-22 is future cryptography and script-design work.</td>
               </tr>
               <tr>
                 <td>Argent</td>
@@ -319,7 +319,7 @@
               <tr>
                 <td>Builder tooling</td>
                 <td><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspanet/kaspa-python-sdk</a> is now a standalone public SDK repo. The <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.0">v2.0.0 release</a> added Toccata-aligned support and the full Rusty Kaspa managed-wallet API for Python. The <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">v2.0.1 release</a> adds <code>get_seq_commit_lane_proof</code>, SMT sync progress events, covenant-binding fixes, and a Rusty Kaspa v2.0.1 dependency bump.</td>
-                <td>Developer-tooling progress that helps Python builders and integrators prepare for Toccata-era wallet, UTXO, lane-proof, and covenant workflows. Protocol-upgrade status still comes from node, KIP, and activation evidence, not the SDK.</td>
+                <td>Developer-tooling progress that helps Python builders and integrators prepare for Toccata-era wallet, UTXO, lane-proof, and covenant workflows. Protocol-upgrade status still comes from node, KIP, and activation evidence rather than the SDK.</td>
               </tr>
               <tr>
                 <td>Infrastructure indexes</td>
@@ -341,11 +341,11 @@
         <div class="reference-grid">
           <article>
             <h3>July 9, 2026</h3>
-            <p>TN10/TN12 recheck. Testnet-10 REST status now reads virtual DAA 512,574,907 with 1,394,944 blocks, up from the June 29 check; the testnet is still running well past both tn10-toc2 and tn10-toc3's scheduled activation scores. Rechecked KIP-16 and KIP-21 raw files directly: both remain "Implemented and activated in TN10," unchanged. Rechecked Argent's README: still self-described as active, unaudited, syntax still settling, matching the existing framing. Confirmed the TN12 covenant vault demo is still live and functional. No status label changed; this refreshes the evidence, not the claim.</p>
+            <p>TN10/TN12 recheck. Testnet-10 REST status now reads virtual DAA 512,574,907 with 1,394,944 blocks, up from the June 29 check; the testnet is still running well past both tn10-toc2 and tn10-toc3's scheduled activation scores. Rechecked KIP-16 and KIP-21 raw files directly: both remain "Implemented and activated in TN10," unchanged. Rechecked Argent's README: still self-described as active, unaudited, syntax still settling, matching the existing framing. Confirmed the TN12 covenant vault demo is still live and functional. No status label changed; this refreshes the evidence rather than the claim.</p>
           </article>
           <article>
             <h3>July 9, 2026</h3>
-            <p>Full-site AI-tell and accuracy sweep. Fixed a DAGKnight status line on the GHOSTDAG page that had drifted from every other page's wording (research-stage, not testnet). Found and fixed where-kaspa-fits.html, which had never been updated for Toccata's mainnet activation and stated Kaspa-native programmability as not live four separate times; it now states the activated covenant, ZK-check, and sequencing-commitment surface plainly, with full app composition marked as what's still ahead. Trimmed repeated rhetorical-question templates and comma-contrast filler on where-kaspa-fits.html and the mining-cycle pages. Merged the thin kaspa-status-updates.html index into this page; old URL redirects.</p>
+            <p>Full-site AI-tell and accuracy sweep. Fixed a DAGKnight status line on the GHOSTDAG page that had drifted from every other page's wording (research-stage, short of testnet). Found and fixed where-kaspa-fits.html, which had never been updated for Toccata's mainnet activation and stated Kaspa-native programmability as not live four separate times; it now states the activated covenant, ZK-check, and sequencing-commitment surface plainly, with full app composition marked as what's still ahead. Trimmed repeated rhetorical-question templates and comma-contrast filler on where-kaspa-fits.html and the mining-cycle pages. Merged the thin kaspa-status-updates.html index into this page; old URL redirects.</p>
           </article>
           <article>
             <h3>July 8, 2026</h3>
@@ -445,7 +445,7 @@
         </article>
         <article>
           <h3>Are Kaspa smart contracts live?</h3>
-          <p>Not as a mature native app layer, not yet. Toccata put the L1 pieces on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. Richer programmability through vProgs is later work.</p>
+          <p>Toccata put the L1 pieces live on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. A mature native app layer, with audited apps and broad tooling, is still ahead; richer programmability through vProgs is later work.</p>
         </article>
       </div>
     </section>
