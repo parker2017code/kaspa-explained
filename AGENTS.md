@@ -91,15 +91,11 @@ These are stable operating rules because these failures have already happened in
 
 ## Final Response Contract
 
-End with:
+Lead with the outcome: what happened, or what you found. Supporting detail after.
 
-- files changed;
-- commands run;
-- verification results;
-- live/deploy status when relevant;
-- risks, assumptions, skipped checks, or remaining follow-up only when they genuinely matter.
+Do not append a boilerplate report to every reply. Name files, commands, and deploy status when they carry information the owner does not already have, and skip them when they do not. Local, committed, pushed, and deployed are four different states, so when the answer turns on which one is true, say which.
 
-Do not hide failures. Do not imply unrun tests passed.
+Do not hide failures. Do not imply unrun checks passed. If something was skipped or could not be verified, say so in a sentence.
 
 ## Codex Operating Spine
 
