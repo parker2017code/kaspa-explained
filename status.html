@@ -29,14 +29,14 @@
   <meta name="twitter:title" content="Kaspa Status | Kaspa Explained">
   <meta name="twitter:description" content="What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-07-09">
+  <meta name="dateModified" content="2026-07-25">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Status",
     "url": "https://kaspaexplained.com/status",
-    "dateModified": "2026-07-09",
+    "dateModified": "2026-07-25",
     "description": "What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.",
     "about": ["Kaspa", "Proof of Work", "GHOSTDAG", "Crescendo", "Toccata", "vProgs", "DAGKnight"]
   }
@@ -79,7 +79,7 @@
         <span class="status-pill research">Research</span>
         <span class="status-pill not-live">Not live</span>
       </div>
-      <p class="fit-note"><strong>Checked:</strong> July 8, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code>, virtual DAA score 481,069,746, well above the activation score, matching block and header counts, about 27.56 billion KAS from the supply endpoint, and a block reward of about 2.44997147 KAS under the July 7 emission step. <strong>Toccata:</strong> see the status table below for the release and activation record, and <a href="/toccata-status">Toccata status</a> for post-activation checks.</p>
+      <p class="fit-note"><strong>Checked:</strong> July 25, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code> on a synced v2.0.1 node, virtual DAA score 495,451,121, well above the activation score, about 27.6 billion KAS from the supply endpoint, and a block reward of 2.44997148 KAS under the current emission step. <strong>Toccata:</strong> see the status table below for the release and activation record, and <a href="/toccata-status">Toccata status</a> for post-activation checks.</p>
       <nav class="jump-list" aria-label="Status page shortcuts">
         <a href="#usable-now">Usable now</a>
         <a href="#status-snapshot">Status table</a>
@@ -158,16 +158,16 @@
               <td><a href="https://github.com/kaspanet/rusty-kaspa/releases">rusty-kaspa releases</a>; <a href="https://medium.com/@michaelsuttonil/unveiling-the-crescendo-hard-fork-roadmap-10bps-and-more-6072329e177f">Crescendo roadmap note</a>; <a href="https://kaspa.org/lore">Kaspa.org lore</a></td>
             </tr>
             <tr>
-              <td>July 8 L1 snapshot</td>
+              <td>July 25 L1 snapshot</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Mainnet REST readout: virtual DAA 481,069,746, matching block and header counts, about 27.562 billion KAS from the supply endpoint, roughly 2.44997147 KAS per block. These numbers move by the hour; recheck before quoting them.</td>
+              <td>Mainnet REST readout: virtual DAA 495,451,121, about 27.597 billion KAS from the supply endpoint, 2.44997148 KAS per block. The node answering was v2.0.1 and synced. These numbers move by the hour; recheck before quoting them. Skip the block and header counts from this endpoint: it load-balances across backend nodes with different pruning states, so the figure describes one node's local store rather than the network. Two reads a minute apart returned 1,488,846 and 26,573,222.</td>
               <td><a href="https://api.kaspa.org/info/blockdag">mainnet blockDAG API</a>; <a href="https://api.kaspa.org/info/coinsupply">supply API</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a></td>
             </tr>
             <tr>
               <td>Emission schedule</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>The schedule steps down monthly: 27.5 KAS/sec from May 8, 2026, 25.9565436 KAS/sec from June 7, 24.49971475 KAS/sec from July 7. There is no single-day July cliff.</td>
-              <td><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa Wiki tokenomics</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a></td>
+              <td>Emission steps down every 2,629,800 seconds by a factor of 2<sup>-1/12</sup>, about 5.61% a step, 426 steps deep in the consensus table. The steps are triggered by DAA score, which is exact, so that is what to quote: 27.5 KAS/sec at DAA 426,015,000, then 25.95654359 at 452,313,000, then 24.49971474 at 478,611,000, which is where the network sits now. The next step is 23.12465141 KAS/sec at DAA 504,909,000, roughly August 5, 2026. Calendar dates drift because they depend on how fast blocks actually land; the DAA triggers do not. No month is a cliff, and August is a routine step identical in kind to May, June, and July.</td>
+              <td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs">coinbase.rs subsidy table</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a>; <a href="https://wiki.kaspa.org/en/tokenomics">Kaspa Wiki tokenomics</a></td>
             </tr>
             <tr>
               <td>Base RTD framing</td>
@@ -257,7 +257,7 @@
             </tr>
             <tr>
               <td>Toccata means one atomic action can already span several independent apps.</td>
-              <td>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk applications. Full cross-app atomic composition is later vProgs work.</td>
+              <td>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk applications. Composing separately compiled covenant apps atomically in one transaction turns out to be possible on Toccata itself: Argent's Inter-Covenant Communication does exactly that, so far only in unaudited offline demos. The line that actually separates vProgs is shared mutable state. When many users mutate one shared app state, L1 composability tends to be exit-style rather than immediate at the moment a user acts.</td>
               <td>Fast L1 coordination and same-operation app composability are different claims.</td>
             </tr>
             <tr>
@@ -288,23 +288,23 @@
             <tbody>
               <tr>
                 <td>Toccata / Silverscript</td>
-                <td><a href="https://github.com/kaspanet/silverscript/commit/627c175ed808c46471ee3c4b2907661e24aec9b2">TN12 dependency sync</a>, <a href="https://github.com/kaspanet/silverscript/commit/38ff79864d7a4dd47890d11e62c3da0e0c2108bc">KCC20 bootstrap fixes</a>, and <a href="https://github.com/kaspanet/silverscript/commit/06928a76e68b3bbd82968643670d99b07fc471db">book/build fixes</a> landed May 4-5, 2026. <a href="https://github.com/kaspanet/rusty-kaspa/issues/983">TN12 field testing</a> surfaced developer-ergonomics issues around covenant and ZK opcode use. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.3.0-toc.5">v1.3.0-toc.5 pre-release</a> sanity-tested mainnet pre-activation compatibility. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 release</a> set the mainnet activation parameters; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> is the current Toccata release. The <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> adds operator guidance for upgrades, fee policy, API field changes, and Testnet-10 checks. The merged <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR</a> adds an <code>R0ScriptBuilder</code> wrapper for turning RISC Zero receipts into Kaspa scripts. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3 pre-release</a> scheduled final TN10 hardening; a July 9 check of <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> showed virtual DAA 512,574,907, with 1,394,944 blocks.</td>
+                <td><a href="https://github.com/kaspanet/silverscript/commit/627c175ed808c46471ee3c4b2907661e24aec9b2">TN12 dependency sync</a>, <a href="https://github.com/kaspanet/silverscript/commit/38ff79864d7a4dd47890d11e62c3da0e0c2108bc">KCC20 bootstrap fixes</a>, and <a href="https://github.com/kaspanet/silverscript/commit/06928a76e68b3bbd82968643670d99b07fc471db">book/build fixes</a> landed May 4-5, 2026. <a href="https://github.com/kaspanet/rusty-kaspa/issues/983">TN12 field testing</a> surfaced developer-ergonomics issues around covenant and ZK opcode use. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.3.0-toc.5">v1.3.0-toc.5 pre-release</a> sanity-tested mainnet pre-activation compatibility. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 release</a> set the mainnet activation parameters; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> is the current Toccata release. The <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> adds operator guidance for upgrades, fee policy, API field changes, and Testnet-10 checks. The merged <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR</a> adds an <code>R0ScriptBuilder</code> wrapper for turning RISC Zero receipts into Kaspa scripts. The <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3 pre-release</a> scheduled final TN10 hardening; a July 25 check of <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> showed virtual DAA 526,066,399, with 1,491,271 blocks.</td>
                 <td>Activated mainnet release evidence: release notes, activation parameters, the operator guide, TN10/TN12 testing, SDK and tooling prep. After activation, the next checks are wallets, explorers, examples, and accepted mainnet transactions.</td>
               </tr>
               <tr>
                 <td>Toccata KIPs</td>
-                <td><a href="https://kaspa.org/build#developments">Kaspa.org Build</a> lists sequencing commitments in the Toccata bundle and labels it live on TN12 ahead of mainnet activation. Raw KIP checks on June 29 showed <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> as proposed plus implemented and activated in TN10, and <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a> as implemented and activated in TN10. Open KIP PRs add important future context: <a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> specifies transaction version 1 fields and hashing for compute budgets, covenant bindings, user lanes, and ZK-friendly payload/rest txids; <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> proposes P2MR ScriptPublicKey work for quantum-resistance and MAST-style scripts.</td>
-                <td>Design and testnet implementation evidence. TN10 KIP status alone doesn't set the mainnet label; that comes from the activation record and observable network behavior.</td>
+                <td>All four Toccata KIPs now read <code>Status: Active</code> in their raw files: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a> (New Transaction Opcodes for Verifiable Computation), <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> (Covenants and Improved Scripting Capabilities), <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> (Covenant IDs), and <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a> (Partitioned Sequencing Commitment with O(activity) Proving). They moved together in <a href="https://github.com/kaspanet/kips/commit/e4ae2332117b">commit e4ae2332</a> on July 15, 2026. Before that they were scoped to TN10, which is what makes the change worth recording: the spec repo caught up with the mainnet activation.</td>
+                <td>The KIP status now matches the activation record instead of trailing it. Wallets, explorers, SDKs, and accepted mainnet transactions still carry their own separate evidence.</td>
               </tr>
               <tr>
                 <td>Open KIP PRs</td>
-                <td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is open for transaction version 1 fields and hashing; its draft text says v1 transactions add per-input compute budgets, optional output covenant bindings, user-lane subnetworks, and a BLAKE3 payload/rest txid split for ZK and based-executor workflows. <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> is open for P2MR ScriptPublicKey, described as a Merkle-root pay-to-script form meant to hide public keys until spend time and support quantum-resistance and MAST-style conditional scripts.</td>
-                <td>Design and implementation evidence, short of merged-KIP or mainnet activation status. KIP-24 sits closer to Toccata transaction plumbing; KIP-22 is future cryptography and script-design work.</td>
+                <td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is open for transaction version 1 fields and hashing; its draft text says v1 transactions add per-input compute budgets, optional output covenant bindings, user-lane subnetworks, and a BLAKE3 payload/rest txid split for ZK and based-executor workflows. <a href="https://github.com/kaspanet/kips/pull/42">KIP-25</a> is open for compute budget on script execution. <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> is open for P2MR ScriptPublicKey, described as a Merkle-root pay-to-script form meant to hide public keys until spend time and support quantum-resistance and MAST-style conditional scripts.</td>
+                <td>Worth knowing where the paperwork and the code disagree. Transaction version 1 and <code>computeBudget</code> already run on mainnet and are documented in the operator guide, but the KIPs that specify them, KIP-24 and KIP-25, are still open pull requests. Cite the guide or the node for those two, not a merged KIP number. KIP-22 is separate: future cryptography and script-design work with no implementation behind it yet.</td>
               </tr>
               <tr>
                 <td>Argent</td>
-                <td><a href="https://github.com/michaelsutton/argent">michaelsutton/argent</a> is a June 2026 experimental actor-style frontend for Silverscript covenant contracts. Its README describes actors, state, transitions, named emits, terminal <code>become</code> dispatch, and generated Silverscript for examples such as Stones and Tickets.</td>
-          <td>Fresh research and tooling evidence, explicitly a prototype. No audit, no production readiness, no stable ABI, no generated transaction builder, no mainnet activation evidence.</td>
+                <td><a href="https://github.com/michaelsutton/argent">michaelsutton/argent</a> is an experimental actor-style frontend for Silverscript covenant contracts: actors, state, transitions, named emits, and terminal <code>become</code> dispatch. It is where most of Michael Sutton's July output went. Thirty-one commits landed between July 8 and July 24, more than half the repo's history, adding Inter-Covenant Communication, actor enums, commitment-forest route planning, and a VS Code extension. Two sibling repos appeared: <a href="https://github.com/michaelsutton/argent-playground">argent-playground</a> on July 9 and <a href="https://github.com/michaelsutton/argent-template">argent-template</a> on July 24. Examples now run well past the original Stones and Tickets.</td>
+          <td>Active prototype, not a product. No audit, no release, no tag, no crates.io publish. Two commits in the last fortnight are labelled breaking changes, so the ABI is still moving. A runtime transaction builder does exist now, <code>argent-runtime</code>'s <code>TxBuilder</code> and <code>TxContext</code>, which the README lists under what is useful today; what is still missing is generated app-specific builder APIs. The playground demos, including the DEX one, run fully offline against hardcoded fixtures with no node or RPC connection, so none of them is a deployment.</td>
               </tr>
               <tr>
                 <td>vProgs</td>
@@ -455,7 +455,7 @@
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
         <a href="/what-crypto-is-good-for"><span>Previous</span><strong>What crypto is good for</strong><p>A tempered guide to where crypto is useful, where it is weak, and where shared records without one operator fit.</p></a>
-        <a href="/kaspa-claims-checker"><span>Next</span><strong>Kaspa claims checker</strong><p>Kaspa claims checker for common public claims: smart contracts, Toccata, DAGKnight, 10 BPS, finality, emissions, DeFi, covenants, and vProgs.</p></a>
+        <a href="/kaspa-developments"><span>Next</span><strong>What changed in Kaspa this month</strong><p>What changed in Kaspa since Toccata activated: the new KCC conventions process, the KIP promotions of July 15, Argent, vProgs, SDK...</p></a>
         <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Source hierarchy, public reference map, and credited external learning resources used by Kaspa Explained.</p></a>
       </div>
     </section>

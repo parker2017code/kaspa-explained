@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Kaspa Explained: What KAS Is and What Is Live Now">
   <meta name="twitter:description" content="What KAS is, how the proof-of-work blockDAG and GHOSTDAG order blocks, and which Kaspa claims are live mainnet versus roadmap.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-07-08">
+  <meta name="dateModified" content="2026-07-25">
   <!-- Toccata activation publish nudge: 2026-06-30 -->
   <script type="application/ld+json">
   {
@@ -103,7 +103,7 @@
 
     <section id="toccata-status-preview" class="section status-workbench" aria-labelledby="toccata-status-preview-title">
       <div>
-        <p class="eyebrow">Toccata status</p>
+        <p class="eyebrow">Mainnet programmability</p>
         <h2 id="toccata-status-preview-title">Toccata activation record</h2>
         <p class="lead">Toccata is live. It activated at DAA score <strong>474,165,565</strong> under Rusty Kaspa v2.0.1, and mainnet now runs L1 covenants, covenant IDs, ZK proof verification, sequencing commitments, and the based-app groundwork. Wallet, explorer, SDK, and app support still need their own receipts.</p>
         <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>.</p>
@@ -114,6 +114,27 @@
         <a href="/kaspa-tps-explained"><span>Capacity</span><strong>TPS of what?</strong><small>Payments, covenants, proofs, tokens, and future app throughput differ.</small></a>
         <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>Releases, KIPs, Testnet-10, vProgs, and Argent.</small></a>
       </div>
+    </section>
+
+    <section class="section" aria-labelledby="whats-new-title">
+      <p class="eyebrow">Latest developments</p>
+      <h2 id="whats-new-title">What changed this month</h2>
+      <p>Toccata activated on June 30 and the protocol has shipped nothing since. July's movement was all in the layers above it.</p>
+      <div class="reference-grid">
+        <article>
+          <h3>A second standards process appeared</h3>
+          <p>Kaspa Calls for Conventions launched on July 15 for ecosystem-level agreements. Five specifications are open. None has merged, and a KCC cannot change consensus.</p>
+        </article>
+        <article>
+          <h3>The Toccata KIPs went active</h3>
+          <p>KIP-16, 17, 20, and 21 moved to <code>Status: Active</code> on July 15. They had still been marked testnet-only for two weeks after mainnet activation.</p>
+        </article>
+        <article>
+          <h3>Mainnet covenant use is small</h3>
+          <p>80 active covenants holding 253.98 KAS, against 491,663 covenants on Testnet-10. The primitives work. Almost nobody is using them in production yet.</p>
+        </article>
+      </div>
+      <p class="actions"><a class="button primary" href="/kaspa-developments">Read the full developments log</a></p>
     </section>
 
     <section id="blockdag-demo" class="protocol-demo section" data-demo-mode="dag" data-reader-mode="simple" aria-labelledby="blockdag-demo-title">
@@ -248,7 +269,7 @@
     <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
       <div class="live-panel-head">
         <div>
-          <p class="eyebrow">Network snapshot</p>
+          <p class="eyebrow">Live API read</p>
           <h2 id="live-network-title">Current network numbers</h2>
           <p class="lead">Pulled live from the public API for orientation. Cross-check anything that matters against a node, an explorer, or the source path below.</p>
           <p class="fit-note">If these numbers stop updating, that just means they're stale. Use <a href="/status">Status</a> and <a href="/sources">Sources</a> for claims that need to hold up.</p>
@@ -422,11 +443,11 @@
         simple: {
           chain: "A single chain has to pick one branch. When two honest blocks arrive close together, one of them falls out of the record entirely.",
           dag: "Kaspa's losing blocks still count toward security. GHOSTDAG keeps them in the graph and orders everything into one payment history.",
-      pressure: "A higher block rate only helps if the graph stays bounded and ordered. That's what bounds how much parallel work turns into usable throughput."
+      pressure: "A higher block rate only helps if the graph stays bounded and ordered. Those bounds decide how much parallel work becomes usable throughput."
         },
         bitcoin: {
       chain: "Bitcoin keeps one chain dominant and treats competing branches as temporary. That conservative design is exactly what limits how often blocks can appear.",
-          dag: "Kaspa keeps Proof of Work and UTXOs but changes the structure underneath them. Parallel blocks get folded into the record and ordered, instead of being orphaned as waste.",
+          dag: "Kaspa keeps Proof of Work and UTXOs but changes the structure underneath them. Parallel blocks get folded into the record and ordered rather than orphaned as waste.",
           pressure: "The tradeoff is engineering: block rate, propagation delay, pruning, and ordering depth set the safety boundary. Fast blocks are not a free security upgrade."
         },
         builder: {

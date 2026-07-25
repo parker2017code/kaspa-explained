@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Kaspa Design Case | Kaspa Explained">
   <meta name="twitter:description" content="How Kaspa's design maps to neutral money, self-custody, fast payment feel, and public rules people can inspect.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-07-08">
+  <meta name="dateModified" content="2026-07-25">
   <link rel="stylesheet" href="styles.css?v=20260711-table-wrap-fix">
   <script defer src="nav.js?v=20260708-dark-default"></script>
 </head>
@@ -58,7 +58,7 @@
   <main id="top" tabindex="-1" class="why-page">
     <section class="why-hero section">
       <h1>Kaspa's design case</h1>
-      <p class="lead">Crypto earns its keep when people need one shared record and no single operator controlling it. Kaspa's bet: can Bitcoin-style <a href="/glossary#proof-of-work">Proof-of-Work</a> security and censorship resistance run closer to real time without giving either one up?</p>
+      <p class="lead">Crypto earns its keep when people need one shared record and no single operator controlling it. Kaspa's bet is that Bitcoin-style <a href="/glossary#proof-of-work">Proof-of-Work</a> security and censorship resistance can run closer to real time without surrendering either one.</p>
     </section>
 
     <section id="kaspa-jobs" class="section">
@@ -87,8 +87,8 @@
 
     <section id="kaspa-blockdag" class="section">
       <h2>Kaspa focuses on latency</h2>
-      <p>Bitcoin proved strangers can coordinate around scarce digital money with no central operator. It pays for that with a slow block interval, chosen partly because network latency has to stay small relative to block production: a real tradeoff baked into every Nakamoto-style system, not an oversight.</p>
-      <p>Kaspa comes out of the research line asking whether a Proof-of-Work network can include parallel honest blocks and still converge on one ordering. The question underneath: can more honest mining work participate in consensus instead of getting discarded as wasted collision?</p>
+      <p>Bitcoin proved strangers can coordinate around scarce digital money with no central operator. It pays for that with a slow block interval, chosen partly because network latency has to stay small relative to block production. Every Nakamoto-style system carries that tradeoff by design.</p>
+      <p>Kaspa comes out of the research line asking whether a Proof-of-Work network can include parallel honest blocks and still converge on one ordering. The underlying question is whether mining work that a single chain throws away as a collision can count toward consensus.</p>
       <p>That claim is narrower than ordinary "faster chain" marketing: the architecture targets the block-rate/latency tradeoff directly.</p>
       <p>Explaining it means naming the actual mechanics: parents, mergesets, blue/red classification, blue work, and the virtual block. Parents are direct block references. The mergeset is the set of blocks incorporated around a selected parent. Blue work lets the network compare accumulated work across a DAG instead of a single chain. The virtual block gives nodes a current-state reference without pretending there's only one tip.</p>
       <div class="concept-diagram dag-concept" role="img" aria-label="Parallel blocks reference earlier blocks and are ordered by GHOSTDAG">
@@ -117,9 +117,9 @@
       <p>Any fast block-producing system can get a transaction into a block quickly. That's inclusion. It says nothing about confirmation: how fast the network gives strong confidence the transaction won't reverse. Conflating the two is the most common way "fast blockchain" claims mislead.</p>
       <p>This is where fast Proof of Work makes a distinctive argument. Proof of Stake typically gets fast finality by rapidly collecting votes from staked validators, which ties confirmation speed directly to validator coordination and stake distribution. Push decentralization further and that coordination gets harder, often pushing the system toward committees or other sampling shortcuts.</p>
       <p>Proof of Work samples security a different way. A block is proof the finder out-competed the network's hash power for that round: the protocol never needs to poll a supermajority of miners before confirming anything. That decouples block-production speed from miner-count coordination.</p>
-      <p>The two models also diverge on cost. Proof of Work imports external cost into consensus: electricity, ASICs, facilities, cooling, supply chains, geography, time. Proof of Stake secures the ledger with internal token ownership instead. That difference changes neutrality, issuance, attack economics, and what sovereignty even means, while PoW keeps its own energy, ASIC, pool, and regulatory exposure.</p>
-      <p>Fast confirmation also depends on bounded DAG mechanics, not just raw block rate. K, finality depth, anticone finalization depth, merge depth, and BPS-scaled parameters are the safety rails that keep high block production from turning into unbounded parallelism. "10 BPS" by itself is not the claim.</p>
-      <p>The honest limit: fast PoW blockDAGs change the inclusion/confirmation/decentralization tradeoff, they don't eliminate it. That narrower claim is the actual reason to study Kaspa.</p>
+      <p>The two models also diverge on cost. Proof of Work imports external cost into consensus: electricity, ASICs, facilities, cooling, supply chains, geography, time. Proof of Stake secures the ledger with internal token ownership instead. That difference changes neutrality, issuance, attack economics, and who ends up holding the power to censor, while PoW keeps its own energy, ASIC, pool, and regulatory exposure.</p>
+      <p>Fast confirmation also depends on bounded DAG mechanics, not just raw block rate. K, finality depth, anticone finalization depth, merge depth, and BPS-scaled parameters are what keep high block production from turning into unbounded parallelism. "10 BPS" by itself is not the claim.</p>
+      <p>The honest limit: fast PoW blockDAGs move the inclusion/confirmation/decentralization tradeoff around. They do not eliminate it.</p>
       <div class="quadrant" aria-label="Inclusion speed versus confirmation coordination">
         <div class="axis y-axis">less stake-vote coordination</div>
         <div class="quad-cell btc"><strong>Bitcoin</strong> <span>slow inclusion, PoW confirmations</span></div>
@@ -132,7 +132,7 @@
 
     <section class="section">
       <h2>RTD is the broader idea</h2>
-      <p><a href="/glossary#rtd">RTD</a> stands for Real-Time Decentralization. In Hashdag's framing, it's Kaspa's core value proposition first: Bitcoin-style Proof-of-Work security and censorship resistance, with real-time confirmation feel.</p>
+      <p><a href="/glossary#rtd">RTD</a> stands for Real-Time Decentralization. In Hashdag's framing it names Kaspa's core claim: Bitcoin-style Proof-of-Work security and censorship resistance, with real-time confirmation feel.</p>
       <p>RTD is measured in real system time. A partially synchronous system should move as fast as the actual network allows: fast when conditions are clean, slower but still safe when the network is degraded or under attack.</p>
       <p>RTD-derived oracle, attestation, TangVM, and group-commitment flows sit a level up. Those are app-level architecture and research ideas built on top of Kaspa's high-frequency PoW sampling. The protocol supplies the base primitives, and applications define their own incentives, rules, data sources, and risk controls.</p>
     </section>
@@ -148,10 +148,10 @@
       <h2>Programmability, by status</h2>
       <p>Kaspa's app-layer path runs through Toccata, spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, and vProgs groundwork. Toccata activated at DAA score 474,165,565 on Rusty Kaspa v2.0.1, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 outlook explains why the original May 5 target moved. The L1 rule surface is live; wallet support, tooling, and app usage are the next evidence to watch.</p>
       <p>The mechanism: money can carry a rule forward. A vault can limit when funds move, a group payment can refund if a condition fails, and an asset can require the right controller before it moves, enforced through transaction introspection, covenant identifiers, sequencing commitments, and proof checks, all Kaspa-specific machinery.</p>
-      <p>The clearest way to picture covenant-style apps is as controlled UTXO state machines. Kaspa.com Learn's smart-contract/chess walkthrough models registration UTXOs, player UTXOs, game-state UTXOs, move-routing transactions, move-application transactions, and final settlement. The point isn't chess. It's a rule-bound workflow that never turns Kaspa L1 into a global account VM.</p>
+      <p>The clearest way to picture covenant-style apps is as controlled UTXO state machines. Kaspa.com Learn's smart-contract/chess walkthrough models registration UTXOs, player UTXOs, game-state UTXOs, move-routing transactions, move-application transactions, and final settlement. Chess is incidental. What the walkthrough shows is a rule-bound workflow that runs without turning Kaspa L1 into a global account VM.</p>
       <p>That's where assets with rules, cohesive DeFi, and apps that prove their own logic belong: built around covenants, ZK proof checks, sequencing commitments, and later vProgs.</p>
       <p>The split holds at the architecture level: L1 handles ordering, commitments, proof checks, and metadata; apps prove the richer logic around it.</p>
-      <p>"Solana-like" here means cohesive developer and user experience, not shared architecture. vProgs are Kaspa-native verifiable-program architecture, not ordinary rollups wearing a different name.</p>
+      <p>"Solana-like" here describes the developer and user experience. Underneath, vProgs are a Kaspa-native verifiable-program design with their own proving and settlement assumptions; calling them rollups imports the wrong ones.</p>
     </section>
 
     <section class="section">
@@ -160,19 +160,19 @@
         <li>Ethereum leads today in application depth, liquidity, and developer adoption.</li>
         <li>Solana leads today in consumer app adoption and cohesive fast-app UX.</li>
       </ul>
-      <p>The rest of the stack sorts by how far along it is: Toccata's L1 rule surface is activated, though native Kaspa DeFi built on top of it is still roadmap; DAGKnight is a research and upgrade track; vProgs belong to roadmap architecture; RTD-derived oracle, TangVM, and attestation flows are app-level constructions over basic Kaspa primitives; and coordination markets stay a research direction until real products and usage exist.</p>
+      <p>The rest sorts by how far along it is: Toccata's L1 rule surface is activated, though native Kaspa DeFi built on top of it is still roadmap; DAGKnight is a research and upgrade track; vProgs belong to roadmap architecture; RTD-derived oracle, TangVM, and attestation flows are app-level constructions over basic Kaspa primitives; and coordination markets stay a research direction until shipped products and repeat usage exist.</p>
     </section>
 
     <section id="kaspa-tests" class="section">
       <h2>Execution risk</h2>
       <p>Architecture is not adoption. On the network side, the case weakens if node-resource requirements rise too far at higher BPS, if mining or pool concentration worsens, or if declining emissions aren't offset by real fee demand. On the app side, it weakens if Toccata's activated rules fail to attract apps with actual usage, or if bridge/oracle systems introduce trusted bottlenecks that undercut the whole point.</p>
-      <p>There's also competitive risk: Ethereum, Solana, Bitcoin L2s, stablecoin rails, and app-specific chains can win users just by being good enough for the job. Kaspa's differentiated claim has to turn into usable infrastructure, not stay a differentiated claim.</p>
+      <p>There's also competitive risk: Ethereum, Solana, Bitcoin L2s, stablecoin networks, and app-specific chains can win users just by being good enough for the job. The architectural claim only counts once it turns into wallets, exchanges, apps, and liquidity people actually use.</p>
     </section>
 
     <section class="section">
       <h2>The core question</h2>
       <blockquote>Proof-of-Work crypto with Bitcoin-style security and censorship resistance operating in real time, with future apps that prove their own rules built around it.</blockquote>
-      <p>That's the value proposition: a neutral shared record, pushed on speed, latency, inclusion, and group action, without giving up Proof of Work's external-cost security model.</p>
+      <p>That's the claim: a neutral shared record pushed on speed, latency, inclusion, and group action, without giving up Proof of Work's external-cost security model.</p>
     </section>
 
     <section class="section">
