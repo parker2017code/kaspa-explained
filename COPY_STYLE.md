@@ -124,3 +124,19 @@ Use the direct claim when the source or practical pattern is grounded:
 Could a competent stranger have written the sentence without knowing anything specific about Kaspa?
 
 If yes, add the missing detail or delete the sentence.
+
+## Structural Tells (added 2026-07-25)
+
+Word lists catch vocabulary. They do not catch the thing that actually gives machine-written prose away, which is **distribution**. A page can pass every banned-word check and still read as generated because its shape is too regular. Measure these, do not eyeball them. Baselines below are what this site measured on 2026-07-25 and are the numbers to stay near.
+
+- **Paragraph length spread.** Healthy is lumpy: mean around 26 words, stdev near 19, with roughly 20% of paragraphs under 14 words and a real tail past 90. A page where almost every paragraph is 2-4 sentences is templated even if every sentence is good.
+- **Section length spread.** Use coefficient of variation (stdev/mean) of section word counts. Sitewide median here is 0.51. Anything under about 0.25 means every section was filled to the same size, which no human does. `kaspa-coordination-markets.html` sat at 0.07 with four sections inside a 14-word band.
+- **Sentence openers.** 972 distinct opening words across 3,383 sentences, with the commonest ("the") at only 6.3%, is healthy. If one opener passes about 10%, or fragments fall under about 5%, the cadence has flattened.
+- **The rule of three.** 60% of grids on this site have exactly three cards. Three is a real layout, but reaching for it by reflex is a tell. Let the content decide the count; four items should render as four.
+- **Section shape.** 76% of sections carry an eyebrow. That is fine sitewide, but 26 pages are at 100%, meaning every section on them is the identical eyebrow-heading-grid unit. Let some sections be plain prose.
+
+Do not pad or trim text to move a number. The metric is a smoke alarm, not the goal. If a section is genuinely short because there is little to say, leave it short and let the variance come from somewhere real.
+
+**On invented terms.** The named shells below are examples, not the whole class. The general test is sharper: if a phrase names a concept the field does not name, and the text does not immediately cash it out into a mechanism, it is invented. Repetition makes it worse rather than legitimate. `rule surface` appeared 13 times across three pages here, six of them as identical table cells, and it was defended as "a status column where repetition is correct." The repetition was correct. The term was not. Fixed by naming the actual thing: covenant rules.
+
+**On this file.** These rules were written by models, and models improve. If a later pass finds a real tell that nothing here catches, the right move is to add it here, not to work around it. Treat this document as the current best understanding rather than a fixed standard.
