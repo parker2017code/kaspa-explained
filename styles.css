@@ -6340,7 +6340,7 @@ body::before {
   }
 }
 
-@media (min-width: 820px) {
+@media (min-width: 1040px) {
   :is(
     .quick-grid,
     .timeline,
@@ -8357,6 +8357,9 @@ figure img,
 }
 
 @media (min-width: 1040px) {
+  /* Four cards in a three-column grid left the fourth alone. Spanning it full
+     width just moved the imbalance: one card at 1138px against three at 266px.
+     Two by two keeps every card the same size. */
   :where(
   .quick-grid,
   .timeline,
@@ -8395,7 +8398,49 @@ figure img,
   .capability-grid,
   .route-card-grid,
   .homepage-route-grid
-):has(> :nth-child(4):last-child) > :last-child {
-    grid-column: 1 / -1;
+):has(> :nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :where(
+  .quick-grid,
+  .timeline,
+  .status-grid,
+  .link-grid,
+  .insight-grid,
+  .claim-grid,
+  .fit-grid,
+  .category-list,
+  .lane-grid,
+  .check-grid,
+  .crypto-native-route,
+  .crypto-native-ledger,
+  .builder-console,
+  .builder-ledger,
+  .rail-ladder,
+  .reference-grid,
+  .source-tier-grid,
+  .ai-destination-grid,
+  .pitch-check-grid,
+  .reality-grid,
+  .field-study-grid,
+  .source-list,
+  .account-grid,
+  .path-grid,
+  .route-grid,
+  .one-screen-grid,
+  .must-read-grid,
+  .insight-groups,
+  .use-source-grid,
+  .learning-steps,
+  .method-strip,
+  .overview-grid,
+  .compare-cards,
+  .glossary-grid,
+  .capability-grid,
+  .route-card-grid,
+  .homepage-route-grid
+):has(> :nth-child(4):last-child) > * {
+    grid-column: auto;
   }
 }
