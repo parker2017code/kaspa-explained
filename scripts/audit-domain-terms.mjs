@@ -33,6 +33,8 @@ const skipDirs = new Set([
 const skipFiles = new Set([
   "AGENTS.md",
   "COPY_STYLE.md",
+  "CLAUDE.md",
+  "CONTENT_BRIEF.md",
   "agent-index.json",
   "package-lock.json",
   "scripts/audit-domain-terms.mjs",
@@ -216,6 +218,9 @@ function walk(dir) {
 function shouldSkipFile(fullPath, relativePath) {
   const normalizedPath = relativePath.split(path.sep).join("/");
   if (skipFiles.has(normalizedPath)) return true;
+  // X post drafts are the owner's social copy in his own voice.
+  if (/^kaspa-x-posts.*\.md$/.test(normalizedPath)) return true;
+  if (/^kaspa-toccata-.*-post-series\.md$/.test(normalizedPath)) return true;
   if (!checkedExtensions.has(path.extname(fullPath))) return true;
   if (fs.statSync(fullPath).size > 2_000_000) return true;
   return false;
@@ -285,8 +290,12 @@ function checkExactPhrases(relativePath, line, clean) {
     return;
   }
 
+  // A term inside quotation marks is being named in order to reject it, which
+  // is the opposite of using it. Scan only the unquoted remainder.
+  const unquoted = lower.replace(/"[^"]*"/g, " ").replace(/\u201c[^\u201d]*\u201d/g, " ");
+
   for (const phrase of [...exactBadPhrases, ...editorialLabels]) {
-    if (!lower.includes(phrase)) continue;
+    if (!unquoted.includes(phrase)) continue;
     failures.push({
       file: relativePath,
       line,

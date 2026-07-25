@@ -87,8 +87,10 @@ function auditHomepage() {
     fail(`index.html has ${buttons.length} button CTAs; keep the homepage route-focused`);
   }
 
-  if (!labels.includes("Build on Kaspa")) {
-    fail("index.html should feature Build on Kaspa as a main route");
+  // Check the route, not the label. The intent is that the homepage sends
+  // readers to the build hub; the button wording is free to change and has.
+  if (!/href="\/build-on-kaspa"/.test(html)) {
+    fail("index.html should route to the build hub at /build-on-kaspa");
   }
 
   for (const button of buttons) {
@@ -105,18 +107,20 @@ function auditHomepage() {
 
 function auditBuildHub() {
   const html = read("build-on-kaspa.html");
-  const flowLabels = [
-    "Founder fit",
-    "Product ideas",
-    "Toccata ideas",
-    "Compare",
-    "Evidence",
-    "Reality check",
+  // Routes, not labels. The earlier list named pages that were merged into
+  // their stronger neighbours, so it asserted a site map that no longer exists.
+  // These are the builder routes the hub actually has to keep reachable.
+  const flowRoutes = [
+    "/builder-guide",
+    "/builder-evidence",
+    "/kaspa-app-ideas",
+    "/application-layer",
+    "/kaspa-claims-checker",
   ];
 
-  for (const label of flowLabels) {
-    if (!html.includes(label)) {
-      fail(`build-on-kaspa.html should expose builder flow label: ${label}`);
+  for (const route of flowRoutes) {
+    if (!html.includes(`href="${route}"`)) {
+      fail(`build-on-kaspa.html should keep the builder route reachable: ${route}`);
     }
   }
 }

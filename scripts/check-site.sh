@@ -29,12 +29,23 @@ python3 scripts/check-copy-quality.py
 # with set -e, a missing node binary used to abort right here and silently
 # skip every check below this line (claim consistency, anchors, forbidden
 # copy). That dead zone is how status drift survived the enforcement layer.
+# Node is often absent from PATH here but present in the bundled Codex
+# runtime. Look there too, otherwise 1,295 lines of audit logic sit dark
+# and the gate reports a pass it did not actually earn.
+NODE_BIN=""
 if command -v node >/dev/null 2>&1; then
-  node scripts/audit-domain-terms.mjs
-  node scripts/audit-content-flow.mjs
-  node scripts/audit-visual-guardrails.mjs
+  NODE_BIN="node"
+elif [[ -x "$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node" ]]; then
+  NODE_BIN="$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
+fi
+
+if [[ -n "$NODE_BIN" ]]; then
+  "$NODE_BIN" scripts/lint-copy.mjs
+  "$NODE_BIN" scripts/audit-domain-terms.mjs
+  "$NODE_BIN" scripts/audit-content-flow.mjs
+  "$NODE_BIN" scripts/audit-visual-guardrails.mjs
 else
-  echo "SKIPPED (node not installed): audit-domain-terms, audit-content-flow, audit-visual-guardrails" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {
