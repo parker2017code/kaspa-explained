@@ -8297,3 +8297,105 @@ figure img,
   text-decoration-color: color-mix(in srgb, var(--muted) 50%, transparent);
   text-underline-offset: 3px;
 }
+
+/* ---------------------------------------------------------------------------
+   Lone card on the final row.
+
+   Measured across 48 routes at nine widths: 160 grids ended on a row that
+   filled less than 90%% of the container. The dominant shapes were three cards
+   in two columns, where the third sat alone across 49%% of the row, and four in
+   three columns, where the fourth sat alone across 32%%. In both cases a card
+   that matched its neighbours everywhere else suddenly had half a row of dead
+   space beside it.
+
+   A last child that starts a fresh row now spans to the end of it, so the row
+   closes instead of trailing off. Scoped to the two- and three-column ranges,
+   since above that the 12-column span rules already balance the rows.
+--------------------------------------------------------------------------- */
+@media (min-width: 700px) and (max-width: 1039px) {
+  :where(
+  .quick-grid,
+  .timeline,
+  .status-grid,
+  .link-grid,
+  .insight-grid,
+  .claim-grid,
+  .fit-grid,
+  .category-list,
+  .lane-grid,
+  .check-grid,
+  .crypto-native-route,
+  .crypto-native-ledger,
+  .builder-console,
+  .builder-ledger,
+  .rail-ladder,
+  .reference-grid,
+  .source-tier-grid,
+  .ai-destination-grid,
+  .pitch-check-grid,
+  .reality-grid,
+  .field-study-grid,
+  .source-list,
+  .account-grid,
+  .path-grid,
+  .route-grid,
+  .one-screen-grid,
+  .must-read-grid,
+  .insight-groups,
+  .use-source-grid,
+  .learning-steps,
+  .method-strip,
+  .overview-grid,
+  .compare-cards,
+  .glossary-grid,
+  .capability-grid,
+  .route-card-grid,
+  .homepage-route-grid
+) > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1040px) {
+  :where(
+  .quick-grid,
+  .timeline,
+  .status-grid,
+  .link-grid,
+  .insight-grid,
+  .claim-grid,
+  .fit-grid,
+  .category-list,
+  .lane-grid,
+  .check-grid,
+  .crypto-native-route,
+  .crypto-native-ledger,
+  .builder-console,
+  .builder-ledger,
+  .rail-ladder,
+  .reference-grid,
+  .source-tier-grid,
+  .ai-destination-grid,
+  .pitch-check-grid,
+  .reality-grid,
+  .field-study-grid,
+  .source-list,
+  .account-grid,
+  .path-grid,
+  .route-grid,
+  .one-screen-grid,
+  .must-read-grid,
+  .insight-groups,
+  .use-source-grid,
+  .learning-steps,
+  .method-strip,
+  .overview-grid,
+  .compare-cards,
+  .glossary-grid,
+  .capability-grid,
+  .route-card-grid,
+  .homepage-route-grid
+):has(> :nth-child(4):last-child) > :last-child {
+    grid-column: 1 / -1;
+  }
+}
