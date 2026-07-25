@@ -92,7 +92,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">Design frame</p>
       <h2>It is not an EVM turn</h2>
       <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction. No shared global account layer sits behind it.</p>
@@ -120,7 +120,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">ZK apps</p>
       <h2>Proofs move computation off L1, then settle back</h2>
       <p>One proof can stand for many off-chain app actions, if the app is designed that way. A proof transaction may weigh more than a simple payment, but the L1 transaction then serves as a settlement or verification event rather than the computation itself.</p>
@@ -128,7 +128,7 @@
       <p>That's why "Kaspa TPS" needs a workload label attached. Payment TPS, covenant transaction capacity, proof-settlement capacity, and effective app actions per settlement cycle are four different measurements.</p>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">KIP-21</p>
       <h2>Sequencing without proving the whole DAG</h2>
       <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, proving what isn't yours turns into the real burden, crowding out the useful work.</p>
@@ -136,7 +136,7 @@
       <p>That gives based apps and later vProg-style systems a way to skip proving unrelated network activity. It is not proof that full synchronous app composition runs today: that's still separate, later work.</p>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">vProgs boundary</p>
       <h2>Based apps first, full vProgs later</h2>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo describes an early Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction runtime, node, L1, and ZK pieces. It's research and roadmap work that shows the implementation direction only; it hasn't shipped as software.</p>
@@ -144,7 +144,7 @@
       <p>Toccata, activated, supports covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full vProgs are separate, later, roadmap architecture for richer execution and cross-app composition. It hasn't reached testnet yet.</p>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">Standard fee floor</p>
       <h2>Operator changes</h2>
       <p>The Toccata guide is operational. It tells node operators to run v2.0.1 or newer, notes the node database upgrade only goes one way without a resync, and tells service providers to test against Testnet-10.</p>
@@ -152,7 +152,7 @@
       <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, specifically to allow ZK-STARK proofs. That's proof-transaction capacity work, and it expands the size envelope those transactions need. Ordinary payment-throughput claims need their own, separate assumptions.</p>
     </section>
 
-    <section class="section">
+    <section class="section prose-section">
       <p class="eyebrow">Mining</p>
       <h2>Rust Stratum Bridge: point your hardware at your own node</h2>
       <p>ASIC miners speak Stratum. Kaspa nodes speak Kaspa RPC. The Rust Stratum Bridge gives miners and pools a maintained path for connecting mining hardware to an upgraded Kaspa node through the Rusty Kaspa stack.</p>
