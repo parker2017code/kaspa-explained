@@ -8299,168 +8299,24 @@ figure img,
 }
 
 /* ---------------------------------------------------------------------------
-   Lone card on the final row.
+   No card alone on a row.
 
-   Measured across 48 routes at nine widths: 160 grids ended on a row that
-   filled less than 90%% of the container. The dominant shapes were three cards
-   in two columns, where the third sat alone across 49%% of the row, and four in
-   three columns, where the fourth sat alone across 32%%. In both cases a card
-   that matched its neighbours everywhere else suddenly had half a row of dead
-   space beside it.
+   Three passes have now tried to fix this. The first balanced exactly seven
+   cards. The second made a trailing single span the full width, which closed
+   the gap but left the card alone on its line at double or triple the width of
+   its neighbours, which is the thing that looked wrong in the first place.
 
-   A last child that starts a fresh row now spans to the end of it, so the row
-   closes instead of trailing off. Scoped to the two- and three-column ranges,
-   since above that the 12-column span rules already balance the rows.
---------------------------------------------------------------------------- */
-@media (min-width: 700px) and (max-width: 1039px) {
-  :where(
-  .quick-grid,
-  .timeline,
-  .status-grid,
-  .link-grid,
-  .insight-grid,
-  .claim-grid,
-  .fit-grid,
-  .category-list,
-  .lane-grid,
-  .check-grid,
-  .crypto-native-route,
-  .crypto-native-ledger,
-  .builder-console,
-  .builder-ledger,
-  .rail-ladder,
-  .reference-grid,
-  .source-tier-grid,
-  .ai-destination-grid,
-  .pitch-check-grid,
-  .reality-grid,
-  .field-study-grid,
-  .source-list,
-  .account-grid,
-  .path-grid,
-  .route-grid,
-  .one-screen-grid,
-  .must-read-grid,
-  .insight-groups,
-  .use-source-grid,
-  .learning-steps,
-  .method-strip,
-  .overview-grid,
-  .compare-cards,
-  .glossary-grid,
-  .capability-grid,
-  .route-card-grid,
-  .homepage-route-grid
-) > :last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
-}
+   Measured across 48 routes at ten widths: 163 grids put one card on a row by
+   itself, most often four cards landing as three plus one, or three cards
+   landing as two plus one.
 
-@media (min-width: 1040px) {
-  /* Four cards in a three-column grid left the fourth alone. Spanning it full
-     width just moved the imbalance: one card at 1138px against three at 266px.
-     Two by two keeps every card the same size. */
-  :where(
-  .quick-grid,
-  .timeline,
-  .status-grid,
-  .link-grid,
-  .insight-grid,
-  .claim-grid,
-  .fit-grid,
-  .category-list,
-  .lane-grid,
-  .check-grid,
-  .crypto-native-route,
-  .crypto-native-ledger,
-  .builder-console,
-  .builder-ledger,
-  .rail-ladder,
-  .reference-grid,
-  .source-tier-grid,
-  .ai-destination-grid,
-  .pitch-check-grid,
-  .reality-grid,
-  .field-study-grid,
-  .source-list,
-  .account-grid,
-  .path-grid,
-  .route-grid,
-  .one-screen-grid,
-  .must-read-grid,
-  .insight-groups,
-  .use-source-grid,
-  .learning-steps,
-  .method-strip,
-  .overview-grid,
-  .compare-cards,
-  .glossary-grid,
-  .capability-grid,
-  .route-card-grid,
-  .homepage-route-grid
-):has(> :nth-child(4):last-child) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  :where(
-  .quick-grid,
-  .timeline,
-  .status-grid,
-  .link-grid,
-  .insight-grid,
-  .claim-grid,
-  .fit-grid,
-  .category-list,
-  .lane-grid,
-  .check-grid,
-  .crypto-native-route,
-  .crypto-native-ledger,
-  .builder-console,
-  .builder-ledger,
-  .rail-ladder,
-  .reference-grid,
-  .source-tier-grid,
-  .ai-destination-grid,
-  .pitch-check-grid,
-  .reality-grid,
-  .field-study-grid,
-  .source-list,
-  .account-grid,
-  .path-grid,
-  .route-grid,
-  .one-screen-grid,
-  .must-read-grid,
-  .insight-groups,
-  .use-source-grid,
-  .learning-steps,
-  .method-strip,
-  .overview-grid,
-  .compare-cards,
-  .glossary-grid,
-  .capability-grid,
-  .route-card-grid,
-  .homepage-route-grid
-):has(> :nth-child(4):last-child) > * {
-    grid-column: auto;
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Short final rows, completed.
-
-   Earlier passes balanced exactly one case (seven cards) and then a lone last
-   card. Both left the general problem: any count that does not divide by the
-   column count ends on a row that stops partway across the container.
-
-   Every grid here resolves to two or three equal columns, and 12 divides by
-   both, so a 12-track base covers every shape. The column count is pinned for
-   each count rather than only for the awkward ones, because leaving an even
-   count to auto-fit let it choose four columns and reintroduce a short row.
-   The bulk of the cards take an even share; whatever is left on the final row
-   splits the same 12 tracks between them, so the row always closes.
+   So when the remainder is a single card, the row above gives cards back rather
+   than the lone card stretching: three cards become one row of three, four
+   become two rows of two. Every grid resolves to two or three equal columns and
+   12 divides by both, so the spans stay whole numbers.
 --------------------------------------------------------------------------- */
 @media (min-width: 700px) and (max-width: 1099px) {
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8505,7 +8361,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8550,7 +8406,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8591,11 +8447,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(3):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(3):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8640,7 +8496,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8685,7 +8541,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8730,7 +8586,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8775,7 +8631,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8816,11 +8672,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(5):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(5):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8865,7 +8721,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8910,7 +8766,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -8955,7 +8811,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9000,7 +8856,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9041,11 +8897,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(7):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(7):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9090,7 +8946,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9135,7 +8991,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9180,7 +9036,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9225,7 +9081,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9266,11 +9122,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(9):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(9):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9315,7 +9171,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9360,7 +9216,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9405,7 +9261,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9450,7 +9306,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9491,11 +9347,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(11):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(11):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9540,7 +9396,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9585,7 +9441,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9630,7 +9486,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9675,7 +9531,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9716,11 +9572,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(13):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(13):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9765,7 +9621,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9810,7 +9666,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9855,7 +9711,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9900,7 +9756,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9941,11 +9797,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(15):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(15):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -9990,7 +9846,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10035,7 +9891,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10080,7 +9936,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10125,7 +9981,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10166,11 +10022,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(17):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(17):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10215,7 +10071,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10260,7 +10116,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10305,7 +10161,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10350,7 +10206,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10391,11 +10247,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(19):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(19):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10440,7 +10296,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10485,7 +10341,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10530,7 +10386,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10575,7 +10431,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10616,11 +10472,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(21):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(21):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10665,7 +10521,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10710,7 +10566,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10755,7 +10611,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10800,7 +10656,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10841,11 +10697,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(23):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(23):last-child) > :nth-last-child(-n + 3) {
+    grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10890,7 +10746,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10937,7 +10793,7 @@ figure img,
 }
 
 @media (min-width: 1100px) {
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -10982,7 +10838,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11027,7 +10883,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11072,7 +10928,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11117,7 +10973,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11158,11 +11014,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(4):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(4):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11207,7 +11063,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11252,7 +11108,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11297,7 +11153,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11342,7 +11198,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11387,7 +11243,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11432,7 +11288,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11477,7 +11333,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11518,11 +11374,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(7):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(7):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11567,7 +11423,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11612,7 +11468,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11657,7 +11513,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11702,7 +11558,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11747,7 +11603,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11792,7 +11648,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11837,7 +11693,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11878,11 +11734,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(10):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(10):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11927,7 +11783,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -11972,7 +11828,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12017,7 +11873,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12062,7 +11918,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12107,7 +11963,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12152,7 +12008,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12197,7 +12053,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12238,11 +12094,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(13):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(13):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12287,7 +12143,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12332,7 +12188,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12377,7 +12233,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12422,7 +12278,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12467,7 +12323,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12512,7 +12368,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12557,7 +12413,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12598,11 +12454,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(16):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(16):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12647,7 +12503,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12692,7 +12548,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12737,7 +12593,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12782,7 +12638,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12827,7 +12683,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12872,7 +12728,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12917,7 +12773,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -12958,11 +12814,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(19):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(19):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13007,7 +12863,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13052,7 +12908,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13097,7 +12953,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13142,7 +12998,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13187,7 +13043,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13232,7 +13088,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13277,7 +13133,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13318,11 +13174,11 @@ figure img,
     .timeline,
     .use-source-grid,
     .visual-library-grid
-  ):has(> :nth-child(22):last-child) > :nth-last-child(-n + 1) {
-    grid-column: span 12;
+  ):has(> :nth-child(22):last-child) > :nth-last-child(-n + 4) {
+    grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13367,7 +13223,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13412,7 +13268,7 @@ figure img,
     grid-column: span 4;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13457,7 +13313,7 @@ figure img,
     grid-column: span 6;
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
@@ -13502,7 +13358,7 @@ figure img,
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
-  :where(
+  :is(
     .account-grid,
     .ai-destination-grid,
     .api-command-grid,
