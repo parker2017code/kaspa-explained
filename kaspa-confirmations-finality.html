@@ -94,6 +94,38 @@
       </div>
     </section>
 
+    <section class="section prose-section">
+      <p class="eyebrow">The mechanism</p>
+      <h2>What a confirmation counts on a graph</h2>
+      <p>On a single chain a confirmation is easy to picture: one more block stacked on the block holding your payment. Kaspa has no single stack. Your block sits in a graph, and what piles up on it is <a href="/glossary#blue-work">blue work</a>, the proof-of-work carried by every later blue block whose history includes yours.</p>
+      <p>The effect on an attacker is the same one Bitcoin relies on. Undoing your payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. Underneath that count is a weight comparison.</p>
+      <p>At 10 BPS the references arrive quickly, which is why Kaspa's risk curve drops steeply in the first seconds. Steeply is not vertically. Reversal risk falls toward zero and keeps falling; no amount of waiting sets it to zero by arithmetic.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Two guarantees</p>
+      <h2>Confidence and finality are not the same thing</h2>
+      <div class="fit-grid">
+        <article class="section">
+          <h3>Confirmation confidence</h3>
+          <p>A sliding scale with no threshold in it. Confidence rises continuously as blue work accumulates over your transaction, and the protocol never announces that a recent payment is done. The recipient decides how much residual risk is acceptable and waits accordingly.</p>
+        </article>
+        <article class="section">
+          <h3>Finality depth</h3>
+          <p><a href="/glossary#finality-depth">Finality depth</a> is a consensus parameter. Once history is buried past that depth, nodes reject a reorganization outright, which is also what makes pruning safe. It sits far deeper than any payment wait and answers a different question: how far back the protocol will let anyone rewrite.</p>
+        </article>
+      </div>
+      <p class="fit-note">A recipient waiting on a payment is using the first one. Node operators, exchanges, and anyone reasoning about archival history and pruning are using the second.</p>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">The decision</p>
+      <h2>How deep to wait</h2>
+      <p>Kaspa publishes no universal confirmation count, and a single number would be the wrong shape of answer. The two inputs are what is at stake and what it would cost someone to build competing work faster than the honest network. A coffee and an exchange deposit sit at opposite ends of that, and they should not wait the same amount of time.</p>
+      <p>Three things move the honest answer. The value at risk sets how much an attacker could gain. Current hash rate and its distribution set how expensive competing work would be to produce. Reversibility outside the protocol matters too: a payment you can claw back through a shipping hold or a customer relationship tolerates a thinner wait than one that hands over an irreversible good.</p>
+      <p>Exchanges and payment processors publish their own deposit policies, and those are the numbers that actually govern a user's experience. For anyone building on Kaspa, the useful move is showing the confidence state honestly, with a first-seen state, an included state, and a depth-based confirmed state the user can understand, in place of a single green check the moment a transaction is broadcast.</p>
+    </section>
+
     <section class="section">
       <p class="eyebrow">The claim</p>
       <h2>How to say it right</h2>
@@ -107,6 +139,17 @@
             <tr><td>Real-time means irreversible now.</td><td>Real-time measures how fast a block gets mined. How final the transaction inside it is depends on separate confirmation math.</td></tr>
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="next-step section">
+      <p class="eyebrow">Sources</p>
+      <h2>Check it yourself</h2>
+      <p>The ordering rule behind all of this gets its own page, the consensus parameters live in the node code, and the status page carries the dated mainnet checks.</p>
+      <div class="actions">
+        <a class="button primary" href="/ghostdag-explained">How GHOSTDAG orders blocks</a>
+        <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
+        <a class="button" href="/status">Current status</a>
       </div>
     </section>
 <!-- related-links:start -->

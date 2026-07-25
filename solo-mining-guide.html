@@ -180,8 +180,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Node already runs on Windows</td><td>Use the Windows bridge command in external-node mode, then point the ASIC at the Windows computer's local IP.</td></tr>
-            <tr><td>Node already runs on macOS or Linux</td><td>Use the macOS / Linux bridge command in external-node mode, then point the ASIC at that computer's local IP.</td></tr>
+            <tr><td>A synced node already runs on this computer</td><td>Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
             <tr><td>Rusty Kaspa is downloaded but the node hasn't started yet</td><td>Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
             <tr><td>The bridge should start its own node</td><td>Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
             <tr><td>The node runs on another computer</td><td>Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
@@ -354,12 +353,10 @@
         <span class="guide-detail-preview">IceRiver, Bitmain, BzMiner, Goldshell, and field-name differences.</span>
       </summary>
       <div class="guide-detail-body">
-      <p>The bridge detects several miner and mining-software types automatically and adjusts protocol handling per type. The setup screen itself still belongs to the miner manufacturer, so field labels vary.</p>
+      <p>The bridge detects several miner and mining-software types automatically and adjusts protocol handling per type. The setup screen itself still belongs to the miner manufacturer, so field labels vary. The bridge docs list two job formats, and every supported device falls into one of them.</p>
       <div class="summary-grid">
-        <article><span>IceRiver</span><p>Listed in the bridge docs; these miners require extranonce plus a single hex string job format.</p></article>
-        <article><span>Bitmain</span><p>Bitmain and GodMiner are listed; these miners use no extranonce, with array plus timestamp job format.</p></article>
-        <article><span>BzMiner</span><p>Listed in the bridge docs; requires extranonce plus a single hex string job format.</p></article>
-        <article><span>Goldshell</span><p>Listed in the bridge docs; requires extranonce plus a single hex string job format.</p></article>
+        <article><span>Extranonce, single hex string</span><p>IceRiver, BzMiner, and Goldshell.</p></article>
+        <article><span>No extranonce, array plus timestamp</span><p>Bitmain and GodMiner.</p></article>
       </div>
       <p class="fit-note">Whatever the brand, the fields that matter stay the same: pool URL, username or wallet field, and a password only if the miner UI demands one.</p>
       </div>

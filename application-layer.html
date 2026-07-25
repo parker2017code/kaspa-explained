@@ -126,25 +126,11 @@
 
     <section id="tn12-covenant-tests" class="section">
       <h2>What TN12 covenant tests are teaching</h2>
-      <p>TN12 covenant tests count as evidence only when they make a money rule visible at the spend layer. Start with what happened: testnet transactions landed, artifacts link to the txids, replay explains the resulting state. Only then ask which rule controlled the spend.</p>
+      <p>A TN12 covenant test earns its keep when it makes a money rule visible at the spend layer. The transaction landed, the artifact links to the txid, replay explains the resulting state. Only then does "which rule controlled this spend" have a checkable answer.</p>
       <p>A wallet or app should explain the rule before the user signs: this spend is under the cap, this asset has the required controller input, this payout matches accepted evidence, this withdrawal is blocked. An ordinary server can display those same claims. What's different here is that the money movement and the rule sit in the same public record.</p>
-      <p>Keep the evidence classes separate. An accepted TN12 transaction landed on testnet. A local reject failed in a local script or covenant engine. Replay-derived state explains accepted rows but does not itself control funds. Wallet policy is a signer warning or refusal before broadcast: four different things, four different weights of proof.</p>
-      <p>Keep the status label next to the demo itself, where a reader hits it before the screenshots. The product path runs through workflows where both the allowed move and the refused move can be reviewed side by side.</p>
-      <div class="use-source-grid">
-        <article>
-          <strong>Budget that cannot drain at once</strong>
-          <span>Allowance wallet, team treasury, grant stream, merchant payout limit, or game resource. Mechanism: a covenant carries the budget state forward, one valid step at a time.</span>
-        </article>
-        <article>
-          <strong>Step-by-step workflow that can recover</strong>
-          <span>Game turn, dispute, service job, approval path, or challenge/timeout flow. Mechanism: a hub routes state through smaller worker roles instead of one monolithic script.</span>
-        </article>
-        <article>
-          <strong>Asset that needs its controller</strong>
-          <span>Ticket, pass, game item, license, or app-owned settlement right. Mechanism: the asset move requires the controller input in the same transaction. No controller input, no move.</span>
-        </article>
-      </div>
-      <p class="fit-note">The public TN12 experiment map is <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/experiments.html">a testnet evidence map</a>. Testnet evidence doesn't stand in for mainnet product evidence.</p>
+      <p>Four kinds of result get read as the same result. An accepted TN12 transaction landed on testnet. A local reject failed inside a script or covenant engine on one machine. Replay-derived state explains accepted rows without controlling any funds itself. Wallet policy is a signer warning or refusal before broadcast, so the network never sees it.</p>
+      <p>The rules under test are the same three the Toccata table below covers: a covenant that carries a budget forward one valid step at a time, a hub that routes workflow state through smaller worker roles instead of one monolithic script, and an asset that cannot move without its controller input in the same transaction.</p>
+      <p class="fit-note">The public TN12 experiment map is <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/experiments.html">a testnet evidence map</a>. Testnet evidence doesn't stand in for mainnet product evidence; <a href="/builder-evidence">builder evidence</a> covers what does.</p>
     </section>
 
     <section id="live-lane" class="section">
@@ -233,59 +219,16 @@
       </details>
     </section>
 
-    <section id="rtd" class="section">
+    <section id="rtd" class="section prose-section">
       <h2>The unusual app job is rules strangers can rely on</h2>
       <p>RTD and Staghunt framing point to markets where people need credible commitment before they act. An ordinary website can collect promises too. The difference is that users worry the operator can censor, reorder, change terms, or disappear.</p>
-      <p>The first version stays simple: collect conditional commitments, group compatible commitments, run a transparent solver, prepare settlement or refunds, replay the accepted evidence. The harder research target adds privacy, reusable capital, solver incentives, censorship resistance, and atomic execution. None of that is built yet.</p>
-      <p>The hard parts are concrete: event sources, incentives, anti-MEV design, scheduling, disputes, implementation. Ship transparent commitments before claiming private or atomic coordination markets.</p>
-      <details class="source-more">
-        <summary>Open group-commitment examples</summary>
-        <div class="fit-grid">
-          <article class="section">
-            <h3>Public-goods assurance</h3>
-            <p>Projects, research, events, software, or local infrastructure receive funding only once enough participants join under rules fixed before anyone commits.</p>
-          </article>
-          <article class="section">
-            <h3>Real-time auctions</h3>
-            <p>Fast, open auctions for scarce digital goods, access, blockspace-related rights, or services that need ordering and censorship resistance to work at all.</p>
-          </article>
-          <article class="section">
-            <h3>Oracle-backed markets</h3>
-            <p>Prediction, insurance, and payment markets that need external data, with oracle trust, incentives, and dispute paths made explicit up front.</p>
-          </article>
-          <article class="section">
-            <h3>First-to-know signal markets</h3>
-            <p>Miners or other rewarded reporters start attesting to an event; the market surfaces the earliest credible signal before normal feeds catch up.</p>
-          </article>
-          <article class="section">
-            <h3>Machine-to-machine payments</h3>
-            <p>Agents, devices, miners, apps, and services buy resources or make commitments at internet speed with self-custodied funds, no human in the loop.</p>
-          </article>
-        </div>
-      </details>
+      <p>Start transparent: collect conditional commitments, group the compatible ones, run a solver anyone can replay, then settle or refund. Privacy before the threshold, reusable capital, solver incentives, and atomic execution are all unsolved, so shipping the transparent version first is what keeps the claim honest. <a href="/kaspa-coordination-markets">Coordination markets</a> works through the design, the places it could fit, and what has to be solved before one launches.</p>
     </section>
 
     <section id="execution-order" class="section">
       <h2>Build order</h2>
       <p>Build in this order: wallet and payment paths first, small covenant-shaped products second, richer based-app or later app-program paths only once the product genuinely needs shared state or composition.</p>
-      <details class="source-more">
-        <summary>Open capability table</summary>
-        <div class="table-wrap">
-          <table class="reality-table">
-            <thead><tr><th>Capability</th><th>What builders can do</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>10 BPS GHOSTDAG payment flow</td><td>Fast inclusion, fast PoW user experience, wallets, payments, infrastructure, and confirmation UX that separates states instead of blurring them.</td><td>Live</td></tr>
-              <tr><td>Receipt and payload UX</td><td>Payment receipts, compact app context, accepted-transaction checks, support dashboards, and fallback verification paths. Wallet and infrastructure quality set the ceiling here; the protocol already clears it.</td><td>Live foundation; depends on wallet and infrastructure quality</td></tr>
-              <tr><td>Attestation-capable paths</td><td>Opt-in event reporting, early external-event signals, oracle experiments, and first-to-know dashboards, all built by apps on top of base payments.</td><td>App-level design over base payment paths</td></tr>
-              <tr><td>MEV-aware ordering or auctions</td><td>Protects a user who delegates an if-this-then-that strategy from a miner or searcher front-running the same event signal.</td><td>Research / design work</td></tr>
-              <tr><td>Toccata covenants and ZK hooks</td><td>Vaults, assurance contracts, state-machine apps, simple assets, bridge foundations, and zk covenant experiments. Any external-chain or real-world claim still needs its own anchor: a light client, finality certificate, accumulated-work view, oracle, reporter set, or dispute process.</td><td>Activated protocol surface; wallet, explorer, and app evidence still needed</td></tr>
-              <tr><td>STARK-sized proof support</td><td>Large validity proofs on Kaspa, trading block size against a standard-fee floor to keep spam expensive.</td><td>TN12 context / mainnet design question</td></tr>
-              <tr><td>Later app programs</td><td><a href="/kaspa-vprogs-explained">Apps that prove their own logic</a>, share Kaspa ordering, feel cohesive to users, and support atomic app-to-app actions: the later roadmap target.</td><td>Roadmap architecture</td></tr>
-              <tr><td>DAGKnight / higher BPS RTD</td><td>Higher-density real-time majority sampling with more internet-round-trip attestation confidence than the current design.</td><td>Research / future upgrade direction</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
+      <p>Two questions stay open at every rung, and neither has a shipped answer. If a user delegates an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. And a validity proof large enough to be worth submitting trades block size against the standard-fee floor that keeps spam expensive. Both are design work. Any external-chain or real-world claim needs its own anchor too: a light client, finality certificate, accumulated-work view, oracle, reporter set, or dispute process.</p>
       <details class="source-more">
         <summary>Open build-order table</summary>
         <div class="table-wrap">

@@ -43,7 +43,7 @@
       {
         "@type": "Question",
         "name": "Is GHOSTDAG the same as DAGKnight?",
-        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG runs on mainnet today. DAGKnight is a separate, later consensus design, still research-stage and nowhere close to testnet."}
+        "acceptedAnswer": {"@type": "Answer", "text": "No. GHOSTDAG runs on mainnet today. DAGKnight is a separate, later consensus design. It is research-stage: KIP-2 still reads Status: Proposed, and the implementation branch has not been touched since March 2026."}
       },
       {
         "@type": "Question",
@@ -83,16 +83,39 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">The mechanism</p>
+      <p class="eyebrow">The setup</p>
       <h2>Why Kaspa needs it</h2>
       <div class="summary-grid">
         <article><span>Problem</span><p>Fast block times mean honest miners regularly find blocks within moments of each other.</p></article>
         <article><span>Old shape</span><p>A single chain has to pick one branch. The losing branch's work gets thrown away as orphaned or stale.</p></article>
         <article><span>Kaspa shape</span><p>A blockDAG keeps both blocks. Neither gets discarded.</p></article>
         <article><span>Ordering rule</span><p>GHOSTDAG splits the graph into a blue set and a red set, then applies the same ranking procedure at every node.</p></article>
-        <article><span>What you see</span><p>Your transaction lands in a block fast. Confidence that the block stays blue builds as more blocks reference it.</p></article>
-        <article><span>The catch</span><p>Fast inclusion is not irreversibility. How final your payment is still depends on confirmation depth and how much risk the recipient will tolerate.</p></article>
       </div>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">Step one</p>
+      <h2>How a block gets colored</h2>
+      <p>A Kaspa block names its parents: every tip the miner could see when it started hashing. Those references are the whole data structure. Follow them backwards and you get a block's past, follow them forwards and you get its future, and everything left over is its <a href="/glossary#anticone">anticone</a>, the blocks that neither came before it nor after it. A single chain has no way to rank an anticone, which is why it discards one side of it.</p>
+      <p>GHOSTDAG ranks the anticone using one behavioral difference between honest miners and attackers. An honest miner publishes a block the second it is found, so within a propagation delay everyone else sees it and starts referencing it. Its anticone stays small by construction. A miner building a hidden history does the opposite: nobody can reference blocks they were never shown, so withheld blocks surface later carrying wide anticones. Secrecy has a shape, and the graph records it.</p>
+      <p>The coloring rule reads that shape. Kaspa has a security parameter, k, which caps how many blue blocks are allowed to sit in any blue block's anticone. A node starts from the heaviest tip and works through the graph, adding each candidate block to the <a href="/glossary#blue-red">blue set</a> only when adding it keeps every blue block under that cap. Blocks that break it get marked red. The parameter is derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin.</p>
+      <p>Red is not deletion. A red block keeps its place in the graph, keeps its parents, and keeps its transactions. What it loses is a vote in the weight comparison below.</p>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">Step two</p>
+      <h2>From a colored graph to one order</h2>
+      <p>Coloring alone gives no sequence, and payments need a sequence: if two transactions spend the same coin, one has to be first. GHOSTDAG builds that sequence from a spine. Each block picks the parent carrying the most accumulated <a href="/glossary#blue-work">blue work</a> as its <a href="/glossary#selected-parent">selected parent</a>, and chaining those choices together produces the selected parent chain, the closest thing Kaspa has to Bitcoin's longest chain.</p>
+      <p>The spine then absorbs everything hanging off it. Each block on the chain has a <a href="/glossary#mergeset">mergeset</a>: the blocks its parents saw that its selected parent's history did not already include. Those get ordered by the same procedure, blue blocks ahead of red ones, and appended in the spine's order. Walk the chain from the genesis block to the current tip and you have laid every block in the DAG, red ones included, into a single line.</p>
+      <p>Transactions are read off that line in order. The first spend of a coin wins and any conflicting spend later in the sequence is rejected, which is how a graph with no unique newest block still produces exactly one payment history. Every node runs the identical procedure over the identical DAG, so they all derive the identical order without voting, messaging, or a committee.</p>
+      <p>Blue work is also the tiebreak between competing histories. Bitcoin compares chains by accumulated work; Kaspa compares them by accumulated work in the blue set. An attacker whose blocks are colored red is spending real electricity that buys no weight in that comparison.</p>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">What you get</p>
+      <h2>What this buys, and what it doesn't</h2>
+      <p>Your transaction lands in a block fast, and confidence that the block stays blue builds as more blocks reference it. That is the payoff: parallel blocks stop being waste, so block rate can rise without the orphan rate eating the security budget.</p>
+      <p>Fast inclusion is not irreversibility. GHOSTDAG settles which blocks are blue and what order they sit in; it does not make a fresh transaction permanent, and confirmation confidence still climbs probabilistically as work accumulates. <a href="/kaspa-confirmations-finality">Confirmations and finality</a> covers how deep to wait and why.</p>
     </section>
 
     <section class="section">
@@ -114,7 +137,7 @@
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research has the protocol lineage, Rusty Kaspa is the code that runs it, and the finality page works through payment-confidence wording in detail.</p>
+      <p>Kaspa Research has the protocol lineage and Rusty Kaspa is the code that runs it, including the current value of k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> collects the term-by-term references for anticone, mergeset, k-clusters, blue score, and blue work.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
