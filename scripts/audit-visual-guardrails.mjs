@@ -114,10 +114,8 @@ function auditKaspaBrandTokens() {
 
 function auditKaspaSurfaceTreatment() {
   // RETIRED (pre-2026-07-08 glass design): assertCssIncludes( "background:\n linear-gradient(132deg, rgba(var(--green-rgb), .068), transparent 30%, rgba(var(--cyan-rgb), .035) 65%, transparent 88%),", "dark Kaspa background wash", );
-  assertCssIncludes(
-    ":root[data-theme=\"light\"] .hero-visual {\n  background:\n    linear-gradient(145deg, rgba(var(--green-rgb), .07), transparent 46%),\n    var(--glass-surface);\n}",
-    "light hero graph Kaspa surface treatment",
-  );
+  // RETIRED: .hero-visual appears on zero pages, so this asserted styling for a
+  // component that nothing renders.
   assertCssIncludes("text-transform: uppercase;\n  letter-spacing: .065em;", "technical eyebrow label treatment");
 }
 
