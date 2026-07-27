@@ -19,7 +19,7 @@
 
     <section class="panel">
       <h2>What's built here, with receipts</h2>
-      <p class="hint">Not a mockup. Every row below is a real accepted TN10 transaction from building this page. Click a txid to verify it independently against the public REST API, the same "don't trust local state" habit this page's own send flow follows.</p>
+      <p class="hint">Not a mockup. Every row below was a real accepted TN10 transaction from building this page. Testnet-10 has since been reset, so the public REST API returns "Transaction not found" for all of them and they are kept here as the record rather than as receipts you can still check. That is what a testnet reset does to evidence, which is the argument for treating testnet artifacts and mainnet history as different classes of claim.</p>
       <div class="table-wrap">
       <table class="receipts-table">
         <thead><tr><th>App / feature</th><th>What it proves</th><th>Receipt</th></tr></thead>
@@ -27,52 +27,52 @@
           <tr>
             <td>Wallet</td>
             <td>Real key generation, funding, and P2P send between two independently created wallets (25 tKAS)</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/ad2ab61647de9047b0fa1103293878cc95b22adcdf6a807e12144b9666d0d320" target="_blank" rel="noopener">ad2ab616…</a></td>
+            <td><code title="ad2ab61647de9047b0fa1103293878cc95b22adcdf6a807e12144b9666d0d320">ad2ab616…</code></td>
           </tr>
           <tr>
             <td>Send cap</td>
             <td>10 tKAS/tx limit enforced client-side (a 15 tKAS attempt is rejected with no transaction built); a 5 tKAS send within the cap goes through normally</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/d5c53eb55417c816ef3c45ca9284608fd044fe3961e920ead9e0dd0956f3ea87" target="_blank" rel="noopener">d5c53eb5…</a></td>
+            <td><code title="d5c53eb55417c816ef3c45ca9284608fd044fe3961e920ead9e0dd0956f3ea87">d5c53eb5…</code></td>
           </tr>
           <tr>
             <td>Encrypted DM</td>
             <td>Wallet-to-wallet CryptoBox (X25519 + XChaCha20Poly1305) encrypted message, published key lookup, decrypted back to the original plaintext on the recipient's device</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/62ce7e68a97ecae5fee5498cdf8c484bba38fd0528a554bef7d03f61b7562797" target="_blank" rel="noopener">62ce7e68…</a></td>
+            <td><code title="62ce7e68a97ecae5fee5498cdf8c484bba38fd0528a554bef7d03f61b7562797">62ce7e68…</code></td>
           </tr>
           <tr>
             <td>Group chat room</td>
             <td>Two independent wallets joined room "kaspa-builders" from just a shared name, exchanged messages, each decrypted the other's using the SDK's own password cipher</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/fc04bcb1f13d0aa82548915d1e759ee2692dc08d65083f26cf321cc56828ba2e" target="_blank" rel="noopener">fc04bcb1…</a></td>
+            <td><code title="fc04bcb1f13d0aa82548915d1e759ee2692dc08d65083f26cf321cc56828ba2e">fc04bcb1…</code></td>
           </tr>
           <tr>
             <td>Public feed</td>
             <td>Unencrypted post to a well-known shared address, readable by anyone, poster's address resolved to a published display name</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/c31fc6e3fd97c712f37a5c11bb2e6e9648ad22d675db858e23bd375440aa70c3" target="_blank" rel="noopener">c31fc6e3…</a></td>
+            <td><code title="c31fc6e3fd97c712f37a5c11bb2e6e9648ad22d675db858e23bd375440aa70c3">c31fc6e3…</code></td>
           </tr>
           <tr>
             <td>Display name / profile</td>
             <td>Self-send payload announcing a name for an address, resolved and cached by the feed/room views</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/725685f2137719502c4cab5ab6810a7c73b30fcf337bf1c53e60ad8cf5fa91e9" target="_blank" rel="noopener">725685f2…</a></td>
+            <td><code title="725685f2137719502c4cab5ab6810a7c73b30fcf337bf1c53e60ad8cf5fa91e9">725685f2…</code></td>
           </tr>
           <tr>
             <td>Tip jar</td>
             <td>A second wallet, funded from this one, sent a real tip with a message to the shared tip jar app, and showed up correctly on its leaderboard</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/544e1164de5d35c536a3a7aedcfb8911231bd11d846e252d890bd9a84f59a276" target="_blank" rel="noopener">544e1164…</a></td>
+            <td><code title="544e1164de5d35c536a3a7aedcfb8911231bd11d846e252d890bd9a84f59a276">544e1164…</code></td>
           </tr>
           <tr>
             <td>Polls</td>
             <td>Created a real poll, voted on it, and watched the tally update live, computed entirely by reading and parsing the board address's own transaction history</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/8941d5462b125f44e80e33d9d5042e8f83470027f6d9e58140f9542c1cf0ad9c" target="_blank" rel="noopener">8941d546…</a></td>
+            <td><code title="8941d5462b125f44e80e33d9d5042e8f83470027f6d9e58140f9542c1cf0ad9c">8941d546…</code></td>
           </tr>
           <tr>
             <td>Task board</td>
             <td>Posted a task, claimed it, and marked it complete, three separate transactions whose replayed order correctly moved the task through Open, Claimed, and Completed, no database involved</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/31ba4c503a7761fda127afe9d482803db894956adc72c8226352c676ec659764" target="_blank" rel="noopener">31ba4c50…</a></td>
+            <td><code title="31ba4c503a7761fda127afe9d482803db894956adc72c8226352c676ec659764">31ba4c50…</code></td>
           </tr>
           <tr>
             <td>Vault</td>
             <td>Locked content behind a real pay-to-script-hash hash-lock (ScriptBuilder, OP_SHA256/OP_EQUALVERIFY/OP_CHECKSIG), a second wallet paid into it, and the claim spent it with a hand-built signature script the network verified, publishing the unlock secret on-chain in the process</td>
-            <td><a href="https://api-tn10.kaspa.org/transactions/73926bffefb7bb39d5f4f4753dd4f1314713fd4f7c9d9093d4102e52208efadf" target="_blank" rel="noopener">73926bff…</a></td>
+            <td><code title="73926bffefb7bb39d5f4f4753dd4f1314713fd4f7c9d9093d4102e52208efadf">73926bff…</code></td>
           </tr>
         </tbody>
       </table>

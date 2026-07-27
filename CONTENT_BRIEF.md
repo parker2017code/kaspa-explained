@@ -469,7 +469,7 @@ Discovery and replies:
 - https://x.com/IzioDev
 - https://x.com/coderofstuff_
 - https://x.com/FreshAir08
-- https://x.com/eliottmea
+- https://kasmedia.com/article/eliot-mea-and-oracles (Eliott Mea; his X account no longer resolves)
 - https://x.com/KasSigner
 
 Read replies as well as top-level posts when researching a current technical point.
