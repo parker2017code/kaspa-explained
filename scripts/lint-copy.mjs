@@ -223,6 +223,14 @@ function historicalLogLines(lines) {
   return skip;
 }
 
+// A verbatim quotation from a source is evidence, not house prose. Rewriting it
+// to satisfy a style rule would falsify the quote, so strip double-quoted spans
+// before matching. Added 2026-07-29, after the rule fired on Kaspa's own
+// documentation being quoted exactly on the Argent page.
+function withoutQuotedSpans(line) {
+  return line.replace(/"[^"]{12,}"/g, (m) => " ".repeat(m.length));
+}
+
 function checkFile(fullPath, relativePath) {
   const text = fs.readFileSync(fullPath, "utf8");
   const lines = text.split(/\r?\n/);
@@ -230,7 +238,7 @@ function checkFile(fullPath, relativePath) {
 
   for (const rule of rules) {
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = withoutQuotedSpans(lines[i]);
       if (historical.has(i)) continue;
       if (/\.(js|mjs|cjs)$/.test(relativePath) && /^\s*(\/\/|\*|\/\*)/.test(line)) continue;
       if (isInstructionContext(relativePath, line)) continue;
@@ -245,7 +253,7 @@ function checkFile(fullPath, relativePath) {
           file: relativePath,
           line: i + 1,
           rule: rule.name,
-          text: line.trim(),
+          text: lines[i].trim(),
         });
       }
     }
