@@ -276,7 +276,7 @@ $KAS
 
 Covenants are Kaspa's low-level script primitive. Silverscript is what makes them buildable without hand-writing every opcode.
 
-It's a higher-level language that compiles down to the actual covenant scripting Toccata activated. Silverscript's own docs still target Testnet-12, not mainnet: the underlying rule surface is live, the tooling built on top of it is still catching up.
+It's a higher-level language that compiles down to the actual covenant scripting Toccata activated. Silverscript still labels itself experimental and recommends its bytecode artifact only on testnet-10 until a first stable release: the underlying rule surface is live, the tooling built on top of it is still catching up.
 
 A covenant idea and a shippable covenant product are separated by exactly this gap.
 

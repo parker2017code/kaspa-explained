@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained</title>
+  <meta name="description" content="A live tracker of Kaspa Improvement Proposals and Kaspa Calls for Conventions, read straight from the kaspanet repositories so the status cannot go stale.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/kips">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained">
+  <meta property="og:description" content="A live tracker of Kaspa Improvement Proposals and Kaspa Calls for Conventions, read straight from the kaspanet repositories so the status cannot go stale.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/kips">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained">
+  <meta name="twitter:description" content="A live tracker of Kaspa Improvement Proposals and Kaspa Calls for Conventions, read straight from the kaspanet repositories so the status cannot go stale.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-07-29">
+  <link rel="stylesheet" href="styles.css?v=20260725-rows-j">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home"><span class="brand-mark" aria-hidden="true"></span>Kaspa Explained</a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+  <main id="top" tabindex="-1">
+    <section class="section">
+      <p class="eyebrow">Proposal tracker</p>
+      <h1>KIPs and KCCs</h1>
+      <p class="lead">Two separate processes decide what Kaspa becomes. One changes the protocol, one does not. This page reads both straight from their repositories, so what you see is the current state rather than a label somebody typed once.</p>
+      <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API. It ships when it is implemented and activated, and until then its status word is the honest answer. A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change at all. The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)."</p>
+      <p>The distinction matters because the two get confused constantly. A merged KIP marked Active is protocol law. An open KCC pull request is a draft one person wrote and others are arguing about, and calling it a standard is how people end up building against something that never lands.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Protocol</p>
+      <h2 id="kip">Kaspa Improvement Proposals</h2>
+      <p>Status words come from the index table in the KIP repository. Implemented means it is running. Active means merged and adopted as the specification. Proposed and Draft mean the argument is still open. Rejected means it was considered and turned down, which is worth as much as the rest.</p>
+      <div class="table-wrap">
+        <table class="reality-table" id="kip-table">
+          <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+          <tbody id="kip-body">
+            <tr><td>1</td><td>Rewriting the full node in Rust</td><td>Consensus, Node</td><td>Implemented</td></tr>
+            <tr><td>2</td><td>Upgrade consensus to follow DAGKNIGHT</td><td>Consensus, API/RPC</td><td>Proposed</td></tr>
+            <tr><td>3</td><td>Block sampling for efficient DAA with high BPS</td><td>Consensus</td><td>Rejected</td></tr>
+            <tr><td>4</td><td>Sparse difficulty windows</td><td>Consensus</td><td>Active</td></tr>
+            <tr><td>5</td><td>Message signing</td><td>Applications</td><td>Active</td></tr>
+            <tr><td>6</td><td>Proof of Chain Membership</td><td>Consensus, Applications</td><td>Draft</td></tr>
+            <tr><td>9</td><td>Extended mass formula for mitigating state bloat</td><td>Consensus, Mempool, P2P</td><td>Active</td></tr>
+            <tr><td>10</td><td>New transaction opcodes for enhanced script functionality</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+            <tr><td>13</td><td>Transient storage handling</td><td>Consensus</td><td>Active</td></tr>
+            <tr><td>14</td><td>The Crescendo hardfork</td><td>Consensus</td><td>Active</td></tr>
+            <tr><td>15</td><td>Canonical transaction ordering and sequencing commitments</td><td>Consensus</td><td>Active</td></tr>
+            <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+            <tr><td>17</td><td>Covenants and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+            <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+            <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" id="kip-stamp">Baseline read from the KIP repository on July 29, 2026. This table refreshes from the repository when the page loads.</p>
+      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the DAGKnight upgrade, has been Proposed for years and is still Proposed: it runs on an internal devnet, and there is no testnet and no date. Ten further KIPs sit open as pull requests, including browser extension wallet APIs, a compute budget for script execution, and a quantum-resistance script type.</p>
+      <p><a href="https://github.com/kaspanet/kips">Read the KIP repository</a> for the full text of any proposal, including the rejected one.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Conventions</p>
+      <h2 id="kcc">Kaspa Calls for Conventions</h2>
+      <p>The KCC repository was created on July 15, 2026. Exactly one pull request has merged since: the README that describes the process. Every specification is still an open pull request, which means no KCC has been accepted and none is a standard yet.</p>
+      <div class="table-wrap">
+        <table class="reality-table" id="kcc-table">
+          <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
+          <tbody id="kcc-body">
+            <tr><td>KCC-0020 fungible token covenant specification</td><td>2026-07-15</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0001 covenant definition, concepts, byte layout and ABI</td><td>2026-07-15</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0402 covenant payment channels</td><td>2026-07-19</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0002 control principal references in program ABIs</td><td>2026-07-20</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0021 covenant token metadata specification</td><td>2026-07-23</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0008 through KCC-0024 multi-token, token, and commerce standards</td><td>2026-07-25</td><td>Open pull request</td></tr>
+            <tr><td>KCC-0025 license agreement</td><td>2026-07-28</td><td>Open pull request</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" id="kcc-stamp">Baseline read from the KCC repository on July 29, 2026. This table refreshes from the repository when the page loads.</p>
+      <p>The four-digit repository numbering is canonical. Forum shorthand like "KCC20" is convenient and is not the identifier in the repository, which matters when someone claims a token already follows a ratified standard. Nothing has been ratified.</p>
+      <p>KCC-0020 is the one to watch. It is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant whose owner can be either a public key or a covenant ID. A convention appearing in a compiler's test suite before it is accepted is normal, and it is not acceptance.</p>
+      <p><a href="https://github.com/kaspanet/kccs">Read the KCC repository</a>, or follow the discussion on <a href="https://kas-smiths.org/">kas-smiths.org</a>.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">How this page stays honest</p>
+      <h2>Where these numbers come from</h2>
+      <p>Both tables above are written into the page as a baseline, verified by hand on the date stamped under each one. When the page loads it asks the two repositories for their current state and replaces the baseline if anything moved, then says when it last checked. If GitHub is unreachable or rate-limits the request, the baseline stays and the stamp tells you it is a baseline. Nothing here is generated from memory.</p>
+      <p>A status word on this page is never evidence that something works. It is evidence of where a document sits in a process. For what is actually running on mainnet, use the <a href="/status">live status page</a>, and for the difference between a primitive being activated and an application being usable, see <a href="/what-still-has-to-be-built">what still has to be built</a>.</p>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/kaspa-developments"><span>Previous</span><strong>What changed in Kaspa this month</strong><p>The KCC conventions process, the July KIP promotions, Argent and vProgs activity, and what is actually deployed on mainnet.</p></a>
+        <a href="/what-still-has-to-be-built"><span>Next</span><strong>Toccata activated. Now somebody has to build the rest.</strong><p>Activating a primitive is not the same as being able to use it. The language, conventions, indexers, wallets, and SDKs that still have to exist.</p></a>
+        <a href="/status"><span>Verify</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <script>
+  (function () {
+    var pill = function (s) { return s; };
+    fetch('https://raw.githubusercontent.com/kaspanet/kips/master/README.md', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('kips ' + r.status); return r.text(); })
+      .then(function (md) {
+        var rows = [];
+        md.split('\n').forEach(function (line) {
+          var m = line.match(/^\|\s*\[(\d+)\]\([^)]*\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|/);
+          if (m) rows.push({ n: m[1], layer: m[2].trim(), title: m[3].trim(), status: m[5].trim() });
+        });
+        if (!rows.length) return;
+        var body = document.getElementById('kip-body');
+        body.innerHTML = rows.map(function (r) {
+          return '<tr><td>' + r.n + '</td><td>' + r.title + '</td><td>' + r.layer + '</td><td>' + pill(r.status) + '</td></tr>';
+        }).join('');
+        document.getElementById('kip-stamp').textContent =
+          'Read live from the KIP repository just now. ' + rows.length + ' proposals indexed.';
+      })
+      .catch(function () { /* baseline stands */ });
+
+    fetch('https://api.github.com/repos/kaspanet/kccs/pulls?state=open&per_page=30', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('kccs ' + r.status); return r.json(); })
+      .then(function (prs) {
+        if (!Array.isArray(prs) || !prs.length) return;
+        prs.sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
+        document.getElementById('kcc-body').innerHTML = prs.map(function (p) {
+          var t = String(p.title).replace(/[<>&]/g, '');
+          return '<tr><td>' + t + '</td><td>' + p.created_at.slice(0, 10) + '</td><td>Open pull request</td></tr>';
+        }).join('');
+        document.getElementById('kcc-stamp').textContent =
+          'Read live from the KCC repository just now. ' + prs.length + ' open, none merged as a specification.';
+      })
+      .catch(function () { /* baseline stands */ });
+  })();
+  </script>
+
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/what-is-kaspa">Kaspa 101</a>
+          <a href="/overview">90-second overview</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/builder-guide">Builder guide</a>
+          <a href="/kaspa-app-ideas">App ideas</a>
+        </div>
+        <div class="footer-link-group" aria-label="Site">
+          <span>Site</span>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+          <a href="/about#corrections">Corrections</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

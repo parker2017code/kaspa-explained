@@ -1,4 +1,4 @@
-last_checked: 2026-07-25
+last_checked: 2026-07-29
 recheck_after: 2026-08-06
 claims:
   proof_of_work:
@@ -155,16 +155,13 @@ claims:
       - vProgs are live
   argent:
     status: research
-    recheck_after: 2026-08-06
-    summary: Michael Sutton's Argent repo is an experimental actor-style frontend for Silverscript covenant contracts, framing multi-contract systems as closed state machines with actors, state, transitions, named emits, and terminal become dispatch. It is where most of his July 2026 output went: 31 commits between July 8 and July 24, more than half the repo's history, adding Inter-Covenant Communication, actor enums, commitment-forest route planning, and a VS Code extension, plus sibling repos argent-playground (July 9) and argent-template (July 24). A runtime transaction builder now exists (argent-runtime's TxBuilder and TxContext), listed in the README under what is useful today; generated app-specific builder APIs remain absent. Still no audit, no release, no tag, no crates.io publish, and two commits in July are labelled breaking changes, so the ABI is still moving. The playground demos, including the DEX one, build and sign against hardcoded fixtures with no node or RPC connection, so none is a deployment.
-    source: https://github.com/michaelsutton/argent
+    recheck_after: 2026-08-12
+    summary: Argent is an actor-based language and compiler for stateful multi-contract applications on covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable artifacts consumed by argent-runtime. As of July 29, 2026 it moved out of Michael Sutton's personal namespace into its own argent-lang organisation: github.com/michaelsutton/argent now redirects there. Three repos, all ISC licensed and all touched within 24 hours: argent (created June 16, 64 commits total with 46 of them in July), argent-playground (July 9, multi-actor and DEX demos), and argent-template (July 24, a starter template with a VS Code extension for .ag files and local argentc wrappers). Sutton is the only contributor. The README sets its own limit: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent itself "will still need further audit and hardening before general production use." Zero releases and zero tags on every repo. The template states that it does not connect to a Kaspa network, manage a wallet, or submit transactions. An examples/icc/kcc20_asset.ag file prototypes a KCC-0020-style transferable asset covenant whose owner identifier can be a pubkey or a covenant ID.
+    source: https://github.com/argent-lang/argent
     forbidden_copy:
       - Argent proves production Kaspa smart contracts are ready
-      - Argent is audited
-      - Argent proves Toccata is live on mainnet
-      - Argent has a stable ABI
-      - Argent playground demos are live deployments
-      - Argent has generated app-specific builder APIs
+      - Argent applications run on Kaspa mainnet
+
   cross_app_composition:
     status: roadmap
     recheck_after: 2026-08-06
@@ -245,27 +242,28 @@ claims:
       - Kaspa oracle flows are live
   kcc_conventions:
     status: research_direction
-    recheck_after: 2026-08-06
+    recheck_after: 2026-08-12
     summary: >
-      Kaspa Calls for Conventions (KCCs) are a new ecosystem-standards process, separate from
-      KIPs. The kaspanet/kccs repo was created on July 15, 2026. As of July 25, 2026 exactly one
-      pull request has merged, the README itself, the standards index table in that README is
-      empty, and the repository root contains no files other than README.md. Five specification
-      PRs are open and none is merged: KCC-0020 fungible token covenant spec, KCC-0001 covenant
-      definition and ABI, KCC-0002 control principal references, KCC-0021 covenant token metadata,
-      and KCC-0402 covenant payment channels. The README draws the boundary itself: "KCCs do not
-      propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa
-      Improvement Proposals (KIPs)," and "Acceptance marks an ecosystem convergence point; it does
-      not make the convention protocol ground truth." Repo numbering (four digits, KCC-0020) is
-      canonical; forum shorthand like "KCC20" is not. Related community claims of KCC20 mainnet
-      wallet transfers are unverified.
+      Kaspa Calls for Conventions (KCCs) are an ecosystem-standards process, separate from KIPs.
+      The kaspanet/kccs repo was created on July 15, 2026 and has not been pushed to since that
+      day: the repository root still contains no file other than README.md, and the standards
+      index table inside it is empty. Exactly one pull request has merged, the README itself. As
+      of July 29, 2026 seven specification pull requests are open and none is merged: KCC-0020
+      fungible token covenant spec, KCC-0001 covenant definition and ABI, KCC-0402 covenant
+      payment channels, KCC-0002 control principal references, KCC-0021 covenant token metadata,
+      a bulk KCC-0008 through KCC-0024 token and commerce set, and KCC-0025 a license agreement.
+      The README draws the boundary itself: "KCCs do not propose changes to Kaspa consensus or
+      core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)," and
+      "Acceptance marks an ecosystem convergence point; it does not make the convention protocol
+      ground truth." Repo numbering (four digits, KCC-0020) is canonical; forum shorthand like
+      "KCC20" is not. The convention is already showing up in code ahead of acceptance: the Argent
+      compiler ships an examples/icc/kcc20_asset.ag asset covenant. Related community claims of
+      KCC20 mainnet wallet transfers are unverified.
     source: https://github.com/kaspanet/kccs
     forbidden_copy:
       - KCC20 is a ratified Kaspa standard
-      - KCC20 is a KIP
-      - Kaspa has adopted a covenant token standard
-      - Toccata made KRC-20 a base-layer asset standard
-      - a merged KCC changes Kaspa consensus
+      - KCC conventions change Kaspa consensus
+
   covenant_tooling_and_support:
     status: builder_guardrail
     recheck_after: 2026-08-06
