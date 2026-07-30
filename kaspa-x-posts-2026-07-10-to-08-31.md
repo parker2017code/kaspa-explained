@@ -508,7 +508,7 @@ $KAS
 
 A vault covenant is only worth something if it has a receipt showing it refusing an invalid spend, not just accepting a valid one.
 
-The TN10 vault demo does both: a pay-to-unlock path that succeeds under the stated rule, and a rejection path that fails when the rule isn't met, both inspectable on testnet. That pairing, accepted case and rejected case, side by side, is the actual bar for "this covenant works," not a screenshot of one successful transaction.
+The TN10 vault demo did both: a pay-to-unlock path that succeeded under the stated rule, and a rejection path that failed when the rule wasn't met. Testnet-10 has since been reset, so neither is inspectable any more, which is its own lesson about what testnet evidence is worth. That pairing, accepted case and rejected case, side by side, is the actual bar for "this covenant works," not a screenshot of one successful transaction.
 
 $KAS
 
@@ -688,7 +688,7 @@ $KAS
 
 Every post in this run traced to a primary source: a release, a KIP, a live check, a paper, or a page on this site that already did that tracing.
 
-What changed since day one: the covenant rule surface shipped and stayed shipped, three based apps went from testnet demo to inspectable receipt, and the scorecard kept splitting the same honest way between what a hard fork changes and what only builders and users can. What didn't change: the actual test. Label it, link it, verify it.
+What changed since day one: the covenant rule surface shipped and stayed shipped, three based apps went from idea to accepted testnet transaction, and the scorecard kept splitting the same honest way between what a hard fork changes and what only builders and users can. Testnet-10 was reset in the meantime and took those receipts with it, which is the lesson that arrived without being scheduled. What didn't change: the actual test. Label it, link it, verify it.
 
 $KAS
 
@@ -712,9 +712,9 @@ $KAS
 
 ## Addendum, July 12 — Post 2: The verifier shipped. The button to press it is still landing.
 
-KIP-16 activated on mainnet with Toccata in June. Silverscript's actual `g16.verify()` builtin, the function a contract writer calls to use it, merged as a pull request weeks later, in July.
+KIP-16 activated on mainnet with Toccata in June. Silverscript's actual `g16.verify()` builtin, the function a contract writer calls to use it, is still an open pull request. It was opened on June 29 and has not merged. RISC0 support and the precompile exposure are two more open pull requests beside it.
 
-That gap isn't a bug. A KIP defines the opcode; a compiler builtin is separate work that turns the opcode into something a contract author can call without hand-writing stack operations. The rule surface can be live on L1 while the tooling that makes it usable is still shipping in pieces behind it, RISC0 proof support included.
+That gap isn't a bug. A KIP defines the opcode; a compiler builtin is separate work that turns the opcode into something a contract author can call without hand-writing stack operations. The rule surface has been live on L1 for a month while the tooling that makes it callable is still sitting in review.
 
 Enforcement and legibility keep being different jobs, at every layer, not just the explorer layer this site has already named.
 
