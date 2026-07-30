@@ -102,9 +102,9 @@ def analyse(path):
 
     banned = {}
     for name, pat in BANNED.items():
-        # Personal essays keep the author's cadence, jokes and conviction.
-        if essay and name in ("performed-enthusiasm", "significance-inflation"):
-            continue
+        # Essay pages were exempt until the owner said on 2026-07-30 that much
+        # of that prose was LLM-assisted anyway. The standard applies to every
+        # line now.
         hits = re.findall(pat, text, re.I)
         if hits:
             banned[name] = len(hits)

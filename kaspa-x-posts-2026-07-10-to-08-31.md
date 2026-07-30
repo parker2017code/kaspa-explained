@@ -496,7 +496,7 @@ $KAS
 
 Kaspa's covenant model can express most of what an Ethereum app does at the primitive level. The gap that actually matters is somewhere else.
 
-Ethereum has years of deployed liquidity, audited contract libraries, and developers who already know the tooling. A UTXO-based covenant on Kaspa is a genuinely different mental model to write against, even when the underlying capability lines up. Betting on Kaspa apps means betting developers will make that switch, not that the architecture can't support them.
+Ethereum has years of deployed liquidity, audited contract libraries, and developers who already know the tooling. A UTXO-based covenant on Kaspa is a different mental model to write against, even when the underlying capability lines up. Betting on Kaspa apps means betting developers will make that switch, not that the architecture can't support them.
 
 $KAS
 

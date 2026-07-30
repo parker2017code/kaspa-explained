@@ -41,6 +41,8 @@ const skipDirs = new Set([
 ]);
 
 const skipFiles = new Set([
+  "MAINTENANCE.md",
+  "PROSE_STANDARD.md",
   // Guidance files describe these patterns in order to ban them, so linting
   // them for the patterns they name is circular. AGENTS.md was already
   // exempt; the rest belong with it.
