@@ -90,6 +90,12 @@ def flesch_kincaid(sents):
 
 ESSAY = re.compile(r"toccata-expressiveness-upgrade")
 
+# Reference indexes are supposed to be uniform. sources.html is 181 link
+# annotations in a deliberate "link, then what it proves" shape, and search.html
+# is a card map. Scanability is the right goal there, not prose rhythm, so the
+# variance rule does not apply. The ban list still does.
+INDEX_PAGE = re.compile(r"(sources|search|glossary)\.html$")
+
 
 def analyse(path):
     text = visible_text(path)
@@ -124,6 +130,7 @@ def analyse(path):
         "shortest": min(lengths),
         "longest": max(lengths),
         "grade": flesch_kincaid(sents),
+        "index_page": bool(INDEX_PAGE.search(path)),
         "banned": banned,
         "rationed": rationed,
     }
@@ -149,9 +156,9 @@ def main():
         issues = []
         if r["banned"]:
             issues.append("BAN " + ",".join(f"{k}x{v}" for k, v in r["banned"].items()))
-        if r["stdev"] < 7:
+        if r["stdev"] < 7 and not r["index_page"]:
             issues.append(f"uniform(sd={r['stdev']})")
-        if r["in_band"] > 0.55:
+        if r["in_band"] > 0.55 and not r["index_page"]:
             issues.append(f"band={r['in_band']}")
         if r["rationed"]:
             issues.append("over " + ",".join(f"{k}x{v}" for k, v in r["rationed"].items()))
