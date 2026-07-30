@@ -1,16 +1,16 @@
 # Kaspa X posts, July 10 - August 31, 2026
 
-July 10-31 below is the corrected set (the old `kaspa-toccata-50-post-series.md` in the dated Codex folder predates Toccata's mainnet activation and is stale — not used). August 1-31 is new, added in the same voice, each sourced from a specific kaspaexplained.com page. No fixed daily curriculum: each post stands alone, no prior post required to make sense of it. Voice matches the site: no em dashes, lead with the counterintuitive claim, name the mechanism, a number instead of an adjective, end when the point's made.
+July 10-31 below is the corrected set (the old `kaspa-toccata-50-post-series.md` in the dated Codex folder predates Toccata's mainnet activation and is stale, not used). August 1-31 is new, added in the same voice, each sourced from a specific kaspaexplained.com page. No fixed daily curriculum: each post stands alone, no prior post required to make sense of it. Voice matches the site: no em dashes, lead with the counterintuitive claim, name the mechanism, a number instead of an adjective, end when the point's made.
 
-Sourcing note: numbers tied to live/testnet state (hash rate, DAA scores, TPS estimates) were current as of July 9-11, 2026. Recheck anything time-sensitive before posting if it's been more than a week or two. August posts drawing on pages not re-verified line by line in this pass (covenants-explained, app-ideas, builder-evidence, tradeoff-map, skeptical-case, reality-check, analyze-any-coin, the three Toccata expressiveness-upgrade essays, ai-guidance, claims-checker, sources, command-line, and the crypto-fundamentals pages) should get a fact-check pass against the live page before posting — the claims here are directionally right but weren't cross-checked sentence by sentence the way the July set was.
+Sourcing note: numbers tied to live/testnet state (hash rate, DAA scores, TPS estimates) were current as of July 9-11, 2026. Recheck anything time-sensitive before posting if it's been more than a week or two. August posts drawing on pages not re-verified line by line in this pass (covenants-explained, app-ideas, builder-evidence, tradeoff-map, skeptical-case, reality-check, analyze-any-coin, the three Toccata expressiveness-upgrade essays, ai-guidance, claims-checker, sources, command-line, and the crypto-fundamentals pages) should get a fact-check pass against the live page before posting, the claims here are directionally right but weren't cross-checked sentence by sentence the way the July set was.
 
-Two things fixed in the July set during this pass, both about repetition across the run, not any single post: the "[X] isn't Y. It's Z." closer showed up three times in 22 posts (July 10, 11, 14) — kept the strongest one (July 14, where the reveal earns it) and rewrote the other two so the device doesn't read as a tic. "Not minutes" got cut from July 10 since the contrast was already made by "before lunch" one sentence earlier.
+Two things fixed in the July set during this pass, both about repetition across the run, not any single post: the "[X] isn't Y. It's Z." closer showed up three times in 22 posts (July 10, 11, 14), kept the strongest one (July 14, where the reveal earns it) and rewrote the other two so the device doesn't read as a tic. "Not minutes" got cut from July 10 since the contrast was already made by "before lunch" one sentence earlier.
 
 Addendum below (added 2026-07-12, after a source check against `kaspa.org/build`, the `kaspanet` GitHub org, Kas Smiths, and the public Telegram Core R&D group): no existing claim in this doc needed correcting, v2.0.1 is still the current mainnet release. Three items surfaced worth adding, each grounded in a specific real source, not a rumor. Kas Smiths and Telegram Core R&D are now standing sources in `AGENTS.md`'s verification routine going forward.
 
 ---
 
-## July 10 — Two clocks
+## July 10: Two clocks
 
 Kaspa's hash rate is up roughly 700x since November 2022. Price has spent whole stretches moving the opposite direction of that chart entirely.
 
@@ -24,7 +24,7 @@ $KAS
 
 ---
 
-## July 11 — GHOSTDAG
+## July 11: GHOSTDAG
 
 Most proof-of-work chains throw away the loser. Two miners solve a block seconds apart, one chain wins, the other block's work counts for nothing.
 
@@ -38,7 +38,7 @@ $KAS
 
 ---
 
-## July 12 — DAGKnight, precisely
+## July 12: DAGKnight, precisely
 
 DAGKnight doesn't have a testnet. It doesn't have an activation date. It doesn't run any part of Kaspa mainnet today.
 
@@ -54,7 +54,7 @@ $KAS
 
 ---
 
-## July 13 — Fast is not final
+## July 13: Fast is not final
 
 A Kaspa transaction can land in a block in under a second. That block landing is not the same as that transaction being irreversible.
 
@@ -70,7 +70,7 @@ $KAS
 
 ---
 
-## July 14 — The presale that didn't happen
+## July 14: The presale that didn't happen
 
 Kaspa almost had a presale.
 
@@ -86,7 +86,7 @@ $KAS
 
 ---
 
-## July 15 — Not an EVM turn
+## July 15: Not an EVM turn
 
 Toccata did not turn Kaspa into an Ethereum clone. That's the part most explainers skip.
 
@@ -100,7 +100,7 @@ $KAS
 
 ---
 
-## July 16 — Proving a negative is expensive
+## July 16: Proving a negative is expensive
 
 Without KIP-21, a based app on Kaspa would have to prove a negative for every transaction that isn't its own: "this wasn't mine either, and neither was this one."
 
@@ -114,7 +114,7 @@ $KAS
 
 ---
 
-## July 17 — Four questions, not one
+## July 17: Four questions, not one
 
 "What's Kaspa's TPS" is not one question. It's four.
 
@@ -128,7 +128,7 @@ $KAS
 
 ---
 
-## July 18 — Prototype, not vaporware
+## July 18: Prototype, not vaporware
 
 vProgs are not live on Kaspa. They're also not vaporware.
 
@@ -142,7 +142,7 @@ $KAS
 
 ---
 
-## July 19 — Coordination without a company
+## July 19: Coordination without a company
 
 A coordination market solves a specific problem: getting strangers to commit to something before anyone knows if enough other people will commit too.
 
@@ -156,7 +156,7 @@ $KAS
 
 ---
 
-## July 20 — Same money, different traffic rule
+## July 20: Same money, different traffic rule
 
 Bitcoin throws away roughly every block that isn't first. Two miners solve a block within seconds of each other, one becomes canonical, the other's work is gone.
 
@@ -170,7 +170,7 @@ $KAS
 
 ---
 
-## July 21 — Three papers before one mainnet
+## July 21: Three papers before one mainnet
 
 GHOSTDAG didn't start as a product. It started as a proof.
 
@@ -184,7 +184,7 @@ $KAS
 
 ---
 
-## July 22 — The security budget is a supply chain
+## July 22: The security budget is a supply chain
 
 You cannot mine Kaspa on a GPU anymore. That's not a limitation, it's the current state of the security budget.
 
@@ -196,7 +196,7 @@ $KAS
 
 ---
 
-## July 23 — A rule needs an identity
+## July 23: A rule needs an identity
 
 A covenant can enforce a rule. Without covenant IDs, it can't prove which covenant it actually is.
 
@@ -210,7 +210,7 @@ $KAS
 
 ---
 
-## July 24 — Opposite starting assumptions
+## July 24: Opposite starting assumptions
 
 XRP and Kaspa both get called "fast payment" chains. The architectures don't share a single assumption.
 
@@ -222,7 +222,7 @@ $KAS
 
 ---
 
-## July 25 — Verification is not truth
+## July 25: Verification is not truth
 
 A ZK proof on Kaspa doesn't prove reality. It proves a statement about chosen inputs.
 
@@ -236,7 +236,7 @@ $KAS
 
 ---
 
-## July 26 — Which problem is harder to retrofit
+## July 26: Which problem is harder to retrofit
 
 Most smart-contract chains start as a programmable platform and back into money and security later.
 
@@ -248,7 +248,7 @@ $KAS
 
 ---
 
-## July 27 — Mass, not transaction count
+## July 27: Mass, not transaction count
 
 Kaspa's block limit isn't measured in transactions. It's measured in mass.
 
@@ -260,7 +260,7 @@ $KAS
 
 ---
 
-## July 28 — Moving the tradeoff line
+## July 28: Moving the tradeoff line
 
 Real-time decentralization is the actual bet Kaspa is making, and it's narrower than it sounds.
 
@@ -272,7 +272,7 @@ $KAS
 
 ---
 
-## July 29 — The gap between an idea and a product
+## July 29: The gap between an idea and a product
 
 Covenants are Kaspa's low-level script primitive. Silverscript is what makes them buildable without hand-writing every opcode.
 
@@ -286,7 +286,7 @@ $KAS
 
 ---
 
-## July 30 — Name what's missing
+## July 30: Name what's missing
 
 The strongest Kaspa builder examples all do the same unglamorous thing: they name what's missing.
 
@@ -300,7 +300,7 @@ $KAS
 
 ---
 
-## July 31 — The test
+## July 31: The test
 
 Every claim in this run traced back to a primary source: a release, a KIP, a live REST check, a paper. Not because Kaspa doesn't have a hype story. It has a specific one.
 
@@ -312,7 +312,7 @@ $KAS
 
 ---
 
-## August 1 — Three tiers, not one build path
+## August 1: Three tiers, not one build path
 
 "Build on Kaspa" isn't one instruction. It's a choice between three tiers with different tools and different maturity.
 
@@ -326,7 +326,7 @@ $KAS
 
 ---
 
-## August 2 — What counts as a receipt
+## August 2: What counts as a receipt
 
 A demo screenshot is not evidence. A live transaction someone else can look up is.
 
@@ -340,7 +340,7 @@ $KAS
 
 ---
 
-## August 3 — Ideas are cheap until the rule shows up
+## August 3: Ideas are cheap until the rule shows up
 
 Every Kaspa app idea sounds buildable until someone asks what happens if a signer disappears.
 
@@ -354,7 +354,7 @@ $KAS
 
 ---
 
-## August 4 — Three words, three objects
+## August 4: Three words, three objects
 
 "Ecosystem," "infrastructure," and "programmability" are the three words that let a claim about Kaspa mean nothing.
 
@@ -368,7 +368,7 @@ $KAS
 
 ---
 
-## August 5 — A vault is a state machine, not a lock
+## August 5: A vault is a state machine, not a lock
 
 Calling a covenant a "smart contract" undersells what actually has to be specified.
 
@@ -380,7 +380,7 @@ $KAS
 
 ---
 
-## August 6 — The metric nobody's screenshotting
+## August 6: The metric nobody's screenshotting
 
 Real adoption doesn't look like a headline. It looks like the same transaction shape repeating on-chain without anyone announcing it.
 
@@ -392,7 +392,7 @@ $KAS
 
 ---
 
-## August 7 — The GUI is not the network
+## August 7: The GUI is not the network
 
 A Kaspa wallet app is a UI choice sitting on top of a node. It is not the protocol.
 
@@ -406,7 +406,7 @@ $KAS
 
 ---
 
-## August 8 — Not every coin is answering the same question
+## August 8: Not every coin is answering the same question
 
 "Which coin is better" assumes every coin is competing for the same job. Most aren't.
 
@@ -418,7 +418,7 @@ $KAS
 
 ---
 
-## August 9 — Value needs a mechanism, not a vibe
+## August 9: Value needs a mechanism, not a vibe
 
 An asset isn't valuable because people believe in it. It's valuable because some mechanism makes it scarce, useful, or both, and belief tracks that mechanism.
 
@@ -430,7 +430,7 @@ $KAS
 
 ---
 
-## August 10 — Narrow the claim to the actual job
+## August 10: Narrow the claim to the actual job
 
 "Crypto is useful" is too broad a claim to check. "Crypto is useful for X" is checkable.
 
@@ -442,7 +442,7 @@ $KAS
 
 ---
 
-## August 11 — Pick two, or change what you're optimizing
+## August 11: Pick two, or change what you're optimizing
 
 Fast, decentralized, and cheap to secure don't arrive together by default. Every chain design picks where it gives ground.
 
@@ -456,7 +456,7 @@ $KAS
 
 ---
 
-## August 12 — Steelman the bear case first
+## August 12: Steelman the bear case first
 
 The strongest case against Kaspa isn't "it's a scam." It's a list of things that haven't happened yet.
 
@@ -468,7 +468,7 @@ $KAS
 
 ---
 
-## August 13 — Run the check yourself
+## August 13: Run the check yourself
 
 A claim about Kaspa is either checkable or it isn't. Most of the interesting ones are.
 
@@ -480,7 +480,7 @@ $KAS
 
 ---
 
-## August 14 — Point the same six questions at something else
+## August 14: Point the same six questions at something else
 
 Take any other coin's next big announcement and run it through the same checklist used here for Kaspa.
 
@@ -492,7 +492,7 @@ $KAS
 
 ---
 
-## August 15 — The gap isn't the architecture
+## August 15: The gap isn't the architecture
 
 Kaspa's covenant model can express most of what an Ethereum app does at the primitive level. The gap that actually matters is somewhere else.
 
@@ -504,7 +504,7 @@ $KAS
 
 ---
 
-## August 16 — A vault that actually rejects a bad case
+## August 16: A vault that actually rejects a bad case
 
 A vault covenant is only worth something if it has a receipt showing it refusing an invalid spend, not just accepting a valid one.
 
@@ -516,7 +516,7 @@ $KAS
 
 ---
 
-## August 17 — The smallest possible based app
+## August 17: The smallest possible based app
 
 A tip jar is a boring app on purpose.
 
@@ -528,7 +528,7 @@ $KAS
 
 ---
 
-## August 18 — Coordination, not just custody
+## August 18: Coordination, not just custody
 
 Most Kaspa app demos are about who holds money. A task board is about who agrees on state.
 
@@ -540,7 +540,7 @@ $KAS
 
 ---
 
-## August 19 — A poll is a coordination primitive too
+## August 19: A poll is a coordination primitive too
 
 Counting votes sounds trivial until the votes have to be tamper-proof and the tally has to be public without a server anyone has to trust.
 
@@ -552,7 +552,7 @@ $KAS
 
 ---
 
-## August 20 — What Kaspa isn't trying to rebuild
+## August 20: What Kaspa isn't trying to rebuild
 
 The based-apps page on this site has a section for what it deliberately skips: streaming, file storage, video, things other live protocols already do well.
 
@@ -564,7 +564,7 @@ $KAS
 
 ---
 
-## August 21 — Two months in, the same two lists
+## August 21: Two months in, the same two lists
 
 Two months past activation, the honest scorecard still splits the same way it did at day one.
 
@@ -576,7 +576,7 @@ $KAS
 
 ---
 
-## August 22 — The bet, restated without the marketing
+## August 22: The bet, restated without the marketing
 
 Strip the branding and Kaspa's actual bet is one sentence: can Bitcoin-style proof-of-work security run closer to real time without becoming something else.
 
@@ -588,7 +588,7 @@ $KAS
 
 ---
 
-## August 23 — The paper that didn't get built until later
+## August 23: The paper that didn't get built until later
 
 GHOSTDAG existed as a research result years before Kaspa's genesis block did.
 
@@ -600,7 +600,7 @@ $KAS
 
 ---
 
-## August 24 — Expressiveness is not a new virtual machine
+## August 24: Expressiveness is not a new virtual machine
 
 Toccata widened what a Kaspa transaction can require before it's valid. It did not add a general-purpose execution environment.
 
@@ -612,7 +612,7 @@ $KAS
 
 ---
 
-## August 25 — The constraint that made the upgrade hard
+## August 25: The constraint that made the upgrade hard
 
 The interesting engineering problem in Toccata's expressiveness work wasn't adding checks. It was keeping every added check cheap enough to verify at 10 blocks per second.
 
@@ -624,7 +624,7 @@ $KAS
 
 ---
 
-## August 26 — What the upgrade still leaves for builders to do
+## August 26: What the upgrade still leaves for builders to do
 
 Toccata's expressiveness work widened what a covenant can check. It didn't write any specific covenant for anyone.
 
@@ -636,7 +636,7 @@ $KAS
 
 ---
 
-## August 27 — Start with the job, not the primitive
+## August 27: Start with the job, not the primitive
 
 The builder guide on this site doesn't open with covenants. It opens with a question: what does the user actually need to happen.
 
@@ -648,7 +648,7 @@ $KAS
 
 ---
 
-## August 28 — Citing Kaspa correctly is itself a claim
+## August 28: Citing Kaspa correctly is itself a claim
 
 An AI answer about Kaspa is only as good as whether it separates mainnet fact from roadmap hope.
 
@@ -660,7 +660,7 @@ $KAS
 
 ---
 
-## August 29 — Same six questions, different claims this time
+## August 29: Same six questions, different claims this time
 
 Run the claims-checker against a fresh batch: "Kaspa needs gas fees like Ethereum," "mining requires a data center," "Toccata added smart contracts from scratch."
 
@@ -672,7 +672,7 @@ $KAS
 
 ---
 
-## August 30 — A source hierarchy is a discipline, not a formality
+## August 30: A source hierarchy is a discipline, not a formality
 
 Not every source that mentions Kaspa deserves the same weight.
 
@@ -684,7 +684,7 @@ $KAS
 
 ---
 
-## August 31 — Two months, the same test
+## August 31: Two months, the same test
 
 Every post in this run traced to a primary source: a release, a KIP, a live check, a paper, or a page on this site that already did that tracing.
 
@@ -696,7 +696,7 @@ $KAS
 
 ---
 
-## Addendum, July 12 — Post 1: ZK doesn't mean private
+## Addendum, July 12: Post 1: ZK doesn't mean private
 
 "ZK does not automatically mean private" is a sentence from a builder actually shipping on Toccata's proof opcodes, not a caveat from this site.
 
@@ -706,11 +706,11 @@ RGK, a third-party asset protocol built on Toccata's covenant and ZK primitives,
 
 $KAS
 
-*Source: kaspanet/rusty-kaspa PR #1067, kaspanet/silverscript PR #137, and RGK Protocol's downstream notes (github.com/RGK-Protocol/RGK) — via public Telegram Core R&D discussion, July 2026.*
+*Source: kaspanet/rusty-kaspa PR #1067, kaspanet/silverscript PR #137, and RGK Protocol's downstream notes (github.com/RGK-Protocol/RGK), via public Telegram Core R&D discussion, July 2026.*
 
 ---
 
-## Addendum, July 12 — Post 2: The verifier shipped. The button to press it is still landing.
+## Addendum, July 12: Post 2: The verifier shipped. The button to press it is still landing.
 
 KIP-16 activated on mainnet with Toccata in June. Silverscript's actual `g16.verify()` builtin, the function a contract writer calls to use it, is still an open pull request. It was opened on June 29 and has not merged. RISC0 support and the precompile exposure are two more open pull requests beside it.
 
@@ -720,11 +720,11 @@ Enforcement and legibility keep being different jobs, at every layer, not just t
 
 $KAS
 
-*Source: kaspanet/silverscript PR #137, PR #138 — via public Telegram Core R&D discussion, July 2026.*
+*Source: kaspanet/silverscript PR #137, PR #138, via public Telegram Core R&D discussion, July 2026.*
 
 ---
 
-## Addendum, July 12 — Post 3: A standard being tested out loud
+## Addendum, July 12: Post 3: A standard being tested out loud
 
 KCC20 is not a KIP. It's a name for a fungible-token covenant design that core contributors are still arguing out in public, in real time, across two open forums.
 

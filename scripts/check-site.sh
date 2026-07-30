@@ -22,6 +22,7 @@ python3 scripts/check-status-freshness.py
 python3 scripts/build-sitemap.py --check
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-grid-spans.py
+python3 scripts/check-prose.py --strict >/dev/null || { python3 scripts/check-prose.py >&2; echo "prose standard violations, see PROSE_STANDARD.md" >&2; exit 1; }
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py
