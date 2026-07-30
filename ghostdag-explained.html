@@ -105,7 +105,7 @@
     <section class="section prose-section">
       <p class="eyebrow">Step two</p>
       <h2>From a colored graph to one order</h2>
-      <p>Coloring alone gives no sequence, and payments need a sequence: if two transactions spend the same coin, one has to be first. GHOSTDAG builds that sequence from a spine. Each block picks the parent carrying the most accumulated <a href="/glossary#blue-work">blue work</a> as its <a href="/glossary#selected-parent">selected parent</a>, and chaining those choices together produces the selected parent chain, the closest thing Kaspa has to Bitcoin's longest chain.</p>
+      <p>Coloring alone gives no sequence. Payments need one: if two transactions spend the same coin, one has to be first. GHOSTDAG builds that sequence from a spine. Each block picks the parent carrying the most accumulated <a href="/glossary#blue-work">blue work</a> as its <a href="/glossary#selected-parent">selected parent</a>, and chaining those choices together produces the selected parent chain, the closest thing Kaspa has to Bitcoin's longest chain.</p>
       <p>The spine then absorbs everything hanging off it. Each block on the chain has a <a href="/glossary#mergeset">mergeset</a>: the blocks its parents saw that its selected parent's history did not already include. Those get ordered by the same procedure, blue blocks ahead of red ones, and appended in the spine's order. Walk the chain from the genesis block to the current tip and you have laid every block in the DAG, red ones included, into a single line.</p>
       <p>Transactions are read off that line in order. The first spend of a coin wins and any conflicting spend later in the sequence is rejected, which is how a graph with no unique newest block still produces exactly one payment history. Every node runs the identical procedure over the identical DAG, so they all derive the identical order without voting, messaging, or a committee.</p>
       <p>Blue work is also the tiebreak between competing histories. Bitcoin compares chains by accumulated work; Kaspa compares them by accumulated work in the blue set. An attacker whose blocks are colored red is spending real electricity that buys no weight in that comparison.</p>
@@ -114,7 +114,7 @@
     <section class="section prose-section">
       <p class="eyebrow">What you get</p>
       <h2>What this buys, and what it doesn't</h2>
-      <p>Your transaction lands in a block fast, and confidence that the block stays blue builds as more blocks reference it. That is the payoff: parallel blocks stop being waste, so block rate can rise without the orphan rate eating the security budget.</p>
+      <p>Your transaction lands in a block fast, and confidence that the block stays blue builds as more blocks reference it. Parallel blocks stop being waste, so block rate can rise without the orphan rate eating the security budget.</p>
       <p>Fast inclusion is not irreversibility. GHOSTDAG settles which blocks are blue and what order they sit in; it does not make a fresh transaction permanent, and confirmation confidence still climbs probabilistically as work accumulates. <a href="/kaspa-confirmations-finality">Confirmations and finality</a> covers how deep to wait and why.</p>
     </section>
 

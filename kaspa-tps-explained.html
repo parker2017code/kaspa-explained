@@ -103,7 +103,7 @@
       <h2>Current simple-payment capacity</h2>
       <p>Kaspa mainnet produces ten blocks per second. The shared block mass limit in current mainnet parameters is 500,000, which sets a budget of 5,000,000 transaction mass per second before policy, fees, propagation, storage shape, and real mempool behavior enter the picture.</p>
       <p>A signed ordinary P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's conservative arithmetic. Add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block: the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the upper end to the commonly cited 3.4k TPS.</p>
-      <p>Benchmarks built on artificial minimum-size transactions score higher than that. They are measuring a lab envelope, and a real signed payment is heavier than the transactions in those runs.</p>
+      <p>Benchmarks built on artificial minimum-size transactions score higher than that. They are measuring a lab envelope.</p>
     </section>
 
     <section class="section prose-section">
@@ -139,7 +139,6 @@
       <h2>Covenant transactions run heavier</h2>
       <p>One token transfer in your wallet can cost several times the mass of a plain payment. A covenant transaction carries rules about how its coins or state can be spent next, which is what makes vaults, escrow, assurance contracts, controlled assets, and token-like rules possible. That structure costs more than a simple payment.</p>
       <p>You see one action. The L1 footprint depends on the asset rule underneath it: covenant state, covenant IDs, authorization rules, extra outputs, witness data, app payloads, or indexer-readable state. Counting that transaction as equivalent to an ordinary payment understates how much of the block it consumes.</p>
-      <p>Simple-payment TPS is a payment metric. Covenant-app throughput needs its own count, built from the actual transaction shape and state pattern.</p>
     </section>
 
     <section class="section prose-section">
@@ -147,7 +146,7 @@
       <h2>ZK changes the metric</h2>
       <p>One L1 transaction can settle thousands of off-chain actions. ZK proof systems move app execution off the base layer and keep a compact verification path on L1: a single proof or settlement transaction updates an app commitment after many off-chain actions run. The L1 transaction count stays small while the app action count grows large.</p>
       <p>That does not make TPS unlimited. Effective app throughput is bounded by the app, proof system, batch size, proof size, proving hardware, proof-generation time, data availability, settlement cadence, exit rules, and bridge/oracle assumptions. A ZK proof proves a statement about chosen inputs. External facts still need an anchor: a light client, finality certificate, accumulated-work view, reporter set, oracle, or challenge process.</p>
-      <p>The metric that matters for a ZK app is app actions per settlement cycle, with L1 proof verification as the bottleneck. That number can run far above L1 transaction TPS for a single app, and it is still bounded by proof economics and state design.</p>
+      <p>The metric that matters for a ZK app is app actions per settlement cycle, with L1 proof verification as the bottleneck.</p>
     </section>
 
     <section class="section prose-section">

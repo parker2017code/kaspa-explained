@@ -94,8 +94,8 @@
       <p class="eyebrow">Scheduling</p>
       <h2>Why resource lanes exist</h2>
       <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state apart into individually addressable resources instead. Alice touching resource A and Bob touching resource Z run at the same time, no queue between them. Two transactions touching the same resource A still have to settle their order, so the scheduler serializes only that piece.</p>
-      <p>The scheduler builds this from the read/write metadata a transaction declares up front. Each resource behaves like its own lane: a transaction attaches to the lanes it touches, waits only for the values it needs, runs the moment those are ready, then passes its updated state forward. The result is a computational DAG rather than a single queue. Independent branches keep executing while a busy resource only slows the transactions that actually collide with it.</p>
-      <p>Hans Moog's vProgs walkthrough does not claim a raw TPS number. The claim is narrower and more useful: app state that doesn't conflict keeps moving even while one resource or market is under load.</p>
+      <p>The scheduler builds this from the read/write metadata a transaction declares up front. Each resource behaves like its own lane: a transaction attaches to the lanes it touches, waits only for the values it needs, runs the moment those are ready, then passes its updated state forward. The result is a computational DAG rather than a single queue.</p>
+      <p>Hans Moog's vProgs walkthrough does not claim a raw TPS number.</p>
     </section>
 
     <section class="section">
@@ -118,7 +118,7 @@
           </tbody>
         </table>
       </div>
-      <p>The layer table describes the design. What follows is the repository's current pulse, read from GitHub when this page loads rather than copied here by hand.</p>
+      <p>What follows is the repository's current pulse, read from GitHub when this page loads rather than copied here by hand.</p>
       <div class="table-wrap">
         <table class="reality-table" id="vprogs-table">
           <thead><tr><th>Signal</th><th>Reading</th></tr></thead>
@@ -138,8 +138,8 @@
       <p class="eyebrow">Toccata connection</p>
       <h2>What comes before full vProgs</h2>
       <p><a href="/toccata-explained">Toccata</a> is the hard-fork track that activated on mainnet before any of this. Its release and KIP work delivered covenant-style spending rules, covenant IDs, ZK proof checks, and sequencing commitments, concrete handles for UTXO state constraints, app-state identity, selected computation proofs, and app-local sequencing anchored to Kaspa evidence.</p>
-      <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is early tooling evidence: actor-style state machines that generate Silverscript for multi-contract covenant systems. It's prototype work worth studying. Audit, production, and activation are separate claims that need separate evidence.</p>
-      <p>None of that makes full vProgs live. Toccata can carry simpler covenant apps, proof-gated flows, sequencing commitments, and standalone based-app foundations. Full app-to-app composition, one action touching several app states that succeeds or fails as a unit, is the later target.</p>
+      <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is early tooling evidence: actor-style state machines that generate Silverscript for multi-contract covenant systems. Audit, production, and activation are separate claims that need separate evidence.</p>
+      <p>None of that makes full vProgs live. Full app-to-app composition, one action touching several app states that succeeds or fails as a unit, is the later target.</p>
     </section>
 
     <section class="section">
@@ -162,7 +162,7 @@
       <p class="eyebrow">For builders</p>
       <h2>When you actually need it</h2>
       <p>The vProgs model fits products with many independent pieces of state, many users hitting the same app, or a proof requirement bigger than a covenant spend can carry: trading state, auctions, games, coordination markets, app-specific ledgers, proof-backed settlement.</p>
-      <p>Most Kaspa apps do not need it yet. Payments, receipts, vault rules, refund paths, allowance caps, and controlled assets fit inside covenants today. Pick the smallest state model that does the job, and reach for vProgs only when your app actually outgrows it.</p>
+      <p>Most Kaspa apps do not need it yet. Payments, receipts, vault rules, refund paths, allowance caps, and controlled assets fit inside covenants today. Pick the smallest state model that does the job.</p>
       <div class="actions">
         <a class="button primary" href="/kaspa-covenants-explained">Covenants first</a>
         <a class="button" href="/builder-evidence">Builder evidence</a>
