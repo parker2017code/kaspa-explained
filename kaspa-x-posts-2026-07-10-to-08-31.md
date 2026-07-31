@@ -302,13 +302,15 @@ $KAS
 
 ## July 31: The test
 
-Every claim in this run traced back to a primary source: a release, a KIP, a live REST check, a paper. Not because Kaspa doesn't have a hype story. It has a specific one.
+A Kaspa claim is worth exactly what its source is worth. A release tag, a merged KIP, a REST call you can run yourself, a paper.
 
-Losing blocks that still count toward security. A testnet that's been running for over a year before anyone calls it done. A covenant system built to remove trust from a spend, not to sound impressive in a pitch deck. The actual story survives being stated plainly. That's the whole test.
+That sounds like a constraint. It's the opposite, because the real story survives it. Blocks that lose the race still count toward security. A testnet ran for over a year before anyone called the upgrade done. A covenant removes trust from a spend rather than sounding impressive in a pitch deck.
+
+None of that needs a superlative to land. Anything that does need one is telling on itself.
 
 $KAS
 
-*Source: this whole run*
+*Source: kaspanet/rusty-kaspa releases, kaspanet/kips*
 
 ---
 
@@ -684,15 +686,17 @@ $KAS
 
 ---
 
-## August 31: Two months, the same test
+## August 31: Two months on from Toccata
 
-Every post in this run traced to a primary source: a release, a KIP, a live check, a paper, or a page on this site that already did that tracing.
+Toccata activated at DAA score 474,165,565 in June. Two months later the covenant rule surface has shipped and stayed shipped, and almost everything above it is still being built.
 
-What changed since day one: the covenant rule surface shipped and stayed shipped, three based apps went from idea to accepted testnet transaction, and the scorecard kept splitting the same honest way between what a hard fork changes and what only builders and users can. Testnet-10 was reset in the meantime and took those receipts with it, which is the lesson that arrived without being scheduled. What didn't change: the actual test. Label it, link it, verify it.
+Testnet-10 was reset somewhere in there and took a set of demo receipts with it. Nobody scheduled that lesson. It is the cleanest argument going for why a testnet artifact and a mainnet record are different classes of evidence, and why one should never be quoted as the other.
+
+The rule that survives all of it is boring. Label the claim, link the source, check it yourself.
 
 $KAS
 
-*Source: this whole run*
+*Source: kaspanet/rusty-kaspa releases, api-tn10.kaspa.org*
 
 ---
 
