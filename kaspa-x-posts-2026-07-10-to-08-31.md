@@ -286,17 +286,19 @@ $KAS
 
 ---
 
-## July 30: Name what's missing
+## July 30: The gate is an audit, not a missing feature
 
-The strongest Kaspa builder examples all do the same unglamorous thing: they name what's missing.
+Correction to an earlier post of mine. I described Argent as a prototype whose tools are unfinished, leaning on a third-party docs page. Argent's own status section says something more precise, and I should have quoted it.
 
-A covenant demo that shows the accepted path and the rejected path side by side, on testnet, with the actual rule spelled out, teaches more than one that just says "vault" and moves on. "Vault" is a word. The delay, the recovery key, the spend cap, and what happens if a signer disappears are the product.
+What it says exists: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking, constrained covenant spawning, actor enums, closed and open ICC, virtual-slot state expansion. Those are working pieces, not planned ones.
 
-Show the edge case before the pitch.
+What it says is missing is a review chain. Silverscript finishes its audit and ships, then advanced users who can read the generated .sil themselves have a path to careful early production, then Argent needs its own audit before general use.
+
+Unfinished and unaudited are different words. I used the wrong one.
 
 $KAS
 
-*Source: builder-guide.html*
+*Source: github.com/argent-lang/argent, Project status*
 
 ---
 
