@@ -43,6 +43,15 @@ clause; keep the fact.
 believe". Name the source or drop the claim. On kaspaexplained this is
 disqualifying, since the whole value of the site is that claims are traceable.
 
+
+**First person, on a site that is not a person.** kaspaexplained.com and its
+posts are an independent explainer, not somebody's diary. Reference pages and
+every X post speak in third person. "A post of mine", "I checked", "we
+recommend" have nobody to refer to and read as a person hiding behind a brand.
+The exception is narrow and explicit: the attributed personal essays keep their
+author's first person, because a signed essay is a person talking. Enforced by
+`check-prose.py` as `site-voice-first-person`.
+
 **Formulaic transitions.** Moreover, furthermore, in addition. Start the next
 sentence with its own subject.
 

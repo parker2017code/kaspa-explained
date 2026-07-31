@@ -90,6 +90,21 @@ def flesch_kincaid(sents):
 
 ESSAY = re.compile(r"toccata-expressiveness-upgrade")
 
+# The account is an independent explainer, not a person. Reference pages and X
+# posts speak in third person; only the attributed personal essays carry an "I".
+# Added 2026-07-30 after a correction post shipped saying "a post of mine" and
+# "I used the wrong one", which the site has no first person to claim.
+SITE_VOICE = re.compile(
+    r"\b(I (think|believe|found|checked|verified|wrote|said|should|would|used|described|"
+    r"called|noticed|assume|expect|suspect|argue)|"
+    r"we (think|believe|found|checked|verified|wrote|built|made|decided|chose|recommend|"
+    r"argue|assume|expect|cover|explain|show)|"
+    r"in my (view|opinion|read)|my (view|opinion|take|read|guess|sense)|"
+    r"our (view|opinion|take|read|site|guide|goal|aim)|"
+    r"(a|an earlier) post of mine|I'm |I've |I'd |I'll )", re.I)
+
+
+
 # Reference indexes are supposed to be uniform. sources.html is 181 link
 # annotations in a deliberate "link, then what it proves" shape, and search.html
 # is a card map. Scanability is the right goal there, not prose rhythm, so the
@@ -107,6 +122,11 @@ def analyse(path):
     band = sum(1 for n in lengths if 14 <= n <= 22) / len(lengths)
 
     banned = {}
+    if not essay:
+        n = len(SITE_VOICE.findall(text))
+        if n:
+            banned["site-voice-first-person"] = n
+
     for name, pat in BANNED.items():
         # Essay pages were exempt until the owner said on 2026-07-30 that much
         # of that prose was LLM-assisted anyway. The standard applies to every
