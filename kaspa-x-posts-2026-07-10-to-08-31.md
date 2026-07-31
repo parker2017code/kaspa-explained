@@ -288,13 +288,13 @@ $KAS
 
 ## July 30: The gate is an audit, not a missing feature
 
-Correction to an earlier post of mine. I described Argent as a prototype whose tools are unfinished, leaning on a third-party docs page. Argent's own status section says something more precise, and I should have quoted it.
+Correction. An earlier post here called Argent a prototype with unfinished tooling, citing a third-party docs page. Argent's own status section is more precise, and it is the better source.
 
-What it says exists: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking, constrained covenant spawning, actor enums, closed and open ICC, virtual-slot state expansion. Those are working pieces, not planned ones.
+What it says exists: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking, constrained covenant spawning, actor enums, closed and open ICC, virtual-slot state expansion. Working pieces, not planned ones.
 
-What it says is missing is a review chain. Silverscript finishes its audit and ships, then advanced users who can read the generated .sil themselves have a path to careful early production, then Argent needs its own audit before general use.
+What it says is missing is a review chain. Silverscript finishes its audit and ships, then advanced users who can read the generated .sil have a path to careful early production, then Argent needs its own audit before general use.
 
-Unfinished and unaudited are different words. I used the wrong one.
+Unfinished and unaudited are different words. The earlier post used the wrong one.
 
 $KAS
 
