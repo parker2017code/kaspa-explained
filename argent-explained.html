@@ -108,6 +108,15 @@ app Tickets {
     </section>
 
     <section class="section">
+      <p class="eyebrow">The boundary</p>
+      <h2>What every example has in common</h2>
+      <p>Look at what the compiler ships as examples and what the tutorials teach: tickets, a chess toy, stones, counters, vaults, an asset covenant. Every one of them partitions cleanly. One UTXO per ticket, per game, per position. Two of them never touch the same state, so they never contend, and the parallelism comes free from the data model instead of from a scheduler.</p>
+      <p>That is the case covenants are good at, and Kaspa's documentation says so directly. It is also the case nobody disputed.</p>
+      <p>The hard one is shared mutable state, where many users change a single object at the same time. A pooled automated market maker, an order book, a lending pool. Those are most of what people mean by DeFi, and no public Argent code implements one. The playground's DEX is a single pair. The compiler's own SECURITY.md, which documents the reasoning behind every generated check, contains no mention of replicas, keepers, or bounded divergence, which is the shape a partitioned pool would need.</p>
+      <p>So the honest reading is split. Partitioned state looks solved and cleanly. Shared state is a design direction with no implementation anyone can read, and Kaspa's answer for it is <a href="/kaspa-vprogs-explained">vProgs</a>, which is earlier still.</p>
+    </section>
+
+    <section class="section">
       <p class="eyebrow">Repository pulse</p>
       <h2>Where the code actually stands</h2>
       <p>Three repositories, one contributor.</p>
