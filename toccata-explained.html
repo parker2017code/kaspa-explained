@@ -88,7 +88,7 @@
         <article><span>KIP-16</span><p>ZK verification lets a script check selected proof systems instead of asking L1 to run every app step itself.</p></article>
         <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane of activity; without them, it would have to prove that almost the entire DAG is irrelevant to it.</p></article>
         <article><span>Based apps</span><p>Apps can anchor state to Kaspa ordering, commitments, settlement, exits, or proofs without relying on an independent sequencer.</p></article>
-        <article><span>vProgs</span><p>Full vProgs are separate, later architecture for richer app execution and cross-app composition. They are not part of what activated.</p></article>
+        <article><span>vProgs</span><p>Full vProgs are separate, later architecture for richer app execution and shared mutable state. They are not part of what activated.</p></article>
       </div>
     </section>
 
@@ -114,7 +114,8 @@
             <tr><td>Assurance funding</td><td>Payout only after enough compatible commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
             <tr><td>Controlled assets</td><td>Transfer policy, controller input, redemption path, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
             <tr><td>ZK proof checks</td><td>A statement about chosen public inputs, with external facts handled by separate anchors.</td><td><span class="status-pill live">Live</span></td></tr>
-            <tr><td>Full app composition</td><td>Several app states succeed or fail together.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
+            <tr><td>Cross-app composition</td><td>Several app states succeed or fail together in one transaction.</td><td><span class="status-pill research">Demos only</span></td></tr>
+            <tr><td>Shared mutable state</td><td>Many users mutating one app state at once.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -133,21 +134,21 @@
       <h2>Sequencing without proving the whole DAG</h2>
       <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, proving what isn't yours turns into the real burden.</p>
       <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity instead of the whole DAG's.</p>
-      <p>None of this is proof that full synchronous app composition runs today: that's still separate, later work.</p>
+      <p>None of this delivers shared mutable state, the case where many users mutate one app state at once. That remains separate, later work.</p>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">vProgs boundary</p>
       <h2>Based apps first, full vProgs later</h2>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo describes an early Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction runtime, node, L1, and ZK pieces. It's research and roadmap work that shows the implementation direction only; it hasn't shipped as software.</p>
-      <p>Michael Sutton's <a href="https://github.com/michaelsutton/argent">Argent</a> repo is related research tooling: an actor-style frontend that aims to generate Silverscript for multi-contract covenant systems. It names the real developer-experience problem directly: writing many linked covenant contracts by hand is the hard part.</p>
-      <p>Full vProgs are separate, later, roadmap architecture for richer execution and cross-app composition. It hasn't reached testnet yet.</p>
+      <p>Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> sits above that as an actor-based language and compiler. It already turns <code>.ag</code> source into plain Silverscript contracts and portable artifacts, and its README lists compiler, runtime transaction building, multi-actor routing, and Inter-Covenant Communication among the pieces that work today. What it is waiting on is an audit: the README puts a careful production path after Silverscript's audit and release, with further Argent hardening after that. It names the real developer-experience problem directly, since writing many linked covenant contracts by hand is the hard part.</p>
+      <p>Full vProgs are separate, later, roadmap architecture. The line is narrower than it is usually drawn: composing separately compiled covenant apps atomically in one transaction turns out to work on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is shared mutable state, the case where many users mutate one app state at once. That has not reached testnet.</p>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">Standard fee floor</p>
       <h2>Operator changes</h2>
-      <p>Toccata changes standard fee policy for direct RPC submission to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Mempool policy and consensus stay separate rule sets, which is why consensus-valid zero-fee transactions are still possible while an upgraded node can reject an underpriced standard transaction from relay or RPC by policy. The per-audience upgrade steps, for node operators, wallets, exchanges, miners, and pools, are on <a href="/toccata-status">Toccata status</a>.</p>
+      <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor bound only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live. Mempool policy and consensus stay separate rule sets, which is why consensus-valid zero-fee transactions are still possible while an upgraded node can reject an underpriced standard transaction from relay or RPC by policy. The per-audience upgrade steps, for node operators, wallets, exchanges, miners, and pools, are on <a href="/toccata-status">Toccata status</a>.</p>
       <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, specifically to allow ZK-STARK proofs. Ordinary payment-throughput claims need their own, separate assumptions.</p>
     </section>
 
@@ -162,7 +163,7 @@
     <section class="next-step section">
       <p class="eyebrow">Read the spec</p>
       <h2>The underlying material</h2>
-      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, and <a href="https://github.com/michaelsutton/argent">Argent</a>.</p>
+      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, and <a href="https://github.com/argent-lang/argent">Argent</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">

@@ -23,7 +23,13 @@ claims:
   l1_status_snapshot_2026_07_25:
     status: measurement_sensitive
     recheck_after: 2026-08-06
-    summary: A July 25, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet answered by a synced v2.0.1 node, virtual DAA score 495,451,121 (above the Toccata activation score), a 2.44997148 KAS block reward under the current emission step, and about 27.597 billion KAS from the public supply endpoint. These are time-stamped network readings. They are unsuitable as timeless constants. Do not quote blockCount or headerCount from this endpoint: it load-balances across backend nodes with different pruning states, and two reads a minute apart returned 1,488,846 and 26,573,222.
+    summary: >
+      A July 25, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet answered by a
+      synced v2.0.1 node, virtual DAA score 495,451,121 (above the Toccata activation score), a 2.44997148
+      KAS block reward under the current emission step, and about 27.597 billion KAS from the public
+      supply endpoint. These are time-stamped network readings. They are unsuitable as timeless constants.
+      Do not quote blockCount or headerCount from this endpoint: it load-balances across backend nodes
+      with different pruning states, and two reads a minute apart returned 1,488,846 and 26,573,222.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
       - July 25 snapshot values are permanent
@@ -31,7 +37,13 @@ claims:
       - A public REST API reading is stronger than node or release evidence
   emission_schedule_may_2026:
     status: live_design
-    summary: Kaspa's emission steps down every 2,629,800 seconds by a factor of 2^(-1/12), about 5.61% per step, 426 steps deep in the consensus SUBSIDY_BY_MONTH_TABLE. Steps are triggered by DAA score, which is exact; calendar dates drift and should be marked approximate. Triggers and rates verified against coinbase.rs: 27.5 KAS/sec at DAA 426,015,000; 25.95654359 at 452,313,000; 24.49971474 at 478,611,000 (current as of July 25, 2026); 23.12465141 at 504,909,000, roughly August 5, 2026. At 10 BPS the current per-block subsidy is 2.44997148 KAS, matching the block reward API. No month is a cliff.
+    summary: >
+      Kaspa's emission steps down every 2,629,800 seconds by a factor of 2^(-1/12), about 5.61% per step,
+      426 steps deep in the consensus SUBSIDY_BY_MONTH_TABLE. Steps are triggered by DAA score, which is
+      exact; calendar dates drift and should be marked approximate. Triggers and rates verified against
+      coinbase.rs: 27.5 KAS/sec at DAA 426,015,000; 25.95654359 at 452,313,000; 24.49971474 at 478,611,000
+      (current as of July 25, 2026); 23.12465141 at 504,909,000, roughly August 5, 2026. At 10 BPS the
+      current per-block subsidy is 2.44997148 KAS, matching the block reward API. No month is a cliff.
     source: https://wiki.kaspa.org/en/tokenomics
     forbidden_copy:
       - Kaspa has a July 2026 emission cliff
@@ -58,7 +70,16 @@ claims:
     source: https://kaspa.org/lore
   fair_launch_origin:
     status: narrative_guardrail
-    summary: Kaspa's fair-launch origin should be described as source-backed history: PHANTOM/GHOSTDAG research, DAGLabs-era commercialization attempts, Polychain/Accomplice-era VC funding, an April 2021 testnet, failed hardware/presale paths, a messy gamenet-to-mainnet path, and a November 2021 proof-of-work launch with no premine, insider allocation, or pre-sales. The Kaspa Wiki prehistory page estimates the post-launch DAGLabs/Polychain-related early-miner amount at under 3% of supply, 840 million KAS, with its longer note saying probably closer to 2.5% and under 850 million KAS. Use this as an early-miner estimate. Premine claims and exact official allocation tables need different evidence. Fair launch lowers official allocation risk; it does not mean no early core contributors mined, and it does not prove perfect distribution, adoption, price, or future execution.
+    summary: >
+      Kaspa's fair-launch origin should be described as source-backed history: PHANTOM/GHOSTDAG research,
+      DAGLabs-era commercialization attempts, Polychain/Accomplice-era VC funding, an April 2021 testnet,
+      failed hardware/presale paths, a messy gamenet-to-mainnet path, and a November 2021 proof-of-work
+      launch with no premine, insider allocation, or pre-sales. The Kaspa Wiki prehistory page estimates
+      the post-launch DAGLabs/Polychain-related early-miner amount at under 3% of supply, 840 million KAS,
+      with its longer note saying probably closer to 2.5% and under 850 million KAS. Use this as an
+      early-miner estimate. Premine claims and exact official allocation tables need different evidence.
+      Fair launch lowers official allocation risk; it does not mean no early core contributors mined, and
+      it does not prove perfect distribution, adoption, price, or future execution.
     source: https://kaspaexplained.com/kaspa-origin-story
     forbidden_copy:
       - DAGLabs and Polychain had a premine
@@ -97,7 +118,19 @@ claims:
   toccata:
     status: daa_gated
     recheck_after: 2026-08-06
-    summary: Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0 was published on June 5, 2026 as the Mainnet Toccata Release; it set Toccata mainnet activation for DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC, and says nodes switch peer compatibility behavior 24 hours before the activation score. Toccata activated. After the score, check upgraded-node behavior, transaction version 1 handling, covenant data, ZK proof paths, wallets, explorers, SDKs, examples, and accepted mainnet transactions. TN10/TN12 and KIP evidence remain useful testnet/design evidence. On July 15, 2026 the four Toccata KIPs (16, 17, 20, 21) were promoted together to Status: Active in kips commit e4ae2332, replacing their earlier TN10-scoped status; this is the spec repo catching up to activation, not a new protocol change. Transaction version 1 and computeBudget run on mainnet and are documented in the operator guide, but their specs (KIP-24 PR #41 and KIP-25 PR #42) are still open, so cite the guide or the node rather than a merged KIP number. No rusty-kaspa release exists after v2.0.1 (June 15, 2026).
+    summary: >
+      Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0
+      was published on June 5, 2026 as the Mainnet Toccata Release; it set Toccata mainnet activation for
+      DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC, and says nodes switch peer compatibility
+      behavior 24 hours before the activation score. Toccata activated. After the score, check
+      upgraded-node behavior, transaction version 1 handling, covenant data, ZK proof paths, wallets,
+      explorers, SDKs, examples, and accepted mainnet transactions. TN10/TN12 and KIP evidence remain
+      useful testnet/design evidence. On July 15, 2026 the four Toccata KIPs (16, 17, 20, 21) were
+      promoted together to Status: Active in kips commit e4ae2332, replacing their earlier TN10-scoped
+      status; this is the spec repo catching up to activation, not a new protocol change. Transaction
+      version 1 and computeBudget run on mainnet and are documented in the operator guide, but their specs
+      (KIP-24 PR #41 and KIP-25 PR #42) are still open, so cite the guide or the node rather than a merged
+      KIP number. No rusty-kaspa release exists after v2.0.1 (June 15, 2026).
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -149,23 +182,69 @@ claims:
   vprogs:
     status: roadmap
     recheck_after: 2026-08-06
-    summary: vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering, including later cross-app atomic composition. They are not a mature live app ecosystem. The public vprogs repo describes an early-development/prototype Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction-runtime, node, L1, ZK, sim, and examples workspace components. It stayed active through July 2026 (8 commits between July 8 and July 23, all runtime and prover engineering) with zero releases, zero tags, and no crates.io publish. Its README says based computation while the GitHub description field says provable computation.
+    summary: >
+      vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering,
+      including later cross-app atomic composition. They are not a mature live app ecosystem. The public
+      vprogs repo README opens with "This repository is in early development / prototype phase. APIs and
+      architecture may change significantly," and the workspace carries core, storage, state, scheduling,
+      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 1, 2026: 19
+      commits landed in July 2026, the last on July 28 adding a program-agnostic daemon engine and a vprun
+      CLI, with zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
+      examples/tn10-flow describes itself as "a proof-of-concept that runs the L2 flow against a remote
+      testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
+      against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
+      path emits. Its README says based computation while the GitHub description field says provable
+      computation.
     source: https://github.com/kaspanet/vprogs
     forbidden_copy:
       - vProgs are live
   argent:
     status: research
     recheck_after: 2026-08-12
-    summary: Argent is an actor-based language and compiler for stateful multi-contract applications on covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable artifacts consumed by argent-runtime. As of July 29, 2026 it moved out of Michael Sutton's personal namespace into its own argent-lang organisation: github.com/michaelsutton/argent now redirects there. Three repos, all ISC licensed and all touched within 24 hours: argent (created June 16, 64 commits total with 46 of them in July), argent-playground (July 9, multi-actor and DEX demos), and argent-template (July 24, a starter template with a VS Code extension for .ag files and local argentc wrappers). Sutton is the only contributor. The README sets its own limit: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent itself "will still need further audit and hardening before general production use." Zero releases and zero tags on every repo. The template states that it does not connect to a Kaspa network, manage a wallet, or submit transactions. An examples/icc/kcc20_asset.ag file prototypes a KCC-0020-style transferable asset covenant whose owner identifier can be a pubkey or a covenant ID.
-    source: https://github.com/argent-lang/argent
+    summary: >
+      Argent is an actor-based language and compiler for stateful multi-contract applications on
+      covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable
+      artifacts consumed by argent-runtime. The README's Project status section has two halves, and
+      quoting only the first one misdescribes the project. The caution reads "The project is still under
+      active development and is not yet release-ready," a careful early-production path opens only "Once
+      Silverscript completes its audit and is released," and Argent itself "will still need further audit
+      and hardening before general production use." The half that gets dropped reads "The main pieces are
+      present: compiler, generated Silverscript, portable artifacts, runtime transaction building,
+      multi-actor routing, cross-app linking, constrained covenant spawning, actor enums, closed and open
+      ICC, and virtual-slot state expansion." A separate Current status section lists what is useful today
+      (compiling .ag apps to auditable .sil, building tracked example transactions through argent-runtime,
+      closed and open ICC examples, route-family and actor-enum examples, virtual-slot expanded state)
+      apart from what is still being built (launch and bootstrap tooling, package and dependency tooling,
+      diagnostics and typechecking, generated app-specific builder APIs, hardening and negative-test
+      coverage). The gate is an audit, not a missing compiler. Checked August 1, 2026. The project now has
+      its own argent-lang organisation, and github.com/michaelsutton/argent returns HTTP 301 to
+      github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, 76 commits
+      with 58 of them in July, latest July 31), argent-playground (created July 9, multi-actor and DEX
+      demos, latest July 29), and argent-template (created July 24, latest July 29). Sutton has 72 of
+      argent's 76 commits; a19q3, Manyfestation, and WolfieOC hold the other four. Zero releases and zero
+      tags on every repo. The template's Scope section says it "does not connect to a Kaspa network,
+      manage a wallet, or submit transactions," and its VS Code extension for .ag files is linked out of
+      the Argent checkout rather than shipped by the template. An examples/icc/kcc20_asset.ag file
+      prototypes a KCC-0020-style transferable asset covenant whose owner identifier can be a pubkey or a
+      covenant ID.
+    source: https://raw.githubusercontent.com/argent-lang/argent/master/README.md
+    supporting_source: https://github.com/argent-lang/argent
     forbidden_copy:
       - Argent proves production Kaspa smart contracts are ready
       - Argent applications run on Kaspa mainnet
+      - unfinished prototype
+      - Argent has no transaction builder
+      - Argent's compiler is incomplete
 
   cross_app_composition:
     status: roadmap
     recheck_after: 2026-08-06
-    summary: Atomic composition means several app states succeed or fail as one operation. Composing separately compiled covenant apps atomically inside a single transaction is possible on Toccata itself: Argent's Inter-Covenant Communication does it, so far only in unaudited offline demos. The line that actually separates vProgs is shared mutable state. Where many users mutate one shared app state, L1 composability tends to be exit-style rather than immediate at the moment a user acts.
+    summary: >
+      Atomic composition means several app states succeed or fail as one operation. Composing separately
+      compiled covenant apps atomically inside a single transaction is possible on Toccata itself:
+      Argent's Inter-Covenant Communication does it, so far only in unaudited offline demos. The line that
+      actually separates vProgs is shared mutable state. Where many users mutate one shared app state, L1
+      composability tends to be exit-style rather than immediate at the moment a user acts.
     source: https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c
     forbidden_copy:
       - cross-app atomic composition requires vProgs
@@ -196,7 +275,18 @@ claims:
   native_defi:
     status: roadmap
     recheck_after: 2026-08-06
-    summary: Native Kaspa L1 DeFi depends on future Kaspa-native programmability foundations and useful app tooling; it is not live today. Measured on July 25, 2026 via the kascov covenant indexer, mainnet carried 1,841 covenants ever created, 80 active, 1,761 burned, and 253.98 KAS of total live covenant value: 4 KCC20 tokens holding 10.04 KAS, 4 SilverScript escrows all burned, and the rest unattributed p2sh commitments. Testnet-10 carried 491,663 covenants over the same period, about 267 times mainnet. No DEX, AMM, or lending market is deployed on mainnet. kascov template labels are heuristic, so unrecognised apps could hide among the active p2sh entries, but the 253.98 KAS live-value ceiling caps the stakes either way. Kaskad/Igra-style L2 lending can be described as ecosystem or L2 DeFi context, but it is not evidence that native Kaspa L1 DeFi, Toccata app usage, or vProgs are live. Do not describe the L1 path as Ethereum-style or EVM-compatible execution unless a primary source adds that support.
+    summary: >
+      Native Kaspa L1 DeFi depends on future Kaspa-native programmability foundations and useful app
+      tooling; it is not live today. Measured on July 25, 2026 via the kascov covenant indexer, mainnet
+      carried 1,841 covenants ever created, 80 active, 1,761 burned, and 253.98 KAS of total live covenant
+      value: 4 KCC20 tokens holding 10.04 KAS, 4 SilverScript escrows all burned, and the rest
+      unattributed p2sh commitments. Testnet-10 carried 491,663 covenants over the same period, about 267
+      times mainnet. No DEX, AMM, or lending market is deployed on mainnet. kascov template labels are
+      heuristic, so unrecognised apps could hide among the active p2sh entries, but the 253.98 KAS
+      live-value ceiling caps the stakes either way. Kaskad/Igra-style L2 lending can be described as
+      ecosystem or L2 DeFi context, but it is not evidence that native Kaspa L1 DeFi, Toccata app usage,
+      or vProgs are live. Do not describe the L1 path as Ethereum-style or EVM-compatible execution unless
+      a primary source adds that support.
     source: https://kaspaexplained.com/why-kaspa-matters
     forbidden_copy:
       - Native DeFi is live
@@ -209,8 +299,19 @@ claims:
   dagknight:
     status: research
     recheck_after: 2026-08-06
-    summary: DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG. Do not attribute the words parameterless or adaptive to kaspa.org/lore: that page uses neither, describing DAGKnight as "the only 49% BFT partially synchronous protocol (in the oblivious setup)" and targeting block times in the 40-25 millisecond range. Sourcing for parameterless belongs to the DAGKnight paper, not kaspa.org. The rusty-kaspa dagknight branch is prototype evidence and has been dormant since March 22, 2026; KIP-2 still reads Status: Proposed. Activation needs release and network confirmation.
+    summary: >
+      DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG.
+      Checked August 1, 2026 against kaspa.org/lore: the word parameterless does not appear on that page
+      at all, and adaptive appears exactly once, inside "hashrate-adaptive finality windows" in the
+      proposed 2027 section, so neither word can be sourced to that page as a DAGKnight descriptor. What
+      the page does say is that DAGKnight is "the only 49% BFT partially synchronous protocol (in the
+      oblivious setup)" with block times "targeted for the 40-25 millisecond range," and that DAGKnight
+      "already provides safety under netsplits" while not providing progress during one. Sourcing for
+      parameterless belongs to the DAGKnight paper, not kaspa.org. The rusty-kaspa dagknight branch is
+      prototype evidence and has been dormant since March 22, 2026; the raw KIP-2 file still reads Status:
+      Proposed. Activation needs release and network confirmation.
     source: https://kaspa.org/lore
+    supporting_source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - DAGKnight is live
       - Kaspa has instant finality
@@ -248,7 +349,7 @@ claims:
       The kaspanet/kccs repo was created on July 15, 2026 and has not been pushed to since that
       day: the repository root still contains no file other than README.md, and the standards
       index table inside it is empty. Exactly one pull request has merged, the README itself. As
-      of July 29, 2026 seven specification pull requests are open and none is merged: KCC-0020
+      of August 1, 2026 seven specification pull requests are open and none is merged: KCC-0020
       fungible token covenant spec, KCC-0001 covenant definition and ABI, KCC-0402 covenant
       payment channels, KCC-0002 control principal references, KCC-0021 covenant token metadata,
       a bulk KCC-0008 through KCC-0024 token and commerce set, and KCC-0025 a license agreement.
