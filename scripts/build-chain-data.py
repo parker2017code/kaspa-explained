@@ -31,7 +31,7 @@ FIELDS = {
     "wallets_of_5": "wal", "us_spot_etf": "etf", "cme_futures": "cme",
     "daily_transactions": "tx", "daily_transactions_raw": "txraw", "tx_note": "txnote",
     "privacy_default": "priv", "market_cap_usd": "cap",
-    "purpose": "why", "weakness": "weak",
+    "purpose": "why", "weakness": "weak", "measured_2026_08_01": "meas",
 }
 
 
