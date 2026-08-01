@@ -22,6 +22,7 @@ const checkedExtensions = new Set([
 ]);
 
 const skipDirs = new Set([
+  ".claude",
   ".git",
   "node_modules",
   "dist",
@@ -63,6 +64,7 @@ const skipFiles = new Set([
 const skipFilePatterns = [/^kaspa-x-posts.*\.md$/, /^kaspa-toccata-.*-post-series\.md$/];
 
 const personalEssayFiles = new Set([
+  "toccata-essay.html",
   "toccata-expressiveness-upgrade.html",
   "toccata-expressiveness-upgrade-part-2.html",
   "toccata-expressiveness-upgrade-part-3.html",

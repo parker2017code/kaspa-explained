@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Which model should you use?</title>
+  <meta name="description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/model-picker">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Which model should you use?">
+  <meta property="og:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaspaexplained.com/model-picker">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Which model should you use?">
+  <meta name="twitter:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-01">
+  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <style>
+    .mp-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+    @media (max-width: 860px) { .mp-shell { grid-template-columns: 1fr; gap: 22px; } }
+    .mp-block { margin-bottom: 26px; }
+    .mp-label { color: var(--faint); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
+    .mp-presets { display: flex; flex-wrap: wrap; gap: 7px; }
+    .mp-preset { font: inherit; font-size: .85rem; color: var(--muted); background: var(--control-bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+    .mp-preset:hover { color: var(--text); border-color: var(--line-bright); }
+    .mp-preset[aria-pressed="true"] { color: #06251f; background: var(--green); border-color: var(--green); font-weight: 600; }
+    .mp-dial { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; margin-bottom: 13px; }
+    .mp-dial > span { font-size: .93rem; color: var(--text); }
+    .mp-dial > output { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .mp-dial > input { grid-column: 1 / -1; }
+    .mp-why-dial { grid-column: 1 / -1; font-style: normal; font-size: .8rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+    .mp-range-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; margin-bottom: 13px; }
+    .mp-range-row > span { font-size: .93rem; color: var(--text); }
+    .mp-range-row > output { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .mp-range-row > input { grid-column: 1 / -1; }
+    input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; cursor: pointer; }
+    input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--line-bright); }
+    input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-bright); }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 50%; background: var(--green); border: 0; }
+    input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--green); border: 0; }
+    input[type="range"]:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+    .mp-check { display: flex; align-items: flex-start; gap: 9px; font-size: .93rem; color: var(--text); margin-bottom: 11px; cursor: pointer; line-height: 1.45; }
+    .mp-check input { margin-top: 3px; accent-color: var(--green); flex: none; }
+    .mp-results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .mp-results-head .mp-label { margin: 0; }
+    .mp-reset { font: inherit; font-size: .85rem; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .mp-reset:hover { color: var(--text); }
+    .mp-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+    .mp-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 46px; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-bg); }
+    .mp-row.top { border-color: var(--green); }
+    .mp-rank { color: var(--faint); font-size: .82rem; font-variant-numeric: tabular-nums; text-align: right; }
+    .mp-cell { display: block; min-width: 0; }
+    .mp-title { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
+    .mp-name { font-size: .96rem; color: var(--text); font-weight: 600; }
+    .mp-tier { font-size: .68rem; font-weight: 700; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; flex: none; }
+    .mp-meta { display: block; font-size: .8rem; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; line-height: 1.45; }
+    .mp-meta .sep { opacity: .45; margin: 0 6px; }
+    .mp-bar { display: block; height: 4px; border-radius: 2px; background: var(--line-bright); margin-top: 8px; overflow: hidden; }
+    .mp-bar > i { display: block; height: 100%; border-radius: 2px; background: var(--green); }
+    .mp-score { font-size: 1.02rem; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+    .mp-empty { color: var(--muted); padding: 18px 0; }
+    .mp-method { margin: 0 0 12px; }
+    .mp-method > summary { cursor: pointer; color: var(--muted); font-size: .84rem; padding: 3px 0; }
+    .mp-method > summary:hover { color: var(--text); }
+    .mp-method ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+    .mp-method li { color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .mp-method b { color: var(--text); font-weight: 600; }
+    .mp-drivers { display: block; font-size: .78rem; color: var(--muted); margin-top: 5px; }
+    .mp-drivers b { color: var(--text); font-weight: 600; }
+    .mp-gap { display: block; font-size: .78rem; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+    .mp-gap b { color: var(--text); font-weight: 600; }
+    .mp-map td:first-child { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home"><span class="brand-mark" aria-hidden="true"></span>Kaspa Explained</a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+  <main id="top" tabindex="-1">
+    <section class="section">
+      <p class="eyebrow">Tool</p>
+      <h1>Which model should you use?</h1>
+      <p class="lead">Move the dials for what your work actually needs. Every model is rescored as you move them, against the same benchmark numbers, and the ranking reorders live.</p>
+    </section>
+
+    <section class="section">
+      <div class="mp-shell">
+        <div class="mp-controls">
+          <div class="mp-block">
+            <p class="mp-label">Start from a job</p>
+            <div class="mp-presets" id="mpPresets"></div>
+          </div>
+
+          <div class="mp-block">
+            <p class="mp-label">What matters, and how much</p>
+            <div id="mpDials"></div>
+          </div>
+
+          <div class="mp-block">
+            <p class="mp-label">Where it runs</p>
+            <label class="mp-check"><input type="checkbox" id="mpOpen"> <span>Open weights only<em>Models you can download and run on your own hardware, with no API call leaving the building.</em></span></label>
+          </div>
+        </div>
+
+        <div class="mp-results">
+          <div class="mp-results-head">
+            <p class="mp-label" id="mpCount">Ranking</p>
+            <button type="button" class="mp-reset" id="mpReset">Reset</button>
+          </div>
+          
+          <ol class="mp-list" id="mpList"></ol>
+          <p class="mp-empty" id="mpEmpty" hidden>Nothing matches. Raise the cost ceiling, allow a slower first token, or ask for less context.</p>
+        </div>
+      </div>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/chain-comparer"><span>Previous</span><strong>Which chain fits the job?</strong><p>Thirty-two layer ones measured on the same day. Move the dials for what your job needs and see which chain fits.</p></a>
+        <a href="/kaspa-origin-story"><span>Next</span><strong>Kaspa&#x27;s fair launch was the path left after the other paths failed</strong><p>How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+<footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+  <script>window.__MP__={"metrics":["intelligence","overall","reasoning","coding","agentic","math","data","language","ifollow","net","confirmed","praise","steer","bash","hallu","costPerTask","costPerSuccess","tps","ttft","total","context"],"models":[{"n":"Celeris-1","t":null,"lab":"Celeris","open":false,"ctx":131,"cost":null,"ttft":0.65,"tps":2038,"solid":false,"nat":0.24,"v":[3.9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,100.0,91.3,100.0,0.5],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1]},{"n":"Claude Fable 5","t":"MAX","lab":"Anthropic","open":false,"ctx":1000,"cost":3.15,"ttft":89.02,"tps":66,"solid":false,"nat":0.48,"v":[98.0,100.0,93.7,100.0,93.6,99.1,96.1,100.0,87.3,100.0,79.0,97.2,100.0,99.6,100.0,0.0,0.0,16.8,12.1,13.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Fable 5","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":3.15,"ttft":89.02,"tps":66,"solid":false,"nat":0.33,"v":[98.0,100.0,93.7,100.0,93.6,99.1,96.1,100.0,87.3,100.0,79.0,97.2,100.0,99.6,100.0,0.0,0.0,16.8,12.1,13.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Fable 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":3.15,"ttft":89.02,"tps":66,"solid":false,"nat":0.29,"v":[98.0,100.0,93.7,100.0,93.6,99.1,96.1,100.0,87.3,100.0,79.0,97.2,100.0,99.6,100.0,0.0,0.0,16.8,12.1,13.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Haiku 4.5","t":null,"lab":"Anthropic","open":false,"ctx":200,"cost":0.25,"ttft":15.64,"tps":95,"solid":false,"nat":0.29,"v":[39.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,39.3,0.0,25.6,40.1,41.5,10.2],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"Claude Opus 4.5","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,49.8,63.2,69.4,45.4,74.2,74.6,66.7,35.9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,19.1,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"Claude Opus 4.6","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,58.9,90.5,62.1,65.3,69.3,58.8,73.8,39.0,78.7,59.3,64.1,83.1,92.6,100.0,0.0,28.2,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.6","t":"OFF","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,58.9,90.5,62.1,65.3,69.3,58.8,73.8,39.0,78.7,59.3,64.1,83.1,92.6,100.0,0.0,28.2,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.7","t":"XHI","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,68.6,85.7,81.1,69.0,85.3,88.4,54.6,52.1,84.7,67.3,66.6,90.3,97.3,99.6,0.0,22.3,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.7","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,68.6,85.7,81.1,69.0,85.3,88.4,54.6,52.1,84.7,67.3,66.6,90.3,97.3,99.6,0.0,22.3,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.7","t":"OFF","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,68.6,85.7,81.1,69.0,85.3,88.4,54.6,52.1,81.8,63.0,69.1,87.9,91.6,99.8,0.0,22.3,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.8","t":"MAX","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,67.1,92.1,79.6,68.5,91.6,45.1,61.0,72.6,89.0,74.7,89.4,90.6,90.3,90.8,0.0,8.5,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.8","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,67.1,92.1,79.6,68.5,91.6,45.1,61.0,72.6,89.0,74.7,89.4,90.6,90.3,90.8,0.0,8.5,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 4.8","t":"OFF","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,67.1,92.1,79.6,68.5,91.6,45.1,61.0,72.6,67.8,73.2,70.2,86.5,90.6,22.6,0.0,8.5,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Claude Opus 5","t":"MAX","lab":"Anthropic","open":false,"ctx":1000,"cost":2.34,"ttft":92.02,"tps":54,"solid":true,"nat":1.0,"v":[100.0,86.0,98.4,77.7,100.0,97.8,75.4,92.9,40.9,97.6,100.0,100.0,67.0,98.1,99.8,4.6,16.0,11.9,11.5,12.2,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Opus 5","t":"XHI","lab":"Anthropic","open":false,"ctx":1000,"cost":1.8,"ttft":33.85,"tps":52,"solid":false,"nat":0.29,"v":[98.0,86.0,98.4,77.7,100.0,97.8,75.4,92.9,40.9,97.6,100.0,100.0,67.0,98.1,99.8,8.7,16.0,11.0,27.6,27.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Opus 5","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":1.23,"ttft":15.97,"tps":53,"solid":true,"nat":0.57,"v":[96.1,86.0,98.4,77.7,100.0,97.8,75.4,92.9,40.9,97.0,97.2,97.2,77.9,93.7,99.9,14.6,16.0,11.5,39.7,37.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Opus 5","t":"MED","lab":"Anthropic","open":false,"ctx":1000,"cost":0.72,"ttft":6.59,"tps":53,"solid":false,"nat":0.29,"v":[90.2,86.0,98.4,77.7,100.0,97.8,75.4,92.9,40.9,97.0,97.2,97.2,77.9,93.7,99.9,22.9,16.0,11.5,54.0,46.4,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Opus 5","t":"LOW","lab":"Anthropic","open":false,"ctx":1000,"cost":0.43,"ttft":3.02,"tps":51,"solid":false,"nat":0.29,"v":[80.4,86.0,98.4,77.7,100.0,97.8,75.4,92.9,40.9,97.0,97.2,97.2,77.9,93.7,99.9,30.9,16.0,10.6,66.6,50.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 4.6","t":"MED","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":1.33,"tps":43,"solid":false,"nat":0.48,"v":[47.1,51.7,78.1,67.5,51.6,59.1,87.0,48.2,38.6,67.2,49.7,42.8,68.7,94.9,99.7,0.0,34.4,6.4,79.8,50.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{"n":"Claude Sonnet 4.6","t":"OFF","lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":1.33,"tps":43,"solid":true,"nat":0.52,"v":[47.1,51.7,78.1,67.5,51.6,59.1,87.0,48.2,38.6,67.2,49.7,42.8,68.7,94.9,99.7,0.0,34.4,6.4,79.8,50.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"MAX","lab":"Anthropic","open":false,"ctx":1000,"cost":1.72,"ttft":188.06,"tps":74,"solid":false,"nat":0.29,"v":[84.3,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,9.4,23.3,19.6,0.0,0.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"XHI","lab":"Anthropic","open":false,"ctx":1000,"cost":1.72,"ttft":30.48,"tps":68,"solid":true,"nat":0.62,"v":[84.3,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,9.4,23.3,17.5,29.3,30.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"HIGH","lab":"Anthropic","open":false,"ctx":1000,"cost":1.72,"ttft":4.39,"tps":70,"solid":true,"nat":0.48,"v":[84.3,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,9.4,23.3,18.2,60.6,52.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"MED","lab":"Anthropic","open":false,"ctx":1000,"cost":0.42,"ttft":2.13,"tps":63,"solid":false,"nat":0.19,"v":[62.7,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,31.3,23.3,15.7,72.2,55.1,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"LOW","lab":"Anthropic","open":false,"ctx":1000,"cost":0.42,"ttft":1.67,"tps":62,"solid":false,"nat":0.19,"v":[62.7,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,31.3,23.3,15.3,76.1,55.7,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Claude Sonnet 5","t":"OFF","lab":"Anthropic","open":false,"ctx":1000,"cost":0.42,"ttft":1.45,"tps":64,"solid":false,"nat":0.29,"v":[62.7,66.2,90.5,74.3,87.6,85.3,65.1,44.3,41.3,86.0,72.4,78.0,81.6,93.8,99.5,31.3,23.3,16.1,78.4,56.7,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Command A+","t":null,"lab":"Cohere","open":true,"ctx":192,"cost":0.0,"ttft":0.38,"tps":196,"solid":false,"nat":0.29,"v":[25.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,100.0,0.0,43.2,100.0,50.1,9.3],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"DeepSeek V4 Flash","t":"MAX","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.03,"ttft":1.24,"tps":107,"solid":false,"nat":0.14,"v":[78.4,15.5,33.0,18.4,40.9,26.2,52.1,27.0,38.2,45.8,35.4,21.4,49.8,66.7,92.5,72.2,100.0,28.5,80.9,65.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"DeepSeek V4 Flash","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.03,"ttft":1.24,"tps":107,"solid":true,"nat":0.95,"v":[37.3,15.5,33.0,18.4,40.9,26.2,52.1,27.0,38.2,45.8,35.4,21.4,49.8,66.7,92.5,72.2,100.0,28.5,80.9,65.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"DeepSeek V4 Pro","t":"MAX","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.05,"ttft":1.79,"tps":62,"solid":false,"nat":0.29,"v":[66.7,44.9,71.4,22.3,51.6,75.6,75.0,55.3,35.5,53.4,39.1,28.3,60.4,64.0,93.2,64.3,74.7,15.3,75.0,16.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"DeepSeek V4 Pro","t":"HIGH","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.04,"ttft":1.67,"tps":58,"solid":false,"nat":0.29,"v":[64.7,44.9,71.4,22.3,51.6,75.6,75.0,55.3,35.5,53.4,39.1,28.3,60.4,64.0,93.2,67.7,74.7,13.7,76.1,27.4,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"DeepSeek V4 Pro","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.04,"ttft":1.62,"tps":62,"solid":true,"nat":0.95,"v":[41.2,44.9,71.4,22.3,51.6,75.6,75.0,55.3,35.5,53.4,39.1,28.3,60.4,64.0,93.2,67.7,74.7,15.3,76.6,55.7,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GLM-5.1","t":null,"lab":"Z.ai","open":true,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,57.7,52.5,42.0,62.0,73.7,97.3,0.0,0.0,0.0,0.0,0.0,47.2],"a":[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1]},{"n":"GLM-5.2","t":"MAX","lab":"Z.ai","open":true,"ctx":1000,"cost":0.69,"ttft":1.53,"tps":107,"solid":true,"nat":0.57,"v":[80.4,52.7,58.4,69.4,71.3,71.6,72.2,48.6,35.1,80.8,75.6,72.6,79.3,83.1,100.0,23.6,45.5,28.5,77.6,38.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GLM-5.2","t":null,"lab":"Z.ai","open":true,"ctx":1000,"cost":0.69,"ttft":2.26,"tps":71,"solid":true,"nat":0.67,"v":[47.1,52.7,58.4,69.4,71.3,71.6,72.2,48.6,35.1,80.8,75.6,72.6,79.3,83.1,100.0,23.6,45.5,18.6,71.3,56.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.2","t":"HIGH","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,59.4,73.0,51.9,68.1,86.7,88.0,61.3,33.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,40.4,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"GPT-5.2 Codex","t":null,"lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,56.5,55.6,88.3,66.2,67.1,88.0,39.7,51.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,45.4,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"GPT-5.4","t":"XHI","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,75.8,88.6,58.7,75.6,90.7,91.9,71.3,65.6,74.0,63.5,48.8,81.0,90.9,100.0,0.0,29.2,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"GPT-5.4","t":"HIGH","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,75.8,88.6,58.7,75.6,90.7,91.9,71.3,65.6,74.0,63.5,48.8,81.0,90.9,100.0,0.0,29.2,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"GPT-5.4 Mini","t":"XHI","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,19.8,35.2,30.1,49.7,21.3,62.0,30.1,25.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,32.5,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"GPT-5.4 Nano","t":"XHI","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,35.3,66.3,26.2,60.6,76.9,50.7,0.0,54.1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,61.4,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"GPT-5.5","t":"XHI","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":true,"nat":0.76,"v":[0.0,86.5,93.7,81.1,76.0,98.7,100.0,88.3,67.6,85.7,66.2,70.6,86.1,100.0,100.0,0.0,26.6,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"GPT-5.5","t":"HIGH","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,86.5,93.7,81.1,76.0,98.7,100.0,88.3,67.6,83.6,65.7,66.9,88.9,96.0,100.0,0.0,26.6,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"GPT-5.5","t":"OFF","lab":"OpenAI","open":false,"ctx":400,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,86.5,93.7,81.1,76.0,98.7,100.0,88.3,67.6,75.4,60.1,54.3,79.0,94.0,100.0,0.0,26.6,0.0,0.0,0.0,26.1],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"GPT-5.6 Luna","t":"MAX","lab":"OpenAI","open":false,"ctx":1000,"cost":0.07,"ttft":121.89,"tps":172,"solid":true,"nat":0.71,"v":[80.4,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,59.1,47.6,40.0,7.0,8.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Luna","t":"XHI","lab":"OpenAI","open":false,"ctx":1000,"cost":0.04,"ttft":37.9,"tps":174,"solid":true,"nat":0.57,"v":[76.5,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,67.7,47.6,40.3,25.8,29.1,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Luna","t":"HIGH","lab":"OpenAI","open":false,"ctx":1000,"cost":0.03,"ttft":8.87,"tps":162,"solid":false,"nat":0.29,"v":[70.6,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,72.2,47.6,38.6,49.2,51.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Luna","t":"MED","lab":"OpenAI","open":false,"ctx":1000,"cost":0.02,"ttft":2.27,"tps":163,"solid":false,"nat":0.29,"v":[54.9,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,78.5,47.6,38.7,71.2,66.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Luna","t":"LOW","lab":"OpenAI","open":false,"ctx":1000,"cost":0.01,"ttft":2.0,"tps":155,"solid":false,"nat":0.29,"v":[45.1,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,89.2,47.6,37.5,73.2,67.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Luna","t":"OFF","lab":"OpenAI","open":false,"ctx":1000,"cost":0.02,"ttft":0.77,"tps":168,"solid":false,"nat":0.29,"v":[33.3,54.6,80.6,85.0,64.0,60.0,87.3,35.8,26.6,68.2,50.4,51.8,63.4,93.9,100.0,78.5,47.6,39.5,88.6,73.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"MAX","lab":"OpenAI","open":false,"ctx":1000,"cost":1.86,"ttft":133.04,"tps":63,"solid":true,"nat":0.71,"v":[96.1,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,8.2,26.4,15.7,5.6,6.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"XHI","lab":"OpenAI","open":false,"ctx":1000,"cost":1.17,"ttft":48.54,"tps":60,"solid":true,"nat":0.57,"v":[94.1,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,15.4,26.4,14.5,21.8,22.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"HIGH","lab":"OpenAI","open":false,"ctx":1000,"cost":0.77,"ttft":12.49,"tps":57,"solid":false,"nat":0.29,"v":[90.2,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,21.9,26.4,13.3,43.7,41.2,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"MED","lab":"OpenAI","open":false,"ctx":1000,"cost":0.51,"ttft":4.57,"tps":55,"solid":false,"nat":0.29,"v":[86.3,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,28.2,26.4,12.4,59.9,49.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"LOW","lab":"OpenAI","open":false,"ctx":1000,"cost":0.31,"ttft":2.9,"tps":56,"solid":false,"nat":0.29,"v":[76.5,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,36.0,26.4,12.8,67.2,52.2,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Sol","t":"OFF","lab":"OpenAI","open":false,"ctx":1000,"cost":0.32,"ttft":0.99,"tps":53,"solid":false,"nat":0.29,"v":[60.8,90.3,100.0,89.8,80.7,100.0,93.7,89.4,71.8,91.1,74.3,91.4,88.2,90.9,100.0,35.5,26.4,11.5,84.6,54.4,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"MAX","lab":"OpenAI","open":false,"ctx":1000,"cost":0.73,"ttft":164.36,"tps":126,"solid":true,"nat":0.71,"v":[88.2,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,22.7,31.3,32.5,2.2,2.7,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"XHI","lab":"OpenAI","open":false,"ctx":1000,"cost":0.43,"ttft":22.12,"tps":109,"solid":true,"nat":0.57,"v":[82.4,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,30.9,31.3,29.0,34.5,37.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"HIGH","lab":"OpenAI","open":false,"ctx":1000,"cost":0.3,"ttft":2.01,"tps":105,"solid":false,"nat":0.29,"v":[76.5,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,36.5,31.3,28.1,73.2,62.4,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"MED","lab":"OpenAI","open":false,"ctx":1000,"cost":0.16,"ttft":1.75,"tps":101,"solid":false,"nat":0.29,"v":[70.6,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,46.2,31.3,27.1,75.4,62.6,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"LOW","lab":"OpenAI","open":false,"ctx":1000,"cost":0.13,"ttft":1.64,"tps":99,"solid":false,"nat":0.29,"v":[58.8,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,49.5,31.3,26.6,76.4,62.7,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GPT-5.6 Terra","t":"OFF","lab":"OpenAI","open":false,"ctx":1000,"cost":0.15,"ttft":0.79,"tps":106,"solid":false,"nat":0.29,"v":[47.1,75.4,96.5,62.1,77.9,94.2,91.9,72.3,44.0,68.4,50.4,51.2,71.4,89.9,100.0,47.2,31.3,28.3,88.2,66.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,25.6,25.7,13.6,45.7,37.6,94.8,0.0,0.0,0.0,0.0,0.0,47.2],"a":[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1]},{"n":"Gemini 3.1 Pro Preview","t":"HIGH","lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":24.79,"tps":122,"solid":false,"nat":0.48,"v":[70.6,71.0,75.6,53.9,54.8,76.9,89.1,81.2,100.0,54.3,41.8,37.8,54.5,53.7,91.4,34.5,35.9,31.7,32.7,35.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.1 Pro Preview","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":24.79,"tps":122,"solid":true,"nat":0.57,"v":[70.6,71.0,75.6,53.9,54.8,76.9,89.1,81.2,100.0,54.3,41.8,37.8,54.5,53.7,91.4,34.5,35.9,31.7,32.7,35.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.5 Flash","t":"HIGH","lab":"Google","open":false,"ctx":1000,"cost":0.69,"ttft":24.33,"tps":171,"solid":true,"nat":1.0,"v":[78.4,59.4,69.2,62.1,65.3,64.4,41.2,78.4,86.5,52.5,39.1,32.5,58.7,68.7,89.4,23.6,39.0,39.9,33.0,36.6,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.5 Flash","t":"MED","lab":"Google","open":false,"ctx":1000,"cost":0.69,"ttft":17.32,"tps":158,"solid":true,"nat":0.52,"v":[68.6,59.4,69.2,62.1,65.3,64.4,41.2,78.4,86.5,37.5,16.8,23.5,42.2,68.9,92.6,23.6,39.0,38.0,38.4,41.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.5 Flash","t":"OFF","lab":"Google","open":false,"ctx":1000,"cost":0.69,"ttft":1.0,"tps":153,"solid":false,"nat":0.24,"v":[49.0,59.4,69.2,62.1,65.3,64.4,41.2,78.4,86.5,37.5,16.8,23.5,42.2,68.9,92.6,23.6,39.0,37.2,84.4,71.0,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.5 Flash-Lite","t":"HIGH","lab":"Google","open":false,"ctx":1000,"cost":0.1,"ttft":8.07,"tps":360,"solid":true,"nat":0.71,"v":[51.0,7.7,0.0,51.9,57.4,0.0,0.0,33.0,54.1,20.6,0.0,0.0,44.3,52.6,94.1,53.5,67.5,58.0,50.7,56.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.5 Flash-Lite","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.1,"ttft":8.07,"tps":360,"solid":false,"nat":0.33,"v":[51.0,7.7,0.0,51.9,57.4,0.0,0.0,33.0,54.1,20.6,0.0,0.0,44.3,52.6,94.1,53.5,67.5,58.0,50.7,56.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.6 Flash","t":"HIGH","lab":"Google","open":false,"ctx":1000,"cost":0.56,"ttft":15.11,"tps":220,"solid":false,"nat":0.48,"v":[78.4,54.6,79.0,60.7,53.3,56.4,34.5,75.9,85.7,50.6,49.1,26.4,53.9,72.0,91.2,26.8,40.3,46.0,40.6,44.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.6 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.56,"ttft":15.11,"tps":220,"solid":true,"nat":0.57,"v":[78.4,54.6,79.0,60.7,53.3,56.4,34.5,75.9,85.7,50.6,49.1,26.4,53.9,72.0,91.2,26.8,40.3,46.0,40.6,44.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemma 4 31B","t":null,"lab":"Google","open":true,"ctx":256,"cost":0.0,"ttft":1.09,"tps":35,"solid":true,"nat":0.57,"v":[37.3,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,46.6,31.7,36.4,0.0,0.0,100.0,0.0,1.4,83.0,20.5,15.9],"a":[1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1]},{"n":"Grok 4.3","t":"HIGH","lab":"SpaceXAI","open":false,"ctx":1000,"cost":0.29,"ttft":9.84,"tps":133,"solid":false,"nat":0.33,"v":[51.0,0.0,33.7,21.8,0.0,47.1,9.2,39.4,37.1,28.1,23.8,7.8,40.8,52.0,92.0,37.0,70.3,33.8,47.6,49.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.3","t":"MED","lab":"SpaceXAI","open":false,"ctx":1000,"cost":0.29,"ttft":9.84,"tps":133,"solid":false,"nat":0.24,"v":[51.0,0.0,33.7,21.8,0.0,47.1,9.2,39.4,37.1,28.1,23.8,7.8,40.8,52.0,92.0,37.0,70.3,33.8,47.6,49.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.3","t":"LOW","lab":"SpaceXAI","open":false,"ctx":1000,"cost":0.29,"ttft":4.69,"tps":135,"solid":false,"nat":0.24,"v":[49.0,0.0,33.7,21.8,0.0,47.1,9.2,39.4,37.1,28.1,23.8,7.8,40.8,52.0,92.0,37.0,70.3,34.2,59.5,58.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.3","t":"OFF","lab":"SpaceXAI","open":false,"ctx":1000,"cost":0.29,"ttft":0.82,"tps":125,"solid":false,"nat":0.29,"v":[29.4,0.0,33.7,21.8,0.0,47.1,9.2,39.4,37.1,28.1,23.8,7.8,40.8,52.0,92.0,37.0,70.3,32.3,87.6,68.8,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.3","t":null,"lab":"SpaceXAI","open":false,"ctx":1000,"cost":0.29,"ttft":9.84,"tps":133,"solid":true,"nat":0.76,"v":[51.0,0.0,33.7,21.8,0.0,47.1,9.2,39.4,37.1,5.8,17.0,2.8,39.1,0.7,91.6,37.0,70.3,33.8,47.6,49.5,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.5","t":"HIGH","lab":"SpaceXAI","open":false,"ctx":500,"cost":0.44,"ttft":8.01,"tps":56,"solid":false,"nat":0.29,"v":[86.3,65.2,85.7,15.5,81.4,76.0,69.7,72.0,70.7,75.5,62.9,53.9,76.9,93.9,100.0,30.5,55.2,12.8,50.9,45.5,31.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok 4.5","t":null,"lab":"SpaceXAI","open":false,"ctx":500,"cost":0.44,"ttft":8.01,"tps":56,"solid":true,"nat":0.76,"v":[86.3,65.2,85.7,15.5,81.4,76.0,69.7,72.0,70.7,75.5,62.9,53.9,76.9,93.9,100.0,30.5,55.2,12.8,50.9,45.5,31.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Grok Build 0.1","t":null,"lab":"SpaceXAI","open":false,"ctx":256,"cost":null,"ttft":null,"tps":null,"solid":true,"nat":0.76,"v":[0.0,26.6,51.4,0.0,58.5,20.9,62.0,35.5,46.3,28.3,36.7,16.4,28.6,45.1,92.7,0.0,91.0,0.0,0.0,0.0,15.9],"a":[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1]},{"n":"Hy3","t":null,"lab":"Tencent","open":true,"ctx":256,"cost":0.04,"ttft":2.73,"tps":69,"solid":true,"nat":0.57,"v":[60.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,52.5,45.0,34.2,37.3,70.4,94.5,67.7,0.0,17.9,68.2,29.9,15.9],"a":[1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1]},{"n":"Inkling","t":"XHI","lab":"Thinking Machines","open":true,"ctx":1000,"cost":null,"ttft":1.87,"tps":86,"solid":false,"nat":0.48,"v":[60.8,46.4,57.5,27.2,66.2,65.3,69.0,39.0,65.3,36.2,29.2,4.3,25.7,61.9,94.2,0.0,40.4,23.2,74.3,34.2,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{"n":"Inkling","t":null,"lab":"Thinking Machines","open":true,"ctx":1000,"cost":null,"ttft":1.87,"tps":86,"solid":true,"nat":0.52,"v":[60.8,46.4,57.5,27.2,66.2,65.3,69.0,39.0,65.3,36.2,29.2,4.3,25.7,61.9,94.2,0.0,40.4,23.2,74.3,34.2,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{"n":"Inkling Small","t":null,"lab":"Thinking Machines","open":true,"ctx":1000,"cost":0.07,"ttft":1.67,"tps":95,"solid":false,"nat":0.29,"v":[58.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,59.1,0.0,25.6,76.1,36.1,47.2],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"Kimi K2.6","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":null,"ttft":2.81,"tps":43,"solid":true,"nat":0.95,"v":[49.0,39.6,61.0,64.1,60.8,47.1,41.9,44.7,43.2,52.3,40.6,37.1,47.0,60.6,91.2,0.0,47.6,6.4,67.8,48.4,15.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1]},{"n":"Kimi K2.7 Code","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":0.22,"ttft":2.82,"tps":50,"solid":true,"nat":1.0,"v":[62.7,29.5,71.7,41.7,58.2,26.2,33.5,54.6,12.0,57.7,63.1,48.7,72.6,79.9,100.0,41.3,59.3,10.1,67.7,22.7,15.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Kimi K3","t":"MAX","lab":"Moonshot","open":true,"ctx":1050,"cost":0.86,"ttft":3.94,"tps":35,"solid":true,"nat":0.57,"v":[92.2,81.6,96.8,77.7,93.6,47.6,89.8,81.6,70.3,90.7,90.4,81.1,90.3,86.2,100.0,20.1,31.6,1.4,62.3,17.6,48.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Kimi K3","t":"LOW","lab":"Moonshot","open":true,"ctx":1050,"cost":0.24,"ttft":4.77,"tps":33,"solid":false,"nat":0.29,"v":[72.5,81.6,96.8,77.7,93.6,47.6,89.8,81.6,70.3,90.7,90.4,81.1,90.3,86.2,100.0,39.9,31.6,0.0,59.2,16.5,48.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Kimi K3","t":null,"lab":"Moonshot","open":true,"ctx":1050,"cost":0.86,"ttft":3.94,"tps":35,"solid":false,"nat":0.48,"v":[92.2,81.6,96.8,77.7,93.6,47.6,89.8,81.6,70.3,90.7,90.4,81.1,90.3,86.2,100.0,20.1,31.6,1.4,62.3,17.6,48.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Llama 4 Scout","t":null,"lab":"Meta","open":true,"ctx":10000,"cost":0.01,"ttft":0.82,"tps":88,"solid":false,"nat":0.29,"v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,89.2,0.0,23.8,87.6,63.3,100.0],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"Mercury 2","t":null,"lab":"Inception","open":false,"ctx":128,"cost":0.08,"ttft":3.62,"tps":809,"solid":false,"nat":0.29,"v":[21.6,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,57.0,0.0,77.6,63.7,71.2,0.0],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"MiMo-V2.5","t":null,"lab":"Xiaomi","open":true,"ctx":1000,"cost":0.01,"ttft":3.03,"tps":74,"solid":false,"nat":0.29,"v":[52.9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,89.2,0.0,19.6,66.5,31.1,47.2],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"MiMo-V2.5 Pro","t":null,"lab":"Xiaomi","open":true,"ctx":1000,"cost":0.05,"ttft":2.94,"tps":49,"solid":true,"nat":0.57,"v":[62.7,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,47.4,38.5,22.1,55.3,71.0,94.6,64.3,0.0,9.6,67.0,24.0,47.2],"a":[1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1]},{"n":"MiniMax M2.7","t":null,"lab":"MiniMax","open":true,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.33,"v":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,15.7,7.3,4.4,17.2,47.1,92.0,0.0,0.0,0.0,0.0,0.0,47.2],"a":[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,1]},{"n":"MiniMax M3","t":null,"lab":"MiniMax","open":true,"ctx":1000,"cost":0.14,"ttft":1.32,"tps":70,"solid":true,"nat":1.0,"v":[66.7,24.2,45.4,13.6,47.5,14.2,81.0,50.7,16.6,47.2,33.2,19.9,48.0,62.3,93.0,48.3,70.6,18.2,79.9,30.9,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Muse Spark 1.1","t":"XHI","lab":"Meta","open":false,"ctx":1050,"cost":0.29,"ttft":2.7,"tps":105,"solid":true,"nat":0.71,"v":[80.4,62.8,87.3,57.3,85.7,59.6,68.0,41.8,63.3,58.8,65.7,51.4,75.8,84.8,99.9,37.0,44.7,28.1,68.4,37.1,48.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Muse Spark 1.1","t":null,"lab":"Meta","open":false,"ctx":1050,"cost":0.29,"ttft":2.7,"tps":105,"solid":false,"nat":0.33,"v":[80.4,62.8,87.3,57.3,85.7,59.6,68.0,41.8,63.3,58.8,65.7,51.4,75.8,84.8,99.9,37.0,44.7,28.1,68.4,37.1,48.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Nemotron 3 Ultra","t":null,"lab":"NVIDIA","open":true,"ctx":262,"cost":0.41,"ttft":1.26,"tps":199,"solid":true,"nat":0.57,"v":[54.9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,10.3,6.4,9.4,0.0,41.6,95.0,31.6,0.0,43.6,80.7,47.5,16.4],"a":[1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1]},{"n":"Qwen3.6 27B","t":null,"lab":"Alibaba","open":true,"ctx":262,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,8.2,32.1,31.1,44.5,27.6,60.6,2.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,43.6,0.0,0.0,0.0,16.4],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"Qwen3.6 Plus","t":null,"lab":"Alibaba","open":false,"ctx":1000,"cost":null,"ttft":null,"tps":null,"solid":false,"nat":0.48,"v":[0.0,31.9,49.5,62.1,49.0,44.4,58.8,44.3,19.7,0.0,0.0,0.0,0.0,0.0,0.0,0.0,41.0,0.0,0.0,0.0,47.2],"a":[0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1]},{"n":"Qwen3.7 Max","t":null,"lab":"Alibaba","open":false,"ctx":1000,"cost":1.28,"ttft":2.45,"tps":199,"solid":true,"nat":1.0,"v":[70.6,52.2,73.3,42.7,53.7,51.1,65.5,61.0,80.3,54.3,43.9,27.1,61.0,64.4,92.9,14.0,46.0,43.6,70.0,45.3,47.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Qwen3.7 Plus","t":null,"lab":"Alibaba","open":false,"ctx":1000,"cost":0.23,"ttft":2.61,"tps":53,"solid":true,"nat":0.57,"v":[56.9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,50.4,44.5,22.3,47.8,62.0,94.9,40.6,0.0,11.5,68.9,25.5,47.2],"a":[1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1]},{"n":"Step 3.7 Flash","t":null,"lab":"StepFun","open":true,"ctx":262,"cost":0.09,"ttft":0.92,"tps":393,"solid":false,"nat":0.29,"v":[39.2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,55.2,0.0,60.1,85.7,61.1,16.4],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]},{"n":"gpt-oss-120b","t":"HIGH","lab":"OpenAI","open":true,"ctx":131,"cost":0.08,"ttft":0.88,"tps":193,"solid":false,"nat":0.29,"v":[27.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,57.0,0.0,42.8,86.5,49.2,0.5],"a":[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1]}]};</script>
+  <script>
+(function () {
+  var D = window.__MP__, M = D.models, MI = D.metrics;
+  var ix = {}; MI.forEach(function (m, i) { ix[m] = i; });
+
+  // Each dial is a plain-language question mapped onto the benchmark metrics behind it.
+  // t is the dial. why explains the number in ten words or fewer, shown under
+  // it. w is the benchmark metrics it reads, and how much each one counts.
+  // Six dials. Context length and open weights are filters, not things you
+  // weigh, so they are not here.
+  var DIALS = [
+    { k: 'reason',  t: 'Thinking through hard problems', w: { reasoning: 3, overall: 2, intelligence: 2, math: 1, data: 1 },
+      why: 'Works a problem through instead of guessing at it.' },
+    { k: 'code',    t: 'Writing code', w: { coding: 3, overall: 1 },
+      why: 'Writes and fixes code that actually runs.' },
+    { k: 'agent',   t: 'Working on its own', w: { agentic: 3, net: 2, bash: 2, confirmed: 1 },
+      why: 'Finishes long jobs without you watching every step.' },
+    { k: 'write',   t: 'Writing and editing', w: { language: 3, ifollow: 1, praise: 1 },
+      why: 'Writes English a person wants to read.' },
+    { k: 'trust',   t: 'Not making things up', w: { hallu: 3, steer: 2, ifollow: 1 },
+      why: 'Says it does not know instead of inventing.' },
+    { k: 'cheap',   t: 'Costing little', w: { costPerTask: 3, costPerSuccess: 1 },
+      why: 'Dollars per finished task, not per token.' },
+    { k: 'fast',    t: 'Answering fast', w: { ttft: 2, tps: 2, total: 1 },
+      why: 'Time before it starts, and time until it is done.' },
+    { k: 'ctx',     t: 'Holding a lot at once', w: { context: 3 },
+      why: 'How much you can hand it in one go before it loses the thread.' }
+  ];
+
+  var PRESETS = [
+    { t: 'Everyday chat',   v: { write: 3, fast: 3, trust: 1 } },
+    { t: 'Coding',          v: { code: 3, fast: 2, trust: 2, cheap: 1 } },
+    { t: 'Agent work',      v: { agent: 3, trust: 2, code: 1, cheap: 1 } },
+    { t: 'Research',        v: { reason: 3, trust: 2, cheap: 1 } },
+    { t: 'Writing',         v: { write: 3, trust: 2, fast: 1 } },
+    { t: 'Bulk jobs',       v: { cheap: 4, fast: 3, reason: 1 } },
+    { t: 'Self-hosted',     v: { reason: 2, cheap: 2, code: 1, agent: 1 }, open: true }
+  ];
+
+  var MIN_COV = 0.70;
+
+  var state = {}, els = {};
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fmtCost(v) { return v === null ? 'no limit' : '$' + v.toFixed(2); }
+  function fmtSecs(v) { return v === null ? 'no limit' : v + 's'; }
+  function fmtCtx(v)  { return v === null ? 'no limit' : (v >= 1000 ? (v / 1000) + 'M tokens' : v + 'k tokens'); }
+  function fmtCtxVal(v) { return v == null ? '' : (v >= 1000 ? (v / 1000) + 'M ctx' : v + 'k ctx'); }
+
+  function build() {
+    var pw = document.createDocumentFragment();
+    PRESETS.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'mp-preset'; b.textContent = p.t;
+      b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', function () { applyPreset(i); });
+      pw.appendChild(b);
+    });
+    $('mpPresets').appendChild(pw);
+
+    var dw = document.createDocumentFragment();
+    DIALS.forEach(function (d) {
+      var l = document.createElement('label');
+      l.className = 'mp-dial'; l.setAttribute('for', 'dial-' + d.k);
+      l.innerHTML = '<span>' + d.t + '</span><output id="out-' + d.k + '">off</output>' +
+        '<em class="mp-why-dial">' + d.why + '</em>' +
+        '<input type="range" id="dial-' + d.k + '" min="0" max="4" step="1" value="0">';
+      dw.appendChild(l);
+      state[d.k] = 0;
+    });
+    $('mpDials').appendChild(dw);
+
+    DIALS.forEach(function (d) {
+      var el = $('dial-' + d.k);
+      els[d.k] = el;
+      el.addEventListener('input', function () {
+        state[d.k] = +el.value; clearPreset(); render();
+      });
+    });
+
+    ['mpOpen'].forEach(function (id) {
+      $(id).addEventListener('change', function () { clearPreset(); render(); });
+    });
+    $('mpReset').addEventListener('click', function () {
+      DIALS.forEach(function (d) { state[d.k] = 0; els[d.k].value = 0; });
+      $('mpOpen').checked = false;
+      clearPreset(); render();
+    });
+
+    var mw = document.createDocumentFragment();
+    DIALS.forEach(function (d) {
+      var tr = document.createElement('tr');
+      var parts = Object.keys(d.w).map(function (m) { return m + ' ×' + d.w[m]; });
+      tr.innerHTML = '<td>' + d.t + '</td><td>' + parts.join(', ') + '</td>';
+      mw.appendChild(tr);
+    });
+    $('mpMap').appendChild(mw);
+  }
+
+  function clearPreset() {
+    [].forEach.call($('mpPresets').children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+  }
+
+  function applyPreset(i) {
+    var p = PRESETS[i];
+    DIALS.forEach(function (d) {
+      var v = p.v[d.k] || 0;
+      state[d.k] = v; els[d.k].value = v;
+    });
+    $('mpOpen').checked = !!p.open;
+    clearPreset();
+    $('mpPresets').children[i].setAttribute('aria-pressed', 'true');
+    render();
+  }
+
+  function score(m, W, tot) {
+    var num = 0, den = 0;
+    for (var j = 0; j < W.length; j++) {
+      if (!W[j]) continue;
+      if (m.a[j]) { num += W[j] * m.v[j]; den += W[j]; }
+    }
+    if (den <= 0 || den / tot < MIN_COV) return null;
+    return num / den;
+  }
+
+  // Which dial this model is strongest and weakest on, so the number is
+  // explainable rather than just a number.
+  // Reasoning-effort tiers arrive as MAX / XHI / HIGH / MED / LOW / OFF, which
+  // means nothing to a reader. Six rows of one model with no readable tier look
+  // like the list is repeating itself, so every row gets a label including the
+  // ones the provider ships with no effort setting at all.
+  var TIERS = { MAX: 'max reasoning', XHI: 'very high reasoning', HIGH: 'high reasoning',
+                MED: 'medium reasoning', LOW: 'low reasoning', OFF: 'no reasoning' };
+  function tierLabel(t) { return t ? (TIERS[t] || t.toLowerCase()) : 'default setting'; }
+
+  function drivers(m) {
+    var out = [];
+    DIALS.forEach(function (d) {
+      if (!state[d.k]) return;
+      var keys = Object.keys(d.w), num = 0, den = 0;
+      keys.forEach(function (k) {
+        var j = ix[k];
+        if (m.a[j]) { num += d.w[k] * m.v[j]; den += d.w[k]; }
+      });
+      if (den > 0) out.push({ t: d.t.toLowerCase(), s: num / den });
+    });
+    out.sort(function (a, b) { return b.s - a.s; });
+    if (out.length < 2) return '';
+    var strong = [], mid = [], weak = [];
+    out.forEach(function (p) { (p.s >= 66 ? strong : p.s >= 34 ? mid : weak).push(p.t); });
+    var bits = [];
+    if (strong.length) bits.push('<b>Leans on</b> ' + strong.join(', '));
+    if (mid.length) bits.push('<b>Holds up on</b> ' + mid.join(', '));
+    if (weak.length) bits.push('<b>Loses on</b> ' + weak.join(', '));
+    return '<span class="mp-drivers">' + bits.join('. ') + '.</span>';
+  }
+
+  function render() {
+    var W = new Array(MI.length).fill(0), tot = 0, any = false;
+    DIALS.forEach(function (d) {
+      var s = state[d.k]; if (!s) return;
+      any = true;
+      var keys = Object.keys(d.w), sum = 0;
+      keys.forEach(function (m) { sum += d.w[m]; });
+      keys.forEach(function (m) { W[ix[m]] += s * d.w[m] / sum; });
+    });
+    W.forEach(function (w) { tot += w; });
+
+    var openOnly = $('mpOpen').checked;
+    // Largest-remainder rounding, so the shares add to exactly 100 rather than
+    // to 99 or 101, which is what a reader notices first.
+    var live = DIALS.filter(function (d) { return state[d.k]; });
+    var sum = live.reduce(function (a, d) { return a + state[d.k]; }, 0);
+    var exact = live.map(function (d) { return { k: d.k, v: state[d.k] / sum * 100 }; });
+    var pcts = exact.map(function (e) { return { k: e.k, p: Math.floor(e.v), r: e.v - Math.floor(e.v) }; });
+    var short = 100 - pcts.reduce(function (a, e) { return a + e.p; }, 0);
+    pcts.slice().sort(function (a, b) { return b.r - a.r; }).slice(0, short)
+        .forEach(function (e) { e.p += 1; });
+    var byKey = {};
+    pcts.forEach(function (e) { byKey[e.k] = e.p; });
+    DIALS.forEach(function (d) {
+      $('out-' + d.k).textContent = state[d.k]
+        ? byKey[d.k] + '% of your score'
+        : 'ignored';
+    });
+
+    var list = $('mpList'), empty = $('mpEmpty');
+    list.textContent = '';
+
+    if (!any) {
+      $('mpCount').textContent = 'Ranking';
+      empty.hidden = false;
+      empty.textContent = 'Pick a job above, or turn up a dial. Nothing is scored until something matters.';
+      return;
+    }
+
+    var rows = [];
+    M.forEach(function (m) {
+      if (openOnly && !m.open) return;
+      var s = score(m, W, tot);
+      if (s === null) return;
+      rows.push({ m: m, s: s });
+    });
+
+    if (!rows.length) {
+      $('mpCount').textContent = 'Ranking';
+      empty.hidden = false;
+      empty.textContent = 'Nothing matches. Raise the cost ceiling, allow a slower first token, or ask for less context.';
+      return;
+    }
+    empty.hidden = true;
+    rows.sort(function (a, b) { return b.s - a.s; });
+    var shown = rows.slice(0, 15);
+    $('mpCount').textContent = shown.length < rows.length
+      // "qualify" is left over from when this page had hard filters. Nothing is
+      // filtered now except open weights: models drop out only when they have
+      // not published enough of what you asked about to be scored fairly.
+      ? 'Top ' + shown.length + ' of ' + rows.length + ' scored'
+      : rows.length + (rows.length === 1 ? ' model scored' : ' models scored');
+
+    var frag = document.createDocumentFragment();
+    shown.forEach(function (r, i) {
+      var m = r.m;
+      var li = document.createElement('li');
+      li.className = 'mp-row' + (i === 0 ? ' top' : '');
+      var meta = [m.lab];
+      if (m.cost !== null) meta.push('$' + m.cost.toFixed(2) + '/task');
+      if (m.ttft !== null) meta.push(m.ttft + 's to start');
+      if (m.tps) meta.push(m.tps + ' tok/s');
+      if (m.ctx) meta.push(fmtCtxVal(m.ctx));
+      if (m.open) meta.push('open weights');
+      var pct = Math.round(r.s);
+      li.innerHTML =
+        '<span class="mp-rank">' + (i + 1) + '</span>' +
+        '<span class="mp-cell">' +
+        '<span class="mp-title"><span class="mp-name">' + m.n + '</span>' +
+        '<span class="mp-tier">' + tierLabel(m.t) + '</span></span>' +
+        '<span class="mp-meta">' + meta.join('<span class="sep">·</span>') + '</span>' +
+        drivers(m) +
+        // Thin evidence used to be a checkbox that hid 70 of the 106 models by
+        // default. Hiding them made the list look better sourced than it was.
+        // Every model is scored now, and the weakly evidenced ones say so.
+        (m.solid ? '' : '<span class="mp-gap"><b>One leaderboard only.</b> '
+          + m.n + ' has a single public score behind it, so its position moves '
+          + 'more than a model measured several times.</span>') +
+        '<span class="mp-bar"><i style="width:' + Math.max(pct, 2) + '%"></i></span></span>' +
+        '<span class="mp-score">' + r.s.toFixed(0) + '</span>';
+      frag.appendChild(li);
+    });
+    list.appendChild(frag);
+  }
+
+  build();
+  applyPreset(1);
+})();
+  </script>
+</body>
+</html>

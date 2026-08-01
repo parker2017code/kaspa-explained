@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kaspa Mining | Kaspa Explained</title>
+  <meta name="description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/kaspa-mining">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Kaspa Mining | Kaspa Explained">
+  <meta property="og:description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/kaspa-mining">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kaspa Mining | Kaspa Explained">
+  <meta name="twitter:description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-01">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Kaspa Mining",
+    "url": "https://kaspaexplained.com/kaspa-mining",
+    "dateModified": "2026-08-01",
+    "description": "Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.",
+    "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="sources-page mining-cycle-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Proof-of-work mining</p>
+      <h1>Kaspa mining</h1>
+      <p class="lead">Price can fall while hash rate keeps climbing, and both charts can be telling the truth. A coin market reprices in minutes. A machine market (ASIC orders, shipping, hosting, wiring) answers weeks or months later. This page covers that gap, then walks through pointing your own ASIC at your own node.</p>
+      <p class="fit-note"><strong>Checked August 1, 2026:</strong> Rusty Kaspa v2.0.1 is the Toccata upgrade release. The Rusty Kaspa Stratum Bridge is marked beta in the official docs. Toccata activated at DAA score 474,165,565. Market numbers below were read August 1, 2026. Nothing here is a price call or a miner-profitability calculator.</p>
+      <div class="actions">
+        <a class="button primary" href="#two-markets">The two markets</a>
+        <a class="button" href="#cycle">The cycle</a>
+        <a class="button" href="#evidence">What to watch</a>
+        <a class="button" href="#solo-mining">Solo mining setup</a>
+        <a class="button" href="#sources">Sources</a>
+      </div>
+    </section>
+
+    <section class="section mining-data-panel">
+      <p class="eyebrow">Snapshot</p>
+      <h2>Checked August 1, 2026</h2>
+      <div class="summary-grid grid-cards">
+        <article><span>KAS price</span><p>CoinGecko API read about <strong>$0.0270</strong> per KAS. Coinbase lists the all-time high as <strong>$0.2075</strong>.</p></article>
+        <article><span>Network hash rate</span><p>The public Kaspa API returned about <strong>336.5 PH/s</strong>. The Kaspa wiki timeline recorded <strong>500 TH/s</strong> on November 29, 2022.</p></article>
+        <article><span>Supply</span><p>The public Kaspa API returned about <strong>27.613B KAS</strong> circulating out of about <strong>28.704B KAS</strong> maximum supply.</p></article>
+        <article><span>Block reward</span><p>The public Kaspa API returned about <strong>2.44997148 KAS</strong> per block under the emission step that began at DAA score 478,611,000 in the 10 BPS era.</p></article>
+      </div>
+      <p class="fit-note">These numbers move by the week. The hash-rate comparison is rough: 336 PH/s is roughly 673 times the wiki's 500 TH/s milestone from November 2022.</p>
+    </section>
+
+    <section id="two-markets" class="section">
+      <h2>The two markets</h2>
+      <p>A proof-of-work coin runs two markets at once. The coin market reprices on buyer and seller mood: exchanges, leverage, attention, fear. It can move before lunch. The machine market moves on hardware: miners order ASICs, wait for production, wait for shipping, find hosting, wire power, tune firmware, join pools. None of that happens in an afternoon.</p>
+      <p>Price can fall while hash rate keeps rising, because machines ordered months earlier are still arriving on trucks. Hash rate can fall while the network sits far above where it stood a year prior. Used ASIC prices can collapse after new production overshoots demand that already cooled.</p>
+      <p>Miners chase margin. Holders chase an exit or hold through it. Buyers chase a price they can stomach. ASIC makers chase order volume. None of them has to be irrational: the lag between the two markets does the rest of the work. The July snapshot above carries that lag in one panel, a price downtrend and a multi-year hash-rate buildout, both true at once.</p>
+      <div class="clock-diagram" aria-label="Coin market and machine market move at different speeds">
+        <div class="clock-lane fast-lane">
+          <div>
+            <span>Coin market</span>
+            <strong>minutes to days</strong>
+            <p>price, liquidity, sentiment</p>
+          </div>
+          <div class="signal-line" aria-hidden="true"><i></i></div>
+        </div>
+        <div class="clock-lane slow-lane">
+          <div>
+            <span>Machine market</span>
+            <strong>weeks to months</strong>
+            <p>ASIC orders, shipping, hosting, hash rate, difficulty</p>
+          </div>
+          <div class="signal-line" aria-hidden="true"><i></i></div>
+        </div>
+      </div>
+      <div class="market-flow" aria-label="Kaspa proof-of-work market loop">
+        <article><span>Coin demand</span><strong>Moves first</strong><p>Demand, liquidity, attention, and holder behavior reprice KAS within hours.</p></article>
+        <article><span>Miner revenue</span><strong>Sets the day's math</strong><p>Price, block reward, fees, difficulty, and power cost decide whether mining pays that day.</p></article>
+        <article><span>ASIC demand</span><strong>Capital follows margin</strong><p>Profitable mining pulls capital toward hardware orders and hosting contracts.</p></article>
+        <article><span>Hash rate</span><strong>Arrives late</strong><p>ASICs ordered on a price signal can come online after that signal has already faded.</p></article>
+        <article><span>Difficulty</span><strong>Compresses margin</strong><p>More machines compete for the same block reward, so each machine earns less KAS per unit of hash rate.</p></article>
+        <article><span>Used machines</span><strong>Sort the survivors</strong><p>The cold phase moves hardware, coins, and conviction to whoever can outlast it.</p></article>
+      </div>
+      <details class="deep-dive visual-shelf">
+        <summary>Visual shelf: market lag and miner margin</summary>
+        <div class="visual-library-grid grid-cards">
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/05-normalized-price-hash-chart.webp" alt="Conceptual normalized price and hash-rate chart" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Price and hash rate</strong> The two lines diverge because hardware answers the coin market late. Neither line is wrong.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/08-miner-margin-flow.webp" alt="Miner margin flow diagram with price, reward, fees, difficulty, electricity, ASIC demand, and hash rate" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Miner margin</strong> Price, block reward, fees, difficulty, hardware cost, and electricity price all land on the same miner at once.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </section>
+
+    <section id="cycle" class="section">
+      <p class="eyebrow">Cycle model</p>
+      <h2>Coins and ASICs heat and cool at different times</h2>
+      <p class="lead">@Themooseisloos5 has framed Kaspa's coin-and-ASIC cycle as a Carnot-engine style model. The metaphor is secondary. The lag it's pointing at is the mechanism worth tracking, and it cycles through four phases.</p>
+      <div class="cycle-grid grid-cards">
+        <article>
+          <span>1</span>
+          <h3>Hot coins, cold ASICs</h3>
+          <p>Demand moves into KAS before hardware can respond. Price rises, mining margins expand, and idle or cheap machines suddenly pencil out.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Hot coins, hot ASICs</h3>
+          <p>ASIC demand catches up. New machines get ordered, old machines get repriced upward, hash rate climbs, and early holders or miners start taking profit.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Cold coins, hot ASICs</h3>
+          <p>Price cools while machines already on order keep arriving. Difficulty can rise into a weak market, which crushes miner margins further.</p>
+        </article>
+        <article>
+          <span>4</span>
+          <h3>Cold coins, cold ASICs</h3>
+          <p>Weak miners shut off or sell. Used machines get cheaper. Coins consolidate. The system compresses until demand, hardware, and conviction find a new balance.</p>
+        </article>
+      </div>
+      <p>Kaspa compressed several discovery phases that took Bitcoin years into one short window: fair launch, fast emissions, GPU mining, an ASIC transition, exchange discovery, and price discovery all landed close together, followed by a large mining buildout. Bitcoin's early distribution, hardware maturation, exchange access, and public understanding all spread out over a much longer stretch. Compression cuts both ways. A bigger up and a bigger down both become more likely, and whether that produces a stronger base is not visible in real time. It shows up one, two, five years later, if it shows up at all.</p>
+      <figure class="article-visual">
+        <img src="assets/mining-cycle-options/16-pow-distribution.webp" alt="Diagram comparing proof-of-work distribution through work with capital-first early allocation" width="1672" height="941" loading="lazy" decoding="async">
+        <figcaption>Proof of work distributes coins through hardware, electricity, and time instead of a capital-first allocation, and miners still have to cover their costs.</figcaption>
+      </figure>
+      <p>Kaspa's fast emission schedule moves supply toward its cap quickly, which is part of the hard-money thesis. The same speed front-loads distribution pressure. Early miners and early participants earned coins by running hardware, with no allocation sold up front. That's the fair-launch case. It also means the early market absorbs a steady flow of coins moving from early miners and holders into later buyers: some take profit, some miners sell to cover power and hardware bills, some holders panic, some accumulate. Fair distribution on paper can still produce an ugly chart.</p>
+      <p>Conviction usually gets tested on the downside. The upside tests it too, since rallies tempt profit-taking the same way drawdowns tempt capitulation. Both directions move coins from one kind of holder to another.</p>
+      <details class="deep-dive visual-shelf">
+        <summary>Visual shelf: the cycle as a picture</summary>
+        <p>Concept sketches, not dated charts. Price, DAA score, reward, hash rate, and supply move constantly; the snapshot panel above carries the dated numbers.</p>
+        <div class="visual-library-grid grid-cards">
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/01-industrial-asic-hero.webp" alt="ASIC mining machines in an industrial facility with visible power and ventilation" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Proof of work is physical</strong> Security has a supply chain behind it: ASICs, megawatts, cooling, floor space, and lead time.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/02-two-clocks-generated-diagram.webp" alt="Two-market diagram showing the fast coin market and slower machine market" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Two markets, two clocks</strong> The coin price moves in minutes. ASIC orders, freight, hosting, and difficulty catch up weeks to months later.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/03-four-stage-loop-generated-diagram.webp" alt="Four-stage loop diagram for hot and cold coin and ASIC market phases" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Hot and cold phases</strong> Price moves first. Machines answer weeks later, and the delay is where miner margin compresses.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/04-dated-evidence-receipt.webp" alt="Dated evidence receipt concept for price, hash rate, supply, reward, and DAA" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Dated evidence receipt</strong> A format for stamping price, hash rate, supply, block reward, and DAA score to the day they were checked.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/10-hot-cold-matrix.webp" alt="Hot and cold matrix for coin market temperature and ASIC market temperature" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Matrix view</strong> Coin-market temperature and ASIC-market temperature can sit out of phase for months at a time.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/11-systems-map.webp" alt="Systems map connecting coin demand, ASIC supply, miner margin, fees, and security budget" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>System map</strong> Coin demand, ASIC supply, miner margin, fees, and the security budget all feed back into each other.</figcaption>
+          </figure>
+        </div>
+        <p>None of these establish current price, hash rate, DAA score, supply, reward, exchange depth, ASIC supply, or miner distribution.</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <h2>ASICs buy security, with a bill attached</h2>
+      <figure class="article-visual">
+        <img src="assets/mining-cycle-options/14-asic-attack-market-friction.webp" alt="Diagram showing ASIC scarcity, power, facilities, logistics, and time raising attack cost" width="1672" height="941" loading="lazy" decoding="async">
+        <figcaption>Buying enough ASICs to threaten the network is itself a market event. Hardware price, power, facilities, logistics, and time push back on the buyer.</figcaption>
+      </figure>
+      <p>A Kaspa attacker cannot rent generic cloud compute and point it at the network.</p>
+      <p>They need specialized KHeavyHash machines, electricity, facilities, cooling, firmware, logistics, and a pool or solo-mining path. Every one of those steps takes time and leaves a trail. The attack has to leave the spreadsheet and enter a supply chain.</p>
+      <p>The same specialization that prices out an attacker prices out most ordinary participants too. Control settles with ASIC manufacturers, large buyers, cheap-power operators, firmware vendors, pools, and hosting sites. Used markets and more independent operators spread that control back out. A handful of dominant actors pull it in again.</p>
+      <p>Proof of work turns digital security into a physical bill. Electricity, hardware, heat, buildings, freight, capital, and time all get paid before a block gets mined. Proof of stake asks holders to lock the asset and follow validator rules. Proof of work recruits a different cast: miners carrying power bills, hosting contracts, repair costs, firmware choices, debt, and taxes, running machines that age in the real world. That friction is the security model, and it is also why mining behaves like an industry with payment terms instead of a balance sitting in a contract.</p>
+      <details class="deep-dive visual-shelf">
+        <summary>Visual shelf: attack cost and physical inputs</summary>
+        <div class="visual-library-grid grid-cards">
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/06-attack-cost-diagram.webp" alt="Diagram of attack cost touching ASIC machines, power, facilities, and time" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Attack cost</strong> A serious attack has to clear ASIC supply, power, facilities, logistics, and time together. No single bottleneck stops it.</figcaption>
+          </figure>
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/09-physical-inputs-diagram.webp" alt="Diagram showing hardware, electricity, cooling, and time feeding network security" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Outside-world inputs</strong> Network security runs through hardware, power, cooling, and time.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Judging the charts</p>
+      <h2>One chart, several stories</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Signal</th>
+              <th>Too-fast reading</th>
+              <th>Slower reading</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Price down</td><td>The market lost interest.</td><td>Lost demand, miner selling, early-holder profit-taking, broad market weakness, and leverage unwinds can all produce the same line, separately or together.</td></tr>
+            <tr><td>Hash rate down</td><td>The network is failing.</td><td>Weaker security is one explanation. Inefficient miners leaving after an overheated ASIC cycle is another. Compare against long-term history and attack cost before picking one.</td></tr>
+            <tr><td>Hash rate up while price falls</td><td>Security is fine, ignore price.</td><td>Delayed ASIC orders can be arriving into a weak market, raising difficulty and squeezing every miner's margin at once.</td></tr>
+            <tr><td>ASIC prices fall</td><td>Mining is dead.</td><td>Used-machine oversupply after manufacturers and miners overbuilt into a hot phase produces the same price drop.</td></tr>
+            <tr><td>Fees rise</td><td>Higher fees are automatically good.</td><td>Fees from repeat use people value help miners. Spam and one-off bursts push the number up without meaning the same thing.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="deep-dive">
+        <summary>Go deeper: linear charts hide the thing people actually care about</summary>
+        <figure class="article-visual">
+          <img src="assets/mining-cycle-options/12-log-scale-perspective.webp" alt="Diagram comparing linear and log views of the same percentage move" width="1672" height="941" loading="lazy" decoding="async">
+          <figcaption>A linear chart makes the dollar swing dominate the page. A log chart shows the percentage change a holder actually feels.</figcaption>
+        </figure>
+        <p>A move from $10 to $20 and a move from $10,000 to $20,000 are both 2x. The dollar amounts feel wildly different. The percentage effect on a holder's position is identical.</p>
+        <p>Log scale fits a young network better than linear. An 80% drawdown looks like death on a linear chart. On a log chart, the same drawdown can read as one violent move inside a much longer compounding path.</p>
+        <p class="guide-note">The eye tracks distance on the page. The portfolio tracks percentage change.</p>
+        <p>Drawdowns are still real losses for whoever is holding them. A top buyer sees a straight loss. An early holder may be looking at a brutal drawdown measured from absurd gains. Someone who bought early and never sold can be living through both pain and life-changing profit in the same chart.</p>
+      </details>
+      <details class="deep-dive">
+        <summary>Go deeper: market cap is not a pile of cash</summary>
+        <figure class="article-visual">
+          <img src="assets/mining-cycle-options/15-market-cap-float.webp" alt="Diagram showing market cap as a marked price and active float as the part moving price" width="1672" height="941" loading="lazy" decoding="async">
+          <figcaption>Market cap marks the whole supply at the last trade. Active float and buyer depth decide how easily that price moves.</figcaption>
+        </figure>
+        <p>Market cap is total supply marked at the marginal price. It isn't a pool of cash sitting somewhere.</p>
+        <p>A 20% price drop does not mean sellers extracted 20% of the market cap in cash. A small amount of selling can move price a long way once buyers step back. A liquidation can dump coins into market inventory that takes the market weeks or months to absorb. Sellers can keep leaning on the order book because they need liquidity before they need conviction.</p>
+        <p class="guide-note">Market cap looks like a pool of money. Price is set at the edge, where the next buyer meets the next seller.</p>
+        <p>Active float sets selloff pressure: how many coins are actually for sale, how urgent those sellers are, and how deep the buyers sit at each price rung. Total supply matters for the monetary story. Float matters in a selloff.</p>
+        <p>A large liquidation keeps reshaping the market long after the candle closes, as coins move from one kind of holder into another kind of inventory. The wallet-level story needs stronger sourcing before naming actors.</p>
+      </details>
+      <details class="deep-dive">
+        <summary>Go deeper: miners do not get to be pure believers</summary>
+        <figure class="article-visual">
+          <img src="assets/mining-cycle-options/17-miner-forced-selling.webp" alt="Diagram showing miner revenue, operating costs, sell pressure, and market inventory" width="1672" height="941" loading="lazy" decoding="async">
+          <figcaption>A miner can believe in the network and still sell. Hardware, hosting, power, repairs, taxes, and debt create pressure a holder never faces.</figcaption>
+        </figure>
+        <p>A holder can decide to sit still. A miner has bills: electricity, hosting, hardware debt, repairs, taxes, pool fees, upgrades. Thin margins turn a believer into a seller regardless of conviction.</p>
+        <p>Mining paid extremely well when price outran hash rate, and ASICs got expensive because that revenue opportunity was real: some machines ran tens of thousands of dollars during the hot phase. Operators with that cost basis recoup it partly by selling coins.</p>
+        <p>Miner selling is a line item, the same as the power bill.</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <h2>Fees are the second revenue source</h2>
+      <figure class="article-visual">
+        <img src="assets/mining-cycle-options/13-one-use-case-demand.webp" alt="Diagram showing one strong use case producing repeat transactions, fees, miner revenue, and security budget" width="1672" height="941" loading="lazy" decoding="async">
+        <figcaption>Kaspa does not need every possible app to work. One repeated, valuable use case can shift demand for blockspace, fees, liquidity, and KAS.</figcaption>
+      </figure>
+      <p>Issuance pays miners first. Fees have to matter later: that's the central security-budget question.</p>
+      <p>As the block reward declines, miners need meaningful revenue from transaction fees, coin value, or both. Toccata widens the design space that could generate that fee demand: covenants, covenant IDs, ZK proof verification, sequencing commitments, and based-app foundations.</p>
+      <p>Primitives are not usage. The fee side still needs shipped applications, users who come back, accepted transactions, and demand for blockspace that outlasts a launch campaign.</p>
+      <p>One use case is enough, if it repeats. One thing generating repeat demand for settlement, ordering, proofs, assets, or payments can reprice blockspace and pull fees into the security budget, and finding that thing is the open part of the experiment.</p>
+      <details class="deep-dive visual-shelf">
+        <summary>Visual shelf: issuance handing off to fees</summary>
+        <div class="visual-library-grid grid-cards">
+          <figure class="article-visual">
+            <img src="assets/mining-cycle-options/07-security-budget-fees.webp" alt="Diagram showing miner revenue transitioning from issuance toward fees" width="1672" height="941" loading="lazy" decoding="async">
+            <figcaption><strong>Fees later</strong> Issuance pays miners first. Fees carry more of the load as the block reward declines.</figcaption>
+          </figure>
+        </div>
+      </details>
+    </section>
+
+    <section id="evidence" class="section">
+      <p class="eyebrow">Evidence</p>
+      <h2>What would prove strength or weakness</h2>
+      <div class="reference-grid grid-cards">
+        <article>
+          <h3>Healthier</h3>
+          <ul>
+            <li>Hash rate stabilizes or grows alongside better pool and operator distribution.</li>
+            <li>ASIC ownership spreads through used markets and more independent operators.</li>
+            <li>Wallets, explorers, SDKs, indexers, and solo-mining paths keep improving.</li>
+            <li>Toccata generates repeat app use, accepted transactions, and fees miners actually collect.</li>
+            <li>Liquidity improves on its own terms, independent of every other claim.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Worse</h3>
+          <ul>
+            <li>Hash rate keeps falling alongside worse mining concentration.</li>
+            <li>Pool, manufacturer, firmware, hosting, or geography chokepoints tighten further.</li>
+            <li>Price, liquidity, and volume keep weakening with no user demand replacing the hype that left.</li>
+            <li>Fees stay irrelevant because apps do not appear or do not retain users.</li>
+            <li>Roadmap language keeps outrunning shipped product evidence.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Nobody knows live</h3>
+          <ul>
+            <li>How much selling came from miners versus early holders versus broader market flows.</li>
+            <li>Whether future fees can replace enough issuance as the block reward keeps declining.</li>
+            <li>Whether a research path such as Proof of Useful Work ever ships.</li>
+            <li>Whether the next major cycle runs up, down, sideways, or something stranger.</li>
+          </ul>
+        </article>
+      </div>
+      <p>Whether Kaspa is in a healthy compression phase or a deeper failure phase is not knowable in real time. Anyone claiming otherwise is selling certainty the data does not have. Price alone is too narrow a signal. Hash rate alone is too narrow. Read them next to ASIC prices, pool distribution, miner revenue, emissions, fees, and builder activity.</p>
+    </section>
+
+    <section id="solo-mining" class="section" data-audience="specialist">
+      <p class="eyebrow">Solo mining</p>
+      <h2>Point your own ASIC at your own node</h2>
+      <p class="lead">An ASIC and a node don't talk to each other directly. Your miner speaks Stratum; your Kaspa node speaks Kaspa RPC. The Rusty Kaspa Stratum Bridge is the translator that sits between them.</p>
+      <div class="reference-grid grid-cards">
+        <article>
+          <h3>Miner</h3>
+          <p>The ASIC does the hashing. Its web screen usually asks for a pool URL, username, and password.</p>
+        </article>
+        <article>
+          <h3>Bridge</h3>
+          <p>The Rusty Kaspa Stratum Bridge accepts the miner connection and talks to a Kaspa node.</p>
+        </article>
+        <article>
+          <h3>Node</h3>
+          <p>The node hands the bridge block templates and takes back solved blocks.</p>
+        </article>
+        <article>
+          <h3>Wallet address</h3>
+          <p>The address in the miner username is where a solo block reward lands if the miner finds a block.</p>
+        </article>
+      </div>
+      <p class="fit-note">Shares only prove the miner is talking to the bridge. A block reward arrives when the hardware finds a valid block, and solo variance means that can take a while even on working hardware.</p>
+
+      <h3>The beginner setup</h3>
+      <p>One computer runs both the node and bridge. Keep two terminal windows open on that computer, then open the miner's web screen in a browser.</p>
+      <ol class="learning-steps grid-cards">
+        <li>Download the Rusty Kaspa zip for the node computer.</li>
+        <li>Extract the zip and open a terminal in the folder holding the binaries.</li>
+        <li>Download the sample bridge config from the repository and save it as <code>bridge/config.yaml</code> there. The archive does not include one.</li>
+        <li>Terminal window A runs <code>kaspad</code>. Leave it open.</li>
+        <li>Terminal window B runs <code>stratum-bridge</code>. Leave it open.</li>
+        <li>The bridge dashboard opens at <code>http://127.0.0.1:3030/</code> on the node computer.</li>
+        <li>The miner points to the node computer's local IP plus port <code>5555</code>.</li>
+        <li>The miner username is the Kaspa receive address plus a worker name.</li>
+        <li>The dashboard should show a worker, shares, and hashrate.</li>
+      </ol>
+      <p class="fit-note">Keep the node, bridge, and miner on the same local network for the first setup. Do not expose RPC, dashboard, or Stratum ports to the public internet while learning.</p>
+
+      <h3>Before touching the miner</h3>
+      <div class="summary-grid grid-cards">
+        <article><span>ASIC</span><p>An IceRiver, Bitmain, Goldshell, or another compatible Kaspa ASIC. The bridge docs also list BzMiner support.</p></article>
+        <article><span>Node computer</span><p>A computer running Rusty Kaspa v2.0.1 or newer. Running bridge and node on the same machine avoids a second network hop while learning.</p></article>
+        <article><span>Wallet address</span><p>A Kaspa address for rewards. Copy it carefully. Never paste a private key into miner or bridge settings.</p></article>
+        <article><span>Local IP</span><p>The node computer's address on the home network, such as <code>192.168.1.10</code>.</p></article>
+        <article><span>Bridge config</span><p>The release archive ships the <code>stratum-bridge</code> binary and no config file. Download the sample <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">config.yaml</a> from the repository and save it as <code>bridge/config.yaml</code> beside the binary.</p></article>
+      </div>
+
+      <h3>Which Rusty Kaspa file do I download?</h3>
+      <p>Use the official Rusty Kaspa v2.0.1 release page and grab the archive matching the computer that will run the node and bridge.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Computer</th>
+              <th>Release asset</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Windows</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-win64.zip"><code>rusty-kaspa-v2.0.1-win64.zip</code></a></td></tr>
+            <tr><td>macOS</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-osx.zip"><code>rusty-kaspa-v2.0.1-osx.zip</code></a></td></tr>
+            <tr><td>Linux, 64-bit Intel/AMD</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-linux-amd64.zip"><code>rusty-kaspa-v2.0.1-linux-amd64.zip</code></a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">Skip the GitHub Source code zip and the WASM SDK zip: those build from source or target browser apps, and neither matches this setup.</p>
+
+      <h3>Get from zip file to working folder</h3>
+      <p>Every command below runs from the folder holding the extracted binaries.</p>
+      <div class="summary-grid grid-cards">
+        <article><span>Windows</span><p>Right-click the downloaded zip, choose Extract All, then open the extracted folder. The Windows archive puts four binaries at the top level, among them <code>kaspad.exe</code> and <code>stratum-bridge.exe</code>.</p></article>
+        <article><span>macOS</span><p>Double-click the zip (Safari may have already unpacked it). The macOS archive nests its four binaries one level down, in a <code>bin</code> folder holding <code>kaspad</code> and <code>stratum-bridge</code>.</p></article>
+        <article><span>Linux</span><p>Use the file manager's Extract option, or run <code>unzip rusty-kaspa-v2.0.1-linux-amd64.zip</code>. Like macOS, the Linux archive puts its binaries in a <code>bin</code> folder.</p></article>
+      </div>
+      <p class="fit-note">"Open a terminal in that folder" means whichever directory holds <code>kaspad</code> and <code>stratum-bridge</code>: the top of the extract on Windows, the <code>bin</code> subfolder on macOS and Linux. None of the three archives carries a config file, so put the downloaded sample at <code>bridge/config.yaml</code> under that same directory before running the bridge.</p>
+
+      <h3>Which instructions apply to you?</h3>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Your setup</th>
+              <th>Use this route</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A synced node already runs on this computer</td><td>Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
+            <tr><td>Rusty Kaspa is downloaded but the node hasn't started yet</td><td>Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
+            <tr><td>The bridge should start its own node</td><td>Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
+            <tr><td>The node runs on another computer</td><td>Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Step 1. Open terminal window A and run the node</h3>
+      <p>Get into the folder holding the binaries first. On Windows, open the extracted folder in File Explorer, click the address bar, type <code>powershell</code>, and press Enter. On macOS or Linux, open Terminal, type <code>cd </code>, drag the <code>bin</code> folder from inside the extract into Terminal, and press Enter.</p>
+      <p>Run the node command for your system, and leave this window open. The bridge needs the node running continuously to fetch templates and submit blocks.</p>
+      <div class="api-command-grid grid-cards">
+        <article class="api-command-card">
+          <span class="command-method">Windows PowerShell</span>
+          <h4>Terminal window A</h4>
+          <pre><code>.\kaspad.exe --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+        </article>
+        <article class="api-command-card">
+          <span class="command-method">macOS / Linux</span>
+          <h4>Terminal window A</h4>
+          <pre><code>./kaspad --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+        </article>
+      </div>
+      <p class="fit-note">Templates from an unsynced node point at stale chain state, so let sync finish before judging mining results. If a node already runs with custom flags, keep those flags and add the RPC listen setting only if the bridge can't reach the node. The official bridge docs use <code>127.0.0.1:16110</code> for the node RPC address.</p>
+
+      <details id="windows" class="guide-detail">
+        <summary>
+          <span class="eyebrow">Step 2A</span>
+          <h3>Open terminal window B and run the bridge on Windows</h3>
+          <span class="guide-detail-preview">PowerShell command, dashboard check, port check, and debug logs.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <ol class="learning-steps grid-cards">
+          <li>Leave the node running in terminal window A.</li>
+          <li>Open a second PowerShell window in the same extracted Rusty Kaspa folder.</li>
+          <li>Run the bridge in external-node mode.</li>
+          <li>Leave this window open too.</li>
+        </ol>
+        <pre><code>.\stratum-bridge.exe --config bridge/config.yaml --node-mode external</code></pre>
+        <p>Open the dashboard in a browser on the node computer:</p>
+        <pre><code>http://127.0.0.1:3030/</code></pre>
+        <p>To check whether the bridge is listening on port <code>5555</code>:</p>
+        <pre><code>netstat -ano | findstr :5555</code></pre>
+        <p>To turn on more detailed bridge logs before starting it:</p>
+        <pre><code>$env:RUST_LOG="info,kaspa_stratum_bridge=debug"</code></pre>
+        <p class="fit-note">"Cannot find bridge/config.yaml" means the config was never downloaded, since the release archive does not ship one. A dashboard that won't open points the same way: the bridge falls back to code defaults when it finds no config, and those defaults leave the dashboard switched off. Check the last few lines printed in terminal window B.</p>
+        </div>
+      </details>
+
+      <details id="mac-linux" class="guide-detail">
+        <summary>
+          <span class="eyebrow">Step 2B</span>
+          <h3>Open terminal window B and run the bridge on macOS or Linux</h3>
+          <span class="guide-detail-preview">Terminal command, dashboard check, port check, and debug logs.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <ol class="learning-steps grid-cards">
+          <li>Leave the node running in terminal window A.</li>
+          <li>Open a second Terminal window in the same extracted Rusty Kaspa folder.</li>
+          <li>If needed, allow the binary to run.</li>
+          <li>Run the bridge in external-node mode.</li>
+          <li>Leave this window open too.</li>
+        </ol>
+        <pre><code>chmod +x ./stratum-bridge
+./stratum-bridge --config bridge/config.yaml --node-mode external</code></pre>
+        <p>Open the dashboard in a browser on the node computer:</p>
+        <pre><code>http://127.0.0.1:3030/</code></pre>
+        <p>To check whether the bridge is listening on port <code>5555</code>:</p>
+        <pre><code>lsof -i :5555</code></pre>
+        <p>To turn on more detailed bridge logs for one run:</p>
+        <pre><code>RUST_LOG="info,kaspa_stratum_bridge=debug" ./stratum-bridge --config bridge/config.yaml --node-mode external</code></pre>
+        <p class="fit-note">On macOS, Gatekeeper may ask for approval before it runs a downloaded binary. Only approve binaries pulled from the official Rusty Kaspa release page.</p>
+        </div>
+      </details>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Other route</span>
+          <h3>If the bridge should start its own node</h3>
+          <span class="guide-detail-preview">In-process mode from the official bridge docs.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <p>In-process mode, also documented by the bridge, starts <code>kaspad</code> inside the same process as the bridge rather than as a separate program.</p>
+        <div class="api-command-grid grid-cards">
+          <article class="api-command-card">
+            <span class="command-method">Windows PowerShell</span>
+            <h4>Bridge plus in-process node</h4>
+            <pre><code>.\stratum-bridge.exe --config bridge/config.yaml --node-mode inprocess -- --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+          </article>
+          <article class="api-command-card">
+            <span class="command-method">macOS / Linux</span>
+            <h4>Bridge plus in-process node</h4>
+            <pre><code>./stratum-bridge --config bridge/config.yaml --node-mode inprocess -- --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+          </article>
+        </div>
+        <p class="fit-note">The <code>--</code> separator is not optional. Bridge flags go before it, node flags after.</p>
+        </div>
+      </details>
+
+      <h3>Step 3. Find the node computer's local IP address</h3>
+      <p>The miner needs the local network address of the computer running the bridge, usually something like <code>192.168.x.x</code> or <code>10.0.x.x</code>.</p>
+      <div class="api-command-grid grid-cards">
+        <article class="api-command-card">
+          <span class="command-method">Windows</span>
+          <h4>PowerShell or Command Prompt</h4>
+          <pre><code>ipconfig</code></pre>
+          <p>Look for the active Wi-Fi or Ethernet adapter and copy the IPv4 Address.</p>
+        </article>
+        <article class="api-command-card">
+          <span class="command-method">macOS</span>
+          <h4>Wi-Fi</h4>
+          <pre><code>ipconfig getifaddr en0</code></pre>
+          <p>If Ethernet is active, System Settings can be easier: Network, then your active connection, then Details.</p>
+        </article>
+        <article class="api-command-card">
+          <span class="command-method">Linux</span>
+          <h4>Terminal</h4>
+          <pre><code>hostname -I</code></pre>
+          <p>Use the address on the same network as your miner.</p>
+        </article>
+      </div>
+
+      <h3>Step 4. Point the ASIC at the bridge</h3>
+      <p>Open the miner's web screen. If you don't know the miner's IP address, check your router's connected-device list or the manufacturer's setup tool. Type the miner IP into a browser, sign in, and find the mining or pool configuration page.</p>
+      <p>Use the bridge computer's local IP address and one of the Stratum ports from the sample config, starting with port <code>5555</code>.</p>
+      <div class="table-wrap">
+        <table class="reality-table miner-settings-table">
+          <thead>
+            <tr>
+              <th>Miner field</th>
+              <th>Put this in</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pool URL</td>
+              <td><code>&lt;node-computer-ip&gt;:5555</code></td>
+              <td><code>192.168.1.10:5555</code></td>
+            </tr>
+            <tr>
+              <td>Username / worker</td>
+              <td><code>kaspa:YOUR_WALLET_ADDRESS.WORKERNAME</code></td>
+              <td><code>kaspa:kaspa:qq...abcd.ks0</code></td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td>Use the miner UI default if it requires a value.</td>
+              <td><code>x</code> is common in miner UIs, but the Rusty Kaspa bridge docs define only pool URL and username.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">A Kaspa address already starts with <code>kaspa:</code>, so the username field ends up looking like <code>kaspa:kaspa:...</code>. That duplication matches the official bridge format; it's not a typo. Some miner screens expect a URL prefix instead. The official bridge docs give the pool URL as <code>&lt;your_pc_IPv4&gt;:&lt;stratum_port&gt;</code>; if a miner rejects that format, check its manual for the exact Stratum URL syntax it wants.</p>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Miner brands</span>
+          <h3>What changes by miner or software type?</h3>
+          <span class="guide-detail-preview">IceRiver, Bitmain, BzMiner, Goldshell, and field-name differences.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <p>The bridge detects several miner and mining-software types automatically and adjusts protocol handling per type. The setup screen itself still belongs to the miner manufacturer, so field labels vary. The bridge docs list two job formats, and every supported device falls into one of them.</p>
+        <div class="summary-grid grid-cards">
+          <article><span>Extranonce, single hex string</span><p>IceRiver, BzMiner, and Goldshell.</p></article>
+          <article><span>No extranonce, array plus timestamp</span><p>Bitmain and GodMiner.</p></article>
+        </div>
+        <p class="fit-note">Whatever the brand, the fields that matter stay the same: pool URL, username or wallet field, and a password only if the miner UI demands one.</p>
+        </div>
+      </details>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Ports</span>
+          <h3>Pick the first port</h3>
+          <span class="guide-detail-preview">Start with 5555, then use lower difficulty ports only for troubleshooting.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <p>The sample config exposes several Stratum ports, each tuned to a different worker difficulty. Start with <code>5555</code>. Drop to a lower-difficulty port only when troubleshooting a connection or matching a weaker worker per the bridge docs.</p>
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Sample config purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>5559</code></td><td>Low-difficulty workers.</td></tr>
+              <tr><td><code>5560</code></td><td>Low-difficulty workers.</td></tr>
+              <tr><td><code>5561</code></td><td>Medium-difficulty workers.</td></tr>
+              <tr><td><code>5555</code></td><td>Higher-difficulty workers. Start here for a normal ASIC setup.</td></tr>
+              <tr><td><code>5556</code>, <code>5557</code>, <code>5558</code></td><td>Higher difficulty ports.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </details>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Step 5</span>
+          <h3>Check that it's working</h3>
+          <span class="guide-detail-preview">Bridge window, dashboard, miner screen, and node checks.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <div class="summary-grid grid-cards">
+          <article><span>Bridge window</span><p>Should keep running and show miner connection or job activity.</p></article>
+          <article><span>Dashboard</span><p>Open <code>http://127.0.0.1:3030/</code> and look for active workers, shares, hashrate, and recent activity.</p></article>
+          <article><span>Miner screen</span><p>Should show an active pool, accepted shares, and hashrate.</p></article>
+          <article><span>Node</span><p>Should stay synced and keep receiving network updates.</p></article>
+        </div>
+        <p class="fit-note">Accepted shares confirm the setup is wired correctly. They are not the reward event: a found block is. A correctly configured rig can run for a long stretch with steady shares and zero blocks. That is solo variance.</p>
+        </div>
+      </details>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Toccata</span>
+          <h3>Toccata mining checks</h3>
+          <span class="guide-detail-preview">Version, activation record, post-Toccata template fields, and testnet checks.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <p>Post-activation block templates can carry new transaction fields. The official node guide warns pools and custom mining stacks to preserve those fields all the way from block template to solved block submission, or risk submitting an invalid block.</p>
+        <div class="summary-grid grid-cards">
+          <article><span>Upgrade</span><p>Use Rusty Kaspa v2.0.1 or newer for the node and bridge path.</p></article>
+          <article><span>Activation record</span><p>Mainnet activation crossed DAA score <code>474,165,565</code>. Check <a href="/toccata-status">Toccata status</a> for post-activation checks.</p></article>
+          <article><span>Template fields</span><p>Custom mining software must preserve post-Toccata fields: transaction version, storage mass, compute budget, and covenant outputs.</p></article>
+          <article><span>Test first</span><p>Run it on Testnet-10 where possible before trusting a mainnet mining path built after the activation score.</p></article>
+        </div>
+        </div>
+      </details>
+
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Fixes</span>
+          <h3>If it doesn't connect</h3>
+          <span class="guide-detail-preview">Pool dead, empty dashboard, bridge-node RPC, firewall, rewards, and activation-day checks.</span>
+        </summary>
+        <div class="guide-detail-body">
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead>
+              <tr>
+                <th>Symptom</th>
+                <th>Check</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Miner says pool dead</td><td>Use the node computer's local IP address. <code>127.0.0.1</code> points the miner back at itself.</td></tr>
+              <tr><td>Dashboard is empty</td><td>Check the bridge is still running, the miner is on the same network, and the pool URL uses a port from the sample config.</td></tr>
+              <tr><td>Bridge cannot reach node</td><td>Confirm the node is running with RPC at <code>127.0.0.1:16110</code>, or update the bridge config to the node's actual RPC address.</td></tr>
+              <tr><td>Firewall blocks connection</td><td>Allow the Stratum port on the node computer for the local network.</td></tr>
+              <tr><td>No rewards</td><td>Check shares first. Rewards need a solved block, and solo variance can leave a working rig without one for a long time.</td></tr>
+              <tr><td>Toccata activation day</td><td>Recheck versions and logs. Past the activation score, a block that strips new fields is invalid.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="summary-grid grid-cards">
+          <article>
+            <span>Network exposure</span>
+            <p>Keep node RPC, the bridge dashboard, and Stratum ports on the local network while learning.</p>
+          </article>
+          <article>
+            <span>Wallet safety</span>
+            <p>Use a public Kaspa receive address for the miner username. Never paste a seed phrase or private key into miner, bridge, or dashboard settings.</p>
+          </article>
+        </div>
+        </div>
+      </details>
+    </section>
+
+    <section id="sources" class="section">
+      <p class="eyebrow">Sources</p>
+      <h2>Source notes</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Used for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a></td><td>Beta status, external-node mode, in-process mode, dashboard, ports, miner setup, and username format.</td></tr>
+            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a></td><td>The file to download, since the release archives do not carry one. It sets the dashboard port, the Stratum ports, and the node RPC address.</td></tr>
+            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a></td><td>v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</td></tr>
+            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a></td><td>The Windows, macOS, and Linux archives used in this guide.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td>August 1, 2026 mainnet DAA and network read.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td>Dated supply and reward panel.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td>The dated hash-rate reading in the snapshot above.</td></tr>
+            <tr><td><a href="https://wiki.kaspa.org/en/timeline">Kaspa wiki timeline</a></td><td>Early hash-rate milestones: 60 MH/s in November 2021, 10 TH/s in June 2022, 50 TH/s in August 2022, and 500 TH/s in November 2022.</td></tr>
+            <tr><td><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa wiki tokenomics</a></td><td>Fair-launch and no-premine context.</td></tr>
+            <tr><td><a href="https://www.coinbase.com/price/kaspa">Coinbase Kaspa price page</a></td><td>All-time-high reference and market-data context.</td></tr>
+            <tr><td><a href="https://www.coingecko.com/en/coins/kaspa">CoinGecko Kaspa page</a> and CoinGecko API</td><td>Dated current price read.</td></tr>
+            <tr><td><a href="/toccata-status">Kaspa Explained Toccata status</a></td><td>Activation tracked separately from the setup instructions.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">The coin-and-ASIC cycle framing is credited to @Themooseisloos5's X posts. Price, hash-rate, supply, and protocol-status claims use the sources listed above.</p>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/skeptical-case"><span>Previous</span><strong>Kaspa risks and open questions</strong><p>The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.</p></a>
+        <a href="/kaspa-developments"><span>Next</span><strong>What changed in Kaspa this month</strong><p>What actually changed in Kaspa this month, with the things that did not change named too.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

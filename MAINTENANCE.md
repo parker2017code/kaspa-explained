@@ -137,6 +137,14 @@ python3 scripts/build-sitemap.py && python3 scripts/build-agent-index.py
   block once hit 18,890 lines this way; a shared `.grid-cards` class took it to
   8,313.
 - Any "what changed this week" note older than the current cycle.
+- When you merge or rename a page, grep `scripts/` for its filename before you
+  finish. Gate exemptions keyed on a filename fail open or fail closed in
+  silence: merging the three-part Toccata essay into `toccata-essay.html` gave
+  the new page 10 `site-voice-first-person` hits on prose whose bytes had not
+  changed, because `check-prose.py` matched the old name. Key an exemption on
+  something that travels with the page, like the byline element or a
+  `data-audience` attribute, and keep a bare filename list only where a missing
+  entry is loud.
 
 ---
 

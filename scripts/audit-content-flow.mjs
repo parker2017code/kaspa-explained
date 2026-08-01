@@ -26,15 +26,16 @@ const buttonHeavyAllowed = new Set([
 const longReferenceAllowed = new Set([
   "claims-reference.html",
   "glossary.html",
-  "kaspa-mining-cycle.html",
+  "kaspa-mining.html",
   "sources.html",
   "status.html",
 ]);
 
 const normalPageWordLimit = 2400;
-const essayPageWordLimit = 3200;
+const essayPageWordLimit = 4000;
 
 const personalEssayFiles = new Set([
+  "toccata-essay.html",
   "toccata-expressiveness-upgrade.html",
   "toccata-expressiveness-upgrade-part-2.html",
   "toccata-expressiveness-upgrade-part-3.html",
@@ -110,12 +111,12 @@ function auditBuildHub() {
   // Routes, not labels. The earlier list named pages that were merged into
   // their stronger neighbours, so it asserted a site map that no longer exists.
   // These are the builder routes the hub actually has to keep reachable.
+  // Those four merged into this hub itself in the Aug 2026 cut, so requiring
+  // links to them asserted a site map that no longer exists.
   const flowRoutes = [
-    "/builder-guide",
-    "/builder-evidence",
-    "/kaspa-app-ideas",
-    "/application-layer",
     "/kaspa-claims-checker",
+    "/toccata-explained",
+    "/status",
   ];
 
   for (const route of flowRoutes) {

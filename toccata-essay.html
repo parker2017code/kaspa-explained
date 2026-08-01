@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Toccata: Kaspa's Expressiveness Upgrade | Kaspa Explained</title>
+  <meta name="description" content="Parker Schmidt's essay on what the Toccata upgrade is: covenants, proof checking, KIP-21, and mining to your own node.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/toccata-essay">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Toccata: Kaspa's Expressiveness Upgrade | Kaspa Explained">
+  <meta property="og:description" content="Parker Schmidt's essay on what the Toccata upgrade is: covenants, proof checking, KIP-21, and mining to your own node.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/toccata-essay">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Toccata: Kaspa's Expressiveness Upgrade | Kaspa Explained">
+  <meta name="twitter:description" content="Parker Schmidt's essay on what the Toccata upgrade is: covenants, proof checking, KIP-21, and mining to your own node.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-01">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Toccata: Kaspa's Expressiveness Upgrade",
+    "url": "https://kaspaexplained.com/toccata-essay",
+    "dateModified": "2026-08-01",
+    "author": {
+      "@type": "Person",
+      "name": "Parker Schmidt"
+    },
+    "description": "Parker Schmidt's personal essay on Kaspa Toccata, sovereignty, covenants, ZK proof verification, KIP-21, fees, and solo mining.",
+    "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "Proof of Work"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="knowledge-page">
+    <section class="knowledge-hero section essay-hero-grid">
+      <div>
+        <p class="eyebrow">Personal essay</p>
+        <h1>Toccata: Kaspa's Expressiveness Upgrade</h1>
+        <p class="lead">Covenants, proof checking, KIP-21, and the parts of Kaspa's sovereignty story that get easier to see once you stop looking only at the next milestone.</p>
+        <p class="fit-note"><strong>By Parker Schmidt</strong> (<a href="https://x.com/parker2017" rel="me noopener">@parker2017</a>)</p>
+        <p class="fit-note"><strong>Status note:</strong> Rusty Kaspa v2.0.1 is available as the Toccata upgrade release. Mainnet activation crossed DAA score 474,165,565. Use <a href="/toccata-status">Toccata status</a> for post-activation checks before quoting app or tooling state.</p>
+      </div>
+      <figure class="essay-visual">
+        <img src="assets/toccata-expressiveness/01-stuck-present.webp" alt="A lone figure standing still while faint versions of the figure run ahead into mist.">
+        <figcaption>Stuck versus present</figcaption>
+      </figure>
+    </section>
+
+    <div data-audience="specialist">
+
+    <section class="section article-body">
+      <p class="eyebrow">Part 1 of 3</p>
+      <p>A personal note before any of this Kaspa stuff, because it's the actual point I wish to convey.</p>
+      <p>We all get stuck in the future. Planning moves. Stuck spinning. We're often one upgrade ahead, one milestone ahead, looking for the next green candle. Crypto cranks this mentality up to 11. It's a human thing and I do it constantly. Wen vProgs. Wen DAGKnight. Wen 100 BPS. Wen number go up. On and on.</p>
+      <p>This is us practicing the opposite, out loud, just for one moment (article). Sitting in something that's already here instead of the thing that's coming. No price, no roadmap, all present. Most of us need this, and not ONLY with Kaspa, but in life. Anyways; from one short monologue to another, longer one.</p>
+      <p>Toccata changes what you can build on Kaspa, and I don't say that lightly.</p>
+      <p>Everyone's looking forward to the big unreleased stuff, and so am I. But after talking to Michael Sutton I wanted to stop and bask in what Toccata actually is. I'm not going to reach for the phrase most people reach for: smart contracts. Nobody agrees what it means, it makes you picture Ethereum, and it points your head in the wrong direction. Toccata is better understood as an inflection point: the moment Kaspa stops being only money and starts being able to express real logic, without throwing away the things that made it Kaspa.</p>
+      <p>Here's my bias, stated plainly: I think crypto done right could end up as one of humanity's greatest inventions of the 21st century, and I think Kaspa is one of the more serious attempts at doing it right. I know how this reads: peak crypto cringe. I believe it anyway. The whole point of crypto was sovereignty. Be your own bank. Run your own node. Verify the rules yourself instead of trusting a company, a foundation, a sequencer, a validator cartel, or whatever privileged middle man wants to sit between you and your money. Kaspa keeps optimizing for that, and Toccata is the part where Kaspa gets to keep its sovereignty and pick up real expressiveness at the same time. The combination is the hard part.</p>
+      <div class="essay-visual-inline">
+        <figure class="essay-visual essay-visual-small">
+          <img src="assets/toccata-expressiveness/12-watershed.webp" alt="Silver water splitting across a dark ridge into two directions.">
+          <figcaption>What changed</figcaption>
+        </figure>
+        <figure class="essay-visual essay-visual-small">
+          <img src="assets/toccata-expressiveness/13-stillness-wheel.webp" alt="A calm figure sitting beside a thin glowing wheel.">
+          <figcaption>Choosing stillness</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <p class="eyebrow">Part 2 of 3</p>
+      <h2>Two ways to build, and a tradeoff nobody escapes</h2>
+      <p class="lead">The architecture part: shared state, UTXO locality, off-chain computation, ZK proof verification, covenants, covenant IDs, and KIP-21.</p>
+      <div class="essay-section-grid">
+        <div>
+          <p>In crypto there are basically two ways to design the thing: account-based and UTXO.</p>
+          <p>Ethereum and Solana-style account or shared-state systems have been treated as the place where the complex on-chain stuff lives. DeFi, games, lending, all of it. But that power has a bill attached. The base layer is carrying a lot of shared state and a lot of computation, and the more it carries, the heavier a node gets, and the heavier a node gets, the fewer people can actually run one, and there goes a chunk of your sovereignty. You can push performance up, but you usually pay for it somewhere, in node requirements or in some flavor of centralization creeping in.</p>
+          <p>Bitcoin and Zcash-style UTXO or output-based systems, plus Cardano's eUTXO, are the other bunch. They're more local. A transaction eats specific outputs and makes new ones, and that's the whole event. Not a giant shared world-computer where every app sits in global state bumping into each other. There's a quiet bonus here: because each transaction spells out exactly which outputs it touches, transactions that touch different outputs can be validated at the same time, in parallel (most shared-state chains struggle with that, since they don't know up front what a transaction will touch; Solana is the exception, and it pays for it elsewhere). This locality is why UTXO is lighter and part of why it can run fast, and being lean and parallel is a big part of what makes Kaspa cool. The catch, the thing everyone "knew," is that UTXO is supposed to be the dumb-but-honest branch of crypto. Great for money, bad for expression. Bitcoin leans into this on purpose (and creates harder workarounds to keep it as "dumb" as possible). Zcash and Monero spend their complexity budget on privacy, which is its own giant pile of tradeoffs. Cardano's eUTXO is clever yet also comes with its own compromises.</p>
+          <p>So the folk wisdom has settled into something tidy and a little lazy. Want real apps? Go account-based. Want a lean sovereign chain? Accept that it can't really do much. Toccata is Kaspa walking up to this tidy little dichotomy and saying "huh, fuck that; let's try to push the limits." To be clear, this doesn't erase tradeoffs and it doesn't turn KAS into ETH or SOL. This isn't what we want. The move is sneakier, and I'd argue more elegant.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/14-offchain-computation.webp" alt="A heavy machine in shadow connected to a small luminous proof seal.">
+            <figcaption>Computation off chain</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/17-node-eye-pickaxe.webp" alt="Three technical icons representing a node, verification, and mining.">
+            <figcaption>Node, verification, mining</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>Covenants</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>The first piece is the one I find beautiful: covenants.</p>
+          <p>Quick word-nerd detour, because the name is doing work here. A covenant is a promise (the word's from Latin, roughly "to come together," an agreement you're bound to). A binding agreement that follows you forward. In a plain old boring UTXO the script is basically "if you have the key, spend it, do whatever you want afterward, I don't care." A covenant changes this deal to "you can spend this only if the next output also obeys these rules." The coin starts carrying a promise about its own future. This is REALLY cool.</p>
+          <p>Sounds like a small grammatical tweak. It's enormous. Once a coin can constrain what the next coin must look like, you can chain those constraints, and chained constraints are how you get state that evolves while the rules stay locked. Vaults, escrow, assets, payout logic, a chess game. Picture a wall of locks and keys where each lock also dictates what the next lock is allowed to be. Like switches flipping on and off in a semiconductor, or 0s and 1s in code: the individual pieces are stupid-simple, and the whole expressiveness lives in how you arrange them. That's the trick the entire field of computing is built on, and Kaspa just brought it to its UTXO model.</p>
+          <p>A quick word on how anyone actually writes these, because the tooling matters as much as the upgrade (otherwise you can't do anything with said upgrade). Raw Kaspa script is low-level and miserable to write by hand, roughly the way nobody wants to write a program directly in 0s and 1s. So there's an experimental high-level language for covenants called SilverScript: you write something readable, and a compiler translates it down into the low-level script the network actually runs. A compiler is just a translator; human-friendly code in, machine-friendly code out, the same reason you get to write Python instead of raw processor instructions. When one covenant isn't enough and you need several of them referring to each other (the chess system needs exactly this), there's an early prototype Michael made called Argent that generates the plumbing between them.</p>
+          <p>One more piece that sounds boring and absolutely is not: covenant IDs. If a covenant is just "a set of rules," then nothing stops some guy from copying rules that look identical and walking in with fake state. Fine for a toy, fatal if that covenant is guarding a real asset. You need to know this coin descends from the real covenant and not a convincing knockoff.</p>
+          <p>Bitcoin Cash gets closest here with CashTokens: token categories give assets a consensus-tracked ID tied to genesis. Kaspa takes the same lineage problem and makes it general. Covenant IDs let consensus track the covenant's bloodline directly, for any covenant, without routing identity through the asset layer.</p>
+          <p>Deeply unsexy. One of the most important parts.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/04-locks-lattice.webp" alt="Many tiny locks and keys arranged into a cathedral-window lattice.">
+            <figcaption>Locks into lattice</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/09-compiler-prism.webp" alt="Silver flow passing through a prism and becoming structured machine glyphs.">
+            <figcaption>SilverScript compiler path</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/10-covenant-lineage.webp" alt="A glowing seal rooted into dark bedrock.">
+            <figcaption>Covenant lineage</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>The elegant part: keep what's actually unique, ship the rest off-chain</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>Unlike other chains I'm aware of, Kaspa looks at this whole process and asks which part is even special. And computation, it turns out, is not the special part. Computers are everywhere. AWS will rent you all the computation you could ever want, and so will a pile of other providers. You can buy plenty of compute at an electronics store too. So Kaspa takes the expensive part (computation) and moves it off chain, and keeps the part that's actually unique to crypto (verification, ordering, censorship resistance, proof-of-work security) on chain.</p>
+          <p>This is where zero-knowledge proofs come in, and I want to be careful here, because ZK in Toccata doesn't mean "private transactions for everyone tomorrow." It means Kaspa gains the ability to verify proofs. An app does its heavy lifting off chain, then hands Kaspa a compact proof, and Kaspa checks the proof instead of re-running the entire program. You keep the thing that matters (anyone can verify the result) and drop the thing that's wasteful (everyone re-computing the same work).</p>
+          <p>Here's the example that made this click for me, the chess game I mentioned earlier. You're playing on chain for real value. Almost all of it is covenants doing their thing (board state, legal moves, locked payout), except for one ugly problem: bots. You're not going to bet real money against a stranger who might be running an engine, and catching cheaters is exactly the kind of messy pattern-matching you can't put on chain (chess.com keeps its bot-detection secret precisely because publishing it would let people dodge it). So an outside watcher runs that detection off chain, and when it catches a bot it posts a ZK proof to L1 that says "this player cheated." The chain never sees the algorithm. It just checks the proof, and the game's own rules dock the cheater automatically. Off-chain work, small proof back, Kaspa verifies.</p>
+          <p>Strip the chess out and the principle is plain: any time the real work is too heavy, too private, or both, you do it off chain and hand Kaspa a proof instead of the work itself. A trading app could match orders off chain and prove it matched them fairly. A sealed-bid auction could prove who won without ever revealing the bids. A game could run a thousand moves off chain and settle the whole thing with one proof. Kaspa never does the work. It just refuses to believe you until the math checks out.</p>
+          <p>The proof systems here include a STARK-based RISC Zero path, plus a Groth16 verifier. To my knowledge, this puts Kaspa among the first proof-of-work L1s to support native STARK-based proof verification, and possibly the first major one.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/03-chess-proof.webp" alt="A chessboard under a verifier's beam with a hidden robotic piece.">
+            <figcaption>Chess bot proof</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/11-proof-container.webp" alt="A technical block-shaped container sized around a faceted proof.">
+            <figcaption>Room for a proof</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>KIP-21, or: how an app finds its own mail</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>The bigger ZK pattern has a name: based apps. "Based" just means anchored to L1. The app commits to processing the L1 transactions aimed at it, in the order L1 provides, so it inherits Kaspa's ordering and censorship resistance while running its real computation off chain and proving the result back. The payoff is a hard kind of sovereignty: a based app doesn't depend on any other app staying alive, because everything talks through L1. If someone else's app dies, yours doesn't even notice.</p>
+          <p>But here's a problem that sounds dumb until you sit with it. You've built an app on Kaspa. How does your app know which transactions are even talking to it?</p>
+          <p>If the answer is "it checks every single transaction on the entire network," you're cooked, because almost none of them are yours. Imagine proving, every few minutes, that you read the whole post office and only one envelope had your name on it. That doesn't scale.</p>
+          <p>KIP-21 fixes the addressing. Instead of grinding over the whole DAG to find your sliver of relevant activity, your app follows its own lane and proves the chain of events that actually pertain to it. That's the difference between a cute whiteboard idea and something a builder can ship without lighting money on fire. (On a VM chain you'd usually solve this with some core contract inside the VM that hoovers up the app's data. Works, but now a user-level contract is quietly doing system-level sequencing inside the shared on-chain VM. This cost shows up as more state and execution, which makes nodes heavier. Kaspa takes that job at the protocol level and skips the full VM.)</p>
+          <p>And as far as I can tell, no other non-VM base layer has actually solved this cleanly. It's also one of the heaviest pieces of engineering in the whole upgrade, and a big chunk of what vProgs will eventually need, quietly shipping now. The thing you trade away is composability: based apps can't reach into each other mid-transaction the way contracts sharing one VM can. This is the deliberate call: more sovereignty now, less synchronous composability. vProgs are the later step that buys some of that composability back without surrendering the rest. Different article.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/05-kip21-mail-lane.webp" alt="A glowing lane sorting one app's envelopes out of a flood of mail.">
+            <figcaption>Finding the app lane</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/02-shared-state-locality.webp" alt="A field of separated local cells.">
+            <figcaption>Local app state</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>So has nobody else done this?</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>People have done parts of it. Bitcoin Cash deserves the credit on UTXO covenants. It added native introspection in 2022, CashTokens followed in 2023, and SilverScript is openly modeled on CashScript. Covenants on a UTXO chain are not a Kaspa invention.</p>
+          <p>So the real question isn't "why did nobody do covenants," it's "why is doing them well so rare." Two reasons. One, the base layer has to be fast. Slow chains can technically run covenants but can't run the good stuff: multi-phase apps, a chess league flipping through states quickly, anything that only works when blocks come fast and parallel. Two, Kaspa adds covenant IDs and native ZK on top. Kaspa needed the full Rust rewrite and Crescendo's 10 blocks per second before any of this was worth attempting. Crescendo brought the speed. Toccata brings expressiveness.</p>
+          <p>Bitcoin itself is the holdout, still refusing the opcodes that make this easy (OP_CAT and friends), partly on philosophy and partly on real worries about security and recursive-covenant risk. Litecoin, Monero, and Zcash mostly went the other way, toward payments or privacy instead.</p>
+          <p>Kaspa's edge is the bundle: covenants, covenant IDs, native ZK verification, KIP-21, and a fast parallel proof-of-work base layer. The covenant idea is old. This combination is not.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/15-switch-pattern.webp" alt="A grid of switches forming an emergent lit pattern.">
+            <figcaption>Simple pieces, complex behavior</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <p class="eyebrow">Part 3 of 3</p>
+      <h2>The fee and transient-mass changes (boring plumbing, real consequences)</h2>
+      <p class="lead">Toccata is plumbing in the good sense: proof room, spam cost, solo-mining paths, source boundaries, and a stronger sovereignty story.</p>
+      <div class="essay-section-grid">
+        <div>
+          <p>Two smaller changes ride in with Toccata, and both are constantly getting misread.</p>
+          <p>First, the transient-mass byte allowance roughly doubles, from about 125 KB to 250 KB. This has little to do with increasing TPS (although, sure). A large STARK-based proof can be big enough that a block needs room for the proof plus the surrounding transaction data. No room for the proof, no ZK verification on L1. Simple as that.</p>
+          <p>Second, a minimum standard fee. Doubling the byte allowance means the DAG can soak up more data, which increases the disk burden on everyone running a node, an archive, or an explorer. This isn't abstract: the Toccata guide now says 640 GB SSD minimum, 1 TB preferred. If storage requirements are going there, the space should be filled by proofs, app transactions, asset activity, payments, actual use, instead of free junk. For a service or app, the fee is small compared with the thing being purchased, settled, or protected. For someone filling blocks with junk, the floor makes chain filling cost real money.</p>
+          <p>This is just a standard-relay fee floor. A miner can accept cheaper transactions, but most run the default, so only that miner's share of blocks would carry the spam. Nodes can change policy later if the number stops making sense.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/08-fee-turnstile.webp" alt="A small toll gate at the mouth of a glowing data river with a crowd held back.">
+            <figcaption>Spam floor, blockspace cost</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/18-sovereignty-rings.webp" alt="Concentric rings of icons held in an open palm.">
+            <figcaption>Sovereignty as separate acts</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>The Rust Stratum Bridge</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>This one's wired straight into the sovereignty story, and imo, it's underrated. Shoutout to @LiveLaughLove13, who built the Rust Stratum Bridge that's now provided with rusty-kaspa and currently marked beta.</p>
+          <p>The sovereignty pitch usually stops at "run your own node." For proof-of-work the better version is "mine to your own node." Problem is ASICs don't speak Kaspa's node language, they speak Stratum, so for a long time you needed a separate bridge or, more commonly, you just handed the job to a pool because wiring yourself directly into the network is a pain. Pulling a maintained Stratum bridge into the rusty-kaspa package itself makes solo mining a normal thing instead of a weekend science project. Run your own node, verify your own chain, mine to your own node. Be your own bank, be your own miner.</p>
+          <p>An implication came up that I hadn't chewed on before, and I'd flag it as speculation (for now) because the mechanism isn't decided: if RTD-style oracle flows ever need miners to attest to outside claims on chain, the Stratum bridge is one plausible place for that app-layer work to plug in. It already sits between ASICs and a Kaspa node. That's app layer, not base consensus. Maybe nothing, but the direction is interesting.</p>
+          <p class="source-inline"><a href="/kaspa-mining#solo-mining">Solo mining guide</a> for the actual miner-to-node setup.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/06-mine-own-node.webp" alt="A miner rig connected by a clean bridge to its own glowing node near a cabin under the night sky.">
+            <figcaption>Mine to your own node</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/17-node-eye-pickaxe.webp" alt="Icons for a node, a verifying eye, and a pickaxe.">
+            <figcaption>Run, verify, mine</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body">
+      <h2>What it adds up to</h2>
+      <div class="essay-section-grid">
+        <div>
+          <p>Covenants make UTXOs expressive. Covenant IDs keep that expressiveness honest. ZK moves the expensive computation off chain while keeping cheap verification on it. KIP-21 lets apps find their own activity instead of scanning the (DAG) universe. The fee and byte-room changes make room for proofs without making spam free. The Stratum Bridge makes solo mining real, and maybe gives future miner-side app jobs a place to plug in. Stack those up and the sovereignty story gets a lot more complete: sovereign money, sovereign verification, sovereign mining, sovereign apps, and maybe one day a sovereign way to bring real-world information in.</p>
+          <p>Yet this still isn't completely finished. vProgs aren't here. DAGKnight isn't here. 100 BPS isn't here. But it's also not nothing, which is the thing Kaspa people keep doing to ourselves: under-celebrating what's shipped because we're already squinting at the next milestone. Toccata isn't a roadmap promise anymore. It activated, and now it's live primitives: vaults, assets, weird state channels, ZK apps proving work back to L1, chess games, or something none of us has thought of yet. That's the fun part.</p>
+          <p>For years, UTXO programmability has been this quiet research corner full of brilliant people inventing clever workarounds. Bitcoin has some of the sharpest minds in the entire space, and a lot of them are stuck working around a culture that doesn't want the solution to exist on L1. The same little opcode that quietly makes most of this possible, OP_CAT, is something Bitcoin has refused for years on purpose, because it treats that much expressiveness as a risk, both to keeping coins as pure money and to Bitcoin's own security. This is a legit philosophy and not necessarily a dumb one. Kaspa just made a different call, and tried hard not to lose the lean, verifiable, sovereign properties that made this whole thing worth caring about in the first place.</p>
+          <p>That's why I keep landing on the word elegant, because none of this has been, is, or will be easy. It's taken the Rust rewrite, Crescendo, years of grinding performance work, and a stack of upgrades and tools most users will never need to know by name (the new opcodes, covenant IDs, the ZK verifier, KIP-21's activity tracking, SilverScript, Argent, on and on), plus a pile of people quietly building parts most users will never see or thank them for. Not to mention the stuff I'm sure core is already working on to make this future more usable.</p>
+          <p>Which is the real reason I'm "bullish," more than any chart. The design is good. The people are better. Core devs, contributors like @LiveLaughLove13, the SilverScript and tooling folks, the writers and explainers (people like me, hello) trying to make this legible to humans who don't read consensus code for fun. We're a real community doing hard, unglamorous work because this design goal is worth pursuing.</p>
+          <p>Underneath the coin, even underneath the people, there's this idea I've actually fallen for. You take something simple and clean, a lock, a key, one rule about what's allowed to come next, and you arrange those tiny pieces into something complex and beautiful. That's the whole story of computing. It's the story of covenants. It's the thing Bitcoin's best researchers wanted for years and weren't allowed to have on Bitcoin. Bitcoin Cash built a version first. Kaspa built it on a base layer fast enough to make it relevant.</p>
+        </div>
+        <div class="essay-visual-stack essay-visual-rail">
+          <figure class="essay-visual">
+            <img src="assets/toccata-expressiveness/19-op-cat-doors.webp" alt="A small key beside a closed amber vault door and an open teal door.">
+            <figcaption>OP_CAT paths</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/20-community-hands.webp" alt="Many hands assembling a luminous structure under warm lamps.">
+            <figcaption>People building the parts</figcaption>
+          </figure>
+          <figure class="essay-visual essay-visual-small">
+            <img src="assets/toccata-expressiveness/21-locks-bookend.webp" alt="A completed lock-and-key lattice with a small figure stepping back to view it.">
+            <figcaption>Simple pieces, whole structure</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section article-body essay-hero-grid">
+      <div>
+        <h2>Back to where I started</h2>
+        <p>It's already here, or close enough to watch without turning the next thing into the only thing. Maybe that's the actual practice, in crypto and otherwise: notice the thing in front of you, and sit with it for a second.</p>
+        <p><strong>This is worth basking in.</strong></p>
+      </div>
+      <figure class="essay-visual">
+        <img src="assets/toccata-expressiveness/07-daa-horizon.webp" alt="A warm horizon made of small rising points of light.">
+        <figcaption>The DAA-score horizon</figcaption>
+      </figure>
+    </section>
+
+    <section class="section article-body">
+      <h2>Status and sources</h2>
+      <div class="summary-grid grid-cards">
+        <article><span>Activation</span><p>Rusty Kaspa v2.0.1 is available as the Toccata upgrade release. Mainnet activation crossed DAA score 474,165,565.</p></article>
+        <article><span>KIPs</span><p>KIP-16, KIP-17, KIP-20, and KIP-21 cover the ZK, covenant, covenant-ID, and sequencing-commitment pieces.</p></article>
+        <article><span>Tooling</span><p>SilverScript and Argent are public Michael Sutton repos. They are early developer tooling, still short of a polished consumer product.</p></article>
+      </div>
+      <p class="essay-source-note">Primary links: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/michaelsutton/silverscript">SilverScript</a>, and <a href="https://github.com/argent-lang/argent">Argent</a>.</p>
+    </section>
+
+    </div>
+
+    <section class="section">
+      <p class="eyebrow">Keep reading</p>
+      <h2>Where to go next</h2>
+      <div class="article-path-grid grid-cards">
+        <article>
+          <span>Technical companion</span>
+          <h3><a href="/toccata-explained">Toccata Explained</a></h3>
+          <p>The source-linked technical version for KIPs, vProgs boundaries, and status.</p>
+        </article>
+        <article>
+          <span>Capacity companion</span>
+          <h3><a href="/what-is-kaspa">What is Kaspa</a></h3>
+          <p>Why payment TPS, covenant transactions, proof settlement, and app throughput are different measurements.</p>
+        </article>
+        <article>
+          <span>Mining companion</span>
+          <h3><a href="/kaspa-mining">Kaspa mining</a></h3>
+          <p>The price and hash rate cycle, plus the miner-to-node setup the essay points at.</p>
+        </article>
+      </div>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/toccata-status"><span>Previous</span><strong>Kaspa Toccata status</strong><p>Toccata&#x27;s DAA activation score, the v2.0.1 release, covenant and ZK surfaces, TN10/TN12 evidence, and the checks builders should run next.</p></a>
+        <a href="/build-on-kaspa"><span>Next</span><strong>Build Kaspa apps</strong><p>Three ways to build on Kaspa, and how to work out which one your idea needs.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

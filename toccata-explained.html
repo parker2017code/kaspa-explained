@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Toccata Explained: Kaspa Covenants, ZK Apps, and vProgs | Kaspa Explained</title>
-  <meta name="description" content="How Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and based-app foundations, without turning Kaspa into an EVM.">
+  <meta name="description" content="Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/toccata-explained">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="Toccata Explained | Kaspa Explained">
-  <meta property="og:description" content="How Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and based-app foundations, without turning Kaspa into an EVM.">
+  <meta property="og:description" content="Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/toccata-explained">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -27,9 +27,9 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Toccata Explained | Kaspa Explained">
-  <meta name="twitter:description" content="How Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and based-app foundations, without turning Kaspa into an EVM.">
+  <meta name="twitter:description" content="Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-07-25">
+  <meta name="dateModified" content="2026-08-01">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -70,113 +70,238 @@
     <section class="sources-hero section">
       <p class="eyebrow">Protocol upgrade</p>
       <h1>Kaspa Toccata explained</h1>
-      <p class="lead">Crescendo made 10 BPS live. Toccata is live too: the hard fork that adds covenants, covenant IDs, ZK proof checks, sequencing lanes, and based-app foundations, all without turning Kaspa into an EVM.</p>
+      <p class="lead">A Kaspa coin can now carry a rule about how it is allowed to move next, and the network itself checks that rule. Toccata turned that on at the base layer, without turning Kaspa into an EVM.</p>
       <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See <a href="/toccata-status">Toccata status</a> for what's checked since.</p>
       <div class="actions">
-        <a class="button primary" href="/kaspa-tps-explained">TPS by workload</a>
-        <a class="button" href="/builder-guide">Builder guide</a>
+        <a class="button primary" href="/build-on-kaspa">Build on Kaspa</a>
+        <a class="button" href="/what-is-kaspa">TPS by workload</a>
         <a class="button" href="/sources#code-tracking">Primary links</a>
       </div>
     </section>
 
     <section class="section">
       <p class="eyebrow">Direct answer</p>
-      <h2>What Toccata changes</h2>
+      <h2>What Toccata turned on</h2>
+      <p>Four rules, worth naming exactly, because the vague version of this list is where the overclaiming starts.</p>
       <div class="summary-grid grid-cards">
-        <article><span>KIP-17</span><p>Covenant scripting lets a UTXO inspect the spending transaction and constrain what the next output must look like.</p></article>
-        <article><span>KIP-20</span><p>Covenant IDs give covenant state a consensus-tracked lineage, so a fake lookalike state can't be conjured out of thin air.</p></article>
-        <article><span>KIP-16</span><p>ZK verification lets a script check selected proof systems instead of asking L1 to run every app step itself.</p></article>
-        <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane of activity; without them, it would have to prove that almost the entire DAG is irrelevant to it.</p></article>
-        <article><span>Based apps</span><p>Apps can anchor state to Kaspa ordering, commitments, settlement, exits, or proofs without relying on an independent sequencer.</p></article>
-        <article><span>vProgs</span><p>Full vProgs are separate, later architecture for richer app execution and shared mutable state. They are not part of what activated.</p></article>
+        <article><span>KIP-17</span><p>A UTXO can read the transaction spending it and pin down what the next output has to look like. Vaults, escrow, spend caps, refunds.</p></article>
+        <article><span>KIP-20</span><p>Covenant IDs give covenant state a lineage consensus tracks, so nobody can conjure up a fake lookalike.</p></article>
+        <article><span>KIP-16</span><p>Instead of L1 running every app step, a script checks a proof from a chosen proof system.</p></article>
+        <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane instead of almost the whole DAG.</p></article>
+        <article><span>vProgs</span><p>Full vProgs are not part of what activated. They come later, for shared app state.</p></article>
+        <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering and settle proofs back to it, with no separate sequencer in the way.</p></article>
       </div>
-    </section>
-
-    <section class="section prose-section">
-      <p class="eyebrow">Design frame</p>
-      <h2>It is not an EVM turn</h2>
-      <p>Toccata does not make Kaspa an account-based global virtual machine. Kaspa still uses UTXOs: transactions spend specific outputs and create new outputs. The consumed and created state sits right in the transaction.</p>
-      <p>The design target is narrow: add enough rule expressiveness for money flows while keeping the base layer lean. A covenant can say, for example, "this next output must preserve the rule," "this spend needs a controller input," or "this refund path opens after the timeout." The app logic lives in constrained UTXO transitions, proofs, or app-side execution anchored back to L1.</p>
-      <p>Toccata is an expressiveness upgrade. Mature wallets, DeFi liquidity, audits, custody flows, and full app composition are separate claims that still need their own evidence.</p>
+      <p>That is the whole activated surface. No virtual machine, no accounts, no global shared state, no contract deployment step. A covenant is a rule attached to coins, and nothing sits at an address waiting to be called, so app logic lives in bounded UTXO steps, in proofs, or in app-side work anchored back to L1.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Covenants</p>
       <h2>Spend rules become state rules</h2>
-      <p>A normal payment proves the spender is allowed to move funds. A covenant-style spend can also inspect the spending transaction and require the next output to preserve a rule. That turns a UTXO into a small state machine: the coin moves, but the rule keeps going.</p>
-      <p>KIP-17 adds the script tools for transaction introspection, byte manipulation, hashing, signatures from stack, and ZK precompile access. KIP-20 adds covenant IDs, so a covenant family carries a stable 32-byte identity through valid continuations.</p>
+      <p>A covenant-style spend requires the next output to keep a rule, which turns a UTXO into a small state machine: the coin moves, but the rule keeps going.</p>
+      <p>KIP-17 adds the script tools: byte handling, hashing, transaction introspection, and signatures from the stack. A rule by itself will not stop someone forging a lookalike UTXO with logic that looks right and no real history. KIP-20 closes that gap, keeping a stable 32-byte identity through every valid step forward, so a copy without the lineage fails the check.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>Vault</td><td>Withdrawal delay, recovery key, spend cap, destination, or emergency path.</td><td><span class="status-pill live">Live</span></td></tr>
-            <tr><td>Escrow</td><td>Release, refund, cancel, timeout, or dispute transition.</td><td><span class="status-pill live">Live</span></td></tr>
-            <tr><td>Assurance funding</td><td>Payout only after enough compatible commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
-            <tr><td>Controlled assets</td><td>Transfer policy, controller input, redemption path, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
-            <tr><td>ZK proof checks</td><td>A statement about chosen public inputs, with external facts handled by separate anchors.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Vault</td><td>Withdrawal delay, recovery key, spend cap, or escape path.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Escrow</td><td>Release, refund, timeout, or dispute transition.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Assurance funding</td><td>Payout only after enough matching commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>Controlled assets</td><td>Transfer rules, controller input, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
+            <tr><td>ZK proof checks</td><td>A claim about chosen public inputs.</td><td><span class="status-pill live">Live</span></td></tr>
             <tr><td>Cross-app composition</td><td>Several app states succeed or fail together in one transaction.</td><td><span class="status-pill research">Demos only</span></td></tr>
             <tr><td>Shared mutable state</td><td>Many users mutating one app state at once.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
           </tbody>
         </table>
       </div>
+      <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
     </section>
 
     <section class="section prose-section">
-      <p class="eyebrow">ZK apps</p>
-      <h2>Proofs move computation off L1, then settle back</h2>
-      <p>One proof can stand for many off-chain app actions, if the app is designed that way. A proof transaction may weigh more than a simple payment, but the L1 transaction then serves as a settlement or verification event rather than the computation itself.</p>
-      <p>KIP-16 introduces <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script verify a proof about chosen public inputs. The proof still needs a defined statement, an app design, and an anchor for outside facts. ZK does not prove prices, bridge truth, game integrity, or real-world events unless the inputs and trust boundary are defined first.</p>
-      <p>That's why "Kaspa TPS" needs a workload label attached. Payment TPS, covenant transaction capacity, proof-settlement capacity, and effective app actions per settlement cycle are four different measurements.</p>
+      <p class="eyebrow">Proofs and lanes</p>
+      <h2>Proofs move the work off L1, then settle back</h2>
+      <p>One proof can stand for many off-chain app actions. That L1 transaction may weigh more than a simple payment, but it is a settlement or a check, not the computation itself.</p>
+      <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own. Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process.</p>
+      <p>KIP-21 answers a separate cost problem. Based apps use Kaspa L1 ordering, and the simple design gets expensive fast: every app would have to prove which L1 transactions were for it and which were not, so at scale proving what isn't yours turns into the real burden. Partitioned sequencing commitments let a prover follow one app lane instead.</p>
     </section>
 
-    <section class="section prose-section">
-      <p class="eyebrow">KIP-21</p>
-      <h2>Sequencing without proving the whole DAG</h2>
-      <p>Based apps use Kaspa L1 ordering. A naive design gets expensive fast: every app would need to prove which L1 transactions were for it and which weren't. At scale, proving what isn't yours turns into the real burden.</p>
-      <p>KIP-21 fixes that with partitioned sequencing commitments. A prover for one app lane follows that lane's activity, so proving cost tracks the app's own activity instead of the whole DAG's.</p>
-      <p>None of this delivers shared mutable state, the case where many users mutate one app state at once. That remains separate, later work.</p>
-    </section>
-
-    <section class="section prose-section">
-      <p class="eyebrow">vProgs boundary</p>
-      <h2>Based apps first, full vProgs later</h2>
-      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo describes an early Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction runtime, node, L1, and ZK pieces. It's research and roadmap work that shows the implementation direction only; it hasn't shipped as software.</p>
-      <p>Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> sits above that as an actor-based language and compiler. It already turns <code>.ag</code> source into plain Silverscript contracts and portable artifacts, and its README lists compiler, runtime transaction building, multi-actor routing, and Inter-Covenant Communication among the pieces that work today. What it is waiting on is an audit: the README puts a careful production path after Silverscript's audit and release, with further Argent hardening after that. It names the real developer-experience problem directly, since writing many linked covenant contracts by hand is the hard part.</p>
-      <p>Full vProgs are separate, later, roadmap architecture. The line is narrower than it is usually drawn: composing separately compiled covenant apps atomically in one transaction turns out to work on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is shared mutable state, the case where many users mutate one app state at once. That has not reached testnet.</p>
-    </section>
-
-    <section class="section prose-section">
+    <section class="section prose-section" data-audience="specialist">
       <p class="eyebrow">Standard fee floor</p>
       <h2>Operator changes</h2>
-      <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor bound only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live. Mempool policy and consensus stay separate rule sets, which is why consensus-valid zero-fee transactions are still possible while an upgraded node can reject an underpriced standard transaction from relay or RPC by policy. The per-audience upgrade steps, for node operators, wallets, exchanges, miners, and pools, are on <a href="/toccata-status">Toccata status</a>.</p>
-      <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, specifically to allow ZK-STARK proofs. Ordinary payment-throughput claims need their own, separate assumptions.</p>
+      <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor covered only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live. Mempool policy and consensus stay separate rule sets, which is why a zero-fee transaction can still be valid to consensus while an upgraded node drops an underpriced standard transaction from relay on policy. Upgrade steps for node operators, wallets, exchanges, and pools are on <a href="/toccata-status">Toccata status</a>.</p>
+      <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, so ZK-STARK proofs can fit.</p>
+      <p>Pools and solo miners need to keep post-Toccata block-template fields and test mining flows against them. The hands-on version is <a href="/kaspa-mining">mining Kaspa</a>.</p>
     </section>
 
-    <section class="section prose-section">
-      <p class="eyebrow">Mining</p>
-      <h2>Rust Stratum Bridge: point your hardware at your own node</h2>
-      <p>ASIC miners speak Stratum. Kaspa nodes speak Kaspa RPC. The Rust Stratum Bridge gives miners and pools a maintained path for connecting mining hardware to an upgraded Kaspa node through the Rusty Kaspa stack.</p>
-      <p>Miners and pools need to preserve post-Toccata block-template fields and test their mining flows against them. A miner who can point hardware at their own node depends less on a pool interface to reach the network at all.</p>
-      <p class="source-inline">Hands-on path: <a href="/solo-mining-guide">Kaspa solo mining guide</a>.</p>
+    <section class="section">
+      <p class="eyebrow">Primitives and products</p>
+      <h2>Seven things between a rule and an app</h2>
+      <p>Shipping a consensus rule is like shipping a new instruction in a processor. The instruction is real the moment the chip ships, and useless to almost everyone until somebody writes a compiler that emits it and enough shared convention that two teams can read each other's output. Toccata shipped the instructions on June 30. July was spent on the toolchain.</p>
+      <p>Checked July 29, 2026, with the repository-backed rows rechecked August 1. Anything merely announced is left out.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Piece</th><th>What it does</th><th>Where it is</th></tr></thead>
+          <tbody>
+            <tr><td>A language</td><td>Covenant scripts are compiler output. SilverScript produces them.</td><td><span class="status-pill target">Experimental</span> Took a breaking change on July 12, after mainnet activation.</td></tr>
+            <tr><td>A framework</td><td>Real apps are several covenants that have to agree. <a href="https://github.com/argent-lang/argent">Argent</a> is the attempt.</td><td><span class="status-pill target">Unaudited</span> Its README names an audit as the gate. 58 commits in July, no tagged release, last breaking change July 24.</td></tr>
+            <tr><td>Shared conventions</td><td>If your token and my wallet disagree about byte layout, neither works. <a href="https://github.com/kaspanet/kccs">KCCs</a> settle that.</td><td><span class="status-pill target">Proposed</span> Process opened July 15. Seven open pull requests, none merged.</td></tr>
+            <tr><td>An index</td><td>Showing someone their tokens means finding every UTXO carrying a covenant ID.</td><td><span class="status-pill not-live">Missing</span> No <code>getUtxosByCovenantId</code> RPC. Called planned on the forum. No code.</td></tr>
+            <tr><td>Explorers</td><td>Someone has to look at a covenant and see what it is.</td><td><span class="status-pill not-live">Missing</span> Block explorers do not decode covenant data. One third-party indexer, kascov, does.</td></tr>
+            <tr><td>Wallets</td><td>A user signs a covenant transaction without understanding any of this.</td><td><span class="status-pill not-live">Missing</span> No verified covenant-signing support in any major Kaspa wallet.</td></tr>
+            <tr><td>SDKs</td><td>Bindings so an application can build these transactions.</td><td><span class="status-pill target">Prerelease</span> kaspa-python-sdk v2.0.2.rc1, published July 23.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Four of those seven are the reason mainnet holds 80 active covenants worth 253.98 KAS while Testnet-10 holds 491,663. The rules are equally available on both. Only one is a place where the missing pieces do not matter yet.</p>
+      <p>Conventions cannot be settled by a protocol upgrade, because they are agreements between people who ship independent software. That argument happens in the open at <a href="https://kas-smiths.org">kas-smiths.org</a> and in the public Core R&amp;D Telegram group, where the token standard draft KCC-0020 still has an open disagreement about whether token metadata belongs inside the spec. Treat everything there as proposal-stage: a thread with a confident name is still a thread, and the test is a merged KIP or a merged KCC. Track both on the <a href="/kips">KIP and KCC tracker</a>.</p>
+      <p>The two projects below are the current attempts at closing the rest of the gap.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Application language</p>
+      <h2>Argent, the layer between a covenant and an app</h2>
+      <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do. Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates.</p>
+      <details class="source-more" data-audience="specialist">
+        <summary>Open the language model, with a worked example</summary>
+        <p>On an account chain, a contract is a thing that sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it: an application is a transaction-wide state transition over covenant UTXOs, and the compiler's job is to turn a readable description of that transition into script the network already enforces.</p>
+        <p>Four ideas carry the core, and they are not the whole surface: the documented set is eight, adding <code>delegate</code>, <code>consumes</code>, and <code>emits</code>, with the route machinery sitting behind those, and routes are where the hard parts live. A <strong>state</strong> is a typed record. An <strong>actor</strong> owns one. An <strong>entry</strong> is a way to spend that actor, taking arguments and declaring which actors it emits. And <code>become</code> names the successor the transaction creates.</p>
+        <div class="table-wrap">
+          <pre><code>state TicketState {
+    byte[32] owner;
+    int units;
+}
+
+actor Ticket owns TicketState {
+    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
+        require(blake2b(owner_pk) == owner);
+        require(checkSig(owner_sig, owner_pk));
+        require(next.value == self.value);
+
+        TicketState new_state = {
+            owner: next_owner,
+            units: units,
+        };
+
+        become next &lt;- Ticket(new_state);
+    }
+}
+
+app Tickets {
+    actor Ticket;
+}</code></pre>
+        </div>
+        <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen. If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
+        <p>Inter-Covenant Communication extends the same model across independently compiled applications, so an actor from one app can observe or authorize an actor from another inside a single atomic transaction. That is the piece that makes something like a mint controller possible: one app owns the asset rule, another owns the policy that decides when supply moves, and neither has to be recompiled into the other.</p>
+        <p>The compiler emits three things for each build: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box. An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities. That last one is KIP-20, which Toccata carried to mainnet.</p>
+      </details>
+      <p>Every example the compiler ships partitions cleanly: one UTXO per ticket, per game, per position. Two never touch the same state, so the parallel work comes free from the data model instead of a scheduler.</p>
+      <p>The hard one is shared mutable state, where many users change a single object at once. A pooled market maker, an order book, a lending pool. Those are most of what people mean by DeFi, and no public Argent code implements one. The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need. Partitioned state looks solved; shared state is a design direction with no implementation anyone can read.</p>
+      <p>Three repositories, and one person writes nearly all of it. Michael Sutton holds 72 of the compiler's 76 commits.</p>
+      <div class="table-wrap">
+        <table class="reality-table" id="argent-table">
+          <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
+          <tbody id="argent-body">
+            <tr><td>argent</td><td>2026-06-16</td><td>2026-07-31</td><td>19</td><td>None</td></tr>
+            <tr><td>argent-playground</td><td>2026-07-09</td><td>2026-07-31</td><td>6</td><td>None</td></tr>
+            <tr><td>argent-template</td><td>2026-07-24</td><td>2026-07-30</td><td>7</td><td>None</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" id="argent-stamp">Baseline read on August 1, 2026. This table refreshes from GitHub when the page loads.</p>
+      <p>Fifty-eight of those commits landed in July, and the project moved out of his personal namespace into an <code>argent-lang</code> organization.</p>
+      <p>Argent's own README answers the production question in two halves, and quoting only the first gets it wrong. The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use." The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned. The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
+      <p>Silverscript, the layer underneath, still labels itself experimental and recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." Read that as the ecosystem's conservative floor rather than the project's current state, since the same page still links the old repository path. Either way, anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened, and a compiler that emits auditable script for a live rule is still what the missing middle needs.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Roadmap architecture</p>
+      <h2>vProgs, and the line Toccata does not cross</h2>
+      <p>Two vProgs transactions touching different resources never wait on each other, and a proof lands on Kaspa L1 instead of a replay of every step.</p>
+      <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Full vProgs and native Kaspa DeFi are not live on mainnet.</p>
+      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state into separate named resources, built from the read and write list a transaction declares up front. Each resource acts like its own lane, so only the transactions touching the same one have to settle their order. Hans Moog's vProgs walkthrough does not claim a raw TPS number.</p>
+      <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo calls itself an early-development Rust framework for based computation on Kaspa. Its README splits the framework into six layers, from shared types up to a runnable node, and the repo tree carries more, including a ZK side with a RISC Zero backend.</p>
+      <div class="table-wrap">
+        <table class="reality-table" id="vprogs-table">
+          <thead><tr><th>Signal</th><th>Reading</th></tr></thead>
+          <tbody id="vprogs-body">
+            <tr><td>Last push</td><td>July 28, 2026</td></tr>
+            <tr><td>Stars</td><td>52</td></tr>
+            <tr><td>Tagged releases</td><td>None</td></tr>
+            <tr><td>Most recent work</td><td>A program-agnostic daemon engine and a vprun CLI, landed July 28, 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" id="vprogs-stamp">Baseline read on August 1, 2026. This table refreshes from the repository when the page loads.</p>
+      <p>An active repo is evidence of work, not of readiness. The line between this and Toccata is narrower than usually drawn: joining separately compiled covenant apps into one all-or-nothing transaction works on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is the shared mutable state case, which has not reached testnet.</p>
+      <p>So the model fits products with many users hitting one app, or a proof too big for a covenant spend to carry. Most Kaspa apps do not need it yet. Pick the smallest state model that does the job.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">App case</p>
+      <h2>Coordination markets, where a rule replaces an operator</h2>
+      <p>The assurance-funding row above is a coordination market: it pays out only once enough strangers commit to the same condition. A website can run that loop too, and usually a website is the right answer. The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A covenant moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
+      <p class="fit-note"><strong>Status: research direction.</strong> Two problems have no shipped answer. A covenant cannot see the outside world, so anything settling on a price or an event needs an oracle whose trust model is spelled out first. And no wallet yet shows a user the condition they are about to sign.</p>
+      <p>Which argues for starting narrow: one condition, one payout rule, and a group small enough to name everyone in it. Assurance funding for a single repeat event is a real test with real users at the end.</p>
     </section>
 
     <section class="next-step section">
       <p class="eyebrow">Read the spec</p>
       <h2>The underlying material</h2>
-      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, and <a href="https://github.com/argent-lang/argent">Argent</a>.</p>
+      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/kaspanet/silverscript">SilverScript</a>, <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a>, <a href="https://kas-smiths.org">Kas Smiths</a>, and <a href="https://kascov.io">kascov</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-expressiveness-upgrade-part-3"><span>Previous</span><strong>Fees, mining, and what it adds up to</strong><p>Part 3 of Parker Schmidt&#x27;s Toccata essay: proof room, fees, the Rust Stratum Bridge, OP_CAT, source notes, and what Kaspa Toccata adds up to.</p></a>
-        <a href="/kaspa-vprogs-explained"><span>Next</span><strong>vProgs, explained.</strong><p>How Kaspa vProgs schedule app state by resource, prove execution with ZK, and where Toccata&#x27;s covenants stop short of native DeFi.</p></a>
+        <a href="/kaspa-origin-story"><span>Previous</span><strong>Kaspa&#x27;s fair launch was the path left after the other paths failed</strong><p>How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.</p></a>
+        <a href="/toccata-status"><span>Next</span><strong>Kaspa Toccata status</strong><p>Toccata&#x27;s DAA activation score, the v2.0.1 release, covenant and ZK surfaces, TN10/TN12 evidence, and the checks builders should run next.</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
   </main>
+
+  <script>
+  (function () {
+    var repos = ['argent', 'argent-playground', 'argent-template'];
+    Promise.all(repos.map(function (name) {
+      return Promise.all([
+        fetch('https://api.github.com/repos/argent-lang/' + name, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
+        fetch('https://api.github.com/repos/argent-lang/' + name + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
+      ]).then(function (p) { return { name: name, repo: p[0], rels: p[1] }; });
+    })).then(function (rows) {
+      if (rows.some(function (r) { return !r.repo; })) return;
+      document.getElementById('argent-body').innerHTML = rows.map(function (r) {
+        var rel = (Array.isArray(r.rels) && r.rels.length) ? r.rels[0].tag_name : 'None';
+        return '<tr><td>' + r.name + '</td><td>' + r.repo.created_at.slice(0, 10) + '</td><td>' +
+          r.repo.pushed_at.slice(0, 10) + '</td><td>' + r.repo.stargazers_count + '</td><td>' + rel + '</td></tr>';
+      }).join('');
+      document.getElementById('argent-stamp').textContent = 'Read live from GitHub just now.';
+    }).catch(function () { /* baseline stands */ });
+  })();
+  (function () {
+    var api = 'https://api.github.com/repos/kaspanet/vprogs';
+    Promise.all([
+      fetch(api, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
+      fetch(api + '/commits?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
+      fetch(api + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
+    ]).then(function (res) {
+      var repo = res[0], commits = res[1], rels = res[2];
+      if (!repo) return;
+      var msg = (Array.isArray(commits) && commits[0] && commits[0].commit)
+        ? String(commits[0].commit.message).split('\n')[0].replace(/[<>&]/g, '') : 'unavailable';
+      var when = (Array.isArray(commits) && commits[0] && commits[0].commit)
+        ? commits[0].commit.author.date.slice(0, 10) : '';
+      var rel = (Array.isArray(rels) && rels.length) ? rels[0].tag_name : 'None';
+      document.getElementById('vprogs-body').innerHTML =
+        '<tr><td>Last push</td><td>' + repo.pushed_at.slice(0, 10) + '</td></tr>' +
+        '<tr><td>Stars</td><td>' + repo.stargazers_count + '</td></tr>' +
+        '<tr><td>Tagged releases</td><td>' + rel + '</td></tr>' +
+        '<tr><td>Most recent work</td><td>' + msg + (when ? ', ' + when : '') + '</td></tr>';
+      document.getElementById('vprogs-stamp').textContent = 'Read live from the vProgs repository just now.';
+    }).catch(function () { /* baseline stands */ });
+  })();
+  </script>
 
   <footer class="footer">
     <div class="footer-grid">
@@ -185,8 +310,9 @@
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
           <a href="/start-here">Start here</a>
-          <a href="/what-is-kaspa">Kaspa 101</a>
-          <a href="/overview">90-second overview</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
           <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
@@ -200,14 +326,16 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/builder-guide">Builder guide</a>
-          <a href="/kaspa-app-ideas">App ideas</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
         </div>
-        <div class="footer-link-group" aria-label="Site">
-          <span>Site</span>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
           <a href="/about">About</a>
-          <a href="/about#corrections">Corrections</a>
         </div>
       </nav>
     </div>

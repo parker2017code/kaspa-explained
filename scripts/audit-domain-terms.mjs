@@ -15,6 +15,7 @@ const checkedExtensions = new Set([
 ]);
 
 const skipDirs = new Set([
+  ".claude",
   ".git",
   "node_modules",
   "dist",

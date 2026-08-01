@@ -88,7 +88,13 @@ def flesch_kincaid(sents):
     return round(0.39 * (len(words) / len(sents)) + 11.8 * (syl / len(words)) - 15.59, 1)
 
 
-ESSAY = re.compile(r"toccata-expressiveness-upgrade")
+# An attributed personal essay is identified by its byline, not by its filename.
+# This used to be re.compile(r"toccata-expressiveness-upgrade"), and merging the
+# three-part essay into toccata-essay.html silently un-exempted it: 10 correct,
+# intended first-person hits on a page whose bytes had not changed. The byline
+# element travels with the essay through any rename or merge, and it appears on
+# no other page on the site. Changed 2026-08-01.
+ESSAY = re.compile(r"<strong>By [A-Z][a-z]+ [A-Z][a-z]+</strong>")
 
 # The account is an independent explainer, not a person. Reference pages and X
 # posts speak in third person; only the attributed personal essays carry an "I".
@@ -114,7 +120,7 @@ INDEX_PAGE = re.compile(r"(sources|search|glossary)\.html$")
 
 def analyse(path):
     text = visible_text(path)
-    essay = bool(ESSAY.search(path))
+    essay = bool(ESSAY.search(open(path, encoding="utf-8", errors="ignore").read()))
     sents = sentences(text)
     if len(sents) < 8:
         return None

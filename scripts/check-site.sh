@@ -23,6 +23,22 @@ python3 scripts/build-sitemap.py --check
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-grid-spans.py
 python3 scripts/check-prose.py --strict >/dev/null || { python3 scripts/check-prose.py >&2; echo "prose standard violations, see PROSE_STANDARD.md" >&2; exit 1; }
+
+# Reading grade, PROSE_STANDARD.md v2.0. Shared copy is held to grade 9; blocks
+# marked data-audience="specialist" are measured separately and do not fail.
+if python3 -c "import textstat" 2>/dev/null; then
+  python3 scripts/check-reading-grade.py >/dev/null || { python3 scripts/check-reading-grade.py >&2; exit 1; }
+else
+  echo "SKIPPED reading-grade check: textstat not installed (python3 -m pip install textstat)" >&2
+fi
+
+# American English, owner instruction 1 Aug 2026. Explicit word map, not a regex
+# over -ise/-ize, so words that are -ise in both dialects are safe.
+python3 scripts/check-american-english.py >/dev/null || {
+  python3 scripts/check-american-english.py >&2
+  echo "British spellings found. Fix with: python3 scripts/check-american-english.py --fix" >&2
+  exit 1
+}
 python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py

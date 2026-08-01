@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Kaspa Status | Kaspa Explained">
   <meta name="twitter:description" content="What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-07-29">
+  <meta name="dateModified" content="2026-08-01">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -70,7 +70,7 @@
     <section class="status-hero section">
       <p class="eyebrow">Current status</p>
       <h1>Kaspa current status</h1>
-      <p class="lead">Kaspa's <a href="/glossary#blockdag">blockDAG</a> keeps every honest block miners produce, and <a href="/glossary#ghostdag">GHOSTDAG</a> orders them into one <a href="/glossary#utxo">UTXO</a> history. This page labels what runs on mainnet today and what is still on the way.</p>
+      <p class="lead">Kaspa's <a href="/glossary#blockdag">blockDAG</a> keeps every honest block miners make, and <a href="/glossary#ghostdag">GHOSTDAG</a> orders them into one <a href="/glossary#utxo">UTXO</a> history. This page labels what runs on mainnet today and what is still on the way.</p>
       <div class="status-legend" aria-label="Status legend">
         <span class="legend-label">Legend</span>
         <span class="status-pill live">Live</span>
@@ -79,15 +79,14 @@
         <span class="status-pill research">Research</span>
         <span class="status-pill not-live">Not live</span>
       </div>
-      <p class="fit-note"><strong>Checked:</strong> July 29, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code> on a synced v2.0.1 node, virtual DAA score 499,175,726, well above the activation score, about 27.6 billion KAS from the supply endpoint, and a block reward of 2.44997148 KAS under the current emission step. <strong>Toccata:</strong> see the status table below for the release and activation record, and <a href="/toccata-status">Toccata status</a> for post-activation checks.</p>
+      <p class="fit-note"><strong>Checked:</strong> August 1, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code> on a synced v2.0.1 node. Virtual DAA score was 501,790,629, well above the activation score. Supply came back at about 27.61 billion KAS, with a block reward of 2.44997148 KAS at the current emission step. <strong>Toccata:</strong> the status table below has the activation record; <a href="/toccata-status">Toccata status</a> has the post-activation checks.</p>
       <nav class="jump-list" aria-label="Status page shortcuts">
         <a href="#usable-now">Usable now</a>
         <a href="#status-snapshot">Status table</a>
         <a href="#common-misconceptions">Misconceptions</a>
-        <a href="/kaspa-claims-checker">Claims checker</a>
-        <a href="/toccata-status">Toccata</a>
+        <a href="#adoption-signals">Adoption signals</a>
+        <a href="#product-claims">Product claims</a>
         <a href="#implementation-evidence">Implementation evidence</a>
-        <a href="#status-faq">FAQ</a>
       </nav>
     </section>
 
@@ -97,23 +96,23 @@
       <div class="quick-grid grid-cards">
         <article>
           <span>Hold and transfer</span>
-          <p>Send, receive, and self-custody KAS on the live Proof-of-Work UTXO blockDAG.</p>
+          <p>Send, receive, and hold your own KAS on the live proof-of-work UTXO blockDAG.</p>
         </article>
         <article>
           <span>Verify and observe</span>
-          <p>Run or study nodes, explorers, visualizers, pruning behavior, and GHOSTDAG ordering.</p>
+          <p>Run a node, or study explorers, visualizers, pruning, and GHOSTDAG ordering.</p>
         </article>
         <article>
           <span>Mine or study mining</span>
-          <p>Kaspa is ASIC-mined today. The <a href="/solo-mining-guide">solo mining guide</a> covers miner-to-node setup; current dashboards cover mining economics and distribution.</p>
+          <p>Kaspa is ASIC-mined today. <a href="/kaspa-mining">Kaspa mining</a> covers miner-to-node setup, plus the price and hash rate cycle behind it.</p>
         </article>
         <article>
           <span>Build around the live lane</span>
-          <p>Wallet UX, payment flows, analytics, education, and infrastructure can build on today's 10 BPS foundation.</p>
+          <p>Wallet UX, payment flows, dashboards, teaching, and plumbing build on today's 10 BPS base.</p>
         </article>
         <article>
           <span>Check the L1 state</span>
-          <p>A public REST reading is a snapshot. Cross it against a node, release notes, KIP status, and accepted mainnet behavior before treating it as a claim.</p>
+          <p>A public REST reading is a snapshot. Check it against a node, release notes, and KIP status first.</p>
         </article>
       </div>
     </section>
@@ -135,79 +134,79 @@
             <tr>
               <td>Proof of Work</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Kaspa runs on Proof-of-Work mining. Work and issuance never depend on a validator identity set.</td>
+              <td>Kaspa runs on proof-of-work mining. Work and new coins never depend on a list of validators.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa</a></td>
             </tr>
             <tr>
               <td>UTXO model</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Kaspa tracks spendable outputs. That's the same model Bitcoin uses; Ethereum tracks balances instead.</td>
+              <td>Kaspa tracks spendable outputs, the same model Bitcoin uses. Ethereum tracks balances instead.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa</a></td>
             </tr>
             <tr>
               <td>GHOSTDAG</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>GHOSTDAG keeps blocks that lose the race to be first instead of discarding them, then orders every kept block into one history.</td>
+              <td>GHOSTDAG keeps blocks that lose the race to be first, instead of throwing them out. It then orders every kept block into one history.</td>
               <td><a href="https://research.kas.pa/">Kaspa Research</a></td>
             </tr>
             <tr>
               <td>Crescendo 10 BPS</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>10 blocks per second is live. Michael Sutton put the throughput gain at roughly 8-9x and the confirmation-time improvement around 30%. Neither figure is instant finality, and a flat "10x faster confirmations" claim overstates his own numbers.</td>
+              <td>10 blocks per second is live. Michael Sutton put the throughput gain at roughly 8-9x and the confirmation-time gain around 30%. Neither figure is instant finality, and a flat "10x faster confirmations" claim goes past his own numbers.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/releases">rusty-kaspa releases</a>; <a href="https://medium.com/@michaelsuttonil/unveiling-the-crescendo-hard-fork-roadmap-10bps-and-more-6072329e177f">Crescendo roadmap note</a></td>
             </tr>
             <tr>
-              <td>July 25 L1 snapshot</td>
+              <td>August 1 L1 snapshot</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Mainnet REST readout: virtual DAA 495,451,121, about 27.597 billion KAS from the supply endpoint, 2.44997148 KAS per block. The node answering was v2.0.1 and synced. These numbers move by the hour; recheck before quoting them. Skip the block and header counts from this endpoint: it load-balances across backend nodes with different pruning states, so the figure describes whichever backend node answered, and only its local store. Two reads a minute apart returned 1,488,846 and 26,573,222.</td>
+              <td>Mainnet REST readout: virtual DAA 501,790,629, about 27.613 billion KAS from the supply endpoint, 2.44997148 KAS per block. The node answering was v2.0.1 and synced. These numbers move by the hour; recheck before quoting them. Skip the block and header counts from this endpoint. It spreads reads across backend nodes with different pruning states, so the figure covers only the node that answered. Two reads a minute apart returned 1,488,846 and 26,573,222.</td>
               <td><a href="https://api.kaspa.org/info/blockdag">mainnet blockDAG API</a>; <a href="https://api.kaspa.org/info/coinsupply">supply API</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a></td>
             </tr>
             <tr>
               <td>Emission schedule</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Emission steps down every 2,629,800 seconds by a factor of 2<sup>-1/12</sup>, about 5.61% a step, 426 steps deep in the consensus table. The steps are triggered by DAA score, which is exact, so that is what to quote: 27.5 KAS/sec at DAA 426,015,000, then 25.95654359 at 452,313,000, then 24.49971474 at 478,611,000, which is where the network sits now. The next step is 23.12465141 KAS/sec at DAA 504,909,000, roughly August 5, 2026. Calendar dates drift because they depend on how fast blocks actually land; the DAA triggers do not. No month is a cliff, and August is a routine step identical in kind to May, June, and July.</td>
+              <td>Emission steps down every 2,629,800 seconds by a factor of 2<sup>-1/12</sup>, about 5.61% a step, 426 steps deep in the consensus table. The steps are triggered by DAA score, which is exact, so quote that. It went 27.5 KAS/sec at DAA 426,015,000, then 25.95654359 at 452,313,000, then 24.49971474 at 478,611,000, which is where the network sits now. The next step is 23.12465141 KAS/sec at DAA 504,909,000, roughly August 5, 2026. Calendar dates drift because they depend on how fast blocks land. The DAA triggers do not. No month is a cliff, and August is a routine step, the same as May, June, and July.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs">coinbase.rs subsidy table</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a>; <a href="https://wiki.kaspa.org/en/tokenomics">Kaspa Wiki tokenomics</a></td>
             </tr>
             <tr>
               <td>Base RTD framing</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Real-time decentralization is Hashdag's name for Kaspa's core trade: Bitcoin-style PoW security and censorship resistance, with confirmations that feel seconds-scale under normal network conditions.</td>
+              <td>Real-time decentralization is Hashdag's name for Kaspa's core trade. Bitcoin-style PoW security and censorship resistance, with confirmations that feel seconds-scale on a normal network.</td>
               <td><a href="https://kaspa.org/lore">Kaspa.org lore</a>; <a href="https://hashd.ag/raw">hashd.ag/raw</a></td>
             </tr>
             <tr>
               <td>Toccata</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Hard fork for L1 spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, standalone based-zk applications, and vProgs groundwork. Rusty Kaspa v2.0.1 is the current Toccata release; v2.0.0 set mainnet activation at DAA 474,165,565.</td>
+              <td>Hard fork for L1 spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, standalone based-zk apps, and vProgs groundwork. Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA 474,165,565.</td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 release</a>; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>; <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3 release</a>; <a href="https://github.com/kaspanet/kips">Kaspa KIPs</a></td>
             </tr>
             <tr>
               <td>vProgs</td>
               <td><span class="status-pill roadmap">Roadmap</span></td>
-              <td><a href="/kaspa-vprogs-explained">Apps that prove richer logic</a> while sharing Kaspa ordering, without turning L1 into a single global execution VM.</td>
+              <td><a href="/toccata-explained">Apps that prove richer logic</a> while sharing Kaspa ordering. L1 never becomes one global VM that runs everything.</td>
               <td><a href="https://github.com/kaspanet/vprogs">vProgs repo</a>; <a href="https://docs.kaspa.org/programmability">programmability docs</a></td>
             </tr>
             <tr>
               <td>Native DeFi</td>
               <td><span class="status-pill roadmap">Roadmap</span></td>
-              <td>A design target that follows Toccata-era L1 foundations. A live Kaspa-native app layer needs shipped apps and usage evidence beyond the architecture.</td>
+              <td>A design target that follows Toccata-era L1 foundations. A live Kaspa-native app layer needs shipped apps and real usage.</td>
               <td><a href="/why-kaspa-matters">Design case</a></td>
             </tr>
             <tr>
               <td>DAGKnight</td>
               <td><span class="status-pill research">Research</span></td>
-              <td>A parameterless, adaptive consensus direction. It does not run mainnet today; GHOSTDAG does.</td>
+              <td>A parameterless consensus direction, meaning it adapts instead of being tuned by hand. It does not run mainnet today; GHOSTDAG does.</td>
               <td><a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, still Status: Proposed; <a href="https://hashd.ag/">hashd.ag</a></td>
             </tr>
             <tr>
               <td>100 BPS / partition-resilient payments</td>
               <td><span class="status-pill research">Research</span></td>
-              <td>Kaspa.org places 10-millisecond blocks, 100 BPS, and partition-resilient local payments in a proposed 2027 hard-fork bucket. No specification, code, release, or activation evidence exists yet.</td>
+              <td>Kaspa.org puts 10-millisecond blocks, 100 BPS, and partition-resilient local payments in a proposed 2027 hard fork. No spec, code, release, or activation evidence exists yet.</td>
               <td><a href="https://kaspa.org/lore">Kaspa.org lore</a></td>
             </tr>
             <tr>
               <td>RTD-derived oracle / TangVM flows</td>
               <td><span class="status-pill research">Research</span></td>
-              <td>Apps can build oracle, TangVM, attestation, and coordination-market systems over Kaspa primitives. The protocol does not ship any of them as products.</td>
+              <td>Apps can build oracle, TangVM, attestation, and coordination-market systems on top of Kaspa. The protocol ships none of them as products.</td>
               <td><a href="https://hashd.ag/raw">hashd.ag/raw</a></td>
             </tr>
           </tbody>
@@ -218,7 +217,7 @@
     <section id="common-misconceptions" class="section">
       <p class="eyebrow">Common misconceptions</p>
       <h2>Statements that need context or measurement</h2>
-      <p class="lead">Most Kaspa confusion comes from one move: blending a live protocol fact, a test result, a public target, and a project headline into a single sentence. Before you repeat a claim, pull those apart.</p>
+      <p class="lead">Most Kaspa confusion comes from one move: mixing a live protocol fact, a test result, a public target, and a project headline into one sentence. Before you repeat a claim, pull those apart.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -231,33 +230,33 @@
           <tbody>
             <tr>
               <td>Mainnet speed means a fixed huge TPS number.</td>
-              <td>10 BPS is live. Simple-payment capacity runs roughly 2.5k to 3.4k TPS depending on transaction shape; covenant apps, ZK proofs, tokens, and vProg-style systems each need their own workload number. See <a href="/kaspa-tps-explained">Kaspa TPS Explained</a>.</td>
+              <td>10 BPS is live. Simple-payment capacity runs roughly 2.5k to 3.4k TPS depending on transaction shape. Covenant apps, ZK proofs, tokens, and vProg-style systems each need their own workload number. See <a href="/what-is-kaspa">What is Kaspa</a>.</td>
               <td>One number turns a real technical edge into a brittle marketing claim.</td>
             </tr>
             <tr>
-              <td>Block rate alone gives an exact finality multiplier.</td>
-              <td>Faster blocks improve inclusion and capacity. Confirmation confidence is a separate, probabilistic question.</td>
+              <td>Block rate alone gives an exact finality number.</td>
+              <td>Faster blocks improve inclusion and capacity. Confirmation confidence is a separate question of odds.</td>
               <td>Users care about both: when a payment shows up, and how sure they should be it stays.</td>
             </tr>
             <tr>
               <td>Testnet or lab numbers are mainnet guarantees.</td>
               <td>Testnets and experiments signal direction. They aren't commitments, and need a current source check before they become a live public claim.</td>
-              <td>Future capability, engineering tests, and shipped network behavior are three different things.</td>
+              <td>What might ship, what a test showed, and what the network does are three different things.</td>
             </tr>
             <tr>
               <td>Real-time means instant finality.</td>
-              <td>Real-time describes the fast-PoW user feel and the decentralization goal. It does not claim every transaction is instantly irreversible.</td>
-              <td>The pitch stays strong without overselling settlement certainty.</td>
+              <td>Real-time describes the fast-PoW user feel and the decentralization goal. It does not claim every payment is instantly final.</td>
+              <td>The pitch stays strong without overselling how final a payment is.</td>
             </tr>
             <tr>
               <td>DAGKnight, vProgs, or native DeFi are live because code or talks exist.</td>
               <td>Code, talks, branches, and demos prove work happened. Activation or production status needs stronger evidence than that.</td>
-              <td>Development evidence sits below release or activation evidence in the proof hierarchy.</td>
+              <td>Work in progress ranks below a release or an activation record.</td>
             </tr>
             <tr>
-              <td>Toccata means one atomic action can already span several independent apps.</td>
-              <td>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk applications. Composing separately compiled covenant apps atomically in one transaction turns out to be possible on Toccata itself: Argent's Inter-Covenant Communication does exactly that, so far only in unaudited offline demos. What still separates <a href="/kaspa-vprogs-explained">vProgs</a> is shared mutable state, the case where many users mutate one app state at once.</td>
-              <td>Fast L1 coordination and same-operation app composability are different claims.</td>
+              <td>Toccata means one action can already span several apps, all or nothing.</td>
+              <td>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk apps. Composing separately compiled covenant apps atomically in one transaction is possible on Toccata itself. Argent's Inter-Covenant Communication does exactly that, so far only in unaudited offline demos. <a href="/toccata-explained">vProgs</a> still differs on shared mutable state, the case where many users change one app state at once.</td>
+              <td>Fast L1 coordination is one claim. Several apps acting in one operation is another.</td>
             </tr>
             <tr>
               <td>July 2026 is a sudden emission cliff.</td>
@@ -269,14 +268,85 @@
       </div>
     </section>
 
+    <section id="adoption-signals" class="section">
+      <p class="eyebrow">Beyond price</p>
+      <h2>Signals that show whether Kaspa is being used</h2>
+      <p class="lead">Price moves on leverage and story faster than it moves on use. The better signals: wallets, nodes, mining spread, fees paid, liquidity, and transactions that are not scripted traffic.</p>
+      <p class="fit-note">The L1 rules apps need are live. Still missing: wallets, explorers, SDKs, working examples, and transactions from repeat users. <a href="/kaspa-developments">What changed in Kaspa this month</a> carries the current mainnet covenant counts.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Signal</th><th>What it would show</th><th>What can mislead</th></tr></thead>
+          <tbody>
+            <tr><td>Wallet usage</td><td>People hold their own keys and send coins with no expert needed.</td><td>Downloads, addresses, and screenshots overcount. None of them shows a repeat user.</td></tr>
+            <tr><td>Node health</td><td>Checking the chain stays spread across many owners.</td><td>A raw node count hides who hosts them, and hides dead ones.</td></tr>
+            <tr><td>Mining distribution</td><td>Hash power is spread across many separate miners.</td><td>Hashrate alone hides where the pools, chips, and power come from.</td></tr>
+            <tr><td>Fees and block demand</td><td>Users pay enough for block space to fund security over the long run.</td><td>Spam, airdrop farming, and scripted traffic pump the number.</td></tr>
+            <tr><td>Liquidity</td><td>Users, miners, and builders can get in and out without pain.</td><td>Liquidity can be pure betting. It does not show that anyone uses the product.</td></tr>
+            <tr><td>Developer activity</td><td>Tools, wallets, and apps keep getting better.</td><td>Commits and posts are noisy. Neither shows that a user got something.</td></tr>
+            <tr><td>Integrations</td><td>Wallets, explorers, exchanges, and receipt tools carry working support for the network.</td><td>A listing or a partner post can sit there with no use behind it.</td></tr>
+            <tr><td>Workflow-linked on-chain activity</td><td>Repeat transactions tied to wallets, app state, receipts, or access show real pull.</td><td>Campaigns, raw mints, spam, and scripted loops pump the count.</td></tr>
+            <tr><td>Receipt and payload activity</td><td>Payment receipts and payload records show on-chain data doing real work.</td><td>Scripted loops, or records nobody ever redeems, can look like uptake.</td></tr>
+            <tr><td>Toccata-era apps</td><td>Vault, asset, proof, and market rules turning into apps people use.</td><td>TN10/TN12 tests and demos can run ahead of the wallets, explorers, and liquidity apps need.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Four numbers get read as adoption when they are not. Price brings attention and liquidity, and it also moves on leverage, thin float, and market cycles that have nothing to do with the protocol; the <a href="/kaspa-mining">mining page</a> splits price from hash rate, ASIC markets, and fees. Social attention helps teaching, and it also breeds hype that outruns the software that shipped. Roadmap buzz counts demos, testnets, and shipped mainnet features as one number: Toccata shipped, DAGKnight and vProgs have not. A raw transaction count means nothing until it is split into users, spam, exchange moves, apps, and tests.</p>
+      <ol class="learning-steps grid-cards">
+        <li><strong>Users understand the benefit.</strong> <span>Wallets and guides make fast PoW confirmation easy for a non-expert to follow.</span></li>
+        <li><strong>Running your own stays real.</strong> <span>What a node or a miner needs does not narrow to a handful of operators.</span></li>
+        <li><strong>Security pays for itself.</strong> <span>Fees, mining rewards, and hash power fund a security budget that lasts past the next cycle.</span></li>
+        <li><strong>Roadmap work ships without hype.</strong> <span>Toccata activated on schedule. The next test is whether the app work built on it ships without being called "live" too soon.</span></li>
+        <li><strong>Education stays honest.</strong> <span>The best Kaspa writing keeps live facts, roadmap, research, and price talk in separate boxes.</span></li>
+      </ol>
+    </section>
+
+    <section id="product-claims" class="section">
+      <p class="eyebrow">App and product claims</p>
+      <h2>Testing a pitch built on top of Kaspa</h2>
+      <p class="lead">A protocol activating on schedule does not tell you whether an app built on it works. Product claims need a separate test: who uses it, where the liquidity comes from, who signs what, and what evidence backs it up.</p>
+      <p class="fit-note">For protocol status, use the <a href="/kaspa-claims-checker">claims checker</a>. When a demo or txid is being used to prove a builder claim, use <a href="/build-on-kaspa">the build page</a>.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr><th>Claim type</th><th>Real signal</th><th>Weak signal</th><th>Kaspa question</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Launchpad</td><td>Issuance, wallet flow, a liquidity path, visible holders, abuse controls.</td><td>A token button and a roadmap.</td><td>What can launch today, and where does the liquidity actually come from?</td></tr>
+            <tr><td>DeFi</td><td>Risk parameters, an oracle model, a liquidation path, an audit trail, liquidity, working transactions.</td><td>The word "DeFi" stapled to any token page.</td><td>Is this live mainnet, TN10/TN12 testnet evidence, or just an app idea riding on Toccata's name?</td></tr>
+            <tr><td>AI agent</td><td>The agent signs, pays, receives, proves work, or triggers a bounded workflow on-chain.</td><td>Chatbot copy wrapped around a token.</td><td>What action actually happens on Kaspa, and who can verify it?</td></tr>
+            <tr><td>Wallet</td><td>Clear signing, recovery, balances, history, error states, source verification.</td><td>Nice screens with no real transaction handling underneath.</td><td>Does a normal user know what they're signing?</td></tr>
+            <tr><td>Institutional use</td><td>Custody, compliance, reporting, settlement, liquidity, support, integration requirements.</td><td>One vague partnership post.</td><td>Which institution, which requirement, and what's the evidence?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details class="source-more">
+        <summary>What other chains' product history says about the Kaspa gaps</summary>
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead>
+              <tr><th>Observed behavior</th><th>Consequence</th><th>Kaspa gap</th><th>Possible experiment</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Low-friction asset launches</td><td>Creation, liquidity, and attention collapse into one flow.</td><td>No Kaspa-native route from asset launch to tradable liquidity exists yet.</td><td>A restrained post-Toccata asset tool with wallet safety, source labels, and abuse warnings.</td></tr>
+              <tr><td>Swap aggregation</td><td>Users want one route across liquidity sources instead of five tabs.</td><td>No native DEX or swap routing yet.</td><td>Track early swap attempts by quote quality, liquidity source, and signing UX.</td></tr>
+              <tr><td>Hackathon intake</td><td>Deadlines, judges, examples, and funding produce repeatable builder submissions.</td><td>Builder activity here is less structured in public.</td><td>A public Kaspa build sprint with source-backed judging criteria and shipped demos.</td></tr>
+              <tr><td>Wallet-first apps</td><td>Users judge a chain by signing, balances, errors, history, and support rather than by whitepapers.</td><td>Consumer wallet UX is still fragmented across needs.</td><td>Map wallet tasks from first user action to accepted transaction evidence.</td></tr>
+              <tr><td>Exploit response</td><td>Real DeFi needs monitoring, audits, an incident process, and recovery language before launch.</td><td>Kaspa's app risk culture is still early.</td><td>Require every app pitch to publish its failure modes before claiming production readiness.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+      <p>Both tables check whether a pitch names the parts a reviewer looks for. Neither tells you the product is worth building. That answer comes from naming the person who would use it, the step they currently do some other way, and what they give up by switching.</p>
+    </section>
+
     <section id="implementation-evidence" class="section">
       <p class="eyebrow">Implementation evidence</p>
       <h2>Code evidence</h2>
-      <p>Code and pull requests show work in progress. A mainnet label needs more: a release, an activation record, upgraded-node behavior, or observable network behavior.</p>
+      <p>Code and pull requests show work in progress. A mainnet label needs a release, an activation record, or proof of what upgraded nodes do.</p>
       <details class="source-more">
         <summary>Open code and implementation evidence</summary>
         <div class="table-wrap">
-          <table class="reality-table">
+          <table class="reality-table" data-audience="specialist">
             <thead>
               <tr>
                 <th>Track</th>
@@ -308,7 +378,7 @@
               <tr>
                 <td>vProgs</td>
                 <td>The <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> README describes an early-development Rust framework for based computation on Kaspa, with core, storage, state, scheduling, transaction-runtime, and node layers. A June 18 merge, <a href="https://github.com/kaspanet/vprogs/pull/36">Feat: Settlement into Covenants</a>, gathered settlement-covenant work, transaction/batch/aggregation provers, SMT support, L1 bridge plumbing, and RISC Zero backend work into master.</td>
-                <td>Roadmap implementation progress. Builders can study and experiment with the framework now. Production Kaspa app paths and native DeFi still need their own shipped evidence. See <a href="/kaspa-vprogs-explained">vProgs Explained</a>.</td>
+                <td>Roadmap implementation progress. Builders can study and experiment with the framework now. Production Kaspa app paths and native DeFi still need their own shipped evidence. See <a href="/toccata-explained">vProgs Explained</a>.</td>
               </tr>
               <tr>
                 <td>DAGKnight</td>
@@ -337,15 +407,15 @@
       <div class="reference-grid grid-cards">
         <article>
           <h3>Is DAGKnight live?</h3>
-          <p>No. DAGKnight is a parameterless, adaptive consensus direction still in research. Mainnet runs GHOSTDAG.</p>
+          <p>No. DAGKnight is an adaptive consensus direction, still in research. Mainnet runs GHOSTDAG.</p>
         </article>
         <article>
           <h3>Is Toccata live?</h3>
-          <p>Yes. Activation and adoption are separate questions, though: check <a href="/toccata-status">Toccata status</a> before quoting wallet, explorer, or app state.</p>
+          <p>Yes. Activation and adoption are separate questions. Check <a href="/toccata-status">Toccata status</a> before quoting wallet, explorer, or app state.</p>
         </article>
         <article>
           <h3>Are Kaspa smart contracts live?</h3>
-          <p>Toccata put the L1 pieces live on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. A mature native app layer, with audited apps and broad tooling, is still ahead; richer programmability through vProgs is later work.</p>
+          <p>Toccata put the L1 pieces live on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. A mature native app layer, with audited apps and broad tooling, is still ahead. Richer programmability through vProgs is later work.</p>
         </article>
       </div>
     </section>
@@ -354,9 +424,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/what-crypto-is-good-for"><span>Previous</span><strong>What crypto is good for</strong><p>A tempered guide to where crypto is useful, where it is weak, and where shared records without one operator fit.</p></a>
-        <a href="/kaspa-developments"><span>Next</span><strong>What changed in Kaspa this month</strong><p>What changed in Kaspa since Toccata activated: the new KCC conventions process, the KIP promotions of July 15, Argent, vProgs, SDK...</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Source hierarchy, public reference map, and credited external learning resources used by Kaspa Explained.</p></a>
+        <a href="/build-on-kaspa"><span>Previous</span><strong>Build Kaspa apps</strong><p>Three ways to build on Kaspa, and how to work out which one your idea needs.</p></a>
+        <a href="/skeptical-case"><span>Next</span><strong>Kaspa risks and open questions</strong><p>The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.</p></a>
+        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
@@ -369,8 +439,9 @@
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
           <a href="/start-here">Start here</a>
-          <a href="/what-is-kaspa">Kaspa 101</a>
-          <a href="/overview">90-second overview</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
           <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
@@ -384,14 +455,16 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/builder-guide">Builder guide</a>
-          <a href="/kaspa-app-ideas">App ideas</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
         </div>
-        <div class="footer-link-group" aria-label="Site">
-          <span>Site</span>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
           <a href="/about">About</a>
-          <a href="/about#corrections">Corrections</a>
         </div>
       </nav>
     </div>
