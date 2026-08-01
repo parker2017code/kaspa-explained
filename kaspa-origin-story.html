@@ -131,6 +131,7 @@
       <p class="eyebrow">Early stress</p>
       <h2>The chain had to survive real failure</h2>
       <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the prior 48 hours. His account: the developers were not rolling back to an earlier preferred state, they were rebuilding and comparing a certainly-valid UTXO commitment after a memory problem. That's the sourced version of what circulates as the "two-week bug" story.</p>
+      <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published. Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually carries.</p>
       <p>A second stress test came later. Kaspalytics recorded a September 2023 dust attack where the UTXO count jumped from about 8 million to 62 million, a separate event from the November 2021 launch bug.</p>
     </section>
 
@@ -160,6 +161,7 @@
             <tr><td>Polychain</td><td>Polychain belongs in the VC-funded DAGLabs prehistory. Premine and pre-sale allocation claims need separate token-allocation evidence.</td><td>Ignoring Polychain context or treating it as proof of a premine.</td></tr>
             <tr><td>Fair launch</td><td>No premine, insider allocation, or pre-sales; every coin came from mining, including the post-launch DAGLabs/Polychain-related early mining estimate.</td><td>DAGLabs/Polychain premine language, flawless distribution, or no early contributor mining.</td></tr>
             <tr><td>Business failure</td><td>Hardware, presale, and startup paths failed to materialize before the vanilla fair launch.</td><td>Bankruptcy language unless a stronger source says bankruptcy.</td></tr>
+            <tr><td>Black Tuesday</td><td>A November 2021 crash, repaired by a hard fork whose new genesis carried the UTXO set of the last valid block.</td><td>A two-week halt. The commit, the genesis timestamp, and the post itself all put the outage in days.</td></tr>
           </tbody>
         </table>
       </div>
@@ -174,15 +176,17 @@
         <li><a href="https://polychain.capital/">Polychain Capital homepage</a> - Polychain's own high-level description as an investment firm for blockchain assets.</li>
         <li><a href="https://uk.investing.com/news/cryptocurrency-news/researcher-behind-ghost-protocol-launches-cryptocurrency-network-kaspa-2355728">Investing.com April 2021 launch article</a> - DAGLabs, April 2021 testnet, no-premining launch intent, and DeFi sequencing context.</li>
         <li><a href="https://vcorem.medium.com/daglabs-just-released-its-kaspa-tesnet-b396481eb0c6">Guy Corem testnet note</a> - April 2021 Kaspa testnet release and Golang Phantom/GHOSTDAG implementation framing.</li>
-        <li><a href="https://epicenter.tv/episode/192-spectre-ghosts-radical-ideas-to-scale-blockchain-tech">Epicenter episode 192</a> - 2017 GHOST, SPECTRE, and blockDAG research context with Aviv Zohar and Yonatan Sompolinsky.</li>
-        <li><a href="https://www.youtube.com/live/W2vSNVz_GEQ">Rethink Trust 2018 interview</a> - Layer One scalability, throughput, confirmation-speed, and trustless-design framing.</li>
+        <li><a href="https://epicenter.tv/episode/192-spectre-ghosts-radical-ideas-to-scale-blockchain-tech">Epicenter episode 192</a> - July 19, 2017 GHOST, SPECTRE, and blockDAG research context with Aviv Zohar and Yonatan Sompolinsky.</li>
+        <li><a href="https://www.youtube.com/live/W2vSNVz_GEQ">Rethink Trust 2018 interview</a> - video record of a July 13, 2018 Yonatan Sompolinsky interview. The page carries no description of what the interview covers.</li>
         <li><a href="https://www.kasmedia.com/article/dr-yonatan-sompolinsky-s-interview-with-uphold-s-head-of-research-dr-martin-heisboeck">Uphold Institutional interview recap</a> - sequencing, finance, MEV, Rust implementation, and ZK-oriented future-programmability framing.</li>
         <li><a href="https://hashd.ag/raw">Hashdag raw archive</a> - launch-plan, ASIC/presale, gamenet, Black Tuesday, and Rust-refactor context from Yonatan Sompolinsky's writing archive.</li>
         <li><a href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">Kaspa launch plan: responding to reality</a> - post-launch community, governance, roadmap, and maintenance context.</li>
         <li><a href="https://hashdag.medium.com/kaspa-black-tuesday-8c7f4fa35834">Kaspa (Black Tuesday)</a> - November 2021 network-crash and UTXO-commitment context.</li>
         <li><a href="https://hackernoon.com/interview-with-dr-yonatan-sompolinsky-of-kaspa">Hackernoon interview with Yonatan Sompolinsky</a> - DAGLabs, ASIC-presale path, optical ASIC immaturity, fair launch, Polychain, and Gadi context.</li>
         <li><a href="https://wiki.kaspa.org/en/prehistory">Kaspa Wiki prehistory page</a> - DAGLabs mining, Polychain-related distribution, and the under-3% / 840 million KAS early-miner estimate.</li>
-        <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 transcript</a> - firsthand launch nuance, gamenet, second genesis, UTXO-set preservation, and smart-contract roadmap boundaries.</li>
+        <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 episode page</a> - chapter index including "Story of Kaspa's messy fair launch in 2021." The page publishes chapter markers rather than a full transcript.</li>
+        <li><a href="https://github.com/kaspanet/kaspad/commit/dbf18d8052f000ba0079be9e79b2d6f5a98b74ca">Kaspad hard-fork commit #1856</a> - the November 2021 new genesis carrying the UTXO set of the last valid block, with the genesis DAA score changed to the checkpoint score.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">rusty-kaspa genesis.rs</a> - mainnet genesis timestamp 1637609671037, checkpoint DAA score 1,312,860, and the UTXO commitment the node still ships.</li>
         <li><a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">DBLP: PHANTOM: A Scalable BlockDAG Protocol</a> - bibliographic record for the 2018 PHANTOM paper by Sompolinsky and Zohar.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa GitHub</a> - Rust node implementation, replacement relationship to the older Golang node, and Crescendo README context.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.0.0">Rusty Kaspa v1.0.0 release</a> - Crescendo mainnet release notes and 1 BPS to 10 BPS transition.</li>

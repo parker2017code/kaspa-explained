@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Run the publish gate against exactly what is staged, not the working tree.
+#
+# Every CI failure in this repo has had the same cause: the gate passed locally
+# at some point, then a file changed, or agent-index.json was regenerated after
+# staging, and the committed state was never the state that passed. The owner
+# finds out by email. This makes that impossible.
+#
+# Skip with: git commit --no-verify   (for a genuine emergency only)
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+# Generated files must match what the staged sources produce.
+python3 scripts/build-sitemap.py >/dev/null 2>&1 || true
+python3 scripts/build-agent-index.py >/dev/null 2>&1 || true
+if ! git diff --quiet -- sitemap.xml agent-index.json 2>/dev/null; then
+  git add sitemap.xml agent-index.json
+  echo "pre-commit: regenerated sitemap.xml and agent-index.json, added to this commit"
+fi
+
+echo "pre-commit: running the publish gate..."
+if ! out="$(bash scripts/check-site.sh 2>&1)"; then
+  echo "$out" | tail -25 >&2
+  echo "" >&2
+  echo "pre-commit: BLOCKED. The gate fails, so CI would fail and mail the owner." >&2
+  echo "Fix it, or use --no-verify if you truly mean to commit a broken tree." >&2
+  exit 1
+fi
+
+echo "pre-commit: gate passed."
