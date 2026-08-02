@@ -253,6 +253,31 @@
     { t: 'Self-hosted',     v: { reason: 2, cheap: 2, code: 1, agent: 1 }, open: true }
   ];
 
+  // Which leaderboard each published figure comes from. The badge on a row
+  // counts sources actually present rather than reading a stored flag, so a
+  // model with partial coverage shows it instead of inheriting a label set
+  // when the page carried fewer sources.
+  var SOURCE_OF = {
+    overall: 'LiveBench', reasoning: 'LiveBench', coding: 'LiveBench',
+    agentic: 'LiveBench', math: 'LiveBench', data: 'LiveBench',
+    language: 'LiveBench', ifollow: 'LiveBench', costPerSuccess: 'LiveBench',
+    intelligence: 'Artificial Analysis', costPerTask: 'Artificial Analysis',
+    tps: 'Artificial Analysis', ttft: 'Artificial Analysis',
+    total: 'Artificial Analysis',
+    confirmed: 'Agent Arena', praise: 'Agent Arena', steer: 'Agent Arena',
+    bash: 'Agent Arena'
+  };
+  var SOURCE_COUNT = 3;
+  var COUNT_WORD = ['no', 'one', 'two', 'three'];
+
+  function sourcesFor(m) {
+    var seen = {};
+    D.metrics.forEach(function (k, i) {
+      if (m.a[i] && SOURCE_OF[k]) seen[SOURCE_OF[k]] = 1;
+    });
+    return Object.keys(seen).length;
+  }
+
   var MIN_COV = 0.70;
 
   var state = {}, els = {};
@@ -445,7 +470,10 @@
       if (m.tps) meta.push(m.tps + ' tok/s');
       if (m.ctx) meta.push(fmtCtxVal(m.ctx));
       if (m.open) meta.push('open weights');
-      meta.push(m.solid ? 'two leaderboards' : 'one leaderboard');
+      var nsrc = sourcesFor(m);
+      meta.push(nsrc === SOURCE_COUNT
+        ? 'all three leaderboards'
+        : COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards') + ' of three');
       var pct = Math.round(r.s);
       li.innerHTML =
         '<span class="mp-rank">' + (i + 1) + '</span>' +
