@@ -155,7 +155,8 @@
               <li><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares shown next to the dials add to 100. Only open weights is a filter, because a model either ships its weights or it does not.</li>
               <li><b>Scores are percentiles across the models that published that number</b>, not the raw benchmark values, so a 90 means near the top of this field rather than 90%.</li>
               <li><b>One row per model, at its best published setting.</b> The leaderboards disagree about which reasoning effort to publish: LiveBench scored Claude Fable 5 at max effort, Artificial Analysis scored its default. Nothing is ever copied from one setting to another; the row simply carries what each source actually measured.</li>
-              <li><b>None of the three composites is imported.</b> Arena's Net Improvement column is the number its own rank is built from, so copying it would replay their ranking instead of building one. Its Tool Hallucination column is left out too: one value fills fifteen of 44 rows and all ten places of its own top-ten list, which is a placeholder rather than a measurement.</li>
+              <li><b>No leaderboard composite is imported, and that now includes the two that were.</b> Arena's Net Improvement is the number its own rank is built from, so copying it would replay their ranking instead of building one. LiveBench's overall and Artificial Analysis's intelligence index are composites too, and both used to feed the score while their own sub-scores were also counted here, so a model strong at reasoning earned it twice. Both are gone. Every factor is built from individual published figures. Arena's Tool Hallucination column stays out for a different reason: one value fills fifteen of 44 rows and all ten places of its own top-ten list, which is a placeholder rather than a measurement.</li>
+            <li><b>Ten factors, and all three leaderboards feed them.</b> Eight figures from LiveBench, four from Artificial Analysis, four from Agent Arena. The Arena four carry what no benchmark asks: whether the user agreed the task was finished, whether pushing back landed, whether it dug itself out of a failed command, and whether people were glad they used it. Those four were loaded and scored nothing until 1 August 2026, so the ranking rested on two sources while this page said three.</li>
               <li><b>Arena prints its signals with the minus signs stripped.</b> Read as printed, the worst-ranked model looks like the best at recovering from a failed command. Each signal's own top-ten list gives a threshold that recovers the sign, and that is done in <code>data/arena-agent.json</code> before anything is scored.</li>
               <li><b>Cost is per finished task, not per token.</b> A cheap model that needs three attempts is not cheap.</li>
             </ol>
@@ -226,17 +227,36 @@
   // it. w is the benchmark metrics it reads, and how much each one counts.
   // Six dials. Context length and open weights are filters, not things you
   // weigh, so they are not here.
+  // Ten factors, each built from the individual published figures rather than
+  // from any leaderboard's own composite.
+  //
+  // Two composites used to feed this: LiveBench's overall and Artificial
+  // Analysis's intelligence index. Both are blends of sub-scores that are also
+  // scored here on their own, so a model strong at reasoning was counted for it
+  // twice, once directly and once inside the composite. They are gone.
+  //
+  // The four Agent Arena signals used to be loaded and never scored at all, so
+  // the ranking rested on two sources while the page claimed three. They now
+  // carry the four questions no benchmark answers: does the user agree the task
+  // finished, do they push back and get somewhere, does it dig itself out of a
+  // failed command, and do people end up glad they used it.
   var DIALS = [
-    { k: 'reason',  t: 'Thinking through hard problems', w: { reasoning: 3, overall: 2, intelligence: 2, math: 1, data: 1 },
+    { k: 'reason',  t: 'Thinking through hard problems', w: { reasoning: 3, math: 2, data: 1 },
       why: 'Works a problem through instead of guessing at it.' },
-    { k: 'code',    t: 'Writing code', w: { coding: 3, overall: 1 },
+    { k: 'code',    t: 'Writing code', w: { coding: 3 },
       why: 'Writes and fixes code that actually runs.' },
-    { k: 'agent',   t: 'Working on its own', w: { agentic: 3, overall: 1 },
-      why: 'Finishes long jobs without you watching every step.' },
+    { k: 'agent',   t: 'Finishing a job on its own', w: { agentic: 3, confirmed: 2 },
+      why: 'Benchmark score for long tasks, plus how often real users agree it finished.' },
+    { k: 'steer',   t: 'Taking correction', w: { steer: 3, ifollow: 1 },
+      why: 'You push back mid-task and it lands the change.' },
+    { k: 'recover', t: 'Digging itself out', w: { bash: 3 },
+      why: 'A command fails. How fast it recovers instead of thrashing.' },
     { k: 'write',   t: 'Writing and editing', w: { language: 3, ifollow: 1 },
       why: 'Writes English a person wants to read.' },
-    { k: 'cheap',   t: 'Costing little', w: { costPerTask: 3, costPerSuccess: 1 },
-      why: 'Dollars per finished task, not per token.' },
+    { k: 'liked',   t: 'People are glad they used it', w: { praise: 3 },
+      why: 'Positive reactions against negative ones, across 1.4 million sessions.' },
+    { k: 'cheap',   t: 'Costing little', w: { costPerSuccess: 3, costPerTask: 2 },
+      why: 'Dollars per finished task. A cheap model that needs three tries is not cheap.' },
     { k: 'fast',    t: 'Answering fast', w: { ttft: 2, tps: 2, total: 1 },
       why: 'Time before it starts, and time until it is done.' },
     { k: 'ctx',     t: 'Holding a lot at once', w: { context: 3 },
@@ -244,12 +264,13 @@
   ];
 
   var PRESETS = [
-    { t: 'Everyday chat',   v: { write: 3, fast: 3 } },
-    { t: 'Coding',          v: { code: 3, fast: 2, cheap: 1 } },
-    { t: 'Agent work',      v: { agent: 3, code: 1, cheap: 1 } },
-    { t: 'Research',        v: { reason: 3, cheap: 1 } },
-    { t: 'Writing',         v: { write: 3, fast: 1 } },
+    { t: 'Everyday chat',   v: { write: 3, fast: 3, liked: 2 } },
+    { t: 'Coding',          v: { code: 3, recover: 2, fast: 2, cheap: 1 } },
+    { t: 'Agent work',      v: { agent: 3, recover: 2, steer: 2, code: 1 } },
+    { t: 'Research',        v: { reason: 3, ctx: 2, cheap: 1 } },
+    { t: 'Writing',         v: { write: 3, steer: 2, fast: 1 } },
     { t: 'Bulk jobs',       v: { cheap: 4, fast: 3, reason: 1 } },
+    { t: 'Pair programming', v: { steer: 3, recover: 2, code: 2, fast: 1 } },
     { t: 'Self-hosted',     v: { reason: 2, cheap: 2, code: 1, agent: 1 }, open: true }
   ];
 
