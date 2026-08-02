@@ -186,8 +186,7 @@
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <div class="mp-mc-head">
             <b class="mp-mc-title">Across 1,000 runs</b>
-            <span class="mp-mc-why">Every figure redrawn from its published error each time, then ranked again.</span>
-            <button type="button" class="mp-mc-run" id="mpRunMC">Re-run</button>
+            <span class="mp-mc-why">The same weights as the ranking below, but every figure redrawn from its published error each time. The order below is one draw; this is the distribution it came from.</span>
           </div>
           <div id="mpMonte"></div>
           <ol class="mp-list" id="mpList"></ol>
@@ -543,17 +542,8 @@
   function openOnly() { var e = $('mpOpen'); return e && e.checked; }
 
   function runMonteCarlo() {
-    var W = [], tot = 0;
-    D.metrics.forEach(function () { W.push(0); });
-    DIALS.forEach(function (d) {
-      var w = state[d.k]; if (!w) return;
-      tot += w;
-      for (var k in d.w) {
-        var i = D.metrics.indexOf(k);
-        if (i >= 0) W[i] += w * d.w[k];
-      }
-    });
-    if (!tot) return null;
+    var _w = buildWeights(), W = _w.W, tot = _w.tot;
+    if (!_w.any) return null;
 
     var rnd = mulberry(1337);
     var wins = {}, appearances = {};
@@ -568,6 +558,7 @@
         var num = 0, den = 0;
         for (var j = 0; j < W.length; j++) {
           if (!W[j] || !m.a[j]) continue;
+          void 0;
           // draw this figure from its own interval; ci is a 95% half-width, so
           // divide by 1.96 to get a standard deviation
           var sd = (m.ci ? m.ci[j] : 3) / 1.96;
@@ -575,7 +566,8 @@
           if (drawn < 0) drawn = 0; if (drawn > 100) drawn = 100;
           num += W[j] * drawn; den += W[j];
         }
-        if (den <= 0) continue;
+        // same coverage rule the ranking uses, so both judge the same field
+        if (den <= 0 || den / tot < MIN_COV) continue;
         var sc = num / den;
         if (sc > bestScore) { bestScore = sc; best = m.n; }
       }
@@ -633,12 +625,18 @@
     if (mcTimer) clearTimeout(mcTimer);
     mcTimer = setTimeout(renderMonteCarlo, 120);
   }
-  (function () {
-    var b = document.getElementById('mpRunMC');
-    if (b) b.addEventListener('click', renderMonteCarlo);
-  })();
+  // No re-run control: the draw is seeded, so pressing it would reproduce the
+  // same answer and read as a broken button. Change a dial and it reruns.
 
-  function render() {
+  // One weight vector, built once, used by both the ranking and the simulation.
+  //
+  // These were built separately and drifted: the ranking divided each dial's
+  // sub-weights by their own sum, so a dial contributed exactly its strength no
+  // matter how many figures it spanned, and the simulation did not. A dial
+  // covering five figures therefore counted three times heavier in the
+  // simulation than in the ranking that sat above it, which is how the page came
+  // to show one model first and simulate a different one winning.
+  function buildWeights() {
     var W = new Array(MI.length).fill(0), tot = 0, any = false;
     DIALS.forEach(function (d) {
       var s = state[d.k]; if (!s) return;
@@ -648,6 +646,11 @@
       keys.forEach(function (m) { W[ix[m]] += s * d.w[m] / sum; });
     });
     W.forEach(function (w) { tot += w; });
+    return { W: W, tot: tot, any: any };
+  }
+
+  function render() {
+    var _w = buildWeights(), W = _w.W, tot = _w.tot, any = _w.any;
 
     var openOnly = $('mpOpen').checked;
     // Largest-remainder rounding, so the shares add to exactly 100 rather than
