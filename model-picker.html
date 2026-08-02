@@ -48,6 +48,7 @@
     .sep-real { color: var(--green); font-weight: 600; }
     .sep-weak { color: var(--muted); font-weight: 600; }
     .sep-tied { color: var(--red, #e0605e); font-weight: 600; }
+    .mp-mc-head[hidden] { display: none; }
     .mp-mc-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 18px 0 10px;
                   padding-top: 16px; border-top: 1px solid var(--line); }
     .mp-mc-title { font-size: .9rem; color: var(--text); }
@@ -62,6 +63,7 @@
     .mp-mc-foot { margin: 0; font-size: .78rem; color: var(--muted); line-height: 1.5; }
     .mp-tie-note { margin: 0 0 10px; font-size: .84rem; color: var(--muted); line-height: 1.5; }
     .mp-why-dial { grid-column: 1 / -1; font-style: normal; font-size: .8rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+    .mp-mix { display: block; font-size: .74rem; color: var(--faint); margin-top: 3px; font-variant-numeric: tabular-nums; }
     .mp-range-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; margin-bottom: 13px; }
     .mp-range-row > span { font-size: .93rem; color: var(--text); }
     .mp-range-row > output { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -100,7 +102,8 @@
     .mp-bar { display: block; height: 4px; border-radius: 2px; background: var(--line-bright); margin-top: 8px; overflow: hidden; }
     .mp-bar > i { display: block; height: 100%; border-radius: 2px; background: var(--green); }
     .mp-score { font-size: 1.02rem; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
-    .mp-empty { color: var(--muted); padding: 18px 0; }
+    .mp-empty { color: var(--muted); padding: 18px 0; line-height: 1.6; }
+    .mp-gap { display: block; font-size: .78rem; color: var(--faint); margin-top: 4px; line-height: 1.5; }
     .mp-method { margin: 0 0 12px; }
     .mp-method > summary { cursor: pointer; color: var(--muted); font-size: .84rem; padding: 3px 0; }
     .mp-method > summary:hover { color: var(--text); }
@@ -169,10 +172,13 @@
             <ol>
               <li><b>Three sources, and a model is listed only if all three scored it.</b> LiveBench 2026-06-25 gives seven category scores and cost per successful task. Artificial Analysis gives an intelligence index, cost, output speed and time to first token. Agent Arena gives four session signals from 1.4 million real sessions. That rule is the whole relevance filter: it keeps the list to models people actually choose between, and it means every row is measured the same way.</li>
               <li><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares shown next to the dials add to 100. Only open weights is a filter, because a model either ships its weights or it does not.</li>
+              <li><b>A benchmark counts for what its evidence will bear, not for what it claims.</b> Every dial is built from several figures, and the weight written against each one says how much it should matter for that job. That is an editorial call. Whether the figure can answer at all is not, so it is measured: how much of the field published it, and how far apart the top five actually are on it. Multiply the two and a thin or finished benchmark counts for a fraction of a well covered one that still separates the leaders. The effect is visible under each dial, and it is not always what the written weights suggest. Looking at images is 94 percent MMMU Pro and 6 percent Arena Vision, because MMMU Pro has fifteen of the 23 models against Arena Vision's four. Answering fast is two thirds output speed, because time to first token has a top-five spread of 0.3 points and cannot rank anything. The same two numbers are computed for all 39 figures. Nothing is tuned per benchmark.</li>
               <li><b>Scores are percentiles across the models that published that number</b>, not the raw benchmark values, so a 90 means near the top of this field rather than 90%.</li>
               <li><b>One row per model, at its best published setting.</b> The leaderboards disagree about which reasoning effort to publish: LiveBench scored Claude Fable 5 at max effort, Artificial Analysis scored its default. Nothing is ever copied from one setting to another; the row simply carries what each source actually measured.</li>
               <li><b>No leaderboard composite is imported, and that now includes the two that were.</b> Arena's Net Improvement is the number its own rank is built from, so copying it would replay their ranking instead of building one. LiveBench's overall and Artificial Analysis's intelligence index are composites too, and both used to feed the score while their own sub-scores were also counted here, so a model strong at reasoning earned it twice. Both are gone. Every factor is built from individual published figures. Arena's Tool Hallucination column stays out for a different reason: one value fills fifteen of 44 rows and all ten places of its own top-ten list, which is a placeholder rather than a measurement.</li>
-            <li><b>Thirteen factors, and all three leaderboards feed them.</b> Artificial Analysis publishes eighteen individual benchmarks next to its index, and the index was the only thing read here until 1 August 2026. Seven of those benchmarks are now in: non-hallucination rate, Terminal-Bench Hard, GDPval real-world work, ITBench incident response, long-context reasoning, Humanity's Last Exam and CritPt physics. Twenty-four of the twenty-six figures loaded now feed the score. The two that do not are the two composites.</li>
+            <li><b>Sixteen factors, and all three leaderboards feed them.</b> Artificial Analysis publishes sixteen individual benchmarks next to its index, and the index was the only thing read here until 1 August 2026. All sixteen are now in, including the eight added on 2 August: Terminal-Bench v2.1, tau-2 Telecom and tau-3 Banking tool use, Omniscience knowledge, GPQA Diamond, SciCode, IFBench and APEX agentic office work, plus MMMU Pro visual reasoning. Thirty-seven of the thirty-nine figures loaded now feed the score. The two that do not are the two composites.</li>
+            <li><b>Not every model is measured on every factor, and the gap runs one way.</b> A model is scored across the figures it published, which quietly rewards not publishing: a model with no vision score skips vision, while one that posted a weak vision score carries it. That is how a partly measured model can outrank a fully measured one. Two guards, both visible. A model needs published figures covering 70 percent of the weight you set or it is not ranked at all, so nothing is ever scored on a fraction of the question. And any row not measured on everything you asked for says which factors it missed and what share of your question its score actually covers. Each dial also prints how much of the field its figures cover, because a thin benchmark and a saturated one fail differently and only the second was labeled before.</li>
+            <li><b>Arena's four boards are thin, so vision does not rest on one.</b> Arena Vision and Arena Document carry four of the 23 models each and Arena Text three, and none of the three has a single open-weights entry. Asking for vision with open weights on therefore used to return an empty list with no explanation. Vision now leads on Artificial Analysis's MMMU Pro, which covers fifteen models including three open-weights ones, with Arena Vision behind it at lower weight. Reading documents still rests on Arena Document alone, so it stays thin and says so, and the empty state now names whichever factor emptied the list instead of guessing.</li>
             <li><b>Most benchmarks are saturated, and each factor says whether it can separate the leaders.</b> Across the top five models GPQA Diamond spans a single point, long-context reasoning one, Terminal-Bench v2.1 four, SciCode four, time to first token zero. Those cannot rank a frontier that has already maxed them out, and a score leaning on them is ranking noise with a decimal point on it. Each dial carries its own frontier spread, computed from the loaded data, and reads separates, barely separates, or cannot separate. Ask for something in that last group and the page says the order is inside measurement noise rather than letting a one-point gap read as a verdict.</li>
             <li><b>Hallucination is the widest gap at the frontier, so it is its own factor.</b> Eighteen points of spread across the top five, wider than any coding, reasoning or agentic figure here. This is Artificial Analysis's measured non-hallucination rate, not Arena's Tool Hallucination column, which stays out because one value fills fifteen of its 44 rows.</li>
               <li><b>Arena prints its signals with the minus signs stripped.</b> Read as printed, the worst-ranked model looks like the best at recovering from a failed command. Each signal's own top-ten list gives a threshold that recovers the sign, and that is done in <code>data/arena-agent.json</code> before anything is scored.</li>
@@ -180,7 +186,7 @@
             </ol>
           </details>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
-          <div class="mp-mc-head">
+          <div class="mp-mc-head" id="mpMcHead">
             <b class="mp-mc-title">Across 1,000 runs</b>
             <span class="mp-mc-why">The same weights as the ranking below, but every figure redrawn from its published error each time. The order below is one draw; this is the distribution it came from.</span>
           </div>
@@ -240,7 +246,7 @@
       </nav>
     </div>
   </footer>
-  <script>window.__MP__={"metrics":["overall","reasoning","coding","agentic","math","data","language","ifollow","costPerSuccess","intelligence","costPerTask","tps","ttft","total","confirmed","praise","steer","bash","context","nonhallu","tbhard","gdpval","itbench","lcr","hle","critpt","atext","awebdev","avision","adoc"],"models":[{"n":"Claude Fable 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":3.15,"ttft":89.02,"tps":66,"solid":true,"v":[100.0,93.7,100.0,93.6,99.1,100.0,100.0,85.5,0.0,96.3,0.0,9.5,53.0,53.0,79.0,97.2,100.0,100.0,96.5,50.0,91.7,86.7,0,70.6,100.0,90.6,100.0,41.4,100.0,61.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,12.2,18.1,16.1,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,7.0,25,22.0]},{"n":"GPT-5.6 Sol","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":1.86,"ttft":133.04,"tps":63,"solid":true,"v":[90.3,100.0,88.2,80.7,100.0,97.4,85.4,68.0,70.3,92.6,41.3,8.6,29.5,29.1,74.3,91.4,84.1,81.6,96.5,6.4,100.0,86.7,100.0,94.1,85.7,100.0,0,33.6,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,9.5,14.1,11.1,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,7.0,8.0,8.0]},{"n":"Claude Opus 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":2.34,"ttft":92.02,"tps":54,"solid":true,"v":[86.0,98.4,74.2,100.0,97.8,78.4,90.3,32.9,52.0,100.0,26.0,5.8,51.4,50.4,100.0,100.0,55.5,96.8,96.5,56.4,0,100.0,0,70.6,100.0,90.6,10.5,100.0,17.4,100.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,13.5,23.1,26.0,2.2,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,11.7,25,25]},{"n":"Kimi K3","t":null,"lab":"Moonshot","open":true,"ctx":1050,"cost":0.86,"ttft":3.94,"tps":35,"solid":true,"v":[81.6,96.8,74.2,93.6,47.6,93.4,74.8,66.2,76.7,85.2,73.4,0.0,98.6,64.3,90.4,81.1,87.0,71.7,100.0,55.1,0,80.0,69.2,100.0,78.6,71.9,0,77.3,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.1,9.8,7.9,2.0,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,9.4,8.0,8.0]},{"n":"GPT-5.6 Terra","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":0.73,"ttft":164.36,"tps":126,"solid":true,"v":[75.4,96.5,56.2,77.9,94.2,95.6,62.1,36.4,76.4,77.8,77.6,28.0,12.7,14.3,50.4,51.2,61.4,79.6,96.5,11.5,77.8,68.9,80.8,94.1,73.8,93.8,0,0,0,0.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.0,11.5,10.3,2.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,25]},{"n":"Gemini 3.1 Pro Preview","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":24.79,"tps":122,"solid":true,"v":[71.0,75.6,46.6,54.8,76.9,92.7,74.3,100.0,81.0,44.4,90.1,26.8,87.4,89.5,57.2,43.7,57.8,85.0,96.5,56.4,66.7,0.0,0.0,88.2,81.0,56.2,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.4,5.1,4.4,2.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Claude Sonnet 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":1.72,"ttft":188.06,"tps":74,"solid":true,"v":[66.2,90.5,70.2,87.6,85.3,67.8,23.8,33.3,65.6,70.4,45.8,12.0,0.0,0.0,72.4,78.0,75.2,87.7,96.5,73.1,0,71.1,0,76.5,69.0,53.1,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,11.4,17.4,14.7,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Grok 4.5","t":null,"lab":"SpaceXAI","open":false,"ctx":500,"cost":0.44,"ttft":8.01,"tps":56,"solid":true,"v":[65.2,85.7,2.2,81.4,76.0,72.5,61.7,66.7,92.7,74.1,86.9,6.5,96.4,96.0,62.9,53.9,68.8,87.9,47.4,51.3,0,62.2,0,58.8,69.0,46.9,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,8.5,10.9,9.1,2.4,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Muse Spark 1.1","t":null,"lab":"Meta","open":false,"ctx":1050,"cost":0.29,"ttft":2.7,"tps":105,"solid":true,"v":[62.8,87.3,50.6,85.7,59.6,70.7,20.4,58.3,87.6,63.0,91.7,21.5,99.3,90.8,65.7,51.4,67.4,69.0,100.0,71.8,0,46.7,0,29.4,81.0,46.9,0.0,0,0.0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.8,5.1,5.0,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,8.0,25,8.0]},{"n":"Gemini 3.5 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.69,"ttft":24.33,"tps":171,"solid":true,"v":[59.4,69.2,56.2,65.3,64.4,42.9,70.4,84.6,83.6,59.3,78.8,41.8,87.7,90.4,59.9,49.0,52.2,53.7,96.5,42.3,30.6,42.2,38.5,64.7,71.4,40.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,5.3,5.7,5.4,3.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"GPT-5.6 Luna","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":0.07,"ttft":121.89,"tps":172,"solid":true,"v":[54.6,80.6,82.6,64.0,60.0,90.8,12.1,16.7,89.2,63.0,98.7,42.2,35.4,37.8,50.4,51.8,50.8,88.0,96.5,5.1,0,68.9,38.5,94.1,61.9,65.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,11.3,13.9,12.3,2.4,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Gemini 3.6 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.56,"ttft":15.11,"tps":220,"solid":true,"v":[54.6,79.0,54.5,53.3,56.4,35.9,67.0,83.8,84.6,59.3,83.0,56.9,92.6,95.7,49.9,55.1,58.6,46.8,96.5,51.3,0,51.1,0,70.6,64.3,34.4,0,0,26.1,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,18.4,19.4,22.5,6.1,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,25,8.0]},{"n":"GLM-5.2","t":null,"lab":"Z.ai","open":true,"ctx":1000,"cost":0.69,"ttft":1.53,"tps":107,"solid":true,"v":[52.7,58.4,64.6,71.3,71.6,75.1,29.6,26.3,88.1,63.0,78.8,22.2,99.9,91.7,75.6,72.6,72.1,65.2,96.5,84.6,58.3,60.0,50.0,76.5,69.0,65.6,0,7.0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,5.6,7.9,6.1,2.1,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,7.0,8.0,8.0]},{"n":"Qwen3.7 Max","t":null,"lab":"Alibaba","open":false,"ctx":1000,"cost":1.28,"ttft":2.45,"tps":199,"solid":true,"v":[52.2,73.3,33.7,53.7,51.1,68.1,46.6,77.6,88.3,44.4,59.9,50.5,99.4,95.9,55.1,54.4,49.1,62.7,96.5,91.0,58.3,35.6,46.2,64.7,64.3,40.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.8,7.0,6.3,3.2,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Claude Sonnet 4.6","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":1.33,"tps":43,"solid":true,"v":[51.7,78.1,62.4,51.6,59.1,90.5,29.1,30.3,79.6,0.0,0.0,2.5,100.0,98.1,49.7,42.8,57.8,90.1,96.5,43.6,33.3,0,0,5.9,0.0,3.1,0,0,0,9.8],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.9,9.0,8.4,2.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,14.6]},{"n":"Inkling","t":null,"lab":"Thinking Machines","open":true,"ctx":1000,"cost":null,"ttft":1.87,"tps":86,"solid":true,"v":[46.4,57.5,15.7,66.2,65.3,71.8,16.5,60.5,84.7,25.9,0.0,15.7,99.7,88.4,29.2,4.3,0.0,68.0,96.5,39.7,0,31.1,0,29.4,45.2,15.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.8,5.9,6.5,2.0,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"DeepSeek V4 Pro","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.05,"ttft":1.79,"tps":62,"solid":true,"v":[44.9,71.4,10.1,51.6,75.6,78.0,38.8,26.8,97.6,37.0,99.4,8.3,99.7,61.7,59.9,53.2,49.8,63.4,96.5,0.0,44.4,37.8,30.8,47.1,59.5,40.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.9,7.0,6.2,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Kimi K2.6","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":null,"ttft":2.81,"tps":43,"solid":true,"v":[39.6,61.0,58.4,60.8,47.1,43.6,24.3,35.5,89.2,3.7,0.0,2.5,99.2,97.3,58.4,44.4,67.9,70.5,0.0,65.4,22.2,0,0,0.0,16.7,3.1,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.6,14.4,13.5,7.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Kimi K2.7 Code","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":0.22,"ttft":2.82,"tps":50,"solid":true,"v":[29.5,71.7,32.6,58.2,26.2,34.8,37.9,0.0,94.1,29.6,93.9,4.6,99.2,74.0,63.1,48.7,63.1,58.5,0.0,17.9,41.7,24.4,0,47.1,52.4,31.2,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.4,14.8,13.1,5.5,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"MiniMax M3","t":null,"lab":"MiniMax","open":true,"ctx":1000,"cost":0.14,"ttft":1.32,"tps":70,"solid":true,"v":[24.2,45.4,0.0,47.5,14.2,84.2,32.5,5.3,96.9,37.0,96.5,10.8,100.0,85.2,65.8,61.6,66.5,67.1,96.5,100.0,33.3,48.9,0,94.1,61.9,12.5,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.0,6.8,6.6,1.8,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"DeepSeek V4 Flash","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.03,"ttft":null,"tps":null,"solid":true,"v":[15.5,33.0,5.6,40.9,26.2,54.2,0.0,29.8,100.0,59.3,100.0,0.0,0.0,0.0,63.6,60.1,64.2,57.9,96.5,12.8,0,66.7,0,47.1,61.9,53.1,0,0.0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,0,1,1,1,0,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.2,6.9,6.4,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,14.1,8.0,8.0]},{"n":"Gemini 3.5 Flash-Lite","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.1,"ttft":8.07,"tps":360,"solid":true,"v":[7.7,0.0,44.4,57.4,0.0,0.0,8.3,47.8,96.3,7.4,97.8,100.0,96.4,100.0,0.0,0.0,71.6,87.4,96.5,76.9,0,20.0,0,23.5,16.7,0.0,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,19.6,15.5,20.8,9.7,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]},{"n":"Grok 4.3","t":null,"lab":"SpaceXAI","open":false,"ctx":1000,"cost":null,"ttft":9.84,"tps":133,"solid":true,"v":[0.0,33.7,9.6,0.0,47.1,9.5,17.0,28.5,96.8,7.4,0.0,30.2,95.4,97.8,23.8,7.8,76.2,0.0,96.5,100.0,0.0,0,0,41.2,40.5,15.6,0,0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.8,4.2,4.4,8.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0]}],"sources":{},"ci_note":"Arena publishes a confidence interval on each of its four session signals, converted to the normalized scale here. LiveBench and Artificial Analysis publish point figures with no interval, so those carry an assumed 1.5 points of absolute benchmark uncertainty, converted through each metric's own raw range. That makes the assumption honest about clustering: the same 1.5 points is worth 4.8 normalized points on reasoning, where models are spread out, and 8.8 on long-context reasoning, where they are bunched. It is still an assumption and is the weakest input to the simulation."};</script>
+  <script>window.__MP__={"metrics":["overall","reasoning","coding","agentic","math","data","language","ifollow","costPerSuccess","intelligence","costPerTask","tps","ttft","total","confirmed","praise","steer","bash","context","nonhallu","tbhard","gdpval","itbench","lcr","hle","critpt","atext","awebdev","avision","adoc","mmmu","tbv2","tau2","tau3","omni","gpqa","scicode","ifbench","apex"],"models":[{"n":"Claude Fable 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":3.15,"ttft":89.02,"tps":66,"solid":true,"v":[100.0,93.7,100.0,93.6,99.1,100.0,100.0,85.5,0.0,96.3,0.0,9.5,53.0,53.0,79.0,97.2,100.0,100.0,96.5,50.0,91.7,86.7,0,70.6,100.0,90.6,100.0,41.4,100.0,61.0,0,88.6,100.0,72.7,100.0,93.3,100.0,51.2,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,12.2,18.1,16.1,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,7.0,25,22.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"GPT-5.6 Sol","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":1.86,"ttft":133.04,"tps":63,"solid":true,"v":[90.3,100.0,88.2,80.7,100.0,97.4,85.4,68.0,70.3,92.6,41.3,8.6,29.5,29.1,74.3,91.4,84.1,81.6,96.5,6.4,100.0,86.7,100.0,94.1,85.7,100.0,0,33.6,0,0,87.5,97.1,30.0,100.0,95.7,100.0,81.0,75.6,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,9.5,14.1,11.1,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,7.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Claude Opus 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":2.34,"ttft":92.02,"tps":54,"solid":true,"v":[86.0,98.4,74.2,100.0,97.8,78.4,90.3,32.9,52.0,100.0,26.0,5.8,51.4,50.4,100.0,100.0,55.5,96.8,96.5,56.4,0,100.0,0,70.6,100.0,90.6,10.5,100.0,17.4,100.0,100.0,100.0,0,86.4,84.8,93.3,81.0,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,13.5,23.1,26.0,2.2,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,11.7,25,25,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Kimi K3","t":null,"lab":"Moonshot","open":true,"ctx":1050,"cost":0.86,"ttft":3.94,"tps":35,"solid":true,"v":[81.6,96.8,74.2,93.6,47.6,93.4,74.8,66.2,76.7,85.2,73.4,0.0,98.6,64.3,90.4,81.1,87.0,71.7,100.0,55.1,0,80.0,69.2,100.0,78.6,71.9,0,77.3,0,0,75.0,88.6,0,100.0,67.4,100.0,95.2,0,73.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,0,1,1,0,1,1,1,1,0,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.1,9.8,7.9,2.0,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,9.4,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"GPT-5.6 Terra","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":0.73,"ttft":164.36,"tps":126,"solid":true,"v":[75.4,96.5,56.2,77.9,94.2,95.6,62.1,36.4,76.4,77.8,77.6,28.0,12.7,14.3,50.4,51.2,61.4,79.6,96.5,11.5,77.8,68.9,80.8,94.1,73.8,93.8,0,0,0,0.0,75.0,97.1,35.0,95.5,67.4,93.3,71.4,70.7,65.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.0,11.5,10.3,2.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,25,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Gemini 3.1 Pro Preview","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":24.79,"tps":122,"solid":true,"v":[71.0,75.6,46.6,54.8,76.9,92.7,74.3,100.0,81.0,44.4,90.1,26.8,87.4,89.5,57.2,43.7,57.8,85.0,96.5,56.4,66.7,0.0,0.0,88.2,81.0,56.2,0,0,0,0,81.2,57.1,85.0,22.7,87.0,100.0,95.2,85.4,34.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.4,5.1,4.4,2.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Claude Sonnet 5","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":1.72,"ttft":188.06,"tps":74,"solid":true,"v":[66.2,90.5,70.2,87.6,85.3,67.8,23.8,33.3,65.6,70.4,45.8,12.0,0.0,0.0,72.4,78.0,75.2,87.7,96.5,73.1,0,71.1,0,76.5,69.0,53.1,0,0,0,0,50.0,77.1,0,77.3,50.0,80.0,71.4,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,11.4,17.4,14.7,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Grok 4.5","t":null,"lab":"SpaceXAI","open":false,"ctx":500,"cost":0.44,"ttft":8.01,"tps":56,"solid":true,"v":[65.2,85.7,2.2,81.4,76.0,72.5,61.7,66.7,92.7,74.1,86.9,6.5,96.4,96.0,62.9,53.9,68.8,87.9,47.4,51.3,0,62.2,0,58.8,69.0,46.9,0,0,0,0,68.8,80.0,0,100.0,80.4,93.3,71.4,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,8.5,10.9,9.1,2.4,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Muse Spark 1.1","t":null,"lab":"Meta","open":false,"ctx":1050,"cost":0.29,"ttft":2.7,"tps":105,"solid":true,"v":[62.8,87.3,50.6,85.7,59.6,70.7,20.4,58.3,87.6,63.0,91.7,21.5,99.3,90.8,65.7,51.4,67.4,69.0,100.0,71.8,0,46.7,0,29.4,81.0,46.9,0.0,0,0.0,0,0,68.6,0,63.6,56.5,73.3,90.5,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,0,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.8,5.1,5.0,2.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,25,8.0,25,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Gemini 3.5 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.69,"ttft":24.33,"tps":171,"solid":true,"v":[59.4,69.2,56.2,65.3,64.4,42.9,70.4,84.6,83.6,59.3,78.8,41.8,87.7,90.4,59.9,49.0,52.2,53.7,96.5,42.3,30.6,42.2,38.5,64.7,71.4,40.6,0,0,0,0,93.8,71.4,80.0,63.6,80.4,86.7,66.7,82.9,100.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,5.3,5.7,5.4,3.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"GPT-5.6 Luna","t":null,"lab":"OpenAI","open":false,"ctx":1000,"cost":0.07,"ttft":121.89,"tps":172,"solid":true,"v":[54.6,80.6,82.6,64.0,60.0,90.8,12.1,16.7,89.2,63.0,98.7,42.2,35.4,37.8,50.4,51.8,50.8,88.0,96.5,5.1,0,68.9,38.5,94.1,61.9,65.6,0,0,0,0,62.5,77.1,0,72.7,58.7,80.0,66.7,0,52.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,1,1,0,1,1,1,1,0,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,11.3,13.9,12.3,2.4,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Gemini 3.6 Flash","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.56,"ttft":15.11,"tps":220,"solid":true,"v":[54.6,79.0,54.5,53.3,56.4,35.9,67.0,83.8,84.6,59.3,83.0,56.9,92.6,95.7,49.9,55.1,58.6,46.8,96.5,51.3,0,51.1,0,70.6,64.3,34.4,0,0,26.1,0,87.5,68.6,0,63.6,76.1,93.3,66.7,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,1,0,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,18.4,19.4,22.5,6.1,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,25,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"GLM-5.2","t":null,"lab":"Z.ai","open":true,"ctx":1000,"cost":0.69,"ttft":1.53,"tps":107,"solid":true,"v":[52.7,58.4,64.6,71.3,71.6,75.1,29.6,26.3,88.1,63.0,78.8,22.2,99.9,91.7,75.6,72.6,72.1,65.2,96.5,84.6,58.3,60.0,50.0,76.5,69.0,65.6,0,7.0,0,0,0,68.6,100.0,72.7,21.7,66.7,52.4,75.6,43.5],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,5.6,7.9,6.1,2.1,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,7.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Qwen3.7 Max","t":null,"lab":"Alibaba","open":false,"ctx":1000,"cost":1.28,"ttft":2.45,"tps":199,"solid":true,"v":[52.2,73.3,33.7,53.7,51.1,68.1,46.6,77.6,88.3,44.4,59.9,50.5,99.4,95.9,55.1,54.4,49.1,62.7,96.5,91.0,58.3,35.6,46.2,64.7,64.3,40.6,0,0,0,0,0,60.0,80.0,0.0,32.6,86.7,47.6,95.1,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.8,7.0,6.3,3.2,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Claude Sonnet 4.6","t":null,"lab":"Anthropic","open":false,"ctx":1000,"cost":null,"ttft":1.33,"tps":43,"solid":true,"v":[51.7,78.1,62.4,51.6,59.1,90.5,29.1,30.3,79.6,0.0,0.0,2.5,100.0,98.1,49.7,42.8,57.8,90.1,96.5,43.6,33.3,0,0,5.9,0.0,3.1,0,0,0,9.8,0.0,0,0.0,0,45.7,6.7,23.8,0.0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,1,1,0,1,0,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.9,9.0,8.4,2.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,14.6,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Inkling","t":null,"lab":"Thinking Machines","open":true,"ctx":1000,"cost":null,"ttft":1.87,"tps":86,"solid":true,"v":[46.4,57.5,15.7,66.2,65.3,71.8,16.5,60.5,84.7,25.9,0.0,15.7,99.7,88.4,29.2,4.3,0.0,68.0,96.5,39.7,0,31.1,0,29.4,45.2,15.6,0,0,0,0,25.0,2.9,0,59.1,54.3,53.3,33.3,0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.8,5.9,6.5,2.0,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"DeepSeek V4 Pro","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.05,"ttft":1.79,"tps":62,"solid":true,"v":[44.9,71.4,10.1,51.6,75.6,78.0,38.8,26.8,97.6,37.0,99.4,8.3,99.7,61.7,59.9,53.2,49.8,63.4,96.5,0.0,44.4,37.8,30.8,47.1,59.5,40.6,0,0,0,0,0,28.6,85.0,68.2,60.9,66.7,52.4,82.9,0.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,6.9,7.0,6.2,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Kimi K2.6","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":null,"ttft":2.81,"tps":43,"solid":true,"v":[39.6,61.0,58.4,60.8,47.1,43.6,24.3,35.5,89.2,3.7,0.0,2.5,99.2,97.3,58.4,44.4,67.9,70.5,0.0,65.4,22.2,0,0,0.0,16.7,3.1,0,0,0,0,0,0,75.0,0,17.4,0.0,0.0,4.9,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.6,14.4,13.5,7.6,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Kimi K2.7 Code","t":null,"lab":"Moonshot","open":true,"ctx":256,"cost":0.22,"ttft":2.82,"tps":50,"solid":true,"v":[29.5,71.7,32.6,58.2,26.2,34.8,37.9,0.0,94.1,29.6,93.9,4.6,99.2,74.0,63.1,48.7,63.1,58.5,0.0,17.9,41.7,24.4,0,47.1,52.4,31.2,0,0,0,0,0,37.1,55.0,31.8,52.2,73.3,38.1,51.2,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,10.4,14.8,13.1,5.5,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"MiniMax M3","t":null,"lab":"MiniMax","open":true,"ctx":1000,"cost":0.14,"ttft":1.32,"tps":70,"solid":true,"v":[24.2,45.4,0.0,47.5,14.2,84.2,32.5,5.3,96.9,37.0,96.5,10.8,100.0,85.2,65.8,61.6,66.5,67.1,96.5,100.0,33.3,48.9,0,94.1,61.9,12.5,0,0,0,0,62.5,31.4,50.0,9.1,0.0,93.3,28.6,100.0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.0,6.8,6.6,1.8,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"DeepSeek V4 Flash","t":null,"lab":"DeepSeek","open":true,"ctx":1000,"cost":0.03,"ttft":null,"tps":null,"solid":true,"v":[15.5,33.0,5.6,40.9,26.2,54.2,0.0,29.8,100.0,59.3,100.0,0.0,0.0,0.0,63.6,60.1,64.2,57.9,96.5,12.8,0,66.7,0,47.1,61.9,53.1,0,0.0,0,0,0,71.4,0,90.9,47.8,80.0,52.4,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,1,0,1,1,1,0,1,0,0,0,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,7.2,6.9,6.4,1.9,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,14.1,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Gemini 3.5 Flash-Lite","t":null,"lab":"Google","open":false,"ctx":1000,"cost":0.1,"ttft":8.07,"tps":360,"solid":true,"v":[7.7,0.0,44.4,57.4,0.0,0.0,8.3,47.8,96.3,7.4,97.8,100.0,96.4,100.0,0.0,0.0,71.6,87.4,96.5,76.9,0,20.0,0,23.5,16.7,0.0,0,0,0,0,62.5,0.0,0,22.7,32.6,33.3,9.5,0,0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,1,1,0,1,1,1,1,0,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,19.6,15.5,20.8,9.7,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]},{"n":"Grok 4.3","t":null,"lab":"SpaceXAI","open":false,"ctx":1000,"cost":null,"ttft":9.84,"tps":133,"solid":true,"v":[0.0,33.7,9.6,0.0,47.1,9.5,17.0,28.5,96.8,7.4,0.0,30.2,95.4,97.8,23.8,7.8,76.2,0.0,96.5,100.0,0.0,0,0,41.2,40.5,15.6,0,0,0,0,43.8,0,60.0,0,28.3,66.7,28.6,100.0,0],"a":[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,0,0,1,0,1,0,1,1,1,1,0],"ci":[6.0,4.8,8.4,3.2,6.7,5.3,5.3,5.8,3.5,6.0,6.0,6.0,6.0,6.0,4.8,4.2,4.4,8.3,6.0,1.9,4.2,3.3,5.8,8.8,3.6,4.7,8.0,8.0,8.0,8.0,9.4,4.3,7.5,6.8,3.3,10.0,7.1,3.7,6.5]}],"sources":{},"ci_note":"Arena publishes a confidence interval on each of its four session signals, converted to the normalized scale here. LiveBench and Artificial Analysis publish point figures with no interval, so those carry an assumed 1.5 points of absolute benchmark uncertainty, converted through each metric's own raw range. That makes the assumption honest about clustering: the same 1.5 points is worth 4.8 normalized points on reasoning, where models are spread out, and 8.8 on long-context reasoning, where they are bunched. It is still an assumption and is the weakest input to the simulation."};</script>
   <script>
 (function () {
   var D = window.__MP__, M = D.models, MI = D.metrics;
@@ -275,39 +281,52 @@
   // that still separate the frontier are the hard agentic ones and, by the
   // widest margin of anything here, hallucination.
   var DIALS = [
-    { k: 'reason',  t: 'Thinking through hard problems', w: { hle: 3, reasoning: 2, critpt: 2, math: 1, data: 1 },
-      why: "Humanity's Last Exam and CritPt physics, where the frontier has not saturated yet." },
-    { k: 'honest',  t: 'Not making things up', w: { nonhallu: 3 },
-      why: 'Measured non-hallucination rate. The single widest gap between frontier models.' },
-    { k: 'code',    t: 'Writing code', w: { coding: 3, scicode: 1 },
-      why: 'Writes and fixes code that actually runs.' },
+    { k: 'reason',  t: 'Thinking through hard problems', w: { hle: 3, critpt: 3, reasoning: 2, math: 1, data: 1, gpqa: 1 },
+      why: "Humanity's Last Exam and CritPt physics carry it, where the frontier has not saturated. GPQA Diamond is in at low weight because it has." },
+    { k: 'honest',  t: 'Not making things up', w: { nonhallu: 3, omni: 1 },
+      why: 'Measured non-hallucination rate, against how much it actually knows. The single widest gap between frontier models.' },
+    { k: 'code',    t: 'Writing code', w: { coding: 3, scicode: 2 },
+      why: 'LiveBench coding and SciCode. Writes and fixes code that actually runs.' },
     { k: 'webdev',  t: 'Building an interface', w: { awebdev: 3 },
       why: 'Arena WebDev, where people vote on the thing it actually built.' },
-    { k: 'terminal',t: 'Hard terminal work', w: { tbhard: 3, agentic: 1 },
-      why: 'Terminal-Bench Hard, the agentic coding set the frontier has not maxed out.' },
-    { k: 'agent',   t: 'Finishing a job on its own', w: { agentic: 2, confirmed: 2, gdpval: 2 },
-      why: 'Benchmark score, real-world work tasks, and how often users agree it finished.' },
+    { k: 'terminal',t: 'Hard terminal work', w: { tbhard: 3, tbv2: 2, agentic: 1 },
+      why: 'Terminal-Bench Hard leads, since v2.1 is nearly maxed out at the frontier.' },
+    { k: 'agent',   t: 'Finishing a job on its own', w: { gdpval: 3, apex: 3, tau2: 2, tau3: 2, confirmed: 2, agentic: 1 },
+      why: 'Real-world work tasks and office work first, then tool use, then whether users agree it finished.' },
     { k: 'ops',     t: 'Debugging live systems', w: { itbench: 3 },
       why: 'Root-cause analysis on real Kubernetes incidents.' },
-    { k: 'steer',   t: 'Taking correction', w: { steer: 3, ifollow: 1 },
+    { k: 'steer',   t: 'Taking correction', w: { steer: 3, ifbench: 2, ifollow: 2 },
       why: 'You push back mid-task and it lands the change.' },
     { k: 'recover', t: 'Digging itself out', w: { bash: 3 },
       why: 'A command fails. How fast it recovers instead of thrashing.' },
-    { k: 'write',   t: 'Writing and editing', w: { language: 3, ifollow: 1, atext: 1 },
+    { k: 'write',   t: 'Writing and editing', w: { language: 3, atext: 2, ifollow: 1 },
       why: 'Writes English a person wants to read.' },
     { k: 'liked',   t: 'People are glad they used it', w: { praise: 3 },
       why: 'Positive reactions against negative ones, across 1.4 million sessions.' },
     { k: 'cheap',   t: 'Costing little', w: { costPerSuccess: 3, costPerTask: 2 },
       why: 'Dollars per finished task. A cheap model that needs three tries is not cheap.' },
-    { k: 'fast',    t: 'Answering fast', w: { ttft: 2, tps: 2, total: 1 },
+    { k: 'fast',    t: 'Answering fast', w: { tps: 2, ttft: 2, total: 1 },
       why: 'Time before it starts, and time until it is done.' },
     { k: 'docs',    t: 'Reading documents', w: { adoc: 3 },
       why: 'Arena Document, head-to-head on real documents.' },
-    { k: 'vision',  t: 'Looking at images', w: { avision: 3 },
-      why: 'Arena Vision, head-to-head on images.' },
+    { k: 'vision',  t: 'Looking at images', w: { mmmu: 3, avision: 2 },
+      why: 'MMMU Pro visual reasoning, plus Arena Vision head-to-head.' },
     { k: 'longctx', t: 'Working across a long context', w: { lcr: 3, context: 1 },
       why: 'Measured long-context reasoning, not the advertised window size.' }
   ];
+
+  // A dial pointing at a figure that was never loaded fails silently: the
+  // lookup returns undefined, the weight lands on a property instead of an
+  // index, and the dial quietly runs at a fraction of the strength the page
+  // says it has. "Writing code" carried a phantom scicode weight this way and
+  // ran at three quarters strength while its label read the full share.
+  // scripts/check-model-picker.py fails the build on this; the throw here is
+  // the second net, for data edited after that check runs.
+  DIALS.forEach(function (d) {
+    Object.keys(d.w).forEach(function (k) {
+      if (!(k in ix)) throw new Error('dial "' + d.k + '" references unknown metric "' + k + '"');
+    });
+  });
 
   var PRESETS = [
     { t: 'Everyday chat',   v: { write: 3, fast: 3, honest: 2, liked: 2 } },
@@ -332,7 +351,11 @@
     language: 'LiveBench', ifollow: 'LiveBench', costPerSuccess: 'LiveBench',
     intelligence: 'Artificial Analysis', costPerTask: 'Artificial Analysis',
     tps: 'Artificial Analysis', ttft: 'Artificial Analysis',
-    total: 'Artificial Analysis',
+    total: 'Artificial Analysis', mmmu: 'Artificial Analysis',
+    tbv2: 'Artificial Analysis', tau2: 'Artificial Analysis',
+    tau3: 'Artificial Analysis', omni: 'Artificial Analysis',
+    gpqa: 'Artificial Analysis', scicode: 'Artificial Analysis',
+    ifbench: 'Artificial Analysis', apex: 'Artificial Analysis',
     confirmed: 'Agent Arena', praise: 'Agent Arena', steer: 'Agent Arena',
     bash: 'Agent Arena'
   };
@@ -370,11 +393,84 @@
     return vals[0] - vals[FRONTIER_N - 1];
   }
 
-  function dialSeparation(d) {
-    var num = 0, den = 0;
-    for (var k in d.w) { num += frontierSpread(k) * d.w[k]; den += d.w[k]; }
-    return den ? num / den : 0;
+  // ---- How much a figure is allowed to count.
+  //
+  // The weights written next to each dial say how much a benchmark SHOULD
+  // matter for that job. They say nothing about whether the benchmark is in
+  // any shape to answer. Two failures decide that, and they are different:
+  //
+  //   Coverage. Arena Vision has four of the 23 models in it and no open
+  //   weights model at all. A percentile there ranks a model against three
+  //   others. MMMU Pro has fifteen. Same question, four times the evidence.
+  //
+  //   Separation. Time to first token has a top-five spread of 0.3 points and
+  //   GPQA Diamond 6.7. The frontier has finished with them. Ranking on a
+  //   figure everyone has maxed out is ranking noise with a decimal point.
+  //
+  // So the editorial weight is multiplied by what the data will actually bear,
+  // measured from the loaded figures rather than asserted. A thin or saturated
+  // benchmark still counts, at a fraction. A well covered one that still
+  // separates the leaders counts fully. Nothing is hand-tuned per metric: the
+  // same two numbers are computed for all 39.
+  var SEP_FULL = 15, SEP_FLOOR = 0.35;
+  var trustCache = {};
+
+  function metricTrust(k) {
+    if (k in trustCache) return trustCache[k];
+    var i = ix[k], n = 0;
+    M.forEach(function (m) { if (m.a[i]) n++; });
+    var sep = Math.max(SEP_FLOOR, Math.min(1, frontierSpread(k) / SEP_FULL));
+    return (trustCache[k] = (n / M.length) * sep);
   }
+
+  // What the dial is really made of once evidence quality is applied, so the
+  // label under it describes the mix that runs rather than the one written.
+  function dialMix(d) {
+    var keys = Object.keys(d.w), tot = 0;
+    var parts = keys.map(function (k) {
+      var e = d.w[k] * metricTrust(k); tot += e; return { k: k, e: e };
+    });
+    parts.forEach(function (p) { p.share = tot ? p.e / tot : 0; });
+    parts.sort(function (a, b) { return b.share - a.share; });
+    return { parts: parts, tot: tot };
+  }
+
+  function dialSeparation(d) {
+    var mix = dialMix(d), num = 0;
+    mix.parts.forEach(function (p) { num += frontierSpread(p.k) * p.share; });
+    return mix.tot ? num : 0;
+  }
+
+  // Frontier spread says whether a figure can tell the leaders apart. It says
+  // nothing about how many models were measured at all, and those are different
+  // failures: Arena Vision has four models in it, so its percentiles rank a
+  // model against three others and read the same as a figure covering the whole
+  // field. A dial measured on part of the field says so next to its label.
+  function dialCoverage(d) {
+    return M.filter(function (m) {
+      return Object.keys(d.w).some(function (k) { return m.a[ix[k]]; });
+    }).length;
+  }
+
+  // Plain names for the figures, so a dial can say what is actually driving it.
+  var FIG = {
+    overall: 'LiveBench overall', reasoning: 'LiveBench reasoning',
+    coding: 'LiveBench coding', agentic: 'LiveBench agentic coding',
+    math: 'LiveBench math', data: 'LiveBench data analysis',
+    language: 'LiveBench language', ifollow: 'LiveBench instruction following',
+    costPerSuccess: 'cost per successful task', intelligence: 'intelligence index',
+    costPerTask: 'cost per task', tps: 'output speed', ttft: 'time to first token',
+    total: 'total response time', confirmed: 'Arena task confirmed',
+    praise: 'Arena praise', steer: 'Arena steerability', bash: 'Arena command recovery',
+    context: 'advertised context window', nonhallu: 'non-hallucination rate',
+    tbhard: 'Terminal-Bench Hard', gdpval: 'GDPval real-world work',
+    itbench: 'ITBench incident response', lcr: 'long-context reasoning',
+    hle: "Humanity's Last Exam", critpt: 'CritPt physics', atext: 'Arena Text',
+    awebdev: 'Arena WebDev', avision: 'Arena Vision', adoc: 'Arena Document',
+    mmmu: 'MMMU Pro', tbv2: 'Terminal-Bench v2.1', tau2: 'tau-2 Telecom tool use',
+    tau3: 'tau-3 Banking tool use', omni: 'Omniscience knowledge',
+    gpqa: 'GPQA Diamond', scicode: 'SciCode', ifbench: 'IFBench', apex: 'APEX office work'
+  };
 
   function sepLabel(v) {
     return v >= 15 ? 'separates the leaders'
@@ -409,9 +505,20 @@
       l.className = 'mp-dial'; l.setAttribute('for', 'dial-' + d.k);
       var sep = dialSeparation(d);
       var cls = sep >= 15 ? 'sep-real' : sep >= 8 ? 'sep-weak' : 'sep-tied';
+      var cov = dialCoverage(d);
+      var covNote = cov < M.length
+        ? ' <b class="sep-tied">' + cov + ' of ' + M.length + ' models measured</b>' : '';
+      // What the dial actually leans on after evidence weighting, which is not
+      // always the figure with the biggest number written next to it.
+      var mix = dialMix(d), lead = mix.parts[0];
+      var mixNote = lead
+        ? '<span class="mp-mix">' + Math.round(lead.share * 100) + '% '
+          + FIG[lead.k] + (mix.parts.length > 1
+            ? ', then ' + FIG[mix.parts[1].k] : '') + '</span>'
+        : '';
       l.innerHTML = '<span>' + d.t + '</span><output id="out-' + d.k + '">off</output>' +
         '<em class="mp-why-dial">' + d.why +
-        ' <b class="' + cls + '">' + sepLabel(sep) + '</b></em>' +
+        ' <b class="' + cls + '">' + sepLabel(sep) + '</b>' + covNote + mixNote + '</em>' +
         '<input type="range" id="dial-' + d.k + '" min="0" max="4" step="1" value="0">';
       dw.appendChild(l);
       state[d.k] = 0;
@@ -468,7 +575,22 @@
       if (m.a[j]) { num += W[j] * m.v[j]; den += W[j]; }
     }
     if (den <= 0 || den / tot < MIN_COV) return null;
-    return num / den;
+    return { s: num / den, cov: den / tot };
+  }
+
+  // Which factors a model was never measured on. A model is scored across what
+  // it published, which quietly rewards not publishing: a model with no Arena
+  // Vision score skips vision entirely, while one that posted a weak vision
+  // score carries it. That is why a partly measured model can outrank a fully
+  // measured one here, so every row that was not scored on everything says so.
+  function unscored(m) {
+    var out = [];
+    DIALS.forEach(function (d) {
+      if (!state[d.k]) return;
+      var has = Object.keys(d.w).some(function (k) { return m.a[ix[k]]; });
+      if (!has) out.push(d.t.toLowerCase());
+    });
+    return out;
   }
 
   // Which dial this model is strongest and weakest on, so the number is
@@ -580,10 +702,16 @@
     var host = $('mpMonte');
     if (!host) return;
     var rows = runMonteCarlo();
+    var head = $('mpMcHead');
+    // With nothing to rank there is nothing to redraw a thousand times. Collapse
+    // the whole panel rather than repeating the reason the list is already
+    // giving, which read as a duplicated paragraph at phone width.
     if (!rows || !rows.length) {
-      host.innerHTML = '<p class="mp-tie-note">Turn a dial up first, then run it.</p>';
+      host.innerHTML = '';
+      if (head) head.hidden = true;
       return;
     }
+    if (head) head.hidden = false;
     var top = rows[0], second = rows[1];
     var verdict;
     if (top.pct >= 85) {
@@ -637,12 +765,49 @@
     DIALS.forEach(function (d) {
       var s = state[d.k]; if (!s) return;
       any = true;
-      var keys = Object.keys(d.w), sum = 0;
-      keys.forEach(function (m) { sum += d.w[m]; });
-      keys.forEach(function (m) { W[ix[m]] += s * d.w[m] / sum; });
+      // Share out this dial's strength by evidence-adjusted weight, so a dial
+      // contributes exactly its strength no matter how many figures it spans
+      // and no matter how thin any one of them is.
+      var mix = dialMix(d);
+      if (!mix.tot) return;
+      mix.parts.forEach(function (p) { W[ix[p.k]] += s * p.share; });
     });
     W.forEach(function (w) { tot += w; });
     return { W: W, tot: tot, any: any };
+  }
+
+  // Why the list came back empty, named rather than guessed at.
+  //
+  // "Nothing matches, turn up a second dial" was both vague and wrong. Two
+  // factors here, Arena Document and Arena Vision, have no open-weights entry
+  // at all, so asking for either one with open weights on can never return a
+  // model, and a second dial does not rescue it unless it outweighs the dead
+  // one by more than two to one. Say which factor emptied the list.
+  function tieNoteEl() { return $('mpTieNote'); }
+
+  function emptyReason(openOnly) {
+    var pool = M.filter(function (m) { return !openOnly || m.open; });
+    var dead = [];
+    DIALS.forEach(function (d) {
+      if (!state[d.k]) return;
+      var n = pool.filter(function (m) {
+        return Object.keys(d.w).some(function (k) { return m.a[ix[k]]; });
+      }).length;
+      if (!n) dead.push(d.t.toLowerCase());
+    });
+    var where = openOnly ? 'open-weights model' : 'model';
+    if (dead.length) {
+      return 'No ' + where + ' here has a published score for <b>' + dead.join('</b> or <b>')
+        + '</b>, so nothing can be ranked on '
+        + (dead.length > 1 ? 'those factors' : 'that factor') + '. Turn '
+        + (dead.length > 1 ? 'them' : 'it') + ' down to zero'
+        + (openOnly ? ', or turn off the open-weights requirement' : '') + '.';
+    }
+    return 'Every ' + where + ' here is missing too much of what you asked for. A model is '
+      + 'only scored when it has published figures covering at least 70 percent of the weight '
+      + 'you set, so it is never ranked on a fraction of the question. Turn down whichever '
+      + 'factor is the most thinly measured'
+      + (openOnly ? ', or turn off the open-weights requirement' : '') + '.';
   }
 
   function render() {
@@ -669,10 +834,15 @@
     var list = $('mpList'), empty = $('mpEmpty');
     list.textContent = '';
 
+    // Every exit from here reschedules the simulation. Leaving it out of the
+    // empty paths left the panel showing the last question's winner next to a
+    // list that had gone empty.
     if (!any) {
       $('mpCount').textContent = 'Ranking';
       empty.hidden = false;
       empty.textContent = 'Pick a job above, or turn up a dial. Nothing is scored until something matters.';
+      if (tieNoteEl()) tieNoteEl().hidden = true;
+      scheduleMonteCarlo();
       return;
     }
 
@@ -681,13 +851,15 @@
       if (openOnly && !m.open) return;
       var s = score(m, W, tot);
       if (s === null) return;
-      rows.push({ m: m, s: s });
+      rows.push({ m: m, s: s.s, cov: s.cov });
     });
 
     if (!rows.length) {
-      $('mpCount').textContent = 'Ranking';
+      $('mpCount').textContent = 'Nothing scored';
       empty.hidden = false;
-      empty.textContent = 'Nothing matches. Turn off the open-weights requirement, or turn up a second dial.';
+      empty.innerHTML = emptyReason(openOnly);
+      if (tieNoteEl()) tieNoteEl().hidden = true;
+      scheduleMonteCarlo();
       return;
     }
     empty.hidden = true;
@@ -739,6 +911,12 @@
       meta.push(nsrc === SOURCE_COUNT
         ? 'all three leaderboards'
         : COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards') + ' of three');
+      var gaps = unscored(m);
+      var gapNote = gaps.length
+        ? '<span class="mp-gap">Never measured on ' + gaps.join(', ')
+          + ', so its score covers ' + Math.round(r.cov * 100)
+          + ' percent of what you asked for.</span>'
+        : '';
       var pct = Math.round(r.s);
       li.innerHTML =
         '<span class="mp-rank">' + (i + 1) + '</span>' +
@@ -746,7 +924,7 @@
         '<span class="mp-title"><span class="mp-name">' + m.n + '</span>' +
         '<span class="mp-tier">' + tierLabel(m.t) + '</span></span>' +
         '<span class="mp-meta">' + meta.join('<span class="sep">·</span>') + '</span>' +
-        drivers(m) +
+        drivers(m) + gapNote +
         '<span class="mp-bar"><i style="width:' + Math.max(pct, 2) + '%"></i></span></span>' +
         '<span class="mp-score">' + r.s.toFixed(0) + '</span>';
       frag.appendChild(li);
