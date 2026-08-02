@@ -170,7 +170,9 @@
           <details class="mp-method">
             <summary>How the score works, and where the numbers come from</summary>
             <ol>
-              <li><b>Three sources, and a model is listed only if all three scored it.</b> LiveBench 2026-06-25 gives seven category scores and cost per successful task. Artificial Analysis gives an intelligence index, cost, output speed and time to first token. Agent Arena gives four session signals from 1.4 million real sessions. That rule is the whole relevance filter: it keeps the list to models people actually choose between, and it means every row is measured the same way.</li>
+              <li><b>Three sources, and a model is listed only if all three scored it.</b> LiveBench 2026-06-25 gives seven category scores and cost per successful task. Artificial Analysis gives twenty individual benchmarks, named below. Arena gives four session signals from 1.4 million real sessions plus its Text, WebDev, Vision and Document boards. That rule is the whole relevance filter: it keeps the list to models people actually choose between, and it means every row is measured the same way.</li>
+              <li><b>No leaderboard's own headline score is used.</b> Artificial Analysis publishes an intelligence index and it feeds nothing here. It is a weighted blend of the same benchmarks listed below, so importing it alongside them would count each one twice, at a mix somebody else chose. The individual figures go in instead and the factors below decide the weights. Every one of the twenty is named on the factor it drives, so a dial reading forty-three percent Terminal-Bench Hard tells you which measurement moved it. The same applies to LiveBench's overall column.</li>
+              <li><b>The benchmarks were picked for spread at the frontier, not for prestige.</b> A benchmark the leaders have all maxed out cannot rank them, whatever its reputation. Hard reasoning goes to Humanity's Last Exam and CritPt physics, where the frontier has not saturated, while GPQA Diamond enters at low weight because across the top five it spans a single point. Terminal-Bench Hard leads its factor because v2.1 is nearly maxed. Each dial prints its own frontier spread, computed from the loaded figures, and says whether it separates, barely separates, or cannot separate the leaders.</li>
               <li><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares shown next to the dials add to 100. Only open weights is a filter, because a model either ships its weights or it does not.</li>
               <li><b>A benchmark counts for what its evidence will bear, not for what it claims.</b> Every dial is built from several figures, and the weight written against each one says how much it should matter for that job. That is an editorial call. Whether the figure can answer at all is not, so it is measured: how much of the field published it, and how far apart the top five actually are on it. Multiply the two and a thin or finished benchmark counts for a fraction of a well covered one that still separates the leaders. The effect is visible under each dial, and it is not always what the written weights suggest. Looking at images is 94 percent MMMU Pro and 6 percent Arena Vision, because MMMU Pro has fifteen of the 23 models against Arena Vision's four. Answering fast is two thirds output speed, because time to first token has a top-five spread of 0.3 points and cannot rank anything. The same two numbers are computed for all 39 figures. Nothing is tuned per benchmark.</li>
               <li><b>Scores are percentiles across the models that published that number</b>, not the raw benchmark values, so a 90 means near the top of this field rather than 90%.</li>
@@ -472,6 +474,28 @@
     gpqa: 'GPQA Diamond', scicode: 'SciCode', ifbench: 'IFBench', apex: 'APEX office work'
   };
 
+  // Which of the three sources each figure comes from. LiveBench and Arena
+  // figures already carry the source in their name; the Artificial Analysis
+  // ones did not, so its individual benchmarks looked like they came from
+  // nowhere. That asymmetry is the whole reason the sourcing was invisible.
+  var SRC = {};
+  ['reasoning','coding','agentic','math','data','language','ifollow','overall']
+    .forEach(function (k) { SRC[k] = 'LiveBench'; });
+  ['confirmed','praise','steer','bash','atext','awebdev','avision','adoc']
+    .forEach(function (k) { SRC[k] = 'Arena'; });
+  ['intelligence','costPerTask','costPerSuccess','tps','ttft','total','nonhallu',
+   'tbhard','gdpval','itbench','lcr','hle','critpt','mmmu','tbv2','tau2','tau3',
+   'omni','gpqa','scicode','ifbench','apex']
+    .forEach(function (k) { SRC[k] = 'Artificial Analysis'; });
+  SRC.costPerSuccess = 'LiveBench';
+  SRC.context = 'published spec';   // a model card number, not a benchmark
+
+  // Name plus source, without repeating a source the name already states.
+  function figWithSrc(k) {
+    var n = FIG[k] || k, s = SRC[k];
+    return (!s || n.indexOf(s) === 0) ? n : n + ' (' + s + ')';
+  }
+
   function sepLabel(v) {
     return v >= 15 ? 'separates the leaders'
          : v >= 8  ? 'barely separates the leaders'
@@ -511,10 +535,14 @@
       // What the dial actually leans on after evidence weighting, which is not
       // always the figure with the biggest number written next to it.
       var mix = dialMix(d), lead = mix.parts[0];
+      // Name the source once when both figures share it, rather than twice.
+      var second = mix.parts.length > 1 ? mix.parts[1].k : null;
+      var sameSrc = second && SRC[lead.k] && SRC[lead.k] === SRC[second];
+      var mixText = sameSrc
+        ? FIG[lead.k] + ', then ' + figWithSrc(second)
+        : figWithSrc(lead.k) + (second ? ', then ' + figWithSrc(second) : '');
       var mixNote = lead
-        ? '<span class="mp-mix">' + Math.round(lead.share * 100) + '% '
-          + FIG[lead.k] + (mix.parts.length > 1
-            ? ', then ' + FIG[mix.parts[1].k] : '') + '</span>'
+        ? '<span class="mp-mix">' + Math.round(lead.share * 100) + '% ' + mixText + '</span>'
         : '';
       l.innerHTML = '<span>' + d.t + '</span><output id="out-' + d.k + '">off</output>' +
         '<em class="mp-why-dial">' + d.why +
