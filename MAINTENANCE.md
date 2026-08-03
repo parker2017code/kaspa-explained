@@ -47,10 +47,14 @@ Every one of these goes stale on its own. Check each, every session.
 
 - `CLAIMS.yml` -> `last_checked`, and every `recheck_after`. Move a date only
   after re-reading the source. Never bump it to silence the gate.
-- The dated baselines in the live trackers: `kips.html` (both tables),
-  `kaspa-vprogs-explained.html` (repo pulse), `argent-explained.html` (repo
-  table). Each renders a hand-verified baseline first and repaints from GitHub,
-  so a stale baseline is invisible to a visitor and still wrong in the file.
+- The dated baselines in the live trackers: `kips.html` (both tables). It
+  renders a hand-verified baseline first and repaints from GitHub, so a stale
+  baseline is invisible to a visitor and still wrong in the file. This list used
+  to name `kaspa-vprogs-explained.html` (repo pulse) and `argent-explained.html`
+  (repo table); both are now redirect stubs into `toccata-explained.html` and
+  neither carries a table any more. The vProgs and Argent repo state now lives
+  only in the `vprogs` and `argent` entries in `CLAIMS.yml`, which have no
+  live-repaint path, so a stale figure there is visible to nobody until read.
 - Emission: the next step-down DAA score and its estimated date. Steps fire on
   score, so the score is exact and the date is an estimate. Say it that way.
 - Any mainnet snapshot: DAA score, supply, block reward, covenant counts.
