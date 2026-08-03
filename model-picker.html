@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="Which model should you use?">
   <meta name="twitter:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="dateModified" content="2026-08-03">
   <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
   <script defer src="nav.js?v=20260708-dark-default"></script>
   <style>
@@ -189,8 +189,8 @@
           </details>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <div class="mp-mc-head" id="mpMcHead">
-            <b class="mp-mc-title">Across 1,000 runs</b>
-            <span class="mp-mc-why">The same weights as the ranking below, but every figure redrawn from its published error each time. The order below is one draw; this is the distribution it came from.</span>
+            <b class="mp-mc-title">How often each model comes first</b>
+            <span class="mp-mc-why">The same weights as the ranking below, with every figure redrawn from its published error on each of 1,000 runs. The order below is one draw; this is the distribution it came from.</span>
           </div>
           <div id="mpMonte"></div>
           <ol class="mp-list" id="mpList"></ol>
@@ -744,14 +744,14 @@
     var verdict;
     if (top.pct >= 85) {
       verdict = '<b>' + top.n + '</b> comes first in ' + Math.round(top.pct)
-        + ' runs out of 100. Settled, for what you asked.';
+        + ' out of every 100 runs. Settled, for what you asked.';
     } else if (top.pct >= 50) {
-      verdict = '<b>' + top.n + '</b> comes first ' + Math.round(top.pct) + ' times out of 100'
+      verdict = '<b>' + top.n + '</b> comes first ' + Math.round(top.pct) + ' times out of every 100'
         + (second ? ', against ' + Math.round(second.pct) + ' for <b>' + second.n + '</b>' : '')
         + '. The better bet, not a settled answer.';
     } else if (top.pct >= 25) {
       verdict = 'No clear winner. <b>' + top.n + '</b> takes it ' + Math.round(top.pct)
-        + ' times out of 100' + (second ? ' and <b>' + second.n + '</b> ' + Math.round(second.pct) : '')
+        + ' times out of every 100' + (second ? ' and <b>' + second.n + '</b> ' + Math.round(second.pct) : '')
         + '. Pick on something this page does not measure.';
     } else {
       verdict = 'Nothing wins even a quarter of the time. ' + rows.length
