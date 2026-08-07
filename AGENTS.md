@@ -1,5 +1,13 @@
 # Kaspa Explained Agent Guidance
 
+## Read `WORKING-STATE.md` first
+
+It is the single home for what is true today: the state of every dated claim and
+where its primary source is, the model picker's data rules, the traps this repo
+has already fallen into, and the checks to run. This file is the standing rules;
+that one is the state. When they disagree about a fact, that one is authoritative
+and this one gets corrected.
+
 ## Standing Directive (owner, 2026-07-25). Read this first.
 
 **Your judgment is canonical. This file is not.**
