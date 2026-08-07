@@ -285,26 +285,26 @@
   // that still separate the frontier are the hard agentic ones and, by the
   // widest margin of anything here, hallucination.
   var DIALS = [
-    { k: 'reason',  t: 'Reasoning and analysis', w: { hle: 3, critpt: 2, reasoning: 1, math: 1, data: 1, gpqa: 1 },
-      why: "Humanity's Last Exam carries it, because it is the broadest reasoning figure still open at the frontier. CritPt is behind it rather than beside it: its 9-point spread is real, and it is physics only, and part of that spread is that most of the field scores near zero on it. LiveBench reasoning, math and data analysis and GPQA Diamond enter at 1 apiece: across the top five they span 2, 3, 2 and 1 points, so they describe the field without being able to rank it." },
-    { k: 'code',    t: 'Writing code', w: { coding: 3, scicode: 1 },
-      why: 'LiveBench coding leads at 5 points of top-five spread. SciCode enters low at 4 points, which is nearly maxed.' },
-    { k: 'build',   t: 'Agentic coding and terminal work', w: { agentic: 3, bash: 2, tbv2: 1 },
-      why: 'LiveBench agentic coding leads, with Arena command recovery beside it. Terminal-Bench v2.1 is in at 1 because the frontier has almost finished it: 4 points across the top five. Terminal-Bench Hard would lead this instead, and it is out because too few models published it.' },
+    { k: 'reason',  t: 'Reasoning and analysis', w: { critpt: 2, math: 2 },
+      why: 'The thinnest factor here, and it says so. LiveBench reasoning separates the top eight by 24 points on the scored scale, GPQA Diamond by 30 and SciCode by 32, which is noise once percentiles stretch it, so all three are out rather than carried at low weight. CritPt physics and LiveBench math are what survive, at 53 and 52.' },
+    { k: 'code',    t: 'Writing code', w: { coding: 3 },
+      why: 'LiveBench coding, which separates the top eight by 98. SciCode was beside it and is cut at 32.' },
+    { k: 'build',   t: 'Agentic coding and terminal work', w: { agentic: 3, bash: 2 },
+      why: 'LiveBench agentic coding at 86, with Arena command recovery at 53. Terminal-Bench v2.1 is out at 43: the frontier has nearly finished it.' },
     { k: 'finish',  t: 'Finishing work unsupervised', w: { gdpval: 3, tau3: 2, confirmed: 2 },
-      why: 'GDPval scores agentic real-world work tasks and spans 12 points at the frontier, one of the four figures here that genuinely separates. Read it as a rescaled Elo rather than a success rate: the board publishes it as (Elo-500)/2000. Then tau-3 banking tool use, then whether users agreed the job was done.' },
+      why: 'GDPval separates the top eight by 100, the widest figure on this board. Read it as a rescaled Elo rather than a success rate, since it is published as (Elo-500)/2000. Then tau-3 banking tool use at 74, then whether users agreed the job was done.' },
     { k: 'honest',  t: 'Not making things up', w: { nonhallu: 3, omni: 2 },
-      why: 'The widest real gap on this board: 21 points across the top five, against 1 for GPQA. Measured on the Omniscience set, which asks things models mostly do not know, so it scores saying so rather than guessing. Weighed against how much it actually knows.' },
-    { k: 'steer',   t: 'Following instructions and taking correction', w: { steer: 3, ifollow: 2 },
-      why: 'Arena steerability from real sessions, with LiveBench instruction following behind it.' },
-    { k: 'write',   t: 'Writing and communication', w: { language: 3 },
-      why: 'LiveBench language. Arena praise was in here at low weight and came out: it is satisfaction across whole sessions, not a measure of writing, so it was answering a different question under this label.' },
-    { k: 'longctx', t: 'Working across a long context', w: { lcr: 3, context: 1 },
-      why: 'Measured long-context reasoning rather than the advertised window. It spans 3 points at the frontier, so it ranks the field and not the leaders.' },
-    { k: 'fast',    t: 'Responsiveness', w: { ttft: 3, tps: 2 },
-      why: 'Time to first token leads because you feel the wait before the first word, and it spans 52x across the leaders where output speed spans 3x. Total response time is dropped rather than added: it is roughly time to first token plus tokens over speed, so counting it beside both counts the same latency twice.' },
+      why: 'Measured non-hallucination at 70, against how much it knows at 52. Scored on the Omniscience set, which asks things models mostly do not know, so it rewards saying so rather than guessing.' },
+    { k: 'steer',   t: 'Following instructions', w: { ifollow: 3 },
+      why: 'LiveBench instruction following at 67. Arena steerability was in this factor and is cut at 44: across the leaders it barely moves.' },
+    { k: 'write',   t: 'Writing and communication', w: { language: 3, praise: 1 },
+      why: 'LiveBench language at 83, with Arena praise behind it at 56 as a check that people were glad they used it.' },
+    { k: 'longctx', t: 'Working across a long context', w: { lcr: 3, context: 2 },
+      why: 'Measured long-context reasoning at 69, with the advertised window at 53. The window is the weaker of the two and is in because it is the one a reader can check on a model card.' },
+    { k: 'fast',    t: 'Responsiveness', w: { ttft: 3 },
+      why: 'Time to first token, which separates the top eight by 99. Output speed is cut at 26: across the leaders it hardly moves. Total response time separates at 97 and is still out, because it is mostly time to first token plus tokens over speed, so carrying both counts one latency twice.' },
     { k: 'cheap',   t: 'Cost per finished task', w: { costPerSuccess: 3 },
-      why: 'Dollars per finished task, from LiveBench. A cheap model that needs three tries is not cheap.' }
+      why: 'Dollars per finished task, at 94. One of the two widest figures on the board, and the one most often left out of a comparison.' }
   ];
 
   // What the page scores before anyone touches it. An empty page made the
