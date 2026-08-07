@@ -8,17 +8,16 @@ old script would silently drop twenty metrics and every ci array, and the gate's
 own check-model-picker.py would then fail because dials name metrics that would
 no longer be in the data. It is kept for its history, not for running.
 
-This script refreshes the 35 metrics that a leaderboard transcription can carry
-and leaves four alone:
+Every figure is rebuilt from source, including Arena's four session signals,
+which are read raw from data/arena-agent.json and sign-recovered here. Nothing
+is carried across from the previous build: a carried value is a percentile of
+whatever field existed last time, and the moment the roster moves it sits in a
+row beside figures scaled to a different one.
 
-  confirmed, praise, steer, bash
-
-Those are Agent Arena session signals from data/arena-agent.json. A leaderboard
-export of the Agent board carries only its Net Improvement column, which this
-page deliberately refuses to import because Arena's own rank is built from it.
-The roster is unchanged, so those four stay normalized against the same set of
-models they were normalized against before, and carrying them across is exact
-rather than approximate. If the roster ever changes, they must be rebuilt.
+The output is a fully dense grid. Every listed model has every listed figure,
+no exceptions, because a model that skipped a benchmark does not score badly on
+it, it skips it, and its average is then taken over an easier question than the
+model beside it that published a weak number.
 
   python3 scripts/refresh-model-data.py data/leaderboards-2026-08-07.json
 """
@@ -37,23 +36,79 @@ AA = ["intelligence", "gdpval", "tbhard", "tbv2", "tau2", "tau3", "lcr", "omni",
       "nonhallu", "hle", "gpqa", "scicode", "ifbench", "critpt", "apex",
       "itbench", "mmmu", "costPerTask", "tps", "ttft", "total", "context"]
 
-KEEP = {"confirmed", "praise", "steer", "bash"}
+# Agent Arena session signals. Read from data/arena-agent.json as raw values and
+# normalized here with everything else, rather than carried across from the last
+# build. Carrying them was exact only while the roster never moved; the moment
+# densify drops a model, a carried value is a percentile of a field that no
+# longer exists, sitting in a row beside figures scaled to the field that does.
+ARENA = ["confirmed", "praise", "steer", "bash"]
+KEEP = set()
 # Lower is better. Everything else is higher is better.
 LOWER = {"costPerSuccess", "costPerTask", "ttft", "total"}
 
-# Coverage floors, owner's call on 7 August 2026: score on figures that most of
-# the field actually published, and list models that most of those figures
-# actually cover.
+# No gaps. Not "few gaps", none.
 #
-# A metric measured on 5 of 23 models is worse than useless here. Every model
-# that never sat the benchmark scores zero on it, the page's own 70% coverage
-# rule then drops those models from any ranking that asks for it, and a dial
-# reading "Looking at images" quietly ranks the five models that happened to
-# publish MMMU rather than the best of the field. Arena's per-board Elo is the
-# worst of these: only the top fifteen of each board publish a score at all, so
-# the metric is structurally biased toward models already winning.
-MIN_METRIC_COV = 0.80   # share of models that must report a metric to keep it
-MIN_MODEL_COV = 0.90    # share of kept metrics a model must report to be listed
+# Percentile coverage thresholds were the first attempt and they were wrong in a
+# way that is easy to miss: 80/90 floors still left one hole, and one hole is
+# enough to bend a comparison. A model missing a figure does not score badly on
+# it, it skips it, so its score is an average over an easier question than the
+# model beside it that published the number and carried a weak result. Partial
+# coverage quietly rewards not publishing. The only way the columns compare like
+# with like is if every listed model has every listed figure.
+#
+# So instead of a threshold, find the largest fully dense submatrix: the choice
+# of models and figures with no missing cell anywhere. That is the maximum-edge
+# biclique problem, which is NP-hard, so this does greedy removal from several
+# starts and keeps the best result. The field is 23x39, small enough that greedy
+# lands on the optimum or next to it.
+#
+# The trade runs both ways and the search makes it explicitly. A benchmark only
+# some models sat is dropped rather than excusing the models that skipped it. A
+# model missing figures the rest all published is dropped rather than dragging
+# those figures out of the set. Which side gives way is decided by which keeps
+# more of the grid, not by hand.
+# Cells are not worth the same, so the search does not maximize raw area.
+# Maximizing area alone kept three trailing models by sacrificing GDPval real
+# world work, Terminal-Bench v2.1, tau-3 tool use and cost per task, which is
+# the wrong way round: those four drive dials and the three models were the
+# only ones missing them. A figure that no dial reads cannot change an answer,
+# so it is worth little; a figure a dial is built on is worth defending, and a
+# model that skipped several of those is the thing that should give way.
+DIAL_FIGURE_WEIGHT = 4.0
+IDLE_FIGURE_WEIGHT = 1.0
+
+
+def norm_name(x):
+    """Arena writes 'GPT 5.6 Sol (xHigh)' where the transcription writes
+    'GPT-5.6 Sol'. Strip the tier and everything that is not alphanumeric."""
+    return re.sub(r"[^a-z0-9]", "", re.sub(r"\s*\(.*?\)\s*$", "", x).lower())
+
+
+def arena_raw():
+    """Arena's four session signals, sign-recovered, keyed by normalized name.
+
+    Arena prints these with the minus signs stripped, so read as printed the
+    worst model looks best at recovering from a failed command. A signal's own
+    top-ten list gives the threshold that recovers the sign: absent from the
+    top ten while above its tenth value means the number was negative.
+
+    Rows are ranked, so the first match for a family is its best tier, which is
+    the same 'best published configuration' rule the other sources get.
+    """
+    a = json.loads((ROOT / "data" / "arena-agent.json").read_text())
+    cols = a["columns"][1:]
+    out = {}
+    for row in a["printed"]:
+        key = norm_name(row[0])
+        if key in out:
+            continue
+        rec = {}
+        for c, v in zip(cols, row[1:]):
+            if row[0] not in a["top10"][c] and abs(v) > a["thresholds"][c]:
+                v = -abs(v)
+            rec[c] = v
+        out[key] = rec
+    return out
 
 
 def main():
@@ -63,18 +118,16 @@ def main():
     if not m:
         sys.exit("could not find the window.__MP__ blob")
     cur = json.loads(m.group(2))
-    metrics = cur["metrics"]
-    old_by_name = {x["n"]: x for x in cur["models"]}
+    # The live page only carries whatever survived the last densify, so it
+    # cannot be the metric universe: figures cut once could never come back
+    # even if a later refresh completes them. The baseline blob keeps the full
+    # space and the ci per figure.
+    base = json.loads((ROOT / "data" / "model-picker-baseline.json").read_text())
+    metrics = base["metrics"]
+    old_by_name = {x["n"]: x for x in base["models"]}
 
     src = raw["models"]
-    names = [x["name"] for x in src]
-    missing = [n for n in names if n not in old_by_name]
-    if missing:
-        sys.exit("roster changed, so the carried-over Arena signals would be "
-                 "normalized against a different set: " + ", ".join(missing))
-    if len(src) != len(cur["models"]):
-        sys.exit(f"roster size changed ({len(cur['models'])} -> {len(src)}); "
-                 "the Arena signals must be rebuilt, not carried across")
+    arena = arena_raw()
 
     # Pull every raw figure into one flat {model: {metric: value}}.
     vals = {}
@@ -91,40 +144,120 @@ def main():
         for k, v in rec["arena"].items():
             if v is not None:
                 d[k] = float(v)
+        for k, v in (arena.get(norm_name(rec["name"])) or {}).items():
+            d[k] = float(v)
         vals[rec["name"]] = d
 
-    # Drop thin metrics first, then models that are thin across what survived.
-    # Order matters: a model must not be judged on coverage of metrics that are
-    # themselves being dropped for thinness.
-    n_all = len(src)
-    dropped_metrics = []
-    kept = []
-    for k in metrics:
-        if k in KEEP:
-            kept.append(k); continue
-        cov = sum(1 for d in vals.values() if k in d) / n_all
-        (kept if cov >= MIN_METRIC_COV else dropped_metrics).append(k)
-        if cov < MIN_METRIC_COV:
-            dropped_metrics[-1] = (k, cov)
-    kept = [k for k in kept if not isinstance(k, tuple)]
+    all_models = [r["name"] for r in src]
+    # KEEP metrics are carried from the old blob for every listed model, so they
+    # are present by construction and never constrain the search.
+    all_metrics = [k for k in metrics if k not in KEEP and k != "context"]
 
-    scorable = [k for k in kept if k not in KEEP]
-    dropped_models = []
-    keep_names = []
-    for rec in src:
-        d = vals[rec["name"]]
-        cov = sum(1 for k in scorable if k in d) / len(scorable)
-        if cov >= MIN_MODEL_COV:
-            keep_names.append(rec["name"])
-        else:
-            dropped_models.append((rec["name"], cov))
+    # Figures the page actually scores on, read from the DIALS array so this
+    # cannot drift away from the page the way a hand-kept list would.
+    dial_body = re.search(r"var DIALS = \[(.*?)\n  \];", page, re.S)
+    used = set(re.findall(r"(\w+):\s*\d", dial_body.group(1))) if dial_body else set()
+    used -= {"k", "t", "w", "why"}
+
+    def fw(k):
+        return DIAL_FIGURE_WEIGHT if k in used else IDLE_FIGURE_WEIGHT
+
+    def value(ms, ks):
+        return len(ms) * sum(fw(k) for k in ks)
+
+    # Eligibility, applied before any search. A model that skipped several of
+    # the figures the page actually scores on is not a cheap row to carry, it
+    # is a row that drags those figures out of the set for everyone else. Area
+    # alone will never say so: keeping a model is worth more than keeping a
+    # figure at any weight, so without this gate the trailing models always win
+    # and the benchmarks that measure agentic work always lose.
+    MAX_MISSING_DIAL_FIGURES = 2
+
+    def density(ms, ks):
+        return sum(1 for n_ in ms for k in ks if k in vals[n_])
+
+    def densify(order_bias):
+        ms, ks = list(all_models), list(all_metrics)
+        while True:
+            holes = density(ms, ks)
+            if holes == len(ms) * len(ks):
+                return ms, ks
+            # worst offender on each axis, scored by how many cells it costs
+            wm = max(ms, key=lambda n_: (sum(1 for k in ks if k not in vals[n_]), n_))
+            wk = max(ks, key=lambda k: (sum(1 for n_ in ms if k not in vals[n_]), k))
+            miss_m = sum(1 for k in ks if k not in vals[wm])
+            miss_k = sum(1 for n_ in ms if wk not in vals[n_])
+            # value left if we cut each way; bias lets models win close calls
+            area_cut_model = value([x for x in ms if x != wm], ks) * order_bias
+            area_cut_metric = value(ms, [x for x in ks if x != wk])
+            if miss_m == 0:
+                ks.remove(wk)
+            elif miss_k == 0:
+                ms.remove(wm)
+            elif area_cut_model >= area_cut_metric:
+                ms.remove(wm)
+            else:
+                ks.remove(wk)
+
+    def drop_models_first(k):
+        """Evict the k models that block the most dial-weighted figures, then
+        drop only whatever is still incomplete.
+
+        Greedy alone cannot see this trade. It removes the worst offender on
+        each axis in turn, so by the time it reaches a figure only three models
+        are missing, evicting those three looks locally worse than dropping the
+        figure, even when the figure drives a dial and the three models are the
+        weakest on the board.
+        """
+        def blocking(n_):
+            return sum(fw(x) for x in all_metrics if x not in vals[n_])
+        ms = sorted(all_models, key=lambda n_: (-blocking(n_), n_))[k:]
+        if not ms:
+            return [], []
+        ks = [x for x in all_metrics if all(x in vals[n_] for n_ in ms)]
+        return ms, ks
+
+    ineligible = []
+    for n_ in list(all_models):
+        gone = [k for k in all_metrics if k in used and k not in vals[n_]]
+        if len(gone) > MAX_MISSING_DIAL_FIGURES:
+            ineligible.append((n_, gone))
+    for n_, gone in ineligible:
+        print(f"  not eligible  {n_:<24} skipped {len(gone)} scored figures: "
+              + ", ".join(gone))
+    all_models = [n_ for n_ in all_models if n_ not in dict(ineligible)]
+
+    best = None
+    cands = [densify(b) for b in (0.90, 1.0, 1.05, 1.15, 1.30)]
+    cands += [drop_models_first(k) for k in range(0, 9)]
+    for ms, ks in cands:
+        if not ms or not ks:
+            continue
+        if sum(1 for n_ in ms for x in ks if x not in vals[n_]):
+            continue                      # not dense, not a candidate
+        score = (value(ms, ks), len(ms))
+        if best is None or score > best[0]:
+            best = (score, ms, ks)
+    _, keep_names, keep_metrics = best
+
+    dropped_models = [n_ for n_ in all_models if n_ not in keep_names]
+    dropped_metrics = [k for k in all_metrics if k not in keep_metrics]
+    for k in dropped_metrics:
+        miss = [n_ for n_ in all_models if k not in vals[n_]]
+        print(f"  dropped figure {k:<14} {len(miss)} of {len(all_models)} models never published it")
+    for n_ in dropped_models:
+        miss = [k for k in all_metrics if k not in vals[n_]]
+        print(f"  dropped model  {n_:<24} missing {len(miss)} of {len(all_metrics)} figures")
+
+    kept = [k for k in metrics if k in keep_metrics or k in KEEP or k == "context"]
     src = [r for r in src if r["name"] in keep_names]
     vals = {k: v for k, v in vals.items() if k in keep_names}
 
-    for k, cov in dropped_metrics:
-        print(f"  dropped metric {k:<14} {cov * 100:.0f}% of models reported it")
-    for n_, cov in dropped_models:
-        print(f"  dropped model  {n_:<24} {cov * 100:.0f}% of kept metrics")
+    holes = sum(1 for n_ in keep_names for k in keep_metrics if k not in vals[n_])
+    if holes:
+        sys.exit(f"densify failed: {holes} gaps remain")
+    print(f"  fully dense: {len(keep_names)} models x {len(keep_metrics)} "
+          f"searchable figures, zero gaps")
 
     # Percentile-normalize each metric across only the models that report it,
     # the same rule the original build used, now over the surviving field.
