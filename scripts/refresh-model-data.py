@@ -77,6 +77,53 @@ LOWER = {"costPerSuccess", "costPerTask", "ttft", "total"}
 DIAL_FIGURE_WEIGHT = 4.0
 IDLE_FIGURE_WEIGHT = 1.0
 
+# Which figures count as load bearing, stated here rather than read from DIALS.
+#
+# Reading the live dials made the data selection depend on the editorial choice
+# it is supposed to feed: rewriting a factor changed which figures counted,
+# which changed which models were eligible, which changed the roster. One dial
+# edit moved the grid from 20x28 to 23x25 with no new data. A selection rule
+# that moves when you rewrite a label is not a rule.
+#
+# So the list is fixed and explicit. It is the figures a person choosing a
+# frontier model is actually choosing on, written down BEFORE looking at which
+# models it drops, which is the other half of the same discipline.
+LOAD_BEARING = {
+    "overall", "reasoning", "coding", "agentic", "math", "data", "language",
+    "ifollow", "costPerSuccess", "intelligence", "gdpval", "tbv2", "tau3",
+    "lcr", "omni", "nonhallu", "hle", "gpqa", "scicode", "critpt",
+    "ttft", "tps", "costPerTask",
+}
+
+
+EFFORT = [("xhigh", "xhigh effort"), ("max", "max effort"), ("high", "high effort"),
+           ("medium", "medium effort"), ("low", "low effort"),
+           ("non-reasoning", "no reasoning"), ("thinking", "thinking")]
+
+
+def tier_of(rec):
+    """What configuration these figures actually came from.
+
+    Every row was written as null, so the page printed "default setting" on all
+    twenty while the transcription deliberately takes each model's BEST
+    published configuration. Claude Opus 5 read "default setting" carrying
+    Opus 5 (max) and Opus Thinking Max Effort. A label is part of the claim.
+
+    The two boards can disagree, so say so rather than picking one.
+    """
+    def eff(row):
+        low = (row or "").lower()
+        for key, label in EFFORT:
+            if key in low:
+                return label
+        return None
+    a, b = eff(rec.get("aa_row")), eff(rec.get("lb_row"))
+    if a and b and a == b:
+        return a
+    if a and b:
+        return a + " / " + b
+    return a or b
+
 
 def norm_name(x):
     """Arena writes 'GPT 5.6 Sol (xHigh)' where the transcription writes
@@ -155,9 +202,7 @@ def main():
 
     # Figures the page actually scores on, read from the DIALS array so this
     # cannot drift away from the page the way a hand-kept list would.
-    dial_body = re.search(r"var DIALS = \[(.*?)\n  \];", page, re.S)
-    used = set(re.findall(r"(\w+):\s*\d", dial_body.group(1))) if dial_body else set()
-    used -= {"k", "t", "w", "why"}
+    used = LOAD_BEARING
 
     def fw(k):
         return DIAL_FIGURE_WEIGHT if k in used else IDLE_FIGURE_WEIGHT
@@ -298,7 +343,7 @@ def main():
                 v.append(0.0); a.append(0)
 
         out.append({
-            "n": name, "t": None, "lab": rec["lab"], "open": rec["open"],
+            "n": name, "t": tier_of(rec), "lab": rec["lab"], "open": rec["open"],
             "ctx": int(d["context"]) if "context" in d else None,
             "cost": d.get("costPerTask"), "ttft": d.get("ttft"), "tps": d.get("tps"),
             # ci is indexed by the metric list, so it has to be pruned with it.
