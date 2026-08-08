@@ -25,6 +25,10 @@ earning its place, however true it is.
 5. **Rejected approaches.** One line each: what, the number that killed it, and
    whether it is a law failure or a data failure.
 
+**PROPORTION.** This site is about Kaspa. 71 of its 72 pages are Kaspa. If a
+section about tooling grows past a section about what the site claims, the doc
+is wrong even if every sentence in it is true.
+
 **NEVER CUT.** A number with a source. A refusal and the check that would close
 it. The traps. The directives. The pick-up block.
 
@@ -58,31 +62,35 @@ it. The traps. The directives. The pick-up block.
 survivable is this file, so keep it current as you go. If context feels tight, do
 not wind down early: commit, update this file, keep working.
 
-**PICK-UP BLOCK, 2026-08-08.**
+**PICK-UP BLOCK, 2026-08-08, session end.**
 
-> Live is `3e9c5d1`, tree clean but for the X-posts draft, every gate green.
+> Check `git log --oneline -1` against three green workflows before trusting
+> anything here. READ THE DATE FROM THE ENVIRONMENT BEFORE WRITING ANY STAMP,
+> trap 2, it cost two pushed commits.
 >
-> READ THE DATE FROM THE ENVIRONMENT BEFORE WRITING ANY STAMP. This is trap 2
-> and it cost two pushed commits.
+> **THE DAILY JOB is the X-post calendar.** `kaspa-x-posts-august-2026.md`,
+> local and uncommitted by the owner's instruction, running to 31 August, asked
+> for one day at a time. Aug 3 to 8 are done. Every post is verified against
+> primary sources before handover and its source slug checked against the
+> redirect stubs. Aug 3 was rewritten for quoting one half of Argent's README;
+> Aug 8 gained a paragraph because it told readers to verify on an explorer and
+> explorers cannot decode covenant data.
 >
-> DO FIRST, and it is the one thing that makes the model picker defensible: the
-> roster is still the 20 models somebody transcribed by hand, not the models
-> that pass a rule. Requiring every model to appear in Arena's file was gating
-> it, and Arena's four figures separate 44 to 56 where GDPval separates 100.
-> Qwen3.8 Max is top five on both LiveBench and Artificial Analysis and is
-> absent for that reason alone. Transcribe every model appearing in both
-> LiveBench and AA. It forces one trade the owner should see first: adding
-> models without Arena data means dropping Arena's four figures, since the grid
-> must stay dense. Those four are the weakest on the board, so the trade is
-> probably right.
+> **NOT YET DONE, and it is the next real job: a full site overview.** All 24
+> live pages read end to end against CLAIMS.yml and the primary sources, not
+> just scanned. The 8 August sweep was a SCANNER pass for AI tells and self-talk
+> (clean: zero em dashes, one self-talk line cut, the rest domain vocabulary and
+> FAQ headings) plus a self-count check on one page. Nobody has read the other
+> 23 pages for stale facts. Start with the pages carrying dated or numeric
+> claims: status, toccata-status, kaspa-claims-checker, what-is-kaspa,
+> build-on-kaspa, kips, toccata-explained, skeptical-case.
 >
-> THEN: the eligibility threshold, "a model missing more than two scored figures
-> is out", was set AFTER seeing which models it would drop. That is fitting a
-> constant to a predetermined answer and it cannot be fixed by measuring. Set it
-> before looking, on a stated principle.
+> **CLAIM DATES all sit on 2026-08-21 and will block the repo together.** 19 of
+> 22 came due on one morning last time. Stagger them.
 >
-> The X-posts draft is local and uncommitted by the owner's instruction. The
-> August calendar runs to the 31st; he asks for them a day at a time.
+> **THE PICKER is current and deployed**: 23 models, 25 figures, 575 of 575
+> cells, both boards re-read 8 August. Its one open flaw is the eligibility
+> threshold, set after seeing which models it dropped.
 
 ## What this is for
 
@@ -132,69 +140,29 @@ Every stamp here is a claim about when a source was read: `CLAIMS.yml`
 `last_checked`, both `kips.html` baselines, `dateModified` on every touched page,
 and the "as of" line inside any dated post.
 
-## The model picker
+## The model picker, briefly
 
-More machinery than the rest of the site combined.
+One page of 72, and it carries more machinery than the rest combined, so it gets
+one section rather than a third of this document.
 
-**`build-model-data.py` is dead and kept for history.** Written for a 19-metric
-page, its input file gone. Running it drops every metric added since and every ci
-array. **`refresh-model-data.py` is the live one.**
+23 models by 25 figures, 575 of 575 cells, zero gaps, two sources.
+`refresh-model-data.py` is the live build; `build-model-data.py` is dead and kept
+for history. Five rules that took a day to learn. The grid must be fully dense,
+because a model missing a figure skips it rather than scoring badly on it. A
+figure that cannot separate the frontier is cut, not down-weighted, since
+percentiles stretch a one-point gap to full range. Separation is measured on the
+scored scale, not in raw points. Labels are part of the claim, which is how every
+row came to print "default setting" while carrying max-effort figures, and how
+the source badge said "all three leaderboards" after one board stopped feeding
+it. And a selection rule must not read the thing it feeds: the eligibility gate
+read the live dials, so rewriting a factor moved the roster with no new data.
 
-**The grid is fully dense, and coverage thresholds were the wrong instrument.**
-80 and 90 percent floors still left one hole. A model missing a figure does not
-score badly on it, it skips it, so its average is taken over an easier question
-than the model beside it that published a weak number. Partial coverage rewards
-not publishing. The build searches for the largest submatrix with no missing cell
-and exits non-zero if one survives. Currently 20 models by 28 figures, 560 of 560.
+Arena's four session signals came out on 8 August to admit three models Arena
+never scored, including Qwen3.8 Max, top five on both remaining boards. Cost per
+task came back the same day, when the one model missing it published one.
 
-**Area alone picks the wrong side of that trade, provably.** Keeping a model
-multiplies the whole figure set, so keeping a model beats keeping a figure at
-every possible weight: 19 by 28 can never outscore 23 by 24. No figure weighting
-fixes it. What fixes it is an eligibility gate ahead of the search. **That gate's
-threshold was fitted to the answer somebody already wanted, and that is an open
-flaw, not a settled rule.**
+OPEN: the eligibility threshold was set after seeing which models it dropped.
 
-**Most benchmarks cannot rank the frontier, and a dead one is worse than
-absent.** Percentile normalization stretches a one-point gap across the full 0
-to 100 range, so a saturated figure at weight 1 injects full-amplitude noise.
-Measured on the scored scale across the top eight: LiveBench reasoning separates
-24, output speed 26, GPQA Diamond 30, SciCode 32, HLE 39, Terminal-Bench v2.1 43,
-Arena steerability 44. All are cut. What leads: GDPval 100, time to first token
-99, LiveBench coding 98, cost per finished task 94, agentic coding 86, language
-83.
-
-**Measure separation on the scale that enters the score, not in raw points.** An
-earlier weighting used raw point spread and put HLE and CritPt at the head of the
-reasoning factor; on the scored scale they separate 39 and 53. Same shape as trap
-7: a number is only meaningful inside the arithmetic it feeds.
-
-**`frontierSpread` measured the wrong frontier.** It sorted by each figure's own
-top five, which asks whether the five cheapest models are close on cost. They
-always are, so cost read "cannot separate" while spanning 4.1x across the models
-actually being ranked. Saturated benchmarks came out right by accident and skewed
-ones did not. It now ranks by the score the reader sees.
-
-**Read each column's definition before scoring it.** GDPval is published as
-`(Elo-500)/2000`, a rescaled Elo and not a success rate. Non-hallucination is
-measured on the Omniscience set, which asks things models mostly do not know, so
-it scores admitting ignorance rather than truthfulness in general.
-
-**Composites stay out of the dials.** LiveBench overall and the AA intelligence
-index are weighted blends of figures already scored here, so dialing them counts
-each sub-score twice at a mix somebody else chose. Both load; neither feeds a
-factor.
-
-**Arena signals are rebuilt from source, never carried across.** Carrying them is
-exact only while the roster never moves, and it moves by design. A carried value
-is a percentile of a field that no longer exists.
-
-**Speed and latency drift between reads.** Nineteen of twenty models had
-different tps, time to first token or total response between two reads of the same
-board hours apart. Benchmark columns did not move. Re-read the speed columns on
-every refresh.
-
-**Ten factors, and a factor built on saturated figures is decoration.** The page
-computes separation per factor and labels it.
 
 ## Serving and rendering
 

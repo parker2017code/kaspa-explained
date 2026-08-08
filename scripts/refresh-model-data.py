@@ -315,13 +315,28 @@ def main():
     ctxs = sorted({d["context"] for d in vals.values() if "context" in d})
     cl, ch = ctxs[0], ctxs[-1]
 
+    # A model transcribed after the baseline was cut has no ci row. For every
+    # LiveBench and Artificial Analysis figure the interval is a property of the
+    # METRIC, not of the model: the note on the page says both boards publish
+    # point figures and carry an assumed 1.5 points converted through each
+    # metric's own range. So a new row inherits the metric's interval, taken as
+    # the median across the models that have one. Arena's four are genuinely
+    # per model, and they are dropped by densify the moment a model without
+    # Arena data joins, so no Arena interval is ever guessed here.
+    import statistics
+    ci_by_metric = []
+    for i in range(len(metrics)):
+        vals_i = [x["ci"][i] for x in base["models"] if i < len(x.get("ci", []))]
+        ci_by_metric.append(statistics.median(vals_i) if vals_i else 6.0)
+
     old_idx = {k: i for i, k in enumerate(metrics)}
     metrics = kept
 
     out = []
     for rec in src:
         name = rec["name"]
-        d, old = vals[name], old_by_name[name]
+        d = vals[name]
+        old = old_by_name.get(name) or {"ci": ci_by_metric}
         v, a = [], []
         for key in metrics:
             if key in KEEP:
