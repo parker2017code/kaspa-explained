@@ -285,8 +285,8 @@
   // that still separate the frontier are the hard agentic ones and, by the
   // widest margin of anything here, hallucination.
   var DIALS = [
-    { k: 'reason',  t: 'Reasoning and analysis', w: { critpt: 2, math: 2 },
-      why: 'The thinnest factor here, and it says so. LiveBench reasoning separates the top eight by 24 points on the scored scale, GPQA Diamond by 30 and SciCode by 32, which is noise once percentiles stretch it, so all three are out rather than carried at low weight. CritPt physics and LiveBench math are what survive, at 53 and 52.' },
+    { k: 'reason',  t: 'Reasoning and analysis', w: { critpt: 3, math: 2, data: 2 },
+      why: 'CritPt physics separates the models you are actually choosing between by 59 points, LiveBench data analysis by 57 and LiveBench math by 52. Data analysis was measured but wired to no factor at all until 8 August, on a dial named for analysis. LiveBench reasoning is out at 42: it asks the same thing the others do and separates less.' },
     { k: 'code',    t: 'Writing code', w: { coding: 3 },
       why: 'LiveBench coding, which separates the top eight by 98. SciCode was beside it and is cut at 32.' },
     { k: 'build',   t: 'Agentic coding and terminal work', w: { agentic: 3 },
@@ -299,10 +299,10 @@
       why: 'LiveBench instruction following at 67. Arena steerability was in this factor and is cut at 44: across the leaders it barely moves.' },
     { k: 'write',   t: 'Writing and communication', w: { language: 3 },
       why: 'LiveBench language.' },
-    { k: 'longctx', t: 'Working across a long context', w: { lcr: 3, context: 2 },
-      why: 'Measured long-context reasoning at 69, with the advertised window at 53. The window is the weaker of the two and is in because it is the one a reader can check on a model card.' },
-    { k: 'fast',    t: 'Responsiveness', w: { ttft: 3 },
-      why: 'Time to first token, which separates the top eight by 99. Output speed is cut at 26: across the leaders it hardly moves. Total response time separates at 97 and is still out, because it is mostly time to first token plus tokens over speed, so carrying both counts one latency twice.' },
+    { k: 'longctx', t: 'Working across a long context', w: { lcr: 3 },
+      why: 'Measured long-context reasoning, which separates these models by 69. The advertised context window used to sit beside it and is now cut: across the models anyone is choosing between it separates by 4 points, which is a rounding error wearing a number. A window is a spec, not a result.' },
+    { k: 'fast',    t: 'Responsiveness', w: { ttft: 3, tps: 2 },
+      why: 'Time to first token separates these models by 68, output speed by 50, and they are different complaints: one is the wait before anything appears, the other is how fast it then arrives. Total response time separates by 66 and stays out, because it is roughly the first plus tokens over the second, so carrying it would count one latency twice.' },
     { k: 'cheap',   t: 'Cost per finished task', w: { costPerSuccess: 3, costPerTask: 2 },
       why: 'Dollars per finished task from LiveBench, with Artificial Analysis cost per task beside it. That second figure was out until 8 August, when the one model missing it published one, and two sources beat one on the number a buyer checks first.' }
   ];
@@ -316,10 +316,16 @@
   // close enough together that one dial at 40% is not a general ranking, it is
   // that dial's leaderboard wearing a general label. The largest share here is
   // about 11%, and the check below fails the build if any default exceeds 20%.
+  // Reweighted 8 August. Agentic coding was carried below writing code, which
+  // no longer matches how frontier models are used: the work is running tools
+  // in a loop, not emitting a function. It moves up to match. Cost moves up
+  // too, because it is the first thing anyone checks and it was sitting in the
+  // bottom tier. Prose moves down one, not because writing stopped mattering
+  // but because it separates these models less than the four above it.
   var DEFAULTS = {
-    reason: 4, code: 4, honest: 4,
-    build: 3, finish: 3, steer: 3, write: 3,
-    longctx: 2, fast: 2, cheap: 2
+    code: 4, build: 4, honest: 4, reason: 4,
+    steer: 3, finish: 3, cheap: 3,
+    write: 2, longctx: 2, fast: 2
   };
   (function () {
     var t = DIALS.reduce(function (a, d) { return a + (DEFAULTS[d.k] || 0); }, 0);

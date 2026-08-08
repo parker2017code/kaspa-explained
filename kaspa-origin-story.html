@@ -132,7 +132,7 @@
       <h2>The chain had to survive real failure</h2>
       <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing a certainly-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
       <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published. Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
-      <p>Kaspalytics recorded a September 2023 dust attack where the UTXO count jumped from about 8 million to 62 million, a separate event from the November 2021 launch bug.</p>
+      <p>A dust attack on Yom Kippur, September 2023, was a separate event from the November 2021 launch bug. Kaspa researcher Shai Wyborski's post-mortem gives the mechanism: each attacking transaction spent one UTXO and created 238, so every block added about 1,185 entries to a set where each one costs roughly 85 bytes. That is near 100 KB of permanent state per block, about 5 GB a day. He counted 57 million attacker UTXOs created before September 28 and put the contained damage at "5GB of junk UTXO data we will have to carry permanently." The lasting answer was not a patch but KIP-9's extended mass formula, which prices state growth into transaction mass so the same attack costs the attacker instead of the network.</p>
     </section>
 
     <section class="section prose-section">
@@ -190,7 +190,8 @@
         <li><a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">DBLP: PHANTOM: A Scalable BlockDAG Protocol</a> - the record for the 2018 PHANTOM paper by Sompolinsky and Zohar.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa GitHub</a> - the Rust node, how it replaces the older Golang node, and the Crescendo notes in its README.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.0.0">Rusty Kaspa v1.0.0 release</a> - Crescendo mainnet release notes and the 1 BPS to 10 BPS move.</li>
-        <li><a href="https://www.kaspalytics.com/blog/post/2024-week4-this-week-on-dag">Kaspalytics Week 4, 2024</a> - the September 2023 dust attack and its UTXO count.</li>
+        <li><a href="https://medium.com/@shai.wyborski/a-very-dusty-yom-kippur-dust-attack-post-mortem-faa11804e37">Shai Wyborski's dust-attack post-mortem</a> - the September 2023 attack mechanism, its per-block cost, and the permanent 5GB of junk UTXO data.</li>
+        <li><a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0009.md">KIP-9 raw file</a> - the extended mass formula that answered the dust attack, naming it as the motivation and pricing state growth through storage mass.</li>
       </ol>
     </section>
 <!-- related-links:start -->
