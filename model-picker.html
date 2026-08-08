@@ -339,7 +339,7 @@
     tau2:     ['tau-2 Telecom', 'agentic tool use in telecom flows', 'Artificial Analysis', '8 Aug 2026'],
     itbench:  ['ITBench', 'Kubernetes incident root-cause analysis', 'Artificial Analysis', '8 Aug 2026'],
     nonhallu: ['Omniscience non-hallucination rate', 'one minus the hallucination rate', 'Artificial Analysis', '8 Aug 2026'],
-    omniIndex:['Omniscience Index', 'credits right answers, penalises confident wrong ones, ignores refusals', 'Artificial Analysis', '8 Aug 2026'],
+    omniIndex:['Omniscience Index', 'credits right answers, penalizes confident wrong ones, ignores refusals', 'Artificial Analysis', '8 Aug 2026'],
     omniAcc:  ['Omniscience accuracy', 'raw knowledge on questions models mostly miss', 'Artificial Analysis', '8 Aug 2026'],
     mmmu:     ['MMMU-Pro', 'visual reasoning', 'Artificial Analysis', '8 Aug 2026'],
     ifbench:  ['IFBench', 'following awkward explicit instructions', 'Artificial Analysis', '8 Aug 2026'],
@@ -356,29 +356,29 @@
   var WHYW = {
     code:   'Opens high. Writing code is the single most common reason anyone reaches for a frontier model.',
     build:  'Opens high, and was raised on 8 August to match writing code. Frontier work is increasingly a model running tools in a loop rather than emitting a function.',
-    honest: 'Opens high. A confident wrong answer costs more than a slow one, and this is where the models differ most sharply.',
-    reason: 'Opens high. It is what people mean by a model being smart, and five separate benchmarks back it.',
+    honest: 'Level with breadth of knowledge, and both sit just under the top three. The evidence for caring about it is strong: across the models you are choosing between, the non-hallucination rate spreads them by 87 points on the scored scale, the widest separation of any figure on this board. A confident wrong answer also costs more than a slow one.',
+    reason: 'Opens high, because it is what people mean by a model being smart. Held at four rather than higher because the five benchmarks behind it are not five independent readings: three of them move together at 0.87 to 0.90, so the dial knows less than its benchmark count suggests.',
     finish: 'Middle. Closest thing here to a measure of real work delivered, held below the top four only because the benchmarks are young.',
     steer:  'Middle. Matters everywhere but has the thinnest coverage on this board, so it is not trusted with a top weight.',
-    cheap:  'Middle, raised on 8 August out of the bottom tier. It is the first number most buyers check.',
-    know:   'Low. Retrieval covers a lot of what raw recall used to, so it is worth less than it looks.',
+    cheap:  'Middle, raised on 8 August out of the bottom tier. It is the first number most buyers check, and the effort ladders make it decisive: the same model at a lower effort setting often scores within a point or two at a third of the price.',
+    know:   'Level with honesty on purpose, and raised on 8 August to get there. A model that answers I do not know to everything scores 100 on non-hallucination and 0 on accuracy: Command A+ does exactly that. While honesty outweighed knowledge, refusing everything paid. At equal weight a refusal is roughly neutral and what decides the row is whether the model is actually right.',
     longctx:'Low. Critical for a minority of jobs and close to irrelevant for the rest, which is exactly what a dial is for.',
     fast:   'Low by default. Nobody picks a model for speed alone, but turn it up for anything interactive.'
   };
 
   var DIALS = [
-    { k: 'reason',  t: 'Reasoning and analysis', w: { critpt: 3, hle: 2, gpqa: 2, math: 2, reasoning: 1 },
-      why: 'Five figures that ask the same question in different rooms: CritPt physics, Humanity\u2019s Last Exam, GPQA Diamond, and LiveBench math and reasoning. No model here is missing all five, so nobody gets dropped for the gap in any one of them.' },
-    { k: 'code',    t: 'Writing code', w: { scicode: 3, coding: 3 },
-      why: 'SciCode from Artificial Analysis and the LiveBench coding category, weighted equally. Two labs, two question sets, one skill.' },
-    { k: 'build',   t: 'Agentic coding and terminal work', w: { tbv2: 3, agentic: 3, tbhard: 2, apex: 1 },
-      why: 'Terminal-Bench v2.1 and its Hard variant, LiveBench agentic coding, and APEX long-horizon office work. APEX is run on only eight models so it carries the least weight, and a model without it still scores on the other three.' },
-    { k: 'finish',  t: 'Finishing work unsupervised', w: { gdpval: 3, tau3: 2, tau2: 2, itbench: 1 },
-      why: 'GDPval real-world work tasks, published as (Elo-500)/2000 rather than a success rate, then tau-3 banking and tau-2 telecom tool use, then Kubernetes incident root-cause. Four ways of asking whether it finishes the job alone.' },
-    { k: 'honest',  t: 'Not making things up', w: { nonhallu: 3, omniIndex: 2 },
-      why: 'Measured non-hallucination rate, plus the Omniscience Index, which rewards a correct answer, punishes a confident wrong one, and charges nothing for saying it does not know.' },
-    { k: 'know',    t: 'Breadth of knowledge', w: { omniAcc: 3, mmmu: 2 },
-      why: 'Omniscience accuracy on questions models mostly do not know, with MMMU-Pro visual reasoning beside it. Separate from the honesty dial on purpose: knowing a lot and admitting the gaps are different virtues, and the same model can be strong at one and weak at the other.' },
+    { k: 'reason',  t: 'Reasoning and analysis', w: { math: 3, critpt: 2, hle: 2, reasoning: 2, gpqa: 1 },
+      why: 'LiveBench math leads, because everyday analytical work looks far more like applied mathematics than like frontier physics, and a picker should weight what people actually do. CritPt and Humanity\u2019s Last Exam sit behind it as the unsaturated hard end. GPQA Diamond is last at weight 1 twice over: the frontier is bunched at 93 and 94 percent, and it tracks Humanity\u2019s Last Exam at 0.90 across these models, so it is largely the same signal a second time.' },
+    { k: 'code',    t: 'Writing code', w: { coding: 4, scicode: 2 },
+      why: 'LiveBench coding carries twice the weight of SciCode, and the reason is what each one asks. LiveBench coding is ordinary code generation and completion, which is what almost everyone reaching for a model is doing. SciCode asks for scientific programming from a paper specification, which is a real skill and a narrow slice of the work.' },
+    { k: 'build',   t: 'Agentic coding and terminal work', w: { tbv2: 3, agentic: 3, tbhard: 1, apex: 1 },
+      why: 'Terminal-Bench v2.1 and LiveBench agentic coding carry this dial, one from each lab. Terminal-Bench Hard was cut from weight 2 to 1 on 8 August because it correlates with Terminal-Bench v2.1 at 0.95 across these models: it is the same benchmark\u2019s harder split, so paying it full weight was counting one measurement twice. APEX is run on eight models only, so it also sits at 1, and a model without it still scores on the other three.' },
+    { k: 'finish',  t: 'Finishing work unsupervised', w: { gdpval: 4, tau3: 2, tau2: 1, itbench: 1 },
+      why: 'GDPval leads at weight 4 and the gap is deliberate. It scores real paid work across a spread of occupations, which makes it the most externally valid thing on this page, and it is published as (Elo-500)/2000 rather than a success rate. Behind it, tau-3 banking outweighs tau-2 telecom because banking flows are the broader test, and Kubernetes incident root-cause is last because it is one specialist job.' },
+    { k: 'honest',  t: 'Not making things up', w: { nonhallu: 3 },
+      why: 'The measured non-hallucination rate, alone, on all 41 models. The Omniscience Index sat here at weight 2 until a correlation check on 8 August: it is a composite that credits right answers and penalizes confident wrong ones, so it re-scores the accuracy this page already counts under breadth of knowledge (r=0.71) as well as the hallucination rate counted here. Carrying it meant one measurement voting in two different factors, so it came out.' },
+    { k: 'know',    t: 'Breadth of knowledge', w: { omniAcc: 3, mmmu: 1 },
+      why: 'Omniscience accuracy does almost all the work, on questions models mostly get wrong. MMMU-Pro visual reasoning is in at weight 1 rather than 2: it is a genuine capability and a minority need for most people choosing a text model. Kept separate from the honesty dial on purpose, since knowing a lot and admitting the gaps are different virtues and the same model is often strong at one and weak at the other.' },
     { k: 'steer',   t: 'Following instructions', w: { ifbench: 3, ifollow: 3 },
       why: 'IFBench and the LiveBench instruction-following category. The thinnest coverage on the board: 34 of the 41 models carry one of the two, and the rest are scored without it and say so.' },
     { k: 'longctx', t: 'Working across a long context', w: { lcr: 3, context: 1 },
@@ -405,9 +405,9 @@
   // bottom tier. Prose moves down one, not because writing stopped mattering
   // but because it separates these models less than the four above it.
   var DEFAULTS = {
-    code: 4, build: 4, honest: 4, reason: 4,
-    finish: 3, steer: 3, cheap: 3,
-    know: 2, longctx: 2, fast: 2
+    code: 4, build: 4, reason: 4,
+    honest: 3, know: 3, finish: 3, steer: 3, cheap: 3,
+    longctx: 2, fast: 2
   };
   (function () {
     var t = DIALS.reduce(function (a, d) { return a + (DEFAULTS[d.k] || 0); }, 0);
@@ -754,14 +754,40 @@
     render();
   }
 
+  // Median of every figure across the models that published it. An unmeasured
+  // figure is filled with this rather than skipped.
+  var MED = MI.map(function (mk, j) {
+    var xs = [];
+    M.forEach(function (mo) { if (mo.a[j]) xs.push(mo.v[j]); });
+    xs.sort(function (a, b) { return a - b; });
+    if (!xs.length) return 50;
+    var mid = Math.floor(xs.length / 2);
+    return xs.length % 2 ? xs[mid] : (xs[mid - 1] + xs[mid]) / 2;
+  });
+
+  // Scoring used to average only the figures a model published, which quietly
+  // paid models for NOT being measured: skip the test you would fail and your
+  // average rises. On 8 August that was measured rather than assumed, and it
+  // was not a rounding error. Claude Opus 5 at high effort carries eleven gaps
+  // and gained eight points from them, ranking second where filling those gaps
+  // put it eighth, while GLM-5.2, which is nearly fully measured, was pushed
+  // from fourth down to twelfth for the crime of publishing its numbers.
+  //
+  // An unmeasured figure is now filled with the board median for that figure:
+  // the assumption is that a model nobody tested is ordinary at the thing,
+  // which is the neutral guess rather than a flattering one. Coverage is still
+  // tracked and still printed on the row, because a score resting on half the
+  // evidence should say so even when the arithmetic no longer favors it.
   function score(m, W, tot) {
-    var num = 0, den = 0;
+    var num = 0, den = 0, seen = 0;
     for (var j = 0; j < W.length; j++) {
       if (!W[j]) continue;
-      if (m.a[j]) { num += W[j] * m.v[j]; den += W[j]; }
+      den += W[j];
+      if (m.a[j]) { num += W[j] * m.v[j]; seen += W[j]; }
+      else { num += W[j] * MED[j]; }
     }
-    if (den <= 0 || den / tot < MIN_COV) return null;
-    return { s: num / den, cov: den / tot };
+    if (den <= 0 || seen / tot < MIN_COV) return null;
+    return { s: num / den, cov: seen / tot };
   }
 
   // Which factors a model was never measured on. A model is scored across what
