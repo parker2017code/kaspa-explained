@@ -170,7 +170,7 @@
           <details class="mp-method">
             <summary>How the score works, and where the numbers come from</summary>
             <ol>
-              <li><b>Three sources, and a model is listed only if all three scored it.</b> LiveBench 2026-06-25 gives seven category scores and cost per successful task. Artificial Analysis gives its individual benchmarks, named below. Arena gives four session signals from 1.4 million real sessions. That rule is the whole relevance filter: it keeps the list to models people actually choose between, and it means every row is measured the same way.</li>
+              <li><b>Two sources, and a model is listed only if both scored it.</b> LiveBench 2026-06-25 gives seven category scores and cost per successful task. Artificial Analysis gives its individual benchmarks, named below. Agent Arena used to be the third, but on 8 August its four session signals were the weakest separators on the board and its membership was quietly deciding the roster, so it came out and three models it had never scored came in. That rule is the whole relevance filter: it keeps the list to models people actually choose between, and it means every row is measured the same way.</li>
               <li><b>No leaderboard's own headline score is used.</b> Artificial Analysis publishes an intelligence index and it feeds nothing here. It is a weighted blend of the same benchmarks listed below, so importing it alongside them would count each one twice, at a mix somebody else chose. The individual figures go in instead and the factors below decide the weights. Every one of the twenty is named on the factor it drives, so a dial reading forty-three percent Terminal-Bench Hard tells you which measurement moved it. The same applies to LiveBench's overall column.</li>
               <li><b>The benchmarks were picked for spread at the frontier, not for prestige.</b> A benchmark the leaders have all maxed out cannot rank them, whatever its reputation. Hard reasoning goes to Humanity's Last Exam and CritPt physics, where the frontier has not saturated, while GPQA Diamond enters at low weight because across the top five it spans a single point. Terminal-Bench v2.1 carries the terminal factor, because Terminal-Bench Hard was published by too few of the field to rank it. Each dial prints its own frontier spread, computed from the loaded figures, and says whether it separates, barely separates, or cannot separate the leaders.</li>
               <li><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares shown next to the dials add to 100. Only open weights is a filter, because a model either ships its weights or it does not.</li>
@@ -356,38 +356,54 @@
     { t: 'Self-hosted',     v: { reason: 3, code: 3, honest: 2 }, open: true }
   ];
 
-  // Which leaderboard each published figure comes from. The badge on a row
-  // counts sources actually present rather than reading a stored flag, so a
-  // model with partial coverage shows it instead of inheriting a label set
-  // when the page carried fewer sources.
-  var SOURCE_OF = {
-    overall: 'LiveBench', reasoning: 'LiveBench', coding: 'LiveBench',
-    agentic: 'LiveBench', math: 'LiveBench', data: 'LiveBench',
-    language: 'LiveBench', ifollow: 'LiveBench', costPerSuccess: 'LiveBench',
-    intelligence: 'Artificial Analysis', costPerTask: 'Artificial Analysis',
-    tps: 'Artificial Analysis', ttft: 'Artificial Analysis',
-    total: 'Artificial Analysis', mmmu: 'Artificial Analysis',
-    tbv2: 'Artificial Analysis', tau2: 'Artificial Analysis',
-    tau3: 'Artificial Analysis', omni: 'Artificial Analysis',
-    gpqa: 'Artificial Analysis', scicode: 'Artificial Analysis',
-    ifbench: 'Artificial Analysis', apex: 'Artificial Analysis',
-    confirmed: 'Agent Arena', praise: 'Agent Arena', steer: 'Agent Arena',
-    bash: 'Agent Arena'
-  };
+  // Which source each published figure comes from. LiveBench and Arena figures
+  // already carry the source in their name; the Artificial Analysis ones did
+  // not, so its individual benchmarks looked like they came from nowhere. That
+  // asymmetry is the whole reason the sourcing was invisible.
+  //
+  // This map has to be defined before SOURCE_COUNT below, not after it. A
+  // second copy of it used to live 140 lines further down, and the derived
+  // SOURCE_COUNT read THAT one, so `var` hoisting handed the IIFE an undefined
+  // object and the whole page died on a TypeError before a single dial drew.
+  // One map, above its first reader.
+  var SRC = {};
+  ['reasoning','coding','agentic','math','data','language','ifollow','overall']
+    .forEach(function (k) { SRC[k] = 'LiveBench'; });
+  ['confirmed','praise','steer','bash','atext','awebdev','avision','adoc']
+    .forEach(function (k) { SRC[k] = 'Arena'; });
+  ['intelligence','costPerTask','costPerSuccess','tps','ttft','total','nonhallu',
+   'tbhard','gdpval','itbench','lcr','hle','critpt','mmmu','tbv2','tau2','tau3',
+   'omni','gpqa','scicode','ifbench','apex']
+    .forEach(function (k) { SRC[k] = 'Artificial Analysis'; });
+  SRC.costPerSuccess = 'LiveBench';
+  SRC.context = 'published spec';   // a model card number, not a benchmark
+
+  // A model card is not a leaderboard, so it must not inflate a badge that
+  // counts leaderboards. Without this, context alone would push the count to
+  // three and every row would claim a board that never scored anything.
+  function boardOf(k) {
+    var s = SRC[k];
+    return s && s !== 'published spec' ? s : null;
+  }
+
   // Derived, not frozen. Arena stopped feeding any figure on 8 August and a
   // hardcoded 3 would have printed 'two leaderboards of three' on every row
   // forever, which is a badge describing a board that no longer contributes.
   var SOURCE_COUNT = (function () {
     var seen = {};
-    D.metrics.forEach(function (k) { if (SRC[k]) seen[SRC[k]] = 1; });
+    D.metrics.forEach(function (k) { var b = boardOf(k); if (b) seen[b] = 1; });
     return Object.keys(seen).length;
   })();
   var COUNT_WORD = ['no', 'one', 'two', 'three'];
 
+  // Counts the boards a model is actually scored on. This read a separate,
+  // staler map that was missing six of the twenty-five live figures, so any
+  // model carrying gdpval, hle, critpt, lcr or nonhallu was undercounted.
   function sourcesFor(m) {
     var seen = {};
     D.metrics.forEach(function (k, i) {
-      if (m.a[i] && SOURCE_OF[k]) seen[SOURCE_OF[k]] = 1;
+      var b = boardOf(k);
+      if (m.a[i] !== null && m.a[i] !== undefined && b) seen[b] = 1;
     });
     return Object.keys(seen).length;
   }
@@ -516,21 +532,7 @@
     gpqa: 'GPQA Diamond', scicode: 'SciCode', ifbench: 'IFBench', apex: 'APEX office work'
   };
 
-  // Which of the three sources each figure comes from. LiveBench and Arena
-  // figures already carry the source in their name; the Artificial Analysis
-  // ones did not, so its individual benchmarks looked like they came from
-  // nowhere. That asymmetry is the whole reason the sourcing was invisible.
-  var SRC = {};
-  ['reasoning','coding','agentic','math','data','language','ifollow','overall']
-    .forEach(function (k) { SRC[k] = 'LiveBench'; });
-  ['confirmed','praise','steer','bash','atext','awebdev','avision','adoc']
-    .forEach(function (k) { SRC[k] = 'Arena'; });
-  ['intelligence','costPerTask','costPerSuccess','tps','ttft','total','nonhallu',
-   'tbhard','gdpval','itbench','lcr','hle','critpt','mmmu','tbv2','tau2','tau3',
-   'omni','gpqa','scicode','ifbench','apex']
-    .forEach(function (k) { SRC[k] = 'Artificial Analysis'; });
-  SRC.costPerSuccess = 'LiveBench';
-  SRC.context = 'published spec';   // a model card number, not a benchmark
+  // SRC is defined once, near the top, above SOURCE_COUNT which reads it.
 
   // Name plus source, without repeating a source the name already states.
   function figWithSrc(k) {

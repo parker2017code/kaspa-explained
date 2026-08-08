@@ -62,6 +62,14 @@ it. The traps. The directives. The pick-up block.
 survivable is this file, so keep it current as you go. If context feels tight, do
 not wind down early: commit, update this file, keep working.
 
+**SCOPE: ECOSYSTEM TRACKING IS L1 ONLY.** Owner's instruction, 8 August. What
+counts as a Kaspa ecosystem development is what runs on Kaspa L1 and is
+re-derivable from chain bytes: covenants, KCC20 tokens, the covenant token
+markets and their graduated pools, escrows. L2 and sidechain activity is not
+Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
+ecosystem context, never adoption evidence. `kaspa-developments.html` says this
+in its own checked-line so a future reader cannot miss it.
+
 **PICK-UP BLOCK, 2026-08-08, session end.**
 
 > Check `git log --oneline -1` against three green workflows before trusting
@@ -76,21 +84,53 @@ not wind down early: commit, update this file, keep working.
 > Aug 8 gained a paragraph because it told readers to verify on an explorer and
 > explorers cannot decode covenant data.
 >
-> **NOT YET DONE, and it is the next real job: a full site overview.** All 24
-> live pages read end to end against CLAIMS.yml and the primary sources, not
-> just scanned. The 8 August sweep was a SCANNER pass for AI tells and self-talk
-> (clean: zero em dashes, one self-talk line cut, the rest domain vocabulary and
-> FAQ headings) plus a self-count check on one page. Nobody has read the other
-> 23 pages for stale facts. Start with the pages carrying dated or numeric
-> claims: status, toccata-status, kaspa-claims-checker, what-is-kaspa,
-> build-on-kaspa, kips, toccata-explained, skeptical-case.
+> **THE SITE OVERVIEW ran on 8 August and found real staleness.** Method that
+> worked and should be repeated: pull every sentence carrying a number, version,
+> date or status word out of all 24 live pages into one list (272 of them), read
+> the list, then verify each suspect against its primary source. That is far
+> cheaper than reading 400 KB of HTML and it caught everything below.
 >
-> **CLAIM DATES all sit on 2026-08-21 and will block the repo together.** 19 of
-> 22 came due on one morning last time. Stagger them.
+> **What it found and fixed, all deployed:**
 >
-> **THE PICKER is current and deployed**: 23 models, 25 figures, 575 of 575
-> cells, both boards re-read 8 August. Its one open flaw is the eligibility
-> threshold, set after seeing which models it dropped.
+> - **The August 5 emission step had fired and no page knew.** Live DAA 507,631,731,
+>   block reward 2.31246515, supply 27.627B. Six files carried the superseded
+>   24.49971474 / 2.44997148 pair. Next step 21.82676446 at DAA 531,207,000,
+>   about 4 September. Verified in coinbase.rs table indexes 48 to 52, which sit
+>   26,298,000 DAA apart at 10 BPS.
+> - **Mainnet covenants grew about fifteenfold in two weeks.** 1,841 to 27,166
+>   ever created, 80 to 337 active, 253.98 KAS to 1,316,791.77 KAS live value.
+>   90 KCC20 tokens. This was the biggest miss on the site.
+> - **"No DEX, AMM, or lending market is deployed on mainnet" became false.**
+>   67 covenant token markets on bonding curves, 4 graduated into AMM pools,
+>   continuous trades. Lending is still absent. Total live value is
+>   about 35,000 US dollars, so the honest line is markets exist and are thin.
+> - **The index said five KCC specs were open; seven are.** kips.html had it
+>   right, the homepage did not.
+> - **Three pages credited v2.0.1 with setting the activation score.** v2.0.0 set
+>   it; v2.0.1 is the current release.
+> - **Six pages had a JSON-LD dateModified disagreeing with their meta tag.**
+>   Now synced, one home per fact.
+> - **The 22 claim dates are staggered**, 15 August to 12 September, volatile
+>   claims soonest. native_defi is first because it just proved it moves weekly.
+>
+> **HOW TO RE-READ THE L1 FOOTPRINT.** kascov publishes an open JSON API with no
+> key: `https://kascov.io/data/mainnet-live.json` for the counts,
+> `/data/mainnet/templates.json` for the label breakdown, `/data/mainnet/markets`
+> and `/pools` and `/tokens.json` for the market side. Never publish those
+> figures on the indexer's word alone. Take a trade's txid to
+> `api.kaspa.org/transactions/<txid>` and confirm `is_accepted`, version 1, and
+> that the amount matches to the sompi. That is what makes it consensus evidence
+> instead of a third-party reading, and it is now the standing bar for this page.
+>
+> **STILL NOT DONE.** The 272-sentence list was read, but the long prose pages
+> were not read end to end for argument drift: kaspa-mining, chain-comparer,
+> sources, crypto-from-scratch, toccata-essay, kaspa-origin-story. Their numbers
+> are checked; their reasoning is not.
+>
+> **THE PICKER went down on the live site and is fixed.** See trap 15. It is
+> current and deployed: 23 models, 25 figures, 575 of 575 cells, two sources.
+> Its one open flaw is the eligibility threshold, set after seeing which models
+> it dropped.
 
 ## What this is for
 
@@ -158,8 +198,13 @@ it. And a selection rule must not read the thing it feeds: the eligibility gate
 read the live dials, so rewriting a factor moved the roster with no new data.
 
 Arena's four session signals came out on 8 August to admit three models Arena
-never scored, including Qwen3.8 Max, top five on both remaining boards. Cost per
-task came back the same day, when the one model missing it published one.
+never scored, including Qwen3.8 Max, which now leads the agent-work preset. Cost
+per task came back the same day, when the one model missing it published one.
+
+The badge that counts sources is derived, and getting that right cost a day of
+downtime: see trap 15. `SRC` is the single source map, defined above its first
+reader, and `boardOf()` keeps `context` out of the count because a model card is
+not a leaderboard.
 
 OPEN: the eligibility threshold was set after seeing which models it dropped.
 
@@ -184,8 +229,10 @@ proves nothing about them.
 
 ## The claim registry rots on a cliff
 
-22 dated claims, and they were not staggered: 19 came due on one morning, which
-turned a recheck into a blocked repo. Stagger `recheck_after` when moving a batch.
+22 dated claims. They were all sitting on one date again and were staggered on 8
+August across 15 August to 12 September, soonest for whatever moves fastest.
+Keep them spread when moving a batch; 19 due on one morning is what turned a
+recheck into a blocked repo.
 
 Bump a date only after reading the source. Bumping is the cheap way to make the
 gate green and it silently converts a checked claim into an unchecked one.
@@ -288,6 +335,23 @@ Times the checker was wrong rather than the site.
 13. **A claim registry that expires all at once.** 19 of 22 on one morning.
 14. **A background job whose output was never read.** Two greps died on trap 12
     and the run was cited as evidence until the file was opened and found empty.
+15. **`var` hoisting made a derived constant read an undefined map, and it took
+    the whole picker down in production for a day.** `SOURCE_COUNT` ran in an
+    IIFE at line 380 and read `SRC`, which was not assigned until line 523. The
+    declaration hoists, the assignment does not, so `SRC[k]` threw a TypeError
+    before a single dial drew. The page served HTTP 200 with the full data blob
+    intact, which is why nothing external noticed. Two lessons. A second copy of
+    the same map existed 140 lines apart, and the older one was missing six of
+    the twenty-five live figures, so the row badge undercounted sources too:
+    one home per fact would have prevented both. And `check-model-picker.py`
+    passed throughout, because it validates that dial weights resolve, not that
+    the page executes. **No checker in this repo proves the picker runs. Load it
+    rendered after any edit to it.**
+16. **The publish gate scanned agent scratch and let it block a deploy.** The
+    forbidden-copy grep walked the whole tree, so a stale worktree under
+    `.claude/worktrees/` held an old copy of every page and a phrase correctly
+    retired from the live site still failed the gate from a directory that never
+    ships. Now excluded. When the gate fails, read the path before the phrase.
 
 ## Run after any change
 
@@ -326,13 +390,17 @@ live page with a cache-busting query string for the exact changed string.
 
 ## Where this is going
 
-1. **Rebuild the picker roster from the benchmarks**, not from what was already
-   transcribed. See the pick-up block. This is the item that makes the tool
-   defensible.
-2. **Set the eligibility threshold before looking at what it drops.**
-3. **Stagger the claim dates** so the registry stops expiring in one block.
+1. **Gate that the picker actually executes.** Nothing does. It shipped a
+   TypeError to production for a day and every checker stayed green. A headless
+   load asserting the ranking list has children would have caught it in seconds.
+2. **Rebuild the picker roster from the benchmarks**, not from what was already
+   transcribed. This is the item that makes the tool defensible.
+3. **Set the eligibility threshold before looking at what it drops.**
 4. **Gate the stamp against the clock.** Nothing catches a date written four
    days behind.
+5. **Re-read the long prose pages for argument drift**, not just numbers:
+   kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay,
+   kaspa-origin-story.
 5. **Gate slugs against the redirect stubs**, so a citation to a merged page
    fails at commit rather than at read.
 6. **Score the picker against outside truth.** Every figure is transcribed by

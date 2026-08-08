@@ -311,8 +311,14 @@ done < <(
   exit 1
 }
 
+# Scan only publishable pages. This used to walk the whole tree, so a stale
+# agent worktree left under .claude/ carried an old copy of every page and a
+# phrase retired from the live site still failed the gate from a directory
+# that never ships. Agent scratch must not decide whether the site publishes.
 for pattern in "${forbidden_patterns[@]}"; do
-  if grep -RIn --include='*.html' "$pattern" . >/tmp/kaspa-forbidden-match.txt; then
+  if grep -RIn --include='*.html' \
+      --exclude-dir=.claude --exclude-dir=.git --exclude-dir=node_modules \
+      "$pattern" . >/tmp/kaspa-forbidden-match.txt; then
     echo "Forbidden overclaim found: $pattern" >&2
     cat /tmp/kaspa-forbidden-match.txt >&2
     exit 1
