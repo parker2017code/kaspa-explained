@@ -76,6 +76,16 @@
     input[type="range"]:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
     .mp-check { display: flex; align-items: flex-start; gap: 9px; font-size: .93rem; color: var(--text); margin-bottom: 11px; cursor: pointer; line-height: 1.45; }
     .mp-check input { margin-top: 3px; accent-color: var(--green); flex: none; }
+    .mp-range { display: block; font-size: .93rem; color: var(--text); margin: 4px 0 11px; min-width: 0; }
+    .mp-range[hidden] { display: none; }
+    .mp-range > span { display: flex; justify-content: space-between; gap: .6rem; margin-bottom: 4px; }
+    .mp-range output { opacity: .75; font-size: .85rem; }
+    .mp-range input[type="range"] { width: 100%; }
+    .mp-range em { display: block; font-style: normal; font-size: .78rem; color: var(--faint, var(--muted)); margin-top: 6px; line-height: 1.5; }
+    .mp-est-badge { display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .02em;
+      text-transform: uppercase; padding: .1rem .4rem; border-radius: .3rem;
+      border: 1px solid currentColor; opacity: .7; vertical-align: middle; margin-left: .4rem; }
+    .mp-est { display: block; font-size: .78rem; color: var(--muted); margin-top: 4px; line-height: 1.5; font-style: italic; }
     /* The description is a block, or it runs straight into the end of the label
        and reads as one mangled sentence. */
     .mp-method { margin: 0 0 12px; }
@@ -88,6 +98,7 @@
     .mp-results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .mp-results-head .mp-label { margin: 0; }
     .mp-reset { font: inherit; font-size: .85rem; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .mp-head-actions { display: flex; gap: 14px; align-items: baseline; }
     .mp-reset:hover { color: var(--text); }
     .mp-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
     .mp-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 46px; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-bg); }
@@ -191,12 +202,29 @@
             <p class="mp-label">Where it runs</p>
             <label class="mp-check"><input type="checkbox" id="mpOpen"> <span>Open weights only<em>Models you can download and run on your own hardware, with no API call leaving the building.</em></span></label>
           </div>
+
+          <div class="mp-block">
+            <p class="mp-label">Effort-tier estimates</p>
+            <label class="mp-check"><input type="checkbox" id="mpEstOn"> <span>Estimate every effort tier<em>Fills in the tiers a model was never measured at, from max down to low, using the curve from six families that were. Marked, never mixed into a real row.</em></span></label>
+            <details class="mp-prov mp-est-prov"><summary>How the estimate works</summary>
+              <div class="mp-prov-body"><p>Six families here have two or more measured effort settings, 35 real tier-to-tier steps this page learns from: cost drops about a third a step, response time drops faster than that, and accuracy figures fall 1 to 17 percent depending on which one, never a straight line.</p>
+              <p>Each missing tier is anchored off whichever real row sits closest to it. Estimates going down the ladder read the curve straight; estimates going up invert it, a shakier guess since a low-effort score can sit on a floor that will not un-flatten cleanly. Every estimated row says which direction it came from.</p></div>
+            </details>
+            <label class="mp-range" id="mpEstStrengthRow" hidden>
+              <span>Estimate strength<output id="out-estStrength">70%</output></span>
+              <input type="range" id="mpEstStrength" min="0" max="100" step="5" value="70">
+              <em>0% shows the tier unchanged from its parent. 100% trusts the measured curve fully. Low it if you want a conservative guess, high it if you want the pattern taken at its word.</em>
+            </label>
+          </div>
         </div>
 
         <div class="mp-results">
           <div class="mp-results-head">
             <p class="mp-label" id="mpCount">Ranking</p>
-            <button type="button" class="mp-reset" id="mpReset">Reset</button>
+            <span class="mp-head-actions">
+              <button type="button" class="mp-reset" id="mpShowAll" aria-pressed="false">Show all</button>
+              <button type="button" class="mp-reset" id="mpReset">Reset</button>
+            </span>
           </div>
           
           <details class="mp-method">
@@ -365,6 +393,132 @@
     longctx:'Low. Critical for a minority of jobs and close to irrelevant for the rest, which is exactly what a dial is for.',
     fast:   'Low by default. Nobody picks a model for speed alone, but turn it up for anything interactive.'
   };
+
+
+  // Estimated lower-effort variants. Six families here have two or more
+  // measured effort tiers (Claude Opus 5 and GPT-5.6 Sol and Terra at all
+  // five; GPT-5.6 Luna at three; Kimi K3 and DeepSeek V4 Pro at two), which is
+  // 35 tier-to-tier steps of ground truth. STEP_RATIO is the median, across
+  // every one of those steps, of how much a figure's score changes for one
+  // step down the effort ladder (max -> xhigh -> high -> medium -> low), taken
+  // to the correct root when a pair spans more than one step. It is not
+  // linear and it is not the same for every figure: cost rises about 8% a
+  // step (the model gets cheaper, and cost is scored so cheaper means higher),
+  // response time about the same, while accuracy figures fall 1 to 17% a step
+  // and instruction following falls hardest. Six figures have no tier-paired
+  // data at all (LiveBench does not publish separate effort rows the way
+  // Artificial Analysis does for these families) and fall back to the mean of
+  // the figures that do.
+  var STEP_RATIO = {
+    agentic: null,
+    apex: null,
+    coding: null,
+    context: 1.0,
+    costPerSuccess: null,
+    costPerTask: 1.0752,
+    critpt: 0.8855,
+    gdpval: 0.9246,
+    gpqa: 0.9575,
+    hle: 0.9219,
+    ifbench: 0.8333,
+    ifollow: null,
+    itbench: null,
+    lcr: 0.9528,
+    math: null,
+    mmmu: 0.9567,
+    nonhallu: 0.985,
+    omniAcc: 0.9804,
+    omniIndex: 0.9762,
+    reasoning: null,
+    scicode: 0.9257,
+    tau2: 0.866,
+    tau3: 0.8821,
+    tbhard: 0.9696,
+    tbv2: 0.9343,
+    tps: 1.0021,
+    ttft: 1.0843
+  };
+  var STEP_FALLBACK = (function () {
+    var xs = []; for (var k in STEP_RATIO) if (STEP_RATIO[k] !== null) xs.push(STEP_RATIO[k]);
+    return xs.reduce(function (a, b) { return a + b; }, 0) / xs.length;
+  })();
+  // Same idea for the raw dollars-and-seconds a row displays, computed
+  // directly from cost and latency rather than through the scored figure.
+  var RAW_STEP = { cost: 0.6573, ttft: 0.4616, tps: 1.0028 };
+  var TIER_ORDER = ['max effort', 'xhigh effort', 'high effort', 'medium effort', 'low effort'];
+
+  // Build one estimated row for `model` at `targetTier`, `steps` below its own
+  // tier. `strength` is the slider: 1 means trust the measured curve fully,
+  // 0 means show no change at all (which is a way of turning the whole
+  // feature off without a second code path). A metric the parent was never
+  // measured on stays unmeasured in the estimate too; estimating a number
+  // from a curve is not the same as measuring it, and a gap should not
+  // quietly become a fabricated figure.
+  function estimateTierByName(model, targetTier, steps, strength) {
+    var v = model.v.map(function (val, i) {
+      if (!model.a[i]) return val;
+      var mk = MI[i];
+      var base = (STEP_RATIO[mk] === null || STEP_RATIO[mk] === undefined) ? STEP_FALLBACK : STEP_RATIO[mk];
+      var ratio = 1 - strength * (1 - base);
+      return Math.max(0, Math.min(100, val * Math.pow(ratio, steps)));
+    });
+    function decayRaw(val, key, dp) {
+      if (val === null || val === undefined) return val;
+      var ratio = 1 - strength * (1 - RAW_STEP[key]);
+      var out = val * Math.pow(ratio, steps);
+      var f = Math.pow(10, dp);
+      return Math.round(out * f) / f;
+    }
+    return {
+      n: model.n, t: targetTier, lab: model.lab, open: model.open, ctx: model.ctx,
+      cost: decayRaw(model.cost, 'cost', 2), ttft: decayRaw(model.ttft, 'ttft', 2),
+      tps: decayRaw(model.tps, 'tps', 0), solid: model.solid, v: v, a: model.a.slice(),
+      ci: model.ci, est: true, estFrom: model.t
+    };
+  }
+
+  // One synthesized row per lower tier a family has not measured, only below
+  // the lowest tier actually on the board for that name, never above it: we
+  // have a real curve for going down the ladder and no evidence at all for
+  // going up it.
+  // Every missing tier in the ladder, not only the ones below what is known.
+  // A model measured at "high" now gets estimated rows for max and xhigh too,
+  // anchored off the NEAREST measured tier for that family rather than always
+  // the same one, so a family known at both max and low estimates medium from
+  // whichever real row sits closer to it. Going down the ladder is read
+  // straight off the measured curve (steps positive). Going up inverts it
+  // (steps negative, so Math.pow(ratio, steps) divides instead of
+  // multiplies), which rests on a shakier assumption: a low-effort figure can
+  // sit on a floor that does not un-flatten cleanly when you project it
+  // upward. Every estimated row says which direction it came from so an
+  // upward guess is never mistaken for the safer downward one.
+  function synthesizeAllTiers(strength) {
+    var out = [];
+    var known = {};
+    D.models.forEach(function (m) {
+      var i = TIER_ORDER.indexOf(m.t);
+      if (i < 0) return;
+      known[m.n] = known[m.n] || { idx: [], row: {} };
+      known[m.n].idx.push(i);
+      known[m.n].row[i] = m;
+    });
+    Object.keys(known).forEach(function (name) {
+      var idxs = known[name].idx;
+      for (var t = 0; t < TIER_ORDER.length; t++) {
+        if (idxs.indexOf(t) !== -1) continue;
+        var nearest = idxs[0];
+        idxs.forEach(function (i) {
+          if (Math.abs(i - t) < Math.abs(nearest - t)) nearest = i;
+        });
+        var anchor = known[name].row[nearest];
+        var steps = t - nearest;
+        var row = estimateTierByName(anchor, TIER_ORDER[t], steps, strength);
+        row.estDir = steps > 0 ? 'down' : 'up';
+        out.push(row);
+      }
+    });
+    return out;
+  }
 
   var DIALS = [
     { k: 'reason',  t: 'Reasoning and analysis', w: { math: 3, critpt: 2, hle: 2, reasoning: 2, gpqa: 1 },
@@ -717,11 +871,29 @@
     ['mpOpen'].forEach(function (id) {
       $(id).addEventListener('change', function () { clearPreset(); render(); });
     });
+    $('mpEstOn').addEventListener('change', function () {
+      $('mpEstStrengthRow').hidden = !$('mpEstOn').checked;
+      render();
+    });
+    $('mpEstStrength').addEventListener('input', function () {
+      $('out-estStrength').textContent = $('mpEstStrength').value + '%';
+      render();
+    });
+    $('mpShowAll').addEventListener('click', function () {
+      var on = $('mpShowAll').getAttribute('aria-pressed') === 'true';
+      $('mpShowAll').setAttribute('aria-pressed', on ? 'false' : 'true');
+      render();
+    });
     $('mpReset').addEventListener('click', function () {
       DIALS.forEach(function (d) {
         state[d.k] = DEFAULTS[d.k] || 0; els[d.k].value = state[d.k];
       });
       $('mpOpen').checked = false;
+      $('mpEstOn').checked = false;
+      $('mpEstStrengthRow').hidden = true;
+      $('mpEstStrength').value = 70;
+      $('out-estStrength').textContent = '70%';
+      $('mpShowAll').setAttribute('aria-pressed', 'false');
       clearPreset(); render();
     });
 
@@ -1051,6 +1223,7 @@
     // list that had gone empty.
     if (!any) {
       $('mpCount').textContent = 'Ranking';
+      $('mpShowAll').hidden = true;
       empty.hidden = false;
       empty.textContent = 'Pick a job above, or turn up a dial. Nothing is scored until something matters.';
       if (tieNoteEl()) tieNoteEl().hidden = true;
@@ -1058,8 +1231,18 @@
       return;
     }
 
+    // Estimated rows are added only to the ranking list, never to M itself.
+    // M is what coverage counts, the median gap-fill, and the Monte Carlo draw
+    // all read, and a projected number is not a measurement: letting it into
+    // those would let the page start reporting an estimate as if a lab
+    // published it.
+    var estOn = $('mpEstOn').checked;
+    var estStrength = estOn ? (+$('mpEstStrength').value) / 100 : 0;
+    var pool = M;
+    if (estOn) pool = M.concat(synthesizeAllTiers(estStrength));
+
     var rows = [];
-    M.forEach(function (m) {
+    pool.forEach(function (m) {
       if (openOnly && !m.open) return;
       var s = score(m, W, tot);
       if (s === null) return;
@@ -1068,6 +1251,7 @@
 
     if (!rows.length) {
       $('mpCount').textContent = 'Nothing scored';
+      $('mpShowAll').hidden = true;
       empty.hidden = false;
       empty.innerHTML = emptyReason(openOnly);
       if (tieNoteEl()) tieNoteEl().hidden = true;
@@ -1076,7 +1260,11 @@
     }
     empty.hidden = true;
     rows.sort(function (a, b) { return b.s - a.s; });
-    var shown = rows.slice(0, 15);
+    var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
+    var CAP = 15;
+    var shown = showAll ? rows : rows.slice(0, CAP);
+    $('mpShowAll').hidden = rows.length <= CAP;
+    $('mpShowAll').textContent = showAll ? 'Show top 15' : 'Show all ' + rows.length;
     $('mpCount').textContent = shown.length < rows.length
       // "qualify" is left over from when this page had hard filters. Nothing is
       // filtered now except open weights: models drop out only when they have
@@ -1119,24 +1307,39 @@
       if (m.tps) meta.push(m.tps + ' tok/s');
       if (m.ctx) meta.push(fmtCtxVal(m.ctx));
       if (m.open) meta.push('open weights');
-      var nsrc = sourcesFor(m);
-      meta.push(nsrc === SOURCE_COUNT
-        ? (SOURCE_COUNT === 2 ? 'both leaderboards' : 'all ' + COUNT_WORD[SOURCE_COUNT] + ' leaderboards')
-        : COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards') + ' of ' + COUNT_WORD[SOURCE_COUNT]);
+      // An estimated row was never measured, so no leaderboard count is true
+      // of it. Say what it actually is instead: a curve fit to how this same
+      // family behaved at the tier it was measured on.
+      if (m.est) {
+        meta.push((m.estDir === 'up' ? 'estimated up from ' : 'estimated down from ') + tierLabel(m.estFrom));
+      } else {
+        var nsrc = sourcesFor(m);
+        meta.push(nsrc === SOURCE_COUNT
+          ? (SOURCE_COUNT === 2 ? 'both leaderboards' : 'all ' + COUNT_WORD[SOURCE_COUNT] + ' leaderboards')
+          : COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards') + ' of ' + COUNT_WORD[SOURCE_COUNT]);
+      }
       var gaps = unscored(m);
       var gapNote = gaps.length
         ? '<span class="mp-gap">Never measured on ' + gaps.join(', ')
           + ', so its score covers ' + Math.round(r.cov * 100)
           + ' percent of what you asked for.</span>'
         : '';
+      var estNote = m.est
+        ? '<span class="mp-est">Estimated, not measured. Projected ' + (m.estDir === 'up' ? 'upward' : 'downward')
+          + ' from the ' + tierLabel(m.estFrom) + ' row using the pattern from six model families '
+          + 'that publish more than one effort tier, at ' + Math.round(estStrength * 100) + '% strength.'
+          + (m.estDir === 'up'
+            ? ' Upward is the shakier direction: it inverts a curve measured going down.'
+            : '') + '</span>'
+        : '';
       var pct = Math.round(r.s);
       li.innerHTML =
         '<span class="mp-rank">' + (i + 1) + '</span>' +
         '<span class="mp-cell">' +
-        '<span class="mp-title"><span class="mp-name">' + m.n + '</span>' +
+        '<span class="mp-title"><span class="mp-name">' + m.n + (m.est ? ' <b class="mp-est-badge">estimated</b>' : '') + '</span>' +
         '<span class="mp-tier">' + tierLabel(m.t) + '</span></span>' +
         '<span class="mp-meta">' + meta.join('<span class="sep">·</span>') + '</span>' +
-        drivers(m) + gapNote +
+        drivers(m) + gapNote + estNote +
         '<span class="mp-bar"><i style="width:' + Math.max(pct, 2) + '%"></i></span></span>' +
         '<span class="mp-score">' + r.s.toFixed(0) + '</span>';
       frag.appendChild(li);
