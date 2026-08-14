@@ -2,65 +2,31 @@
 
 ## START HERE ON A FRESH SESSION
 
-The owner pastes this file in at the start of every session.
+The owner pastes this file in at the start of every session. Do these in order, before any building.
 
-**FIRST JOB, before any building: trim this file.** Run `wc -w
-WORKING-STATE.md`. The cap is 20,000, a ceiling and not a target. Trim every
-session, over or not. The rule below is mechanical, so apply it and move on.
+1. **TRIM THIS FILE FIRST, whether or not it is over.** Run `wc -w WORKING-STATE.md`. The cap is 20,000 words, a ceiling to work under, not headroom to fill. The file is always rationed and always cut, and the cutting must reach material a previous pass protected, not just whatever is easiest to remove this time. Trim every session, over or not. Cut in this order, each test needing no judgment: narration (delete the sentence, see if a number or decision goes with it); closed work (leave one line: the number, the script that owns it); second homes (grep a distinctive number; two hits means one is redundant); superseded prose (calls a thing unbuilt that is now built, cut first); rejected approaches (one line: what, the number that killed it, law failure or data failure).
+2. **NEVER CUT:** a number with a source, a refusal and the check that closes it, the traps, the directives, the pick-up block.
+3. **CHECK PROPORTION.** 71 of 72 pages are Kaspa. If tooling prose outgrows what-the-site-claims prose, the doc is wrong even if every sentence in it is true.
+4. **DO NOT ASK WHAT TO DO NEXT.** Take the top item in the pick-up block that needs nobody outside, finish it, record it, ship it.
+5. **DECIDE AND REPORT**, don't ask. If a call is reversible, make it, say you made it, say what would reverse it.
+6. **ONLY THREE THINGS NEED THE OWNER:** deleting files he created, a change to what a page CLAIMS, anything touching credentials or the domain.
+7. **COMMIT** only when one thing is finished and verified: the code, its gate, and the paragraph here explaining it, together. Pre-commit hook runs the full publish gate, so a red gate blocks committing.
+8. **DEPLOY** by pushing to `main`, then confirm all three workflows are green and fetch the live page with a cache-busting query string for the exact changed string. A push is not a deploy.
+9. **WRITE HERE** the moment a number, refusal, or decision exists that isn't in the code. Not narration of what you did.
+10. **ON CONTEXT:** compaction cannot be triggered from inside a turn. This file is what makes it survivable, so keep it current. If context feels tight, do not wind down early: commit, update this file, keep working.
 
-**Read it as a briefing for a stranger who has to continue the work today.** Not
-an archive. A paragraph that does not change what the reader does next is not
-earning its place, however true it is.
+## SESSION CLOSE
 
-**CUT, in this order. Each has a test that needs no judgment.**
+No script emits this yet; state it directly before ending the session. **OPEN ITEM: nothing in this repo forces this checklist to run; it depends on the session author remembering to state it.**
 
-1. **Narration.** Any sentence describing the doing rather than the result.
-   Test: delete it and see whether a number or a decision goes with it.
-2. **Closed work.** A section whose outcome is now a shipped default or a
-   passing gate. Leave one line with the number and the script that owns it.
-3. **Second homes.** Any topic explained twice. Grep a distinctive number from
-   it; two hits means one is redundant.
-4. **Superseded prose.** Anything calling a thing unbuilt or unknown that is now
-   built or known. Cut these first when found.
-5. **Rejected approaches.** One line each: what, the number that killed it, and
-   whether it is a law failure or a data failure.
-
-**PROPORTION.** This site is about Kaspa. 71 of its 72 pages are Kaspa. If a
-section about tooling grows past a section about what the site claims, the doc
-is wrong even if every sentence in it is true.
-
-**NEVER CUT.** A number with a source. A refusal and the check that would close
-it. The traps. The directives. The pick-up block.
-
-**HOW TO WORK, once the trim is done.**
-
-- **Do not ask what to do next.** The queue below is ordered. Take the top item
-  that needs nobody outside, finish it, record it, ship it.
-- **Decide and report.** If a call is reversible, make it, say you made it, and
-  say what would reverse it.
-- **Three things need the owner, and only these three.** Deleting files he
-  created. A change to what a page CLAIMS, since that is his positioning.
-  Anything touching credentials or the domain.
-- **Where this is heading.** Every public sentence is sourced to code, a
-  release, a KIP or a core contributor, and carries its status label. Every
-  check a reader might run should be cheaper than the claim it tests.
-
-**THE RHYTHM.**
-
-- **COMMIT** when one thing is finished and verified. A commit is the code, its
-  gate, and the paragraph here that explains it, together. The pre-commit hook
-  runs the full publish gate, so a red gate blocks committing, not just pushing.
-- **DEPLOY** by pushing to `main`. Then confirm all three workflows are green
-  and fetch the live page with a cache-busting query string for the exact
-  changed string. A push is not a deploy and a deploy is not a verified page.
-- **WRITE HERE** the moment a number, a refusal or a decision exists that is not
-  in the code. Not narration of what you did.
-- **REPORT** with the outcome first: what is live, what is committed, what is
-  measured, what is open.
-
-**On context.** Compaction cannot be triggered from inside a turn. What makes it
-survivable is this file, so keep it current as you go. If context feels tight, do
-not wind down early: commit, update this file, keep working.
+1. **WHAT'S LIVE**, and how you know: last pushed commit hash, confirmed against `git log --oneline -1` and origin, workflows green.
+2. **TREE CLEAN OR NOT.** Name every uncommitted file and why it's uncommitted.
+3. **WORD COUNT**, `wc -w WORKING-STATE.md`, against the 20,000 cap, and what came out this session.
+4. **EVERY GATE RUN AND ITS RESULT:** `check-site.sh`, `check-claims.py`, `check-status-freshness.py`, `check-model-picker.py`, `check-prose.py`, `check-american-english.py`, `check-grid-spans.py`. A gate not run is not green.
+5. **WHAT WAS MEASURED**, not assumed, with the number.
+6. **WHAT'S STILL OPEN**, and the single top item for next session.
+7. **ANYTHING BLOCKED ON THE OWNER**, one sentence each: what it settles, what it needs from him. Nothing if nothing is blocked.
+8. **ANY CLAIM MADE THIS SESSION NOT YET VERIFIED**, said plainly as unverified.
 
 **SCOPE: ECOSYSTEM TRACKING IS L1 ONLY.** Owner's instruction, 8 August. What
 counts as a Kaspa ecosystem development is what runs on Kaspa L1 and is
@@ -70,67 +36,13 @@ Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
 ecosystem context, never adoption evidence. `kaspa-developments.html` says this
 in its own checked-line so a future reader cannot miss it.
 
-**PICK-UP BLOCK, 2026-08-08, session end.**
+**PICK-UP BLOCK, 2026-08-14, session end.**
 
-> Check `git log --oneline -1` against three green workflows before trusting
-> anything here. READ THE DATE FROM THE ENVIRONMENT BEFORE WRITING ANY STAMP,
-> trap 2, it cost two pushed commits.
->
-> **THE DAILY JOB is the X-post calendar.** `kaspa-x-posts-august-2026.md`,
-> local and uncommitted by the owner's instruction, running to 31 August, asked
-> for one day at a time. Aug 3 to 8 are done. Every post is verified against
-> primary sources before handover and its source slug checked against the
-> redirect stubs. Aug 3 was rewritten for quoting one half of Argent's README;
-> Aug 8 gained a paragraph because it told readers to verify on an explorer and
-> explorers cannot decode covenant data.
->
-> **THE SITE OVERVIEW ran on 8 August and found real staleness.** Method that
-> worked and should be repeated: pull every sentence carrying a number, version,
-> date or status word out of all 24 live pages into one list (272 of them), read
-> the list, then verify each suspect against its primary source. That is far
-> cheaper than reading 400 KB of HTML and it caught everything below.
->
-> **What it found and fixed, all deployed:**
->
-> - **The August 5 emission step had fired and no page knew.** Live DAA 507,631,731,
->   block reward 2.31246515, supply 27.627B. Six files carried the superseded
->   24.49971474 / 2.44997148 pair. Next step 21.82676446 at DAA 531,207,000,
->   about 4 September. Verified in coinbase.rs table indexes 48 to 52, which sit
->   26,298,000 DAA apart at 10 BPS.
-> - **Mainnet covenants grew about fifteenfold in two weeks.** 1,841 to 27,166
->   ever created, 80 to 337 active, 253.98 KAS to 1,316,791.77 KAS live value.
->   90 KCC20 tokens. This was the biggest miss on the site.
-> - **"No DEX, AMM, or lending market is deployed on mainnet" became false.**
->   67 covenant token markets on bonding curves, 4 graduated into AMM pools,
->   continuous trades. Lending is still absent. Total live value is
->   about 35,000 US dollars, so the honest line is markets exist and are thin.
-> - **The index said five KCC specs were open; seven are.** kips.html had it
->   right, the homepage did not.
-> - **Three pages credited v2.0.1 with setting the activation score.** v2.0.0 set
->   it; v2.0.1 is the current release.
-> - **Six pages had a JSON-LD dateModified disagreeing with their meta tag.**
->   Now synced, one home per fact.
-> - **The 22 claim dates are staggered**, 15 August to 12 September, volatile
->   claims soonest. native_defi is first because it just proved it moves weekly.
->
-> **HOW TO RE-READ THE L1 FOOTPRINT.** kascov publishes an open JSON API with no
-> key: `https://kascov.io/data/mainnet-live.json` for the counts,
-> `/data/mainnet/templates.json` for the label breakdown, `/data/mainnet/markets`
-> and `/pools` and `/tokens.json` for the market side. Never publish those
-> figures on the indexer's word alone. Take a trade's txid to
-> `api.kaspa.org/transactions/<txid>` and confirm `is_accepted`, version 1, and
-> that the amount matches to the sompi. That is what makes it consensus evidence
-> instead of a third-party reading, and it is now the standing bar for this page.
->
-> **STILL NOT DONE.** The 272-sentence list was read, but the long prose pages
-> were not read end to end for argument drift: kaspa-mining, chain-comparer,
-> sources, crypto-from-scratch, toccata-essay, kaspa-origin-story. Their numbers
-> are checked; their reasoning is not.
->
-> **THE PICKER went down on the live site and is fixed.** See trap 15. It is
-> current and deployed: 23 models, 25 figures, 575 of 575 cells, two sources.
-> Its one open flaw is the eligibility threshold, set after seeing which models
-> it dropped.
+1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp (see "Mistakes that keep happening" item 1).
+2. **UNCOMMITTED RIGHT NOW:** `model-picker.html` has local changes on top of `aa30e2c`, verified live, gate-clean, ready to commit. The 4/3/3-flagship rebuild mentioned in earlier pick-up blocks was itself superseded mid-session: the owner asked for a full methodology change (see "The model picker, briefly" below) before that version ever shipped. Read that section before touching the picker again; the deployed site is still `aa30e2c` and does not match the file on disk.
+3. **THE DAILY JOB is the X-post calendar**, `kaspa-x-posts-august-2026.md`, local and uncommitted by standing instruction. Aug 3-14 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
+4. **SITE REVIEW DONE THIS SESSION, clean.** Owner asked for a full voice/consistency/staleness pass. Result: no voice drift anywhere across all 72 pages, including the six long-prose pages item 4 of "Where this is going" had flagged as never read end to end for argument drift (kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay, kaspa-origin-story) plus toccata-explained.html. That item is now closed. Two real staleness items survived the pass, not yet fixed, see "Where this is going."
+5. **RAW SOURCE DATA for this session's picker rebuild** (Artificial Analysis, LiveBench, and LM Arena pulls, all dated 14 August) lives only in the session-scoped scratchpad, not the repo: `aa-fresh-2026-08-14.md`, `livebench-fresh-2026-08-14.md`, `arena-fresh-2026-08-14.md`. It will not survive past this session. Move it into `data/` before the next picker data refresh needs to reproduce or extend today's numbers.
 
 ## What this is for
 
@@ -182,31 +94,50 @@ and the "as of" line inside any dated post.
 
 ## The model picker, briefly
 
-One page of 72, and it carries more machinery than the rest combined, so it gets
-one section rather than a third of this document.
+One page of 72, and it carries more machinery than the rest combined, so it
+gets one section rather than a third of this document. Rebuilt around a new
+methodology this session, superseding every prior version described in older
+copies of this section; read this one, not memory of an earlier pass.
 
-23 models by 25 figures, 575 of 575 cells, zero gaps, two sources.
-`refresh-model-data.py` is the live build; `build-model-data.py` is dead and kept
-for history. Five rules that took a day to learn. The grid must be fully dense,
-because a model missing a figure skips it rather than scoring badly on it. A
-figure that cannot separate the frontier is cut, not down-weighted, since
-percentiles stretch a one-point gap to full range. Separation is measured on the
-scored scale, not in raw points. Labels are part of the claim, which is how every
-row came to print "default setting" while carrying max-effort figures, and how
-the source badge said "all three leaderboards" after one board stopped feeding
-it. And a selection rule must not read the thing it feeds: the eligibility gate
-read the live dials, so rewriting a factor moved the roster with no new data.
+**Deployed (`aa30e2c`):** 41 models, one flagship benchmark per dial, 4
+Artificial Analysis / 3 LiveBench / 3 Arena. Still live on the site as of this
+write-up; the rebuild below has not been pushed.
 
-Arena's four session signals came out on 8 August to admit three models Arena
-never scored, including Qwen3.8 Max, which now leads the agent-work preset. Cost
-per task came back the same day, when the one model missing it published one.
+**Local, uncommitted, verified, ready to ship:** 20 hand-curated models, each
+dial blended from up to 3 benchmarks instead of one (29 metrics total; cost
+and speed are the two disclosed exceptions, at 3 and 2 sources respectively,
+because a genuine third signal didn't exist without duplicating another
+dial's meaning). Roster picked by coverage across the three sources plus
+current relevance, not auto-derived from a big pool. Three of the 20 (Claude
+Opus 4.7 High, Opus 4.8 High, GPT-5.5 xHigh) have zero Artificial Analysis
+data by design, kept in the roster on purpose to make that gap visible rather
+than hidden; their AA-anchored dial cells render "no data," never a
+fabricated number. A within-dial gap (a model missing one of a dial's 2-3
+backing benchmarks) blends silently from whichever it has; only a
+whole-dial gap (every backing benchmark absent) renders as "no data." The
+effort-tier estimator (`estimateTierByName`, `synthesizeAllTiers`) lost its
+visible toggle and slider; it still runs, silently, for the small number of
+cost-fallback cases baked into the data at build time (LiveBench had no
+exact-tier cost row for three of the 20), never to generate new ranked rows.
 
-The badge that counts sources is derived, and getting that right cost a day of
-downtime: see trap 15. `SRC` is the single source map, defined above its first
-reader, and `boardOf()` keeps `context` out of the count because a model card is
-not a leaderboard.
+Dial sliders run 0-10 (11 steps), widened from 0-4 for finer control;
+`DEFAULTS` and every named preset were rescaled by the same factor so the
+percentage split each dial gets is unchanged (reason/code/build ~13%,
+finish/honest/know/steer/cheap ~10%, longctx/fast ~6%).
 
-OPEN: the eligibility threshold was set after seeing which models it dropped.
+Cost is a 3-way blend: 55% LiveBench cost-per-successful-task (success-
+adjusted, stays the anchor), 25% Artificial Analysis cost-per-task (a second
+independent source), 20% Artificial Analysis output price per 1M tokens (the
+model's intrinsic sticker price, independent of how chatty it happens to be
+on any one benchmark). Four models (the three AA-gap models plus Claude
+Sonnet 5 xhigh, which AA also doesn't cover at that tier) degrade gracefully
+to the LiveBench-only figure rather than showing "no data," since LiveBench
+alone still covers all 20.
+
+The badge that counts sources is derived, not stored, because a hardcoded
+count silently goes stale the day a source stops covering everything: see the
+`var`-hoisting trap in "The traps," which cost a day of downtime once
+already.
 
 
 ## Serving and rendering
@@ -256,7 +187,7 @@ gate green and it silently converts a checked claim into an unchecked one.
 
 **Working**
 
-1. Do not ask, decide. Report the call afterwards so it can be reversed.
+1. Do not ask, decide. Report the call afterward so it can be reversed.
 2. Ask before destroying files the owner created.
 3. Bound every command with an explicit timeout. Check cheap state first.
 4. Do not declare blocked. A long session is not a blocker; context is
@@ -266,7 +197,7 @@ gate green and it silently converts a checked claim into an unchecked one.
 
 **Building**
 
-7. One home per fact. A slug, a count or a date in two places drifts.
+7. One home per fact. A slug, a count, or a date in two places drifts.
 8. Delete a placeholder rather than shipping it as a number.
 9. A default ships with its band printed and a control that overrides it.
 10. Composites do not feed a score that already scores their parts.
@@ -279,11 +210,11 @@ gate green and it silently converts a checked claim into an unchecked one.
 
 14. Score against outside truth, never against the tool.
 15. Prove a check can fail before reporting that it passed.
-16. Drive it on the live page. Reading the code is worth nothing for anything JS
+16. Drive it on the live page. Reading the code proves nothing for anything JS
     renders.
 17. Assert coverage. A parser that can silently see less than everything must
     state how much it saw.
-18. Local, committed, pushed, deployed and visually verified are five states.
+18. Local, committed, pushed, deployed, and visually verified are five states.
 
 **Searching**
 
@@ -298,60 +229,122 @@ gate green and it silently converts a checked claim into an unchecked one.
 23. Plain and not dramatic. State the thing, give the number, move on.
 24. State a status once with its label. Repeating the caveat reads as scared.
 
+## Mistakes that keep happening
+
+A separate list from the traps below. The traps are ways a MEASUREMENT can be
+wrong; this is the other list, ways the WORK itself keeps being wrong. Each
+entry ends in one of three fates: converted into a gate, converted into a
+mid-turn tell, or admitted as a wish with no fix yet.
+
+1. **A stamp inferred from the task instead of the clock.** A session stamped
+   every baseline "August 3" because the task was the August 3 post; it was
+   the 7th, and the error reached two pushed commits. Nothing in the gate
+   checks a stamp against the clock, so this recurs. Directive 5 says read the
+   date from the environment first. No gate enforces it yet: still open item,
+   "gate the stamp against the clock."
+2. **A claim registry that expires all at once.** 22 dated claims were
+   staggered on 8 August, and 19 of 22 still landed due on one morning,
+   turning a routine recheck into a blocked repo. Bumping a date is the cheap
+   way to make the gate green, and nothing stops a batch bump from clustering
+   dates. Fix stated but not enforced: keep dates spread when moving a batch.
+   No automated spread-check exists yet.
+3. **A background job whose output was never read.** Two `ugrep` runs died on
+   the complexity-limit error (see traps below) and the run was cited as
+   evidence until the file was opened and found empty. Nothing distinguishes a
+   silently failed background job from a successful one. No fix built: read
+   backgrounded output directly before citing it as a result.
+4. **The publish gate scanned agent scratch.** The forbidden-copy grep walked
+   the whole tree, so a stale worktree under `.claude/worktrees/` held an old
+   copy of every page, and a phrase correctly retired from the live site
+   failed the gate from a directory that never ships. Fixed: scratch is now
+   excluded from the grep. When the gate fails, read the path before the
+   phrase.
+
 ## The traps
 
 Times the checker was wrong rather than the site.
 
-1. **A page cited by slug that redirects.** 48 of 72 are stubs; the citation
-   returns 200 and lands elsewhere. Found across 21 source lines in one file
-   after being fixed twice as single instances.
-2. **A stamp inferred from the task instead of the clock.** Two commits shipped
-   four days behind.
-3. **`build()` throwing on its own last line looks like an empty page.**
-   `$('mpMap')` had no markup and never had. Everything above the throw had
-   wired up, so dials worked the moment one was touched and the page merely
-   looked empty. It shipped an uncaught TypeError, and the `applyPreset(1)`
-   under the throw had never once run.
-4. **A synchronous read of a debounced render returns the previous state.** The
-   simulation is on a 120 ms timer, so probing right after a click reported
-   every preset as identical and looked exactly like a filter bug.
-5. **A coverage threshold that leaves one hole reads as complete.** 84 and 99.8
-   percent both print as green summaries. Assert zero gaps and exit non-zero.
-6. **A carried-over value is a percentile of a field that no longer exists.**
-7. **Separation measured in the wrong units.** Raw benchmark points ranked HLE
-   and CritPt at the head of a factor; on the scored scale they are weak.
-8. **A separation measure that sorts by the metric's own leaders** asks whether
-   the five cheapest are close on cost. Always yes. It labeled cost unable to
-   separate while it spanned 4.1x across the models being ranked.
-9. **A threshold set after seeing what it drops** is a constant fitted to a
-   predetermined answer. Still live in the picker's eligibility gate.
-10. **A roster inherited rather than derived.** The picker's models are the ones
-    somebody transcribed, minus three, presented as the output of a rule. 18
-    models in the Arena file were never tested against it.
-11. **A stale server on the documented port.** HTTP 000, nothing in the log
-    until it was read directly.
-12. **`ugrep` failing a complex pattern looks like a negative result**,
-    especially backgrounded.
-13. **A claim registry that expires all at once.** 19 of 22 on one morning.
-14. **A background job whose output was never read.** Two greps died on trap 12
-    and the run was cited as evidence until the file was opened and found empty.
-15. **`var` hoisting made a derived constant read an undefined map, and it took
-    the whole picker down in production for a day.** `SOURCE_COUNT` ran in an
-    IIFE at line 380 and read `SRC`, which was not assigned until line 523. The
+1. **A page cited by slug that redirects.** 48 of 72 pages are stubs; a
+   citation to a merged page still returns HTTP 200 and lands elsewhere,
+   found across 21 source lines in one file after being fixed twice as single
+   instances. The 200 status read as a valid link. Check a slug against the
+   redirect-stub list, never against its status code.
+2. **`build()` throwing on its own last line looks like an empty page.**
+   `$('mpMap')` had no markup and never had; everything above the throw had
+   wired up, so dials worked once touched and the page merely looked empty.
+   It shipped an uncaught TypeError, and the `applyPreset(1)` under the throw
+   had never once run. A thrown error deep in setup can look identical to an
+   incomplete page; verify the whole function ran, not just that something
+   rendered.
+3. **A synchronous read of a debounced render returns the previous state.**
+   The render is on a 120 ms timer; probing right after a click reported
+   every preset as identical and read exactly like a filter bug. Never sample
+   state synchronously after triggering a debounced render; wait for it.
+4. **A coverage threshold that leaves one hole reads as complete.** 84 and
+   99.8 percent both print as green summaries. Assert zero gaps and exit
+   non-zero instead of accepting any threshold short of complete.
+5. **A carried-over value is a percentile of a field that no longer exists.**
+   A stale derived number keeps reading as current once its source set has
+   changed underneath it.
+6. **Separation measured in the wrong units.** Raw benchmark points ranked
+   HLE and CritPt at the head of a factor; on the scored scale they are weak.
+   Measure separation on the scale actually used to rank, not the metric's
+   native units.
+7. **A separation measure that sorts by the metric's own leaders** asks
+   whether the five cheapest are close on cost. Always yes. It labeled cost
+   unable to separate while it spanned 4.1x across the models being ranked.
+   Measure separation across the full ranked population, not a subset picked
+   by the metric under test.
+8. **A threshold set after seeing what it drops** is a constant fitted to a
+   predetermined answer. Still live in the picker's eligibility gate. A
+   reverse-fit threshold looks like a principled cutoff; it is not a check.
+9. **A roster inherited rather than derived.** The picker's models are the
+   ones somebody transcribed, minus three, presented as the output of a rule;
+   18 models in the Arena file were never tested against it. A supposedly
+   rule-derived set must be checked against the full candidate pool, not just
+   the set that already exists.
+10. **A stale server on the documented port.** HTTP 000, nothing in the log
+    until it was read directly. An old process can hold a port silently;
+    serve on another port rather than debugging the stale one.
+11. **`ugrep` failing a complex pattern looks like a negative result**,
+    especially backgrounded, where the error lands in a file nobody reads.
+    A search tool erroring out is indistinguishable from a true negative
+    unless the error itself is checked; parse structured formats in a real
+    parser instead.
+12. **`var` hoisting made a derived constant read an undefined map, and it
+    took the whole picker down in production for a day.** `SOURCE_COUNT` ran
+    in an IIFE at line 380 and read `SRC`, not assigned until line 523: the
     declaration hoists, the assignment does not, so `SRC[k]` threw a TypeError
-    before a single dial drew. The page served HTTP 200 with the full data blob
-    intact, which is why nothing external noticed. Two lessons. A second copy of
-    the same map existed 140 lines apart, and the older one was missing six of
-    the twenty-five live figures, so the row badge undercounted sources too:
-    one home per fact would have prevented both. And `check-model-picker.py`
-    passed throughout, because it validates that dial weights resolve, not that
-    the page executes. **No checker in this repo proves the picker runs. Load it
-    rendered after any edit to it.**
-16. **The publish gate scanned agent scratch and let it block a deploy.** The
-    forbidden-copy grep walked the whole tree, so a stale worktree under
-    `.claude/worktrees/` held an old copy of every page and a phrase correctly
-    retired from the live site still failed the gate from a directory that never
-    ships. Now excluded. When the gate fails, read the path before the phrase.
+    before a single dial drew. The page still served HTTP 200 with the full
+    data blob intact, so nothing external noticed. A second copy of the same
+    map 140 lines apart was also missing six of twenty-five live figures,
+    undercounting the source badge too: one home per fact would have
+    prevented both. `check-model-picker.py` passed throughout, because it
+    validates that dial weights resolve, not that the page executes. HTTP 200
+    and a passing weight-resolution check prove nothing about whether the
+    page actually renders. Load it rendered after any edit.
+13. **A mechanism built for one regime silently misfires in another.** Making
+    the effort-tier estimator always-on (removing its visible toggle) was
+    read as "call the same gap-filling logic automatically," but the
+    render path was calling `synthesizeAllTiers`, which doesn't fill gaps
+    in place, it manufactures whole new synthetic rows for every untested
+    tier of every model family. 20 roster rows became 68 rendered ones, a
+    duplicate "Claude Opus 5, xhigh effort, ESTIMATED" row sitting next to
+    the real "Claude Opus 5 (Max)" entry, caught only by reading the "Show
+    all N" count against the known roster size. A function's behavior at
+    its old call site does not transfer to a new one just because the old
+    site's precondition (an opt-in toggle) is gone; check what the function
+    actually does, not what its name suggests.
+14. **A coverage floor built for an auto-derived pool silently excludes a
+    hand-curated one.** The picker's `MIN_COV = 0.70` threshold existed to
+    drop weak entries from a large, algorithmically-assembled model list.
+    After the roster became a small, individually-justified 20-model list,
+    where three entries were kept on purpose to make a real data gap
+    visible, the same floor silently dropped those three from the rendered
+    list, "17 of 20 scored," the opposite of the intent. A filter's
+    original purpose does not survive a change to what it filters;
+    re-justify every threshold against the current input, don't assume it
+    still means what it meant.
 
 ## Run after any change
 
@@ -388,21 +381,71 @@ git push origin main
 Then confirm Site checks, Copy lint and pages build are all green, and fetch the
 live page with a cache-busting query string for the exact changed string.
 
+## What survives a compaction
+
+A resumed or compacted context is a fresh session, not a continuation. It
+carries a summary of finished work and that summary reads like memory; it
+isn't. Re-read this file as a briefing written for a stranger picking up the
+work today, including the trim step at the top, even when the transcript above
+seems to already know all of it.
+
+This file is the only thing that survives a compaction. A decision, a number,
+or a refusal that exists only in a turn that gets compacted away is gone. If
+it should still be true after this session ends, it has to be written here
+before that happens, not narrated as something that was done.
+
+**Open gap, real rather than hypothetical:** nothing here forces the trim
+step, asserts the 20,000-word cap, or makes a reader run `wc -w` before
+building. It depends entirely on whoever opens this file choosing to follow
+the instructions at the top. A rule that depends on someone choosing to act on
+it fails silently, exactly the failure mode this kind of document is supposed
+to guard against, and this repo currently has no mechanism against it. That is
+item 9 in "Where this is going," not just a note here.
+
 ## Where this is going
 
-1. **Gate that the picker actually executes.** Nothing does. It shipped a
+The only ordering in this document; anything elsewhere implying a different order is stale.
+
+1. **Gate that the picker actually executes.** Still nothing does. It shipped a
    TypeError to production for a day and every checker stayed green. A headless
-   load asserting the ranking list has children would have caught it in seconds.
-2. **Rebuild the picker roster from the benchmarks**, not from what was already
-   transcribed. This is the item that makes the tool defensible.
-3. **Set the eligibility threshold before looking at what it drops.**
-4. **Gate the stamp against the clock.** Nothing catches a date written four
-   days behind.
-5. **Re-read the long prose pages for argument drift**, not just numbers:
-   kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay,
-   kaspa-origin-story.
-5. **Gate slugs against the redirect stubs**, so a citation to a merged page
+   load asserting the ranking list has children would catch it.
+2. **Gate the stamp against the clock.** Nothing catches a date written four
+   days behind; that error already reached two pushed commits.
+3. **Gate slugs against the redirect stubs**, so a citation to a merged page
    fails at commit rather than at read.
-6. **Score the picker against outside truth.** Every figure is transcribed by
+4. **Score the picker against outside truth.** Every figure is transcribed by
    hand and nothing re-reads the boards. A checker that re-fetches and diffs
    catches both transcription error and board drift.
+5. **Move this session's raw source pulls (AA/LiveBench/Arena, 14 August) out
+   of the scratchpad** into `data/`, before the session-scoped path is gone;
+   needed to reproduce or extend today's 20-model figures later.
+6. **Add a mechanism that forces the trim and word-count check.** See "What
+   survives a compaction" above: nothing today makes this happen except a
+   reader choosing to.
+7. **Refresh `sources.html`'s "Official roadmap framing" row**, still citing
+   an August 1 observation about kaspa.org Lore/Build lagging Toccata
+   activation. Recheck those two pages; if kaspa.org caught up since, the
+   sentence itself is now the stale one.
+8. **Refresh `toccata-explained.html`'s repo-freshness stamps**
+   ("Checked July 29... rechecked August 1, covenants August 8"), now 6-13
+   days behind a fast-moving source set (Argent alone took 58 commits in
+   July). Refresh the Argent/vProgs repo rows and the covenant-count table,
+   then re-stamp.
+9. **Dated "checked as of" lines outside `CLAIMS.yml` rot silently.** Found
+   this session on `sources.html` and `toccata-explained.html` (items 7-8):
+   every substantive page carries its own freshness stamp that isn't a
+   registry entry, so `check-status-freshness.py` never sees it decay. No
+   fix built; the honest state is these two are found, the rest of the site
+   is unaudited for the same pattern.
+
+Closed this session: roster rebuild from benchmarks rather than what was
+already transcribed -- `aa30e2c` (23 to 41 models, substitution scoring),
+then the 20-model/blended-dial rebuild (14 August, not yet pushed, see "The
+model picker, briefly"). The 41-model roster's eligibility-threshold-set-
+after-the-fact problem is moot: the new roster is hand-curated, not
+filtered by a coverage floor (removing that floor was itself a bug fix this
+session, see "The traps"). The estimator's sparse-real-row blind spot
+(Claude Opus 5 medium topic) is also moot under the new methodology, since
+gap-filling is now scoped to individual dial cells rather than whole
+synthetic rows. Long-prose argument-drift re-read (item 4 in earlier
+copies of this list) is closed, clean, see the pick-up block.
