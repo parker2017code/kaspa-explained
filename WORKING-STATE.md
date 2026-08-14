@@ -39,10 +39,11 @@ in its own checked-line so a future reader cannot miss it.
 **PICK-UP BLOCK, 2026-08-14, session end.**
 
 1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp (see "Mistakes that keep happening" item 1).
-2. **UNCOMMITTED RIGHT NOW:** `model-picker.html` has local changes on top of `aa30e2c`, verified live, gate-clean, ready to commit. The 4/3/3-flagship rebuild mentioned in earlier pick-up blocks was itself superseded mid-session: the owner asked for a full methodology change (see "The model picker, briefly" below) before that version ever shipped. Read that section before touching the picker again; the deployed site is still `aa30e2c` and does not match the file on disk.
-3. **THE DAILY JOB is the X-post calendar**, `kaspa-x-posts-august-2026.md`, local and uncommitted by standing instruction. Aug 3-14 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
-4. **SITE REVIEW DONE THIS SESSION, clean.** Owner asked for a full voice/consistency/staleness pass. Result: no voice drift anywhere across all 72 pages, including the six long-prose pages item 4 of "Where this is going" had flagged as never read end to end for argument drift (kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay, kaspa-origin-story) plus toccata-explained.html. That item is now closed. Two real staleness items survived the pass, not yet fixed, see "Where this is going."
-5. **RAW SOURCE DATA for this session's picker rebuild** (Artificial Analysis, LiveBench, and LM Arena pulls, all dated 14 August) lives only in the session-scoped scratchpad, not the repo: `aa-fresh-2026-08-14.md`, `livebench-fresh-2026-08-14.md`, `arena-fresh-2026-08-14.md`. It will not survive past this session. Move it into `data/` before the next picker data refresh needs to reproduce or extend today's numbers.
+2. **MODEL PICKER: shipped.** `110aaee`, pushed, deployed, verified against the live URL. The 20-model/blended-dial rebuild described in "The model picker, briefly" below is what's actually live now, not `aa30e2c`. That section is current, not historical.
+3. **SOURCES.HTML AND TOCCATA-EXPLAINED.HTML: fixed, gate-clean, NOT yet committed.** Both staleness items flagged earlier this session are resolved: `sources.html`'s kaspa.org-lag claim re-verified and re-dated (the gap has not closed, now 45 days not 32), `toccata-explained.html`'s KIP/KCC/vProgs/Argent/covenant figures re-checked against live sources and re-stamped. Commit these next.
+4. **THE DAILY JOB is the X-post calendar**, `kaspa-x-posts-august-2026.md`, local and uncommitted by standing instruction. Aug 3-14 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
+5. **SITE REVIEW DONE THIS SESSION, clean.** No voice drift anywhere across all 72 pages, including the six long-prose pages flagged as never read end to end for argument drift (kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay, kaspa-origin-story) plus toccata-explained.html. That item is closed.
+6. **RAW SOURCE DATA for this session's picker rebuild** (Artificial Analysis, LiveBench, and LM Arena pulls, all dated 14 August) lives only in the session-scoped scratchpad, not the repo: `aa-fresh-2026-08-14.md`, `livebench-fresh-2026-08-14.md`, `arena-fresh-2026-08-14.md`. It will not survive past this session. Move it into `data/` before the next picker data refresh needs to reproduce or extend today's numbers.
 
 ## What this is for
 
@@ -345,6 +346,21 @@ Times the checker was wrong rather than the site.
     original purpose does not survive a change to what it filters;
     re-justify every threshold against the current input, don't assume it
     still means what it meant.
+15. **Two agents editing different pages at the same time is not automatically
+    safe.** Two content-refresh agents ran in parallel on `sources.html` and
+    `toccata-explained.html`, no overlapping scope by design. Partway through,
+    the second agent read `sources.html` (not its own file), saw changes it
+    hadn't authored, decided they were unexplained, and reverted the whole
+    file to its committed state rather than leave them, silently destroying
+    the first agent's already-finished, gate-verified fix. Caught only
+    because the fix had already been reported complete and a follow-up diff
+    check showed the file clean again. A defensive instinct ("don't ship
+    changes I can't explain") is right in isolation and wrong under
+    concurrency: it cannot distinguish a stray edit from a sibling agent's
+    legitimate work. Re-verify a specific file's state immediately after any
+    run where a second concurrent agent touched the same repo, even on a
+    supposedly disjoint file, and prefer investigating an unexplained change
+    over reverting it.
 
 ## Run after any change
 
@@ -400,7 +416,7 @@ building. It depends entirely on whoever opens this file choosing to follow
 the instructions at the top. A rule that depends on someone choosing to act on
 it fails silently, exactly the failure mode this kind of document is supposed
 to guard against, and this repo currently has no mechanism against it. That is
-item 9 in "Where this is going," not just a note here.
+item 6 in "Where this is going," not just a note here.
 
 ## Where this is going
 
@@ -422,29 +438,25 @@ The only ordering in this document; anything elsewhere implying a different orde
 6. **Add a mechanism that forces the trim and word-count check.** See "What
    survives a compaction" above: nothing today makes this happen except a
    reader choosing to.
-7. **Refresh `sources.html`'s "Official roadmap framing" row**, still citing
-   an August 1 observation about kaspa.org Lore/Build lagging Toccata
-   activation. Recheck those two pages; if kaspa.org caught up since, the
-   sentence itself is now the stale one.
-8. **Refresh `toccata-explained.html`'s repo-freshness stamps**
-   ("Checked July 29... rechecked August 1, covenants August 8"), now 6-13
-   days behind a fast-moving source set (Argent alone took 58 commits in
-   July). Refresh the Argent/vProgs repo rows and the covenant-count table,
-   then re-stamp.
-9. **Dated "checked as of" lines outside `CLAIMS.yml` rot silently.** Found
-   this session on `sources.html` and `toccata-explained.html` (items 7-8):
-   every substantive page carries its own freshness stamp that isn't a
-   registry entry, so `check-status-freshness.py` never sees it decay. No
-   fix built; the honest state is these two are found, the rest of the site
-   is unaudited for the same pattern.
+7. **Dated "checked as of" lines outside `CLAIMS.yml` rot silently.** Found
+   this session on `sources.html` and `toccata-explained.html`, both now
+   fixed for this pass, but the mechanism is unaddressed: every substantive
+   page carries its own freshness stamp that isn't a registry entry, so
+   `check-status-freshness.py` never sees it decay. No fix built; the
+   honest state is these two were found and fixed by hand, the rest of the
+   site is unaudited for the same pattern.
 
 Closed this session: roster rebuild from benchmarks rather than what was
 already transcribed -- `aa30e2c` (23 to 41 models, substitution scoring),
-then the 20-model/blended-dial rebuild (14 August, not yet pushed, see "The
-model picker, briefly"). The 41-model roster's eligibility-threshold-set-
-after-the-fact problem is moot: the new roster is hand-curated, not
-filtered by a coverage floor (removing that floor was itself a bug fix this
-session, see "The traps"). The estimator's sparse-real-row blind spot
+then the 20-model/blended-dial rebuild, `110aaee`, pushed and deployed, see
+"The model picker, briefly." `sources.html`'s kaspa.org-lag claim and
+`toccata-explained.html`'s repo-freshness stamps, both re-verified against
+live sources and re-dated 14 August (see the pick-up block; not yet
+committed as of this write-up). The 41-model roster's
+eligibility-threshold-set-after-the-fact problem is moot: the new roster is
+hand-curated, not filtered by a coverage floor (removing that floor was
+itself a bug fix this session, see "The traps"). The estimator's
+sparse-real-row blind spot
 (Claude Opus 5 medium topic) is also moot under the new methodology, since
 gap-filling is now scoped to individual dial cells rather than whole
 synthetic rows. Long-prose argument-drift re-read (item 4 in earlier

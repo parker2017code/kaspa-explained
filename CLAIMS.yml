@@ -1,4 +1,4 @@
-last_checked: 2026-08-08
+last_checked: 2026-08-14
 recheck_after: 2026-08-22
 claims:
   proof_of_work:
@@ -184,15 +184,16 @@ claims:
       - TN12 txids are mainnet txids
   vprogs:
     status: roadmap
-    recheck_after: 2026-08-22
+    recheck_after: 2026-09-03
     summary: >
       vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering,
       including later cross-app atomic composition. They are not a mature live app ecosystem. The public
       vprogs repo README opens with "This repository is in early development / prototype phase. APIs and
       architecture may change significantly," and the workspace carries core, storage, state, scheduling,
-      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 7, 2026: 19
-      commits landed in July 2026, the last on July 28 adding a program-agnostic daemon engine and a vprun
-      CLI, nothing has landed since, and there are still zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
+      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 14, 2026: no
+      change since the August 7 check. Still 19 commits landed in July 2026, the last on July 28 adding a
+      program-agnostic daemon engine and a vprun CLI. Nothing has landed since, now over two weeks, and
+      there are still zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
       examples/tn10-flow describes itself as "a proof-of-concept that runs the L2 flow against a remote
       testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
       against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
@@ -203,7 +204,7 @@ claims:
       - vProgs are live
   argent:
     status: research
-    recheck_after: 2026-08-20
+    recheck_after: 2026-08-30
     summary: >
       Argent is an actor-based language and compiler for stateful multi-contract applications on
       covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable
@@ -219,20 +220,22 @@ claims:
       closed and open ICC examples, route-family and actor-enum examples, virtual-slot expanded state)
       apart from what is still being built (launch and bootstrap tooling, package and dependency tooling,
       diagnostics and typechecking, generated app-specific builder APIs, hardening and negative-test
-      coverage). The gate is an audit, not a missing compiler. Checked August 7, 2026. The project now has
-      its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP 301 to
-      github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, 77 commits
-      with 58 of them in July and one on August 2 hardening entry arguments against route-state override,
-      latest August 2), argent-playground (created July 9, multi-actor and DEX demos, latest July 29), and
-      argent-template (created July 24, latest July 29). Sutton has 73 of argent's 77 commits; a19q3,
-      Manyfestation, and WolfieOC hold the other four. Zero releases and zero
+      coverage). The gate is an audit, not a missing compiler. Checked August 14, 2026: no change to the
+      README text since the August 7 check, and the repo has gone quiet since its last commit on August 2.
+      The project has its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP
+      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, 77
+      commits with 58 of them in July and one on August 2 hardening entry arguments against route-state
+      override, still the latest push), argent-playground (created July 9, multi-actor and DEX demos, still
+      latest July 29), and argent-template (created July 24, still latest July 29). Sutton has 73 of
+      argent's 77 commits; a19q3, Manyfestation, and WolfieOC hold the other four. Zero releases and zero
       tags on every repo. The audit gate is independently visible upstream: kaspanet/silverscript also has
-      zero releases and zero tags and was still renaming core syntax on August 3, so the release Argent
-      waits on has not happened. The template's Scope section says it "does not connect to a Kaspa network,
-      manage a wallet, or submit transactions," and its VS Code extension for .ag files is linked out of
-      the Argent checkout rather than shipped by the template. An examples/icc/kcc20_asset.ag file
-      prototypes a KCC-0020-style transferable asset covenant whose owner identifier can be a pubkey or a
-      covenant ID.
+      zero releases and zero tags, and stayed active through the check window (a security policy added
+      August 11, compilation hardening August 10, entrypoint-argument and bounded-loop work August 10), so
+      the release Argent waits on still has not happened. The template's Scope section says it "does not
+      connect to a Kaspa network, manage a wallet, or submit transactions," and its VS Code extension for
+      .ag files is linked out of the Argent checkout rather than shipped by the template. An
+      examples/icc/kcc20_asset.ag file prototypes a KCC-0020-style transferable asset covenant whose owner
+      identifier can be a pubkey or a covenant ID.
     source: https://raw.githubusercontent.com/argent-lang/argent/master/README.md
     supporting_source: https://github.com/argent-lang/argent
     forbidden_copy:
@@ -280,26 +283,31 @@ claims:
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   native_defi:
     status: roadmap
-    recheck_after: 2026-08-15
+    recheck_after: 2026-08-21
     summary: >
       Mature native Kaspa L1 DeFi still depends on future programmability foundations and app tooling, but
       the "nothing is deployed" version of this claim expired between July 25 and August 8, 2026. Measured
-      August 8 via the kascov covenant indexer, mainnet carried 27,166 covenants ever created, 337 active,
-      26,829 burned, and 1,316,791.77 KAS of total live covenant value: 90 KCC20 tokens holding 1,116.37
-      KAS, 4 SilverScript escrows all still burned, and 27,072 p2sh commitments holding the remaining
-      1,316,675.89 KAS. On July 25 the same figures were 1,841 / 80 / 1,761 / 253.98 KAS, so the footprint
-      grew about fifteenfold in two weeks. Testnet-10 carried 787,850 covenants and 67,514 active, about 29
-      times mainnet, down from 267 times.
-      Mainnet now carries 67 covenant token markets on bonding curves, 4 of them graduated into AMM pools,
-      with continuous trades; market exit values sum to about 515,418 KAS. This was verified past the
-      indexer: trade txid dfca80761ffcebcb9b2f16984ea695fe542780ab9d836b061fb527e0277c708c reads as
-      accepted on api.kaspa.org with transaction version 1 and p2sh outputs whose amount matches kascov to
-      the sompi. So say markets exist and are thin, roughly 35,000 US dollars of total live covenant value,
-      rather than saying no market exists. Lending is still absent from mainnet. kascov template labels are
-      heuristic, so unrecognized apps could hide among the p2sh entries. Kaskad/Igra-style L2 lending can
-      be described as ecosystem or L2 DeFi context, but it is not evidence that mature native Kaspa L1
-      DeFi, broad Toccata app usage, or vProgs are live. Do not describe the L1 path as Ethereum-style or
-      EVM-compatible execution unless a primary source adds that support.
+      August 14 via the kascov covenant indexer (kascov.io/data/mainnet-live.json), mainnet carries 27,725
+      covenants ever created, 373 active, 27,352 burned, and about 1,674,423 KAS of total live covenant
+      value, roughly 42,200 US dollars at kascov's quoted price. On August 8 the same figures were 27,166 /
+      337 / 26,829 / 1,316,791.77 KAS: the fifteenfold July surge has slowed hard, up only about 2 percent
+      in covenant count over the six days since. Testnet-10 carries 913,964 covenants and 74,199 active,
+      about 33 times mainnet's covenant count, up from 29 times on August 8.
+      Mainnet still carries 67 covenant token markets on bonding curves (kascov.io/data/mainnet/markets),
+      but 6 have now graduated into AMM pools, up from 4 on August 8, with continuous trades; summed exit
+      value across bonding-phase markets plus reserve value in graduated pools is about 1,531,750 KAS, up
+      from about 515,418 KAS on August 8. This was verified past the indexer on August 8: trade txid
+      dfca80761ffcebcb9b2f16984ea695fe542780ab9d836b061fb527e0277c708c read as accepted on api.kaspa.org
+      with transaction version 1 and p2sh outputs whose amount matched kascov to the sompi; not re-verified
+      txid by txid on August 14, since the indexer total itself was read fresh. So say markets exist and
+      are still thin relative to the overall covenant total, rather than saying no market exists. Lending
+      is still absent from mainnet. kascov's per-token/per-template breakdown (the 90-KCC20-token,
+      4-escrow, p2sh-commitment split reported August 8) was not re-pulled this check; only the aggregate
+      stats and market list were. kascov template labels are heuristic, so unrecognized apps could hide
+      among the p2sh entries. Kaskad/Igra-style L2 lending can be described as ecosystem or L2 DeFi
+      context, but it is not evidence that mature native Kaspa L1 DeFi, broad Toccata app usage, or vProgs
+      are live. Do not describe the L1 path as Ethereum-style or EVM-compatible execution unless a primary
+      source adds that support.
     source: https://kaspaexplained.com/why-kaspa-matters
     forbidden_copy:
       - Native DeFi is live
@@ -340,6 +348,24 @@ claims:
       - Kaspa is 100 BPS today
       - Partition-resilient payments are live
       - DAGKnight lets transactions confirm during a netsplit today
+  official_roadmap_framing_lag:
+    status: roadmap_framing
+    recheck_after: 2026-08-28
+    summary: >
+      Kaspa.org's own Lore and Build pages lag mainnet activation. Checked August 14, 2026, 45
+      days after Toccata activated on mainnet (June 30, 2026): Lore's Toccata section still opens
+      "The next hardfork is Toccata" and says "a mature implementation is already up and running
+      on TN12," with no mainnet mention. Build still says the Toccata hard fork is "currently live
+      on TN12 ahead of mainnet activation," and separately says Silverscript is "testing on TN12
+      ahead of the Toccata hard fork that lands covenants and zk opcodes on mainnet." Both read as
+      unchanged from the same check on August 1, 2026, 32 days after activation. Roadmap framing on
+      these pages is not activation evidence either way: trust the release tag and DAA score over
+      this prose when they conflict.
+    source: https://kaspa.org/lore
+    supporting_source: https://kaspa.org/build
+    forbidden_copy:
+      - Kaspa.org's own pages confirm Toccata mainnet activation
+      - kaspa.org/lore and kaspa.org/build describe Toccata as mainnet-live
   dagknight_latency_policy:
     status: research
     recheck_after: 2026-09-12
@@ -359,23 +385,25 @@ claims:
       - Kaspa oracle flows are live
   kcc_conventions:
     status: research_direction
-    recheck_after: 2026-08-19
+    recheck_after: 2026-08-23
     summary: >
       Kaspa Calls for Conventions (KCCs) are an ecosystem-standards process, separate from KIPs.
       The kaspanet/kccs repo was created on July 15, 2026 and has not been pushed to since that
       day: the repository root still contains no file other than README.md, and the standards
-      index table inside it is empty. Exactly one pull request has merged, the README itself. As
-      of August 7, 2026 seven specification pull requests are open and none is merged: KCC-0020
-      fungible token covenant spec, KCC-0001 covenant definition and ABI, KCC-0402 covenant
-      payment channels, KCC-0002 control principal references, KCC-0021 covenant token metadata,
-      a bulk KCC-0008 through KCC-0024 token and commerce set, and KCC-0025 a license agreement.
-      The README draws the boundary itself: "KCCs do not propose changes to Kaspa consensus or
-      core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)," and
-      "Acceptance marks an ecosystem convergence point; it does not make the convention protocol
-      ground truth." Repo numbering (four digits, KCC-0020) is canonical; forum shorthand like
-      "KCC20" is not. The convention is already showing up in code ahead of acceptance: the Argent
-      compiler ships an examples/icc/kcc20_asset.ag asset covenant. Related community claims of
-      KCC20 mainnet wallet transfers are unverified.
+      index table inside it is empty. Exactly one pull request has merged, the README itself.
+      Checked August 14, 2026: five specification pull requests are open and none is merged:
+      KCC-0020 fungible token covenant spec, KCC-0001 covenant definition and ABI, KCC-0402
+      covenant payment channels, KCC-0002 control principal references, and KCC-0021 covenant
+      token metadata. Two proposals seen open on August 7, a bulk KCC-0008 through KCC-0024 token
+      and commerce set and a KCC-0025 license agreement, were both withdrawn August 9 by their
+      author, who wrote "Superseded by revised proposals under KCC-0060 and subsequent numbers."
+      No KCC-0060-numbered pull request has been opened yet. The README draws the boundary itself:
+      "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in
+      Kaspa Improvement Proposals (KIPs)," and "Acceptance marks an ecosystem convergence point; it
+      does not make the convention protocol ground truth." Repo numbering (four digits, KCC-0020)
+      is canonical; forum shorthand like "KCC20" is not. The convention is already showing up in
+      code ahead of acceptance: the Argent compiler ships an examples/icc/kcc20_asset.ag asset
+      covenant. Related community claims of KCC20 mainnet wallet transfers are unverified.
     source: https://github.com/kaspanet/kccs
     forbidden_copy:
       - KCC20 is a ratified Kaspa standard
