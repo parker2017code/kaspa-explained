@@ -36,14 +36,14 @@ Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
 ecosystem context, never adoption evidence. `kaspa-developments.html` says this
 in its own checked-line so a future reader cannot miss it.
 
-**PICK-UP BLOCK, 2026-08-14, session end.**
+**PICK-UP BLOCK, 2026-08-15.**
 
 1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp (see "Mistakes that keep happening" item 1).
-2. **MODEL PICKER: verified locally, deploying now.** `110aaee` is what's live on the site; the 9-dial/17-model rebuild described in "The model picker, briefly" below supersedes it and is what's being pushed this session. If this pick-up block still says "deploying now" next session, the push did not finish; check `git log` before trusting either state.
-3. **SOURCES.HTML AND TOCCATA-EXPLAINED.HTML: fixed and pushed**, commit `6c3544b`. Both staleness items are resolved and live.
-4. **THE DAILY JOB is the X-post calendar**, `kaspa-x-posts-august-2026.md`, local and uncommitted by standing instruction. Aug 3-14 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
-5. **SITE REVIEW DONE THIS SESSION, clean.** No voice drift anywhere across all 72 pages, including the six long-prose pages flagged as never read end to end for argument drift (kaspa-mining, chain-comparer, sources, crypto-from-scratch, toccata-essay, kaspa-origin-story) plus toccata-explained.html. That item is closed.
-6. **RAW SOURCE DATA for this session's picker rebuild** (Artificial Analysis, LiveBench, and LM Arena pulls, all dated 14 August) lives only in the session-scoped scratchpad, not the repo: `aa-fresh-2026-08-14.md`, `livebench-fresh-2026-08-14.md`, `arena-fresh-2026-08-14.md`. It will not survive past this session. Move it into `data/` before the next picker data refresh needs to reproduce or extend today's numbers.
+2. **MODEL-PICKER.HTML now runs 9 dials across 17 models, each dial a clean 50/50 pair of two benchmarks, committed and pushed this session.** Went through 4 rebuilds: 3-5 benchmarks per dial, then a 5-dial version forcing 1 source from each, then back to 9 dials once that source-purity rule itself was named as the problem. See "The model picker, briefly" for the per-dial detail. `check-model-picker.py` and `check-site.sh` ("Site checks passed.") both green before push. If `git log --oneline -1` shows this hasn't landed yet, finish that: commit, push, confirm the three workflows green, fetch the live page with a cache-busting query for the changed dial text.
+3. **TWO DATA FILES from 15 August, session-scoped scratchpad, will not survive:** `aa-fresh-2026-08-15-full.md` (the AA data behind the redesign) and `arena-fresh-2026-08-15.md` (confirms Agent/Text Arena unchanged from 14 Aug, WebDev gained one new single-source-only model `deepseek-v4-pro-high-20260813` correctly NOT added to the roster). Move into `data/` if this becomes a recurring refresh cadence.
+4. **AUGUST 15 X-POST DONE**, in `kaspa-x-posts-august-2026.md` ("Steelman the bear case first"), verified against `skeptical-case.html` directly, no em dashes, local and uncommitted by standing instruction.
+5. **THE DAILY JOB is the X-post calendar**, local and uncommitted by standing instruction. Aug 3-15 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
+6. **SITE REVIEW from earlier this session, clean, closed.** No voice drift across all 72 pages; `sources.html` and `toccata-explained.html` staleness fixes are live in `6c3544b`.
 
 ## What this is for
 
@@ -96,82 +96,58 @@ and the "as of" line inside any dated post.
 ## The model picker, briefly
 
 One page of 72, and it carries more machinery than the rest combined, so it
-gets one section rather than a third of this document. Rebuilt twice more
-this session after the summary below was first written; read this version,
-not memory of an earlier pass, since the methodology changed underneath it.
+gets one section rather than a third of this document. Rebuilt three times
+this session; read this version, not memory of an earlier pass.
 
-**Deployed (`110aaee`):** the 20-model, up-to-3-benchmarks-per-dial, 10-dial
-version. Still live on the site as of this write-up.
+**Local, verified, gate-clean, ready to push: 9 dials, 17 models, every
+dial a clean 50/50 pair.** Owner's instructions arrived in stages and each
+stage changed the design: first, reconsider the whole benchmark set (3-5
+per dial, up to 2 per source, drop saturated benchmarks, redefine dials
+that don't fit). That produced a version where 6 of 9 dials could not draw
+one benchmark from each of Artificial Analysis, LiveBench, and LM Arena,
+because Arena runs exactly four boards total and none of the six ever had
+a fifth to claim. Second stage, on seeing that gap: "must use at least 1
+source from each per dial, or dial must change," which produced a 5-dial
+version merging the six into two broad blends (one an 8-benchmark
+"reasoning and real-world work," the other a 7-benchmark "honest, fast,
+and cheap" that still couldn't reach Arena, since Arena has never
+published cost, speed, or hallucination data under any framing). Owner's
+verdict on that result: the source-purity rule itself was the problem, not
+the dials, stated directly as a test of whether the arbitrary rule would
+be caught rather than mechanically satisfied. Third and final stage: back
+to 9 dials, each blending exactly 2 benchmarks at a flat 50/50, picked for
+what they measure rather than for which source published them, with no
+source-count requirement at all. Writing code and agentic coding trimmed
+from their original 3 benchmarks to the 2 most distinct legs (an
+automated eval plus a live Arena judgment in both cases); general quality
+trimmed from 4 to 2 (Artificial Analysis Intelligence Index plus Arena
+Text Overall). Reasoning, finishing real work, honesty, long context,
+speed, and cost are their original clean 2-benchmark pairs, several of
+them single-source by nature (responsiveness is two Artificial Analysis
+figures because no other source tracks speed; honesty is two Artificial
+Analysis figures because neither other source tracks hallucination). A
+tenth dial, following instructions, was tried again and dropped again:
+IFBench, its only real second benchmark, has real scores for 5 of 17
+models, the same thin-coverage floor (real data for fewer than roughly 10
+of 17) that sank every other rejected candidate this session. GPQA
+Diamond, Omniscience Index, and MMMU Pro stay dropped for the same
+reasons as before (saturated, double-counting, category error). Roster
+stays at 17: all three previously excluded models (Claude Opus 4.8 High,
+Claude Opus 4.7 High, GPT-5.5 xHigh) still carry zero Artificial Analysis
+data, and every one of the nine dials draws on at least one Artificial
+Analysis figure, so the exclusion holds regardless of how the dials are
+shaped. `check-model-picker.py` passes (9 dials, all weights resolve);
+`check-site.sh` reaches "Site checks passed."
 
-**Local, verified, ready to ship, supersedes `110aaee`:** rebuilt to a
-stricter rule, owner's explicit instruction: every dial draws exactly one
-benchmark from Artificial Analysis, one from LiveBench, and one from LM
-Arena, evenly weighted, UNLESS a source publishes nothing relevant at all
-to that dial's concept, in which case the dial is honestly disclosed as a
-two-source (or, for one dial, single-source) blend rather than padded with
-an irrelevant or saturated benchmark to hit three. GPQA Diamond was dropped
-outright (93-95% across the whole frontier, too tight to separate anyone).
-Three clean 3-source triads survive: writing code (SciCode, LiveBench
-coding, Arena WebDev), agentic coding and terminal work (Terminal-Bench
-v2.1, LiveBench agentic coding, Arena Agent), general quality (AA
-Intelligence Index, LiveBench global average, Arena Text Overall). Five
-dials are honest 2-source pairs (reasoning, finishing real work, working
-across a long context, responsiveness, cost), because LiveBench and Arena
-between them publish nothing for long-context, hallucination, or speed at
-all. One dial, not making things up, is honestly single-sourced
-(Artificial Analysis non-hallucination rate only): neither LiveBench nor
-Arena publishes anything hallucination-specific, and Arena's Search
-leaderboard, the one candidate proxy, does not cover enough of the roster to
-use.
+**Two real display bugs from earlier this session (truncated benchmark
+list; percentage from `dialMix()`'s separation-share instead of the real
+weight) stayed fixed through all four rebuilds**, reverified live each
+time: every dial's inline text now names both benchmarks backing it at a
+plain 50%, matching the "Which benchmarks, and why" panel underneath.
 
-**"Following instructions" was cut entirely, not patched.** It was the
-weakest fit: both its benchmarks (IFBench, LiveBench IF) correlate heavily
-with the general-quality dial already, and instruction-adherence is a less
-distinct real-world decision factor than the other nine. Owner's call,
-mid-session: rather than keep every original dial alive by forcing a thin
-fit, drop the one that does not earn its place. The picker now has 9 dials,
-not 10.
-
-**Roster dropped from 20 to 17.** New rule, owner's explicit instruction:
-exclude any model missing more than 10 of the total ~20 individual
-benchmark metrics wired across the 9 dials, computed fresh against the
-current (smaller) metric set, not a leftover percentage floor from an
-earlier design. Three models cleared the old design's bar but not this one:
-Claude Opus 4.8 High (12 missing), Claude Opus 4.7 High (11 missing), GPT-5.5
-xHigh (12 missing), the same three with zero Artificial Analysis data. This
-is a deliberate exclusion, not a bug: unlike the coverage floor removed
-earlier this session, which was a stale leftover fighting a hand-curated
-roster's intent, this threshold was set fresh for the current design and
-should not be second-guessed the same way.
-
-**Two real display bugs, both found by the owner and fixed, same root
-cause.** First: the inline "leans on" summary under each dial capped at two
-named benchmarks no matter how many actually backed it, so a 3-source
-triad and a 2-source pair rendered in the identical shape, silently
-dropping the Arena figure from all three triads every time (Arena WebDev
-from writing code, Arena Agent from agentic coding, Arena Text Overall
-from general quality). Second, and worse: that same summary's percentage
-was never the configured weight at all. It came from `dialMix()`, an
-evidence-weighted "how much does this figure actually separate the field"
-computation built for a different purpose (the "separates the leaders"
-label), reused here by mistake. A clean 33/33/33 triad could render as
-61/26/13, and the number disagreed with the "Which benchmarks, and why"
-panel directly underneath it describing the same dial with the real
-weight. Both are fixed together: the summary now names every benchmark
-that backs a dial and states its real configured share, matching the
-panel below it exactly, every dial reading a plain 50%, 33%, or 100%
-depending on how many sources it draws from. `dialMix()`/`dialSeparation()`
-are untouched and still used for the separation label, which is a
-legitimately different question from how much a benchmark counts.
-
-Dial sliders run 0-10 (11 steps), widened from 0-4 for finer control;
-`DEFAULTS` and every named preset were rescaled by the same factor so the
-percentage split each dial gets held steady through that change.
-
-The badge that counts sources is derived, not stored, because a hardcoded
-count silently goes stale the day a source stops covering everything: see the
-`var`-hoisting trap in "The traps," which cost a day of downtime once
-already.
+Dial sliders run 0-10 (11 steps); the badge that counts sources is derived,
+not stored, because a hardcoded count silently goes stale the day a source
+stops covering everything (see the `var`-hoisting trap in "The traps").
 
 
 ## Serving and rendering
