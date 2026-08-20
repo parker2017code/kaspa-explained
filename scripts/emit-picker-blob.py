@@ -681,7 +681,27 @@ EFFORT_ORDER_BASE = {
     # Explicitly off. Its own floor, below every setting of on, because a model
     # told not to reason is doing a different thing from one reasoning a
     # little. The boards name this state three ways.
-    "Non-reasoning": 0, "Non-reasoning, high": 0, "Non-reasoning, Low Effort": 0,
+    #
+    # The depth of that floor is measured, not assumed. It used to sit two rungs
+    # below low, which was a guess. LiveBench publishes the same model with
+    # reasoning off and reasoning on across ten historical releases, and seven
+    # of those pairs name the effort tier on the on side, which is what it takes
+    # to place the floor: subtract the low-to-that-tier climb from the pair's gap
+    # and what is left is how far below low the off state sits.
+    #
+    # On LiveBench Overall a full low-to-max climb is worth 17.0 points, median
+    # of 10 within-model steps. The seven pairs put the off state 10.0 to 19.7
+    # points below low, median 16.1, which is 0.95 of an entire ladder, or 3.79
+    # rungs on this 0-to-6 scale. All seven agree in direction. So off belongs
+    # near -1.8, not 0, and the old guess understated the floor by about half.
+    #
+    # 31 further pairs carry a bare "Thinking" label with no tier on the on side.
+    # They cannot place the floor and are left out rather than guessed at.
+    #
+    # No model on the current roster was measured with reasoning off, so this
+    # moves nothing on the page today. It is fixed because it is wrong, and it
+    # would bite silently the first time a non-reasoning model is ranked.
+    "Non-reasoning": -1.8, "Non-reasoning, high": -1.8, "Non-reasoning, Low Effort": -1.8,
     # On, from the lowest setting up. OpenAI calls its lowest "minimal", which
     # is reasoning turned down rather than turned off, so it sits above off.
     "minimal": 1,
@@ -689,7 +709,10 @@ EFFORT_ORDER_BASE = {
 }
 
 # The widest a ladder gets, used to normalize a partial climb to a full one.
-LADDER_SPAN = max(EFFORT_ORDER_BASE.values())
+# Top to bottom, not top to zero: the floor went negative when it was measured,
+# and reading only the maximum would quietly shrink every climb that starts from
+# reasoning turned off.
+LADDER_SPAN = max(EFFORT_ORDER_BASE.values()) - min(EFFORT_ORDER_BASE.values())
 
 
 def main():
