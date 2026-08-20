@@ -439,6 +439,100 @@ VARIANT_FIX = {
     "Gemini 3.1 Pro Preview": "high",
 }
 
+# ---------------------------------------------------------------------------
+# LM Arena figures are read with Style Control on.
+#
+# Arena publishes its own correction that removes formatting and length from
+# the ranking, and the gap to the plain board says how much of a model's
+# standing is presentation. The median model loses 12 points on Overall and 5
+# on Creative Writing when it is applied.
+#
+# Using the corrected numbers is simply better evidence, and it is Arena's own
+# correction rather than one invented here. All four boards this page scores
+# were read with it on, from data/arena-style-controlled-scores-2026-08-20.md,
+# so nothing mixes corrected and uncorrected.
+#
+# The penalty turns out to be a property of the model and not of the task. A
+# model's Overall delta predicts its Creative Writing delta at r = 0.849 across
+# 19 models. That refuted the obvious guess, which was that style would matter
+# most where writing matters most; it matters most in general chat.
+#
+# Worth knowing which way the correction cuts: GPT-5.6 Sol loses 28 points on
+# Overall, Luna 22, Terra 20, Claude Sonnet 5 19. Claude Opus 5 is the only
+# model that gains, 16 at max and 12 at high.
+STYLE_CONTROLLED = {
+    # arena slug: {metric: style-controlled Elo}
+    "claude-fable-5": {"arenaHardPrompts": 1511, "arenaCreativeWriting": 1501,
+                       "arenaTextInstructionFollowing": 1505, "arenaLongerQuery": 1510},
+    "claude-opus-5-high": {"arenaHardPrompts": 1511, "arenaCreativeWriting": 1488,
+                           "arenaTextInstructionFollowing": 1515, "arenaLongerQuery": 1518},
+    "claude-opus-5-max": {"arenaHardPrompts": 1516, "arenaCreativeWriting": 1483,
+                          "arenaTextInstructionFollowing": 1511, "arenaLongerQuery": 1514},
+    "claude-sonnet-5-high": {"arenaHardPrompts": 1481, "arenaCreativeWriting": 1417,
+                             "arenaTextInstructionFollowing": 1452, "arenaLongerQuery": 1464},
+    "gpt-5.6-sol-xhigh": {"arenaHardPrompts": 1504, "arenaCreativeWriting": 1453,
+                          "arenaTextInstructionFollowing": 1475, "arenaLongerQuery": 1475},
+    "gpt-5.6-terra-xhigh": {"arenaHardPrompts": 1493, "arenaCreativeWriting": 1404,
+                            "arenaTextInstructionFollowing": 1452, "arenaLongerQuery": 1452},
+    "gpt-5.6-luna-xhigh": {"arenaHardPrompts": 1485, "arenaCreativeWriting": 1393,
+                           "arenaTextInstructionFollowing": 1437, "arenaLongerQuery": 1436},
+    "gemini-3.1-pro-preview": {"arenaHardPrompts": 1490, "arenaCreativeWriting": 1481,
+                               "arenaTextInstructionFollowing": 1466, "arenaLongerQuery": 1483},
+    "gemini-3.6-flash-high": {"arenaHardPrompts": 1492, "arenaCreativeWriting": 1463,
+                              "arenaTextInstructionFollowing": 1468, "arenaLongerQuery": 1475},
+    "gemini-3.7-flash-high": {"arenaHardPrompts": 1505, "arenaCreativeWriting": 1490,
+                              "arenaTextInstructionFollowing": 1486, "arenaLongerQuery": 1492},
+    "grok-4.5": {"arenaHardPrompts": 1495, "arenaCreativeWriting": 1437,
+                 "arenaTextInstructionFollowing": 1448, "arenaLongerQuery": 1468},
+    "grok-4.6-high": {"arenaHardPrompts": 1483, "arenaCreativeWriting": 1450,
+                      "arenaTextInstructionFollowing": 1446, "arenaLongerQuery": 1468},
+    "kimi-k3-max": {"arenaHardPrompts": 1499, "arenaCreativeWriting": 1450,
+                    "arenaTextInstructionFollowing": 1480, "arenaLongerQuery": 1490},
+    "deepseek-v4-pro-high-20260813": {"arenaHardPrompts": 1481, "arenaCreativeWriting": 1404,
+                                      "arenaTextInstructionFollowing": 1446, "arenaLongerQuery": 1461},
+    "glm-5.2-max": {"arenaHardPrompts": 1480, "arenaCreativeWriting": 1461,
+                    "arenaTextInstructionFollowing": 1453, "arenaLongerQuery": 1468},
+    "glm-5.3-max": {"arenaHardPrompts": 1496, "arenaCreativeWriting": 1463,
+                    "arenaTextInstructionFollowing": 1481, "arenaLongerQuery": 1477},
+    "qwen3.8-max": {"arenaHardPrompts": 1502, "arenaCreativeWriting": 1485,
+                    "arenaTextInstructionFollowing": 1482, "arenaLongerQuery": 1495},
+    "muse-spark-1.1": {"arenaHardPrompts": 1487, "arenaCreativeWriting": 1438,
+                       "arenaTextInstructionFollowing": 1459, "arenaLongerQuery": 1459},
+    "muse-spark-1.2 (xHigh)": {"arenaHardPrompts": 1498, "arenaCreativeWriting": 1446,
+                               "arenaTextInstructionFollowing": 1468, "arenaLongerQuery": 1484},
+}
+
+# Our model names to the slug Arena prints. Only the rows we score.
+STYLE_SLUG = {
+    ("Claude Fable 5", None): "claude-fable-5",
+    ("Claude Opus 5", "high"): "claude-opus-5-high",
+    ("Claude Opus 5", "max"): "claude-opus-5-max",
+    ("Claude Sonnet 5", None): "claude-sonnet-5-high",
+    ("GPT-5.6 Sol", None): "gpt-5.6-sol-xhigh",
+    ("GPT-5.6 Terra", None): "gpt-5.6-terra-xhigh",
+    ("GPT-5.6 Luna", None): "gpt-5.6-luna-xhigh",
+    ("Gemini 3.1 Pro Preview", None): "gemini-3.1-pro-preview",
+    ("Gemini 3.6 Flash", None): "gemini-3.6-flash-high",
+    ("Gemini 3.7 Flash", None): "gemini-3.7-flash-high",
+    ("Grok 4.5", None): "grok-4.5",
+    ("Grok 4.6", None): "grok-4.6-high",
+    ("Kimi K3", None): "kimi-k3-max",
+    ("DeepSeek V4 Pro 0813", None): "deepseek-v4-pro-high-20260813",
+    ("GLM-5.2", None): "glm-5.2-max",
+    ("GLM-5.3", None): "glm-5.3-max",
+    ("Qwen3.8 Max", None): "qwen3.8-max",
+    ("Muse Spark 1.1", None): "muse-spark-1.1",
+    ("Muse Spark 1.2", None): "muse-spark-1.2 (xHigh)",
+}
+
+
+def style_slug(name, variant):
+    """The Arena slug for a row, preferring an exact name and variant match."""
+    if (name, variant) in STYLE_SLUG:
+        return STYLE_SLUG[(name, variant)]
+    return STYLE_SLUG.get((name, None))
+
+
 VARIANT_MAP = {
     "max": "max effort", "xhigh": "xhigh effort", "high": "high effort",
     "medium": "medium effort", "low": "low effort",
@@ -663,6 +757,22 @@ def main():
     for v in inc.values():
         if not v.get("lab"):
             v["lab"] = LAB_FALLBACK.get(v["name"])
+
+    # Swap the four Arena figures to Style Control before anything reads them,
+    # so percentiles, the ladder and the simulation all see the same numbers.
+    swapped = 0
+    for v in inc.values():
+        slug = style_slug(v["name"], v["variant"])
+        if not slug:
+            continue
+        for m, val in STYLE_CONTROLLED.get(slug, {}).items():
+            if m in v["raw"]:
+                e = dict(v["raw"][m])
+                e["value"] = float(val)
+                e["adjustment"] = "style control"
+                v["raw"][m] = e
+                swapped += 1
+    print(f"arena figures swapped to style control: {swapped}")
 
     # ---- one row per model
     #
