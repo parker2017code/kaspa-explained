@@ -260,6 +260,22 @@ MIN_SHARED_FOR_FILL = 5
 # simulation discounts an estimate by exactly the interval it declares. At
 # these settings a prediction is off by 12.5 points on average, and its stated
 # interval is right about how often it is wrong.
+# How much an older release of a rotating benchmark still counts.
+#
+# LiveBench replaces its questions every six months to stay contamination free,
+# which means each release is a harder exam than the last and the same model
+# scores lower on it without having changed. Claude 4.5 Opus at medium effort
+# reads 75.6 on the 2025-05-30 release and 59.1 on 2026-01-08. Worse, the
+# effort ladder itself widens with difficulty: the medium to high gap on that
+# model goes from 11.2 points to 16.9 across those releases, and GPT-5.1's
+# reasoning-on against reasoning-off gap goes from 20.0 to 29.4.
+#
+# So effort buys more on harder tasks, and an old release measures a rung that
+# no longer exists. The newest three carry the fit; older ones are kept at a
+# tenth so they can contradict it but not set it.
+RELEASE_DECAY = [1.0, 0.6, 0.35]
+RELEASE_TAIL = 0.1
+
 IMPUTE_MIN_R = 0.70     # weaker than this and the donor is not telling us much
 IMPUTE_MIN_PAIRS = 12   # models publishing both, below which r is not evidence
 IMPUTE_MIN_DONORS = 3   # never let one or two correlations carry a figure
@@ -308,6 +324,51 @@ ARENA_CI_SECTIONS = {
     "arenaCreativeWriting": "### Creative Writing",
     "arenaHardPrompts": "### Hard Prompts",
     "arenaLongerQuery": "### Longer Query",
+}
+
+# ---------------------------------------------------------------------------
+# Tier corrections, from data/tier-audit-2026-08-20.md.
+#
+# The boards disagree about which effort setting they tested, and a figure has
+# to be moved to the common rung from the setting its own board used. The audit
+# checked all 21 models across all three sources and reported 147 mis-tiered
+# figures. That number is inflated and the corrections below are the part of it
+# that survives, because most of what it counted was a board printing no suffix
+# at all. Silence is not disagreement. LiveBench prints "Kimi K3" with no
+# suffix while Artificial Analysis prints "Kimi K3 (max)"; only one of them made
+# a claim, and it is not evidence of a second setting.
+#
+# What counts is a board printing a DIFFERENT setting than another board.
+#
+# ARENA_TIER moves the Arena-sourced figures for a model onto the setting Arena
+# actually tested, leaving that model's other figures where they were:
+#
+#   Claude Fable 5         Arena Agent prints "Claude Fable 5 (High)" while
+#                          Artificial Analysis and LiveBench both say max.
+#   DeepSeek V4 Pro 0813   Arena prints "DeepSeek V4 Pro (High) (0813)" and
+#                          "deepseek-v4-pro-high-20260813" against AA's (max).
+#   DeepSeek V4 Flash 0731 Arena prints "Deepseek V4 Flash (High) (20260731)"
+#                          against AA's (max).
+#
+# VARIANT_FIX is the other direction: Artificial Analysis prints no setting at
+# all for these two, so they were filed with no rung and the ladder could not
+# place them. LiveBench and Arena both print High for Gemini 3.6 Flash, and
+# LiveBench prints High for Gemini 3.1 Pro Preview. Two boards naming a setting
+# beats one board staying silent.
+ARENA_METRICS = {
+    "arenaHardPrompts", "arenaCreativeWriting", "arenaLongerQuery",
+    "arenaTextInstructionFollowing", "webdevArena", "imageToWebdevArena",
+    "textArena", "textCoding", "textMath", "textExpert",
+    "visionArena", "docArena", "searchArena", "agentArena",
+}
+ARENA_TIER = {
+    "Claude Fable 5": "high",
+    "DeepSeek V4 Pro 0813": "high",
+    "DeepSeek V4 Flash 0731": "high",
+}
+VARIANT_FIX = {
+    "Gemini 3.6 Flash": "high",
+    "Gemini 3.1 Pro Preview": "high",
 }
 
 VARIANT_MAP = {
@@ -466,21 +527,76 @@ def main():
                 shared = [m for m in CAP_METRICS if m in pv[a] and m in pv[b]]
                 if not shared:
                     continue
-                obs = {"cap": sum(pv[b][m] - pv[a][m] for m in shared) / len(shared)}
+                obs = {"cap": sum(pv[b][m] - pv[a][m] for m in shared) / len(shared),
+                       "src": "aa"}
                 for m in SCALED_RAW:
                     x = inc[a]["raw"].get(m, {}).get("value")
                     y = inc[b]["raw"].get(m, {}).get("value")
                     obs[m] = (y / x) if (x and y) else None
                 rows.setdefault(pair, []).append(obs)
+        # Pooled by source, then averaged across sources equally.
+        #
+        # Not a flat average over every observation. The boards do not sample
+        # independently: LiveBench republishes the same model across five
+        # releases, so a flat pool counts that model five times and lets
+        # whichever board publishes most often set the ladder for all of them.
+        # Each source gets a third of the say regardless of how much it prints.
+        #
+        # Every observation here currently carries source "aa", because the
+        # ladder is fit from data/picker-data.json alone. The grouping is in
+        # place so the LiveBench and Arena ladders drop straight in.
         out = {}
         for pair, obs in rows.items():
-            caps = [o["cap"] for o in obs]
-            entry = {"cap": statistics.median(caps),
-                     "cap_sd": statistics.pstdev(caps) if len(caps) > 1 else 4.0,
-                     "n": len(obs)}
+            by_src = {}
+            for o in obs:
+                by_src.setdefault(o.get("src", "aa"), []).append(o)
+
+            def across_sources(pick):
+                """One number per source, then averaged across sources equally.
+
+                Inside a source, observations are grouped by the release they
+                came from, each release reduced to a median across families,
+                and the releases combined by recency. A benchmark that rotates
+                its questions gets harder each time, so an old release is
+                measuring a different thing and should not carry the same
+                weight as the one running now. The newest three carry almost
+                all of it and anything older is kept only as a sanity check.
+                """
+                per = []
+                for src_obs in by_src.values():
+                    by_rel = {}
+                    for ob in src_obs:
+                        v = pick(ob)
+                        if v is not None:
+                            by_rel.setdefault(ob.get("rel", ""), []).append(v)
+                    if not by_rel:
+                        continue
+                    # Newest first. Releases are ISO dates, so a plain reverse
+                    # sort is chronological, and the empty string used when a
+                    # source publishes no release date sorts last on its own.
+                    rels = sorted(by_rel, reverse=True)
+                    num = den = 0.0
+                    for i, r in enumerate(rels):
+                        w = RELEASE_DECAY[i] if i < len(RELEASE_DECAY) else RELEASE_TAIL
+                        num += w * statistics.median(by_rel[r])
+                        den += w
+                    per.append(num / den)
+                return per
+
+            caps = across_sources(lambda o: o["cap"])
+            if not caps:
+                continue
+            # Spread is taken over the raw observations, not over the three
+            # source medians. Three numbers cannot describe a spread, and
+            # understating this error is what the simulation would inherit.
+            raw_caps = [o["cap"] for o in obs]
+            entry = {"cap": sum(caps) / len(caps),
+                     "cap_sd": statistics.pstdev(raw_caps) if len(raw_caps) > 1 else 4.0,
+                     "n": len(obs),
+                     "sources": sorted(by_src)}
             for m in SCALED_RAW:
-                vals = [o[m] for o in obs if o[m]]
-                entry[m] = statistics.median(vals) if vals else None
+                per = across_sources(lambda o, _m=m: o[_m])
+                entry[m] = (sum(per) / len(per)) if per else None
             out[pair] = entry
         return out
 
@@ -696,7 +812,11 @@ def main():
         # sharpens as the audit fills them in.
         def tier_of_figure(m):
             t = v["raw"][m].get("tier")
-            return rung(t if t else v["variant"])
+            if not t and m in ARENA_METRICS:
+                t = ARENA_TIER.get(v["name"])
+            if not t:
+                t = VARIANT_FIX.get(v["name"]) or v["variant"]
+            return rung(t)
 
         def hop_for(m):
             t = tier_of_figure(m)
@@ -713,8 +833,9 @@ def main():
         # The row-level summary still needs one hop to describe. Use the one
         # that moved the cost, since price is what a reader acts on.
         H = hop_for("aaCostPerTask") if "aaCostPerTask" in v["raw"] else None
-        if H is None and rung(v["variant"]):
-            H = hop(rung(v["variant"]), TARGET, v["name"])
+        base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
+        if H is None and rung(base_variant):
+            H = hop(rung(base_variant), TARGET, v["name"])
 
         # Pass one: what this setting was measured on, then what its own
         # neighboring settings can supply. Same-model evidence first, always.
@@ -877,7 +998,8 @@ def main():
 
     for row, key in zip(rows, order):
         v = inc[key]
-        H = hop(rung(v["variant"]), TARGET, v["name"]) if rung(v["variant"]) else None
+        base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
+        H = hop(rung(base_variant), TARGET, v["name"]) if rung(base_variant) else None
         nat, cnat = [], []
         for m in METRICS:
             if m in NAT_METRICS and m in v["raw"]:
