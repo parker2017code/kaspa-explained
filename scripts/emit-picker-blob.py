@@ -715,6 +715,93 @@ EFFORT_ORDER_BASE = {
 LADDER_SPAN = max(EFFORT_ORDER_BASE.values()) - min(EFFORT_ORDER_BASE.values())
 
 
+# The honest scale.
+#
+# The 0-to-100 the page has always shown is a percentile across the 21 models on
+# it. That makes the bottom model 0 and the top model 100 by construction, no
+# matter how close together they actually are, which is how a field that agrees
+# to within a couple of points on a benchmark ends up looking 51 points apart.
+# It answers "who is ahead here", and it cannot answer "by how much".
+#
+# So every figure also gets a second reading, against the full published board
+# it came from rather than against this page's roster. Artificial Analysis
+# publishes 610 models, LiveBench its whole board, and LM Arena a board that
+# starts at the models from 2023. Those ranges are real and none of them move
+# when the roster changes.
+#
+# Each source contributes its own metrics on its own full range, which keeps the
+# three sources a third each in the same way the ladder fit does, rather than
+# letting whichever board has the widest numbers dominate.
+ARENA_FULL_RANGE = {
+    # Read off each board's own Score Range filter with Style Control on, which
+    # is the setting these figures are scored at. The floor is a real model:
+    # llama-13b and its contemporaries still sit at the bottom of these boards.
+    "arenaHardPrompts": (917.0, 1534.0),
+    "arenaCreativeWriting": (931.0, 1509.0),
+    "arenaTextInstructionFollowing": (908.0, 1514.0),
+    "arenaLongerQuery": (1042.0, 1525.0),
+    # WebDev is a separate board and was captured without Style Control, same as
+    # the figure itself, so the pair is at least consistent.
+    "webdevArena": (1080.0, 1691.0),
+}
+
+LIVEBENCH_COLUMNS = {
+    "Coding": "lbCoding", "AgenticCoding": "lbAgenticCoding",
+    "Mathematics": "lbMath", "DataAnalysis": "lbDataAnalysis",
+    "Language": "lbLanguage", "InstructionFollowing": "lbInstructionFollowing",
+    "CostPerSuccessfulTask": "lbCostPerSuccessTask",
+}
+
+
+def full_board_ranges():
+    """Per-figure range across the whole board each figure comes from."""
+    out = dict(ARENA_FULL_RANGE)
+
+    if LADDER_CORPUS.exists():
+        lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
+                 if l.startswith("| ")]
+        if len(lines) >= 3:
+            header = [c.strip() for c in lines[0].strip("|").split("|")]
+            acc = {}
+            for line in lines[2:]:
+                cells = [c.strip() for c in line.strip("|").split("|")]
+                if len(cells) != len(header):
+                    continue
+                row = dict(zip(header, cells))
+                for col, key in CORPUS_COLUMNS.items():
+                    v = corpus_number(row.get(col))
+                    if v is not None:
+                        acc.setdefault(key, []).append(v)
+            for k, vals in acc.items():
+                if len(vals) >= 20 and max(vals) > min(vals):
+                    out[k] = (min(vals), max(vals))
+
+    lb = ROOT / "data" / "livebench-2026-08-20.md"
+    if lb.exists():
+        cols = []
+        acc = {}
+        for line in lb.read_text(encoding="utf-8").splitlines():
+            if line.startswith("# Columns:"):
+                cols = [c.strip() for c in line.split(":", 1)[1].split("|")]
+                continue
+            if not cols or "|" not in line or line.startswith("#"):
+                continue
+            cells = [c.strip() for c in line.split("|")]
+            if len(cells) != len(cols):
+                continue
+            for col, val in zip(cols, cells):
+                key = LIVEBENCH_COLUMNS.get(col)
+                if not key:
+                    continue
+                v = corpus_number(val)
+                if v is not None:
+                    acc.setdefault(key, []).append(v)
+        for k, vals in acc.items():
+            if len(vals) >= 20 and max(vals) > min(vals):
+                out[k] = (min(vals), max(vals))
+    return out
+
+
 def main():
     d = json.loads(DATA.read_text(encoding="utf-8"))
     models = d["models"]
@@ -748,6 +835,36 @@ def main():
         if not span[m]:
             return 100.0
         p = (val - lo[m]) / span[m] * 100.0
+        return p if d["metrics"][m]["higher"] else 100.0 - p
+
+    FULL = full_board_ranges()
+
+    def unpctile(m, p):
+        """Back from this page's percentile to the figure the board printed.
+
+        The honest reading is taken from the raw value rather than recomputed
+        from scratch, so that every correction already applied to a figure, the
+        move to the common effort rung above all, survives the change of scale
+        instead of being silently dropped.
+        """
+        if not span[m]:
+            return lo[m]
+        if not d["metrics"][m]["higher"]:
+            p = 100.0 - p
+        return lo[m] + p / 100.0 * span[m]
+
+    def honest(m, val):
+        """0 to 100 against the whole board this figure comes from.
+
+        Clamped, because a roster model can sit outside the captured range when
+        the board moved between captures, and a score over 100 would say the
+        model beat a scale it is being measured against.
+        """
+        r = FULL.get(m)
+        if not r or r[1] <= r[0]:
+            return None
+        p = (val - r[0]) / (r[1] - r[0]) * 100.0
+        p = max(0.0, min(100.0, p))
         return p if d["metrics"][m]["higher"] else 100.0 - p
 
     ci_raw = arena_intervals()
@@ -1482,18 +1599,21 @@ def main():
                 val[m], sd[m] = got
                 kind[m] = "imputed"
 
-        pct, av, ci, est, esd = [], [], [], [], []
+        pct, av, ci, est, esd, hpct = [], [], [], [], [], []
         has_ci = False
         n_est = 0
         for m in METRICS:
             if m not in val:
                 pct.append(0.0)
+                hpct.append(None)
                 av.append(0)
                 est.append(0)
                 esd.append(None)
                 ci.append(None)
                 continue
             pct.append(round(val[m], 1))
+            h = honest(m, unpctile(m, val[m]))
+            hpct.append(round(h, 1) if h is not None else None)
             av.append(1)
             if kind[m] == "measured":
                 est.append(0)
@@ -1527,6 +1647,7 @@ def main():
             "tps": raw_at_target.get("tokensPerSec", {}).get("value"),
             "solid": v["wired_metric_count"] >= 19,
             "v": pct,
+            "hv": hpct,
             "a": av,
         }
         if H:
