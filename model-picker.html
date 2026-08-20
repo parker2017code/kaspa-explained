@@ -1308,6 +1308,17 @@
     return (R.hi - R.lo) * gapPts / 100;
   }
 
+  // The gap as a share of the leader, which is the one reading that means the
+  // same thing on every question. Under a tenth of a percent is printed as
+  // "<0.1%" rather than rounded to zero, because a row claiming to be exactly
+  // level with the leader when it is not is the failure this replaced.
+  function pctBehind(gapPts, top) {
+    if (!(top > 0)) return null;
+    var p = 100 * gapPts / top;
+    if (p > 0 && p < 0.1) return '<0.1%';
+    return '\u2212' + (p < 10 ? p.toFixed(1) : Math.round(p)) + '%';
+  }
+
   function anchorFor(rows, W) {
     var figs = loadedFigures(W);
     for (var i = 0; i < figs.length; i++) {
@@ -1899,26 +1910,37 @@
           + 'so treat the top few as tied and pick on price or whatever else matters.';
         tieNote.hidden = false;
       } else if (askedW && gap < 5 && shown.length > 1) {
-        tieNote.textContent = 'The top few are within ' + Math.round(gap)
-          + ' points of each other here, which is close enough to call a tie.';
+        tieNote.textContent = 'The top few are within '
+          + (topScore > 0 ? (100 * gap / topScore).toFixed(1) + '%' : Math.round(gap) + ' points')
+          + ' of each other here, which is close enough to call a tie.';
         tieNote.hidden = false;
       } else { tieNote.hidden = true; }
     }
 
     // In real terms the under-score figure stops being scale points and starts
-    // being what the boards print, next to what the model costs against the
-    // leader. Both halves of the same fact: the gap is small, and the price
-    // difference is not.
+    // being how far behind the leader the model is, next to what it costs
+    // against that leader. Both halves of the same fact: the gap is small, and
+    // the price difference is not.
+    //
+    // This used to read the gap back in the units of whichever board anchored
+    // the current question, which was a mistake for two reasons. The unit moved
+    // with the dials, printing points, then Elo, then tokens per second, so no
+    // two turns of the page were comparable. Worse, one of those units was a
+    // percentage, and a row saying "-0.95%" read as one percent behind when it
+    // meant 0.95 percentage points on GPQA Diamond and the real gap was ten
+    // times that. A figure that invites the wrong reading is worse than a
+    // coarser one that does not, so this is the share of the leader's score
+    // that the gap represents, in one unit, on every question.
     var real = realMode();
     var topCost = rows[0].m.cost;
-    var anchor = anchorFor(rows, W);
     function scoreSub(r, i) {
       var gap = topScore - r.s;
       if (!real) return i === 0 ? '<b>top</b>' : '<b>\u2212' + gap.toFixed(1) + '</b>';
       if (i === 0) return '<b>top</b>';
       var bits = [];
-      var fg = anchor ? gapInUnits(gap, anchor.k) : null;
-      if (fg !== null) bits.push('\u2212' + fmtRaw(anchor.k, fg));
+      if (topScore > 0) {
+        bits.push(pctBehind(gap, topScore) + ' worse');
+      }
       if (topCost && r.m.cost) {
         bits.push(r.m.cost <= topCost
           ? '\u00d7' + (topCost / r.m.cost).toFixed(1) + ' cheaper'
