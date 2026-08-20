@@ -194,27 +194,60 @@ def subtask_closeness(shipped_names):
 # climbing from low to max, which pays 12.3 points per doubling.
 COST_PENALTY = 8.0
 
-# Every model is quoted at the same effort setting, and the setting is derived,
-# not chosen. These boards test whatever each lab submitted: Claude Opus 5 at
-# five settings, GLM-5.2 only at max, Grok 4.5 only at high. Ranking those
-# against each other compares submissions, not models.
+# Every model is quoted at the same point on its own effort curve.
 #
-# Which rung, and why not the cheapest one that still scores well: capability
-# keeps rising all the way up. Measured on capability figures alone, a rung
-# buys +14.9 points from low to medium, +5.9 to high, +7.4 to xhigh, +11.4 to
-# max, against about 1.5x the price each time. Every one of those clears
-# COST_PENALTY, so a value walk does not stop anywhere and cannot pick a rung.
-# An earlier version of this file thought it could, because it averaged the
-# cost and speed figures in with capability, and those fall as effort rises.
-# That made the top rung look negative. It is not.
+# Not at the same labeled setting. The labels are not comparable and the data
+# says so plainly. Measured as a fraction along each model's own log-price
+# ladder, where 0 is its cheapest published setting and 1 its dearest, the word
+# "high" lands at:
 #
-# So the rung is picked to invent as little as possible: the one the most
-# models were actually tested at, inside the medium-to-high band a buyer
-# actually runs. Counting rungs of extrapolation over the 21 models, medium
-# costs 23 and has 9 models measured there, high costs 13 and has 13. High
-# wins on both. TARGET is derived in derived_target() and printed on every
-# build, because a refresh can move it.
-TARGET_BAND = ("medium", "high")
+#   GPT-5.6 Terra      0.00   its cheapest setting
+#   GPT-5.6 Sol        0.52
+#   Claude Opus 5      0.62
+#   Gemini 3.7 Flash   1.00   its dearest setting
+#
+# The same word spans the whole ladder. Quoting everything at "high" puts one
+# model at the bottom of its curve and another at the top and calls that a fair
+# comparison. It is the same mistake as comparing one lab's max against
+# another's medium, moved up one level.
+#
+# So the target is a position, and every model is interpolated to it along its
+# own curve. Where that position sits is derived, not chosen. Pooling the
+# families that publish three or more settings and reading marginal capability
+# per doubling of price along the normalized curve:
+#
+#   f 0.0 to 0.3    30.2, 19.4, 18.2 points per doubling
+#   f 0.3 to 0.5    11.9, 11.9
+#   f 0.5 to 1.0    10.3, 9.8, 9.8, 9.8, 9.8
+#
+# Marginal return falls by a third between 0.3 and 0.4 and is flat across the
+# entire top half. That break is the knee, and buying past it is paying for a
+# curve that has stopped rising. TARGET_F is placed there.
+#
+# For scale, the capability curve is steeply concave: Claude Opus 5 collects
+# 70 percent of everything max effort buys it within the first 30 percent of
+# its price span.
+TARGET_F = 0.35
+
+# Where each label falls on its own model's price span, pooled across the
+# families that publish a full ladder. Used only to place a model that
+# publishes a single setting, which has no curve of its own to interpolate on.
+# The spread behind these is wide, which is the whole point of not using them
+# as the target.
+POOLED_F = {"low": 0.00, "medium": 0.30, "high": 0.57, "xhigh": 0.75, "max": 1.00}
+
+# The pooled curve itself: capability as a fraction of a model's own low-to-max
+# gain, at each position. Read off the same families.
+POOLED_CURVE = [(0.0, 0.00), (0.1, 0.17), (0.2, 0.33), (0.3, 0.48),
+                (0.4, 0.57), (0.5, 0.65), (0.6, 0.72), (0.7, 0.78),
+                (0.8, 0.85), (0.9, 0.92), (1.0, 1.00)]
+
+# How wide a full low-to-max ladder is, in doublings of price, pooled. A model
+# with one published setting is moved along the pooled curve by this much.
+POOLED_LADDER_DOUBLINGS = 1.97
+
+# How many percentile points a full low-to-max climb buys, pooled. Same use.
+POOLED_LADDER_CAP = 26.0
 
 # Two settings inside this many points of each other are the same buy, so the
 # tie breaks on which one the boards actually measured. Five is the page's own
@@ -603,90 +636,199 @@ def main():
     LADDER = pooled_ladder()
     RUNGS = ["low", "medium", "high", "xhigh", "max"]
 
-    def derived_target():
-        """The rung inside TARGET_BAND that takes the least extrapolation.
+    RUNG_LIST = ["low", "medium", "high", "xhigh", "max"]
 
-        Cost is counted in rungs: for each model, how far its nearest measured
-        setting sits from the candidate. A model already measured there costs
-        nothing. Ties go to the rung more models were tested at, then to the
-        lower rung, because a cheaper quote is the more conservative claim.
-        """
-        band = RUNGS[RUNGS.index(TARGET_BAND[0]):RUNGS.index(TARGET_BAND[1]) + 1]
-        best = None
-        for cand in band:
-            hops, exact = 0, 0
+    # How much a full climb buys, PER FIGURE, rather than one number for all.
+    #
+    # Applying a single shift to every capability figure is wrong and the data
+    # says how wrong. Measured across the families that publish a full ladder,
+    # a low-to-max climb buys 71.9 percentile points on Terminal-Bench v2.1 and
+    # 2.2 on the non-hallucination rate. Effort transforms agentic coding and
+    # does almost nothing for whether a model makes things up. The pooled
+    # number is 23.3, so using it understates Terminal-Bench by 48 points and
+    # overstates hallucination resistance by 21.
+    #
+    # Some figures also move the wrong way for some models. Claude Opus 5 loses
+    # 10 points of long-context reasoning climbing to max effort while GPT-5.6
+    # Sol gains 70 on the same figure. That is why a model with its own ladder
+    # is read off its own curve figure by figure, and the table below is only
+    # for models that have no ladder to read.
+    def per_metric_gain():
+        out = {}
+        for m in CAP_METRICS:
+            vals = []
             for name, ks in groups.items():
-                rungs = [EFFORT_ORDER[inc[k]["variant"]] for k in ks
-                         if inc[k]["variant"] in EFFORT_ORDER]
-                if not rungs:
+                ladder = [k for k in ks
+                          if inc[k]["variant"] in EFFORT_ORDER and cost_of(k)]
+                if len(ladder) < 3:
                     continue
-                far = min(abs(r - RUNGS.index(cand)) for r in rungs)
-                hops += far
-                exact += 1 if far == 0 else 0
-            score = (hops, -exact, RUNGS.index(cand))
-            if best is None or score < best[0]:
-                best = (score, cand)
-        return best[1]
-
-    def hop(src, dst, name):
-        """What it takes to quote a model measured at src as if it ran at dst.
-
-        A family's own two settings beat the board-wide ladder every time, so
-        those are used when the family has both. Otherwise the board-wide
-        ladder is chained a rung at a time, and the spread of those steps
-        becomes the error on the result.
-        """
-        if src == dst or src not in RUNGS or dst not in RUNGS:
-            return None
-        i, j = RUNGS.index(src), RUNGS.index(dst)
-        own = {inc[k]["variant"]: k for k in groups.get(name, [])}
-        if src in own and dst in own:
-            a, b = own[src], own[dst]
-            shared = [m for m in CAP_METRICS if m in pv[a] and m in pv[b]]
-            ca, cb = cost_of(a), cost_of(b)
-            if shared and ca and cb:
-                out = {"cap": sum(pv[b][m] - pv[a][m] for m in shared) / len(shared),
-                       "sd": 0.0, "own": True, "rungs": abs(j - i)}
-                for m in SCALED_RAW:
-                    x = inc[a]["raw"].get(m, {}).get("value")
-                    y = inc[b]["raw"].get(m, {}).get("value")
-                    out[m] = (y / x) if (x and y) else None
-                return out
-        cap, var = 0.0, 0.0
-        mult = {m: 1.0 for m in SCALED_RAW}
-        up = 1 if j > i else -1
-        for at in range(i, j, up):
-            a, b = (RUNGS[at], RUNGS[at + 1]) if up > 0 else (RUNGS[at - 1], RUNGS[at])
-            step = LADDER.get((a, b))
-            if not step or not step["aaCostPerTask"]:
-                return None
-            cap += step["cap"] * up
-            var += step["cap_sd"] ** 2
-            for m in SCALED_RAW:
-                if step[m]:
-                    mult[m] *= step[m] ** up
-        out = {"cap": cap, "sd": var ** 0.5, "own": False, "rungs": abs(j - i)}
-        out.update(mult)
+                ladder.sort(key=lambda k: math.log2(cost_of(k)))
+                a, b = ladder[0], ladder[-1]
+                if m in pv[a] and m in pv[b]:
+                    vals.append(pv[b][m] - pv[a][m])
+            if len(vals) >= 3:
+                out[m] = {"gain": statistics.median(vals),
+                          "sd": statistics.pstdev(vals),
+                          "n": len(vals)}
         return out
 
-    TARGET = derived_target()
+    GAIN = per_metric_gain()
+    GAIN_REF = statistics.median([g["gain"] for g in GAIN.values()]) if GAIN else 1.0
+
+    def own_curve(name):
+        """A model's own ladder: [(f, capability, log2 price)], cheapest first.
+
+        f is the position along that model's own log-price span, 0 at its
+        cheapest published setting and 1 at its dearest. None when the model
+        publishes fewer than two priced settings, which is when the pooled
+        curve has to stand in for it.
+        """
+        ks = [k for k in groups.get(name, [])
+              if inc[k]["variant"] in EFFORT_ORDER and cost_of(k)]
+        if len(ks) < 2:
+            return None
+        core = [m for m in CAP_METRICS if all(m in pv[k] for k in ks)]
+        if not core:
+            return None
+        pts = []
+        for k in ks:
+            cap = sum(pv[k][m] for m in core) / len(core)
+            pts.append((math.log2(cost_of(k)), cap, inc[k]["variant"]))
+        pts.sort()
+        lo_p, hi_p = pts[0][0], pts[-1][0]
+        if hi_p <= lo_p:
+            return None
+        return [((p - lo_p) / (hi_p - lo_p), c, p, var) for p, c, var in pts]
+
+    def interp(curve, f, idx):
+        """Read a curve at position f, straight-line between its measured points."""
+        if f <= curve[0][0]:
+            return curve[0][idx]
+        if f >= curve[-1][0]:
+            return curve[-1][idx]
+        for i in range(len(curve) - 1):
+            x0, x1 = curve[i][0], curve[i + 1][0]
+            if x0 <= f <= x1:
+                if x1 == x0:
+                    return curve[i][idx]
+                t = (f - x0) / (x1 - x0)
+                return curve[i][idx] + t * (curve[i + 1][idx] - curve[i][idx])
+        return curve[-1][idx]
+
+    def pooled_cap_frac(f):
+        return interp([(x, y, 0, None) for x, y in POOLED_CURVE], f, 1)
+
+    def own_metric_curve(name, metric):
+        """One model's own readings of one figure across its own ladder.
+
+        The most honest thing available: no pooling at all, just that model
+        measured on that figure at several prices. Returns [(f, value)] or None.
+        """
+        curve = own_curve(name)
+        if not curve:
+            return None
+        by_var = {}
+        for k in groups.get(name, []):
+            if inc[k]["variant"] in EFFORT_ORDER and metric in pv[k]:
+                by_var[inc[k]["variant"]] = pv[k][metric]
+        pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
+        return pts if len(pts) >= 2 else None
+
+    def metric_shift(name, metric, f_now, overall):
+        """What moving to TARGET_F does to one figure, for one model.
+
+        Three ways down, best first. The model's own readings of this exact
+        figure across its own ladder. Failing that, its own overall move scaled
+        by how much this figure responds to effort board-wide. Failing that,
+        the overall move unscaled.
+        """
+        own = own_metric_curve(name, metric)
+        if own:
+            a = interp([(f, v, 0, None) for f, v in own], f_now, 1)
+            b = interp([(f, v, 0, None) for f, v in own], TARGET_F, 1)
+            return b - a, 0.0
+        g = GAIN.get(metric)
+        if g and GAIN_REF:
+            scale = g["gain"] / GAIN_REF
+            # The spread across families on this figure is the error on using
+            # a board-wide number for it, carried proportionally.
+            return overall["cap"] * scale, abs(overall["cap"]) * (
+                g["sd"] / abs(g["gain"]) if g["gain"] else 1.0) * 0.5
+        return overall["cap"], 0.0
+
+    def to_target(name, variant):
+        """Move a model from the setting it was measured at to TARGET_F.
+
+        Returns the multiplier to apply to its price and the shift to apply to
+        its capability figures, plus the error on that shift.
+
+        A model that publishes two or more priced settings is interpolated on
+        its own curve, which is the real measurement and carries almost no
+        assumption. A model published at one setting only has no curve, so the
+        pooled one stands in: its label places it on the shared curve and it
+        moves from there. That is a much weaker claim and it carries a much
+        wider error.
+        """
+        if variant not in EFFORT_ORDER:
+            return None
+        curve = own_curve(name)
+        if curve:
+            f_now = next((c[0] for c in curve if c[3] == variant), None)
+            if f_now is None:
+                return None
+            if abs(f_now - TARGET_F) < 1e-9:
+                return None
+            cap_now = interp(curve, f_now, 1)
+            cap_tgt = interp(curve, TARGET_F, 1)
+            p_now = interp(curve, f_now, 2)
+            p_tgt = interp(curve, TARGET_F, 2)
+            # Error is how far this model's own curve sits from the pooled one
+            # over the stretch being crossed. A model whose ladder behaves like
+            # everybody else's is a safe interpolation; one that does not is not.
+            span = abs(curve[-1][1] - curve[0][1]) or 1.0
+            resid = [abs((c[1] - curve[0][1]) / span - pooled_cap_frac(c[0])) for c in curve]
+            sd = (sum(r * r for r in resid) / len(resid)) ** 0.5 * span
+            return {"price": 2 ** (p_tgt - p_now),
+                    "cap": cap_tgt - cap_now,
+                    "sd": max(sd, 1.0),
+                    "own": True,
+                    "from_f": f_now}
+        # No curve of its own. Place it by label on the pooled curve.
+        f_now = POOLED_F.get(variant)
+        if f_now is None:
+            return None
+        d_frac = pooled_cap_frac(TARGET_F) - pooled_cap_frac(f_now)
+        return {"price": 2 ** ((TARGET_F - f_now) * POOLED_LADDER_DOUBLINGS),
+                "cap": d_frac * POOLED_LADDER_CAP,
+                # The label is the weak link. "high" was measured anywhere from
+                # 0.00 to 1.00 of a model's span, so placing a model by its
+                # label alone is worth about a third of the ladder in error.
+                "sd": 0.30 * POOLED_LADDER_CAP,
+                "own": False,
+                "from_f": f_now}
 
     def choose_setting(keys):
-        """The measured setting to quote from, before it is moved to TARGET.
+        """Which measured setting to quote from, before moving it to TARGET_F.
 
-        Nearest the target rung wins, because a short hop carries less error
-        than a long one. A priced setting beats an unpriced one at the same
-        distance: cost is one of the ten dials and the whole x axis of the
-        value chart, and it cannot be recovered from a setting that never
-        published it. Coverage breaks what is left.
+        The one already nearest the target position, because a short move
+        carries less error than a long one. A priced setting beats an unpriced
+        one at equal distance: cost is one of the ten dials and the whole x
+        axis of the value chart, and it cannot be recovered from a setting that
+        never published it. Coverage breaks what is left.
         """
         if len(keys) == 1:
             return keys[0]
-        target_i = RUNGS.index(TARGET)
+        name = inc[keys[0]]["name"]
+        curve = own_curve(name)
+        f_of = {}
+        if curve:
+            for c in curve:
+                f_of[c[3]] = c[0]
 
         def rank(k):
             v = inc[k]["variant"]
-            far = abs(EFFORT_ORDER[v] - target_i) if v in EFFORT_ORDER else 9
+            f = f_of.get(v, POOLED_F.get(v))
+            far = abs(f - TARGET_F) if f is not None else 9
             return (0 if cost_of(k) is not None else 1, far,
                     -inc[k]["wired_metric_count"])
         return min(keys, key=rank)
@@ -820,14 +962,14 @@ def main():
 
         def hop_for(m):
             t = tier_of_figure(m)
-            return hop(t, TARGET, v["name"]) if t in EFFORT_ORDER else None
+            return to_target(v["name"], t) if t in EFFORT_ORDER else None
 
         raw_at_target = {}
         for m, e in v["raw"].items():
             Hm = hop_for(m) if m in SCALED_RAW else None
-            if Hm and Hm.get(m):
+            if Hm and Hm.get("price"):
                 e = dict(e)
-                e["value"] = e["value"] * Hm[m]
+                e["value"] = e["value"] * Hm["price"]
             raw_at_target[m] = e
 
         # The row-level summary still needs one hop to describe. Use the one
@@ -835,11 +977,12 @@ def main():
         H = hop_for("aaCostPerTask") if "aaCostPerTask" in v["raw"] else None
         base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
         if H is None and rung(base_variant):
-            H = hop(rung(base_variant), TARGET, v["name"])
+            H = to_target(v["name"], rung(base_variant))
 
         # Pass one: what this setting was measured on, then what its own
         # neighboring settings can supply. Same-model evidence first, always.
         val, kind, sd = {}, {}, {}
+        metric_sd = {}
         src_tiers = {}
         for m in METRICS:
             if m in raw_at_target:
@@ -849,7 +992,10 @@ def main():
                 val[m] = pctile(m, raw_at_target[m]["value"])
                 Hm = hop_for(m)
                 if Hm and m in CAP_METRICS:
-                    val[m] = max(0.0, min(100.0, val[m] + Hm["cap"]))
+                    # Per figure, not one shift for all of them.
+                    dm, dsd = metric_shift(v["name"], m, Hm["from_f"], Hm)
+                    val[m] = max(0.0, min(100.0, val[m] + dm))
+                    metric_sd[m] = (Hm["sd"] ** 2 + dsd ** 2) ** 0.5
                 src_tiers[m] = tier_of_figure(m)
                 kind[m] = "measured"
             elif len(sibs) > 1:
@@ -886,7 +1032,11 @@ def main():
             av.append(1)
             if kind[m] == "measured":
                 est.append(0)
-                esd.append(None)
+                # A measured figure that was moved along the curve carries the
+                # error of that move, per figure. It is still a measurement, so
+                # it is not marked estimated, but the simulation has to know
+                # how far it was carried.
+                esd.append(round(metric_sd[m], 2) if m in metric_sd else None)
                 c = None
                 slug = v.get("arena_slug") or key
                 if m in ARENA_CI_SECTIONS and span[m]:
@@ -903,7 +1053,7 @@ def main():
         raw = v["raw"]
         row = {
             "n": v["name"],
-            "t": TARGET + " effort",
+            "t": None,
             "lab": v["lab"],
             "open": bool(v["open_weights"]),
             "ctx": int(v["context_window"] / 1000) if v.get("context_window") else None,
@@ -917,18 +1067,22 @@ def main():
         if H:
             # Everything on this row was moved, so the row says so once rather
             # than every figure saying it separately.
-            froms = sorted({t for t in src_tiers.values() if t and t != TARGET})
+            froms = sorted({t for t in src_tiers.values() if t})
             row["sh"] = {
-                "from": tier_of(froms[0]) if len(froms) == 1
-                        else (" and ".join(tier_of(t) for t in froms) if froms
-                              else tier_of(v["variant"])),
-                "price": round(H.get("aaCostPerTask") or 1.0, 3),
+                "from": " and ".join(tier_of(t) for t in froms) if froms
+                        else tier_of(v["variant"]),
+                "price": round(H["price"], 3),
                 "cap": round(H["cap"], 1),
                 "sd": round(H["sd"], 2),
                 "own": bool(H["own"]),
+                "f": round(H["from_f"], 2),
             }
         if n_est:
             row["e"] = est
+        # Emitted whenever any figure carries an error of its own, which now
+        # includes measured figures that were moved along the curve, not only
+        # the estimated ones.
+        if any(x is not None for x in esd):
             row["es"] = esd
         if has_ci:
             row["ci"] = ci
@@ -999,7 +1153,7 @@ def main():
     for row, key in zip(rows, order):
         v = inc[key]
         base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
-        H = hop(rung(base_variant), TARGET, v["name"]) if rung(base_variant) else None
+        H = to_target(v["name"], rung(base_variant)) if rung(base_variant) else None
         nat, cnat = [], []
         for m in METRICS:
             if m in NAT_METRICS and m in v["raw"]:
@@ -1053,13 +1207,13 @@ def main():
     js = "window.__MP__=" + json.dumps(blob, separators=(",", ":"), ensure_ascii=False) + ";"
 
     print(f"metrics {len(METRICS)}  models {len(rows)}  settings dropped {dropped}")
-    print(f"common operating point: {TARGET} effort  (ladder rungs measured: "
-          + ", ".join(f"{a}->{b} n={LADDER[(a, b)]['n']}" for a, b in LADDER) + ")")
+    print(f"common operating point: f={TARGET_F} along each model's own "
+          f"price ladder  (0 = its cheapest setting, 1 = its dearest)")
     for r in rows:
         e = sum(r.get("e", []))
         sh = r.get("sh")
-        moved = (f"  <- {sh['from']} x{sh['price']:.2f} cap{sh['cap']:+.1f}"
-                 + (" (own)" if sh["own"] else "")) if sh else ""
+        moved = (f"  <- f={sh['f']:.2f} x{sh['price']:.2f} cap{sh['cap']:+.1f}"
+                 + (" own-curve" if sh["own"] else " pooled")) if sh else ""
         print(f"  {sum(r['a']):2d}/{len(METRICS)}  est {e:2d}  "
               f"{('$%.3f' % r['cost']) if r['cost'] is not None else '   -   ':>7}  "
               f"{r['n']}{moved}")
