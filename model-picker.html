@@ -1414,7 +1414,7 @@
     return n + (c.u ? ' ' + c.u : '');
   }
 
-  function renderCloseness(rows, scaleSpan) {
+  function renderCloseness(rows, scaleSpan, topPct) {
     var host = $('mpClose');
     if (!host) return;
     var list = D.close || [];
@@ -1434,14 +1434,19 @@
     var withC = naturalSpread(rows, true), without = naturalSpread(rows, false);
     if (withC) {
       // The one line worth reading without opening anything.
-      headline = 'The ranking spreads these models over ' + scaleSpan.toFixed(0)
-        + ' points. On the tests\u2019 own scales they are <b>' + withC.span.toFixed(0)
-        + '</b> apart.';
-      head = '<p class="lede">On what you asked for, the ranking above spreads these models '
-        + 'over <span class="n">' + scaleSpan.toFixed(0) + ' points</span>. On the scales the '
-        + 'tests themselves use, they span <span class="n">' + withC.span.toFixed(0)
-        + '</span>, from ' + esc(withC.top.m.n) + ' at ' + withC.top.v.toFixed(0)
-        + ' down to ' + esc(withC.low.m.n) + ' at ' + withC.low.v.toFixed(0) + '.';
+      headline = 'Top to bottom the ranking spans <b>'
+        + (topPct ? topPct.toFixed(0) + '%' : scaleSpan.toFixed(0) + ' percentile points')
+        + '</b>. On the boards\u2019 own numbers the same models sit about <b>'
+        + withC.span.toFixed(0) + '</b> apart, averaged across everything you asked for.';
+      head = '<p class="lede">The ranking above is a percentile scale, and on what you asked '
+        + 'for it spreads these models over <span class="n">' + scaleSpan.toFixed(0)
+        + ' of its 100 points</span>. That is the spread of their standings, not of their '
+        + 'ability. On the numbers the boards themselves print, the same models span '
+        + '<span class="n">' + withC.span.toFixed(0) + '</span>, from ' + esc(withC.top.m.n)
+        + ' at ' + withC.top.v.toFixed(0) + ' down to ' + esc(withC.low.m.n) + ' at '
+        + withC.low.v.toFixed(0) + '. Those last figures are an average across the boards '
+        + 'behind your dials, which do not share a unit, so read the distance and not the '
+        + 'number itself.';
       if (without && without.span > withC.span + 0.5) {
         head += ' Counting only the tests that are scored above, it would read '
           + without.span.toFixed(0) + ', so leaving the close ones out was making the field '
@@ -1917,12 +1922,15 @@
       var spanPts = topScore - lowScore;
       scaleEl.innerHTML = rows.length < 2
         ? 'One model scored, so there is nothing to place it against.'
-        : 'Scores are percentiles across this field, not a percentage of anything: '
+        : 'Two different numbers sit on every row, so here is each one. The big '
+          + 'number is a percentile across this field, not a percentage of anything: '
           + 'the field runs <b>' + lowScore.toFixed(0) + '</b> to <b>' + topScore.toFixed(0)
-          + '</b> here. Under each score is how far that model sits below the top, and '
-          + 'anything inside about 5 is a tie.';
+          + '</b> on this question. Under it is how far behind the top that model is, '
+          + 'as a share of the top model\u2019s score, and anything inside about '
+          + '<b>' + (topScore > 0 ? Math.max(1, Math.round(500 / topScore)) : 5) + '%</b> '
+          + 'is a tie.';
     }
-    renderCloseness(rows, spanPts);
+    renderCloseness(rows, spanPts, topScore > 0 ? 100 * spanPts / topScore : null);
     var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
     var CAP = 15;
     var shown = showAll ? rows : rows.slice(0, CAP);
