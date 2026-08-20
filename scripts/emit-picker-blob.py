@@ -83,6 +83,28 @@ MIN_METRICS = 9
 # climbing from low to max, which pays 12.3 points per doubling.
 COST_PENALTY = 8.0
 
+# Every model is quoted at the same effort setting, and the setting is derived,
+# not chosen. These boards test whatever each lab submitted: Claude Opus 5 at
+# five settings, GLM-5.2 only at max, Grok 4.5 only at high. Ranking those
+# against each other compares submissions, not models.
+#
+# Which rung, and why not the cheapest one that still scores well: capability
+# keeps rising all the way up. Measured on capability figures alone, a rung
+# buys +14.9 points from low to medium, +5.9 to high, +7.4 to xhigh, +11.4 to
+# max, against about 1.5x the price each time. Every one of those clears
+# COST_PENALTY, so a value walk does not stop anywhere and cannot pick a rung.
+# An earlier version of this file thought it could, because it averaged the
+# cost and speed figures in with capability, and those fall as effort rises.
+# That made the top rung look negative. It is not.
+#
+# So the rung is picked to invent as little as possible: the one the most
+# models were actually tested at, inside the medium-to-high band a buyer
+# actually runs. Counting rungs of extrapolation over the 21 models, medium
+# costs 23 and has 9 models measured there, high costs 13 and has 13. High
+# wins on both. TARGET is derived in derived_target() and printed on every
+# build, because a refresh can move it.
+TARGET_BAND = ("medium", "high")
+
 # Two settings inside this many points of each other are the same buy, so the
 # tie breaks on which one the boards actually measured. Five is the page's own
 # tie threshold in the ranked list; three is deliberately tighter, because this
@@ -282,31 +304,148 @@ def main():
     def capability(key, core):
         return sum(pv[key][m] for m in core) / len(core) if core else 0.0
 
-    def choose_setting(keys):
-        """The setting a buyer should run, not the one that scores highest.
+    # Effort changes these directly, so they are rescaled in dollars and
+    # seconds rather than shifted in percentile space, each by its own measured
+    # ratio. Output price per token is not here on purpose: effort changes how
+    # many tokens a model spends, never what a token costs. Throughput is not
+    # here either, because it does not move (1.02 per rung across 16 steps).
+    # Latency is not on this list, and it was until the numbers were looked at.
+    # Price is a real ladder: 1.30 to 1.71 across thirteen measured steps, tight
+    # enough to chain. Latency is not. Its steps range from 1.39 to 9.98, so
+    # chaining two of them put GLM-5.2 at 0.17 seconds to first token, which is
+    # not a measurement of anything. Time to first token and total response
+    # time are therefore left at whatever setting the board tested, which
+    # flatters nobody and penalizes the models only submitted at max.
+    SCALED_RAW = ["aaCostPerTask", "lbCostPerSuccessTask"]
 
-        Capability is compared only on the figures every setting of this model
-        publishes, because comparing a setting measured on 25 figures against
-        one measured on 13 compares the boards, not the settings.
+    # Capability is everything the dials score that is not a price or a clock.
+    CAP_METRICS = [m for m in METRICS if m not in NO_IMPUTE]
+
+    def pooled_ladder():
+        """One rung of effort, measured across every family that publishes two.
+
+        Price and latency are measured in dollars and seconds, never in
+        percentiles. Taking a ratio after normalizing turns a small step into a
+        large one, which is how an earlier version of this page came to claim
+        an effort rung cost 2.5x.
+        """
+        rows = {}
+        for name, ks in groups.items():
+            ladder = sorted([k for k in ks if inc[k]["variant"] in EFFORT_ORDER],
+                            key=lambda k: EFFORT_ORDER[inc[k]["variant"]])
+            for a, b in zip(ladder, ladder[1:]):
+                pair = (inc[a]["variant"], inc[b]["variant"])
+                shared = [m for m in CAP_METRICS if m in pv[a] and m in pv[b]]
+                if not shared:
+                    continue
+                obs = {"cap": sum(pv[b][m] - pv[a][m] for m in shared) / len(shared)}
+                for m in SCALED_RAW:
+                    x = inc[a]["raw"].get(m, {}).get("value")
+                    y = inc[b]["raw"].get(m, {}).get("value")
+                    obs[m] = (y / x) if (x and y) else None
+                rows.setdefault(pair, []).append(obs)
+        out = {}
+        for pair, obs in rows.items():
+            caps = [o["cap"] for o in obs]
+            entry = {"cap": statistics.median(caps),
+                     "cap_sd": statistics.pstdev(caps) if len(caps) > 1 else 4.0,
+                     "n": len(obs)}
+            for m in SCALED_RAW:
+                vals = [o[m] for o in obs if o[m]]
+                entry[m] = statistics.median(vals) if vals else None
+            out[pair] = entry
+        return out
+
+    LADDER = pooled_ladder()
+    RUNGS = ["low", "medium", "high", "xhigh", "max"]
+
+    def derived_target():
+        """The rung inside TARGET_BAND that takes the least extrapolation.
+
+        Cost is counted in rungs: for each model, how far its nearest measured
+        setting sits from the candidate. A model already measured there costs
+        nothing. Ties go to the rung more models were tested at, then to the
+        lower rung, because a cheaper quote is the more conservative claim.
+        """
+        band = RUNGS[RUNGS.index(TARGET_BAND[0]):RUNGS.index(TARGET_BAND[1]) + 1]
+        best = None
+        for cand in band:
+            hops, exact = 0, 0
+            for name, ks in groups.items():
+                rungs = [EFFORT_ORDER[inc[k]["variant"]] for k in ks
+                         if inc[k]["variant"] in EFFORT_ORDER]
+                if not rungs:
+                    continue
+                far = min(abs(r - RUNGS.index(cand)) for r in rungs)
+                hops += far
+                exact += 1 if far == 0 else 0
+            score = (hops, -exact, RUNGS.index(cand))
+            if best is None or score < best[0]:
+                best = (score, cand)
+        return best[1]
+
+    def hop(src, dst, name):
+        """What it takes to quote a model measured at src as if it ran at dst.
+
+        A family's own two settings beat the board-wide ladder every time, so
+        those are used when the family has both. Otherwise the board-wide
+        ladder is chained a rung at a time, and the spread of those steps
+        becomes the error on the result.
+        """
+        if src == dst or src not in RUNGS or dst not in RUNGS:
+            return None
+        i, j = RUNGS.index(src), RUNGS.index(dst)
+        own = {inc[k]["variant"]: k for k in groups.get(name, [])}
+        if src in own and dst in own:
+            a, b = own[src], own[dst]
+            shared = [m for m in CAP_METRICS if m in pv[a] and m in pv[b]]
+            ca, cb = cost_of(a), cost_of(b)
+            if shared and ca and cb:
+                out = {"cap": sum(pv[b][m] - pv[a][m] for m in shared) / len(shared),
+                       "sd": 0.0, "own": True, "rungs": abs(j - i)}
+                for m in SCALED_RAW:
+                    x = inc[a]["raw"].get(m, {}).get("value")
+                    y = inc[b]["raw"].get(m, {}).get("value")
+                    out[m] = (y / x) if (x and y) else None
+                return out
+        cap, var = 0.0, 0.0
+        mult = {m: 1.0 for m in SCALED_RAW}
+        up = 1 if j > i else -1
+        for at in range(i, j, up):
+            a, b = (RUNGS[at], RUNGS[at + 1]) if up > 0 else (RUNGS[at - 1], RUNGS[at])
+            step = LADDER.get((a, b))
+            if not step or not step["aaCostPerTask"]:
+                return None
+            cap += step["cap"] * up
+            var += step["cap_sd"] ** 2
+            for m in SCALED_RAW:
+                if step[m]:
+                    mult[m] *= step[m] ** up
+        out = {"cap": cap, "sd": var ** 0.5, "own": False, "rungs": abs(j - i)}
+        out.update(mult)
+        return out
+
+    TARGET = derived_target()
+
+    def choose_setting(keys):
+        """The measured setting to quote from, before it is moved to TARGET.
+
+        Nearest the target rung wins, because a short hop carries less error
+        than a long one. A priced setting beats an unpriced one at the same
+        distance: cost is one of the ten dials and the whole x axis of the
+        value chart, and it cannot be recovered from a setting that never
+        published it. Coverage breaks what is left.
         """
         if len(keys) == 1:
             return keys[0]
-        core = [m for m in METRICS if all(m in pv[k] for k in keys)]
-        priced = [k for k in keys if cost_of(k) is not None]
-        # An unpriced setting cannot be ranked on cost, which is one of the ten
-        # dials and the whole x axis of the Pareto chart. Prefer a priced one.
-        cand = priced or keys
-        if not priced:
-            return max(cand, key=lambda k: (inc[k]["wired_metric_count"],
-                                            -EFFORT_ORDER.get(inc[k]["variant"], 9)))
-        floor_cost = min(cost_of(k) for k in cand)
-        def objective(k):
-            c = cost_of(k)
-            steps = math.log2(c / floor_cost) if c > 0 and floor_cost > 0 else 0.0
-            return capability(k, core) - COST_PENALTY * steps
-        best = max(objective(k) for k in cand)
-        band = [k for k in cand if objective(k) >= best - SETTING_TIE]
-        return max(band, key=lambda k: (inc[k]["wired_metric_count"], -cost_of(k)))
+        target_i = RUNGS.index(TARGET)
+
+        def rank(k):
+            v = inc[k]["variant"]
+            far = abs(EFFORT_ORDER[v] - target_i) if v in EFFORT_ORDER else 9
+            return (0 if cost_of(k) is not None else 1, far,
+                    -inc[k]["wired_metric_count"])
+        return min(keys, key=rank)
 
     def fill_from_sibling(chosen, keys, metric):
         """Estimate a figure the chosen setting was never measured on.
@@ -411,12 +550,28 @@ def main():
     for key in order:
         v = inc[key]
         sibs = groups[v["name"]]
+        # What it takes to quote this setting as if it ran at the common rung.
+        # None means it already does, or that the ladder cannot get there.
+        H = hop(v["variant"], TARGET, v["name"]) if v["variant"] in EFFORT_ORDER else None
+        raw_at_target = dict(v["raw"])
+        if H:
+            for m in SCALED_RAW:
+                if H.get(m) and m in raw_at_target:
+                    e = dict(raw_at_target[m])
+                    e["value"] = e["value"] * H[m]
+                    raw_at_target[m] = e
+
         # Pass one: what this setting was measured on, then what its own
         # neighboring settings can supply. Same-model evidence first, always.
         val, kind, sd = {}, {}, {}
         for m in METRICS:
-            if m in v["raw"]:
-                val[m] = pctile(m, v["raw"][m]["value"])
+            if m in raw_at_target:
+                # A price or a clock is rescaled in its own units and then
+                # read off the same scale as everybody else. Everything the
+                # dials score as capability is shifted by the ladder instead.
+                val[m] = pctile(m, raw_at_target[m]["value"])
+                if H and m in CAP_METRICS:
+                    val[m] = max(0.0, min(100.0, val[m] + H["cap"]))
                 kind[m] = "measured"
             elif len(sibs) > 1:
                 got = fill_from_sibling(key, sibs, m)
@@ -431,6 +586,8 @@ def main():
             if m in val:
                 continue
             got = impute(m, val)
+            # An imputed figure is predicted from figures already moved to the
+            # common rung, so it lands there too. No second shift.
             if got is not None:
                 val[m], sd[m] = got
                 kind[m] = "imputed"
@@ -467,17 +624,27 @@ def main():
         raw = v["raw"]
         row = {
             "n": v["name"],
-            "t": tier_of(v["variant"]),
+            "t": TARGET + " effort",
             "lab": v["lab"],
             "open": bool(v["open_weights"]),
             "ctx": int(v["context_window"] / 1000) if v.get("context_window") else None,
-            "cost": raw.get("aaCostPerTask", {}).get("value"),
-            "ttft": raw.get("ttft", {}).get("value"),
-            "tps": raw.get("tokensPerSec", {}).get("value"),
+            "cost": raw_at_target.get("aaCostPerTask", {}).get("value"),
+            "ttft": raw_at_target.get("ttft", {}).get("value"),
+            "tps": raw_at_target.get("tokensPerSec", {}).get("value"),
             "solid": v["wired_metric_count"] >= 19,
             "v": pct,
             "a": av,
         }
+        if H:
+            # Everything on this row was moved, so the row says so once rather
+            # than every figure saying it separately.
+            row["sh"] = {
+                "from": tier_of(v["variant"]),
+                "price": round(H.get("aaCostPerTask") or 1.0, 3),
+                "cap": round(H["cap"], 1),
+                "sd": round(H["sd"], 2),
+                "own": bool(H["own"]),
+            }
         if n_est:
             row["e"] = est
             row["es"] = esd
@@ -507,11 +674,16 @@ def main():
     js = "window.__MP__=" + json.dumps(blob, separators=(",", ":"), ensure_ascii=False) + ";"
 
     print(f"metrics {len(METRICS)}  models {len(rows)}  settings dropped {dropped}")
+    print(f"common operating point: {TARGET} effort  (ladder rungs measured: "
+          + ", ".join(f"{a}->{b} n={LADDER[(a, b)]['n']}" for a, b in LADDER) + ")")
     for r in rows:
         e = sum(r.get("e", []))
+        sh = r.get("sh")
+        moved = (f"  <- {sh['from']} x{sh['price']:.2f} cap{sh['cap']:+.1f}"
+                 + (" (own)" if sh["own"] else "")) if sh else ""
         print(f"  {sum(r['a']):2d}/{len(METRICS)}  est {e:2d}  "
-              f"{('$%.2f' % r['cost']) if r['cost'] is not None else '   -  ':>6}  "
-              f"{r['n']} [{r['t']}]")
+              f"{('$%.3f' % r['cost']) if r['cost'] is not None else '   -   ':>7}  "
+              f"{r['n']}{moved}")
     print(f"rows carrying published intervals: {sum(1 for r in rows if 'ci' in r)}")
 
     if "--print" in sys.argv:
