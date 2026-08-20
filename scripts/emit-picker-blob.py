@@ -758,21 +758,6 @@ def main():
         if not v.get("lab"):
             v["lab"] = LAB_FALLBACK.get(v["name"])
 
-    # Swap the four Arena figures to Style Control before anything reads them,
-    # so percentiles, the ladder and the simulation all see the same numbers.
-    swapped = 0
-    for v in inc.values():
-        slug = style_slug(v["name"], v["variant"])
-        if not slug:
-            continue
-        for m, val in STYLE_CONTROLLED.get(slug, {}).items():
-            if m in v["raw"]:
-                e = dict(v["raw"][m])
-                e["value"] = float(val)
-                e["adjustment"] = "style control"
-                v["raw"][m] = e
-                swapped += 1
-    print(f"arena figures swapped to style control: {swapped}")
 
     # ---- one row per model
     #
