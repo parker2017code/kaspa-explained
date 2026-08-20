@@ -1633,19 +1633,25 @@ def main():
                 val[m], sd[m] = got
                 kind[m] = "imputed"
 
-        pct, av, ci, est, esd, hpct = [], [], [], [], [], []
+        pct, av, ci, est, esd, hpct, prov = [], [], [], [], [], [], []
         has_ci = False
         n_est = 0
         for m in METRICS:
             if m not in val:
                 pct.append(0.0)
                 hpct.append(None)
+                prov.append(0)
                 av.append(0)
                 est.append(0)
                 esd.append(None)
                 ci.append(None)
                 continue
             pct.append(round(val[m], 1))
+            # 1 read off the board, 2 carried from another setting of this same
+            # model, 3 predicted from other figures. The middle case is still
+            # that board measuring that model, which is why it is not lumped in
+            # with the third.
+            prov.append({"measured": 1, "sibling": 2}.get(kind[m], 3))
             h = honest(m, unpctile(m, val[m]))
             hpct.append(round(h, 1) if h is not None else None)
             av.append(1)
@@ -1682,6 +1688,7 @@ def main():
             "solid": v["wired_metric_count"] >= 19,
             "v": pct,
             "hv": hpct,
+            "p": prov,
             "a": av,
         }
         if H:
