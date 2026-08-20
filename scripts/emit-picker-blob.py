@@ -761,9 +761,31 @@ LIVEBENCH_COLUMNS = {
 }
 
 
-def full_board_ranges():
-    """Per-figure range across the whole board each figure comes from."""
+# Figures that are already a score out of 100, so their honest range is the
+# scale the test is marked on and nothing has to be inferred at all. A model
+# that gets 55 percent of Humanity's Last Exam right reads 55, not 91 because
+# 55 happens to be the best anyone has managed. Every LiveBench category is
+# marked the same way.
+#
+# This is the correction that matters most. Taking these ranges from the models
+# on the board instead reproduced the exact fault the honest scale exists to
+# remove, one roster deep: LiveBench Language came out 62.5 to 90.7, where 90.7
+# is Claude Fable 5's own score, so Fable read 100 on that figure by
+# construction. Bigger arbitrary is still arbitrary.
+TRUE_SCALE_UNITS = {"%", "pts"}
+
+
+def full_board_ranges(metric_meta):
+    """Per-figure honest range.
+
+    A test marked out of 100 uses 0 to 100. Elo has no zero, so it uses the
+    published board, floor included, which still reaches back to the models of
+    2023. Prices and clocks have no ceiling either and use the full board.
+    """
     out = dict(ARENA_FULL_RANGE)
+    for k, meta in metric_meta.items():
+        if meta.get("unit") in TRUE_SCALE_UNITS:
+            out[k] = (0.0, 100.0)
 
     if LADDER_CORPUS.exists():
         lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
@@ -781,6 +803,8 @@ def full_board_ranges():
                     if v is not None:
                         acc.setdefault(key, []).append(v)
             for k, vals in acc.items():
+                if k in out:
+                    continue
                 if len(vals) >= 20 and max(vals) > min(vals):
                     out[k] = (min(vals), max(vals))
 
@@ -805,6 +829,8 @@ def full_board_ranges():
                 if v is not None:
                     acc.setdefault(key, []).append(v)
         for k, vals in acc.items():
+            if k in out:
+                continue
             if len(vals) >= 20 and max(vals) > min(vals):
                 out[k] = (min(vals), max(vals))
     return out
@@ -845,7 +871,7 @@ def main():
         p = (val - lo[m]) / span[m] * 100.0
         return p if d["metrics"][m]["higher"] else 100.0 - p
 
-    FULL = full_board_ranges()
+    FULL = full_board_ranges(d["metrics"])
 
     def unpctile(m, p):
         """Back from this page's percentile to the figure the board printed.
