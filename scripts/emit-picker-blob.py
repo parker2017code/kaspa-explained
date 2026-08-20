@@ -664,8 +664,19 @@ def main():
         "missing all of them, that dial reads no data for it, and the row says how much of the "
         "question its score covers."
     )
+    # Raw low and high per figure, so the page can say what a score point is
+    # worth in the figure's own units. Without this the 0-to-100 scale reads as
+    # a percentage of something absolute, and the whole field here sits inside
+    # 44 Elo on Arena Hard Prompts.
+    ranges = {}
+    for m in METRICS:
+        unit = next((v["raw"][m].get("unit") for v in inc.values() if m in v["raw"]), None)
+        ranges[m] = {"lo": round(lo[m], 4), "hi": round(hi[m], 4), "u": unit,
+                     "up": bool(d["metrics"][m]["higher"])}
+
     blob = {
         "metrics": METRICS,
+        "range": ranges,
         "models": rows,
         "sources": {"Artificial Analysis": 13, "LiveBench": 7, "LM Arena": 5},
         "ci_note": note,

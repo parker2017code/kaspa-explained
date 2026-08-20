@@ -118,6 +118,9 @@
     .mp-bar { display: block; height: 4px; border-radius: 2px; background: var(--line-bright); margin-top: 8px; overflow: hidden; }
     .mp-bar > i { display: block; height: 100%; border-radius: 2px; background: var(--green); }
     .mp-score { font-size: 1.02rem; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+    .mp-score b { display: block; font-size: .68rem; font-weight: 600; color: var(--muted); letter-spacing: .02em; margin-top: 2px; line-height: 1.35; }
+    .mp-list.real .mp-row { grid-template-columns: 26px minmax(0, 1fr) 88px; }
+    .mp-scale { margin: 0 0 10px; font-size: .82rem; color: var(--muted); line-height: 1.55; }
     .mp-empty { color: var(--muted); padding: 18px 0; line-height: 1.6; }
     .mp-gap { display: block; font-size: .78rem; color: var(--faint); margin-top: 4px; line-height: 1.5; }
     .mp-method { margin: 0 0 12px; }
@@ -264,6 +267,7 @@
           <div class="mp-results-head">
             <p class="mp-label" id="mpCount">Ranking</p>
             <span class="mp-head-actions">
+              <button type="button" class="mp-reset" id="mpReal" aria-pressed="false">How far are they really?</button>
               <button type="button" class="mp-reset" id="mpShowAll" aria-pressed="false">Show all</button>
               <button type="button" class="mp-reset" id="mpReset">Reset</button>
             </span>
@@ -287,7 +291,8 @@
               <li><b>Missing one of a dial's figures does not zero the dial.</b> A model is scored on whichever of that dial's figures it has. A dial reads no data for a model only when every figure behind it is absent.</li>
               <li><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares next to the dials add to 100. Open weights is the only filter, because a model either ships its weights or it does not.</li>
               <li><b>A figure counts for what its evidence will bear.</b> The weight written against it says how much it should matter, which is a judgment call. Whether it can answer at all is measured: how much of this roster published it, and how far apart the top five are on it. A thin or maxed-out figure counts for a fraction of a well covered one.</li>
-              <li><b>Scores are percentiles, not raw benchmark values.</b> A 90 means near the top of this field, not 90 percent correct. The scale is taken across all 37 published settings, including the low-effort ones that no longer appear here, so a setting that ships still sits where its own family was measured.</li>
+              <li><b>The spread between these models is made by the benchmarks, not found in the models.</b> Pick a different set of tests and the gaps change size. Every figure here is a frontier model against other frontier models, so the floor of each scale is a strong model on its weakest board, not a model that cannot do the work. Press <b>How far are they really?</b> above the list and every gap is restated in the units the boards print, next to what each model costs against the leader. That is the reading worth acting on: the whole field fits inside 44 Elo on Arena Hard Prompts, which is the best of them winning 56 times out of 100 against the worst, and the models that give up almost nothing often cost several times less.</li>
+              <li><b>Scores are percentiles, not raw benchmark values, and not a percentage of anything absolute.</b> On each figure, 0 is the weakest number published on this board and 100 the strongest. The scale is taken across all 37 published settings, including the low-effort ones that no longer appear here, so a setting that ships still sits where its own family was measured. Your score is the weighted average of those figures, which is why real models bunch in the middle and none of them reach either end. A 73 does not mean 73 percent of frontier capability. There is no frontier number to be 73 percent of, because these boards publish ranks and scores against each other, never against what a model can do in the abstract. What a point does mean is fixed and linear, so the distance between two models is the only thing worth reading, and the list prints it under every score.</li>
               <li><b>Not every model is measured on everything, and the gap runs one way.</b> A model is scored on what it published, which quietly rewards publishing less. Any row not measured on all of what you asked for says which parts it missed and how much of your question its score covers.</li>
               <li><b>Where the numbers came from, and how they get refreshed.</b> Six reads, run at once, all live: one for Artificial Analysis, one for LiveBench, and four for LM Arena, which alone carries fifteen boards and the longest of them ranks 393 models. The reads split by how much text each part holds, not by source, and no board is ever read in part. A rank means nothing against half a field. Every figure on this page is derived from those files by script, so a refresh is a re-read and a rebuild, never an edit.</li>
               <li><b>Each dial says whether it can separate the leaders.</b> A dial reading figures the frontier has maxed out is ranking noise with a decimal point on it. Each one carries its own top-five gap, worked out from the loaded data, and reads separates, barely separates, or cannot separate.</li>
@@ -302,6 +307,7 @@
             <button type="button" class="mp-reset mp-names" id="mpParetoNames" aria-pressed="false">Name every model</button>
           </div>
           <div class="mp-pareto" id="mpPareto"></div>
+          <p class="mp-scale" id="mpScale"></p>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <div class="mp-mc-head" id="mpMcHead">
             <b class="mp-mc-title">How often each model comes first</b>
@@ -363,7 +369,7 @@
       </nav>
     </div>
   </footer>
-  <script>window.__MP__={"metrics":["hle","lbMath","arenaHardPrompts","scicode","lbCoding","webdevArena","lbAgenticCoding","tau3Banking","aaTbv2","gdpval","lbDataAnalysis","omniNonHallucination","omniAccuracy","lbInstructionFollowing","arenaTextInstructionFollowing","arenaCreativeWriting","lbLanguage","aaLcr","arenaLongerQuery","tokensPerSec","ttft","aaTotalResponse","aaCostPerTask","lbCostPerSuccessTask","aaOutputPrice"],"models":[{"n":"Claude Fable 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":3.14,"ttft":141.35,"tps":75.0,"solid":true,"v":[100.0,98.3,100.0,100.0,100.0,73.4,86.2,56.7,68.8,88.6,100.0,44.9,100.0,79.3,100.0,100.0,100.0,40.0,100.0,11.6,35.7,34.2,0.0,0.0,0.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,15.87,null,null,17.78,null,null,null,null,null,null]},{"n":"Gemini 3.1 Pro Preview","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.33,"ttft":32.45,"tps":121.0,"solid":true,"v":[73.3,55.9,43.2,93.3,45.4,0.0,3.2,0.0,0.0,0.0,88.6,63.8,79.6,96.0,38.5,52.4,70.7,60.0,48.9,25.6,85.6,84.5,90.4,82.7,77.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,9.09,null,null,null,null,null,null,null,null,null,null,null,9.62,9.52,null,null,13.33,null,null,null,null,null,null]},{"n":"Gemini 3.6 Flash","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":21.12,"tps":209.0,"solid":true,"v":[53.3,16.9,29.5,53.3,53.4,37.3,0.0,30.0,25.0,52.3,0.0,56.5,69.4,77.3,28.8,36.5,62.4,60.0,20.0,52.4,90.7,90.4,90.0,86.3,94.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.7 Flash","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.4,"ttft":11.87,"tps":365.0,"solid":true,"v":[76.7,77.1,43.2,80.0,59.2,57.8,68.3,40.0,75.0,65.9,28.6,43.5,79.6,100.0,50.0,74.6,71.3,70.0,48.9,100.0,95.0,95.1,88.1,91.9,94.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GLM-5.2","t":"high effort","lab":"Z AI","open":true,"ctx":1000,"cost":0.19007401812688823,"ttft":1.95,"tps":98.0,"solid":true,"v":[34.6,27.0,0.0,14.6,45.0,36.6,19.8,27.9,6.3,42.6,42.4,81.3,0.0,0.0,0.0,0.0,1.1,21.3,0.0,18.6,99.5,88.6,94.9,87.0,93.4],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,14.29,null,null,13.33,null,null,null,null,null,null]},{"n":"Grok 4.5","t":"high effort","lab":"SpaceXAI","open":false,"ctx":500,"cost":0.36,"ttft":11.04,"tps":54.0,"solid":true,"v":[60.0,54.2,13.6,60.0,0.0,45.1,60.1,70.0,50.0,63.6,57.1,59.4,73.5,57.6,9.6,1.6,56.4,10.0,17.8,5.2,95.4,91.9,89.4,93.8,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Kimi K3","t":"high effort","lab":"Kimi","open":true,"ctx":1050,"cost":0.36286858006042294,"ttft":2.79,"tps":39.0,"solid":true,"v":[54.6,0.0,49.4,74.6,54.8,74.3,67.5,64.6,50.0,63.1,71.0,42.1,46.6,38.3,29.3,0.3,52.5,81.3,32.4,0.6,99.1,71.1,89.3,78.2,71.7],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"ci":[null,null,15.91,null,null,null,null,null,null,null,null,null,null,null,17.31,19.05,null,null,17.78,null,null,null,null,null,null]},{"n":"Qwen3.8 Max","t":"high effort","lab":"Alibaba","open":false,"ctx":1000,"cost":1.13,"ttft":2.64,"tps":45.0,"solid":true,"v":[60.0,58.5,43.2,53.3,24.7,91.0,97.2,100.0,43.8,88.6,88.0,76.8,32.7,70.7,30.8,41.3,39.2,10.0,44.4,2.4,99.2,74.9,64.6,83.4,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,18.18,null,null,null,null,null,null,null,null,null,null,null,21.15,23.81,null,null,20.0,null,null,null,null,null,null]},{"n":"DeepSeek V4 Pro 0813","t":"high effort","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.10799660120845922,"ttft":1.67,"tps":80.0,"solid":true,"v":[34.6,71.9,14.3,7.9,30.7,36.6,34.0,44.6,12.5,54.0,73.8,0.0,48.6,19.6,0.0,0.0,33.7,1.3,0.0,13.1,99.6,86.2,97.5,100.0,94.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"es":[null,null,14.08,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"n":"Grok 4.6","t":"high effort","lab":"SpaceXAI","open":false,"ctx":500,"cost":0.84,"ttft":43.74,"tps":63.0,"solid":true,"v":[60.0,69.5,33.2,60.0,47.1,74.6,62.4,100.0,87.5,88.6,62.3,88.4,65.3,59.6,25.8,20.6,61.3,20.0,6.7,7.9,80.4,77.7,74.0,88.3,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],"es":[null,null,15.61,null,null,null,null,null,null,null,null,null,null,null,12.67,null,null,null,null,null,null,null,null,null,null]},{"n":"Muse Spark 1.2","t":"high effort","lab":"Meta","open":false,"ctx":1050,"cost":0.2733333333333334,"ttft":null,"tps":null,"solid":true,"v":[59.3,50.2,44.9,65.9,43.8,28.3,57.8,39.3,30.1,67.6,69.8,82.5,51.8,64.3,25.3,0.6,25.8,92.6,41.5,0.0,0.0,0.0,92.2,76.3,93.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false}},{"n":"DeepSeek V4 Flash 0731","t":"high effort","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.04751850453172206,"ttft":1.17,"tps":126.0,"solid":true,"v":[27.9,1.6,11.3,14.6,18.0,31.1,0.0,41.3,12.5,49.4,74.4,0.0,30.2,8.5,7.2,0.0,17.7,0.0,4.5,27.1,99.9,91.6,99.4,98.9,99.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],"es":[null,null,16.74,null,null,15.48,null,null,null,null,null,null,null,null,13.64,null,null,null,14.55,null,null,null,null,null,null]},{"n":"Claude Opus 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":1.23,"ttft":17.91,"tps":58.0,"solid":false,"v":[93.3,100.0,70.5,60.0,79.5,88.1,100.0,80.0,87.5,88.6,72.2,49.3,87.8,24.6,73.1,44.4,94.8,30.0,71.1,6.4,92.2,89.1,61.4,58.9,51.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,1,0,0,1,0,1,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,1,0],"es":[null,13.99,null,null,13.99,null,13.99,null,null,null,13.99,null,null,13.99,null,null,13.99,null,null,null,null,null,null,13.99,null],"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,14.29,null,null,33.33,null,null,null,null,null,null]},{"n":"GLM-5.3","t":"high effort","lab":"Z AI","open":false,"ctx":1000,"cost":0.2937507552870091,"ttft":1.92,"tps":93.0,"solid":false,"v":[37.9,0.0,13.1,54.6,0.0,42.7,57.8,77.9,43.8,72.2,0.0,75.5,18.0,0.0,25.5,14.6,30.5,11.3,0.0,17.1,99.5,88.1,91.5,0.0,93.4],"a":[1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],"es":[null,null,null,null,null,null,19.77,null,null,null,null,null,null,null,null,null,15.89,null,null,null,null,null,null,null,null],"ci":[null,null,31.82,null,null,null,null,null,null,null,null,null,null,null,38.46,39.68,null,null,37.78,null,null,null,null,null,null]},{"n":"Qwen3.8 27B","t":"high effort","lab":"Alibaba","open":true,"ctx":256,"cost":0.33,"ttft":null,"tps":null,"solid":false,"v":[30.0,15.3,6.5,0.0,40.8,64.0,82.6,90.0,37.5,65.9,77.7,94.2,0.0,63.6,9.1,0.0,9.4,40.0,5.4,0.0,0.0,0.0,90.4,96.4,96.1],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,1,1],"e":[0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],"es":[null,null,16.58,null,null,15.48,null,null,null,null,null,null,null,null,13.64,null,null,null,14.55,null,null,null,null,null,null]},{"n":"GPT-5.6 Luna","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.0205,"ttft":53.75,"tps":157.0,"solid":false,"v":[32.6,24.2,18.9,25.9,82.7,21.3,23.5,19.3,17.6,56.3,86.2,0.0,45.7,0.5,11.4,0.0,0.5,0.0,9.4,36.6,75.8,75.3,100.3,91.6,100.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false},"e":[0,1,1,0,1,0,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,27.45,16.74,null,27.45,null,27.45,null,null,null,27.45,null,null,27.45,13.64,null,27.45,null,14.55,null,null,null,null,27.45,null]},{"n":"Claude Sonnet 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":0.7430166163141995,"ttft":172.59,"tps":79.0,"solid":false,"v":[34.6,49.9,0.0,41.3,47.4,14.4,51.2,34.6,25.0,54.0,27.5,62.4,30.2,0.0,0.0,0.0,0.0,21.3,0.0,12.8,21.4,20.2,77.1,44.8,82.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,32.54,39.94,null,32.54,39.94,32.54,null,null,null,32.54,null,null,32.54,39.94,null,32.54,null,39.94,null,null,null,null,32.54,null]},{"n":"GPT-5.6 Sol","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.55,"ttft":16.74,"tps":67.0,"solid":false,"v":[70.0,100.0,38.0,80.0,97.3,69.8,68.1,53.3,81.2,75.0,100.0,5.8,85.7,68.5,43.6,43.8,92.8,20.0,32.7,9.1,92.7,90.2,83.3,75.6,41.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,0],"es":[null,35.53,8.08,null,35.53,8.08,35.53,null,null,null,35.53,null,null,35.53,8.08,8.08,35.53,null,8.08,null,null,null,null,35.53,null]},{"n":"GPT-5.6 Terra","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.22,"ttft":2.95,"tps":109.0,"solid":false,"v":[46.7,86.5,14.5,33.3,52.7,25.2,50.3,26.7,12.5,63.6,90.7,7.2,59.2,20.3,0.0,0.0,54.5,0.0,15.6,22.0,99.1,97.7,93.9,75.5,77.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,49.76,14.86,null,49.76,9.76,49.76,null,null,null,49.76,null,null,49.76,9.76,null,49.76,null,14.55,null,null,null,null,49.76,null]},{"n":"Qwen3.8 2.4T A95B","t":"high effort","lab":"Alibaba","open":true,"ctx":984,"cost":1.09,"ttft":2.55,"tps":45.0,"solid":false,"v":[56.7,0.0,35.2,46.7,0.0,71.5,76.3,93.3,50.0,86.4,0.0,81.2,30.6,0.0,27.7,0.0,39.9,20.0,24.0,2.4,99.2,74.8,65.9,0.0,90.2],"a":[1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1],"e":[0,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],"es":[null,null,16.74,null,null,15.34,19.77,null,null,null,null,null,null,null,14.59,null,15.89,null,14.81,null,null,null,null,null,null]},{"n":"Muse Spark 1.1","t":"high effort","lab":"Meta","open":false,"ctx":null,"cost":null,"ttft":null,"tps":null,"solid":false,"v":[54.7,15.5,42.6,49.2,42.0,30.3,61.9,0.0,0.0,0.0,46.9,0.0,0.0,40.6,19.5,0.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0,89.0,0.0],"a":[1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,0],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false},"e":[1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"es":[9.19,null,null,14.57,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]}],"sources":{"Artificial Analysis":13,"LiveBench":7,"LM Arena":5},"ci_note":"Artificial Analysis, LiveBench 2026-06-25 and LM Arena, all read 20 August 2026. Twenty-five figures across ten dials, kept or cut on whether they still tell the leading models apart rather than on how well known they are. Every dial carries two or three of them. Each model appears once, at the effort setting that buys the most capability per dollar rather than the setting that scores highest, because the top rung on these ladders often costs three times as much for a difference the figures cannot see. Price, latency and throughput always come from that setting. When a model is missing one of a dial's figures, the dial blends from whichever it has; when it is missing all of them, that dial reads no data for it, and the row says how much of the question its score covers."};</script>
+  <script>window.__MP__={"metrics":["hle","lbMath","arenaHardPrompts","scicode","lbCoding","webdevArena","lbAgenticCoding","tau3Banking","aaTbv2","gdpval","lbDataAnalysis","omniNonHallucination","omniAccuracy","lbInstructionFollowing","arenaTextInstructionFollowing","arenaCreativeWriting","lbLanguage","aaLcr","arenaLongerQuery","tokensPerSec","ttft","aaTotalResponse","aaCostPerTask","lbCostPerSuccessTask","aaOutputPrice"],"range":{"hle":{"lo":25.0,"hi":55.0,"u":"%","up":true},"lbMath":{"lo":84.4,"hi":96.2,"u":"pts","up":true},"arenaHardPrompts":{"lo":1488.0,"hi":1532.0,"u":"elo","up":true},"scicode":{"lo":45.0,"hi":60.0,"u":"%","up":true},"lbCoding":{"lo":68.6,"hi":86.0,"u":"pts","up":true},"webdevArena":{"lo":1447.0,"hi":1691.0,"u":"elo","up":true},"lbAgenticCoding":{"lo":43.4,"hi":65.2,"u":"pts","up":true},"tau3Banking":{"lo":21.0,"hi":51.0,"u":"%","up":true},"aaTbv2":{"lo":74.0,"hi":90.0,"u":"%","up":true},"gdpval":{"lo":23.0,"hi":67.0,"u":"%","up":true},"lbDataAnalysis":{"lo":63.0,"hi":80.5,"u":"pts","up":true},"omniNonHallucination":{"lo":5.0,"hi":74.0,"u":"%","up":true},"omniAccuracy":{"lo":16.0,"hi":65.0,"u":"%","up":true},"lbInstructionFollowing":{"lo":60.1,"hi":79.9,"u":"pts","up":true},"arenaTextInstructionFollowing":{"lo":1460.0,"hi":1512.0,"u":"elo","up":true},"arenaCreativeWriting":{"lo":1446.0,"hi":1509.0,"u":"elo","up":true},"lbLanguage":{"lo":72.6,"hi":90.7,"u":"pts","up":true},"aaLcr":{"lo":73.0,"hi":83.0,"u":"%","up":true},"arenaLongerQuery":{"lo":1477.0,"hi":1522.0,"u":"elo","up":true},"tokensPerSec":{"lo":37.0,"hi":365.0,"u":"tok/s","up":true},"ttft":{"lo":0.89,"hi":219.33,"u":"s","up":false},"aaTotalResponse":{"lo":2.38,"hi":223.62,"u":"s","up":false},"aaCostPerTask":{"lo":0.03,"hi":3.14,"u":"$","up":false},"lbCostPerSuccessTask":{"lo":0.044,"hi":1.439,"u":"$","up":false},"aaOutputPrice":{"lo":1.2,"hi":50.0,"u":"$/Mtok","up":false}},"models":[{"n":"Claude Fable 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":3.14,"ttft":141.35,"tps":75.0,"solid":true,"v":[100.0,98.3,100.0,100.0,100.0,73.4,86.2,56.7,68.8,88.6,100.0,44.9,100.0,79.3,100.0,100.0,100.0,40.0,100.0,11.6,35.7,34.2,0.0,0.0,0.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,15.87,null,null,17.78,null,null,null,null,null,null]},{"n":"Gemini 3.1 Pro Preview","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.33,"ttft":32.45,"tps":121.0,"solid":true,"v":[73.3,55.9,43.2,93.3,45.4,0.0,3.2,0.0,0.0,0.0,88.6,63.8,79.6,96.0,38.5,52.4,70.7,60.0,48.9,25.6,85.6,84.5,90.4,82.7,77.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,9.09,null,null,null,null,null,null,null,null,null,null,null,9.62,9.52,null,null,13.33,null,null,null,null,null,null]},{"n":"Gemini 3.6 Flash","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.34,"ttft":21.12,"tps":209.0,"solid":true,"v":[53.3,16.9,29.5,53.3,53.4,37.3,0.0,30.0,25.0,52.3,0.0,56.5,69.4,77.3,28.8,36.5,62.4,60.0,20.0,52.4,90.7,90.4,90.0,86.3,94.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Gemini 3.7 Flash","t":"high effort","lab":"Google","open":false,"ctx":1000,"cost":0.4,"ttft":11.87,"tps":365.0,"solid":true,"v":[76.7,77.1,43.2,80.0,59.2,57.8,68.3,40.0,75.0,65.9,28.6,43.5,79.6,100.0,50.0,74.6,71.3,70.0,48.9,100.0,95.0,95.1,88.1,91.9,94.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"GLM-5.2","t":"high effort","lab":"Z AI","open":true,"ctx":1000,"cost":0.19007401812688823,"ttft":1.95,"tps":98.0,"solid":true,"v":[34.6,27.0,0.0,14.6,45.0,36.6,19.8,27.9,6.3,42.6,42.4,81.3,0.0,0.0,0.0,0.0,1.1,21.3,0.0,18.6,99.5,88.6,94.9,87.0,93.4],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,14.29,null,null,13.33,null,null,null,null,null,null]},{"n":"Grok 4.5","t":"high effort","lab":"SpaceXAI","open":false,"ctx":500,"cost":0.36,"ttft":11.04,"tps":54.0,"solid":true,"v":[60.0,54.2,13.6,60.0,0.0,45.1,60.1,70.0,50.0,63.6,57.1,59.4,73.5,57.6,9.6,1.6,56.4,10.0,17.8,5.2,95.4,91.9,89.4,93.8,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]},{"n":"Kimi K3","t":"high effort","lab":"Kimi","open":true,"ctx":1050,"cost":0.36286858006042294,"ttft":2.79,"tps":39.0,"solid":true,"v":[54.6,0.0,49.4,74.6,54.8,74.3,67.5,64.6,50.0,63.1,71.0,42.1,46.6,38.3,29.3,0.3,52.5,81.3,32.4,0.6,99.1,71.1,89.3,78.2,71.7],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"ci":[null,null,15.91,null,null,null,null,null,null,null,null,null,null,null,17.31,19.05,null,null,17.78,null,null,null,null,null,null]},{"n":"Qwen3.8 Max","t":"high effort","lab":"Alibaba","open":false,"ctx":1000,"cost":1.13,"ttft":2.64,"tps":45.0,"solid":true,"v":[60.0,58.5,43.2,53.3,24.7,91.0,97.2,100.0,43.8,88.6,88.0,76.8,32.7,70.7,30.8,41.3,39.2,10.0,44.4,2.4,99.2,74.9,64.6,83.4,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"ci":[null,null,18.18,null,null,null,null,null,null,null,null,null,null,null,21.15,23.81,null,null,20.0,null,null,null,null,null,null]},{"n":"DeepSeek V4 Pro 0813","t":"high effort","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.10799660120845922,"ttft":1.67,"tps":80.0,"solid":true,"v":[34.6,71.9,14.3,7.9,30.7,36.6,34.0,44.6,12.5,54.0,73.8,0.0,48.6,19.6,0.0,0.0,33.7,1.3,0.0,13.1,99.6,86.2,97.5,100.0,94.3],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"es":[null,null,14.08,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]},{"n":"Grok 4.6","t":"high effort","lab":"SpaceXAI","open":false,"ctx":500,"cost":0.84,"ttft":43.74,"tps":63.0,"solid":true,"v":[60.0,69.5,33.2,60.0,47.1,74.6,62.4,100.0,87.5,88.6,62.3,88.4,65.3,59.6,25.8,20.6,61.3,20.0,6.7,7.9,80.4,77.7,74.0,88.3,90.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],"es":[null,null,15.61,null,null,null,null,null,null,null,null,null,null,null,12.67,null,null,null,null,null,null,null,null,null,null]},{"n":"Muse Spark 1.2","t":"high effort","lab":"Meta","open":false,"ctx":1050,"cost":0.2733333333333334,"ttft":null,"tps":null,"solid":true,"v":[59.3,50.2,44.9,65.9,43.8,28.3,57.8,39.3,30.1,67.6,69.8,82.5,51.8,64.3,25.3,0.6,25.8,92.6,41.5,0.0,0.0,0.0,92.2,76.3,93.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false}},{"n":"DeepSeek V4 Flash 0731","t":"high effort","lab":"DeepSeek","open":true,"ctx":1000,"cost":0.04751850453172206,"ttft":1.17,"tps":126.0,"solid":true,"v":[27.9,1.6,11.3,14.6,18.0,31.1,0.0,41.3,12.5,49.4,74.4,0.0,30.2,8.5,7.2,0.0,17.7,0.0,4.5,27.1,99.9,91.6,99.4,98.9,99.8],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],"es":[null,null,16.74,null,null,15.48,null,null,null,null,null,null,null,null,13.64,null,null,null,14.55,null,null,null,null,null,null]},{"n":"Claude Opus 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":1.23,"ttft":17.91,"tps":58.0,"solid":false,"v":[93.3,100.0,70.5,60.0,79.5,88.1,100.0,80.0,87.5,88.6,72.2,49.3,87.8,24.6,73.1,44.4,94.8,30.0,71.1,6.4,92.2,89.1,61.4,58.9,51.2],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,1,0,0,1,0,1,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,1,0],"es":[null,13.99,null,null,13.99,null,13.99,null,null,null,13.99,null,null,13.99,null,null,13.99,null,null,null,null,null,null,13.99,null],"ci":[null,null,13.64,null,null,null,null,null,null,null,null,null,null,null,13.46,14.29,null,null,33.33,null,null,null,null,null,null]},{"n":"GLM-5.3","t":"high effort","lab":"Z AI","open":false,"ctx":1000,"cost":0.2937507552870091,"ttft":1.92,"tps":93.0,"solid":false,"v":[37.9,0.0,13.1,54.6,0.0,42.7,57.8,77.9,43.8,72.2,0.0,75.5,18.0,0.0,25.5,14.6,30.5,11.3,0.0,17.1,99.5,88.1,91.5,0.0,93.4],"a":[1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],"es":[null,null,null,null,null,null,19.77,null,null,null,null,null,null,null,null,null,15.89,null,null,null,null,null,null,null,null],"ci":[null,null,31.82,null,null,null,null,null,null,null,null,null,null,null,38.46,39.68,null,null,37.78,null,null,null,null,null,null]},{"n":"Qwen3.8 27B","t":"high effort","lab":"Alibaba","open":true,"ctx":256,"cost":0.33,"ttft":null,"tps":null,"solid":false,"v":[30.0,15.3,6.5,0.0,40.8,64.0,82.6,90.0,37.5,65.9,77.7,94.2,0.0,63.6,9.1,0.0,9.4,40.0,5.4,0.0,0.0,0.0,90.4,96.4,96.1],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,1,1],"e":[0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],"es":[null,null,16.58,null,null,15.48,null,null,null,null,null,null,null,null,13.64,null,null,null,14.55,null,null,null,null,null,null]},{"n":"GPT-5.6 Luna","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.0205,"ttft":53.75,"tps":157.0,"solid":false,"v":[32.6,24.2,18.9,25.9,82.7,21.3,23.5,19.3,17.6,56.3,86.2,0.0,45.7,0.5,11.4,0.0,0.5,0.0,9.4,36.6,75.8,75.3,100.3,91.6,100.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false},"e":[0,1,1,0,1,0,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,27.45,16.74,null,27.45,null,27.45,null,null,null,27.45,null,null,27.45,13.64,null,27.45,null,14.55,null,null,null,null,27.45,null]},{"n":"Claude Sonnet 5","t":"high effort","lab":"Anthropic","open":false,"ctx":1000,"cost":0.7430166163141995,"ttft":172.59,"tps":79.0,"solid":false,"v":[34.6,49.9,0.0,41.3,47.4,14.4,51.2,34.6,25.0,54.0,27.5,62.4,30.2,0.0,0.0,0.0,0.0,21.3,0.0,12.8,21.4,20.2,77.1,44.8,82.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"sh":{"from":"max effort","price":0.432,"cap":-18.7,"sd":7.3,"own":false},"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,32.54,39.94,null,32.54,39.94,32.54,null,null,null,32.54,null,null,32.54,39.94,null,32.54,null,39.94,null,null,null,null,32.54,null]},{"n":"GPT-5.6 Sol","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.55,"ttft":16.74,"tps":67.0,"solid":false,"v":[70.0,100.0,38.0,80.0,97.3,69.8,68.1,53.3,81.2,75.0,100.0,5.8,85.7,68.5,43.6,43.8,92.8,20.0,32.7,9.1,92.7,90.2,83.3,75.6,41.0],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,0],"es":[null,35.53,8.08,null,35.53,8.08,35.53,null,null,null,35.53,null,null,35.53,8.08,8.08,35.53,null,8.08,null,null,null,null,35.53,null]},{"n":"GPT-5.6 Terra","t":"high effort","lab":"OpenAI","open":false,"ctx":1000,"cost":0.22,"ttft":2.95,"tps":109.0,"solid":false,"v":[46.7,86.5,14.5,33.3,52.7,25.2,50.3,26.7,12.5,63.6,90.7,7.2,59.2,20.3,0.0,0.0,54.5,0.0,15.6,22.0,99.1,97.7,93.9,75.5,77.9],"a":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],"e":[0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0],"es":[null,49.76,14.86,null,49.76,9.76,49.76,null,null,null,49.76,null,null,49.76,9.76,null,49.76,null,14.55,null,null,null,null,49.76,null]},{"n":"Qwen3.8 2.4T A95B","t":"high effort","lab":"Alibaba","open":true,"ctx":984,"cost":1.09,"ttft":2.55,"tps":45.0,"solid":false,"v":[56.7,0.0,35.2,46.7,0.0,71.5,76.3,93.3,50.0,86.4,0.0,81.2,30.6,0.0,27.7,0.0,39.9,20.0,24.0,2.4,99.2,74.8,65.9,0.0,90.2],"a":[1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1],"e":[0,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],"es":[null,null,16.74,null,null,15.34,19.77,null,null,null,null,null,null,null,14.59,null,15.89,null,14.81,null,null,null,null,null,null]},{"n":"Muse Spark 1.1","t":"high effort","lab":"Meta","open":false,"ctx":null,"cost":null,"ttft":null,"tps":null,"solid":false,"v":[54.7,15.5,42.6,49.2,42.0,30.3,61.9,0.0,0.0,0.0,46.9,0.0,0.0,40.6,19.5,0.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0,89.0,0.0],"a":[1,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,0,1,0],"sh":{"from":"xhigh effort","price":0.683,"cap":-7.4,"sd":3.9,"own":false},"e":[1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"es":[9.19,null,null,14.57,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]}],"sources":{"Artificial Analysis":13,"LiveBench":7,"LM Arena":5},"ci_note":"Artificial Analysis, LiveBench 2026-06-25 and LM Arena, all read 20 August 2026. Twenty-five figures across ten dials, kept or cut on whether they still tell the leading models apart rather than on how well known they are. Every dial carries two or three of them. Each model appears once, at the effort setting that buys the most capability per dollar rather than the setting that scores highest, because the top rung on these ladders often costs three times as much for a difference the figures cannot see. Price, latency and throughput always come from that setting. When a model is missing one of a dial's figures, the dial blends from whichever it has; when it is missing all of them, that dial reads no data for it, and the row says how much of the question its score covers."};</script>
   <script>
 (function () {
   var D = window.__MP__, M = D.models, MI = D.metrics;
@@ -864,12 +870,23 @@
       $('mpShowAll').setAttribute('aria-pressed', on ? 'false' : 'true');
       render();
     });
+    var rb = $('mpReal');
+    if (rb) rb.addEventListener('click', function () {
+      var on = rb.getAttribute('aria-pressed') === 'true';
+      rb.setAttribute('aria-pressed', on ? 'false' : 'true');
+      rb.textContent = on ? 'How far are they really?' : 'Back to the scale';
+      render();
+    });
     $('mpReset').addEventListener('click', function () {
       DIALS.forEach(function (d) {
         state[d.k] = DEFAULTS[d.k] || 0; els[d.k].value = state[d.k];
       });
       $('mpOpen').checked = false;
       if ($('mpCov')) $('mpCov').value = '0';
+      if ($('mpReal')) {
+        $('mpReal').setAttribute('aria-pressed', 'false');
+        $('mpReal').textContent = 'How far are they really?';
+      }
       $('mpShowAll').setAttribute('aria-pressed', 'false');
       clearPreset(); render();
     });
@@ -1172,6 +1189,123 @@
   // at all, so asking for either one with open weights on can never return a
   // model, and a second dial does not rescue it unless it outweighs the dead
   // one by more than two to one. Say which factor emptied the list.
+  // What the scale is stretched over, in the units each board actually prints.
+  // Not one fixed benchmark: the figures the dials are loading, heaviest first,
+  // because a point is worth a different thing on every board. Forty points of
+  // score is 6.5 points of Terminal-Bench and 44 Elo of Arena, and 44 Elo is a
+  // 56 to 44 head to head, not one model being twice the other.
+  function whatAPointIsWorth(rows, W, spanPts) {
+    var figs = loadedFigures(W).slice(0, 3), out = [];
+    figs.forEach(function (f) {
+      var R = D.range[f.k];
+      if (!R || R.hi === R.lo) return;
+      var real = (R.hi - R.lo) * spanPts / 100;
+      var line = 'the ' + spanPts.toFixed(0) + ' points above are '
+        + fmtRaw(f.k, real) + ' of ' + (FIG[f.k] || f.k)
+        + ', where the whole field runs ' + fmtRaw(f.k, R.lo) + ' to ' + fmtRaw(f.k, R.hi);
+      if (R.u === 'elo') {
+        var win = 1 / (1 + Math.pow(10, -real / 400));
+        line += ', a ' + Math.round(win * 100) + ' to ' + Math.round(100 - win * 100)
+          + ' head to head';
+      }
+      out.push(line);
+    });
+    if (!out.length) return '';
+    return 'On the figures you are leaning on: ' + out.join('; ') + '.';
+  }
+
+  // The sentence most readers came for: the cheapest model that is not really
+  // behind. Close is measured on the figure the question leans on hardest, in
+  // that board's own units, never in scale points.
+  function bestBuyLine(rows, W) {
+    if (rows.length < 2) return '';
+    var top = rows[0], tc = top.m.cost;
+    var a = anchorFor(rows, W);
+    if (!tc || !a) return '';
+    // On a question that is only about price, the ranking is already the
+    // answer and this line reads as a contradiction: giving up cost while
+    // costing less. Say nothing rather than say that.
+    if (!D.range[a.k] || !D.range[a.k].up) return '';
+    // A twentieth of the board's whole published spread is not a difference
+    // anyone runs into. Measured against the board rather than against a
+    // number picked to suit it.
+    var pick = null;
+    rows.forEach(function (r) {
+      if (!r.m.cost || r.m.cost >= tc) return;
+      if (top.s - r.s > 5) return;
+      if (!pick || r.m.cost < pick.m.cost) pick = r;
+    });
+    if (!pick) return '';
+    var worth = gapInUnits(top.s - pick.s, a.k);
+    if (worth === null) return '';
+    return '<b>' + esc(pick.m.n) + '</b> gives up ' + fmtRaw(a.k, worth) + ' of '
+      + (FIG[a.k] || a.k) + ' against <b>' + esc(top.m.n) + '</b> and costs '
+      + (tc / pick.m.cost).toFixed(1) + ' times less.';
+  }
+
+  function realMode() {
+    var b = $('mpReal');
+    return !!b && b.getAttribute('aria-pressed') === 'true';
+  }
+
+  // Back out the number the board printed. Every figure on a row is a
+  // percentile taken over a known low and high, so the raw value is recoverable
+  // exactly, including for the figures where lower is better.
+  function rawAt(m, j) {
+    var R = D.range && D.range[D.metrics[j]];
+    if (!R || !m.a[j]) return null;
+    var p = R.up ? m.v[j] : 100 - m.v[j];
+    return R.lo + (R.hi - R.lo) * p / 100;
+  }
+
+  function fmtRaw(key, x) {
+    var u = (D.range && D.range[key] && D.range[key].u) || '';
+    var n = Math.abs(x) >= 100 ? x.toFixed(0) : Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(2);
+    if (u === '$') return '$' + n;
+    if (u === '$/Mtok') return '$' + n;
+    if (u === '%') return n + '%';
+    if (u === 's') return n + 's';
+    if (u === 'tok/s') return n + ' tok/s';
+    if (u === 'elo') return n + ' Elo';
+    return n + (u ? ' ' + u : '');
+  }
+
+  // The figures the question is actually leaning on, heaviest first. Every
+  // conversion below runs through these rather than through one fixed
+  // benchmark, because a point means something different on each board and the
+  // dials decide which boards are in play at all.
+  function loadedFigures(W) {
+    var out = [];
+    W.forEach(function (w, j) { if (w > 0) out.push({ j: j, k: D.metrics[j], w: w }); });
+    out.sort(function (a, b) { return b.w - a.w; });
+    return out;
+  }
+
+  // A gap on the 0-to-100 scale, read back in the units of one board.
+  //
+  // Deliberately the whole weighted gap and not that board's own raw
+  // difference. The raw difference on a single figure is exact and useless as
+  // a headline: on the default question Grok 4.6 ties the leader on GDPval to
+  // the decimal while sitting ten points back overall, and a row reading
+  // "0.00% behind" is worse than no row at all. What this answers is the
+  // question a reader actually has, which is how much the whole gap is worth
+  // on a board they recognize.
+  function gapInUnits(gapPts, key) {
+    var R = D.range && D.range[key];
+    if (!R || R.hi === R.lo) return null;
+    return (R.hi - R.lo) * gapPts / 100;
+  }
+
+  function anchorFor(rows, W) {
+    var figs = loadedFigures(W);
+    for (var i = 0; i < figs.length; i++) {
+      var j = figs[i].j, ok = 0;
+      rows.forEach(function (r) { if (r.m.a[j]) ok++; });
+      if (ok >= Math.max(2, rows.length * 0.6)) return figs[i];
+    }
+    return figs.length ? figs[0] : null;
+  }
+
   function tieNoteEl() { return $('mpTieNote'); }
 
   function emptyReason(openOnly) {
@@ -1457,6 +1591,7 @@
 
     var list = $('mpList'), empty = $('mpEmpty');
     list.textContent = '';
+    list.className = 'mp-list' + (realMode() ? ' real' : '');
 
     // Every exit from here reschedules the simulation. Leaving it out of the
     // empty paths left the panel showing the last question's winner next to a
@@ -1543,6 +1678,25 @@
     empty.hidden = true;
     rows.sort(function (a, b) { return b.s - a.s; });
     renderPareto(rows);
+    var topScore = rows[0].s, lowScore = rows[rows.length - 1].s;
+
+    // A reader seeing 73 reads it as 73 percent of something. It is not. Say
+    // what the number is and how wide the field is, on this question, now.
+    var scaleEl = $('mpScale');
+    if (scaleEl) {
+      var spanPts = topScore - lowScore;
+      scaleEl.innerHTML = rows.length < 2
+        ? 'One model scored, so there is nothing to place it against.'
+        : 'A score is not a percentage of anything, and double the score is not '
+          + 'double the model. On each figure, 0 is the weakest number published '
+          + 'on this board and 100 the strongest, so the zero here is a frontier '
+          + 'model having a bad day, not a model that cannot do the work. On this '
+          + 'question the field runs from <b>' + lowScore.toFixed(0) + '</b> to <b>'
+          + topScore.toFixed(0) + '</b>, a spread of <b>' + spanPts.toFixed(0)
+          + ' points</b>, and the figure under every score is how far that model sits '
+          + 'below the top. Anything inside about 5 is a tie. '
+          + whatAPointIsWorth(rows, W, spanPts) + ' ' + bestBuyLine(rows, W);
+    }
     var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
     var CAP = 15;
     var shown = showAll ? rows : rows.slice(0, CAP);
@@ -1578,6 +1732,28 @@
           + ' points of each other here, which is close enough to call a tie.';
         tieNote.hidden = false;
       } else { tieNote.hidden = true; }
+    }
+
+    // In real terms the under-score figure stops being scale points and starts
+    // being what the boards print, next to what the model costs against the
+    // leader. Both halves of the same fact: the gap is small, and the price
+    // difference is not.
+    var real = realMode();
+    var topCost = rows[0].m.cost;
+    var anchor = anchorFor(rows, W);
+    function scoreSub(r, i) {
+      var gap = topScore - r.s;
+      if (!real) return i === 0 ? '<b>top</b>' : '<b>\u2212' + gap.toFixed(1) + '</b>';
+      if (i === 0) return '<b>top</b>';
+      var bits = [];
+      var fg = anchor ? gapInUnits(gap, anchor.k) : null;
+      if (fg !== null) bits.push('\u2212' + fmtRaw(anchor.k, fg));
+      if (topCost && r.m.cost) {
+        bits.push(r.m.cost <= topCost
+          ? '\u00d7' + (topCost / r.m.cost).toFixed(1) + ' cheaper'
+          : '\u00d7' + (r.m.cost / topCost).toFixed(1) + ' dearer');
+      }
+      return '<b>' + bits.join('<br>') + '</b>';
     }
 
     var frag = document.createDocumentFragment();
@@ -1623,7 +1799,7 @@
         '<span class="mp-meta">' + meta.join('<span class="sep">·</span>') + '</span>' +
         drivers(m) + gapNote +
         '<span class="mp-bar"><i style="width:' + Math.max(pct, 2) + '%"></i></span></span>' +
-        '<span class="mp-score">' + r.s.toFixed(0) + '</span>';
+        '<span class="mp-score">' + r.s.toFixed(0) + scoreSub(r, i) + '</span>';
       frag.appendChild(li);
     });
     list.appendChild(frag);
