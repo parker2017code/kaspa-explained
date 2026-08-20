@@ -461,45 +461,25 @@ VARIANT_FIX = {
 # Overall, Luna 22, Terra 20, Claude Sonnet 5 19. Claude Opus 5 is the only
 # model that gains, 16 at max and 12 at high.
 STYLE_CONTROLLED = {
-    # arena slug: {metric: style-controlled Elo}
-    "claude-fable-5": {"arenaHardPrompts": 1511, "arenaCreativeWriting": 1501,
-                       "arenaTextInstructionFollowing": 1505, "arenaLongerQuery": 1510},
-    "claude-opus-5-high": {"arenaHardPrompts": 1511, "arenaCreativeWriting": 1488,
-                           "arenaTextInstructionFollowing": 1515, "arenaLongerQuery": 1518},
-    "claude-opus-5-max": {"arenaHardPrompts": 1516, "arenaCreativeWriting": 1483,
-                          "arenaTextInstructionFollowing": 1511, "arenaLongerQuery": 1514},
-    "claude-sonnet-5-high": {"arenaHardPrompts": 1481, "arenaCreativeWriting": 1417,
-                             "arenaTextInstructionFollowing": 1452, "arenaLongerQuery": 1464},
-    "gpt-5.6-sol-xhigh": {"arenaHardPrompts": 1504, "arenaCreativeWriting": 1453,
-                          "arenaTextInstructionFollowing": 1475, "arenaLongerQuery": 1475},
-    "gpt-5.6-terra-xhigh": {"arenaHardPrompts": 1493, "arenaCreativeWriting": 1404,
-                            "arenaTextInstructionFollowing": 1452, "arenaLongerQuery": 1452},
-    "gpt-5.6-luna-xhigh": {"arenaHardPrompts": 1485, "arenaCreativeWriting": 1393,
-                           "arenaTextInstructionFollowing": 1437, "arenaLongerQuery": 1436},
-    "gemini-3.1-pro-preview": {"arenaHardPrompts": 1490, "arenaCreativeWriting": 1481,
-                               "arenaTextInstructionFollowing": 1466, "arenaLongerQuery": 1483},
-    "gemini-3.6-flash-high": {"arenaHardPrompts": 1492, "arenaCreativeWriting": 1463,
-                              "arenaTextInstructionFollowing": 1468, "arenaLongerQuery": 1475},
-    "gemini-3.7-flash-high": {"arenaHardPrompts": 1505, "arenaCreativeWriting": 1490,
-                              "arenaTextInstructionFollowing": 1486, "arenaLongerQuery": 1492},
-    "grok-4.5": {"arenaHardPrompts": 1495, "arenaCreativeWriting": 1437,
-                 "arenaTextInstructionFollowing": 1448, "arenaLongerQuery": 1468},
-    "grok-4.6-high": {"arenaHardPrompts": 1483, "arenaCreativeWriting": 1450,
-                      "arenaTextInstructionFollowing": 1446, "arenaLongerQuery": 1468},
-    "kimi-k3-max": {"arenaHardPrompts": 1499, "arenaCreativeWriting": 1450,
-                    "arenaTextInstructionFollowing": 1480, "arenaLongerQuery": 1490},
-    "deepseek-v4-pro-high-20260813": {"arenaHardPrompts": 1481, "arenaCreativeWriting": 1404,
-                                      "arenaTextInstructionFollowing": 1446, "arenaLongerQuery": 1461},
-    "glm-5.2-max": {"arenaHardPrompts": 1480, "arenaCreativeWriting": 1461,
-                    "arenaTextInstructionFollowing": 1453, "arenaLongerQuery": 1468},
-    "glm-5.3-max": {"arenaHardPrompts": 1496, "arenaCreativeWriting": 1463,
-                    "arenaTextInstructionFollowing": 1481, "arenaLongerQuery": 1477},
-    "qwen3.8-max": {"arenaHardPrompts": 1502, "arenaCreativeWriting": 1485,
-                    "arenaTextInstructionFollowing": 1482, "arenaLongerQuery": 1495},
-    "muse-spark-1.1": {"arenaHardPrompts": 1487, "arenaCreativeWriting": 1438,
-                       "arenaTextInstructionFollowing": 1459, "arenaLongerQuery": 1459},
-    "muse-spark-1.2 (xHigh)": {"arenaHardPrompts": 1498, "arenaCreativeWriting": 1446,
-                               "arenaTextInstructionFollowing": 1468, "arenaLongerQuery": 1484},
+    "claude-fable-5": {"arenaHardPrompts": 1532, "arenaCreativeWriting": 1509, "arenaTextInstructionFollowing": 1512, "arenaLongerQuery": 1522},
+    "claude-opus-5-high": {"arenaHardPrompts": 1519, "arenaCreativeWriting": 1474, "arenaTextInstructionFollowing": 1498, "arenaLongerQuery": 1509},
+    "claude-opus-5-max": {"arenaHardPrompts": 1512, "arenaCreativeWriting": 1464, "arenaTextInstructionFollowing": 1489, "arenaLongerQuery": 1499},
+    "claude-sonnet-5-high": {"arenaHardPrompts": 1491, "arenaCreativeWriting": 1436, "arenaTextInstructionFollowing": 1467, "arenaLongerQuery": 1482},
+    "gpt-5.6-sol-xhigh": {"arenaHardPrompts": 1505, "arenaCreativeWriting": 1474, "arenaTextInstructionFollowing": 1483, "arenaLongerQuery": 1492},
+    "gpt-5.6-terra-xhigh": {"arenaHardPrompts": 1486, "arenaCreativeWriting": 1421, "arenaTextInstructionFollowing": 1460, "arenaLongerQuery": 1468},
+    "gpt-5.6-luna-xhigh": {"arenaHardPrompts": 1472, "arenaCreativeWriting": 1408, "arenaTextInstructionFollowing": 1443, "arenaLongerQuery": 1452},
+    "qwen3.8-max": {"arenaHardPrompts": 1507, "arenaCreativeWriting": 1472, "arenaTextInstructionFollowing": 1476, "arenaLongerQuery": 1497},
+    "kimi-k3-max": {"arenaHardPrompts": 1518, "arenaCreativeWriting": 1458, "arenaTextInstructionFollowing": 1485, "arenaLongerQuery": 1500},
+    "glm-5.3-max": {"arenaHardPrompts": 1502, "arenaCreativeWriting": 1467, "arenaTextInstructionFollowing": 1483, "arenaLongerQuery": 1483},
+    "glm-5.2-max": {"arenaHardPrompts": 1488, "arenaCreativeWriting": 1450, "arenaTextInstructionFollowing": 1462, "arenaLongerQuery": 1478},
+    "grok-4.5": {"arenaHardPrompts": 1494, "arenaCreativeWriting": 1447, "arenaTextInstructionFollowing": 1465, "arenaLongerQuery": 1485},
+    "grok-4.6-high": {"arenaHardPrompts": 1485, "arenaCreativeWriting": 1459, "arenaTextInstructionFollowing": 1458, "arenaLongerQuery": 1480},
+    "gemini-3.1-pro-preview": {"arenaHardPrompts": 1507, "arenaCreativeWriting": 1479, "arenaTextInstructionFollowing": 1480, "arenaLongerQuery": 1499},
+    "gemini-3.6-flash-high": {"arenaHardPrompts": 1501, "arenaCreativeWriting": 1469, "arenaTextInstructionFollowing": 1475, "arenaLongerQuery": 1486},
+    "gemini-3.7-flash-high": {"arenaHardPrompts": 1507, "arenaCreativeWriting": 1493, "arenaTextInstructionFollowing": 1486, "arenaLongerQuery": 1499},
+    "muse-spark-1.1": {"arenaHardPrompts": 1510, "arenaCreativeWriting": 1446, "arenaTextInstructionFollowing": 1474, "arenaLongerQuery": 1477},
+    "muse-spark-1.2 (xHigh)": {"arenaHardPrompts": 1511, "arenaCreativeWriting": 1451, "arenaTextInstructionFollowing": 1477, "arenaLongerQuery": 1499},
+    "deepseek-v4-pro-high-20260813": {"arenaHardPrompts": 1488, "arenaCreativeWriting": 1408, "arenaTextInstructionFollowing": 1461, "arenaLongerQuery": 1480},
 }
 
 # Our model names to the slug Arena prints. Only the rows we score.
@@ -757,6 +737,18 @@ def main():
     for v in inc.values():
         if not v.get("lab"):
             v["lab"] = LAB_FALLBACK.get(v["name"])
+
+    # Score the Arena text figures with Style Control on, verified board by board
+    # against the live toggle rather than inferred from the page text.
+    swapped = 0
+    for v in inc.values():
+        slug = style_slug(v["name"], v["variant"])
+        for m, val in STYLE_CONTROLLED.get(slug or "", {}).items():
+            if m in v["raw"]:
+                e = dict(v["raw"][m]); e["value"] = float(val)
+                e["adjustment"] = "style control"
+                v["raw"][m] = e; swapped += 1
+    print(f"arena text figures on style control: {swapped}")
 
 
     # ---- one row per model
