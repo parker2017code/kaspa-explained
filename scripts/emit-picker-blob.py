@@ -59,6 +59,28 @@ METRICS = [
 # price against capability needs to see.
 MIN_METRICS = 9
 
+# Figures that are not scored and are published anyway, as evidence of how
+# close this field is.
+#
+# Each of these was cut from the ranking for saturation: the strongest models
+# sit on top of each other, so the figure cannot order them. That is a fair
+# reason to keep a figure out of a ranking and a terrible reason to hide it.
+# Ranking only on the tests that spread models apart guarantees the page
+# overstates how far apart they are. A test where the frontier is bunched is
+# not broken. It is a measurement saying these models are close, which is the
+# single most useful thing this page can tell somebody choosing between them.
+#
+# So they are carried here, scored by nobody, shown in the real-terms reading
+# next to whichever dial they belong to. Composites are still excluded, on a
+# different argument that saturation does not touch: the AA Intelligence Index,
+# LiveBench overall, AA Omniscience and Text Arena overall are blends of
+# figures already on this page, and averaging a blend back in counts the same
+# evidence twice. LM Arena's Agent board stays out too, because it prints the
+# size of a signed number without the sign.
+CLOSENESS = ["aaGpqaDiamond", "aaCritpt", "aaMmmuPro", "lbReasoning",
+             "textCoding", "textMath", "textExpert"]
+CLOSENESS_MIN_COVERAGE = 12
+
 # ---------------------------------------------------------------------------
 # One row per model.
 #
@@ -674,9 +696,92 @@ def main():
         ranges[m] = {"lo": round(lo[m], 4), "hi": round(hi[m], 4), "u": unit,
                      "up": bool(d["metrics"][m]["higher"])}
 
+    # ---- the natural scale
+    #
+    # Percentiles answer "who is ahead" and destroy "by how much": min-max
+    # stretches every figure across the same 0 to 100 no matter whether the
+    # models are 1 point apart or 40. That is fine for ranking and useless for
+    # the question of how close this field really is, and it is why a saturated
+    # figure cannot simply be added to the ranking. On its own scale a test
+    # where everyone scores between 89 and 95 contributes a 6 point spread. Min
+    # maxed it contributes 100, which is the opposite of the truth.
+    #
+    # So capability figures get a second reading on the scale the test itself
+    # uses. Pass rates and LiveBench points are already 0 to 100. Elo is not a
+    # magnitude at all, so it is converted to the expected win rate against the
+    # middle of this field, which is what an Elo difference actually means.
+    def natural(m, value, mean_elo):
+        u = d["metrics"][m].get("unit")
+        if u in ("%", "pts"):
+            return max(0.0, min(100.0, value))
+        if u == "elo":
+            return 100.0 / (1.0 + 10.0 ** ((mean_elo[m] - value) / 400.0))
+        return None
+
+    NAT_METRICS = [m for m in CAP_METRICS if d["metrics"][m].get("unit") in ("%", "pts", "elo")]
+    CLOSE_OK = []
+    mean_elo = {}
+    for m in set(NAT_METRICS) | set(CLOSENESS):
+        if m not in d["metrics"]:
+            continue
+        vals = [inc[k]["raw"][m]["value"] for k in chosen_keys if m in inc[k]["raw"]]
+        if vals and d["metrics"][m].get("unit") == "elo":
+            mean_elo[m] = sum(vals) / len(vals)
+    for m in CLOSENESS:
+        if m not in d["metrics"]:
+            continue
+        if d["metrics"][m].get("unit") not in ("%", "pts", "elo"):
+            continue
+        n = sum(1 for k in chosen_keys if m in inc[k]["raw"])
+        if n >= CLOSENESS_MIN_COVERAGE:
+            CLOSE_OK.append(m)
+
+    for row, key in zip(rows, order):
+        v = inc[key]
+        H = hop(v["variant"], TARGET, v["name"]) if v["variant"] in EFFORT_ORDER else None
+        nat, cnat = [], []
+        for m in METRICS:
+            if m in NAT_METRICS and m in v["raw"]:
+                nat.append(round(natural(m, v["raw"][m]["value"], mean_elo), 2))
+            else:
+                nat.append(None)
+        for m in CLOSE_OK:
+            if m in v["raw"]:
+                cnat.append(round(natural(m, v["raw"][m]["value"], mean_elo), 2))
+            else:
+                cnat.append(None)
+        row["nat"] = nat
+        if any(x is not None for x in cnat):
+            row["cnat"] = cnat
+
+    # Same field the ranking uses, so "the whole field spans" means the models
+    # on the page and not a wider list nobody can see.
+    close = []
+    for m in CLOSENESS:
+        if m not in d["metrics"]:
+            continue
+        vals = [inc[k]["raw"][m]["value"] for k in chosen_keys if m in inc[k]["raw"]]
+        if len(vals) < CLOSENESS_MIN_COVERAGE:
+            continue
+        higher = bool(d["metrics"][m]["higher"])
+        ordered = sorted(vals, reverse=higher)
+        top5 = ordered[:5]
+        close.append({
+            "k": m,
+            "lo": round(min(vals), 4),
+            "hi": round(max(vals), 4),
+            "t5": round(abs(top5[0] - top5[-1]), 4) if len(top5) >= 5 else None,
+            "n": len(vals),
+            "u": next((inc[k]["raw"][m].get("unit") for k in chosen_keys
+                       if m in inc[k]["raw"]), None),
+            "up": higher,
+        })
+
     blob = {
         "metrics": METRICS,
         "range": ranges,
+        "close": close,
+        "cm": CLOSE_OK,
         "models": rows,
         "sources": {"Artificial Analysis": 13, "LiveBench": 7, "LM Arena": 5},
         "ci_note": note,
@@ -696,6 +801,10 @@ def main():
               f"{('$%.3f' % r['cost']) if r['cost'] is not None else '   -   ':>7}  "
               f"{r['n']}{moved}")
     print(f"rows carrying published intervals: {sum(1 for r in rows if 'ci' in r)}")
+    print("closeness evidence, not scored:")
+    for c in close:
+        print(f"  {c['k']:<18} {c['n']:2d} models  field {c['lo']} to {c['hi']} {c['u']}"
+              + (f"  top five inside {c['t5']}" if c["t5"] is not None else ""))
 
     if "--print" in sys.argv:
         print("\n" + js[:400] + " ...")
