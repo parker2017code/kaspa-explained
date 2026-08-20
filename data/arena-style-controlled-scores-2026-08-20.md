@@ -47,3 +47,51 @@ writing matters most. It does not. It matters most in general chat.
 
 Style Control for Coding was not read, so the Coding board is not part of this
 and the picker does not score it.
+
+## Coding, Style Control on
+
+Read 20 August 2026, board dated Aug 19 2026, 1,641,021 votes across 388
+models. The picker does not score an Arena coding figure, so nothing here is
+swapped in. It was read as a third test of where the style penalty comes from,
+and it is the one that overturned the earlier reading.
+
+| arena slug | plain | style controlled | delta |
+| --- | --- | --- | --- |
+| claude-opus-5-max | 1526 | 1530 | +4 |
+| claude-opus-5-high | 1533 | 1531 | -2 |
+| qwen3.8-max | 1520 | 1500 | -20 |
+| glm-5.3-max | 1535 | 1509 | -26 |
+| gemini-3.6-flash-high | 1520 | 1493 | -27 |
+| kimi-k3-max | 1544 | 1513 | -31 |
+| gpt-5.6-terra-xhigh | 1518 | 1486 | -32 |
+| claude-fable-5 | 1552 | 1519 | -33 |
+| claude-sonnet-5-high | 1521 | 1486 | -35 |
+| muse-spark-1.1 | 1529 | 1493 | -36 |
+| deepseek-v4-pro-high-20260813 | 1523 | 1486 | -37 |
+| muse-spark-1.2 (xHigh) | 1532 | 1495 | -37 |
+| gemini-3.1-pro-preview | 1521 | 1483 | -38 |
+| gpt-5.6-sol-xhigh | 1529 | 1491 | -38 |
+| grok-4.5 | 1522 | 1483 | -39 |
+
+## Where the style penalty comes from
+
+Reading three boards together, the penalty splits into two parts that add.
+
+A task part, which shifts every model at once. The median penalty is 27 points
+on Coding, 11 on Overall and 5 on Creative Writing. That ordering is the
+reverse of the obvious guess. Style counts for most where code is being judged
+and least where writing is being judged, which is worth sitting with: what a
+coding answer wins on is partly its code blocks, its structure and its
+scaffolding, and taking those away moves the ranking further than taking away
+prose polish from prose.
+
+A model part, which is stable across boards. A model's Overall penalty predicts
+its Creative Writing penalty at r = 0.849 over 19 models, and its Coding
+penalty at r = 0.875 over 15, with a slope near 1 in both cases. A model that
+wins on presentation wins that way on every board, and the board only sets how
+far the whole field drops.
+
+Claude Opus 5 is the exception in both directions. It is the only model that
+gains when style is removed, 16 points at max effort on Overall, and on Coding
+it is the only model that does not fall, at -2 and +4 while the rest of the
+field drops about 35. Its standing is close to all substance.
