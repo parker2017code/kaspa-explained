@@ -124,6 +124,9 @@
     .mp-close { margin: 0 0 12px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-bg); }
     .mp-close p { margin: 0 0 7px; font-size: .8rem; color: var(--muted); line-height: 1.5; }
     .mp-close p.lede { font-size: .87rem; color: var(--text); margin-bottom: 9px; }
+    .mp-close-d > summary { cursor: pointer; font-size: .86rem; color: var(--text); line-height: 1.5; }
+    .mp-close-d > summary::marker { color: var(--muted); }
+    .mp-close-d[open] > summary { margin-bottom: 9px; }
     .mp-close ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
     .mp-close li { font-size: .8rem; color: var(--text); line-height: 1.5; }
     .mp-close .n { font-weight: 700; }
@@ -315,7 +318,7 @@
           </details>
           <div class="mp-pareto-head" id="mpParetoHead">
             <b class="mp-pareto-title">What you cannot get cheaper</b>
-            <span class="mp-pareto-why">Every scored model is plotted against what one task costs it, on a price axis that runs by tens. A model sits on the line when nothing here beats it on both at once: nothing scores higher for the same money, and nothing matches it for less. Everything below the line is beaten outright and is worth buying only for something this page does not measure. Move a dial and the line moves, because there is no one answer to this, only one per question. Starred points carry estimated figures, so read their place on the line as an estimate too.</span>
+            <span class="mp-pareto-why">A model sits on the line when nothing here beats it on both score and price at once. Move a dial and the line moves.</span>
             <button type="button" class="mp-reset mp-names" id="mpParetoNames" aria-pressed="false">Name every model</button>
           </div>
           <div class="mp-pareto" id="mpPareto"></div>
@@ -324,7 +327,7 @@
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <div class="mp-mc-head" id="mpMcHead">
             <b class="mp-mc-title">How often each model comes first</b>
-            <span class="mp-mc-why">The same weights as the ranking below, with every figure redrawn from its published error on each of 1,000 runs. The order below is one draw; this is the distribution it came from.</span>
+            <span class="mp-mc-why">The ranking below is one draw. This is the distribution it came from.</span>
           </div>
           <div id="mpMonte"></div>
           <ol class="mp-list" id="mpList"></ol>
@@ -1163,9 +1166,9 @@
         + '<span class="mp-mc-pct">' + (r.pct >= 10 ? Math.round(r.pct) : r.pct.toFixed(1)) + '%</span></li>';
     }).join('');
     host.innerHTML = '<p class="mp-mc-verdict">' + verdict + '</p><ol class="mp-mc-list">' + bars + '</ol>'
-      + '<p class="mp-mc-foot">A thousand rankings, each drawing every figure from its own published '
-      + 'confidence interval. Neither LiveBench nor Artificial Analysis publishes those intervals, so their figures '
-      + 'carry an assumed 1.5 points of benchmark error, converted through the spread of each metric, so it counts for more where models are bunched. That assumption is the weakest input here.</p>';
+      + '<p class="mp-mc-foot">A thousand rankings, each figure redrawn from its own '
+      + 'error. Where a board publishes no interval, 1.5 points is assumed, which is the '
+      + 'weakest input here.</p>';
   }
 
   // Runs itself whenever the question changes. Making it a button implied the
@@ -1211,31 +1214,6 @@
   // at all, so asking for either one with open weights on can never return a
   // model, and a second dial does not rescue it unless it outweighs the dead
   // one by more than two to one. Say which factor emptied the list.
-  // What the scale is stretched over, in the units each board actually prints.
-  // Not one fixed benchmark: the figures the dials are loading, heaviest first,
-  // because a point is worth a different thing on every board. Forty points of
-  // score is 6.5 points of Terminal-Bench and 44 Elo of Arena, and 44 Elo is a
-  // 56 to 44 head to head, not one model being twice the other.
-  function whatAPointIsWorth(rows, W, spanPts) {
-    var figs = loadedFigures(W).slice(0, 3), out = [];
-    figs.forEach(function (f) {
-      var R = D.range[f.k];
-      if (!R || R.hi === R.lo) return;
-      var real = (R.hi - R.lo) * spanPts / 100;
-      var line = 'the ' + spanPts.toFixed(0) + ' points above are '
-        + fmtRaw(f.k, real) + ' of ' + (FIG[f.k] || f.k)
-        + ', where the whole field runs ' + fmtRaw(f.k, R.lo) + ' to ' + fmtRaw(f.k, R.hi);
-      if (R.u === 'elo') {
-        var win = 1 / (1 + Math.pow(10, -real / 400));
-        line += ', a ' + Math.round(win * 100) + ' to ' + Math.round(100 - win * 100)
-          + ' head to head';
-      }
-      out.push(line);
-    });
-    if (!out.length) return '';
-    return 'On the figures you are leaning on: ' + out.join('; ') + '.';
-  }
-
   // The sentence most readers came for: the cheapest model that is not really
   // behind. Close is measured on the figure the question leans on hardest, in
   // that board's own units, never in scale points.
@@ -1429,9 +1407,13 @@
       // evidence the dial has that these models are hard to tell apart.
       return d || ((a.t5 == null ? 999 : a.t5) - (b.t5 == null ? 999 : b.t5));
     });
-    var head = '';
+    var head = '', headline = '';
     var withC = naturalSpread(rows, true), without = naturalSpread(rows, false);
     if (withC) {
+      // The one line worth reading without opening anything.
+      headline = 'The ranking spreads these models over ' + scaleSpan.toFixed(0)
+        + ' points. On the tests\u2019 own scales they are <b>' + withC.span.toFixed(0)
+        + '</b> apart.';
       head = '<p class="lede">On what you asked for, the ranking above spreads these models '
         + 'over <span class="n">' + scaleSpan.toFixed(0) + ' points</span>. On the scales the '
         + 'tests themselves use, they span <span class="n">' + withC.span.toFixed(0)
@@ -1461,6 +1443,9 @@
       host.innerHTML = head;
       return;
     }
+    // Four, not fifteen. The panel is evidence, not an inventory, and the
+    // tightest ones make the point on their own.
+    picks = picks.slice(0, 4);
     var items = picks.map(function (c) {
       var span = Math.abs(c.hi - c.lo);
       var bits = '<span class="n">' + esc(closeName(c)) + '</span>: '
@@ -1477,11 +1462,14 @@
       return '<li>' + bits + '.</li>';
     }).join('');
     host.hidden = false;
-    host.innerHTML = head
-      + '<p>These tests are not ranked on, because the leaders are too bunched on them to '
-      + 'order. That is the reason to show them. They are accurate measurements of the same '
-      + 'models reporting that the models are close, and ranking only on the tests that '
-      + 'spread them apart overstates the difference.</p><ul>' + items + '</ul>';
+    // Collapsed. The headline sits in the summary where it is read; the
+    // evidence behind it is one click away for anyone who wants it.
+    host.innerHTML = '<details class="mp-close-d"><summary>' + (headline || 'How close are they really?')
+      + '</summary>' + head
+      + '<p>These are not ranked on, because the leaders are too bunched on them to order. '
+      + 'That is the reason to show them: they measure the same models and report that the '
+      + 'models are close. Ranking only on the tests that spread them apart overstates the '
+      + 'difference.</p><ul>' + items + '</ul></details>';
   }
 
   function tieNoteEl() { return $('mpTieNote'); }
@@ -1714,24 +1702,19 @@
       foot += ' That is ' + (top.cost / cheapest.cost).toFixed(1) + ' times the price for ' +
         Math.round(top.s - cheapest.s) + ' more points.';
     }
-    foot += ' All ' + pts.length + ' scored models are on the chart. ' + front.length +
-      ' of them are on the line; the other ' + (pts.length - front.length) + ' are beaten ' +
-      'outright, with something here both better and cheaper.';
+    foot += ' All ' + pts.length + ' are plotted, ' + front.length + ' on the line.';
     if (showNames && droppedNames) {
-      foot += ' ' + droppedNames + ' of those ' + (droppedNames === 1 ? 'name is' : 'names are') +
-        ' left off the chart for want of room, and still appear when you point at the dot.';
+      foot += ' ' + droppedNames + ' names did not fit; point at a dot for those.';
     }
     var partial = front.filter(function (p) {
       return p.cov < 0.999 || p.est > 0.005 || p.moved;
     }).length;
     if (partial) {
-      foot += ' ' + (partial === 1 ? 'One point is' : partial + ' points are') +
-        ' marked with a star: part of what you asked for was estimated for that model rather ' +
-        'than read off a board, so read its place on the line as an estimate too.';
+      foot += ' A star means part of that model was estimated rather than measured.';
     }
     if (noPrice) {
-      foot += ' ' + noPrice + (noPrice === 1 ? ' model is' : ' models are') +
-        ' left off: no published cost per task, and nothing here is placed on a price nobody published or derived.';
+      foot += ' ' + noPrice + (noPrice === 1 ? ' model has' : ' models have')
+        + ' no published price and is left off.';
     }
 
     host.innerHTML = '<div class="mp-pareto-wrap"><svg viewBox="0 0 ' + PG.w + ' ' + PG.h +
@@ -1868,18 +1851,10 @@
       var spanPts = topScore - lowScore;
       scaleEl.innerHTML = rows.length < 2
         ? 'One model scored, so there is nothing to place it against.'
-        : 'Every model here is quoted at the same point on its own effort curve, '
-          + 'about a third of the way up it, so the column compares models rather '
-          + 'than whichever setting each lab happened to submit. A score is not a '
-          + 'percentage of anything, and double the '
-          + 'score is not double the model. On each figure, 0 is the weakest number published '
-          + 'on this board and 100 the strongest, so the zero here is a frontier '
-          + 'model having a bad day, not a model that cannot do the work. On this '
-          + 'question the field runs from <b>' + lowScore.toFixed(0) + '</b> to <b>'
-          + topScore.toFixed(0) + '</b>, a spread of <b>' + spanPts.toFixed(0)
-          + ' points</b>, and the figure under every score is how far that model sits '
-          + 'below the top. Anything inside about 5 is a tie. '
-          + whatAPointIsWorth(rows, W, spanPts) + ' ' + bestBuyLine(rows, W);
+        : 'Scores are percentiles across this field, not a percentage of anything: '
+          + 'the field runs <b>' + lowScore.toFixed(0) + '</b> to <b>' + topScore.toFixed(0)
+          + '</b> here. Under each score is how far that model sits below the top, and '
+          + 'anything inside about 5 is a tie.';
     }
     renderCloseness(rows, spanPts);
     var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
