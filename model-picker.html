@@ -1548,18 +1548,59 @@
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  function renderPareto(rows) {
+  // The three figures that are themselves a price. They are scored in the
+  // ranking, where wanting a cheap model is a real preference, but they must
+  // come out of this chart's vertical axis.
+  //
+  // Leaving them in double-counted price. Cost is about a ninth of the default
+  // score, so a cheap model was rewarded on the vertical axis and then plotted
+  // to the left on the horizontal one for the same fact, which bends the
+  // frontier toward cheap models and overstates how many of them are
+  // undominated. A cost-versus-quality chart only means anything when the two
+  // axes are independent, so the vertical axis here is the same question with
+  // the price figures taken out and the remaining dials reweighted.
+  //
+  // This is why a model can sit higher on the chart than its position in the
+  // list, and the caption says so.
+  var COST_KEYS = ['aaCostPerTask', 'lbCostPerSuccessTask', 'aaOutputPrice'];
+
+  function qualityOnly(W) {
+    var Wq = W.slice(), t = 0;
+    COST_KEYS.forEach(function (k) { if (ix[k] !== undefined) Wq[ix[k]] = 0; });
+    Wq.forEach(function (w) { t += w; });
+    return { W: Wq, tot: t };
+  }
+
+  function renderPareto(rows, W) {
     var host = $('mpPareto'), head = $('mpParetoHead');
     if (!host) return;
+    var q = W ? qualityOnly(W) : null;
+    // Asking only for a cheap model leaves nothing to put on the other axis.
+    if (!q || !(q.tot > 0)) {
+      host.innerHTML = '';
+      if (head) head.hidden = true;
+      return;
+    }
     var pts = [], noPrice = 0;
     rows.forEach(function (r) {
       var c = r.m.cost;
       // A model with no published price cannot be placed on a price axis, and
       // guessing one would be the only fabricated number on this page.
       if (c === null || c === undefined || !(c > 0)) { noPrice++; return; }
-      pts.push({ n: r.m.n, t: r.m.t, cost: c, s: r.s, cov: r.cov, est: r.est,
-                 moved: r.moved, open: r.m.open });
+      var qs = score(r.m, q.W, q.tot);
+      if (!qs) { noPrice++; return; }
+      pts.push({ n: r.m.n, t: r.m.t, cost: c, s: qs.s, cov: qs.cov, est: qs.est,
+                 moved: qs.moved, open: r.m.open });
     });
+    // Read the axis as a share of the best model on this question, so the top
+    // of the chart is a fixed 100 whatever the dials say. There is no absolute
+    // zero available: the floor is the weakest model on this page, not the
+    // first competent language model, because none of these boards publish
+    // scores that far back.
+    if (pts.length) {
+      var qmax = Math.max.apply(null, pts.map(function (p) { return p.s; }));
+      if (qmax > 0) pts.forEach(function (p) { p.s = 100 * p.s / qmax; });
+    }
     if (pts.length < 3) {
       host.innerHTML = '';
       if (head) head.hidden = true;
@@ -1718,12 +1759,14 @@
       }
       return p.moved ? ' (partly estimated, not measured)' : '';
     }
-    var foot = '<b>' + esc(cheapest.label) + '</b> is the cheapest thing here not beaten outright, at $' +
+    var foot = 'Height is what you asked for with the price figures removed, scored against the '
+      + 'best model on this question at 100, so the two axes do not both count cost. '
+      + '<b>' + esc(cheapest.label) + '</b> is the cheapest thing here not beaten outright, at $' +
       cheapest.cost.toFixed(2) + ' a task' + cov(cheapest) + '. <b>' + esc(top.label) +
       '</b> scores highest, at $' + top.cost.toFixed(2) + cov(top) + '.';
     if (front.length > 1 && top.cost > cheapest.cost) {
       foot += ' That is ' + (top.cost / cheapest.cost).toFixed(1) + ' times the price for ' +
-        Math.round(top.s - cheapest.s) + ' more points.';
+        (top.s - cheapest.s).toFixed(1) + '% more quality.';
     }
     foot += ' All ' + pts.length + ' are plotted, ' + front.length + ' on the line.';
     if (showNames && droppedNames) {
@@ -1864,7 +1907,7 @@
 
     empty.hidden = true;
     rows.sort(function (a, b) { return b.s - a.s; });
-    renderPareto(rows);
+    renderPareto(rows, W);
     var topScore = rows[0].s, lowScore = rows[rows.length - 1].s;
 
     // A reader seeing 73 reads it as 73 percent of something. It is not. Say
