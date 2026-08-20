@@ -81,6 +81,95 @@ CLOSENESS = ["aaGpqaDiamond", "aaCritpt", "aaMmmuPro", "lbReasoning",
              "textCoding", "textMath", "textExpert"]
 CLOSENESS_MIN_COVERAGE = 12
 
+# LiveBench publishes its seven categories as a roll-up of 23 component tasks,
+# and the components are where the bunching shows. The field is spread 51 to 79
+# on plot unscrambling and sits on top of itself on connections, which the
+# Language average hides completely.
+#
+# These can never be scored. A component is part of a category already on this
+# page, and averaging both counts the same answers twice. As evidence of how
+# close the field is they are the best material here, because four dials had no
+# saturated figure at all until these arrived.
+SUBTASK_FILE = ROOT / "data" / "livebench-extra-2026-08-20.md"
+SUBTASK_PICKS = {
+    "Language": ["connections", "plot unscrambling"],
+    "Data Analysis": ["table reformat", "consecutive events"],
+    "Instruction Following": ["simplify", "paraphrase"],
+    "Agentic Coding": ["javascript", "typescript"],
+    "Coding": ["code completion"],
+    "Reasoning": ["zebra puzzle", "spatial"],
+}
+# LiveBench's model strings carry the effort setting; ours do not. Mapped by
+# hand from the strings the board actually prints, never by fuzzy matching.
+SUBTASK_MODEL_MAP = {
+    "Claude Fable 5 Max Effort": "Claude Fable 5",
+    "Claude 5 Opus Thinking Max Effort": "Claude Opus 5",
+    "Claude Sonnet 5 xHigh Effort": "Claude Sonnet 5",
+    "GPT-5.6 Sol Max Effort": "GPT-5.6 Sol",
+    "GPT-5.6 Terra Max Effort": "GPT-5.6 Terra",
+    "GPT-5.6 Luna Max Effort": "GPT-5.6 Luna",
+    "Gemini 3.1 Pro Preview High": "Gemini 3.1 Pro Preview",
+    "Gemini 3.6 Flash High": "Gemini 3.6 Flash",
+    "Gemini 3.7 Flash High": "Gemini 3.7 Flash",
+    "Grok 4.5": "Grok 4.5",
+    "Grok 4.6": "Grok 4.6",
+    "Kimi K3": "Kimi K3",
+    "DeepSeek V4 Pro 0813": "DeepSeek V4 Pro 0813",
+    "DeepSeek V4 Flash 0731": "DeepSeek V4 Flash 0731",
+    "GLM-5.2": "GLM-5.2",
+    "Qwen 3.8 Max": "Qwen3.8 Max",
+    "Qwen3.8 27B": "Qwen3.8 27B",
+    "Muse Spark 1.1 xHigh Effort": "Muse Spark 1.1",
+    "Muse Spark 1.2 xHigh Effort": "Muse Spark 1.2",
+}
+
+
+def subtask_closeness(shipped_names):
+    """LiveBench component scores, read for the models that ship here."""
+    if not SUBTASK_FILE.exists():
+        return []
+    text = SUBTASK_FILE.read_text(encoding="utf-8")
+    out = []
+    for chunk in re.split(r"\n## ", text):
+        head = chunk.split("\n", 1)[0].strip()
+        m = re.match(r"(.+?)\s+subtasks", head)
+        if not m or m.group(1).strip() not in SUBTASK_PICKS:
+            continue
+        cat = m.group(1).strip()
+        lines = [l for l in chunk.splitlines() if l.strip().startswith("|")]
+        if len(lines) < 3:
+            continue
+        hdr = [c.strip() for c in lines[0].strip("|").split("|")]
+        cols = {h: [] for h in hdr[1:]}
+        for line in lines[2:]:
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) != len(hdr):
+                continue
+            ours = SUBTASK_MODEL_MAP.get(cells[0])
+            if not ours or ours not in shipped_names:
+                continue
+            for h, v in zip(hdr[1:], cells[1:]):
+                try:
+                    cols[h].append(float(re.sub(r"[^0-9.\-]", "", v)))
+                except ValueError:
+                    pass
+        for name in SUBTASK_PICKS[cat]:
+            vals = cols.get(name)
+            if not vals or len(vals) < CLOSENESS_MIN_COVERAGE:
+                continue
+            ordered = sorted(vals, reverse=True)
+            out.append({
+                "k": "lbSub:" + name,
+                "cat": cat,
+                "lo": round(min(vals), 2),
+                "hi": round(max(vals), 2),
+                "t5": round(ordered[0] - ordered[4], 2) if len(ordered) >= 5 else None,
+                "n": len(vals),
+                "u": "pts",
+                "up": True,
+            })
+    return out
+
 # ---------------------------------------------------------------------------
 # One row per model.
 #
@@ -311,6 +400,23 @@ def main():
     import math
 
     EFFORT_ORDER = {"low": 0, "medium": 1, "high": 2, "xhigh": 3, "max": 4}
+
+    # Settings whose printed name is not a rung but which are one.
+    #
+    # Artificial Analysis charts Claude Fable 5 as "(with fallback)". Its own
+    # prose on the same page calls the same model "Claude Fable 5 (Adaptive
+    # Reasoning, Max Effort, Opus 4.8 Fallback)". So it is max effort with a
+    # fallback attached, and the leaderboard label just leaves the effort out.
+    # Left unmapped it matched no rung, the ladder could not move it, and the
+    # top-ranked model on the page was the one model quoted at max effort while
+    # every other row had been brought down to the common rung. That is the
+    # worst possible place for this bug to land.
+    EFFORT_ALIAS = {"with fallback": "max"}
+
+    def rung(variant):
+        if variant in EFFORT_ORDER:
+            return variant
+        return EFFORT_ALIAS.get(variant)
 
     pv = {}
     for key, v in inc.items():
@@ -590,7 +696,7 @@ def main():
         # sharpens as the audit fills them in.
         def tier_of_figure(m):
             t = v["raw"][m].get("tier")
-            return t if t else v["variant"]
+            return rung(t if t else v["variant"])
 
         def hop_for(m):
             t = tier_of_figure(m)
@@ -607,8 +713,8 @@ def main():
         # The row-level summary still needs one hop to describe. Use the one
         # that moved the cost, since price is what a reader acts on.
         H = hop_for("aaCostPerTask") if "aaCostPerTask" in v["raw"] else None
-        if H is None and v["variant"] in EFFORT_ORDER:
-            H = hop(v["variant"], TARGET, v["name"])
+        if H is None and rung(v["variant"]):
+            H = hop(rung(v["variant"]), TARGET, v["name"])
 
         # Pass one: what this setting was measured on, then what its own
         # neighboring settings can supply. Same-model evidence first, always.
@@ -771,7 +877,7 @@ def main():
 
     for row, key in zip(rows, order):
         v = inc[key]
-        H = hop(v["variant"], TARGET, v["name"]) if v["variant"] in EFFORT_ORDER else None
+        H = hop(rung(v["variant"]), TARGET, v["name"]) if rung(v["variant"]) else None
         nat, cnat = [], []
         for m in METRICS:
             if m in NAT_METRICS and m in v["raw"]:
@@ -809,6 +915,8 @@ def main():
                        if m in inc[k]["raw"]), None),
             "up": higher,
         })
+
+    close += subtask_closeness({inc[k]["name"] for k in chosen_keys})
 
     blob = {
         "metrics": METRICS,
