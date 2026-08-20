@@ -20,19 +20,24 @@ claims:
     forbidden_copy:
       - 10 BPS gives automatic 10x finality
       - Kaspa mainnet payments are instantly final
-  l1_status_snapshot_2026_08_08:
+  l1_status_snapshot_2026_08_20:
     status: measurement_sensitive
-    recheck_after: 2026-08-18
+    recheck_after: 2026-08-30
     summary: >
-      An August 8, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet answered by a
-      synced v2.0.1 node, virtual DAA score 507,631,731 (above the Toccata activation score), a 2.31246515
-      KAS block reward under the current emission step, and about 27.627 billion KAS from the public
-      supply endpoint. These are time-stamped network readings. They are unsuitable as timeless constants.
-      Do not quote blockCount or headerCount from this endpoint: it load-balances across backend nodes
-      with different pruning states, and two reads a minute apart returned 1,488,846 and 26,573,222.
+      An August 20, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet answered by a
+      synced v2.0.1 node, virtual DAA score 517,984,766 (above the Toccata activation score), a 2.31246515
+      KAS block reward, and about 27.651 billion KAS from the public supply endpoint
+      (2,765,075,442,047,419,902 sompi). The reward matches the emission step that runs from DAA
+      504,909,000 to 531,207,000, so the reward reading and the DAA reading corroborate each other.
+      Supersedes the August 8, 2026 reading: DAA 507,631,731 and about 27.627 billion KAS, same node
+      version, same reward. These are time-stamped network readings. They are unsuitable as timeless
+      constants. Do not quote blockCount or headerCount from this endpoint: it load-balances across
+      backend nodes with different pruning states, two reads a minute apart on August 8 returned
+      1,488,846 and 26,573,222, and the August 20 read returned 1,116,061, below both.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
       - August 8 snapshot values are permanent
+      - August 20 snapshot values are permanent
       - api.kaspa.org blockCount is a network-wide block total
       - A public REST API reading is stronger than node or release evidence
   emission_schedule_may_2026:
@@ -411,17 +416,19 @@ claims:
 
   covenant_tooling_and_support:
     status: builder_guardrail
-    recheck_after: 2026-08-17
+    recheck_after: 2026-08-30
     summary: >
-      Post-activation tooling is moving faster than the protocol. kaspa-python-sdk v2.0.2.rc1 was
-      published July 23, 2026 as a prerelease; its release notes say only "Release candidate for
-      2.0.2" and do not confirm SilverScript bindings. kascov is an active third-party covenant
-      indexer and dashboard covering mainnet and testnet-10. Its README names the current gap
-      plainly: there is no "get UTXOs by covenant ID" RPC, and block explorers do not decode
-      covenant data yet. A covenant-ID RPC is described on the forum as planned, with no code and
-      no version. Wallet support for constructing covenant transactions is UNVERIFIED; no
-      KasWare, Kaspium, or KSPR covenant-signing release was found. Do not cite THTProtocol/Covex,
-      which does not resolve.
+      Rechecked August 20, 2026 against each primary source; every part below held unchanged.
+      Post-activation tooling is moving faster than the protocol. kaspa-python-sdk v2.0.2.rc1 is
+      still the newest release, published July 23, 2026 as a prerelease; its release notes still
+      say only "Release candidate for 2.0.2" and do not confirm SilverScript bindings. kascov is an
+      active third-party covenant indexer and dashboard covering mainnet and testnet-10. Its README
+      still names the gap plainly: there is no "get UTXOs by covenant ID" RPC, and block explorers
+      do not decode covenant data yet. rusty-kaspa's newest release is still v2.0.1, June 15, 2026,
+      so no release has added that RPC. A covenant-ID RPC is described on the forum as planned, with
+      no code and no version. Wallet support for constructing covenant transactions is UNVERIFIED;
+      no KasWare, Kaspium, or KSPR covenant-signing release was found. Do not cite THTProtocol/Covex,
+      which still returns 404.
     source: https://github.com/kaspanet/kaspa-python-sdk/releases
     forbidden_copy:
       - Kaspa wallets support covenant construction

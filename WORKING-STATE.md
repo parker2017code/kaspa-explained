@@ -36,14 +36,23 @@ Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
 ecosystem context, never adoption evidence. `kaspa-developments.html` says this
 in its own checked-line so a future reader cannot miss it.
 
-**PICK-UP BLOCK, 2026-08-15.**
+**PICK-UP BLOCK, 2026-08-20. MODEL PICKER REBUILT, GATE GREEN, DEPLOYED.**
 
-1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp (see "Mistakes that keep happening" item 1).
-2. **MODEL-PICKER.HTML now runs 9 dials across 17 models, each dial a clean 50/50 pair of two benchmarks, committed and pushed this session.** Went through 4 rebuilds: 3-5 benchmarks per dial, then a 5-dial version forcing 1 source from each, then back to 9 dials once that source-purity rule itself was named as the problem. See "The model picker, briefly" for the per-dial detail. `check-model-picker.py` and `check-site.sh` ("Site checks passed.") both green before push. If `git log --oneline -1` shows this hasn't landed yet, finish that: commit, push, confirm the three workflows green, fetch the live page with a cache-busting query for the changed dial text.
-3. **TWO DATA FILES from 15 August, session-scoped scratchpad, will not survive:** `aa-fresh-2026-08-15-full.md` (the AA data behind the redesign) and `arena-fresh-2026-08-15.md` (confirms Agent/Text Arena unchanged from 14 Aug, WebDev gained one new single-source-only model `deepseek-v4-pro-high-20260813` correctly NOT added to the roster). Move into `data/` if this becomes a recurring refresh cadence.
-4. **AUGUST 15 X-POST DONE**, in `kaspa-x-posts-august-2026.md` ("Steelman the bear case first"), verified against `skeptical-case.html` directly, no em dashes, local and uncommitted by standing instruction.
-5. **THE DAILY JOB is the X-post calendar**, local and uncommitted by standing instruction. Aug 3-15 done (Aug 12 has no entry in this transcript; check the file before assuming a gap).
-6. **SITE REVIEW from earlier this session, clean, closed.** No voice drift across all 72 pages; `sources.html` and `toccata-explained.html` staleness fixes are live in `6c3544b`.
+1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp.
+2. **THE REBUILD, IN ONE LINE.** `model-picker.html` runs 10 dials over 25 figures and 22 models, from three boards, every figure kept or cut on whether it still tells the leading models apart.
+3. **WHERE THE DATA IS. All durable in `data/`, none in the scratchpad.** `aa-2026-08-20.md` (Artificial Analysis, 27 columns, 35 models), `livebench-2026-08-20.md` (9 columns, 44 models), `arena-overview-2026-08-20.md` (all 13 boards), `arena-agent-signals-2026-08-20.md`, `arena-deep-agent-code-2026-08-20.md` (Agent 50x6, WebDev 117, Image-to-WebDev 42), `arena-deep-text-vision-2026-08-20.md` (Text top 60 plus all 7 sub-categories, Vision 146, Document 39, Search 32), `metric-screening-2026-08-20.md`, `picker-data.json`.
+4. **TWO SCRIPTS OWN THE PICKER'S DATA.** `build-picker-data.py` reads the `data/*.md` pulls and writes `picker-data.json`. `emit-picker-blob.py` picks the wired figures, recomputes percentiles over the live roster, decides which models clear the floor, and rewrites the `window.__MP__` line in the page. Re-run both after a fresh pull. Percentiles are derived in the emitter on purpose: `picker-data.json` carries percentiles normalized over whatever roster was wired when it was built, and a percentile only means anything against the field it was taken over.
+5. **THE 25 WIRED FIGURES, BY DIAL.** reason: HLE, LiveBench math, Arena Hard Prompts. code: SciCode, LiveBench coding, Arena WebDev. build: LiveBench agentic coding, tau3-Banking, Terminal-Bench v2.1. finish: GDPval, LiveBench data analysis. honest: Omniscience non-hallucination, Omniscience accuracy. follow: LiveBench instruction following, Arena Instruction Following. write: Arena Creative Writing, LiveBench language. longctx: AA-LCR, Arena Longer Query. fast: tokens/s, TTFT, total response time. cheap: AA cost per task, LiveBench cost per successful task, AA output price. Split: AA 13, LiveBench 7, Arena 5. Every figure feeds exactly one dial.
+6. **EVERY DIAL CARRIES TWO OR THREE FIGURES, NEVER ONE.** Owner's rule, 20 August, and it is right: a dial built on one number is that number's leaderboard with a slider on it. Seven carry three, three carry two. The three that carry two each name their rejected third leg in their own `why` string.
+7. **WHAT WAS CUT AND THE NUMBER THAT CUT IT. Do not re-litigate without re-measuring.** Saturation, measured as top-5 gap: Arena Tool Hallucination (13 models share a byte-identical 1.14% +/-0.16% and the CI does not shrink between 8.8K and 83K sessions, so it is a floor or a placeholder, not an estimate), GPQA Diamond (the frontier scores 89 to 95 percent, a 6-point band), AA Intelligence Index, LiveBench reasoning, LiveBench overall, CritPt, MMMU Pro, Arena Text Overall/Coding/Expert/Math (top five inside their published intervals), Arena Vision and Document (exact ties across 146 and 39 models), Arena Search (margin 12, cleanest board on the site, but covers 1 of 23 roster models). Coverage: AnalystAgent, Terminal-Bench Hard, IFBench, APEX-Agents, ITBench, tau2-Telecom. Redundancy: input price tracks output price at 0.98; Arena Image-to-WebDev tracks Arena WebDev at 0.89 on fewer models; every board's own composite is a blend of figures already scored here.
+8. **CAUTION ON THE SATURATION NUMBERS.** Two different scales were used across this rebuild and they do not agree. The first screening measured top-5 gap in a benchmark's own raw points; a later pass measured it as a percent of the roster's full range. AA-LCR reads "2 points" on the first and 20 percent on the second, which is why it was cut and then wired. Before cutting anything on a gap number again, state which scale it is on. The page's own `frontierSpread()` is the authority: it works on percentiles of the loaded roster and already discounts a weak figure automatically through `metricTrust`, so a mid-separation figure costs less than it looks.
+9. **ROSTER: 22 in, 15 out** of 37, at a floor of 14 published figures out of 25. **14 is where the data breaks, not a round number.** Every model with figures from more than one board clears 14; every single-source model lands on exactly 13, because AA alone contributes 13 of the 25. So the floor sorts on cross-source evidence without naming a source in the rule. **RECHECK THIS NUMBER AFTER ANY CHANGE TO `METRICS`; it is not a constant.** Known cost: Claude Sonnet 5 drops out entirely, since no Sonnet 5 row clears the floor. Every other exclusion is a second effort tier of a model already on the roster, plus Qwen3.8 2.4T A95B.
+10. **NEW ON THE PAGE: a Pareto front, "What you cannot get cheaper."** Score against cost per task on a log axis, rebuilt from the live weights on every render, so moving a dial moves the line. Drawn as a staircase, never a diagonal: between two front points the only thing buyable is the cheaper one, and a diagonal would draw models that do not exist. Filled dot means on the line and measured on everything asked; hollow ring means on the line but not fully measured, and it carries a star; small gray dot means beaten outright, and every one of those is named on hover or keyboard focus. A legend says all three. Models with no published price are left off and counted, never given a guessed price.
+11. **REMOVED: the effort-tier estimation machinery** and its "Effort-tier gaps" disclosure. `render()` never called it, no row was ever an estimate, and its one live branch referenced an `estStrength` variable never defined anywhere on the page. About 130 lines describing behavior the page did not perform. Recomputing that curve honestly is also not straightforward: the ratios were applied to percentiles, and min-max normalization amplifies a small raw step into a wild one (TTFT came out at 2.50 a step, cost at 1.73).
+12. **CARRIED THROUGH THAT THE FIRST BUILD DROPPED: LM Arena's published intervals** on its text boards, converted onto the percentile scale. 10 of 22 rows carry real intervals into the 1,000-run simulation. The other 12 rows and both other sources still use the assumed 1.5-point benchmark error, which remains the weakest input on the page. Closing that is the best remaining improvement.
+13. **TWO CLAIMS RECHECKED AGAINST PRIMARY SOURCES, NOT DATE-BUMPED.** `l1_status_snapshot` reread at api.kaspa.org: DAA 517,984,766, reward 2.31246515 KAS, supply 2,765,075,442,047,419,902 sompi (about 27.651 billion KAS), node v2.0.1 synced. The reward matches the emission step running from DAA 504,909,000 to 531,207,000, so the two readings corroborate each other. blockCount came back 1,116,061, below both August 8 reads, which is more evidence for the standing do-not-quote warning. Renamed `l1_status_snapshot_2026_08_20`. `covenant_tooling_and_support` reread at three sources, unchanged on every part: kaspa-python-sdk newest is still v2.0.2.rc1 prerelease of July 23 with notes reading only "Release candidate for 2.0.2", the kascov README still says there is no get-UTXOs-by-covenant-ID RPC and that explorers do not decode covenant data, rusty-kaspa newest is still v2.0.1 of June 15 so no release added that RPC, and THTProtocol/Covex still returns 404. Both dates moved to 2026-08-30.
+14. **GATE.** `bash scripts/check-site.sh` prints "Site checks passed." Reading grade 6.0 against the 9.0 cap. Node lives at `~/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node`, not on PATH; `check-site.sh` finds it, but running `lint-copy.mjs` by hand needs the full path. 45 em dashes written by the 20 August data-pull agents were removed from four `data/*.md` files.
+15. **THE DAILY JOB is the X-post calendar**, local and uncommitted by standing instruction. Aug 3-19 done. Aug 20 not yet written.
 
 ## What this is for
 
@@ -393,6 +402,41 @@ Times the checker was wrong rather than the site.
     from the data); and reusing a computed value for a new display purpose
     because it happens to be nearby is how a percentage that means one thing
     ends up labeled as another.
+
+17. **A published number can be the unsigned magnitude of a signed quantity,
+    and nothing in the text says so.** Arena's Agent leaderboard shows each
+    model a percentage per signal. Those percentages are causal treatment
+    effects against an average-orchestrator baseline, and they can be
+    negative, but the minus sign is never printed. Direction is carried
+    only by an SVG arrow (`aria-label="Up"`/`"Down"`) and a CSS class
+    (`text-interactive-positive`/`-negative`). The zero crossing on the 50-model
+    board sat at row 28: rows 1-27 positive, rows 28-50 negative. Row 50
+    displayed "19.82%" and its real value was minus 19.82. Scraping the text
+    and normalizing it 0-100 would have scored the worst models on the board
+    as among the best, and every check we had would have passed, because the
+    numbers parse, the coverage is complete, and the spread looks healthy. The
+    tell that something was wrong was weaker and easier to dismiss: the column
+    did not sort in rank order. Chasing that down through the published
+    methodology is what surfaced the sign. Two lessons. A number rendered
+    without a sign is not necessarily positive, and when a ranked column does
+    not sort by its own displayed value, stop and find out what the site is
+    actually ranking before wiring any of it. The same page also revealed a
+    dead metric hiding behind the largest sample on the site: Tool
+    Hallucination reports a byte-identical 1.14% +/-0.16% for 13 models whose
+    session counts range from 8,796 to 83,274. A real estimator's interval
+    narrows as the sample grows. That one does not move at all, which makes it
+    a floor or a placeholder rather than a measurement.
+18. **A benchmark's famous name is not evidence it still separates anything.**
+    Measured on 20 August against the top five models only, the spread that
+    actually decides a ranking: GPQA Diamond 1 point, AA Intelligence Index 2,
+    LiveBench Reasoning 2, AA-LCR 2, Terminal-Bench v2.1 4, LiveBench Overall
+    5. Arena's Vision (146 models) and Document (39 models) boards tie exactly
+    at the top. Four of Arena Text's seven sub-categories sit inside their own
+    confidence intervals. Every one of those is a headline number somewhere.
+    Six of them were wired into this site's own picker and were contributing
+    noise. Judge a metric by the gap among the leaders, never by its overall
+    range and never by its reputation, and re-measure every refresh, because
+    saturation arrives quietly as models improve.
 
 ## Run after any change
 
