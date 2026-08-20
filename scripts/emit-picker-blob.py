@@ -572,28 +572,58 @@ def main():
     for key in order:
         v = inc[key]
         sibs = groups[v["name"]]
-        # What it takes to quote this setting as if it ran at the common rung.
-        # None means it already does, or that the ladder cannot get there.
-        H = hop(v["variant"], TARGET, v["name"]) if v["variant"] in EFFORT_ORDER else None
-        raw_at_target = dict(v["raw"])
-        if H:
-            for m in SCALED_RAW:
-                if H.get(m) and m in raw_at_target:
-                    e = dict(raw_at_target[m])
-                    e["value"] = e["value"] * H[m]
-                    raw_at_target[m] = e
+        # Each figure moves to the common rung from the setting its own board
+        # tested, not from one setting assumed for the whole row.
+        #
+        # The boards disagree, and filing every figure under a single tier is
+        # simply wrong. Artificial Analysis prints "Claude Fable 5 (with
+        # fallback)", LiveBench prints "Claude Fable 5 Max Effort" and LM Arena
+        # prints "Claude Fable 5 (High)". Same model, three settings. Before
+        # this, a row carried one tier and a figure measured at another was
+        # quoted as though it came from that one, which is the error that made
+        # a model with no rung in its name escape the normalization entirely.
+        #
+        # A figure carries its own tier when data/picker-data.json records one
+        # for it. Where it does not, the row's variant is the best available
+        # answer and is used, which is exactly the old behavior. So this reads
+        # correctly against data collected before per-figure tiers existed and
+        # sharpens as the audit fills them in.
+        def tier_of_figure(m):
+            t = v["raw"][m].get("tier")
+            return t if t else v["variant"]
+
+        def hop_for(m):
+            t = tier_of_figure(m)
+            return hop(t, TARGET, v["name"]) if t in EFFORT_ORDER else None
+
+        raw_at_target = {}
+        for m, e in v["raw"].items():
+            Hm = hop_for(m) if m in SCALED_RAW else None
+            if Hm and Hm.get(m):
+                e = dict(e)
+                e["value"] = e["value"] * Hm[m]
+            raw_at_target[m] = e
+
+        # The row-level summary still needs one hop to describe. Use the one
+        # that moved the cost, since price is what a reader acts on.
+        H = hop_for("aaCostPerTask") if "aaCostPerTask" in v["raw"] else None
+        if H is None and v["variant"] in EFFORT_ORDER:
+            H = hop(v["variant"], TARGET, v["name"])
 
         # Pass one: what this setting was measured on, then what its own
         # neighboring settings can supply. Same-model evidence first, always.
         val, kind, sd = {}, {}, {}
+        src_tiers = {}
         for m in METRICS:
             if m in raw_at_target:
                 # A price or a clock is rescaled in its own units and then
                 # read off the same scale as everybody else. Everything the
                 # dials score as capability is shifted by the ladder instead.
                 val[m] = pctile(m, raw_at_target[m]["value"])
-                if H and m in CAP_METRICS:
-                    val[m] = max(0.0, min(100.0, val[m] + H["cap"]))
+                Hm = hop_for(m)
+                if Hm and m in CAP_METRICS:
+                    val[m] = max(0.0, min(100.0, val[m] + Hm["cap"]))
+                src_tiers[m] = tier_of_figure(m)
                 kind[m] = "measured"
             elif len(sibs) > 1:
                 got = fill_from_sibling(key, sibs, m)
@@ -660,8 +690,11 @@ def main():
         if H:
             # Everything on this row was moved, so the row says so once rather
             # than every figure saying it separately.
+            froms = sorted({t for t in src_tiers.values() if t and t != TARGET})
             row["sh"] = {
-                "from": tier_of(v["variant"]),
+                "from": tier_of(froms[0]) if len(froms) == 1
+                        else (" and ".join(tier_of(t) for t in froms) if froms
+                              else tier_of(v["variant"])),
                 "price": round(H.get("aaCostPerTask") or 1.0, 3),
                 "cap": round(H["cap"], 1),
                 "sd": round(H["sd"], 2),

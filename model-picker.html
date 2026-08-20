@@ -990,8 +990,8 @@
                 MED: 'medium reasoning', LOW: 'low reasoning', OFF: 'no reasoning' };
   function tierLabel(t) { return t ? (TIERS[t] || t.toLowerCase()) : 'default setting'; }
 
-  // Every row is quoted at the same setting, so the setting is stated once at
-  // the top of the list instead of repeated on all 21 rows.
+  // Every row is quoted at the same effort setting. That is the point of the
+  // page, so it is stated once, above the list, and never on a row.
   var TIER_LABEL = tierLabel(M.length ? M[0].t : null);
 
   function drivers(m) {
@@ -1639,7 +1639,7 @@
              p.cost.toFixed(2) + ' a task, scores ' + p.s.toFixed(0) +
              (p.cov < 0.999 ? ', measured on ' + Math.round(p.cov * 100) + '% of what you asked' : '') +
              (p.est > 0.005 ? ', ' + Math.round(p.est * 100) + '% of it estimated' : '') +
-             (p.moved ? ', quoted at ' + TIER_LABEL + ' from a setting it was not tested at' : '') +
+             (p.moved ? ', partly estimated' : '') +
              '</title></circle>');
       place(p, '');
     });
@@ -1663,7 +1663,7 @@
       if (p.est > 0.005) {
         return ' (' + Math.round(p.est * 100) + '% of that score estimated, not measured)';
       }
-      return p.moved ? ' (quoted at ' + TIER_LABEL + ', not tested there)' : '';
+      return p.moved ? ' (partly estimated, not measured)' : '';
     }
     var foot = '<b>' + esc(cheapest.label) + '</b> is the cheapest thing here not beaten outright, at $' +
       cheapest.cost.toFixed(2) + ' a task' + cov(cheapest) + '. <b>' + esc(top.label) +
@@ -1826,8 +1826,10 @@
       var spanPts = topScore - lowScore;
       scaleEl.innerHTML = rows.length < 2
         ? 'One model scored, so there is nothing to place it against.'
-        : 'A score is not a percentage of anything, and double the score is not '
-          + 'double the model. On each figure, 0 is the weakest number published '
+        : 'Every model here is quoted at the same effort setting, ' + TIER_LABEL
+          + ', so the column compares models and not whichever setting each lab '
+          + 'submitted. A score is not a percentage of anything, and double the '
+          + 'score is not double the model. On each figure, 0 is the weakest number published '
           + 'on this board and 100 the strongest, so the zero here is a frontier '
           + 'model having a bad day, not a model that cannot do the work. On this '
           + 'question the field runs from <b>' + lowScore.toFixed(0) + '</b> to <b>'
@@ -1846,9 +1848,8 @@
       // "qualify" is left over from when this page had hard filters. Nothing is
       // filtered now except open weights: models drop out only when they have
       // not published enough of what you asked about to be scored fairly.
-      ? 'Top ' + shown.length + ' of ' + rows.length + ' scored, every one at ' + TIER_LABEL
-      : rows.length + (rows.length === 1 ? ' model scored, at ' : ' models scored, every one at ')
-        + TIER_LABEL;
+      ? 'Top ' + shown.length + ' of ' + rows.length + ' scored'
+      : rows.length + (rows.length === 1 ? ' model scored' : ' models scored');
 
     // If what you asked for cannot tell the leaders apart, say so rather than
     // letting a one-point gap read as a verdict. The threshold is the same
@@ -1922,20 +1923,17 @@
         notes.push(Math.round(r.est * 100) + ' percent of this score is estimated rather '
           + 'than read off a board.');
       }
-      if (m.sh) {
-        notes.push('Only tested at ' + m.sh.from + '. Everything above is this model '
-          + 'quoted at ' + TIER_LABEL + ' instead, on the effort ladder these labs publish: '
-          + 'price \u00d7' + m.sh.price + ', score ' + (m.sh.cap > 0 ? '+' : '') + m.sh.cap
-          + ' points, give or take ' + m.sh.sd + '. That score shift is the shakiest number '
-          + 'on this row. The times are as measured at ' + m.sh.from + ', so read them slow.');
-      }
+      // The effort setting is deliberately absent from every row. All of them
+      // are quoted at the same one, which is the whole point of the page, and
+      // repeating it twenty-one times buries that instead of making it. It is
+      // stated once above the list and once in the method notes.
       var gapNote = notes.length ? '<span class="mp-gap">' + notes.join(' ') + '</span>' : '';
       var pct = Math.round(r.s);
       li.innerHTML =
         '<span class="mp-rank">' + (i + 1) + '</span>' +
         '<span class="mp-cell">' +
         '<span class="mp-title"><span class="mp-name">' + m.n + '</span>' +
-        (m.sh ? '<span class="mp-tier">quoted</span>' : '') + '</span>' +
+        '</span>' +
         '<span class="mp-meta">' + meta.join('<span class="sep">·</span>') + '</span>' +
         drivers(m) + gapNote +
         '<span class="mp-bar"><i style="width:' + Math.max(pct, 2) + '%"></i></span></span>' +
