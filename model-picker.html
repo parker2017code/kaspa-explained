@@ -179,6 +179,9 @@
     .mp-pareto .pt:focus .hov, .mp-pareto .pt:hover .hov { opacity: 1; }
     .mp-pareto .pt:focus .beat, .mp-pareto .pt:hover .beat { stroke: var(--cyan); stroke-width: 2.5; }
     .mp-pareto .pt { cursor: default; }
+    .mp-pareto .lab.beaten { font-weight: 500; fill: var(--muted); font-size: 10px;
+      stroke-width: 3; }
+    .mp-pareto-head .mp-names { flex: none; align-self: center; }
     .mp-pareto-key { list-style: none; display: flex; flex-wrap: wrap; gap: .3rem 1.1rem;
       margin: .55rem 0 0; padding: 0; font-size: .76rem; color: var(--muted); }
     .mp-pareto-key li { display: flex; align-items: center; gap: .4rem; }
@@ -264,7 +267,8 @@
           </details>
           <div class="mp-pareto-head" id="mpParetoHead">
             <b class="mp-pareto-title">What you cannot get cheaper</b>
-            <span class="mp-pareto-why">Every scored model plotted against what one task costs it. A model sits on the line when nothing here scores higher for the same money, or matches it for less. Move a dial and the line moves, because there is no one answer to this, only one per question.</span>
+            <span class="mp-pareto-why">Every scored model is plotted against what one task costs it. A model sits on the line when nothing here scores higher for the same money, or matches it for less. Move a dial and the line moves, because there is no one answer to this, only one per question.</span>
+            <button type="button" class="mp-reset mp-names" id="mpParetoNames" aria-pressed="false">Name every model</button>
           </div>
           <div class="mp-pareto" id="mpPareto"></div>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
@@ -811,6 +815,13 @@
     ['mpOpen'].forEach(function (id) {
       $(id).addEventListener('change', function () { clearPreset(); render(); });
     });
+    var pn = $('mpParetoNames');
+    if (pn) pn.addEventListener('click', function () {
+      var on = pn.getAttribute('aria-pressed') === 'true';
+      pn.setAttribute('aria-pressed', on ? 'false' : 'true');
+      pn.textContent = on ? 'Name every model' : 'Show fewer names';
+      render();
+    });
     $('mpShowAll').addEventListener('click', function () {
       var on = $('mpShowAll').getAttribute('aria-pressed') === 'true';
       $('mpShowAll').setAttribute('aria-pressed', on ? 'false' : 'true');
@@ -1157,6 +1168,11 @@
       return;
     }
     if (head) head.hidden = false;
+    // Every scored model is a dot on the chart either way. This only decides
+    // whether the beaten ones carry a name without being pointed at, which at
+    // 22 models is more text than the frame holds.
+    var namesBtn = $('mpParetoNames');
+    var showNames = !!namesBtn && namesBtn.getAttribute('aria-pressed') === 'true';
 
     // Four model names on this roster carry two effort rows each, at different
     // prices, so a bare name would point at two different dots.
@@ -1238,7 +1254,37 @@
              (py - 10).toFixed(1) + '" text-anchor="' + anc + '">' + esc(p.label) +
              '</text></g>');
     });
+    // Labels are placed against every box already placed, front points first
+    // so the line keeps its names when the chart runs out of room.
     var placed = [];
+    function place(p, cls) {
+      var x = X(p.cost), yv = Y(p.s);
+      var thin = p.cov < 0.999;
+      var txt = p.label + (thin ? ' *' : '');
+      var anchor = x > PG.w - 150 ? 'end' : 'start';
+      var dx = anchor === 'end' ? 7 : -7;
+      var wpx = txt.length * (cls ? 5.2 : 5.7);
+      var x0 = anchor === 'end' ? x + dx - wpx : x + dx;
+      var cand = [yv - 11, yv + 19, yv - 30, yv + 38, yv - 49, yv + 57, yv - 68];
+      var ly = null;
+      for (var c = 0; c < cand.length; c++) {
+        var cy = cand[c], clash = false;
+        if (cy < PG.t + 6 || cy > PG.h - PG.b - 4) continue;
+        for (var b = 0; b < placed.length; b++) {
+          var q = placed[b];
+          if (Math.abs(cy - q.y) < 12 && x0 < q.x1 + 5 && x0 + wpx > q.x0 - 5) { clash = true; break; }
+        }
+        if (!clash) { ly = cy; break; }
+      }
+      // No slot left that does not collide. Drop the label rather than stack
+      // two on top of each other; the dot still names itself on hover.
+      if (ly === null) return false;
+      placed.push({ x0: x0, x1: x0 + wpx, y: ly });
+      g.push('<text class="lab' + (cls ? ' ' + cls : '') + '" x="' + (x + dx).toFixed(1) +
+             '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + esc(txt) + '</text>');
+      return true;
+    }
+
     front.forEach(function (p, i) {
       var x = X(p.cost), yv = Y(p.s);
       var thin = p.cov < 0.999;
@@ -1247,31 +1293,19 @@
              p.cost.toFixed(2) + ' a task, scores ' + p.s.toFixed(0) +
              (thin ? ', measured on ' + Math.round(p.cov * 100) + '% of what you asked' : '') +
              '</title></circle>');
-      // Labels sit above the dot, never beside it. The staircase leaves each
-      // point horizontally to the right, so a label on the same baseline gets a
-      // line drawn straight through it and reads as struck out.
-      //
-      // Placement checks every label already placed, not just the one before
-      // it. Checking only the previous label let the third of three clustered
-      // points land back on top of the first.
-      var anchor = x > PG.w - 150 ? 'end' : 'start';
-      var dx = anchor === 'end' ? 7 : -7;
-      var wpx = (p.label.length + (thin ? 2 : 0)) * 5.7;
-      var x0 = anchor === 'end' ? x + dx - wpx : x + dx;
-      var candidates = [yv - 11, yv + 19, yv - 30, yv + 38, yv - 49];
-      var ly = candidates[0];
-      for (var c = 0; c < candidates.length; c++) {
-        var cy = candidates[c], clash = false;
-        for (var b = 0; b < placed.length; b++) {
-          var q = placed[b];
-          if (Math.abs(cy - q.y) < 13 && x0 < q.x1 + 6 && x0 + wpx > q.x0 - 6) { clash = true; break; }
-        }
-        if (!clash) { ly = cy; break; }
-      }
-      placed.push({ x0: x0, x1: x0 + wpx, y: ly });
-      g.push('<text class="lab" x="' + (x + dx).toFixed(1) + '" y="' + ly.toFixed(1) +
-             '" text-anchor="' + anchor + '">' + esc(p.label) + (thin ? ' *' : '') + '</text>');
+      place(p, '');
     });
+
+    // Then every model the line beats, if the reader asked for them. All 22
+    // are on the chart either way; this decides whether they carry a name
+    // without being pointed at.
+    var namedAll = 0, droppedNames = 0;
+    if (showNames) {
+      pts.forEach(function (p) {
+        if (onFront[p.n + '|' + p.t]) return;
+        if (place(p, 'beaten')) namedAll++; else droppedNames++;
+      });
+    }
 
     var cheapest = front[0], top = front[front.length - 1];
     function cov(p) {
@@ -1286,8 +1320,13 @@
       foot += ' That is ' + (top.cost / cheapest.cost).toFixed(1) + ' times the price for ' +
         Math.round(top.s - cheapest.s) + ' more points.';
     }
-    foot += ' ' + front.length + ' of ' + pts.length + ' models are on the line. The rest are beaten ' +
-      'outright: something here is both better and cheaper.';
+    foot += ' All ' + pts.length + ' scored models are on the chart. ' + front.length +
+      ' of them are on the line; the other ' + (pts.length - front.length) + ' are beaten ' +
+      'outright, with something here both better and cheaper.';
+    if (showNames && droppedNames) {
+      foot += ' ' + droppedNames + ' of those ' + (droppedNames === 1 ? 'name is' : 'names are') +
+        ' left off the chart for want of room, and still appear when you point at the dot.';
+    }
     var partial = front.filter(function (p) { return p.cov < 0.999; }).length;
     if (partial) {
       foot += ' ' + (partial === 1 ? 'One point is' : partial + ' points are') +
@@ -1306,7 +1345,7 @@
       '<ul class="mp-pareto-key">' +
       '<li><i class="k-front"></i>On the line, measured on all of what you asked</li>' +
       '<li><i class="k-partial"></i>On the line, but not measured on all of it (starred)</li>' +
-      '<li><i class="k-beat"></i>Beaten outright. Point at one to name it</li>' +
+      '<li><i class="k-beat"></i>Beaten outright: something here is better and cheaper</li>' +
       '</ul>' +
       '<p class="mp-pareto-foot">' + foot + '</p>';
   }
