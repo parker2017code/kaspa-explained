@@ -1352,6 +1352,25 @@
     return '\u2212' + (p < 10 ? p.toFixed(1) : Math.round(p)) + '%';
   }
 
+  // How far behind the leader a model really is, always on the honest scale.
+  //
+  // The percentile scale cannot answer this. Dividing one percentile by another
+  // gives a ratio of a number that only means "place in this queue", so on that
+  // scale a two-point gap between the top two read as three percent when the
+  // real distance between them is under one. The big number can stay a
+  // percentile, because rank is what most people want first, but the distance
+  // under it has to be measured against something real or it should not be
+  // printed at all.
+  function honestScore(m, W, tot) {
+    if (!m.hv) return null;
+    var num = 0, den = 0;
+    for (var j = 0; j < W.length; j++) {
+      if (!W[j] || !m.a[j] || m.hv[j] === null) continue;
+      num += W[j] * m.hv[j]; den += W[j];
+    }
+    return den > 0 ? num / den : null;
+  }
+
   function anchorFor(rows, W) {
     var figs = loadedFigures(W);
     for (var i = 0; i < figs.length; i++) {
@@ -2032,12 +2051,16 @@
     // that the gap represents, in one unit, on every question.
     var real = realMode();
     var topCost = rows[0].m.cost;
+    var hTop = honestScore(rows[0].m, W, tot);
     function scoreSub(r, i) {
       var gap = topScore - r.s;
       if (!real) return i === 0 ? '<b>top</b>' : '<b>\u2212' + gap.toFixed(1) + '</b>';
       if (i === 0) return '<b>top</b>';
       var bits = [];
-      if (topScore > 0) {
+      var hMine = honestScore(r.m, W, tot);
+      if (hTop && hMine !== null) {
+        bits.push(pctBehind(hTop - hMine, hTop) + ' worse');
+      } else if (topScore > 0) {
         bits.push(pctBehind(gap, topScore) + ' worse');
       }
       if (topCost && r.m.cost) {
