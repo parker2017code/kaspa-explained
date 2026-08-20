@@ -564,7 +564,38 @@ def main():
 
     # Full-span multiplier per figure, low to max, pooled across families.
     # A move of df along the curve multiplies by ELASTICITY ** df.
+    # A clock is a floor plus thinking time, and only the thinking part moves.
+    #
+    # Treating latency as one elasticity was wrong twice over: dropping it
+    # ignored a large real effect, and applying a pooled multiplier put GLM-5.2
+    # at 0.2 seconds. The reason both failed is that latency is not one
+    # quantity. Across the ten families on this board that publish a ladder,
+    # the multiplier over a full climb runs from 0.96 to 133.8, and what
+    # predicts it is simply how slow the model already is at max effort:
+    # log latency ratio against log max-effort latency fits at r = 0.970.
+    #
+    # That is because every model starts from about the same floor. The
+    # cheapest setting of each family reads 0.92, 1.67, 1.78, 1.96, 2.78, 3.07,
+    # 3.51 and 4.29 seconds, a median of 1.91, while their max-effort readings
+    # run from 0.88 to 223. All of the spread is thinking time.
+    #
+    # So the clock is modeled as floor plus a thinking budget, and the budget is
+    # spent late: fitting the share spent by position f across those families
+    # gives f to the power 3.5, with a root mean square error of 0.111. At the
+    # target position only about 2.5 percent of a model's thinking budget has
+    # been spent.
+    #
+    # This moves every model, with no exceptions and nothing invented. GPT-5.6
+    # Terra has a floor of 1.67 seconds and a budget of 221.8, so it lands at
+    # 7.2. GLM-5.2 has a floor of 1.91 and a budget of 0.04, so it lands at
+    # 1.91 and barely moves, which is correct: it was never thinking before it
+    # answered and there is nothing to take away.
     CLOCK_METRICS = {"ttft", "aaTotalResponse"}
+    CLOCK_SHAPE = 3.5
+    POOLED_FLOOR = {"ttft": 1.91, "aaTotalResponse": 5.0}
+
+    def clock_share(f):
+        return max(f, 0.0) ** CLOCK_SHAPE
     ELASTICITY = {
         "aaCostPerTask": 3.92,
         "lbCostPerSuccessTask": 3.92,
@@ -721,6 +752,33 @@ def main():
         pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
         return pts if len(pts) >= 2 else None
 
+    def clock_at_target(name, metric, f_now, measured):
+        """Move a clock for any model, on the floor-plus-thinking model.
+
+        Works for every model on the board, including the ones with a single
+        published setting, because it needs only that model's own reading and
+        the shared shape. A model whose reading is already at the floor has no
+        budget and does not move, which is the whole reason this replaced a
+        pooled multiplier.
+        """
+        if not measured or measured <= 0:
+            return None
+        floor = POOLED_FLOOR.get(metric)
+        own = own_raw_curve(name, metric)
+        if own:
+            # Its own cheapest reading is a better floor than the pooled one.
+            floor = min(2 ** v for _, v in own)
+        if floor is None:
+            return None
+        floor = min(floor, measured)
+        spent = clock_share(f_now)
+        if spent < 0.02:
+            # Measured so near the bottom of the curve that the budget cannot
+            # be recovered from it without dividing by almost nothing.
+            return None
+        budget = (measured - floor) / spent
+        return floor + budget * clock_share(TARGET_F)
+
     def raw_factor(name, metric, f_now):
         """What moving to TARGET_F does to one priced or timed figure.
 
@@ -736,20 +794,6 @@ def main():
         if not e:
             return None
         if metric in CLOCK_METRICS:
-            # The pooled clock elasticity does not transfer and the data says so
-            # plainly. It is fit on families whose max-effort latency runs 65 to
-            # 223 seconds, where nearly all of the wait is the model thinking
-            # before it says anything. GLM-5.2 answers in 1.95 seconds at max
-            # effort and DeepSeek V4 Flash in 1.17: those models are streaming
-            # immediately and have no thinking time to take away. Applying x35
-            # to them produced 0.2 and 0.1 seconds, which is not a measurement
-            # of anything, and is the same failure that got latency dropped from
-            # this list once already.
-            #
-            # So a clock is only moved when the model's own ladder measured it
-            # moving. Otherwise the row keeps the time the board recorded and
-            # says so, which is wrong in a known direction rather than wrong by
-            # an invented factor.
             return None
         return e ** (TARGET_F - f_now)
 
@@ -1045,7 +1089,12 @@ def main():
         raw_at_target = {}
         for m, e in v["raw"].items():
             Hm = hop_for(m) if m in SCALED_RAW else None
-            if Hm:
+            if Hm and m in CLOCK_METRICS:
+                tgt = clock_at_target(v["name"], m, Hm["from_f"], e.get("value"))
+                if tgt is not None:
+                    e = dict(e)
+                    e["value"] = tgt
+            elif Hm:
                 fac = raw_factor(v["name"], m, Hm["from_f"])
                 if fac:
                     e = dict(e)
