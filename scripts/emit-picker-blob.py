@@ -437,6 +437,129 @@ def arena_intervals():
     return out
 
 
+# ---------------------------------------------------------------------------
+# The effort ladder is fit on the whole Artificial Analysis board, not on the
+# 21 models that ship here.
+#
+# data/aa-all-status-2026-08-20.md is that board read with the status filter set
+# to All: 610 models, 41 columns, every generation it has ever tested. Fitting
+# the ladder on the shipped roster alone gave 10 families with more than one
+# effort setting and 4 with a full one. This file has far more, and a ladder fit
+# on four families is a ladder fit on Anthropic and OpenAI.
+#
+# The corpus is used ONLY to fit how effort behaves. It never adds a model to
+# the page and never supplies a figure for one. Gains are measured here in the
+# board's own units and converted to the page's percentile scale through each
+# metric's own span, so the two never mix.
+LADDER_CORPUS = ROOT / "data" / "aa-all-status-2026-08-20.md"
+
+CORPUS_COLUMNS = {
+    "GDPval-AA v2": "gdpval",
+    "AA-AnalystAgent": "aaAnalystAgent",
+    "Terminal-Bench Hard": "aaTbHard",
+    "Terminal-Bench v2.1": "aaTbv2",
+    "tau2-Bench Telecom": "aaTau2Telecom",
+    "tau3-Banking": "tau3Banking",
+    "AA-LCR": "aaLcr",
+    "Omniscience Accuracy": "omniAccuracy",
+    "Non-Hallucination Rate": "omniNonHallucination",
+    "Humanity's Last Exam": "hle",
+    "GPQA Diamond": "aaGpqaDiamond",
+    "SciCode": "scicode",
+    "IFBench": "aaIfbench",
+    "CritPt": "aaCritpt",
+    "APEX-Agents-AA": "aaApexAgents",
+    "ITBench-AA": "aaItbench",
+    "MMMU Pro": "aaMmmuPro",
+    "Cost per Task (USD)": "aaCostPerTask",
+    "Output Price (USD/1M)": "aaOutputPrice",
+    "Median Tokens/s": "tokensPerSec",
+    "Latency First Chunk (s)": "ttft",
+    "Total Response (s)": "aaTotalResponse",
+}
+
+
+def corpus_number(x):
+    """A cell as a number, or None. Blank is '--' on this board."""
+    if x is None:
+        return None
+    x = x.strip()
+    if x in ("--", "", "N/A"):
+        return None
+    x = x.replace("$", "").replace("%", "").replace(",", "").replace("*", "")
+    try:
+        return float(x)
+    except ValueError:
+        return None
+
+
+def load_ladder_corpus_all(_cache={}):
+    """Every family with two or more effort settings, priced or not.
+
+    A capability ladder needs two rungs and nothing else. Requiring a price at
+    both drops the family count from 25 to 10 and throws away most of the
+    evidence about what effort buys.
+    """
+    if "v" in _cache:
+        return _cache["v"]
+    _cache["v"] = _load_corpus(require_price=False)
+    return _cache["v"]
+
+
+def load_ladder_corpus():
+    """Families on the full board that publish more than one effort setting.
+
+    Returns {family: [{"variant": str, metric: value, ...}]}, sorted cheapest
+    first, keeping only families with at least two priced settings, since a
+    ladder needs a price axis to sit on.
+    """
+    return _load_corpus(require_price=True)
+
+
+def _load_corpus(require_price):
+    if not LADDER_CORPUS.exists():
+        return {}
+    lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
+             if l.startswith("| ")]
+    if len(lines) < 3:
+        return {}
+    header = [c.strip() for c in lines[0].strip("|").split("|")]
+    fams = {}
+    for line in lines[2:]:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) != len(header):
+            continue
+        row = dict(zip(header, cells))
+        variant = row.get("Effort Setting", "").strip()
+        if variant not in EFFORT_ORDER_BASE:
+            continue
+        name = re.sub(r"\s*\((?:low|medium|high|xhigh|max)\)\s*$", "",
+                      row.get("Model", "")).strip()
+        if not name:
+            continue
+        rec = {"variant": variant}
+        for col, key in CORPUS_COLUMNS.items():
+            v = corpus_number(row.get(col))
+            if v is not None:
+                rec[key] = v
+        fams.setdefault(name, []).append(rec)
+    out = {}
+    for name, recs in fams.items():
+        if require_price:
+            recs = [r for r in recs if r.get("aaCostPerTask")]
+        if len({r["variant"] for r in recs}) < 2:
+            continue
+        recs.sort(key=lambda r: (r.get("aaCostPerTask") or 0,
+                                 EFFORT_ORDER_BASE[r["variant"]]))
+        out[name] = recs
+    return out
+
+
+# EFFORT_ORDER is built inside main(); the corpus loader needs the same set at
+# module scope and there is no reason for two of them to drift apart.
+EFFORT_ORDER_BASE = {"low": 0, "medium": 1, "high": 2, "xhigh": 3, "max": 4}
+
+
 def main():
     d = json.loads(DATA.read_text(encoding="utf-8"))
     models = d["models"]
@@ -716,6 +839,47 @@ def main():
     # Sol gains 70 on the same figure. That is why a model with its own ladder
     # is read off its own curve figure by figure, and the table below is only
     # for models that have no ladder to read.
+    def corpus_metric_gain():
+        """Per-figure gain over a full climb, fit on the whole board.
+
+        The shipped roster gives at most four families with a usable ladder,
+        which is a ladder fit on two labs. The full board gives up to 24 for a
+        capability figure, because a capability comparison needs two rungs and
+        not a price at each of them.
+
+        Measured in the board's own units and converted to this page's
+        percentile scale through each metric's own span, so a raw gain and a
+        percentile gain are never added together.
+
+        Gains are per rung of the effort order rather than per step of price,
+        since most of these families do not publish a price at every setting.
+        """
+        corpus = load_ladder_corpus_all()
+        out = {}
+        for m in CAP_METRICS:
+            vals = []
+            for name, recs in corpus.items():
+                seen = {}
+                for r in recs:
+                    if m in r:
+                        seen[r["variant"]] = r[m]
+                if len(seen) < 2:
+                    continue
+                rungs = sorted(seen, key=lambda v: EFFORT_ORDER_BASE[v])
+                lo_v, hi_v = rungs[0], rungs[-1]
+                steps = EFFORT_ORDER_BASE[hi_v] - EFFORT_ORDER_BASE[lo_v]
+                if steps < 1:
+                    continue
+                # Normalized to a full low-to-max span of four rungs.
+                vals.append((seen[hi_v] - seen[lo_v]) / steps * 4)
+            if len(vals) >= 4 and span.get(m):
+                raw = statistics.median(vals)
+                out[m] = {"gain": raw / span[m] * 100.0,
+                          "raw": raw,
+                          "sd": statistics.pstdev(vals) / span[m] * 100.0,
+                          "n": len(vals)}
+        return out
+
     def per_metric_gain():
         out = {}
         for m in CAP_METRICS:
@@ -735,7 +899,11 @@ def main():
                           "n": len(vals)}
         return out
 
+    # The board-wide fit wins where it has enough families; the shipped-roster
+    # fit fills anything it cannot reach, such as the LiveBench and Arena
+    # figures the corpus does not carry.
     GAIN = per_metric_gain()
+    GAIN.update(corpus_metric_gain())
     GAIN_REF = statistics.median([g["gain"] for g in GAIN.values()]) if GAIN else 1.0
 
     def own_raw_curve(name, metric):
