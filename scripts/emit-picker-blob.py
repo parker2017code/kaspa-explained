@@ -242,8 +242,25 @@ POOLED_CURVE = [(0.0, 0.00), (0.1, 0.17), (0.2, 0.33), (0.3, 0.48),
                 (0.4, 0.57), (0.5, 0.65), (0.6, 0.72), (0.7, 0.78),
                 (0.8, 0.85), (0.9, 0.92), (1.0, 1.00)]
 
-# How wide a full low-to-max ladder is, in doublings of price, pooled. A model
+# How wide a full published ladder is, in doublings of price, pooled. A model
 # with one published setting is moved along the pooled curve by this much.
+#
+# This is the best measured constant on the page, not the weakest. It rests on
+# 24 adjacent rung steps whose ratios have a median of 1.57 and quartiles of
+# 1.46 and 1.71, a spread of 17 percent across the interquartile range. Counting
+# families rather than steps undersells it: ten families, but twenty-four
+# measurements, and they agree closely.
+#
+# Reconstructing a price for the fifteen families that publish effort settings
+# without prices was tried and does not work. Cost per task is output tokens
+# times price per token, and price per token does not move with effort, so a
+# rung's cost ratio should be its token ratio, and the board publishes tokens
+# per second and both timings. Four forms were tested against the twenty-two
+# steps that publish both a price and a timing: tokens per second times total
+# response, tokens per second times time to first token, and each timing alone.
+# Correlations came out between minus 0.16 and minus 0.07 with median errors of
+# 41 to 85 percent. Timing does not predict price on this board. The idea is
+# recorded here so it is not tried a third time.
 POOLED_LADDER_DOUBLINGS = 1.97
 
 # How many percentile points a full low-to-max climb buys, pooled. Same use.

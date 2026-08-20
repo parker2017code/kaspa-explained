@@ -1094,3 +1094,1073 @@ Devstral 2 [open] | 13.5 | 12.3 | 13.2 | 11.5 | 16.9
 Cost: not published.
 
 ---
+
+## Release 2026-01-08
+
+Header: "23 objective tasks across 7 categories". 79 model rows in the default table.
+Read 20 Aug 2026.
+
+Reasoning-on/off pairs confirmed: GPT-5.2 High/GPT-5.2 No Thinking, GPT-5.1 High/GPT-5.1
+No Thinking, Grok 4.20 Beta/Grok 4.20 Beta (Non-Reasoning), Grok 4.1 Fast/Grok 4.1 Fast
+(Non-Reasoning), Claude Sonnet 4.5 Thinking/Claude Sonnet 4.5, Claude 4.1 Opus
+Thinking/Claude 4.1 Opus, Claude 4 Sonnet Thinking/Claude 4 Sonnet, Claude Haiku 4.5
+Thinking/Claude Haiku 4.5, DeepSeek V3.2 Thinking/DeepSeek V3.2, DeepSeek V3.2 Exp
+Thinking/DeepSeek V3.2 Exp, Kimi K2 Thinking/Kimi K2 Instruct, Qwen 3 235B A22B Thinking
+2507/Instruct 2507, Qwen 3 Next 80B A3B Thinking/Instruct. Every pair named in the brief
+was found present in this release, exactly as claimed.
+
+Effort-tier pair confirmed exactly as described in the brief: Claude 4.5 Opus Thinking
+High Effort (76.0) and Claude 4.5 Opus Medium Effort (59.1) are both present in the
+default 79-row table. The category-profile dropdown additionally lists (overall score
+only): Claude 4.5 Opus Thinking Medium Effort (73.8), Claude 4.5 Opus Thinking Low
+Effort (65.6), Claude 4.5 Opus High Effort (58.6), Claude 4.5 Opus Low Effort (55.8).
+Other effort families visible in the dropdown for this release only (overall score
+only, not full rows): Claude 4.6 Sonnet Thinking High Effort (75.3) / Medium Effort
+(75.5, in main table) / Low Effort (70.4); Claude 4.7 Opus Thinking xHigh Effort (76.9,
+main table) / Medium Effort (72.3) / Low Effort (69.1); GPT-5.5 Thinking xHigh Effort
+(80.7, main table) / High Effort (76.2) / Medium Effort (68.7); GPT-5.4 Thinking xHigh
+Effort (80.3, main table) / High Effort (75.1).
+
+Columns: Model | Overall | Reasoning | Coding | AgenticCoding | Mathematics | DataAnalysis | Language | InstructionFollowing
+
+```
+GPT-5.5 Thinking xHigh Effort | 80.7 | 87.7 | 82.5 | 56.7 | 96.3 | 81.1 | 87.7 | 73.0
+GPT-5.4 Thinking xHigh Effort | 80.3 | 88.1 | 77.5 | 70.0 | 94.1 | 79.3 | 82.6 | 70.2
+Gemini 3.1 Pro Preview High | 79.9 | 84.0 | 76.5 | 65.0 | 91.0 | 78.5 | 85.4 | 79.1
+Claude 4.7 Opus Thinking xHigh Effort | 76.9 | 87.7 | 82.1 | 60.0 | 93.1 | 78.3 | 77.9 | 59.3
+Claude 4.6 Opus Thinking High Effort | 76.3 | 88.7 | 78.2 | 61.7 | 89.3 | 69.9 | 83.3 | 63.3
+Claude 4.5 Opus Thinking High Effort | 76.0 | 80.1 | 79.7 | 63.3 | 90.4 | 74.4 | 81.3 | 62.5
+Claude 4.6 Sonnet Thinking Medium Effort | 75.5 | 84.8 | 79.3 | 60.0 | 87.0 | 77.9 | 76.1 | 63.2
+Gemini 3.5 Flash High | 75.0 | 82.0 | 78.2 | 51.7 | 88.2 | 64.9 | 84.6 | 75.6
+GPT-5.2 High | 74.8 | 83.2 | 76.1 | 51.7 | 93.2 | 78.2 | 79.8 | 61.8
+GPT-5.2 Codex | 74.3 | 77.7 | 83.6 | 51.7 | 88.8 | 78.2 | 73.7 | 66.4
+Qwen 3.7 Max | 74.3 | 83.3 | 74.2 | 51.7 | 85.2 | 71.8 | 79.7 | 74.0
+GPT-5.1 Codex Max High | 74.0 | 83.7 | 80.7 | 53.3 | 83.2 | 70.1 | 76.5 | 70.4
+DeepSeek V4 Pro [open] | 73.6 | 82.7 | 70.0 | 56.7 | 90.7 | 74.5 | 78.1 | 62.4
+Gemini 3 Pro Preview High | 73.4 | 77.4 | 74.6 | 55.0 | 81.8 | 74.4 | 84.6 | 65.8
+GPT-5.3 Codex High | 72.8 | 80.2 | 78.2 | 55.0 | 87.8 | 62.7 | 80.1 | 65.4
+Gemini 3 Flash Preview High | 72.4 | 74.5 | 73.9 | 40.0 | 84.2 | 74.8 | 84.6 | 74.9
+Kimi K2.6 Thinking [open] | 72.2 | 79.4 | 78.6 | 58.3 | 84.3 | 65.1 | 75.1 | 64.4
+GPT-5.1 High | 72.0 | 78.8 | 72.5 | 53.3 | 86.9 | 69.6 | 79.3 | 63.9
+Qwen 3.6 Plus | 70.8 | 75.8 | 78.2 | 55.0 | 83.7 | 69.9 | 75.0 | 58.3
+GPT-5 Pro | 70.5 | 81.7 | 72.1 | 51.7 | 86.2 | 57.0 | 80.7 | 64.0
+GLM 5.1 [open] | 70.2 | 72.5 | 75.4 | 55.0 | 84.9 | 63.2 | 71.8 | 68.5
+GPT-5.4 Nano xHigh | 70.1 | 81.1 | 72.1 | 49.1 | 91.3 | 67.6 | 62.5 | 67.2
+Minimax M3 | 70.0 | 74.5 | 68.2 | 60.0 | 76.9 | 76.2 | 76.8 | 57.5
+Kimi K2.5 Thinking [open] | 69.1 | 76.0 | 77.9 | 48.3 | 84.9 | 61.4 | 77.7 | 57.4
+GLM 5 [open] | 68.8 | 69.1 | 73.6 | 55.0 | 83.5 | 67.9 | 77.5 | 55.3
+GPT-5.1 Codex | 68.6 | 82.0 | 71.8 | 53.3 | 79.6 | 60.7 | 69.5 | 63.4
+Claude Sonnet 4.5 Thinking | 68.2 | 77.6 | 80.4 | 53.3 | 79.3 | 57.0 | 76.5 | 53.4
+Grok 4.20 Beta | 68.0 | 75.3 | 66.1 | 43.3 | 87.1 | 62.9 | 77.7 | 63.4
+GPT-5.4 Mini xHigh | 67.5 | 72.5 | 71.6 | 47.5 | 78.6 | 70.9 | 71.5 | 60.3
+DeepSeek V4 Flash [open] | 67.3 | 70.6 | 69.2 | 50.0 | 79.6 | 68.0 | 70.1 | 63.1
+Grok 4.3 | 66.7 | 70.8 | 69.9 | 50.0 | 84.3 | 55.8 | 73.6 | 62.8
+GPT-5 Mini High | 65.9 | 68.3 | 68.2 | 46.7 | 82.2 | 55.2 | 75.5 | 65.3
+Qwen 3.6 27B [open] | 65.6 | 70.3 | 71.8 | 50.0 | 79.9 | 70.4 | 63.3 | 53.2
+Minimax M2.7 | 63.5 | 74.8 | 54.9 | 50.0 | 80.5 | 56.3 | 66.8 | 61.1
+DeepSeek V3.2 Thinking [open] | 62.2 | 77.2 | 64.6 | 40.0 | 85.0 | 50.0 | 70.4 | 48.2
+Grok 4 | 62.0 | 79.1 | 73.1 | 30.0 | 83.0 | 63.4 | 76.4 | 29.1
+Claude 4.1 Opus Thinking | 61.8 | 72.3 | 74.7 | 48.3 | 73.2 | 49.0 | 72.8 | 42.4
+Gemini 3.1 Flash Lite Preview High | 61.7 | 59.7 | 68.5 | 33.3 | 73.6 | 54.9 | 73.2 | 68.6
+Gemma 4 31B [open] | 61.6 | 59.4 | 60.3 | 40.0 | 73.9 | 58.8 | 71.3 | 67.6
+Kimi K2 Thinking [open] | 61.6 | 63.5 | 67.4 | 38.3 | 81.1 | 52.3 | 66.5 | 62.0
+Claude Haiku 4.5 Thinking | 61.3 | 61.7 | 72.8 | 41.7 | 77.5 | 59.3 | 66.5 | 49.8
+Claude 4 Sonnet Thinking | 61.3 | 69.0 | 77.5 | 40.0 | 70.5 | 54.6 | 72.9 | 44.3
+GPT-5.1 Codex Mini | 60.4 | 64.7 | 69.9 | 40.0 | 76.3 | 49.7 | 63.0 | 59.0
+Qwen 3.6 Flash | 60.4 | 62.9 | 64.9 | 46.7 | 78.9 | 58.8 | 63.1 | 47.2
+Minimax M2.5 [open] | 60.1 | 59.3 | 70.7 | 51.7 | 77.4 | 49.6 | 55.1 | 57.2
+GPT-5.3 Instant | 60.0 | 63.1 | 78.6 | 28.3 | 72.4 | 48.0 | 70.0 | 59.4
+Grok 4.1 Fast | 60.0 | 80.2 | 69.6 | 31.7 | 83.7 | 52.2 | 74.3 | 28.2
+Claude 4.5 Opus Medium Effort | 59.1 | 53.2 | 78.5 | 63.3 | 66.3 | 45.5 | 78.7 | 28.1
+DeepSeek V3.2 Exp Thinking [open] | 58.9 | 64.4 | 70.1 | 31.7 | 82.4 | 51.5 | 71.1 | 41.3
+Gemini 2.5 Pro (Max Thinking) | 58.3 | 70.8 | 75.7 | 33.3 | 68.3 | 51.6 | 75.5 | 33.1
+MiMo V2 Pro | 58.1 | 69.7 | 68.8 | 30.0 | 77.0 | 49.2 | 69.1 | 43.2
+GLM 4.7 [open] | 58.1 | 59.7 | 73.1 | 41.7 | 76.0 | 55.2 | 65.2 | 35.7
+GLM 4.6 [open] | 55.2 | 62.1 | 71.0 | 35.0 | 81.1 | 51.9 | 59.0 | 26.2
+Claude 4.1 Opus | 54.5 | 40.9 | 76.1 | 53.3 | 62.8 | 45.4 | 76.8 | 25.9
+Claude Sonnet 4.5 | 53.7 | 42.3 | 76.1 | 48.3 | 62.6 | 47.0 | 76.0 | 23.5
+Gemini 2.5 Flash (Max Thinking) | 53.1 | 51.5 | 67.5 | 23.3 | 75.4 | 61.0 | 65.3 | 27.7
+Qwen 3 235B A22B Thinking 2507 [open] | 53.0 | 59.4 | 69.0 | 6.7 | 73.4 | 52.2 | 69.5 | 40.6
+DeepSeek V3.2 [open] | 51.8 | 44.3 | 75.7 | 46.7 | 64.0 | 45.0 | 64.2 | 23.1
+Nemotron 3 Ultra 550B A55B | 51.8 | 37.5 | 71.3 | 46.7 | 54.5 | 42.0 | 52.2 | 58.2
+Claude 4 Sonnet | 51.0 | 39.7 | 80.7 | 38.3 | 60.4 | 44.1 | 71.0 | 22.7
+Qwen 3 Next 80B A3B Thinking [open] | 50.4 | 58.2 | 60.7 | 8.3 | 74.3 | 53.6 | 56.3 | 41.5
+DeepSeek V3.2 Exp [open] | 49.9 | 45.5 | 73.2 | 36.7 | 64.4 | 44.3 | 65.6 | 19.3
+GLM 5V Turbo | 49.6 | 56.1 | 73.9 | 3.3 | 70.4 | 54.1 | 62.3 | 27.2
+GPT-5.2 No Thinking | 48.9 | 42.8 | 76.5 | 40.0 | 58.3 | 47.7 | 50.0 | 27.2
+Qwen 3 235B A22B Instruct 2507 [open] | 48.8 | 58.4 | 69.6 | 13.3 | 68.0 | 44.7 | 66.1 | 21.7
+GPT-5 Nano High | 48.6 | 40.3 | 62.4 | 23.3 | 68.4 | 43.4 | 46.8 | 55.7
+Qwen 3 Next 80B A3B Instruct [open] | 48.4 | 54.7 | 68.2 | 10.0 | 70.2 | 49.8 | 66.3 | 19.2
+Kimi K2 Instruct [open] | 48.1 | 42.2 | 74.3 | 31.7 | 58.2 | 43.3 | 66.7 | 20.4
+Gemini 2.5 Flash (Max Thinking) | 47.7 | 44.6 | 66.0 | 16.7 | 68.8 | 47.3 | 62.3 | 28.5
+GPT OSS 120b [open] | 46.1 | 39.2 | 60.2 | 16.7 | 68.9 | 38.8 | 48.6 | 50.3
+Claude Haiku 4.5 | 45.3 | 33.9 | 72.2 | 33.3 | 58.0 | 45.1 | 57.0 | 17.8
+Grok Code Fast | 45.1 | 42.3 | 64.4 | 33.3 | 56.0 | 49.0 | 48.6 | 22.3
+Qwen 3 32B [open] | 43.6 | 48.3 | 66.0 | 3.3 | 67.4 | 46.5 | 55.5 | 17.8
+GPT-5.1 No Thinking | 42.6 | 26.8 | 77.5 | 28.3 | 44.5 | 44.1 | 53.8 | 23.5
+Gemini 2.5 Flash Lite (Max Thinking) | 42.6 | 43.3 | 66.4 | 5.0 | 61.0 | 47.0 | 52.0 | 23.1
+Gemini 2.5 Flash Lite (Max Thinking) | 42.4 | 36.2 | 65.4 | 1.7 | 64.9 | 47.9 | 52.6 | 28.1
+Devstral 2 [open] | 41.2 | 27.7 | 66.8 | 43.3 | 52.5 | 39.1 | 45.7 | 13.5
+GLM 4.6V [open] | 40.1 | 37.2 | 64.2 | 3.3 | 62.5 | 46.4 | 49.7 | 17.1
+Grok 4.20 Beta (Non-Reasoning) | 39.7 | 25.6 | 58.5 | 38.3 | 45.5 | 43.5 | 42.0 | 24.3
+Qwen 3 30B A3B | 39.0 | 36.7 | 48.9 | 1.7 | 65.3 | 44.9 | 54.5 | 21.1
+Elephant Alpha | 36.0 | 40.0 | 56.7 | 1.7 | 57.5 | 38.5 | 27.7 | 29.6
+Grok 4.1 Fast (Non-Reasoning) | 33.5 | 23.3 | 54.3 | 10.0 | 38.9 | 40.6 | 50.0 | 17.0
+Trinity Large Preview [open] | 32.7 | 20.6 | 65.6 | 3.3 | 44.9 | 40.3 | 42.1 | 12.2
+Nemotron 3 Super 120B A12B [open] | 32.5 | 34.4 | 54.1 | 23.0 | 36.4 | 21.2 | 30.0 | 28.4
+```
+
+Cost: not published.
+
+### 2026-01-08 subtask breakdown (all 7 categories)
+
+Reached by clicking each CATEGORY tab in turn. Subtask set sums to 4+2+3+4+3+3+4 = 23,
+matching the page's stated "23 objective tasks" exactly. Compared with the 21 for
+2025-12-23, two subtasks were added: "Integrals with Game" under Mathematics, and
+"Consecutive Events" under Data Analysis. This is the mechanism behind the task-count
+change noted in the brief.
+
+**Reasoning (4 subtasks: Theory of Mind, Zebra Puzzle, Spatial, Logic with Navigation)**
+
+Columns: Model | Reasoning | TheoryOfMind | ZebraPuzzle | Spatial | LogicWithNavigation
+
+```
+Claude 4.6 Opus Thinking High Effort | 88.7 | 82.7 | 94.0 | 98.0 | 80.0
+GPT-5.4 Thinking xHigh Effort | 88.1 | 88.5 | 98.0 | 98.0 | 68.0
+GPT-5.5 Thinking xHigh Effort | 87.7 | 78.8 | 100.0 | 98.0 | 74.0
+Claude 4.7 Opus Thinking xHigh Effort | 87.7 | 80.8 | 100.0 | 100.0 | 70.0
+Claude 4.6 Sonnet Thinking Medium Effort | 84.8 | 73.1 | 96.0 | 100.0 | 70.0
+Gemini 3.1 Pro Preview High | 84.0 | 80.8 | 85.3 | 98.0 | 72.0
+GPT-5.1 Codex Max High | 83.7 | 84.6 | 88.0 | 98.0 | 64.0
+Qwen 3.7 Max | 83.3 | 78.8 | 74.5 | 96.0 | 84.0
+GPT-5.2 High | 83.2 | 78.8 | 84.0 | 96.0 | 74.0
+DeepSeek V4 Pro [open] | 82.7 | 80.8 | 92.0 | 94.0 | 64.0
+Gemini 3.5 Flash High | 82.0 | 80.8 | 77.3 | 96.0 | 74.0
+GPT-5.1 Codex | 82.0 | 76.9 | 89.0 | 98.0 | 64.0
+GPT-5 Pro | 81.7 | 80.8 | 84.0 | 98.0 | 64.0
+GPT-5.4 Nano xHigh | 81.1 | 80.8 | 97.4 | 82.0 | 64.0
+Grok 4.1 Fast | 80.2 | 61.5 | 95.3 | 94.0 | 70.0
+GPT-5.3 Codex High | 80.2 | 84.6 | 68.0 | 98.0 | 70.0
+Claude 4.5 Opus Thinking High Effort | 80.1 | 78.8 | 77.5 | 96.0 | 68.0
+Kimi K2.6 Thinking [open] | 79.4 | 75.0 | 78.5 | 94.0 | 70.0
+Grok 4 | 79.1 | 61.5 | 85.0 | 96.0 | 74.0
+GPT-5.1 High | 78.8 | 76.9 | 80.3 | 92.0 | 66.0
+GPT-5.2 Codex | 77.7 | 78.8 | 70.0 | 94.0 | 68.0
+Claude Sonnet 4.5 Thinking | 77.6 | 78.8 | 67.5 | 96.0 | 68.0
+Gemini 3 Pro Preview High | 77.4 | 76.9 | 64.8 | 98.0 | 70.0
+DeepSeek V3.2 Thinking [open] | 77.2 | 76.9 | 69.8 | 98.0 | 64.0
+Kimi K2.5 Thinking [open] | 76.0 | 73.1 | 70.8 | 94.0 | 66.0
+Qwen 3.6 Plus | 75.8 | 67.3 | 68.0 | 98.0 | 70.0
+Grok 4.20 Beta | 75.3 | 65.4 | 67.8 | 98.0 | 70.0
+Minimax M2.7 | 74.8 | 76.9 | 66.3 | 96.0 | 60.0
+Gemini 3 Flash Preview High | 74.5 | 82.7 | 47.5 | 96.0 | 72.0
+Minimax M3 | 74.5 | 76.9 | 61.0 | 94.0 | 66.0
+GLM 5.1 [open] | 72.5 | 78.8 | 49.3 | 94.0 | 68.0
+GPT-5.4 Mini xHigh | 72.5 | 76.9 | 65.1 | 88.0 | 60.0
+Claude 4.1 Opus Thinking | 72.3 | 67.3 | 62.0 | 90.0 | 70.0
+Grok 4.3 | 70.8 | 61.5 | 57.8 | 98.0 | 66.0
+Gemini 2.5 Pro (Max Thinking) | 70.8 | 69.2 | 48.0 | 98.0 | 68.0
+DeepSeek V4 Flash [open] | 70.6 | 73.1 | 49.3 | 96.0 | 64.0
+Qwen 3.6 27B [open] | 70.3 | 65.4 | 53.8 | 100.0 | 62.0
+MiMo V2 Pro | 69.7 | 67.3 | 63.5 | 84.0 | 64.0
+GLM 5 [open] | 69.1 | 82.7 | 35.8 | 92.0 | 66.0
+Claude 4 Sonnet Thinking | 69.0 | 61.5 | 52.5 | 96.0 | 66.0
+GPT-5 Mini High | 68.3 | 61.5 | 61.8 | 88.0 | 62.0
+GPT-5.1 Codex Mini | 64.7 | 53.8 | 53.0 | 94.0 | 58.0
+DeepSeek V3.2 Exp Thinking [open] | 64.4 | 69.2 | 30.3 | 88.0 | 70.0
+Kimi K2 Thinking [open] | 63.5 | 57.7 | 46.3 | 92.0 | 58.0
+GPT-5.3 Instant | 63.1 | 63.5 | 29.0 | 94.0 | 66.0
+Qwen 3.6 Flash | 62.9 | 50.0 | 51.8 | 90.0 | 60.0
+GLM 4.6 [open] | 62.1 | 50.0 | 48.3 | 90.0 | 60.0
+Claude Haiku 4.5 Thinking | 61.7 | 44.2 | 58.5 | 90.0 | 54.0
+GLM 4.7 [open] | 59.7 | 76.9 | 18.0 | 82.0 | 62.0
+Gemini 3.1 Flash Lite Preview High | 59.7 | 65.4 | 25.3 | 88.0 | 60.0
+Gemma 4 31B [open] | 59.4 | 51.9 | 29.8 | 92.0 | 64.0
+Qwen 3 235B A22B Thinking 2507 [open] | 59.4 | 53.8 | 37.8 | 86.0 | 60.0
+Minimax M2.5 [open] | 59.3 | 63.5 | 21.8 | 90.0 | 62.0
+Qwen 3 235B A22B Instruct 2507 [open] | 58.4 | 44.2 | 43.5 | 84.0 | 62.0
+Qwen 3 Next 80B A3B Thinking [open] | 58.2 | 46.2 | 32.5 | 96.0 | 58.0
+GLM 5V Turbo | 56.1 | 51.9 | 18.5 | 94.0 | 60.0
+Qwen 3 Next 80B A3B Instruct [open] | 54.7 | 44.2 | 32.8 | 90.0 | 52.0
+Claude 4.5 Opus Medium Effort | 53.2 | 53.8 | 19.0 | 82.0 | 58.0
+Gemini 2.5 Flash (Max Thinking) | 51.5 | 42.3 | 23.5 | 80.0 | 60.0
+Qwen 3 32B [open] | 48.3 | 55.8 | 21.3 | 86.0 | 30.0
+DeepSeek V3.2 Exp [open] | 45.5 | 50.0 | 12.0 | 80.0 | 40.0
+Gemini 2.5 Flash (Max Thinking) | 44.6 | 42.3 | 18.3 | 86.0 | 32.0
+DeepSeek V3.2 [open] | 44.3 | 50.0 | 9.0 | 76.0 | 42.0
+Gemini 2.5 Flash Lite (Max Thinking) | 43.3 | 34.6 | 12.8 | 84.0 | 42.0
+GPT-5.2 No Thinking | 42.8 | 32.7 | 10.5 | 74.0 | 54.0
+Grok Code Fast | 42.3 | 38.5 | 14.8 | 74.0 | 42.0
+Claude Sonnet 4.5 | 42.3 | 51.9 | 15.3 | 70.0 | 32.0
+Kimi K2 Instruct [open] | 42.2 | 51.9 | 21.0 | 62.0 | 34.0
+Claude 4.1 Opus | 40.9 | 48.1 | 11.5 | 62.0 | 42.0
+GPT-5 Nano High | 40.3 | 46.2 | 7.0 | 94.0 | 14.0
+Elephant Alpha | 40.0 | 46.2 | 13.8 | 80.0 | 20.0
+Claude 4 Sonnet | 39.7 | 57.7 | 13.0 | 60.0 | 28.0
+GPT OSS 120b [open] | 39.2 | 48.1 | 20.8 | 80.0 | 8.0
+Nemotron 3 Ultra 550B A55B | 37.5 | 51.9 | 6.3 | 66.0 | 26.0
+GLM 4.6V [open] | 37.2 | 34.6 | 18.3 | 84.0 | 12.0
+Qwen 3 30B A3B | 36.7 | 38.5 | 16.3 | 82.0 | 10.0
+Gemini 2.5 Flash Lite (Max Thinking) | 36.2 | 40.4 | 12.3 | 68.0 | 24.0
+Nemotron 3 Super 120B A12B [open] | 34.4 | 0.3 | no score printed | 42.1 | 60.8
+Claude Haiku 4.5 | 33.9 | 50.0 | 9.8 | 58.0 | 18.0
+Devstral 2 [open] | 27.7 | 38.5 | 0.5 | 56.0 | 16.0
+GPT-5.1 No Thinking | 26.8 | 25.0 | 8.3 | 48.0 | 26.0
+Grok 4.20 Beta (Non-Reasoning) | 25.6 | 30.8 | 7.8 | 48.0 | 16.0
+Grok 4.1 Fast (Non-Reasoning) | 23.3 | 40.4 | 9.0 | 36.0 | 8.0
+Trinity Large Preview [open] | 20.6 | 26.9 | 7.5 | 46.0 | 2.0
+```
+
+Note: Nemotron 3 Super 120B A12B's Zebra Puzzle cell rendered as an em-dash character
+on the page itself (the site's own placeholder for "no data"), transcribed above as
+"no score printed" per the no-em-dash rule for this file.
+
+**Coding (2 subtasks: Code Generation, Code Completion)**
+
+Columns: Model | Coding | CodeGeneration | CodeCompletion
+
+```
+GPT-5.2 Codex | 83.6 | 80.3 | 87.0
+GPT-5.5 Thinking xHigh Effort | 82.5 | 84.5 | 80.4
+Claude 4.7 Opus Thinking xHigh Effort | 82.1 | 85.9 | 78.3
+Claude 4 Sonnet | 80.7 | 78.9 | 82.6
+GPT-5.1 Codex Max High | 80.7 | 83.1 | 78.3
+Claude Sonnet 4.5 Thinking | 80.4 | 80.3 | 80.4
+Claude 4.5 Opus Thinking High Effort | 79.7 | 78.9 | 80.4
+Claude 4.6 Sonnet Thinking Medium Effort | 79.3 | 80.3 | 78.3
+GPT-5.3 Instant | 78.6 | 74.6 | 82.6
+Kimi K2.6 Thinking [open] | 78.6 | 78.9 | 78.3
+Claude 4.5 Opus Medium Effort | 78.5 | 83.1 | 73.9
+Claude 4.6 Opus Thinking High Effort | 78.2 | 80.3 | 76.1
+Gemini 3.5 Flash High | 78.2 | 80.3 | 76.1
+GPT-5.3 Codex High | 78.2 | 80.3 | 76.1
+Qwen 3.6 Plus | 78.2 | 80.3 | 76.1
+Kimi K2.5 Thinking [open] | 77.9 | 77.5 | 78.3
+GPT-5.4 Thinking xHigh Effort | 77.5 | 74.6 | 80.4
+Claude 4 Sonnet Thinking | 77.5 | 78.9 | 76.1
+GPT-5.1 No Thinking | 77.5 | 78.9 | 76.1
+Gemini 3.1 Pro Preview High | 76.5 | 74.6 | 78.3
+GPT-5.2 No Thinking | 76.5 | 74.6 | 78.3
+Claude 4.1 Opus | 76.1 | 76.1 | 76.1
+Claude Sonnet 4.5 | 76.1 | 76.1 | 76.1
+GPT-5.2 High | 76.1 | 76.1 | 76.1
+DeepSeek V3.2 [open] | 75.7 | 77.5 | 73.9
+Gemini 2.5 Pro (Max Thinking) | 75.7 | 77.5 | 73.9
+GLM 5.1 [open] | 75.4 | 74.6 | 76.1
+Claude 4.1 Opus Thinking | 74.7 | 73.2 | 76.1
+Gemini 3 Pro Preview High | 74.6 | 77.5 | 71.7
+Kimi K2 Instruct [open] | 74.3 | 74.6 | 73.9
+Qwen 3.7 Max | 74.2 | 78.9 | 69.6
+Gemini 3 Flash Preview High | 73.9 | 76.1 | 71.7
+GLM 5V Turbo | 73.9 | 76.1 | 71.7
+GLM 5 [open] | 73.6 | 69.0 | 78.3
+DeepSeek V3.2 Exp [open] | 73.2 | 74.6 | 71.7
+GLM 4.7 [open] | 73.1 | 78.9 | 67.4
+Grok 4 | 73.1 | 78.9 | 67.4
+Claude Haiku 4.5 Thinking | 72.8 | 76.1 | 69.6
+GPT-5.1 High | 72.5 | 73.2 | 71.7
+Claude Haiku 4.5 | 72.2 | 70.4 | 73.9
+GPT-5.4 Nano xHigh | 72.1 | 75.4 | 68.9
+GPT-5 Pro | 72.1 | 74.6 | 69.6
+GPT-5.1 Codex | 71.8 | 71.8 | 71.7
+Qwen 3.6 27B [open] | 71.8 | 71.8 | 71.7
+GPT-5.4 Mini xHigh | 71.6 | 67.7 | 75.6
+Nemotron 3 Ultra 550B A55B | 71.3 | 77.5 | 65.2
+GLM 4.6 [open] | 71.0 | 74.6 | 67.4
+Minimax M2.5 [open] | 70.7 | 71.8 | 69.6
+DeepSeek V3.2 Exp Thinking [open] | 70.1 | 66.2 | 73.9
+DeepSeek V4 Pro [open] | 70.0 | 70.4 | 69.6
+GPT-5.1 Codex Mini | 69.9 | 74.6 | 65.2
+Grok 4.3 | 69.9 | 74.6 | 65.2
+Grok 4.1 Fast | 69.6 | 71.8 | 67.4
+Qwen 3 235B A22B Instruct 2507 [open] | 69.6 | 71.8 | 67.4
+DeepSeek V4 Flash [open] | 69.2 | 73.2 | 65.2
+Qwen 3 235B A22B Thinking 2507 [open] | 69.0 | 66.2 | 71.7
+MiMo V2 Pro | 68.8 | 74.6 | 63.0
+Gemini 3.1 Flash Lite Preview High | 68.5 | 71.8 | 65.2
+GPT-5 Mini High | 68.2 | 69.0 | 67.4
+Qwen 3 Next 80B A3B Instruct [open] | 68.2 | 69.0 | 67.4
+Minimax M3 | 68.2 | 69.0 | 67.4
+Gemini 2.5 Flash (Max Thinking) | 67.5 | 67.6 | 67.4
+Kimi K2 Thinking [open] | 67.4 | 71.8 | 63.0
+Devstral 2 [open] | 66.8 | 66.2 | 67.4
+Gemini 2.5 Flash Lite (Max Thinking) | 66.4 | 67.6 | 65.2
+Grok 4.20 Beta | 66.1 | 64.8 | 67.4
+Gemini 2.5 Flash (Max Thinking) | 66.0 | 69.0 | 63.0
+Qwen 3 32B [open] | 66.0 | 69.0 | 63.0
+Trinity Large Preview [open] | 65.6 | 70.4 | 60.9
+Gemini 2.5 Flash Lite (Max Thinking) | 65.4 | 63.4 | 67.4
+Qwen 3.6 Flash | 64.9 | 69.0 | 60.9
+DeepSeek V3.2 Thinking [open] | 64.6 | 66.2 | 63.0
+Grok Code Fast | 64.4 | 78.9 | 50.0
+GLM 4.6V [open] | 64.2 | 67.6 | 60.9
+GPT-5 Nano High | 62.4 | 70.4 | 54.3
+Qwen 3 Next 80B A3B Thinking [open] | 60.7 | 64.8 | 56.5
+Gemma 4 31B [open] | 60.3 | 62.0 | 58.7
+GPT OSS 120b [open] | 60.2 | 70.4 | 50.0
+Grok 4.20 Beta (Non-Reasoning) | 58.5 | 60.6 | 56.5
+Elephant Alpha | 56.7 | 63.4 | 50.0
+Minimax M2.7 | 54.9 | 62.0 | 47.8
+Grok 4.1 Fast (Non-Reasoning) | 54.3 | 56.3 | 52.2
+Nemotron 3 Super 120B A12B [open] | 54.1 | 69.0 | 39.1
+Qwen 3 30B A3B | 48.9 | 52.1 | 45.7
+```
+
+**Agentic Coding (3 subtasks: JavaScript, TypeScript, Python)**
+
+Columns: Model | AgenticCoding | JavaScript | TypeScript | Python
+
+```
+GPT-5.4 Thinking xHigh Effort | 70.0 | 65.0 | 60.0 | 85.0
+Gemini 3.1 Pro Preview High | 65.0 | 55.0 | 55.0 | 85.0
+Claude 4.5 Opus Medium Effort | 63.3 | 65.0 | 55.0 | 70.0
+Claude 4.5 Opus Thinking High Effort | 63.3 | 50.0 | 55.0 | 85.0
+Claude 4.6 Opus Thinking High Effort | 61.7 | 60.0 | 45.0 | 80.0
+Claude 4.6 Sonnet Thinking Medium Effort | 60.0 | 50.0 | 55.0 | 75.0
+Claude 4.7 Opus Thinking xHigh Effort | 60.0 | 55.0 | 60.0 | 65.0
+Minimax M3 | 60.0 | 55.0 | 50.0 | 75.0
+Kimi K2.6 Thinking [open] | 58.3 | 50.0 | 45.0 | 80.0
+DeepSeek V4 Pro [open] | 56.7 | 40.0 | 50.0 | 80.0
+GPT-5.5 Thinking xHigh Effort | 56.7 | 45.0 | 50.0 | 75.0
+Gemini 3 Pro Preview High | 55.0 | 60.0 | 35.0 | 70.0
+GLM 5 [open] | 55.0 | 50.0 | 40.0 | 75.0
+GLM 5.1 [open] | 55.0 | 55.0 | 45.0 | 65.0
+GPT-5.3 Codex High | 55.0 | 50.0 | 50.0 | 65.0
+Qwen 3.6 Plus | 55.0 | 45.0 | 45.0 | 75.0
+Claude 4.1 Opus | 53.3 | 45.0 | 40.0 | 75.0
+Claude Sonnet 4.5 Thinking | 53.3 | 40.0 | 45.0 | 75.0
+GPT-5.1 High | 53.3 | 50.0 | 45.0 | 65.0
+GPT-5.1 Codex | 53.3 | 45.0 | 50.0 | 65.0
+GPT-5.1 Codex Max High | 53.3 | 45.0 | 50.0 | 65.0
+Gemini 3.5 Flash High | 51.7 | 45.0 | 50.0 | 60.0
+GPT-5 Pro | 51.7 | 45.0 | 45.0 | 65.0
+GPT-5.2 High | 51.7 | 50.0 | 35.0 | 70.0
+GPT-5.2 Codex | 51.7 | 30.0 | 50.0 | 75.0
+Minimax M2.5 [open] | 51.7 | 40.0 | 40.0 | 75.0
+Qwen 3.7 Max | 51.7 | 45.0 | 40.0 | 70.0
+DeepSeek V4 Flash [open] | 50.0 | 40.0 | 40.0 | 70.0
+Grok 4.3 | 50.0 | 45.0 | 35.0 | 70.0
+Minimax M2.7 | 50.0 | 45.0 | 30.0 | 75.0
+Qwen 3.6 27B [open] | 50.0 | 35.0 | 45.0 | 70.0
+GPT-5.4 Nano xHigh | 49.1 | 47.4 | 35.0 | 65.0
+Claude 4.1 Opus Thinking | 48.3 | 45.0 | 30.0 | 70.0
+Claude Sonnet 4.5 | 48.3 | 45.0 | 20.0 | 80.0
+Kimi K2.5 Thinking [open] | 48.3 | 35.0 | 35.0 | 75.0
+GPT-5.4 Mini xHigh | 47.5 | 47.4 | 40.0 | 55.0
+DeepSeek V3.2 [open] | 46.7 | 40.0 | 30.0 | 70.0
+GPT-5 Mini High | 46.7 | 50.0 | 20.0 | 70.0
+Qwen 3.6 Flash | 46.7 | 45.0 | 30.0 | 65.0
+Nemotron 3 Ultra 550B A55B | 46.7 | 45.0 | 20.0 | 75.0
+Devstral 2 [open] | 43.3 | 40.0 | 20.0 | 70.0
+Grok 4.20 Beta | 43.3 | 25.0 | 35.0 | 70.0
+Claude Haiku 4.5 Thinking | 41.7 | 40.0 | 20.0 | 65.0
+GLM 4.7 [open] | 41.7 | 25.0 | 35.0 | 65.0
+Claude 4 Sonnet Thinking | 40.0 | 30.0 | 30.0 | 60.0
+DeepSeek V3.2 Thinking [open] | 40.0 | 30.0 | 30.0 | 60.0
+Gemini 3 Flash Preview High | 40.0 | 40.0 | 35.0 | 45.0
+Gemma 4 31B [open] | 40.0 | 20.0 | 35.0 | 65.0
+GPT-5.1 Codex Mini | 40.0 | 25.0 | 30.0 | 65.0
+GPT-5.2 No Thinking | 40.0 | 35.0 | 35.0 | 50.0
+Claude 4 Sonnet | 38.3 | 25.0 | 25.0 | 65.0
+Grok 4.20 Beta (Non-Reasoning) | 38.3 | 25.0 | 25.0 | 65.0
+Kimi K2 Thinking [open] | 38.3 | 40.0 | 20.0 | 55.0
+DeepSeek V3.2 Exp [open] | 36.7 | 30.0 | 25.0 | 55.0
+GLM 4.6 [open] | 35.0 | 30.0 | 20.0 | 55.0
+Claude Haiku 4.5 | 33.3 | 30.0 | 25.0 | 45.0
+Gemini 2.5 Pro (Max Thinking) | 33.3 | 30.0 | 25.0 | 45.0
+Gemini 3.1 Flash Lite Preview High | 33.3 | 35.0 | 25.0 | 40.0
+Grok Code Fast | 33.3 | 30.0 | 15.0 | 55.0
+DeepSeek V3.2 Exp Thinking [open] | 31.7 | 25.0 | 20.0 | 50.0
+Grok 4.1 Fast | 31.7 | 25.0 | 20.0 | 50.0
+Kimi K2 Instruct [open] | 31.7 | 35.0 | 15.0 | 45.0
+Grok 4 | 30.0 | 20.0 | 20.0 | 50.0
+MiMo V2 Pro | 30.0 | 15.0 | 25.0 | 50.0
+GPT-5.1 No Thinking | 28.3 | 35.0 | 20.0 | 30.0
+GPT-5.3 Instant | 28.3 | 20.0 | 20.0 | 45.0
+Gemini 2.5 Flash (Max Thinking) | 23.3 | 15.0 | 15.0 | 40.0
+GPT-5 Nano High | 23.3 | 25.0 | 10.0 | 35.0
+Nemotron 3 Super 120B A12B [open] | 23.0 | 0.0 | no score printed | 46.0
+Gemini 2.5 Flash (Max Thinking) | 16.7 | 10.0 | 0.0 | 40.0
+GPT OSS 120b [open] | 16.7 | 20.0 | 10.0 | 20.0
+Qwen 3 235B A22B Instruct 2507 [open] | 13.3 | 10.0 | 10.0 | 20.0
+Grok 4.1 Fast (Non-Reasoning) | 10.0 | 10.0 | 5.0 | 15.0
+Qwen 3 Next 80B A3B Instruct [open] | 10.0 | 5.0 | 5.0 | 20.0
+Qwen 3 Next 80B A3B Thinking [open] | 8.3 | 15.0 | 0.0 | 10.0
+Qwen 3 235B A22B Thinking 2507 [open] | 6.7 | 5.0 | 5.0 | 10.0
+Gemini 2.5 Flash Lite (Max Thinking) | 5.0 | 5.0 | 0.0 | 10.0
+Trinity Large Preview [open] | 3.3 | 0.0 | 0.0 | 10.0
+GLM 4.6V [open] | 3.3 | 0.0 | 0.0 | 10.0
+GLM 5V Turbo | 3.3 | 0.0 | 0.0 | 10.0
+Qwen 3 32B [open] | 3.3 | 0.0 | 0.0 | 10.0
+Elephant Alpha | 1.7 | 0.0 | 0.0 | 5.0
+Gemini 2.5 Flash Lite (Max Thinking) | 1.7 | 5.0 | 0.0 | 0.0
+Qwen 3 30B A3B | 1.7 | 0.0 | 0.0 | 5.0
+```
+
+**Mathematics (4 subtasks: AMPS Hard, Integrals with Game, Math Comp, Olympiad -
+"Integrals with Game" is the subtask added versus 2025-12-23)**
+
+Columns: Model | Mathematics | AMPSHard | IntegralsWithGame | MathComp | Olympiad
+
+```
+GPT-5.5 Thinking xHigh Effort | 96.3 | 98.0 | 100.0 | 96.1 | 91.2
+GPT-5.4 Thinking xHigh Effort | 94.1 | 98.0 | 93.0 | 94.1 | 91.5
+GPT-5.2 High | 93.2 | 97.0 | 92.0 | 95.1 | 88.6
+Claude 4.7 Opus Thinking xHigh Effort | 93.1 | 98.0 | 85.0 | 98.0 | 91.4
+GPT-5.4 Nano xHigh | 91.3 | 98.0 | 82.8 | 95.1 | 89.2
+Gemini 3.1 Pro Preview High | 91.0 | 98.0 | 78.0 | 96.1 | 92.1
+DeepSeek V4 Pro [open] | 90.7 | 98.0 | 78.0 | 96.1 | 90.6
+Claude 4.5 Opus Thinking High Effort | 90.4 | 99.0 | 78.0 | 95.1 | 89.5
+Claude 4.6 Opus Thinking High Effort | 89.3 | 97.0 | 73.0 | 95.1 | 92.2
+GPT-5.2 Codex | 88.8 | 98.0 | 75.0 | 95.1 | 87.0
+Gemini 3.5 Flash High | 88.2 | 98.0 | 68.0 | 95.1 | 91.9
+GPT-5.3 Codex High | 87.8 | 98.0 | 73.0 | 93.1 | 87.2
+Grok 4.20 Beta | 87.1 | 98.0 | 81.0 | 94.1 | 75.1
+Claude 4.6 Sonnet Thinking Medium Effort | 87.0 | 76.0 | 90.0 | 94.1 | 87.9
+GPT-5.1 High | 86.9 | 97.0 | 67.0 | 95.1 | 88.5
+GPT-5 Pro | 86.2 | 98.0 | 62.0 | 97.1 | 87.6
+Qwen 3.7 Max | 85.2 | 98.0 | 59.0 | 97.1 | 86.9
+DeepSeek V3.2 Thinking [open] | 85.0 | 97.0 | 63.0 | 95.1 | 85.0
+GLM 5.1 [open] | 84.9 | 97.0 | 60.0 | 94.1 | 88.5
+Kimi K2.5 Thinking [open] | 84.9 | 96.0 | 61.0 | 94.1 | 88.4
+Grok 4.3 | 84.3 | 97.0 | 63.0 | 95.1 | 82.3
+Kimi K2.6 Thinking [open] | 84.3 | 97.0 | 54.0 | 96.1 | 90.0
+Gemini 3 Flash Preview High | 84.2 | 98.0 | 56.0 | 93.1 | 89.6
+Qwen 3.6 Plus | 83.7 | 97.0 | 62.0 | 93.1 | 82.8
+Grok 4.1 Fast | 83.7 | 95.0 | 65.0 | 96.1 | 78.8
+GLM 5 [open] | 83.5 | 97.0 | 57.0 | 95.1 | 84.8
+GPT-5.1 Codex Max High | 83.2 | 90.0 | 61.0 | 96.1 | 85.8
+Grok 4 | 83.0 | 86.0 | 65.0 | 94.1 | 87.0
+DeepSeek V3.2 Exp Thinking [open] | 82.4 | 96.0 | 59.0 | 92.2 | 82.4
+GPT-5 Mini High | 82.2 | 98.0 | 57.0 | 91.2 | 82.6
+Gemini 3 Pro Preview High | 81.8 | 97.0 | 45.0 | 95.1 | 90.3
+GLM 4.6 [open] | 81.1 | 98.0 | 50.0 | 95.1 | 81.4
+Kimi K2 Thinking [open] | 81.1 | 96.0 | 52.0 | 96.1 | 80.3
+Minimax M2.7 | 80.5 | 97.0 | 49.0 | 92.2 | 84.0
+Qwen 3.6 27B [open] | 79.9 | 93.0 | 52.0 | 92.2 | 82.3
+DeepSeek V4 Flash [open] | 79.6 | 98.0 | 37.0 | 97.1 | 86.5
+GPT-5.1 Codex | 79.6 | 95.0 | 45.0 | 96.1 | 82.2
+Claude Sonnet 4.5 Thinking | 79.3 | 97.0 | 47.0 | 90.2 | 83.1
+Qwen 3.6 Flash | 78.9 | 98.0 | 44.0 | 93.1 | 80.4
+GPT-5.4 Mini xHigh | 78.6 | 97.0 | 37.4 | 94.1 | 85.7
+Claude Haiku 4.5 Thinking | 77.5 | 97.0 | 38.0 | 95.1 | 80.0
+Minimax M2.5 [open] | 77.4 | 98.0 | 39.0 | 94.1 | 78.5
+MiMo V2 Pro | 77.0 | 91.0 | 41.0 | 93.1 | 82.7
+Minimax M3 | 76.9 | 75.0 | 56.0 | 91.2 | 85.6
+GPT-5.1 Codex Mini | 76.3 | 98.0 | 32.0 | 94.1 | 80.9
+GLM 4.7 [open] | 76.0 | 97.0 | 35.0 | 92.2 | 79.9
+Gemini 2.5 Flash (Max Thinking) | 75.4 | 96.0 | 32.0 | 89.2 | 84.2
+Qwen 3 Next 80B A3B Thinking [open] | 74.3 | 98.0 | 38.0 | 88.2 | 72.8
+Gemma 4 31B [open] | 73.9 | 100.0 | 26.3 | 87.3 | 82.2
+Gemini 3.1 Flash Lite Preview High | 73.6 | 97.0 | 27.0 | 89.2 | 81.0
+Qwen 3 235B A22B Thinking 2507 [open] | 73.4 | 86.0 | 40.0 | 86.3 | 81.3
+Claude 4.1 Opus Thinking | 73.2 | 93.0 | 26.0 | 85.3 | 88.5
+GPT-5.3 Instant | 72.4 | 97.0 | 23.0 | 86.3 | 83.3
+Claude 4 Sonnet Thinking | 70.5 | 86.0 | 27.0 | 85.3 | 83.7
+GLM 5V Turbo | 70.4 | 98.8 | 13.0 | 85.3 | 84.5
+Qwen 3 Next 80B A3B Instruct [open] | 70.2 | 97.0 | 26.0 | 86.3 | 71.4
+GPT OSS 120b [open] | 68.9 | 92.0 | 32.0 | 92.2 | 59.3
+Gemini 2.5 Flash (Max Thinking) | 68.8 | 85.0 | 21.0 | 87.3 | 81.8
+GPT-5 Nano High | 68.4 | 96.0 | 31.0 | 90.2 | 56.4
+Gemini 2.5 Pro (Max Thinking) | 68.3 | 74.0 | 24.0 | 89.2 | 86.0
+Qwen 3 235B A22B Instruct 2507 [open] | 68.0 | 84.0 | 21.0 | 90.2 | 76.9
+Qwen 3 32B [open] | 67.4 | 87.0 | 25.0 | 84.3 | 73.4
+Claude 4.5 Opus Medium Effort | 66.3 | 88.0 | 7.0 | 83.3 | 86.9
+Qwen 3 30B A3B | 65.3 | 91.0 | 22.0 | 84.3 | 64.1
+Gemini 2.5 Flash Lite (Max Thinking) | 64.9 | 93.0 | 17.0 | 83.3 | 66.3
+DeepSeek V3.2 Exp [open] | 64.4 | 92.0 | 13.0 | 75.5 | 77.0
+DeepSeek V3.2 [open] | 64.0 | 95.0 | 10.0 | 76.5 | 74.3
+Claude 4.1 Opus | 62.8 | 89.0 | 10.0 | 65.7 | 86.6
+Claude Sonnet 4.5 | 62.6 | 91.0 | 8.0 | 68.6 | 82.9
+GLM 4.6V [open] | 62.5 | 95.0 | 10.0 | 84.3 | 60.7
+Gemini 2.5 Flash Lite (Max Thinking) | 61.0 | 93.0 | 11.0 | 73.5 | 66.6
+Claude 4 Sonnet | 60.4 | 84.0 | 6.0 | 70.6 | 80.8
+GPT-5.2 No Thinking | 58.3 | 77.0 | 7.0 | 67.6 | 81.4
+Kimi K2 Instruct [open] | 58.2 | 82.0 | 7.0 | 72.5 | 71.1
+Claude Haiku 4.5 | 58.0 | 88.0 | 4.0 | 68.6 | 71.3
+Elephant Alpha | 57.5 | 94.0 | 8.0 | 75.5 | 52.5
+Grok Code Fast | 56.0 | 87.0 | 8.0 | 61.8 | 67.3
+Nemotron 3 Ultra 550B A55B | 54.5 | 73.0 | 14.0 | 81.4 | 49.7
+Devstral 2 [open] | 52.5 | 80.0 | 7.0 | 60.8 | 62.3
+Grok 4.20 Beta (Non-Reasoning) | 45.5 | 49.0 | 27.0 | 80.4 | 25.7
+Trinity Large Preview [open] | 44.9 | 61.0 | 8.0 | 47.1 | 63.7
+GPT-5.1 No Thinking | 44.5 | 78.0 | 3.0 | 28.4 | 68.6
+Grok 4.1 Fast (Non-Reasoning) | 38.9 | 47.0 | 5.0 | 45.1 | 58.6
+Nemotron 3 Super 120B A12B [open] | 36.4 | 87.0 | 6.0 | 23.6 | 29.1
+```
+
+**Data Analysis (3 subtasks: Consecutive Events, Table Join, Table Reformat -
+"Consecutive Events" is the subtask added versus 2025-12-23)**
+
+Columns: Model | DataAnalysis | ConsecutiveEvents | TableJoin | TableReformat
+
+```
+GPT-5.5 Thinking xHigh Effort | 81.1 | 88.7 | 54.5 | 100.0
+GPT-5.4 Thinking xHigh Effort | 79.3 | 86.2 | 51.8 | 100.0
+Gemini 3.1 Pro Preview High | 78.5 | 85.2 | 52.3 | 98.0
+Claude 4.7 Opus Thinking xHigh Effort | 78.3 | 89.5 | 47.2 | 98.0
+GPT-5.2 Codex | 78.2 | 89.0 | 45.6 | 100.0
+GPT-5.2 High | 78.2 | 88.9 | 45.6 | 100.0
+Claude 4.6 Sonnet Thinking Medium Effort | 77.9 | 92.7 | 45.1 | 96.1
+Minimax M3 | 76.2 | 84.6 | 45.8 | 98.0
+Gemini 3 Flash Preview High | 74.8 | 74.8 | 51.4 | 98.0
+DeepSeek V4 Pro [open] | 74.5 | 75.4 | 48.2 | 100.0
+Claude 4.5 Opus Thinking High Effort | 74.4 | 79.4 | 45.9 | 98.0
+Gemini 3 Pro Preview High | 74.4 | 73.3 | 51.8 | 98.0
+Qwen 3.7 Max | 71.8 | 71.8 | 45.5 | 98.0
+GPT-5.4 Mini xHigh | 70.9 | 63.0 | 49.9 | 100.0
+Qwen 3.6 27B [open] | 70.4 | 70.4 | 42.8 | 98.0
+GPT-5.1 Codex Max High | 70.1 | 65.1 | 45.3 | 100.0
+Qwen 3.6 Plus | 69.9 | 67.0 | 44.7 | 98.0
+Claude 4.6 Opus Thinking High Effort | 69.9 | 63.5 | 48.2 | 98.0
+GPT-5.1 High | 69.6 | 64.7 | 44.1 | 100.0
+DeepSeek V4 Flash [open] | 68.0 | 59.9 | 46.1 | 98.0
+GLM 5 [open] | 67.9 | 60.0 | 45.7 | 98.0
+GPT-5.4 Nano xHigh | 67.6 | 54.3 | 50.6 | 98.0
+Kimi K2.6 Thinking [open] | 65.1 | 51.3 | 46.1 | 98.0
+Gemini 3.5 Flash High | 64.9 | 48.0 | 50.5 | 96.1
+Grok 4 | 63.4 | 51.1 | 41.0 | 98.0
+GLM 5.1 [open] | 63.2 | 53.9 | 49.5 | 86.3
+Grok 4.20 Beta | 62.9 | 50.8 | 37.8 | 100.0
+GPT-5.3 Codex High | 62.7 | 39.7 | 48.4 | 100.0
+Kimi K2.5 Thinking [open] | 61.4 | 42.2 | 47.8 | 94.1
+Gemini 2.5 Flash (Max Thinking) | 61.0 | 37.5 | 47.4 | 98.0
+GPT-5.1 Codex | 60.7 | 44.6 | 41.5 | 96.1
+Claude Haiku 4.5 Thinking | 59.3 | 39.2 | 42.6 | 96.1
+Qwen 3.6 Flash | 58.8 | 39.3 | 43.1 | 94.1
+Gemma 4 31B [open] | 58.8 | 29.9 | 46.4 | 100.0
+GPT-5 Pro | 57.0 | 26.3 | 44.8 | 100.0
+Claude Sonnet 4.5 Thinking | 57.0 | 27.4 | 45.5 | 98.0
+Minimax M2.7 | 56.3 | 28.6 | 42.4 | 98.0
+Grok 4.3 | 55.8 | 28.0 | 41.3 | 98.0
+GPT-5 Mini High | 55.2 | 21.7 | 43.9 | 100.0
+GLM 4.7 [open] | 55.2 | 18.1 | 47.4 | 100.0
+Gemini 3.1 Flash Lite Preview High | 54.9 | 23.8 | 42.9 | 98.0
+Claude 4 Sonnet Thinking | 54.6 | 24.2 | 41.6 | 98.0
+GLM 5V Turbo | 54.1 | 20.9 | 43.5 | 98.0
+Qwen 3 Next 80B A3B Thinking [open] | 53.6 | 14.4 | 46.3 | 100.0
+Kimi K2 Thinking [open] | 52.3 | 15.7 | 45.1 | 96.1
+Grok 4.1 Fast | 52.2 | 29.9 | 38.5 | 88.2
+Qwen 3 235B A22B Thinking 2507 [open] | 52.2 | 7.2 | 49.3 | 100.0
+GLM 4.6 [open] | 51.9 | 12.4 | 43.5 | 100.0
+Gemini 2.5 Pro (Max Thinking) | 51.6 | 11.8 | 45.0 | 98.0
+DeepSeek V3.2 Exp Thinking [open] | 51.5 | 8.9 | 45.6 | 100.0
+DeepSeek V3.2 Thinking [open] | 50.0 | 8.4 | 41.6 | 100.0
+Qwen 3 Next 80B A3B Instruct [open] | 49.8 | 12.1 | 45.1 | 92.2
+GPT-5.1 Codex Mini | 49.7 | 8.5 | 40.6 | 100.0
+Minimax M2.5 [open] | 49.6 | 12.2 | 40.5 | 96.1
+MiMo V2 Pro | 49.2 | 13.8 | 37.7 | 96.1
+Grok Code Fast | 49.0 | 8.9 | 38.0 | 100.0
+Claude 4.1 Opus Thinking | 49.0 | 4.6 | 44.3 | 98.0
+GPT-5.3 Instant | 48.0 | 2.0 | 42.1 | 100.0
+Gemini 2.5 Flash Lite (Max Thinking) | 47.9 | 8.3 | 37.3 | 98.0
+GPT-5.2 No Thinking | 47.7 | 5.5 | 37.6 | 100.0
+Gemini 2.5 Flash (Max Thinking) | 47.3 | 2.6 | 41.3 | 98.0
+Gemini 2.5 Flash Lite (Max Thinking) | 47.0 | 6.6 | 36.5 | 98.0
+Claude Sonnet 4.5 | 47.0 | 6.3 | 36.6 | 98.0
+Qwen 3 32B [open] | 46.5 | 3.0 | 38.5 | 98.0
+GLM 4.6V [open] | 46.4 | 6.3 | 34.9 | 98.0
+Claude 4.5 Opus Medium Effort | 45.5 | 2.2 | 36.3 | 98.0
+Claude 4.1 Opus | 45.4 | 2.2 | 37.8 | 96.1
+Claude Haiku 4.5 | 45.1 | 3.0 | 38.3 | 94.1
+DeepSeek V3.2 [open] | 45.0 | 1.7 | 35.4 | 98.0
+Qwen 3 30B A3B | 44.9 | 1.6 | 37.1 | 96.1
+Qwen 3 235B A22B Instruct 2507 [open] | 44.7 | 3.7 | 34.4 | 96.1
+DeepSeek V3.2 Exp [open] | 44.3 | 2.6 | 32.1 | 98.0
+Claude 4 Sonnet | 44.1 | 2.8 | 35.3 | 94.1
+GPT-5.1 No Thinking | 44.1 | 3.9 | 32.2 | 96.1
+Grok 4.20 Beta (Non-Reasoning) | 43.5 | 3.5 | 26.9 | 100.0
+GPT-5 Nano High | 43.4 | 5.8 | 34.2 | 90.2
+Kimi K2 Instruct [open] | 43.3 | 3.2 | 32.7 | 94.1
+Nemotron 3 Ultra 550B A55B | 42.0 | 0.4 | 27.6 | 98.0
+Grok 4.1 Fast (Non-Reasoning) | 40.6 | 5.3 | 26.3 | 90.2
+Trinity Large Preview [open] | 40.3 | 6.6 | 20.3 | 94.1
+Devstral 2 [open] | 39.1 | 3.5 | 21.8 | 92.2
+GPT OSS 120b [open] | 38.8 | 2.9 | 29.2 | 84.3
+Elephant Alpha | 38.5 | 4.4 | 22.9 | 88.2
+Nemotron 3 Super 120B A12B [open] | 21.2 | 0.0 | 7.7 | 56.0
+```
+
+**Language (3 subtasks: Connections, Plot Unscrambling, Typos)**
+
+Columns: Model | Language | Connections | PlotUnscrambling | Typos
+
+```
+GPT-5.5 Thinking xHigh Effort | 87.7 | 100.0 | 75.0 | 88.0
+Gemini 3.1 Pro Preview High | 85.4 | 100.0 | 74.1 | 82.0
+Gemini 3 Pro Preview High | 84.6 | 100.0 | 69.9 | 84.0
+Gemini 3.5 Flash High | 84.6 | 100.0 | 67.8 | 86.0
+Gemini 3 Flash Preview High | 84.6 | 100.0 | 65.7 | 88.0
+Claude 4.6 Opus Thinking High Effort | 83.3 | 99.3 | 66.5 | 84.0
+GPT-5.4 Thinking xHigh Effort | 82.6 | 100.0 | 65.9 | 82.0
+Claude 4.5 Opus Thinking High Effort | 81.3 | 99.3 | 66.5 | 78.0
+GPT-5 Pro | 80.7 | 98.0 | 64.1 | 80.0
+GPT-5.3 Codex High | 80.1 | 100.0 | 64.3 | 76.0
+GPT-5.2 High | 79.8 | 99.0 | 58.4 | 82.0
+Qwen 3.7 Max | 79.7 | 96.5 | 58.7 | 84.0
+GPT-5.1 High | 79.3 | 97.3 | 60.4 | 80.0
+Claude 4.5 Opus Medium Effort | 78.7 | 89.7 | 62.3 | 84.0
+DeepSeek V4 Pro [open] | 78.1 | 98.0 | 56.4 | 80.0
+Claude 4.7 Opus Thinking xHigh Effort | 77.9 | 92.3 | 61.4 | 80.0
+Grok 4.20 Beta | 77.7 | 100.0 | 51.2 | 82.0
+Kimi K2.5 Thinking [open] | 77.7 | 98.0 | 55.0 | 80.0
+GLM 5 [open] | 77.5 | 91.0 | 63.6 | 78.0
+Minimax M3 | 76.8 | 96.3 | 50.2 | 84.0
+Claude 4.1 Opus | 76.8 | 86.0 | 60.3 | 84.0
+GPT-5.1 Codex Max High | 76.5 | 90.0 | 57.4 | 82.0
+Claude Sonnet 4.5 Thinking | 76.5 | 91.3 | 62.0 | 76.0
+Grok 4 | 76.4 | 98.7 | 60.5 | 70.0
+Claude 4.6 Sonnet Thinking Medium Effort | 76.1 | 99.3 | 57.0 | 72.0
+Claude Sonnet 4.5 | 76.0 | 80.7 | 57.3 | 90.0
+GPT-5 Mini High | 75.5 | 98.7 | 41.9 | 86.0
+Gemini 2.5 Pro (Max Thinking) | 75.5 | 87.5 | 63.0 | 76.0
+Kimi K2.6 Thinking [open] | 75.1 | 89.3 | 58.1 | 78.0
+Qwen 3.6 Plus | 75.0 | 90.5 | 52.5 | 82.0
+Grok 4.1 Fast | 74.3 | 99.3 | 47.6 | 76.0
+GPT-5.2 Codex | 73.7 | 95.0 | 56.0 | 70.0
+Grok 4.3 | 73.6 | 94.0 | 48.7 | 78.0
+Gemini 3.1 Flash Lite Preview High | 73.2 | 91.0 | 46.5 | 82.0
+Claude 4 Sonnet Thinking | 72.9 | 82.8 | 55.9 | 80.0
+Claude 4.1 Opus Thinking | 72.8 | 93.8 | 60.5 | 64.0
+GLM 5.1 [open] | 71.8 | 79.0 | 60.3 | 76.0
+GPT-5.4 Mini xHigh | 71.5 | 99.0 | 45.4 | 70.0
+Gemma 4 31B [open] | 71.3 | 92.5 | 47.5 | 74.0
+DeepSeek V3.2 Exp Thinking [open] | 71.1 | 87.7 | 47.5 | 78.0
+Claude 4 Sonnet | 71.0 | 74.8 | 54.2 | 84.0
+DeepSeek V3.2 Thinking [open] | 70.4 | 93.5 | 45.7 | 72.0
+DeepSeek V4 Flash [open] | 70.1 | 89.5 | 46.9 | 74.0
+GPT-5.3 Instant | 70.0 | 93.0 | 53.0 | 64.0
+Qwen 3 235B A22B Thinking 2507 [open] | 69.5 | 83.0 | 47.6 | 78.0
+GPT-5.1 Codex | 69.5 | 96.5 | 41.9 | 70.0
+MiMo V2 Pro | 69.1 | 81.7 | 43.6 | 82.0
+Minimax M2.7 | 66.8 | 88.3 | 34.0 | 78.0
+Kimi K2 Instruct [open] | 66.7 | 78.2 | 45.9 | 76.0
+Claude Haiku 4.5 Thinking | 66.5 | 84.8 | 42.5 | 72.0
+Kimi K2 Thinking [open] | 66.5 | 88.0 | 43.4 | 68.0
+Qwen 3 Next 80B A3B Instruct [open] | 66.3 | 89.0 | 40.0 | 70.0
+Qwen 3 235B A22B Instruct 2507 [open] | 66.1 | 91.0 | 39.2 | 68.0
+DeepSeek V3.2 Exp [open] | 65.6 | 79.3 | 45.5 | 72.0
+Gemini 2.5 Flash (Max Thinking) | 65.3 | 77.7 | 52.4 | 66.0
+GLM 4.7 [open] | 65.2 | 70.5 | 53.2 | 72.0
+DeepSeek V3.2 [open] | 64.2 | 81.8 | 44.9 | 66.0
+Qwen 3.6 27B [open] | 63.3 | 77.2 | 42.7 | 70.0
+Qwen 3.6 Flash | 63.1 | 76.3 | 43.1 | 70.0
+GPT-5.1 Codex Mini | 63.0 | 97.0 | 30.0 | 62.0
+GPT-5.4 Nano xHigh | 62.5 | 94.3 | 39.1 | 54.0
+GLM 5V Turbo | 62.3 | 86.0 | 46.8 | 54.0
+Gemini 2.5 Flash (Max Thinking) | 62.3 | 70.2 | 52.7 | 64.0
+GLM 4.6 [open] | 59.0 | 71.0 | 50.0 | 56.0
+Claude Haiku 4.5 | 57.0 | 71.3 | 37.8 | 62.0
+Qwen 3 Next 80B A3B Thinking [open] | 56.3 | 70.2 | 40.8 | 58.0
+Qwen 3 32B [open] | 55.5 | 61.0 | 37.6 | 68.0
+Minimax M2.5 [open] | 55.1 | 66.0 | 31.3 | 68.0
+Qwen 3 30B A3B | 54.5 | 68.2 | 31.2 | 64.0
+GPT-5.1 No Thinking | 53.8 | 44.7 | 42.9 | 74.0
+Gemini 2.5 Flash Lite (Max Thinking) | 52.6 | 63.0 | 32.8 | 62.0
+Nemotron 3 Ultra 550B A55B | 52.2 | 48.0 | 36.5 | 72.0
+Gemini 2.5 Flash Lite (Max Thinking) | 52.0 | 61.8 | 32.1 | 62.0
+Grok 4.1 Fast (Non-Reasoning) | 50.0 | 44.2 | 41.9 | 64.0
+GPT-5.2 No Thinking | 50.0 | 48.8 | 45.1 | 56.0
+GLM 4.6V [open] | 49.7 | 57.5 | 29.7 | 62.0
+GPT OSS 120b [open] | 48.6 | 79.2 | 18.6 | 48.0
+Grok Code Fast | 48.6 | 55.7 | 38.0 | 52.0
+GPT-5 Nano High | 46.8 | 81.2 | 17.4 | 42.0
+Devstral 2 [open] | 45.7 | 34.3 | 38.7 | 64.0
+Trinity Large Preview [open] | 42.1 | 34.8 | 31.6 | 60.0
+Grok 4.20 Beta (Non-Reasoning) | 42.0 | 14.8 | 37.3 | 74.0
+Nemotron 3 Super 120B A12B [open] | 30.0 | 24.0 | 36.1 | no score printed
+Elephant Alpha | 27.7 | 33.5 | 13.7 | 36.0
+```
+
+**Instruction Following (4 subtasks: Paraphrase, Simplify, Story Generation,
+Summarize)**
+
+Columns: Model | InstructionFollowing | Paraphrase | Simplify | StoryGeneration | Summarize
+
+```
+Gemini 3.1 Pro Preview High | 79.1 | 79.9 | 71.0 | 77.3 | 88.2
+Gemini 3.5 Flash High | 75.6 | 75.5 | 69.1 | 75.2 | 82.6
+Gemini 3 Flash Preview High | 74.9 | 73.0 | 70.1 | 71.5 | 84.9
+Qwen 3.7 Max | 74.0 | 72.0 | 64.1 | 76.3 | 83.8
+GPT-5.5 Thinking xHigh Effort | 73.0 | 76.8 | 69.3 | 74.2 | 71.9
+GPT-5.1 Codex Max High | 70.4 | 78.0 | 65.5 | 66.0 | 72.2
+GPT-5.4 Thinking xHigh Effort | 70.2 | 63.4 | 70.0 | 79.0 | 68.4
+Gemini 3.1 Flash Lite Preview High | 68.6 | 62.0 | 65.9 | 67.3 | 79.3
+GLM 5.1 [open] | 68.5 | 65.9 | 68.6 | 69.7 | 69.7
+Gemma 4 31B [open] | 67.6 | 69.5 | 61.3 | 71.7 | 67.9
+GPT-5.4 Nano xHigh | 67.2 | 66.6 | 62.8 | 67.7 | 71.8
+GPT-5.2 Codex | 66.4 | 67.0 | 60.6 | 74.8 | 63.4
+Gemini 3 Pro Preview High | 65.8 | 64.3 | 58.2 | 66.8 | 74.1
+GPT-5.3 Codex High | 65.4 | 64.8 | 61.1 | 74.8 | 60.8
+GPT-5 Mini High | 65.3 | 61.9 | 60.4 | 73.5 | 65.3
+Kimi K2.6 Thinking [open] | 64.4 | 61.6 | 61.4 | 66.9 | 67.5
+GPT-5 Pro | 64.0 | 61.4 | 62.2 | 67.3 | 65.0
+GPT-5.1 High | 63.9 | 58.3 | 60.1 | 76.1 | 61.0
+Grok 4.20 Beta | 63.4 | 58.9 | 60.6 | 67.9 | 66.1
+GPT-5.1 Codex | 63.4 | 61.0 | 60.3 | 67.5 | 64.7
+Claude 4.6 Opus Thinking High Effort | 63.3 | 62.8 | 59.1 | 66.1 | 65.2
+Claude 4.6 Sonnet Thinking Medium Effort | 63.2 | 59.4 | 62.9 | 68.9 | 61.6
+DeepSeek V4 Flash [open] | 63.1 | 62.4 | 54.0 | 67.3 | 68.8
+Grok 4.3 | 62.8 | 64.4 | 57.6 | 70.6 | 58.4
+Claude 4.5 Opus Thinking High Effort | 62.5 | 65.7 | 55.0 | 65.8 | 63.7
+DeepSeek V4 Pro [open] | 62.4 | 56.2 | 55.9 | 67.8 | 69.5
+Kimi K2 Thinking [open] | 62.0 | 63.4 | 50.9 | 67.4 | 66.5
+GPT-5.2 High | 61.8 | 64.1 | 54.1 | 65.7 | 63.2
+Minimax M2.7 | 61.1 | 58.0 | 58.5 | 68.9 | 59.0
+GPT-5.4 Mini xHigh | 60.3 | 59.9 | 54.1 | 67.5 | 59.6
+GPT-5.3 Instant | 59.4 | 56.3 | 54.6 | 70.7 | 56.0
+Claude 4.7 Opus Thinking xHigh Effort | 59.3 | 60.1 | 54.8 | 60.6 | 61.9
+GPT-5.1 Codex Mini | 59.0 | 45.5 | 59.8 | 68.4 | 62.5
+Qwen 3.6 Plus | 58.3 | 60.6 | 51.6 | 56.9 | 64.3
+Nemotron 3 Ultra 550B A55B | 58.2 | 61.1 | 55.4 | 61.0 | 55.2
+Minimax M3 | 57.5 | 55.9 | 56.6 | 63.5 | 53.9
+Kimi K2.5 Thinking [open] | 57.4 | 54.6 | 59.8 | 57.9 | 57.4
+Minimax M2.5 [open] | 57.2 | 56.0 | 60.6 | 62.3 | 50.1
+GPT-5 Nano High | 55.7 | 50.2 | 58.8 | 55.2 | 58.6
+GLM 5 [open] | 55.3 | 52.4 | 52.9 | 57.8 | 58.3
+Claude Sonnet 4.5 Thinking | 53.4 | 53.4 | 47.9 | 58.4 | 53.7
+Qwen 3.6 27B [open] | 53.2 | 49.4 | 50.7 | 60.1 | 52.6
+GPT OSS 120b [open] | 50.3 | 44.8 | 55.5 | 56.5 | 44.4
+Claude Haiku 4.5 Thinking | 49.8 | 42.6 | 45.4 | 57.3 | 53.8
+DeepSeek V3.2 Thinking [open] | 48.2 | 41.8 | 48.2 | 55.1 | 47.6
+Qwen 3.6 Flash | 47.2 | 49.5 | 41.4 | 46.9 | 51.0
+Claude 4 Sonnet Thinking | 44.3 | 41.4 | 46.0 | 48.7 | 41.3
+MiMo V2 Pro | 43.2 | 41.8 | 41.8 | 43.1 | 46.3
+Claude 4.1 Opus Thinking | 42.4 | 35.4 | 44.4 | 44.7 | 45.2
+Qwen 3 Next 80B A3B Thinking [open] | 41.5 | 33.2 | 39.1 | 48.3 | 45.6
+DeepSeek V3.2 Exp Thinking [open] | 41.3 | 34.3 | 41.0 | 42.5 | 47.2
+Qwen 3 235B A22B Thinking 2507 [open] | 40.6 | 37.6 | 38.1 | 39.2 | 47.6
+GLM 4.7 [open] | 35.7 | 31.2 | 36.8 | 37.9 | 36.8
+Gemini 2.5 Pro (Max Thinking) | 33.1 | 28.6 | 34.5 | 32.1 | 37.0
+Elephant Alpha | 29.6 | 24.9 | 27.1 | 35.4 | 31.2
+Grok 4 | 29.1 | 19.8 | 25.9 | 38.8 | 31.8
+Gemini 2.5 Flash (Max Thinking) | 28.5 | 25.4 | 22.5 | 32.9 | 33.2
+Nemotron 3 Super 120B A12B [open] | 28.4 | 10.2 | 36.8 | 7.8 | 58.8
+Grok 4.1 Fast | 28.2 | 23.7 | 25.8 | 32.3 | 31.0
+Claude 4.5 Opus Medium Effort | 28.1 | 22.8 | 27.3 | 31.7 | 30.6
+Gemini 2.5 Flash Lite (Max Thinking) | 28.1 | 27.2 | 24.3 | 32.7 | 28.2
+Gemini 2.5 Flash (Max Thinking) | 27.7 | 24.5 | 26.9 | 30.8 | 28.5
+GLM 5V Turbo | 27.2 | 22.8 | 25.9 | 28.4 | 31.7
+GPT-5.2 No Thinking | 27.2 | 21.6 | 25.2 | 30.3 | 31.8
+GLM 4.6 [open] | 26.2 | 22.8 | 20.8 | 29.4 | 31.8
+Claude 4.1 Opus | 25.9 | 19.1 | 25.6 | 31.0 | 27.9
+Grok 4.20 Beta (Non-Reasoning) | 24.3 | 21.1 | 26.5 | 28.0 | 21.9
+Claude Sonnet 4.5 | 23.5 | 19.6 | 19.4 | 28.2 | 26.9
+GPT-5.1 No Thinking | 23.5 | 16.9 | 27.1 | 21.9 | 28.1
+Gemini 2.5 Flash Lite (Max Thinking) | 23.1 | 16.6 | 23.4 | 27.8 | 24.6
+DeepSeek V3.2 [open] | 23.1 | 20.6 | 24.0 | 20.7 | 27.0
+Claude 4 Sonnet | 22.7 | 17.0 | 22.2 | 24.8 | 26.8
+Grok Code Fast | 22.3 | 18.6 | 20.1 | 24.8 | 25.6
+Qwen 3 235B A22B Instruct 2507 [open] | 21.7 | 18.0 | 21.9 | 19.4 | 27.6
+Qwen 3 30B A3B | 21.1 | 17.9 | 20.4 | 25.1 | 21.1
+Kimi K2 Instruct [open] | 20.4 | 13.0 | 20.3 | 24.3 | 23.9
+DeepSeek V3.2 Exp [open] | 19.3 | 16.1 | 20.9 | 16.7 | 23.7
+Qwen 3 Next 80B A3B Instruct [open] | 19.2 | 16.4 | 18.4 | 17.6 | 24.4
+Qwen 3 32B [open] | 17.8 | 15.8 | 20.1 | 14.5 | 20.7
+Claude Haiku 4.5 | 17.8 | 15.5 | 18.9 | 16.4 | 20.2
+GLM 4.6V [open] | 17.1 | 17.0 | 14.9 | 14.6 | 21.7
+Grok 4.1 Fast (Non-Reasoning) | 17.0 | 12.6 | 17.1 | 18.7 | 19.4
+Devstral 2 [open] | 13.5 | 12.3 | 13.2 | 11.5 | 16.9
+```
+
+Cost: not published.
+
+---
+
+## Reasoning-on versus reasoning-off pairs
+
+Every pair below is two rows for what the page presents as the same underlying model,
+one with a "Thinking" or "High"-style suffix and one without (or with "No Thinking" /
+"(Non-Reasoning)"). Scores are Overall from each release's main leaderboard table,
+read verbatim, effort suffix kept exactly as printed on the page.
+
+### 2025-04-25
+
+```
+Claude 4 Opus Thinking | 79.5    Claude 4 Opus | 71.5
+Claude 4 Sonnet Thinking | 79.1    Claude 4 Sonnet | 69.7
+```
+
+### 2025-05-30
+
+```
+GPT-5.1 High | 78.8    GPT-5.1 No Thinking | 58.8
+Claude Sonnet 4.5 Thinking | 78.3    Claude Sonnet 4.5 | 70.6
+Claude 4.1 Opus Thinking | 75.3    Claude 4.1 Opus | 67.8
+Claude 4 Sonnet Thinking | 73.8    Claude 4 Sonnet | 65.4
+DeepSeek V3.2 Exp Thinking | 71.6    DeepSeek V3.2 Exp | 66.6
+Kimi K2 Thinking | 71.6    Kimi K2 Instruct | 63.8
+Claude Haiku 4.5 Thinking | 71.4    Claude Haiku 4.5 | 60.4
+Grok 4 Fast | 70.1    Grok 4 Fast (Non-Reasoning) | 46.1
+Grok 4.1 Fast | 69.9    Grok 4.1 Fast (Non-Reasoning) | 47.0
+Qwen 3 235B A22B Thinking 2507 | 69.1    Qwen 3 235B A22B Instruct 2507 | 65.2
+Qwen 3 Next 80B A3B Thinking | 64.6    Qwen 3 Next 80B A3B Instruct | 66.3
+```
+
+Note on the last row: this is the one pair found anywhere in the survey where the
+non-thinking variant outscores the thinking variant (66.3 vs 64.6). Recorded as
+observed, not smoothed over.
+
+### 2025-11-25
+
+```
+GPT-5.2 High | 74.6    GPT-5.2 No Thinking | 53.8
+GPT-5.1 High | 74.0    GPT-5.1 No Thinking | 47.5
+Claude Sonnet 4.5 Thinking | 72.3    Claude Sonnet 4.5 | 59.7
+Claude 4.1 Opus Thinking | 67.3    Claude 4.1 Opus | 60.0
+DeepSeek V3.2 Thinking | 66.8    DeepSeek V3.2 | 57.6
+Claude 4 Sonnet Thinking | 65.7    Claude 4 Sonnet | 57.1
+Claude Haiku 4.5 Thinking | 65.0    Claude Haiku 4.5 | 51.7
+Kimi K2 Thinking | 65.8    Kimi K2 Instruct | 53.8
+Grok 4.1 Fast | 63.0    Grok 4.1 Fast (Non-Reasoning) | 38.3
+DeepSeek V3.2 Exp Thinking | 62.8    DeepSeek V3.2 Exp | 55.5
+Qwen 3 235B A22B Thinking 2507 | 57.7    Qwen 3 235B A22B Instruct 2507 | 53.9
+Qwen 3 Next 80B A3B Thinking | 54.9    Qwen 3 Next 80B A3B Instruct | 53.3
+```
+
+### 2025-12-23
+
+```
+GPT-5.2 High | 74.1    GPT-5.2 No Thinking | 54.4
+GPT-5.1 High | 73.3    GPT-5.1 No Thinking | 47.5
+Claude Sonnet 4.5 Thinking | 71.8    Claude Sonnet 4.5 | 59.2
+Claude 4.1 Opus Thinking | 67.2    Claude 4.1 Opus | 60.0
+DeepSeek V3.2 Thinking | 66.2    DeepSeek V3.2 | 57.5
+Kimi K2 Thinking | 65.6    Kimi K2 Instruct | 53.4
+Claude 4 Sonnet Thinking | 65.5    Claude 4 Sonnet | 56.5
+Claude Haiku 4.5 Thinking | 64.6    Claude Haiku 4.5 | 50.9
+DeepSeek V3.2 Exp Thinking | 63.1    DeepSeek V3.2 Exp | 55.3
+Grok 4.1 Fast | 62.5    Grok 4.1 Fast (Non-Reasoning) | 37.6
+Qwen 3 235B A22B Thinking 2507 | 57.8    Qwen 3 235B A22B Instruct 2507 | 54.0
+Qwen 3 Next 80B A3B Thinking | 54.9    Qwen 3 Next 80B A3B Instruct | 53.1
+```
+
+### 2026-01-08
+
+Every pair the brief names as "confirmed" for this release was found present, exactly
+as claimed:
+
+```
+GPT-5.2 High | 74.8    GPT-5.2 No Thinking | 48.9
+GPT-5.1 High | 72.0    GPT-5.1 No Thinking | 42.6
+Grok 4.20 Beta | 68.0    Grok 4.20 Beta (Non-Reasoning) | 39.7
+Grok 4.1 Fast | 60.0    Grok 4.1 Fast (Non-Reasoning) | 33.5
+Claude Sonnet 4.5 Thinking | 68.2    Claude Sonnet 4.5 | 53.7
+Claude 4.1 Opus Thinking | 61.8    Claude 4.1 Opus | 54.5
+Claude 4 Sonnet Thinking | 61.3    Claude 4 Sonnet | 51.0
+Claude Haiku 4.5 Thinking | 61.3    Claude Haiku 4.5 | 45.3
+DeepSeek V3.2 Thinking | 62.2    DeepSeek V3.2 | 51.8
+DeepSeek V3.2 Exp Thinking | 58.9    DeepSeek V3.2 Exp | 49.9
+Kimi K2 Thinking | 61.6    Kimi K2 Instruct | 48.1
+Qwen 3 235B A22B Thinking 2507 | 53.0    Qwen 3 235B A22B Instruct 2507 | 48.8
+Qwen 3 Next 80B A3B Thinking | 50.4    Qwen 3 Next 80B A3B Instruct | 48.4
+```
+
+Across all five releases where pairs were found (2025-04-25 through 2026-01-08), the
+gap between thinking-on and thinking-off ranges from about 8 points (Qwen 3 235B A22B
+family, smallest gaps) up to about 33 points (GPT-5.1/GPT-5.2 families, largest gaps),
+with the single exception noted above where Qwen 3 Next 80B A3B's non-thinking variant
+scored 1.7 points higher than its thinking variant in the 2025-05-30 release only.
+
+---
+
+## Effort-tier pairs within one model
+
+### 2025-05-30
+
+Claude 4.5 Opus, three effort tiers, all three pulled as full rows (Medium Effort from
+the default table, High Effort and Low Effort via the model search box):
+
+```
+Claude 4.5 Opus Medium Effort | 75.6
+Claude 4.5 Opus High Effort   | 74.3
+Claude 4.5 Opus Low Effort    | 71.6
+```
+
+Medium scores highest of the three in this release, ahead of High - a non-monotonic
+result recorded as observed.
+
+### 2025-11-25
+
+Claude 4.5 Opus. Two variants (Thinking High Effort, Medium Effort with no "Thinking"
+prefix) are in the main leaderboard table; four more variants (a 2x3 Thinking/non-
+Thinking by High/Medium/Low matrix) exist only as overall-score entries in the
+category-profile "Add model" dropdown, not pulled as full rows here:
+
+```
+Claude 4.5 Opus Thinking High Effort | 76.8   (main table)
+Claude 4.5 Opus Thinking Medium Effort | 74.9   (dropdown, overall only)
+Claude 4.5 Opus Thinking Low Effort | 69.1   (dropdown, overall only)
+Claude 4.5 Opus Medium Effort | 64.8   (main table)
+Claude 4.5 Opus High Effort | 64.2   (dropdown, overall only)
+Claude 4.5 Opus Low Effort | 61.4   (dropdown, overall only)
+```
+
+### 2025-12-23
+
+Same six-way Claude 4.5 Opus matrix, same two variants in the main table:
+
+```
+Claude 4.5 Opus Thinking High Effort | 76.2   (main table)
+Claude 4.5 Opus Thinking Medium Effort | 74.5   (dropdown, overall only)
+Claude 4.5 Opus Thinking Low Effort | 69.0   (dropdown, overall only)
+Claude 4.5 Opus Medium Effort | 65.0   (main table)
+Claude 4.5 Opus High Effort | 64.5   (dropdown, overall only)
+Claude 4.5 Opus Low Effort | 61.5   (dropdown, overall only)
+```
+
+### 2026-01-08
+
+Claude 4.5 Opus Thinking High Effort and Claude 4.5 Opus Medium Effort are both in the
+main leaderboard table, exactly the pair the brief names as present in this release:
+
+```
+Claude 4.5 Opus Thinking High Effort | 76.0   (main table)
+Claude 4.5 Opus Thinking Medium Effort | 73.8   (dropdown, overall only)
+Claude 4.5 Opus Thinking Low Effort | 65.6   (dropdown, overall only)
+Claude 4.5 Opus Medium Effort | 59.1   (main table)
+Claude 4.5 Opus High Effort | 58.6   (dropdown, overall only)
+Claude 4.5 Opus Low Effort | 55.8   (dropdown, overall only)
+```
+
+This release also carries effort-tier families for four other models, each with one
+tier in the main table and the rest overall-score-only in the dropdown:
+
+```
+Claude 4.6 Sonnet Thinking Medium Effort | 75.5   (main table)
+Claude 4.6 Sonnet Thinking High Effort | 75.3   (dropdown, overall only)
+Claude 4.6 Sonnet Thinking Low Effort | 70.4   (dropdown, overall only)
+
+Claude 4.7 Opus Thinking xHigh Effort | 76.9   (main table)
+Claude 4.7 Opus Thinking Medium Effort | 72.3   (dropdown, overall only)
+Claude 4.7 Opus Thinking Low Effort | 69.1   (dropdown, overall only)
+
+GPT-5.5 Thinking xHigh Effort | 80.7   (main table)
+GPT-5.5 Thinking High Effort | 76.2   (dropdown, overall only)
+GPT-5.5 Thinking Medium Effort | 68.7   (dropdown, overall only)
+
+GPT-5.4 Thinking xHigh Effort | 80.3   (main table)
+GPT-5.4 Thinking High Effort | 75.1   (dropdown, overall only)
+```
+
+Pattern across all four releases with a Claude 4.5 Opus effort ladder: High Effort
+scores between Medium and Low in 2025-11-25, 2025-12-23, and 2026-01-08 (High < Medium
+in all three, the reverse of what "higher effort" would suggest), but in 2025-05-30
+High scores between Medium and Low the ordinary way (Medium > High > Low). Recorded as
+observed; no explanation for the ordering flip is offered here.
+
+---
+
+## Models appearing in more than one release: score drift
+
+This is the core evidence for how much the benchmark itself moved, independent of any
+model change, since the model string is identical across releases. Overall score plus,
+where the same-named category exists across every listed release, the category the
+brief specifically calls out.
+
+### The example named in the brief, verified
+
+GPT-5.2 High, Data Analysis column:
+
+```
+Release      Overall   DataAnalysis
+2025-11-25    74.6        72.8
+2025-12-23    74.1        72.8
+2026-01-08    74.8        78.2
+```
+
+The 2026-01-08 Data Analysis figure (78.2) versus 2025-12-23 (72.8) matches exactly
+what the brief states, with no model change between the two releases. The 2025-11-25
+Data Analysis figure is identical to 2025-12-23 (72.8), so the jump happened
+specifically between 2025-12-23 and 2026-01-08, the release where "Consecutive
+Events" was added to the Data Analysis subtask set - consistent with the subtask-set
+change being the mechanism, not a change to the model.
+
+### Overall-score drift across the four most recent 7-category releases
+
+Model | 2025-05-30 | 2025-11-25 | 2025-12-23 | 2026-01-08
+
+```
+GPT-5.1 High | 78.8 | 74.0 | 73.3 | 72.0
+GPT-5.1 Codex | 75.1 | 72.3 | 71.4 | 68.6
+GPT-5.1 Codex Mini | 70.5 | 65.7 | 65.4 | 60.4
+GPT-5.1 No Thinking | 58.8 | 47.5 | 47.5 | 42.6
+Claude Sonnet 4.5 Thinking | 78.3 | 72.3 | 71.8 | 68.2
+Claude Sonnet 4.5 | 70.6 | 59.7 | 59.2 | 53.7
+Claude 4.1 Opus Thinking | 75.3 | 67.3 | 67.2 | 61.8
+Claude 4.1 Opus | 67.8 | 60.0 | 60.0 | 54.5
+Claude 4 Sonnet Thinking | 73.8 | 65.7 | 65.5 | 61.3
+Claude 4 Sonnet | 65.4 | 57.1 | 56.5 | 51.0
+Claude Haiku 4.5 Thinking | 71.4 | 65.0 | 64.6 | 61.3
+Claude Haiku 4.5 | 60.4 | 51.7 | 50.9 | 45.3
+Claude 4.5 Opus Medium Effort | 75.6 | 64.8 | 65.0 | 59.1
+Kimi K2 Thinking | 71.6 | 65.8 | 65.6 | 61.6
+Kimi K2 Instruct | 63.8 | 53.8 | 53.4 | 48.1
+DeepSeek V3.2 Exp Thinking | 71.6 | 62.8 | 63.1 | 58.9
+DeepSeek V3.2 Exp | 66.6 | 55.5 | 55.3 | 49.9
+Qwen 3 235B A22B Thinking 2507 | 69.1 | 57.7 | 57.8 | 53.0
+Qwen 3 235B A22B Instruct 2507 | 65.2 | 53.9 | 54.0 | 48.8
+Qwen 3 Next 80B A3B Thinking | 64.6 | 54.9 | 54.9 | 50.4
+Qwen 3 Next 80B A3B Instruct | 66.3 | 53.3 | 53.1 | 48.4
+Grok 4.1 Fast | 69.9 | 63.0 | 62.5 | 60.0
+Grok 4.1 Fast (Non-Reasoning) | 47.0 | 38.3 | 37.6 | 33.5
+Grok Code Fast | 59.4 | 50.3 | 50.3 | 45.1
+Qwen 3 32B | 62.8 | 49.6 | 48.7 | 43.6
+GPT OSS 120b | 55.6 | 51.9 | 50.4 | 46.1
+Gemini 2.5 Pro (Max Thinking) | 71.9 | 63.4 | 63.3 | 58.3
+```
+
+Model | 2025-11-25 | 2025-12-23 | 2026-01-08
+
+```
+GPT-5.2 High | 74.6 | 74.1 | 74.8
+GPT-5.1 Codex Max (2025-11-25) / GPT-5.1 Codex Max High (2026-01-08 sortname) | 76.6 | 75.6 | 74.0
+GPT-5.2 No Thinking | 53.8 | 54.4 | 48.9
+GPT-5 Pro | 74.7 | 73.8 | 70.5
+Grok 4 | 64.0 | 63.8 | 62.0
+DeepSeek V3.2 Thinking | 66.8 | 66.2 | 62.2
+DeepSeek V3.2 | 57.6 | 57.5 | 51.8
+DeepSeek V3.2 Speciale (2025-11-25 only, not found in 2025-12-23 or 2026-01-08) | 64.0 | no suffix printed | no suffix printed
+Claude 4.5 Opus Thinking High Effort | 76.8 | 76.2 | 76.0
+Claude Haiku 4.5 (already listed above, repeated here for the 3-release span) | 51.7 | 50.9 | 45.3
+GLM 4.6 | 59.6 | 59.5 | 55.2
+GLM 4.7 | 47.7 | 62.7 | 58.1
+Devstral 2 | 46.5 | 46.0 | 41.2
+```
+
+Reading the pattern: almost every model above scores lower in 2025-12-23 than in
+2025-05-30, and lower again (with a couple of exceptions - GPT-5.2 High and DeepSeek
+V3.2 Exp Thinking's Data Analysis-driven bump, Claude 4.5 Opus Thinking High Effort
+holding nearly flat) in 2026-01-08 than in 2025-12-23. Since these are the same model
+strings with no version change, the consistent downward drift across most of the
+roster is evidence the benchmark's tasks got harder release to release (LiveBench
+states it refreshes tasks specifically to fight contamination), not evidence the
+models got worse. Claude 4.5 Opus Thinking High Effort is the standout exception,
+staying within 0.8 points across all three releases (76.8 to 76.2 to 76.0) while
+almost everything else around it dropped 5 to 15 points - flagged as notable rather
+than explained.
+
+### Long-span drift across the six-category era (2024-06-24 through 2025-04-25)
+
+The same real-world models (not the fictional 2026-era ones) recur across the first
+six releases in this file, which is the era before Agentic Coding existed and before
+cost was published. Overall score:
+
+Model | 2024-06-24 | 2024-07-26 | 2024-08-31 | 2024-11-25 | 2025-04-02 | 2025-04-25
+
+```
+Claude 3.5 Sonnet | 61.2 | 59.9 | 59.8 | 59.0 | no suffix printed | no suffix printed
+GPT-4o | 56.5 | 56.7 | 56.0 | 55.3 | 49.2 | no suffix printed
+Claude 3 Opus | 50.8 | 50.6 | 50.0 | 49.2 | 45.6 | no suffix printed
+Mistral Large [open] | 48.4 | 48.0 | 48.5 | 48.4 | 43.6 | 50.3
+Llama 3.1 405B Instruct Turbo [open] | 55.2 | 54.3 | 53.2 | 52.4 | 47.5 | no suffix printed
+```
+
+Claude 3.5 Sonnet drops from 61.2 to 59.0 across five releases with zero model change,
+about 2.2 points of pure benchmark-difficulty drift over roughly five months. GPT-4o
+drops harder, from 56.5 to 49.2 across four releases (about 7.3 points) before it
+disappears from the leaderboard in 2025-04-25. Llama 3.1 405B Instruct Turbo shows the
+same pattern, 55.2 down to 47.5 across five releases. Claude 3 Opus and GPT-4o are
+absent from 2025-04-25 (retired from the leaderboard, not merely renamed - no row
+under either name was found there). These are read as further confirmation that
+LiveBench's periodic task refresh erodes scores over time independent of the model.
