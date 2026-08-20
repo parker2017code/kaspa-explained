@@ -531,14 +531,46 @@ def main():
     # ratio. Output price per token is not here on purpose: effort changes how
     # many tokens a model spends, never what a token costs. Throughput is not
     # here either, because it does not move (1.02 per rung across 16 steps).
-    # Latency is not on this list, and it was until the numbers were looked at.
-    # Price is a real ladder: 1.30 to 1.71 across thirteen measured steps, tight
-    # enough to chain. Latency is not. Its steps range from 1.39 to 9.98, so
-    # chaining two of them put GLM-5.2 at 0.17 seconds to first token, which is
-    # not a measurement of anything. Time to first token and total response
-    # time are therefore left at whatever setting the board tested, which
-    # flatters nobody and penalizes the models only submitted at max.
-    SCALED_RAW = ["aaCostPerTask", "lbCostPerSuccessTask"]
+    # Everything effort moves directly, each by its own elasticity.
+    #
+    # An earlier version left the clock out, on the grounds that chaining
+    # rung-to-rung latency ratios was too unstable. That was the wrong fix for
+    # a real problem: it treated the single most elastic quantity on the whole
+    # ladder as though effort did not touch it, and left rows showing a
+    # normalized price beside a max-effort clock. Claude Fable 5 read $1.29 a
+    # task next to 141 seconds to first token.
+    #
+    # Measured over a full low-to-max climb across the families with complete
+    # ladders, the median multipliers are:
+    #
+    #   capability          +29.7 points, on a field spanning about 35
+    #   cost per task        x3.9
+    #   total response time  x11.7
+    #   time to first token  x35.6
+    #
+    # The clock runs away nine times faster than price and price already
+    # outruns capability. That is the asymmetry this whole page exists to show,
+    # so it is measured rather than dropped.
+    #
+    # It is noisier than price: across families the full-span latency ratio runs
+    # 13.3, 15.2, 56.1, 74.3, against 2.3 to 5.4 for price. Wide, but the
+    # direction and the order of magnitude are not in doubt in any family, and
+    # an interval carries that.
+    #
+    # Output price per token is deliberately absent: effort changes how many
+    # tokens a model spends, never what one costs. Throughput is absent too,
+    # measured at 1.02 across a full climb.
+    SCALED_RAW = ["aaCostPerTask", "lbCostPerSuccessTask", "ttft", "aaTotalResponse"]
+
+    # Full-span multiplier per figure, low to max, pooled across families.
+    # A move of df along the curve multiplies by ELASTICITY ** df.
+    CLOCK_METRICS = {"ttft", "aaTotalResponse"}
+    ELASTICITY = {
+        "aaCostPerTask": 3.92,
+        "lbCostPerSuccessTask": 3.92,
+        "ttft": 35.6,
+        "aaTotalResponse": 11.7,
+    }
 
     # Capability is everything the dials score that is not a price or a clock.
     CAP_METRICS = [m for m in METRICS if m not in NO_IMPUTE]
@@ -674,6 +706,52 @@ def main():
 
     GAIN = per_metric_gain()
     GAIN_REF = statistics.median([g["gain"] for g in GAIN.values()]) if GAIN else 1.0
+
+    def own_raw_curve(name, metric):
+        """One model's own readings of a priced or timed figure across its ladder."""
+        curve = own_curve(name)
+        if not curve:
+            return None
+        by_var = {}
+        for k in groups.get(name, []):
+            var = inc[k]["variant"]
+            val = inc[k]["raw"].get(metric, {}).get("value")
+            if var in EFFORT_ORDER and val and val > 0:
+                by_var[var] = math.log2(val)
+        pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
+        return pts if len(pts) >= 2 else None
+
+    def raw_factor(name, metric, f_now):
+        """What moving to TARGET_F does to one priced or timed figure.
+
+        The model's own readings first, which is a real measurement of that
+        model's own curve. The pooled elasticity only when it has none.
+        """
+        own = own_raw_curve(name, metric)
+        if own:
+            a = interp([(f, v, 0, None) for f, v in own], f_now, 1)
+            b = interp([(f, v, 0, None) for f, v in own], TARGET_F, 1)
+            return 2 ** (b - a)
+        e = ELASTICITY.get(metric)
+        if not e:
+            return None
+        if metric in CLOCK_METRICS:
+            # The pooled clock elasticity does not transfer and the data says so
+            # plainly. It is fit on families whose max-effort latency runs 65 to
+            # 223 seconds, where nearly all of the wait is the model thinking
+            # before it says anything. GLM-5.2 answers in 1.95 seconds at max
+            # effort and DeepSeek V4 Flash in 1.17: those models are streaming
+            # immediately and have no thinking time to take away. Applying x35
+            # to them produced 0.2 and 0.1 seconds, which is not a measurement
+            # of anything, and is the same failure that got latency dropped from
+            # this list once already.
+            #
+            # So a clock is only moved when the model's own ladder measured it
+            # moving. Otherwise the row keeps the time the board recorded and
+            # says so, which is wrong in a known direction rather than wrong by
+            # an invented factor.
+            return None
+        return e ** (TARGET_F - f_now)
 
     def own_curve(name):
         """A model's own ladder: [(f, capability, log2 price)], cheapest first.
@@ -967,9 +1045,11 @@ def main():
         raw_at_target = {}
         for m, e in v["raw"].items():
             Hm = hop_for(m) if m in SCALED_RAW else None
-            if Hm and Hm.get("price"):
-                e = dict(e)
-                e["value"] = e["value"] * Hm["price"]
+            if Hm:
+                fac = raw_factor(v["name"], m, Hm["from_f"])
+                if fac:
+                    e = dict(e)
+                    e["value"] = e["value"] * fac
             raw_at_target[m] = e
 
         # The row-level summary still needs one hop to describe. Use the one
