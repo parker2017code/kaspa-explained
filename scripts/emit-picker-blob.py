@@ -238,6 +238,24 @@ POOLED_F = {"low": 0.00, "medium": 0.30, "high": 0.57, "xhigh": 0.75, "max": 1.0
 
 # The pooled curve itself: capability as a fraction of a model's own low-to-max
 # gain, at each position. Read off the same families.
+#
+# Corroborated on a second board that measures something else entirely.
+# LiveBench publishes Claude 4.5 Opus at low, medium and high effort with
+# reasoning on, across four releases. Asking that data what fraction of the
+# low-to-high gain is already delivered at medium gives 0.753, 0.764 and 0.788
+# in the three releases where the ordering is monotonic, a median of 0.776. The
+# curve below answers the same question with 0.687. Two independent boards,
+# one a composite of 23 live tasks and the other a set of capability figures,
+# agreeing to 13 percent on the shape of the same curve.
+#
+# The fourth release, 2025-05-30, reads 1.481 because medium outscores high
+# there by 1.3 points. Left out of the median as non-monotonic rather than
+# smoothed away: it is a real reading and small enough to be noise.
+#
+# Worth knowing alongside it, from the same rows: turning reasoning on is worth
+# more than the entire effort dial. The median gap between thinking and not
+# thinking at the same effort label is 10.1 points, against 7.7 for the whole
+# low-to-high climb with thinking already on.
 POOLED_CURVE = [(0.0, 0.00), (0.1, 0.17), (0.2, 0.33), (0.3, 0.48),
                 (0.4, 0.57), (0.5, 0.65), (0.6, 0.72), (0.7, 0.78),
                 (0.8, 0.85), (0.9, 0.92), (1.0, 1.00)]
@@ -550,8 +568,9 @@ def _load_corpus(require_price):
         variant = row.get("Effort Setting", "").strip()
         if variant not in EFFORT_ORDER_BASE:
             continue
-        name = re.sub(r"\s*\((?:low|medium|high|xhigh|max)\)\s*$", "",
-                      row.get("Model", "")).strip()
+        name = re.sub(
+            r"\s*\((?:low|medium|high|xhigh|max|minimal|Non-reasoning[^)]*)\)\s*$",
+            "", row.get("Model", "")).strip()
         if not name:
             continue
         rec = {"variant": variant}
@@ -572,9 +591,31 @@ def _load_corpus(require_price):
     return out
 
 
-# EFFORT_ORDER is built inside main(); the corpus loader needs the same set at
-# module scope and there is no reason for two of them to drift apart.
-EFFORT_ORDER_BASE = {"low": 0, "medium": 1, "high": 2, "xhigh": 3, "max": 4}
+# One ladder, not two. The vocabulary changed and the thing did not.
+#
+# These boards have called the same control thinking, then reasoning, then
+# effort, and they publish a bottom rung under several names: "Non-reasoning",
+# "minimal", and on LiveBench a model listed without the word "Thinking" at
+# all. Treating that as a separate on-off switch beside the effort dial is
+# wrong. It is the bottom of the same ladder, and Artificial Analysis files it
+# in the same Effort Setting column as low and medium, which settles it.
+#
+# Including it takes the corpus from 25 families with two or more settings to
+# 28, and from 10 priced to 12. Thirteen families gain a rung, among them
+# Claude Sonnet 5, Grok 4.3, GPT-5.5 and all three GPT-5.6 models.
+EFFORT_ORDER_BASE = {
+    # Explicitly off. Its own floor, below every setting of on, because a model
+    # told not to reason is doing a different thing from one reasoning a
+    # little. The boards name this state three ways.
+    "Non-reasoning": 0, "Non-reasoning, high": 0, "Non-reasoning, Low Effort": 0,
+    # On, from the lowest setting up. OpenAI calls its lowest "minimal", which
+    # is reasoning turned down rather than turned off, so it sits above off.
+    "minimal": 1,
+    "low": 2, "medium": 3, "high": 4, "xhigh": 5, "max": 6,
+}
+
+# The widest a ladder gets, used to normalize a partial climb to a full one.
+LADDER_SPAN = max(EFFORT_ORDER_BASE.values())
 
 
 def main():
@@ -887,8 +928,8 @@ def main():
                 steps = EFFORT_ORDER_BASE[hi_v] - EFFORT_ORDER_BASE[lo_v]
                 if steps < 1:
                     continue
-                # Normalized to a full low-to-max span of four rungs.
-                vals.append((seen[hi_v] - seen[lo_v]) / steps * 4)
+                # Normalized to a full climb across the whole ladder.
+                vals.append((seen[hi_v] - seen[lo_v]) / steps * LADDER_SPAN)
             if len(vals) >= 4 and span.get(m):
                 raw = statistics.median(vals)
                 out[m] = {"gain": raw / span[m] * 100.0,
