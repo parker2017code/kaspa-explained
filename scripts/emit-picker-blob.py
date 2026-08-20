@@ -43,13 +43,22 @@ METRICS = [
 ]
 
 # A model needs published figures for at least this many of the 25 to be ranked.
-# 14 is where the data breaks, not a round number chosen first. Every model with
-# figures from more than one board clears it. Every model with figures from one
-# board only sits at exactly 13, because Artificial Analysis alone contributes 13
-# of the 25. So the floor sorts on cross-source evidence, which is the thing
-# worth sorting on, and it does it without naming a source in the rule. Check
-# this number against the data after any change to METRICS; it is not a constant.
-MIN_METRICS = 14
+#
+# This started at 14, the point where the data splits: every model seen by more
+# than one board clears 14, and every model seen by one board only lands on
+# exactly 13, because Artificial Analysis alone contributes 13 of the 25. That
+# floor was too strict, and the owner was right to say so on 20 August. With 25
+# figures behind ten dials, a model measured on half of them is still worth
+# ranking, and the page already says on every row how much of the question that
+# row's score actually covers, marks the same gap on the Pareto chart, and
+# refuses to invent a number for anything unmeasured. Cutting a model that has
+# real figures hides it; ranking it with the gap disclosed does not.
+#
+# So the floor is now a guardrail against a row with almost nothing, not a
+# quality bar. At 9 it admits every model these three boards publish, including
+# each lab's lower effort tiers, which are exactly the rows a buyer comparing
+# price against capability needs to see.
+MIN_METRICS = 9
 
 # Which Arena section heading carries the published interval for each figure.
 ARENA_CI_SECTIONS = {
@@ -129,6 +138,15 @@ def main():
 
     ci_raw = arena_intervals()
 
+    # A lab the Artificial Analysis pull does not carry, read off LM Arena's Org
+    # column instead: data/arena-deep-text-vision-2026-08-20.md ranks
+    # "muse-spark-1.1" with Org "Meta". Sourced, not guessed. Add to this map
+    # only from a pull that actually names the lab.
+    LAB_FALLBACK = {"Muse Spark 1.1": "Meta"}
+    for v in inc.values():
+        if not v.get("lab"):
+            v["lab"] = LAB_FALLBACK.get(v["name"])
+
     # ---- rows
     rows = []
     for key, v in sorted(inc.items(), key=lambda kv: -kv[1]["wired_metric_count"]):
@@ -173,10 +191,9 @@ def main():
         "Twenty-five figures across ten dials, kept or cut on whether they still tell the "
         "leading models apart rather than on how well known they are. Every dial carries two "
         "or three of them. A model is ranked only if it has published figures for at least "
-        f"{MIN_METRICS} of the 25, which is why the roster is a subset of the models these three "
-        "boards score between them. When a model is missing one of a dial's figures, the dial "
+        f"{MIN_METRICS} of the 25. When a model is missing one of a dial's figures, the dial "
         "blends from whichever it has; when it is missing all of them, that dial reads no data "
-        "for it."
+        "for it, and the row says how much of the question its score covers."
     )
     blob = {
         "metrics": METRICS,
