@@ -733,15 +733,23 @@ LADDER_SPAN = max(EFFORT_ORDER_BASE.values()) - min(EFFORT_ORDER_BASE.values())
 # three sources a third each in the same way the ladder fit does, rather than
 # letting whichever board has the widest numbers dominate.
 ARENA_FULL_RANGE = {
-    # Read off each board's own Score Range filter with Style Control on, which
-    # is the setting these figures are scored at. The floor is a real model:
-    # llama-13b and its contemporaries still sit at the bottom of these boards.
-    "arenaHardPrompts": (917.0, 1534.0),
+    # Style Control on, the setting these figures are scored at. The floor is a
+    # real model: llama-13b and its contemporaries still sit at the bottom of
+    # these boards, which is what makes the range worth using as a scale.
+    #
+    # Hard Prompts and Creative Writing are read off the captured rows
+    # themselves, all 393 and 391 of them, in data/arena-text-raw-dumps. The
+    # other two are read off each board's own Score Range filter, because no
+    # full row capture of them exists at this setting yet. The two that can be
+    # checked both ways agree: Creative Writing matches exactly and Hard Prompts
+    # differs by one point on the top, which is the filter rounding. That is
+    # the evidence for trusting the filter on the remaining two.
+    "arenaHardPrompts": (917.0, 1533.0),
     "arenaCreativeWriting": (931.0, 1509.0),
     "arenaTextInstructionFollowing": (908.0, 1514.0),
     "arenaLongerQuery": (1042.0, 1525.0),
-    # WebDev is a separate board and was captured without Style Control, same as
-    # the figure itself, so the pair is at least consistent.
+    # WebDev is a separate board, captured without Style Control, exactly as the
+    # figure it scales is. Wrong together beats wrong apart.
     "webdevArena": (1080.0, 1691.0),
 }
 
