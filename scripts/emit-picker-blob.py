@@ -17,6 +17,7 @@ both derived here. See choose_setting() and fill_from_sibling().
   python3 scripts/emit-picker-blob.py            # rewrite the blob
   python3 scripts/emit-picker-blob.py --print    # show what it would write
 """
+import math
 import json, pathlib, re, statistics, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -368,10 +369,30 @@ MIN_SHARED_FOR_FILL = 5
 RELEASE_DECAY = [1.0, 0.6, 0.35]
 RELEASE_TAIL = 0.1
 
-IMPUTE_MIN_R = 0.70     # weaker than this and the donor is not telling us much
-IMPUTE_MIN_PAIRS = 12   # models publishing both, below which r is not evidence
-IMPUTE_MIN_DONORS = 3   # never let one or two correlations carry a figure
-IMPUTE_MAX_DONORS = 5
+# Filling a figure a model never published.
+#
+# This used to refuse unless it had three donors correlating at 0.70 or better.
+# Everything below that threshold was thrown away and the figure left blank,
+# which is a strange thing to do with evidence: a donor at r = 0.45 is not
+# nothing, it is worth about a fifth of a figure, and the honest move is to use
+# a fifth of it rather than none.
+#
+# So the floor drops to 0.25, which is roughly where a correlation stops being
+# distinguishable from chance at these sample sizes, and one donor is allowed.
+# Every donor is then weighted by r squared, so a weak one moves the answer
+# barely at all, and the whole prediction is shrunk toward the field median by
+# how much the donors collectively explain. A figure with strong donors lands
+# near what they predict. A figure with one weak donor lands near the median
+# with a wide error. A figure with nothing lands on the median exactly, which
+# is what the scoring already did for a blank.
+#
+# Negative correlations were always allowed and still are. A donor that
+# predicts the target downward is as useful as one that predicts it upward;
+# only a donor that predicts nothing is useless.
+IMPUTE_MIN_R = 0.25     # below this a correlation is not distinguishable from chance
+IMPUTE_MIN_PAIRS = 8    # models publishing both, below which r is not evidence
+IMPUTE_MIN_DONORS = 1   # one weak correlate beats refusing to answer
+IMPUTE_MAX_DONORS = 8
 
 # Price is the one number this page refuses to invent. The whole point of the
 # cost axis is that it is real, and a predicted price on a value chart would
@@ -790,18 +811,176 @@ LIVEBENCH_COLUMNS = {
 }
 
 
-# Figures that are already a score out of 100, so their honest range is the
-# scale the test is marked on and nothing has to be inferred at all. A model
-# that gets 55 percent of Humanity's Last Exam right reads 55, not 91 because
-# 55 happens to be the best anyone has managed. Every LiveBench category is
-# marked the same way.
+# The scale: 0 is the worst result anyone has recorded on that figure, 100 is
+# the best. A model reading 100 was first on that board; a model reading 0 was
+# last, out of every model ever measured on it, not out of the 21 here.
 #
-# This is the correction that matters most. Taking these ranges from the models
-# on the board instead reproduced the exact fault the honest scale exists to
-# remove, one roster deep: LiveBench Language came out 62.5 to 90.7, where 90.7
-# is Claude Fable 5's own score, so Fable read 100 on that figure by
-# construction. Bigger arbitrary is still arbitrary.
-TRUE_SCALE_UNITS = {"%", "pts"}
+# This replaced two earlier attempts, both wrong in opposite directions.
+# Percentile across this page's roster made the bottom model 0 and the top 100
+# by construction, whatever the real gap. Then the test's printed range, 0 to
+# 100 for anything marked out of 100, which is honest but answers a different
+# question: it says what share of the exam a model got right, not whether
+# anyone has ever done better.
+#
+# Observed extremes answer the question actually being asked, which is how far
+# through the field a model sits. Artificial Analysis supplies 610 models,
+# LiveBench 604 rows once every release is counted, and LM Arena boards whose
+# floor is still the models of 2023.
+#
+# The catch, stated because it is real: LiveBench refreshes its questions every
+# six months, so its oldest releases are a different edition of the test. The
+# floors taken from them are floors on an earlier edition. Using them anyway
+# beats the alternative, which was a range read off the top forty models of the
+# current release, where the best model scored 100 because it was the best model
+# in the file rather than because it answered everything.
+LIVEBENCH_HISTORY = ROOT / "data" / "livebench-historical-2026-08-20.md"
+
+
+def livebench_full_ranges():
+    """Per-category range across every LiveBench release, not just the latest."""
+    cols = ["Reasoning", "Coding", "AgenticCoding", "Mathematics",
+            "DataAnalysis", "Language", "InstructionFollowing"]
+    keys = {"Coding": "lbCoding", "AgenticCoding": "lbAgenticCoding",
+            "Mathematics": "lbMath", "DataAnalysis": "lbDataAnalysis",
+            "Language": "lbLanguage", "InstructionFollowing": "lbInstructionFollowing",
+            "Reasoning": "lbReasoning"}
+    acc = {c: [] for c in cols}
+    if LIVEBENCH_HISTORY.exists():
+        for line in LIVEBENCH_HISTORY.read_text(encoding="utf-8").splitlines():
+            if "|" not in line:
+                continue
+            got = []
+            for cell in [x.strip() for x in line.split("|")][1:]:
+                try:
+                    v = float(cell)
+                except ValueError:
+                    continue
+                if 0 <= v <= 100:
+                    got.append(v)
+            if len(got) >= 6:
+                for i, c in enumerate(cols):
+                    if i + 1 < len(got):
+                        acc[c].append(got[i + 1])
+    lb = ROOT / "data" / "livebench-2026-08-20.md"
+    if lb.exists():
+        for line in lb.read_text(encoding="utf-8").splitlines():
+            if "|" not in line or line.startswith("#"):
+                continue
+            cells = [x.strip() for x in line.split("|")]
+            if len(cells) < 9:
+                continue
+            try:
+                nums = [float(x) for x in cells[1:9]]
+            except ValueError:
+                continue
+            for i, c in enumerate(cols):
+                acc[c].append(nums[i + 1])
+    out = {}
+    for c, vals in acc.items():
+        if len(vals) >= 30 and max(vals) > min(vals):
+            out[keys[c]] = (min(vals), max(vals))
+    return out
+
+
+TRUE_SCALE_UNITS = set()
+
+
+# Placing a model that never printed an effort label.
+#
+# Three models publish one setting and no tier: Qwen3.8 Max, Qwen3.8 27B and
+# Qwen3.8 2.4T A95B. Everything else on the page is moved to the common
+# operating point, so leaving these where they were quietly exempted them, and
+# the exemption was not neutral: every other model gets its price cut by
+# somewhere between a quarter and three fifths on the way down, so a model that
+# never moves is left looking dearer than its rivals for no measured reason.
+#
+# What places them is what effort physically is, which is tokens emitted. Cost
+# per task divided by output price gives the tokens a task actually took, and
+# that is the strongest single predictor of where a setting sits: r = 0.665
+# across 55 labeled rows, against 0.389 for time to first token. Inside a single
+# model it reaches r = 0.896, and one full climb multiplies output tokens 8.5x.
+#
+# Three features together beat any one of them: implied tokens, total response
+# time and time to first token give R2 = 0.646 on 52 rows.
+#
+# The estimate is then shrunk toward the target by how much it actually
+# explains. At R2 = 0.646 a model is moved about two thirds of the way to where
+# the fit puts it and a third of the way to no claim at all. Where a fit
+# explains nothing, this moves nothing, which is the behavior wanted.
+#
+# Two things this deliberately does not do. It does not use the clock-based
+# token estimate, total response times median speed, even though that is
+# independent of price: the two token estimates agree only at r = 0.426, so
+# they are not measuring the same quantity and averaging them would hide that.
+# And it does not stratify by price tier, though it could: the fit is far better
+# on dear models (r2 = 0.73) than on cheap ones (r2 = 0.26). Splitting would
+# leave 27 rows a side, and a placement rule fitted on 27 rows and applied to
+# three models is a worse trade than a pooled rule fitted on 55.
+def unlabeled_placement():
+    """Fit effort position from what a task actually consumed.
+
+    Returns (predict, r2) where predict takes cost per task, output price,
+    total response and ttft, or None when the board cannot support a fit.
+    """
+    corpus = LADDER_CORPUS
+    if not corpus.exists():
+        return None, 0.0
+    lines = [l for l in corpus.read_text(encoding="utf-8").splitlines()
+             if l.startswith("| ")]
+    if len(lines) < 3:
+        return None, 0.0
+    header = [c.strip() for c in lines[0].strip("|").split("|")]
+    rows = []
+    for line in lines[2:]:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) != len(header):
+            continue
+        row = dict(zip(header, cells))
+        f = POOLED_F.get(row.get("Effort Setting", "").strip())
+        if f is None:
+            continue
+        cost = corpus_number(row.get("Cost per Task (USD)"))
+        op = corpus_number(row.get("Output Price (USD/1M)"))
+        tot = corpus_number(row.get("Total Response (s)"))
+        tt = corpus_number(row.get("Latency First Chunk (s)"))
+        if not (cost and op and op > 0 and tot and tot > 0 and tt and tt > 0):
+            continue
+        rows.append(([math.log2(cost / op * 1e6), math.log2(tot), math.log2(tt)], f))
+    if len(rows) < 20:
+        return None, 0.0
+    k = 3
+    X = [[1.0] + x for x, _ in rows]
+    Y = [y for _, y in rows]
+    n = len(rows)
+    A = [[sum(X[i][p] * X[i][q] for i in range(n)) for q in range(k + 1)]
+         + [sum(X[i][p] * Y[i] for i in range(n))] for p in range(k + 1)]
+    for i in range(k + 1):
+        piv = max(range(i, k + 1), key=lambda z: abs(A[z][i]))
+        A[i], A[piv] = A[piv], A[i]
+        if abs(A[i][i]) < 1e-12:
+            return None, 0.0
+        for j in range(i + 1, k + 1):
+            fac = A[j][i] / A[i][i]
+            for q in range(i, k + 2):
+                A[j][q] -= fac * A[i][q]
+    beta = [0.0] * (k + 1)
+    for i in range(k, -1, -1):
+        beta[i] = (A[i][k + 1] - sum(A[i][q] * beta[q]
+                                     for q in range(i + 1, k + 1))) / A[i][i]
+    pred = [beta[0] + sum(beta[p + 1] * rows[i][0][p] for p in range(k))
+            for i in range(n)]
+    my = sum(Y) / n
+    ss = sum((Y[i] - pred[i]) ** 2 for i in range(n))
+    tt_ = sum((y - my) ** 2 for y in Y)
+    r2 = 1 - ss / tt_ if tt_ else 0.0
+
+    def predict(cost, op, tot, ttft):
+        if not (cost and op and op > 0 and tot and tot > 0 and ttft and ttft > 0):
+            return None
+        x = [math.log2(cost / op * 1e6), math.log2(tot), math.log2(ttft)]
+        return beta[0] + sum(beta[p + 1] * x[p] for p in range(k))
+
+    return predict, max(0.0, min(1.0, r2))
 
 
 def full_board_ranges(metric_meta):
@@ -812,9 +991,7 @@ def full_board_ranges(metric_meta):
     2023. Prices and clocks have no ceiling either and use the full board.
     """
     out = dict(ARENA_FULL_RANGE)
-    for k, meta in metric_meta.items():
-        if meta.get("unit") in TRUE_SCALE_UNITS:
-            out[k] = (0.0, 100.0)
+    out.update(livebench_full_ranges())
 
     if LADDER_CORPUS.exists():
         lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
@@ -1459,6 +1636,12 @@ def main():
                 g["sd"] / abs(g["gain"]) if g["gain"] else 1.0) * 0.5
         return overall["cap"], 0.0
 
+    PLACE_FN, PLACE_R2 = unlabeled_placement()
+    inc_by_name = {v["name"]: v for v in inc.values()}
+    if PLACE_FN:
+        print(f"unlabeled placement fit: R2={PLACE_R2:.3f} "
+              f"(tokens implied by price, total response, time to first token)")
+
     def to_target(name, variant):
         """Move a model from the setting it was measured at to TARGET_F.
 
@@ -1473,7 +1656,31 @@ def main():
         wider error.
         """
         if variant not in EFFORT_ORDER:
-            return None
+            # No label at all. Place it by what a task actually consumed, then
+            # shrink that toward no claim by how much the fit explains.
+            v = inc_by_name.get(name)
+            if not v or not PLACE_FN or PLACE_R2 <= 0:
+                return None
+            raw = v["raw"]
+            got = lambda m: (raw.get(m) or {}).get("value")
+            f_hat = PLACE_FN(got("aaCostPerTask"), got("aaOutputPrice"),
+                             got("aaTotalResponse"), got("ttft"))
+            if f_hat is None:
+                return None
+            f_now = TARGET_F + PLACE_R2 * (max(0.0, min(1.0, f_hat)) - TARGET_F)
+            if abs(f_now - TARGET_F) < 1e-9:
+                return None
+            d_frac = pooled_cap_frac(TARGET_F) - pooled_cap_frac(f_now)
+            return {"price": 2 ** ((TARGET_F - f_now) * POOLED_LADDER_DOUBLINGS),
+                    "cap": d_frac * POOLED_LADDER_CAP,
+                    # Wider than a labeled placement, because the label at least
+                    # says what the lab intended and this only says what the
+                    # task cost. The unexplained share of the fit, carried as
+                    # error on the whole ladder.
+                    "sd": (1.0 - PLACE_R2) * abs(POOLED_LADDER_CAP),
+                    "own": False,
+                    "estimated_label": True,
+                    "from_f": f_now}
         curve = own_curve(name)
         if curve:
             f_now = next((c[0] for c in curve if c[3] == variant), None)
@@ -1606,6 +1813,12 @@ def main():
     for target in LINK:
         LINK[target].sort(key=lambda l: -abs(l["r"]))
 
+    FIELD_MEDIAN = {}
+    for _m in METRICS:
+        _vals = [pv[k][_m] for k in pv if _m in pv[k]]
+        if _vals:
+            FIELD_MEDIAN[_m] = statistics.median(_vals)
+
     def impute(target, have):
         """Predict a figure from the ones this row does have.
 
@@ -1625,6 +1838,15 @@ def main():
         # scatter smaller, and overstating confidence here is the failure that
         # would matter.
         sd = sum(l["r"] ** 2 * l["rsd"] for l in links) / wsum
+        # Shrink toward the field median by how much the donors explain between
+        # them, capped at one because several strong donors should not be able
+        # to claim more confidence than one of them has.
+        conf = min(1.0, max(l["r"] ** 2 for l in links))
+        base = FIELD_MEDIAN.get(target)
+        if base is not None:
+            pred = base + conf * (pred - base)
+            # What the donors do not explain is error, on top of their scatter.
+            sd = (sd ** 2 + ((1.0 - conf) * abs(pred - base) + (1.0 - conf) * sd) ** 2) ** 0.5
         return max(0.0, min(100.0, pred)), round(sd, 2)
 
     chosen_keys, dropped = [], 0
@@ -1665,7 +1887,9 @@ def main():
 
         def hop_for(m):
             t = tier_of_figure(m)
-            return to_target(v["name"], t) if t in EFFORT_ORDER else None
+            # A missing label is not a reason to skip the hop: to_target places
+            # an unlabeled model from what its task consumed instead.
+            return to_target(v["name"], t if t in EFFORT_ORDER else None)
 
         raw_at_target = {}
         for m, e in v["raw"].items():
@@ -1686,7 +1910,7 @@ def main():
         # that moved the cost, since price is what a reader acts on.
         H = hop_for("aaCostPerTask") if "aaCostPerTask" in v["raw"] else None
         base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
-        if H is None and rung(base_variant):
+        if H is None:
             H = to_target(v["name"], rung(base_variant))
 
         # Pass one: what this setting was measured on, then what its own
@@ -1874,7 +2098,7 @@ def main():
     for row, key in zip(rows, order):
         v = inc[key]
         base_variant = VARIANT_FIX.get(v["name"]) or v["variant"]
-        H = to_target(v["name"], rung(base_variant)) if rung(base_variant) else None
+        H = to_target(v["name"], rung(base_variant))
         nat, cnat = [], []
         for m in METRICS:
             if m in NAT_METRICS and m in v["raw"]:
