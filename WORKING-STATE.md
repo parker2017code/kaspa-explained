@@ -565,3 +565,70 @@ sparse-real-row blind spot
 gap-filling is now scoped to individual dial cells rather than whole
 synthetic rows. Long-prose argument-drift re-read (item 4 in earlier
 copies of this list) is closed, clean, see the pick-up block.
+
+## Model picker, state at end of 21 August 2026
+
+Deployed through commit 63a147c. Every check below was run and passed; the
+numbers are the evidence, not decoration.
+
+THE SCALE. 0 is the worst result anyone has recorded on a figure, 100 is the
+best, across every model ever measured on that board. Not a percentile across
+the 21 models here, which made this page's own bottom model 0 and its own top
+100 whatever the real gap. Not the range each test prints out of, which answers
+what share of the exam was answered rather than whether anyone has done better.
+LiveBench needs all eleven releases for this: the captured board is the top
+forty of the current release, where the best model reads 100 because it is the
+best in the file. All releases give 604 rows and real floors, coding 6.1 rather
+than 65.4, agentic coding 1.7 rather than 18.5. CAVEAT, do not lose it:
+LiveBench refreshes its questions twice a year, so the oldest floors are floors
+on an earlier edition of the test.
+
+32 FIGURES, not 25. Seven came back on 21 August after being cut for not
+separating the leaders: GPQA Diamond, CritPt, MMMU-Pro and LiveBench reasoning
+from the SATURATED list, plus Arena's Coding, Math and Expert boards which were
+captured and never wired. Cutting a benchmark for being saturated made sense on
+a percentile scale, where a one-point gap gets stretched to fill the chart. On
+an absolute scale it guarantees the page overstates how far apart models are.
+Composites stay out forever: Intelligence Index, Omniscience Index, LiveBench
+Overall and Arena Text Overall are blends of figures already scored here.
+
+LADDERS COME FROM THE FULL BOARD, not from picker-data.json. That file carries
+whichever settings were pulled when it was built. GPT-5.6 Luna had two of its
+six, so its ladder started at $0.03 and 53.75s when the model really starts at
+$0.01 and 0.84s, and the correction pushed its price the wrong way. A truncated
+ladder is worse than no ladder: no ladder falls back to pooled and says so, a
+truncated one looks like a measurement and is silently wrong.
+
+PLACING A MODEL WITH NO EFFORT LABEL. Effort is tokens emitted. Cost per task
+over output price recovers the tokens a task took and predicts position at
+r = 0.665 across 55 labeled rows, against 0.389 for time to first token and
+0.630 for total response. All three together give R2 = 0.646, and the estimate
+is shrunk toward the target by exactly that. A model with a price but no clock
+falls back to tokens alone at r2 = 0.442 and is shrunk harder. Deliberately NOT
+stratified by price tier although the fit is much better on dear models
+(r2 0.73 against 0.26): splitting leaves 27 rows a side and a rule fitted on 27
+applied to three models is the worse trade.
+
+IMPUTATION IS A CONTINUUM, not a cutoff. Was three donors at r >= 0.70 or
+nothing. Now the floor is 0.25, one donor is enough, every donor is weighted by
+r squared, and the prediction is shrunk toward the field median by what the
+donors fail to explain. Blank figures fell from 19 percent of the grid to 1.2
+percent, 8 of 672. 17 of 21 models are complete on all 32.
+
+AUDITED, all 21 models: every one has a cost per task and every one has been
+moved to the common point. The only real gap the audit found was Muse Spark
+1.1, which arrived through Arena and LiveBench only and was missing fifteen AA
+figures including its price. Backfilled from the board, now 32 of 32 at $0.168.
+
+STYLE CONTROL TRAP, do not get this wrong again: a board captured WITH the
+correction on prints "Default Leaderboard Plots"; one captured WITHOUT it prints
+"Remove Style Control". That reads backwards and it cost a full withdrawal of
+published findings. Never infer the setting from page furniture, ask.
+
+REFUTED AND RECORDED so they are not retried: style dependence predicts nothing
+else measured (11 tests, 0 survive; capability reached r = -0.488 against a 0.47
+threshold and collapses to -0.291 without Claude Opus 5, Spearman -0.387).
+Room to the ceiling does not predict effort gain (r = -0.043). Per-lab
+regression offsets are noise. Cross-model placement from the clock alone fails
+(r = 0.389, 15 percent explained, error of about three effort rungs).
+
