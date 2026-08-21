@@ -32,17 +32,32 @@ PAGE = ROOT / "model-picker.html"
 METRICS = [
     "hle", "lbMath", "arenaHardPrompts",
     "aaGpqaDiamond", "aaCritpt", "aaMmmuPro", "lbReasoning",
-    "textMath", "textExpert",
+    "textMath",
     "scicode", "lbCoding", "webdevArena", "textCoding",
-    "lbAgenticCoding", "tau3Banking", "aaTbv2",
-    "gdpval", "lbDataAnalysis",
-    "omniNonHallucination", "omniAccuracy",
-    "lbInstructionFollowing", "arenaTextInstructionFollowing",
-    "arenaCreativeWriting", "lbLanguage",
-    "aaLcr", "arenaLongerQuery",
-    "tokensPerSec", "ttft", "aaTotalResponse",
+    "lbAgenticCoding", "tau3Banking", "aaTbv2", "aaTau2Telecom",
+    "gdpval", "lbDataAnalysis", "aaTbHard", "aaItbench",
+    "lbInstructionFollowing", "arenaTextInstructionFollowing", "aaIfbench",
+    "arenaMultiTurn",
+    "omniNonHallucination", "omniAccuracy", "arenaNonEnglish", "aaLcr",
+    "arenaCreativeWriting", "lbLanguage", "arenaLongerQuery", "textExpert",
+    "tokensPerSec", "ttft", "aaFirstAnswer", "aaTotalResponse",
     "aaCostPerTask", "lbCostPerSuccessTask", "aaOutputPrice",
+    "aaCacheHitPrice",
 ]
+
+# Three figures wired on 21 August so that ten dials carry three or four legs
+# each with nothing weighted above anything else.
+#
+# All three were cut earlier on coverage, and coverage was the wrong test once
+# a missing figure stopped being a hole and started being an estimate with a
+# declared interval. On the board they sit at 72, 73 and 73 rows of 102, which
+# is better than several figures that were never questioned.
+#
+#   IFBench              instruction following, scored automatically
+#   tau2-Bench Telecom   a tool-using job in a second domain
+#   Terminal-Bench Hard  the harder half of the terminal work
+#
+# Each lands on a dial that had two legs and now has three or four.
 
 def source_of(metric):
     """Which board publishes a figure, by the naming the emitter already uses."""
@@ -690,6 +705,7 @@ CORPUS_COLUMNS = {
     "MMMU Pro": "aaMmmuPro",
     "Cost per Task (USD)": "aaCostPerTask",
     "Output Price (USD/1M)": "aaOutputPrice",
+    "Cache Hit Price (USD/1M)": "aaCacheHitPrice",
     "Median Tokens/s": "tokensPerSec",
     "Latency First Chunk (s)": "ttft",
     "Total Response (s)": "aaTotalResponse",
@@ -1097,6 +1113,8 @@ ARENA_FULL_RANGE = {
     # WebDev is a separate board, captured without Style Control, exactly as the
     # figure it scales is. Wrong together beats wrong apart.
     "webdevArena": (1080.0, 1691.0),
+    "arenaMultiTurn": (866.0, 1519.0),
+    "arenaNonEnglish": (887.0, 1496.0),
 }
 
 LIVEBENCH_COLUMNS = {
@@ -1374,13 +1392,147 @@ def main():
         v["included"] = v["wired_metric_count"] >= MIN_METRICS
     inc = {k: v for k, v in models.items() if v["included"]}
 
+    # picker-data.json is one source among several. The status board, the
+    # Arena captures and the LiveBench file all supply figures it never
+    # carried, so a figure missing from it is only a problem if nothing else
+    # filled it either. That is checked below, against the models.
+    # Figures that reach the page from the board or the Arena captures rather
+    # than from picker-data.json still need a direction and a unit, and that
+    # file is where every other figure's comes from. Declared here so a figure
+    # cannot be scored without one.
+    EXTRA_META = {
+        "arenaMultiTurn": {"higher": True, "unit": "elo"},
+        "arenaNonEnglish": {"higher": True, "unit": "elo"},
+        "aaFirstAnswer": {"higher": False, "unit": "s"},
+        "aaCacheHitPrice": {"higher": False, "unit": "$/1M"},
+    }
+    for _m, _meta in EXTRA_META.items():
+        d["metrics"].setdefault(_m, dict(_meta))
+
     missing = [m for m in METRICS if m not in d["metrics"]]
     if missing:
-        sys.exit(f"metrics not present in picker-data.json: {missing}")
+        print("figures supplied from outside picker-data.json: "
+              + ", ".join(missing))
 
     # ---- Percentiles are computed here, over the live roster, not read from
     # picker-data.json. That file carries percentiles for whatever metric set
     # was wired when it was built, so three of the figures below have none at
+    _rows = {}
+    if LADDER_CORPUS.exists():
+        _ls = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
+               if l.startswith("| ")]
+        if len(_ls) >= 3:
+            _h = [c.strip() for c in _ls[0].strip("|").split("|")]
+            for _line in _ls[2:]:
+                _c = [c.strip() for c in _line.strip("|").split("|")]
+                if len(_c) != len(_h):
+                    continue
+                _row = dict(zip(_h, _c))
+                _nm = re.sub(
+                    r"\s*\((?:low|medium|high|xhigh|max|minimal|"
+                    r"Non-reasoning[^)]*|with fallback)\)\s*$",
+                    "", _row.get("Model", "")).strip()
+                if not _nm:
+                    continue
+                _rec = {"variant": _row.get("Effort Setting", "").strip()}
+                for _col, _key in CORPUS_COLUMNS.items():
+                    _val = corpus_number(_row.get(_col))
+                    if _val is not None:
+                        _rec[_key] = _val
+                _rows.setdefault(_nm, []).append(_rec)
+    _bf = 0
+    for _name, _recs in _rows.items():
+        _v = next((x for x in inc.values() if x["name"] == _name), None)
+        if not _v:
+            continue
+        # Match on the normalized tier, because the roster writes a setting as
+        # "xHigh Effort" and the board writes the same rung as "xhigh". Comparing
+        # the raw strings misses on every model that names its setting the long
+        # way, and the miss is silent.
+        _want = tier_of(_v.get("variant"))
+        _pick = next((_r for _r in _recs if tier_of(_r.get("variant")) == _want), None)
+        if _pick is None and _recs:
+            # No row at this model's own setting. Take the nearest rung rather
+            # than whichever row the board happened to print first, and keep the
+            # rung it came from so the figure is not filed as if it were measured
+            # at the setting the page ranks.
+            _tgt = EFFORT_ORDER_BASE.get(_v.get("variant"))
+            if _tgt is None:
+                _tgt = EFFORT_ORDER_BASE.get(str(_want or "").split()[0] if _want else "", 3)
+            _pick = min(_recs, key=lambda _r: abs(
+                EFFORT_ORDER_BASE.get(_r.get("variant"), 3) - _tgt))
+        if _pick is None:
+            continue
+        _same = tier_of(_pick.get("variant")) == _want
+        for _m in METRICS:
+            if _m in _v["raw"] or _pick.get(_m) is None:
+                continue
+            _v["raw"][_m] = {"value": float(_pick[_m]),
+                             "tier": _pick.get("variant"),
+                             "source": "aa status board" if _same
+                                       else "aa status board, nearest setting"}
+            _bf += 1
+    if _bf:
+        print(f"figures backfilled from the status board: {_bf}")
+
+    # Score the Arena text figures with Style Control on, verified board by board
+    # against the live toggle rather than inferred from the page text.
+    # Two further Arena boards, read at Style Control on with the marker
+    # visible, so ten of the forty figures come from Arena and every dial that
+    # can carry an Arena leg does.
+    ARENA_EXTRA_BOARDS = {"Multi-Turn": "arenaMultiTurn",
+                          "Non-English": "arenaNonEnglish"}
+    _cats = ROOT / "data" / "arena-categories-style-control-on-2026-08-20.md"
+    EXTRA_ARENA = {}
+    if _cats.exists():
+        _txt = _cats.read_text(encoding="utf-8")
+        for _board, _metric in ARENA_EXTRA_BOARDS.items():
+            _m = re.search(r"## " + re.escape(_board) +
+                           r" \(Style Control ON.*?\n(.*?)(?=\n## |\Z)",
+                           _txt, re.S)
+            if not _m:
+                continue
+            for _ln in _m.group(1).splitlines():
+                _c = [x.strip() for x in _ln.strip("|").split("|")]
+                if len(_c) >= 5 and _c[0].isdigit():
+                    _v = corpus_number(_c[2])
+                    if _v is None:
+                        continue
+                    # These boards print the effort setting in the slug, as
+                    # "muse-spark-1.2 (xHigh)", where the scored boards print
+                    # it as a suffix. Strip it so both spellings land on the
+                    # same model: that takes Multi-Turn from 16 of 18 roster
+                    # models to all 18.
+                    _slug = re.sub(r"\s*\([^)]*\)\s*$", "",
+                                   _c[1]).strip().lower().replace(" ", "-")
+                    EXTRA_ARENA.setdefault(_slug, {})[_metric] = _v
+
+    swapped, added = 0, 0
+    for v in inc.values():
+        slug = style_slug(v["name"], v["variant"])
+        _vals = dict(STYLE_CONTROLLED.get(slug or "", {}))
+        _vals.update(EXTRA_ARENA.get(slug or "", {}))
+        for m, val in _vals.items():
+            if m in v["raw"]:
+                e = dict(v["raw"][m]); e["value"] = float(val)
+                e["adjustment"] = "style control"
+                v["raw"][m] = e; swapped += 1
+            else:
+                # Arena scores a model once, under one slug, whatever effort
+                # setting the other boards quote it at. A roster row that
+                # carries no Arena figure is not a model Arena never saw, it is
+                # a setting Arena does not split out, so the board's own entry
+                # for this model belongs here. Without this the figure gets
+                # predicted from other benchmarks while the real Elo sits in
+                # the data directory unused.
+                v["raw"][m] = {"value": float(val),
+                               "tier": v.get("variant"),
+                               "adjustment": "style control",
+                               "source": "lm arena, board entry for this model"}
+                added += 1
+    print(f"arena text figures on style control: {swapped} corrected, "
+          f"{added} carried onto settings arena does not split")
+
     # all, and the ones it does have are normalized across a different roster.
     # A percentile is only meaningful against the field it is taken over.
     lo, hi, span = {}, {}, {}
@@ -1446,92 +1598,11 @@ def main():
     # only keeps families with two or more settings and so never sees a model
     # published once. That is exactly the case this exists to catch.
     _rows = {}
-    if LADDER_CORPUS.exists():
-        _ls = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
-               if l.startswith("| ")]
-        if len(_ls) >= 3:
-            _h = [c.strip() for c in _ls[0].strip("|").split("|")]
-            for _line in _ls[2:]:
-                _c = [c.strip() for c in _line.strip("|").split("|")]
-                if len(_c) != len(_h):
-                    continue
-                _row = dict(zip(_h, _c))
-                _nm = re.sub(
-                    r"\s*\((?:low|medium|high|xhigh|max|minimal|"
-                    r"Non-reasoning[^)]*|with fallback)\)\s*$",
-                    "", _row.get("Model", "")).strip()
-                if not _nm:
-                    continue
-                _rec = {"variant": _row.get("Effort Setting", "").strip()}
-                for _col, _key in CORPUS_COLUMNS.items():
-                    _val = corpus_number(_row.get(_col))
-                    if _val is not None:
-                        _rec[_key] = _val
-                _rows.setdefault(_nm, []).append(_rec)
-    _bf = 0
-    for _name, _recs in _rows.items():
-        _v = next((x for x in inc.values() if x["name"] == _name), None)
-        if not _v:
-            continue
-        # Match on the normalized tier, because the roster writes a setting as
-        # "xHigh Effort" and the board writes the same rung as "xhigh". Comparing
-        # the raw strings misses on every model that names its setting the long
-        # way, and the miss is silent.
-        _want = tier_of(_v.get("variant"))
-        _pick = next((_r for _r in _recs if tier_of(_r.get("variant")) == _want), None)
-        if _pick is None and _recs:
-            # No row at this model's own setting. Take the nearest rung rather
-            # than whichever row the board happened to print first, and keep the
-            # rung it came from so the figure is not filed as if it were measured
-            # at the setting the page ranks.
-            _tgt = EFFORT_ORDER_BASE.get(_v.get("variant"))
-            if _tgt is None:
-                _tgt = EFFORT_ORDER_BASE.get(str(_want or "").split()[0] if _want else "", 3)
-            _pick = min(_recs, key=lambda _r: abs(
-                EFFORT_ORDER_BASE.get(_r.get("variant"), 3) - _tgt))
-        if _pick is None:
-            continue
-        _same = tier_of(_pick.get("variant")) == _want
-        for _m in METRICS:
-            if _m in _v["raw"] or _pick.get(_m) is None:
-                continue
-            _v["raw"][_m] = {"value": float(_pick[_m]),
-                             "tier": _pick.get("variant"),
-                             "source": "aa status board" if _same
-                                       else "aa status board, nearest setting"}
-            _bf += 1
-    if _bf:
-        print(f"figures backfilled from the status board: {_bf}")
 
     for v in inc.values():
         if not v.get("lab"):
             v["lab"] = LAB_FALLBACK.get(v["name"])
 
-    # Score the Arena text figures with Style Control on, verified board by board
-    # against the live toggle rather than inferred from the page text.
-    swapped, added = 0, 0
-    for v in inc.values():
-        slug = style_slug(v["name"], v["variant"])
-        for m, val in STYLE_CONTROLLED.get(slug or "", {}).items():
-            if m in v["raw"]:
-                e = dict(v["raw"][m]); e["value"] = float(val)
-                e["adjustment"] = "style control"
-                v["raw"][m] = e; swapped += 1
-            else:
-                # Arena scores a model once, under one slug, whatever effort
-                # setting the other boards quote it at. A roster row that
-                # carries no Arena figure is not a model Arena never saw, it is
-                # a setting Arena does not split out, so the board's own entry
-                # for this model belongs here. Without this the figure gets
-                # predicted from other benchmarks while the real Elo sits in
-                # the data directory unused.
-                v["raw"][m] = {"value": float(val),
-                               "tier": v.get("variant"),
-                               "adjustment": "style control",
-                               "source": "lm arena, board entry for this model"}
-                added += 1
-    print(f"arena text figures on style control: {swapped} corrected, "
-          f"{added} carried onto settings arena does not split")
 
 
     # ---- one row per model
@@ -2734,6 +2805,11 @@ def main():
                        if m in inc[k]["raw"]), None),
             "up": higher,
         })
+
+    empty = [m for m in METRICS
+             if not any(m in inc[k]["raw"] for k in chosen_keys)]
+    if empty:
+        sys.exit(f"figures that reached no model at all: {empty}")
 
     close += subtask_closeness({inc[k]["name"] for k in chosen_keys})
 
