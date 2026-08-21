@@ -668,6 +668,9 @@ CORPUS_COLUMNS = {
     # on the page, so scoring it would count them twice, but it is published at
     # 94 percent of rungs and it sharpens the fit that prices a blank rung.
     "Intelligence Index": "aaIntelligenceIndex",
+    "First Answer (s)": "aaFirstAnswer",
+    "P25 First Chunk (s)": "aaTtftP25",
+    "P75 First Chunk (s)": "aaTtftP75",
     "GDPval-AA v2": "gdpval",
     "AA-AnalystAgent": "aaAnalystAgent",
     "Terminal-Bench Hard": "aaTbHard",
@@ -1983,69 +1986,110 @@ def main():
     # not moving them. Input price, output price and both cache prices fit at
     # r2 of 0.00 to 0.03, which is this method independently confirming what
     # the ratio test found: a lab charges the same per token at every setting.
-    CLOCK_FEATURES = ["ttft", "aaTotalResponse", "tokensPerSec",
-                      "aaIntelligenceIndex"]
+    # Candidate predictors, nested cheapest first. Which of these a figure
+    # actually gets is decided per figure by held-out fit, not by taste.
+    #
+    # Nine predictors on nine models overfits, and it does so invisibly: fitted
+    # on everything, tau3-Banking reads r-squared 0.944 and Terminal-Bench Hard
+    # 0.669, and held out by model they fall to 0.242 and 0.035. In-sample fit
+    # is not evidence here. So each figure is scored by leave-one-model-out
+    # r-squared across the nested sets below, and takes the smallest set that
+    # wins, or none if nothing clears the floor.
+    CLOCK_SETS = [
+        ["ttft", "aaTotalResponse", "tokensPerSec"],
+        ["ttft", "aaTotalResponse", "tokensPerSec", "aaIntelligenceIndex"],
+        ["ttft", "aaTotalResponse", "tokensPerSec", "aaIntelligenceIndex",
+         "aaFirstAnswer", "aaTtftP25", "aaTtftP75"],
+    ]
+    CLOCK_FEATURES = CLOCK_SETS[-1]
 
-    def clock_metric_fits():
-        """Per figure, how it moves when a model's own clocks move."""
-        rows = {}
+    def _clock_obs(feats):
+        obs = {}
         for fname, by in (BOARD_LADDER or {}).items():
             recs = list(by.values())
             for i in range(len(recs)):
                 for j in range(i + 1, len(recs)):
                     a, b = recs[i], recs[j]
-                    feat = []
-                    for f in CLOCK_FEATURES:
-                        va, vb = a.get(f), b.get(f)
-                        if not va or not vb or va <= 0 or vb <= 0:
-                            feat = None
+                    row = []
+                    for f in feats:
+                        u, v = a.get(f), b.get(f)
+                        if not u or not v or u <= 0 or v <= 0:
+                            row = None
                             break
-                        feat.append(math.log(vb) - math.log(va))
-                    if not feat:
+                        row.append(math.log(v) - math.log(u))
+                    if not row:
                         continue
                     for m in CAP_METRICS:
-                        va, vb = a.get(m), b.get(m)
-                        if va is None or vb is None:
+                        u, v = a.get(m), b.get(m)
+                        if u is None or v is None:
                             continue
-                        rows.setdefault(m, []).append(
-                            (feat, pctile(m, vb) - pctile(m, va), fname))
-        out = {}
-        for m, obs in rows.items():
-            if len(obs) < 12 or len({o[2] for o in obs}) < 4:
-                continue
-            k = len(CLOCK_FEATURES)
-            A = [[0.0] * k for _ in range(k)]
-            bv = [0.0] * k
-            for feat, dy, _ in obs:
-                for r in range(k):
-                    for c in range(k):
-                        A[r][c] += feat[r] * feat[c]
-                    bv[r] += feat[r] * dy
+                        obs.setdefault(m, []).append(
+                            (row, pctile(m, v) - pctile(m, u), fname))
+        return obs
+
+    def _ridge(obs, k):
+        A = [[0.0] * k for _ in range(k)]
+        bv = [0.0] * k
+        for row, dy, _ in obs:
             for r in range(k):
-                A[r][r] += 1e-3
-            w = solve_normal(A, bv)
-            if w is None:
-                continue
-            ss = sum((dy - sum(wi * fi for wi, fi in zip(w, feat))) ** 2
-                     for feat, dy, _ in obs)
-            tt = sum(dy * dy for _, dy, _ in obs)
-            if not tt or 1 - ss / tt < CLOCK_FIT_MIN_R2:
-                continue
-            resid = [abs(dy - sum(wi * fi for wi, fi in zip(w, feat)))
-                     for feat, dy, _ in obs]
-            out[m] = (w, statistics.median(resid))
+                for c in range(k):
+                    A[r][c] += row[r] * row[c]
+                bv[r] += row[r] * dy
+        for r in range(k):
+            A[r][r] += 1e-3
+        return solve_normal(A, bv)
+
+    def clock_metric_fits():
+        """Per figure, the smallest predictor set that survives being held out.
+
+        Scored by leave-one-model-out r-squared, never by in-sample fit.
+        """
+        out = {}
+        for feats in CLOCK_SETS:
+            k = len(feats)
+            for m, obs in _clock_obs(feats).items():
+                names = {o[2] for o in obs}
+                if len(obs) < 3 * k or len(names) < 4:
+                    continue
+                ss = tt = 0.0
+                for hold in names:
+                    tr = [o for o in obs if o[2] != hold]
+                    te = [o for o in obs if o[2] == hold]
+                    if len(tr) < 2 * k or not te:
+                        continue
+                    w = _ridge(tr, k)
+                    if w is None:
+                        continue
+                    for row, dy, _ in te:
+                        ss += (dy - sum(wi * xi
+                                        for wi, xi in zip(w, row))) ** 2
+                        tt += dy * dy
+                if not tt:
+                    continue
+                h2 = 1 - ss / tt
+                if h2 < CLOCK_FIT_MIN_R2:
+                    continue
+                if m in out and out[m][2] >= h2:
+                    continue
+                w = _ridge(obs, k)
+                if w is None:
+                    continue
+                resid = [abs(dy - sum(wi * xi for wi, xi in zip(w, row)))
+                         for row, dy, _ in obs]
+                out[m] = (w, statistics.median(resid), h2, feats)
         return out
 
-    CLOCK_FIT_MIN_R2 = 0.60
+    CLOCK_FIT_MIN_R2 = 0.40
     CLOCK_FITS = clock_metric_fits()
     if CLOCK_FITS:
+        _hs = sorted((v[2] for v in CLOCK_FITS.values()), reverse=True)
         print(f"figures moved by a model's own clocks: {len(CLOCK_FITS)} of "
-              f"{len(CAP_METRICS)}")
+              f"{len(CAP_METRICS)}  held-out r2 {_hs[0]:.2f} to {_hs[-1]:.2f}")
 
-    def clock_deltas(name, f_now):
+    def clock_deltas(name, f_now, feats=None):
         """log change in this model's own clocks between f_now and the target."""
         out = []
-        for f in CLOCK_FEATURES:
+        for f in (feats or CLOCK_FEATURES):
             own = own_raw_curve(name, f)
             if not own:
                 return None
@@ -2069,9 +2113,9 @@ def main():
             return b - a, 0.0
         fit = CLOCK_FITS.get(metric)
         if fit:
-            d = clock_deltas(name, f_now)
+            w, err, _h2, _feats = fit
+            d = clock_deltas(name, f_now, _feats)
             if d:
-                w, err = fit
                 return sum(wi * di for wi, di in zip(w, d)), err
         g = GAIN.get(metric)
         if g and GAIN_REF:
