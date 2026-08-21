@@ -1265,6 +1265,14 @@ def main():
             val = inc[k]["raw"].get(metric, {}).get("value")
             if var in EFFORT_ORDER and val and val > 0:
                 by_var[var] = math.log2(val)
+        # The board fills any rung the roster is missing, which is most of them
+        # for a clock: the roster kept two settings of Luna, the board has six.
+        for var, r in (BOARD_LADDER.get(name) or {}).items():
+            if var in by_var:
+                continue
+            val = r.get(metric)
+            if val and val > 0:
+                by_var[var] = math.log2(val)
         pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
         return pts if len(pts) >= 2 else None
 
@@ -1313,6 +1321,41 @@ def main():
             return None
         return e ** (TARGET_F - f_now)
 
+    # Every setting each model actually publishes, read off the full status
+    # board rather than off the wired roster.
+    #
+    # The roster carries whichever settings were pulled when it was built, which
+    # is not the same thing. GPT-5.6 Luna arrived with two of its six: xhigh and
+    # max. Its ladder therefore began at $0.03 and 53.75 seconds, when the model
+    # really starts at $0.01 and 0.84 seconds. Every position on that ladder was
+    # measured against the wrong floor, so the move to the common operating
+    # point started from the wrong place and barely moved anything. The same
+    # applied to Terra, Sol, Opus 5, Sonnet 5, Gemini 3.7 Flash and Kimi K3.
+    #
+    # A truncated ladder is worse than no ladder: no ladder falls back to the
+    # pooled curve and is marked as pooled, while a truncated one looks like a
+    # real measurement and is silently wrong.
+    BOARD_LADDER = {}
+    for _name, _recs in load_ladder_corpus_all().items():
+        _by = {}
+        for _r in _recs:
+            _v = _r.get("variant")
+            if _v in EFFORT_ORDER:
+                _by[_v] = _r
+        if len(_by) >= 2:
+            BOARD_LADDER[_name] = _by
+
+    def board_priced(name):
+        """That model's priced settings from the board, cheapest first."""
+        by = BOARD_LADDER.get(name)
+        if not by:
+            return None
+        pts = [(v, r) for v, r in by.items() if r.get("aaCostPerTask")]
+        if len(pts) < 2:
+            return None
+        pts.sort(key=lambda x: x[1]["aaCostPerTask"])
+        return pts
+
     def own_curve(name):
         """A model's own ladder: [(f, capability, log2 price)], cheapest first.
 
@@ -1320,7 +1363,26 @@ def main():
         cheapest published setting and 1 at its dearest. None when the model
         publishes fewer than two priced settings, which is when the pooled
         curve has to stand in for it.
+
+        The board is preferred over the roster because the board is complete.
+        Capability at each rung is averaged over the figures the board carries
+        for every rung of that model, so the ladder is measured on one set of
+        figures rather than on whichever figures happened to survive.
         """
+        bp = board_priced(name)
+        if bp:
+            core = [m for m in CAP_METRICS
+                    if all(r.get(m) is not None for _, r in bp)]
+            if core:
+                pts = []
+                for var, r in bp:
+                    cap = sum(pctile(m, r[m]) for m in core) / len(core)
+                    pts.append((math.log2(r["aaCostPerTask"]), cap, var))
+                pts.sort()
+                lo_p, hi_p = pts[0][0], pts[-1][0]
+                if hi_p > lo_p:
+                    return [((p - lo_p) / (hi_p - lo_p), c, p, var)
+                            for p, c, var in pts]
         ks = [k for k in groups.get(name, [])
               if inc[k]["variant"] in EFFORT_ORDER and cost_of(k)]
         if len(ks) < 2:
@@ -1369,6 +1431,9 @@ def main():
         for k in groups.get(name, []):
             if inc[k]["variant"] in EFFORT_ORDER and metric in pv[k]:
                 by_var[inc[k]["variant"]] = pv[k][metric]
+        for var, r in (BOARD_LADDER.get(name) or {}).items():
+            if var not in by_var and r.get(metric) is not None:
+                by_var[var] = pctile(metric, r[metric])
         pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
         return pts if len(pts) >= 2 else None
 
