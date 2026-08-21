@@ -801,6 +801,11 @@
   }
 
   // Plain names for the figures, so a dial can say what is actually driving it.
+  // Short labels for the dial summary line. PROV carries a display name for
+  // every figure already, so anything missing here falls back to it rather
+  // than printing the raw key. This map went stale on 21 August and put
+  // "aaTau2Telecom" and "arenaMultiTurn" on the live page; a second
+  // hand-maintained list of the same 40 names could only ever go stale again.
   var FIG = {
     hle: "Humanity's Last Exam", lbMath: 'LiveBench mathematics',
     arenaHardPrompts: 'LM Arena Hard Prompts', scicode: 'SciCode',
@@ -822,6 +827,11 @@
     lbReasoning: 'LiveBench reasoning', textCoding: 'LM Arena Coding',
     textMath: 'LM Arena Math', textExpert: 'LM Arena Expert'
   };
+
+  Object.keys(PROV).forEach(function (k) {
+    if (!FIG[k]) FIG[k] = PROV[k][0];
+  });
+
 
   // SRC is defined once, near the top, above SOURCE_COUNT which reads it.
 
@@ -995,8 +1005,14 @@
   // The median score on each figure, across the models that published it.
   // Recomputed once per render because the pool moves with the filters.
   var FIELD_MED = [];
+  // How far apart the field actually is on each figure. The simulation draws a
+  // substituted median with this spread, because standing in for a number
+  // nobody published is the least certain thing on a row and should lose runs
+  // accordingly.
+  var FIELD_SD = [];
   function fieldMedians(pool) {
     FIELD_MED = [];
+    FIELD_SD = [];
     var n = pool.length ? (pool[0].hv || pool[0].v).length : 0;
     for (var j = 0; j < n; j++) {
       var vals = [];
@@ -1006,6 +1022,16 @@
       }
       vals.sort(function (a, b) { return a - b; });
       FIELD_MED.push(vals.length ? vals[Math.floor(vals.length / 2)] : null);
+      if (vals.length > 1) {
+        var mean = 0, k;
+        for (k = 0; k < vals.length; k++) mean += vals[k];
+        mean /= vals.length;
+        var vr = 0;
+        for (k = 0; k < vals.length; k++) vr += (vals[k] - mean) * (vals[k] - mean);
+        FIELD_SD.push(Math.sqrt(vr / vals.length));
+      } else {
+        FIELD_SD.push(null);
+      }
     }
   }
 
@@ -1196,10 +1222,26 @@
       for (var a = 0; a < pool.length; a++) {
         var m = pool[a];
         appearances[m.n]++;
-        var num = 0, den = 0;
+        var num = 0, den = 0, vec = vecOf(m);
         for (var j = 0; j < W.length; j++) {
-          if (!W[j] || !m.a[j]) continue;
-          void 0;
+          if (!W[j]) continue;
+          if (!m.a[j] || vec[j] === null) {
+            // Same substitution score() makes, and for the same reason. The
+            // simulation used to skip a figure the model never published,
+            // which shrinks its denominator and scores it only on the
+            // benchmarks it chose to enter. That is the not-publishing
+            // advantage, and it put models in this panel in an order the list
+            // above disagreed with. The median stands in, drawn with the
+            // spread of the field on that figure, because a stand-in is the
+            // least certain number on the row.
+            var fm = FIELD_MED[j];
+            if (fm === null || fm === undefined) continue;
+            var fsd = FIELD_SD[j] != null ? FIELD_SD[j] : 12;
+            var sub = fm + normalPair(rnd) * fsd;
+            if (sub < 0) sub = 0; if (sub > 100) sub = 100;
+            num += W[j] * sub; den += W[j];
+            continue;
+          }
           // draw this figure from its own interval; ci is a 95% half-width, so
           // divide by 1.96 to get a standard deviation
           // An estimated figure is drawn from the spread of whatever produced
@@ -1217,7 +1259,7 @@
           if (m.sh && m.sh.sd && !(m.es && m.es[j] != null)) {
             sd = Math.sqrt(sd * sd + m.sh.sd * m.sh.sd);
           }
-          var drawn = m.v[j] + normalPair(rnd) * sd;
+          var drawn = vec[j] + normalPair(rnd) * sd;
           if (drawn < 0) drawn = 0; if (drawn > 100) drawn = 100;
           num += W[j] * drawn; den += W[j];
         }
@@ -1275,7 +1317,9 @@
     host.innerHTML = '<p class="mp-mc-verdict">' + verdict + '</p><ol class="mp-mc-list">' + bars + '</ol>'
       + '<p class="mp-mc-foot">A thousand rankings, each figure redrawn from its own '
       + 'error. Where a board publishes no interval, 1.5 points is assumed, which is the '
-      + 'weakest input here.</p>';
+      + 'weakest input here. A figure a model never published is stood in for by the '
+      + 'median of the field and drawn with the spread of the field, the same '
+      + 'substitution the ranking above makes, so both judge the same thing.</p>';
   }
 
   // Runs itself whenever the question changes. Making it a button implied the
