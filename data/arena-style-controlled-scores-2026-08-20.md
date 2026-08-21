@@ -1,5 +1,23 @@
 # LM Arena Text, Style Control on: the four boards this page scores
 
+> RETRACTED 21 August 2026. Do not read numbers out of this file.
+>
+> The capture is mislabeled. Its Coding table has the plain and style-controlled
+> columns swapped, proven against a board read with the toggle marker visible:
+> claude-fable-5 is 1519 with the correction off and 1552 with it on, and this
+> file prints those the other way round. Every value in the four-board table
+> disagrees with the verified capture on every one of 19 models, and matches
+> neither the on nor the off reading of the marker-confirmed board.
+>
+> The scored source is data/arena-style-control-verified-2026-08-20.md, whose
+> values were confirmed board by board against the live toggle. This file is
+> kept only so the incident stays legible; nothing reads from it.
+>
+> The trap that caused it: a board read WITH the correction on prints "Default
+> Leaderboard Plots", and with it off prints "Remove Style Control". That reads
+> backwards. Never infer the setting from page furniture.
+
+
 Read 20 August 2026, board dated Aug 19 2026. Pasted from the rendered page by
 the site owner, not scraped. Style Control is Arena's own correction, which
 removes formatting and length from the ranking.

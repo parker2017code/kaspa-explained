@@ -44,6 +44,25 @@ METRICS = [
     "aaCostPerTask", "lbCostPerSuccessTask", "aaOutputPrice",
 ]
 
+def source_of(metric):
+    """Which board publishes a figure, by the naming the emitter already uses."""
+    if metric.startswith("lb"):
+        return "LiveBench"
+    if metric.startswith(("arena", "webdev", "text")):
+        return "LM Arena"
+    return "Artificial Analysis"
+
+
+def source_counts():
+    """Figures per board. Derived, because the hardcoded version went stale the
+    moment the figure count moved and kept summing to the old total."""
+    out = {}
+    for m in METRICS:
+        out[source_of(m)] = out.get(source_of(m), 0) + 1
+    assert sum(out.values()) == len(METRICS)
+    return out
+
+
 # Seven figures added back on 21 August, all of them previously cut for
 # separating the top of the field by too little.
 #
@@ -494,7 +513,7 @@ VARIANT_FIX = {
 #
 # Using the corrected numbers is simply better evidence, and it is Arena's own
 # correction rather than one invented here. All four boards this page scores
-# were read with it on, from data/arena-style-controlled-scores-2026-08-20.md,
+# were read with it on, from data/arena-style-control-verified-2026-08-20.md,
 # so nothing mixes corrected and uncorrected.
 #
 # The penalty turns out to be a property of the model and not of the task. A
@@ -688,7 +707,8 @@ def _load_corpus(require_price):
         if variant not in EFFORT_ORDER_BASE:
             continue
         name = re.sub(
-            r"\s*\((?:low|medium|high|xhigh|max|minimal|Non-reasoning[^)]*)\)\s*$",
+            r"\s*\((?:low|medium|high|xhigh|max|minimal|"
+            r"Non-reasoning[^)]*|with fallback)\)\s*$",
             "", row.get("Model", "")).strip()
         if not name:
             continue
@@ -1177,18 +1197,32 @@ def main():
         _v = next((x for x in inc.values() if x["name"] == _name), None)
         if not _v:
             continue
-        _pick = None
-        for _r in _recs:
-            if _r.get("variant") == _v.get("variant"):
-                _pick = _r
-                break
-        _pick = _pick or _recs[0]
+        # Match on the normalized tier, because the roster writes a setting as
+        # "xHigh Effort" and the board writes the same rung as "xhigh". Comparing
+        # the raw strings misses on every model that names its setting the long
+        # way, and the miss is silent.
+        _want = tier_of(_v.get("variant"))
+        _pick = next((_r for _r in _recs if tier_of(_r.get("variant")) == _want), None)
+        if _pick is None and _recs:
+            # No row at this model's own setting. Take the nearest rung rather
+            # than whichever row the board happened to print first, and keep the
+            # rung it came from so the figure is not filed as if it were measured
+            # at the setting the page ranks.
+            _tgt = EFFORT_ORDER_BASE.get(_v.get("variant"))
+            if _tgt is None:
+                _tgt = EFFORT_ORDER_BASE.get(str(_want or "").split()[0] if _want else "", 3)
+            _pick = min(_recs, key=lambda _r: abs(
+                EFFORT_ORDER_BASE.get(_r.get("variant"), 3) - _tgt))
+        if _pick is None:
+            continue
+        _same = tier_of(_pick.get("variant")) == _want
         for _m in METRICS:
             if _m in _v["raw"] or _pick.get(_m) is None:
                 continue
             _v["raw"][_m] = {"value": float(_pick[_m]),
                              "tier": _pick.get("variant"),
-                             "source": "aa status board"}
+                             "source": "aa status board" if _same
+                                       else "aa status board, nearest setting"}
             _bf += 1
     if _bf:
         print(f"figures backfilled from the status board: {_bf}")
@@ -1199,7 +1233,7 @@ def main():
 
     # Score the Arena text figures with Style Control on, verified board by board
     # against the live toggle rather than inferred from the page text.
-    swapped = 0
+    swapped, added = 0, 0
     for v in inc.values():
         slug = style_slug(v["name"], v["variant"])
         for m, val in STYLE_CONTROLLED.get(slug or "", {}).items():
@@ -1207,7 +1241,21 @@ def main():
                 e = dict(v["raw"][m]); e["value"] = float(val)
                 e["adjustment"] = "style control"
                 v["raw"][m] = e; swapped += 1
-    print(f"arena text figures on style control: {swapped}")
+            else:
+                # Arena scores a model once, under one slug, whatever effort
+                # setting the other boards quote it at. A roster row that
+                # carries no Arena figure is not a model Arena never saw, it is
+                # a setting Arena does not split out, so the board's own entry
+                # for this model belongs here. Without this the figure gets
+                # predicted from other benchmarks while the real Elo sits in
+                # the data directory unused.
+                v["raw"][m] = {"value": float(val),
+                               "tier": v.get("variant"),
+                               "adjustment": "style control",
+                               "source": "lm arena, board entry for this model"}
+                added += 1
+    print(f"arena text figures on style control: {swapped} corrected, "
+          f"{added} carried onto settings arena does not split")
 
 
     # ---- one row per model
@@ -1924,9 +1972,14 @@ def main():
         conf = min(1.0, max(l["r"] ** 2 for l in links))
         base = FIELD_MEDIAN.get(target)
         if base is not None:
-            pred = base + conf * (pred - base)
+            # Measure the deviation before shrinking it. Reading it afterwards
+            # scales the error by conf*(1-conf), which peaks in the middle and
+            # falls to nothing at both ends, so a half-explained figure would
+            # declare a wider interval than one imputed from nothing.
+            dev = pred - base
+            pred = base + conf * dev
             # What the donors do not explain is error, on top of their scatter.
-            sd = (sd ** 2 + ((1.0 - conf) * abs(pred - base) + (1.0 - conf) * sd) ** 2) ** 0.5
+            sd = (sd ** 2 + ((1.0 - conf) * abs(dev) + (1.0 - conf) * sd) ** 2) ** 0.5
         return max(0.0, min(100.0, pred)), round(sd, 2)
 
     chosen_keys, dropped = [], 0
@@ -2225,7 +2278,7 @@ def main():
         "close": close,
         "cm": CLOSE_OK,
         "models": rows,
-        "sources": {"Artificial Analysis": 13, "LiveBench": 7, "LM Arena": 5},
+        "sources": source_counts(),
         "ci_note": note,
     }
 
