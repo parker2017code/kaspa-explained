@@ -1076,21 +1076,48 @@
   // label to print. Stated once above the list and never on a row.
   var TIER_LABEL = 'the same point on its own effort curve';
 
+  function dialScore(m, d) {
+    var num = 0, den = 0;
+    Object.keys(d.w).forEach(function (k) {
+      var j = ix[k];
+      if (m.a[j]) { num += d.w[k] * m.v[j]; den += d.w[k]; }
+    });
+    return den > 0 ? num / den : null;
+  }
+
+  // Where a model is strong is a question about the field, not about the
+  // number. On a scale whose 100 is the best result ever recorded, every model
+  // shipping today scores in the nineties on price, because the worst price
+  // ever recorded is enormous. Read against a fixed threshold that made price
+  // a strength for all 21, including the dearest ones, which is the opposite
+  // of what the sentence claims. So each dial is read against how the rest of
+  // the field scores on that same dial.
   function drivers(m) {
     var out = [];
     DIALS.forEach(function (d) {
       if (!state[d.k]) return;
-      var keys = Object.keys(d.w), num = 0, den = 0;
-      keys.forEach(function (k) {
-        var j = ix[k];
-        if (m.a[j]) { num += d.w[k] * m.v[j]; den += d.w[k]; }
+      var s = dialScore(m, d);
+      if (s === null) return;
+      var peers = [];
+      M.forEach(function (o) {
+        var v = dialScore(o, d);
+        if (v !== null) peers.push(v);
       });
-      if (den > 0) out.push({ t: d.t.toLowerCase(), s: num / den });
+      if (peers.length < 3) return;
+      var mean = 0;
+      peers.forEach(function (v) { mean += v; });
+      mean /= peers.length;
+      var vr = 0;
+      peers.forEach(function (v) { vr += (v - mean) * (v - mean); });
+      var sd = Math.sqrt(vr / peers.length);
+      out.push({ t: d.t.toLowerCase(), s: s, z: sd > 0 ? (s - mean) / sd : 0 });
     });
-    out.sort(function (a, b) { return b.s - a.s; });
+    out.sort(function (a, b) { return b.z - a.z; });
     if (out.length < 2) return '';
     var strong = [], mid = [], weak = [];
-    out.forEach(function (p) { (p.s >= 66 ? strong : p.s >= 34 ? mid : weak).push(p.t); });
+    out.forEach(function (p) {
+      (p.z >= 0.5 ? strong : p.z <= -0.5 ? weak : mid).push(p.t);
+    });
     var bits = [];
     if (strong.length) bits.push('<b>Leans on</b> ' + strong.join(', '));
     if (mid.length) bits.push('<b>Holds up on</b> ' + mid.join(', '));

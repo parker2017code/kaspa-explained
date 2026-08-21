@@ -696,6 +696,68 @@ CORPUS_COLUMNS = {
 }
 
 
+LIVEBENCH_LADDER = ROOT / "data" / "livebench-2026-08-20.md"
+LB_COLUMNS = ["lbOverall", "lbReasoningRaw", "lbCodingRaw", "lbAgenticRaw",
+              "lbMathRaw", "lbDataRaw", "lbLangRaw", "lbIfRaw",
+              "lbCostPerSuccessTaskRaw"]
+
+
+def lb_norm(name):
+    """A LiveBench model name reduced to something an AA family name matches.
+
+    The two boards disagree on word order and on where the effort tier goes.
+    LiveBench writes "Claude 5 Opus Thinking Max Effort" for what Artificial
+    Analysis calls "Claude Opus 5 (max)". Normalizing both sides matches 44 of
+    44 rows where a straight comparison matched 14.
+    """
+    n = name.lower().replace("[open]", "").strip()
+    n = re.sub(r"\b(thinking|effort)\b", " ", n)
+    n = re.sub(r"\b(max|xhigh|high|medium|low|minimal)\b", " ", n)
+    # "claude 5 opus" and "claude opus 5" are the same model.
+    m = re.match(r"^\s*claude\s+([\d.]+)\s+(opus|sonnet|haiku|fable)\s*$",
+                 n.strip())
+    if m:
+        n = f"claude {m.group(2)} {m.group(1)}"
+    return re.sub(r"[^a-z0-9.]+", "", n)
+
+
+def lb_rung(name):
+    """The effort tier LiveBench prints, in the vocabulary the board uses."""
+    low = name.lower()
+    for r in ("xhigh", "max", "high", "medium", "low", "minimal"):
+        if re.search(r"\b" + r + r"\b", low):
+            return r
+    return None
+
+
+def load_livebench_rungs(_cache={}):
+    """{(normalized family, rung or None): {metric: value}} from LiveBench.
+
+    LiveBench prices a rung Artificial Analysis leaves blank, and it publishes
+    seven category scores for every model it lists. Both are evidence about the
+    same climb, so both are read in here rather than left on the page.
+    """
+    if "v" in _cache:
+        return _cache["v"]
+    out = {}
+    for path in (LIVEBENCH_LADDER,):
+        if not path or not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if "|" not in line or line.startswith("#"):
+                continue
+            cells = [c.strip() for c in line.split("|")]
+            if len(cells) < 10:
+                continue
+            vals = [corpus_number(c) for c in cells[1:10]]
+            if vals[0] is None:
+                continue
+            rec = {k: v for k, v in zip(LB_COLUMNS, vals) if v is not None}
+            out[(lb_norm(cells[0]), lb_rung(cells[0]))] = rec
+    _cache["v"] = out
+    return out
+
+
 def solve_normal(A, b):
     """Gaussian elimination with partial pivoting. None if singular."""
     k = len(b)
@@ -782,6 +844,31 @@ def _load_corpus(require_price):
                 rec[key] = v
         fams.setdefault(name, []).append(rec)
 
+    # Fold LiveBench onto the same rungs before anything is fitted.
+    #
+    # It is a second board measuring the same climb: an overall score, seven
+    # category scores, and a cost per successful task, published at rungs
+    # Artificial Analysis sometimes leaves blank. Matching needs both names
+    # normalized, since LiveBench writes "Claude 5 Opus Thinking Max Effort"
+    # for what this board calls "Claude Opus 5 (max)".
+    _lb = load_livebench_rungs()
+    _merged = 0
+    for _fam, _recs in fams.items():
+        _key = lb_norm(_fam)
+        for _r in _recs:
+            _hit = _lb.get((_key, tier_of(_r.get("variant")) or ""))
+            if _hit is None:
+                _hit = _lb.get((_key, (_r.get("variant") or "").lower()))
+            if _hit is None:
+                _hit = _lb.get((_key, None))
+            if _hit is None:
+                continue
+            for _k, _v in _hit.items():
+                _r.setdefault(_k, _v)
+            _merged += 1
+    if _merged:
+        print(f"rungs carrying LiveBench as well: {_merged}")
+
     # Price the rungs the board leaves blank, so a real ladder is not thrown
     # away for want of one column.
     #
@@ -817,7 +904,7 @@ def _load_corpus(require_price):
     # families, so all three are used and latency alone is the fallback when a
     # rung publishes nothing else.
     COST_FEATS = ["ttft", "aaTotalResponse", "tokensPerSec",
-                  "aaIntelligenceIndex"]
+                  "aaIntelligenceIndex", "lbCostPerSuccessTaskRaw"]
     TTFT_TO_COST = 0.37
 
     def _fit_cost_from_clocks(_fams, _feats):
@@ -863,7 +950,8 @@ def _load_corpus(require_price):
     # is missing one column drops to the next best fit rather than all the way
     # to a single slope.
     COST_TIERS = []
-    for _feats in (COST_FEATS, COST_FEATS[:3], COST_FEATS[:1]):
+    for _feats in (COST_FEATS, COST_FEATS[:4], COST_FEATS[:3],
+                   COST_FEATS[:1]):
         _f = _fit_cost_from_clocks(fams, _feats)
         if _f:
             COST_TIERS.append((_feats, _f))
@@ -2000,6 +2088,9 @@ def main():
         ["ttft", "aaTotalResponse", "tokensPerSec", "aaIntelligenceIndex"],
         ["ttft", "aaTotalResponse", "tokensPerSec", "aaIntelligenceIndex",
          "aaFirstAnswer", "aaTtftP25", "aaTtftP75"],
+        ["ttft", "aaTotalResponse", "tokensPerSec", "aaIntelligenceIndex",
+         "aaFirstAnswer", "aaTtftP25", "aaTtftP75", "lbOverall",
+         "lbCostPerSuccessTaskRaw"],
     ]
     CLOCK_FEATURES = CLOCK_SETS[-1]
 
