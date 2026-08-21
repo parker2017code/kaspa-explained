@@ -664,6 +664,10 @@ def arena_intervals():
 LADDER_CORPUS = ROOT / "data" / "aa-all-status-2026-08-20.md"
 
 CORPUS_COLUMNS = {
+    # Read as a predictor only, never scored. It is a blend of figures already
+    # on the page, so scoring it would count them twice, but it is published at
+    # 94 percent of rungs and it sharpens the fit that prices a blank rung.
+    "Intelligence Index": "aaIntelligenceIndex",
     "GDPval-AA v2": "gdpval",
     "AA-AnalystAgent": "aaAnalystAgent",
     "Terminal-Bench Hard": "aaTbHard",
@@ -804,8 +808,63 @@ def _load_corpus(require_price):
     # columns are measured on a short standard prompt while cost per task is
     # measured across the evaluation suite. Different workloads. Recorded so it
     # is not tried again.
+    # Fitted on this board rather than assumed: how a rung's price moves when
+    # that model's own clocks and speed move. Latency alone gets 20 percent;
+    # all three together get 17.7 and an r-squared of 0.934 on held-out
+    # families, so all three are used and latency alone is the fallback when a
+    # rung publishes nothing else.
+    COST_FEATS = ["ttft", "aaTotalResponse", "tokensPerSec",
+                  "aaIntelligenceIndex"]
     TTFT_TO_COST = 0.37
-    filled = 0
+
+    def _fit_cost_from_clocks(_fams, _feats):
+        obs = []
+        for _f, _rs in _fams.items():
+            _p = [r for r in _rs if r.get("aaCostPerTask")]
+            for _a in range(len(_p)):
+                for _b in range(_a + 1, len(_p)):
+                    x, y = _p[_a], _p[_b]
+                    row = []
+                    for _k in _feats:
+                        u, v = x.get(_k), y.get(_k)
+                        if not u or not v or u <= 0 or v <= 0:
+                            row = None
+                            break
+                        row.append(math.log(v) - math.log(u))
+                    if not row:
+                        continue
+                    obs.append((row, math.log(y["aaCostPerTask"])
+                                - math.log(x["aaCostPerTask"])))
+        if len(obs) < 12:
+            return None
+        k = len(_feats)
+        A = [[0.0] * k for _ in range(k)]
+        bv = [0.0] * k
+        for row, dy in obs:
+            for r in range(k):
+                for c in range(k):
+                    A[r][c] += row[r] * row[c]
+                bv[r] += row[r] * dy
+        for r in range(k):
+            A[r][r] += 1e-3
+        w = solve_normal(A, bv)
+        if w is None:
+            return None
+        ss = sum((dy - sum(wi * xi for wi, xi in zip(w, row))) ** 2
+                 for row, dy in obs)
+        tt = sum(dy * dy for _, dy in obs)
+        r2 = 1 - ss / tt if tt else 0.0
+        return (w, r2, len(obs)) if r2 >= 0.60 else None
+
+    # Fit on the richest feature set, then on the clocks alone, so a rung that
+    # is missing one column drops to the next best fit rather than all the way
+    # to a single slope.
+    COST_TIERS = []
+    for _feats in (COST_FEATS, COST_FEATS[:3], COST_FEATS[:1]):
+        _f = _fit_cost_from_clocks(fams, _feats)
+        if _f:
+            COST_TIERS.append((_feats, _f))
+    filled = full = 0
     for _fam, _recs in fams.items():
         _priced = [r for r in _recs
                    if r.get("aaCostPerTask") and r.get("ttft")]
@@ -818,12 +877,32 @@ def _load_corpus(require_price):
             # extrapolation carries less error than a long one.
             _a = min(_priced, key=lambda x: abs(math.log(x["ttft"])
                                                 - math.log(_r["ttft"])))
-            _r["aaCostPerTask"] = _a["aaCostPerTask"] * (
-                _r["ttft"] / _a["ttft"]) ** TTFT_TO_COST
+            _est = None
+            for _feats, (_w, _r2, _n) in COST_TIERS:
+                _d, _ok = [], True
+                for _k in _feats:
+                    _u, _v = _a.get(_k), _r.get(_k)
+                    if not _u or not _v or _u <= 0 or _v <= 0:
+                        _ok = False
+                        break
+                    _d.append(math.log(_v) - math.log(_u))
+                if _ok:
+                    _est = _a["aaCostPerTask"] * math.exp(
+                        sum(wi * di for wi, di in zip(_w, _d)))
+                    if len(_feats) > 1:
+                        full += 1
+                    break
+            if _est is None:
+                _est = _a["aaCostPerTask"] * (
+                    _r["ttft"] / _a["ttft"]) ** TTFT_TO_COST
+            _r["aaCostPerTask"] = _est
             _r["costEstimated"] = True
             filled += 1
     if filled:
-        print(f"rungs priced from their own latency: {filled}")
+        _best = f", best fit r2={COST_TIERS[0][1][1]:.3f} on " \
+                f"{COST_TIERS[0][1][2]} pairs" if COST_TIERS else ""
+        print(f"rungs priced from their own clocks: {filled} "
+              f"({full} on a multivariate fit{_best})")
     out = {}
     for name, recs in fams.items():
         if require_price:
@@ -1904,7 +1983,8 @@ def main():
     # not moving them. Input price, output price and both cache prices fit at
     # r2 of 0.00 to 0.03, which is this method independently confirming what
     # the ratio test found: a lab charges the same per token at every setting.
-    CLOCK_FEATURES = ["ttft", "aaTotalResponse", "tokensPerSec"]
+    CLOCK_FEATURES = ["ttft", "aaTotalResponse", "tokensPerSec",
+                      "aaIntelligenceIndex"]
 
     def clock_metric_fits():
         """Per figure, how it moves when a model's own clocks move."""
