@@ -974,11 +974,36 @@ def unlabeled_placement():
     tt_ = sum((y - my) ** 2 for y in Y)
     r2 = 1 - ss / tt_ if tt_ else 0.0
 
+    # A one-feature fallback, fitted on the same rows, for a model that
+    # publishes a price but no clock at all. Weaker and it says so: implied
+    # tokens alone explain about 0.44 against 0.65 for all three, so a model
+    # placed this way is shrunk harder and carries a wider error.
+    xs = [x[0] for x, _ in rows]
+    ys = [y for _, y in rows]
+    mx = sum(xs) / n
+    my = sum(ys) / n
+    sxy = sum((a - mx) * (b - my) for a, b in zip(xs, ys))
+    sxx = sum((a - mx) ** 2 for a in xs)
+    syy = sum((b - my) ** 2 for b in ys)
+    if sxx > 0 and syy > 0:
+        r1 = sxy / (sxx * syy) ** 0.5
+        sl1 = sxy / sxx
+        ic1 = my - sl1 * mx
+        solo = (sl1, ic1, r1 * r1)
+    else:
+        solo = None
+
     def predict(cost, op, tot, ttft):
-        if not (cost and op and op > 0 and tot and tot > 0 and ttft and ttft > 0):
+        """Best available placement, and how much of it to believe."""
+        if not (cost and op and op > 0):
             return None
-        x = [math.log2(cost / op * 1e6), math.log2(tot), math.log2(ttft)]
-        return beta[0] + sum(beta[p + 1] * x[p] for p in range(k))
+        tok = math.log2(cost / op * 1e6)
+        if tot and tot > 0 and ttft and ttft > 0:
+            x = [tok, math.log2(tot), math.log2(ttft)]
+            return beta[0] + sum(beta[p + 1] * x[p] for p in range(k)), r2
+        if solo:
+            return solo[0] * tok + solo[1], solo[2]
+        return None
 
     return predict, max(0.0, min(1.0, r2))
 
@@ -1114,6 +1139,60 @@ def main():
     # "muse-spark-1.1" with Org "Meta". Sourced, not guessed. Add to this map
     # only from a pull that actually names the lab.
     LAB_FALLBACK = {"Muse Spark 1.1": "Meta"}
+    # Backfill anything the status board publishes that the wired roster missed.
+    #
+    # Muse Spark 1.1 arrived through Arena and LiveBench only, so fifteen
+    # Artificial Analysis figures it does publish, including its price, were
+    # simply absent: the row showed no cost per task at all while every other
+    # row showed one. An audit of all 21 models against the board found this was
+    # the only case, which is worth knowing either way.
+    # Read straight off the board rather than through the ladder loader, which
+    # only keeps families with two or more settings and so never sees a model
+    # published once. That is exactly the case this exists to catch.
+    _rows = {}
+    if LADDER_CORPUS.exists():
+        _ls = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
+               if l.startswith("| ")]
+        if len(_ls) >= 3:
+            _h = [c.strip() for c in _ls[0].strip("|").split("|")]
+            for _line in _ls[2:]:
+                _c = [c.strip() for c in _line.strip("|").split("|")]
+                if len(_c) != len(_h):
+                    continue
+                _row = dict(zip(_h, _c))
+                _nm = re.sub(
+                    r"\s*\((?:low|medium|high|xhigh|max|minimal|"
+                    r"Non-reasoning[^)]*|with fallback)\)\s*$",
+                    "", _row.get("Model", "")).strip()
+                if not _nm:
+                    continue
+                _rec = {"variant": _row.get("Effort Setting", "").strip()}
+                for _col, _key in CORPUS_COLUMNS.items():
+                    _val = corpus_number(_row.get(_col))
+                    if _val is not None:
+                        _rec[_key] = _val
+                _rows.setdefault(_nm, []).append(_rec)
+    _bf = 0
+    for _name, _recs in _rows.items():
+        _v = next((x for x in inc.values() if x["name"] == _name), None)
+        if not _v:
+            continue
+        _pick = None
+        for _r in _recs:
+            if _r.get("variant") == _v.get("variant"):
+                _pick = _r
+                break
+        _pick = _pick or _recs[0]
+        for _m in METRICS:
+            if _m in _v["raw"] or _pick.get(_m) is None:
+                continue
+            _v["raw"][_m] = {"value": float(_pick[_m]),
+                             "tier": _pick.get("variant"),
+                             "source": "aa status board"}
+            _bf += 1
+    if _bf:
+        print(f"figures backfilled from the status board: {_bf}")
+
     for v in inc.values():
         if not v.get("lab"):
             v["lab"] = LAB_FALLBACK.get(v["name"])
@@ -1663,11 +1742,12 @@ def main():
                 return None
             raw = v["raw"]
             got = lambda m: (raw.get(m) or {}).get("value")
-            f_hat = PLACE_FN(got("aaCostPerTask"), got("aaOutputPrice"),
-                             got("aaTotalResponse"), got("ttft"))
-            if f_hat is None:
+            got_place = PLACE_FN(got("aaCostPerTask"), got("aaOutputPrice"),
+                                 got("aaTotalResponse"), got("ttft"))
+            if got_place is None:
                 return None
-            f_now = TARGET_F + PLACE_R2 * (max(0.0, min(1.0, f_hat)) - TARGET_F)
+            f_hat, conf = got_place
+            f_now = TARGET_F + conf * (max(0.0, min(1.0, f_hat)) - TARGET_F)
             if abs(f_now - TARGET_F) < 1e-9:
                 return None
             d_frac = pooled_cap_frac(TARGET_F) - pooled_cap_frac(f_now)
@@ -1677,7 +1757,7 @@ def main():
                     # says what the lab intended and this only says what the
                     # task cost. The unexplained share of the fit, carried as
                     # error on the whole ladder.
-                    "sd": (1.0 - PLACE_R2) * abs(POOLED_LADDER_CAP),
+                    "sd": (1.0 - conf) * abs(POOLED_LADDER_CAP),
                     "own": False,
                     "estimated_label": True,
                     "from_f": f_now}
