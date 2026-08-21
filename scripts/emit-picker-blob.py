@@ -30,7 +30,9 @@ PAGE = ROOT / "model-picker.html"
 # on a single number is that number's leaderboard with a slider on it.
 METRICS = [
     "hle", "lbMath", "arenaHardPrompts",
-    "scicode", "lbCoding", "webdevArena",
+    "aaGpqaDiamond", "aaCritpt", "aaMmmuPro", "lbReasoning",
+    "textMath", "textExpert",
+    "scicode", "lbCoding", "webdevArena", "textCoding",
     "lbAgenticCoding", "tau3Banking", "aaTbv2",
     "gdpval", "lbDataAnalysis",
     "omniNonHallucination", "omniAccuracy",
@@ -40,6 +42,28 @@ METRICS = [
     "tokensPerSec", "ttft", "aaTotalResponse",
     "aaCostPerTask", "lbCostPerSuccessTask", "aaOutputPrice",
 ]
+
+# Seven figures added back on 21 August, all of them previously cut for
+# separating the top of the field by too little.
+#
+# That test made sense on a percentile scale, where a benchmark the leaders
+# agree on within a point gets stretched across the full height of the chart
+# and becomes pure noise. It stopped making sense the moment every figure was
+# read on the scale its own test is marked on. There a one-point gap is a
+# one-point gap, and dropping the benchmark is what distorts the answer:
+# keeping only the figures that separate models is a guarantee the page will
+# overstate how far apart they are.
+#
+# GPQA Diamond, CritPt, MMMU-Pro and LiveBench reasoning come back from the
+# screening report's SATURATED list. Arena's Coding, Math and Expert boards
+# come back because they were never wired at all. Two saturated figures were
+# already in, AA-LCR and Terminal-Bench v2.1, which made the old rule
+# inconsistent as well as wrong.
+#
+# Composites stay out and always will: Intelligence Index, Omniscience Index,
+# LiveBench Overall and Arena Text Overall are blends of figures already scored
+# here, so adding them counts their parts twice. Input price stays out for
+# tracking output price at 0.98.
 
 # A model needs published figures for at least this many of the 25 to be ranked.
 #
@@ -745,6 +769,11 @@ ARENA_FULL_RANGE = {
     # differs by one point on the top, which is the filter rounding. That is
     # the evidence for trusting the filter on the remaining two.
     "arenaHardPrompts": (917.0, 1533.0),
+    # Read off the captured rows of each board, all at Style Control on:
+    # Coding 388 models, Math 377, Expert 343.
+    "textCoding": (883.0, 1552.0),
+    "textMath": (890.0, 1551.0),
+    "textExpert": (1082.0, 1547.0),
     "arenaCreativeWriting": (931.0, 1509.0),
     "arenaTextInstructionFollowing": (908.0, 1514.0),
     "arenaLongerQuery": (1042.0, 1525.0),
