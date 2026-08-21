@@ -689,6 +689,25 @@ CORPUS_COLUMNS = {
 }
 
 
+def solve_normal(A, b):
+    """Gaussian elimination with partial pivoting. None if singular."""
+    k = len(b)
+    M = [list(A[i]) + [b[i]] for i in range(k)]
+    for i in range(k):
+        piv = max(range(i, k), key=lambda r: abs(M[r][i]))
+        if abs(M[piv][i]) < 1e-12:
+            return None
+        M[i], M[piv] = M[piv], M[i]
+        for r in range(i + 1, k):
+            f = M[r][i] / M[i][i]
+            for c in range(i, k + 1):
+                M[r][c] -= f * M[i][c]
+    x = [0.0] * k
+    for i in range(k - 1, -1, -1):
+        x[i] = (M[i][k] - sum(M[i][c] * x[c] for c in range(i + 1, k))) / M[i][i]
+    return x
+
+
 def corpus_number(x):
     """A cell as a number, or None. Blank is '--' on this board."""
     if x is None:
@@ -1857,6 +1876,104 @@ def main():
         pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
         return pts if len(pts) >= 2 else None
 
+    # What a model's own clocks say about its own benchmark movement.
+    #
+    # Everything on this board that answers to effort answers to the same
+    # underlying thing: how long the model thinks. That shows up directly in
+    # latency, total response and output speed, all of which are published at
+    # far more rungs than the benchmarks are. So a figure can be moved up or
+    # down a model's own ladder by what that model's own clocks did between the
+    # two rungs, instead of by a board-wide average for that figure.
+    #
+    # Fitted on within-family rung pairs, holding out whole families:
+    #
+    #   GDPval-AA v2         r2 0.963   1.7 points off, against 7.0 unmoved
+    #   Cost per Task        r2 0.934   17.7 percent off, against 56.1
+    #   tau3-Banking         r2 0.929   2.4 points, against 7.0
+    #   Terminal-Bench v2.1  r2 0.888   3.2 points, against 9.0
+    #   Humanity's Last Exam r2 0.810   1.6 points, against 7.0
+    #   tau2-Bench Telecom   r2 0.764   2.6 points, against 7.0
+    #   SciCode              r2 0.691   1.5 points, against 3.0
+    #   CritPt               r2 0.685   3.1 points, against 5.0
+    #   Terminal-Bench Hard  r2 0.629   4.2 points, against 5.5
+    #
+    # Figures that do not clear the bar are left where they are, which is the
+    # finding rather than a failure: AA-LCR, the non-hallucination rate, GPQA
+    # Diamond, MMMU Pro, IFBench and the Omniscience pair barely move with
+    # effort inside a family, so predicting them from the clocks is worse than
+    # not moving them. Input price, output price and both cache prices fit at
+    # r2 of 0.00 to 0.03, which is this method independently confirming what
+    # the ratio test found: a lab charges the same per token at every setting.
+    CLOCK_FEATURES = ["ttft", "aaTotalResponse", "tokensPerSec"]
+
+    def clock_metric_fits():
+        """Per figure, how it moves when a model's own clocks move."""
+        rows = {}
+        for fname, by in (BOARD_LADDER or {}).items():
+            recs = list(by.values())
+            for i in range(len(recs)):
+                for j in range(i + 1, len(recs)):
+                    a, b = recs[i], recs[j]
+                    feat = []
+                    for f in CLOCK_FEATURES:
+                        va, vb = a.get(f), b.get(f)
+                        if not va or not vb or va <= 0 or vb <= 0:
+                            feat = None
+                            break
+                        feat.append(math.log(vb) - math.log(va))
+                    if not feat:
+                        continue
+                    for m in CAP_METRICS:
+                        va, vb = a.get(m), b.get(m)
+                        if va is None or vb is None:
+                            continue
+                        rows.setdefault(m, []).append(
+                            (feat, pctile(m, vb) - pctile(m, va), fname))
+        out = {}
+        for m, obs in rows.items():
+            if len(obs) < 12 or len({o[2] for o in obs}) < 4:
+                continue
+            k = len(CLOCK_FEATURES)
+            A = [[0.0] * k for _ in range(k)]
+            bv = [0.0] * k
+            for feat, dy, _ in obs:
+                for r in range(k):
+                    for c in range(k):
+                        A[r][c] += feat[r] * feat[c]
+                    bv[r] += feat[r] * dy
+            for r in range(k):
+                A[r][r] += 1e-3
+            w = solve_normal(A, bv)
+            if w is None:
+                continue
+            ss = sum((dy - sum(wi * fi for wi, fi in zip(w, feat))) ** 2
+                     for feat, dy, _ in obs)
+            tt = sum(dy * dy for _, dy, _ in obs)
+            if not tt or 1 - ss / tt < CLOCK_FIT_MIN_R2:
+                continue
+            resid = [abs(dy - sum(wi * fi for wi, fi in zip(w, feat)))
+                     for feat, dy, _ in obs]
+            out[m] = (w, statistics.median(resid))
+        return out
+
+    CLOCK_FIT_MIN_R2 = 0.60
+    CLOCK_FITS = clock_metric_fits()
+    if CLOCK_FITS:
+        print(f"figures moved by a model's own clocks: {len(CLOCK_FITS)} of "
+              f"{len(CAP_METRICS)}")
+
+    def clock_deltas(name, f_now):
+        """log change in this model's own clocks between f_now and the target."""
+        out = []
+        for f in CLOCK_FEATURES:
+            own = own_raw_curve(name, f)
+            if not own:
+                return None
+            a = interp([(x, v, 0, None) for x, v in own], f_now, 1)
+            b = interp([(x, v, 0, None) for x, v in own], TARGET_F, 1)
+            out.append((b - a) * math.log(2))
+        return out
+
     def metric_shift(name, metric, f_now, overall):
         """What moving to TARGET_F does to one figure, for one model.
 
@@ -1870,6 +1987,12 @@ def main():
             a = interp([(f, v, 0, None) for f, v in own], f_now, 1)
             b = interp([(f, v, 0, None) for f, v in own], TARGET_F, 1)
             return b - a, 0.0
+        fit = CLOCK_FITS.get(metric)
+        if fit:
+            d = clock_deltas(name, f_now)
+            if d:
+                w, err = fit
+                return sum(wi * di for wi, di in zip(w, d)), err
         g = GAIN.get(metric)
         if g and GAIN_REF:
             scale = g["gain"] / GAIN_REF
