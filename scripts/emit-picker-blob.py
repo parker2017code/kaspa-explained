@@ -256,22 +256,44 @@ COST_PENALTY = 8.0
 # another's medium, moved up one level.
 #
 # So the target is a position, and every model is interpolated to it along its
-# own curve. Where that position sits is derived, not chosen. Pooling the
-# families that publish three or more settings and reading marginal capability
-# per doubling of price along the normalized curve:
+# own curve. Where that position sits is derived, and it is ONE position for
+# every model, not a position fitted per model.
 #
-#   f 0.0 to 0.3    30.2, 19.4, 18.2 points per doubling
-#   f 0.3 to 0.5    11.9, 11.9
-#   f 0.5 to 1.0    10.3, 9.8, 9.8, 9.8, 9.8
+# It has to be one position, and the reason is in the data. Six families on
+# this board publish three or more priced settings, which is what it takes to
+# see a curve bend at all. Ask each of them separately where its own returns
+# flatten and the answers are 0.15, 0.19, 0.31, 0.48, 0.78, 0.78: a median of
+# 0.40 and a spread covering most of the ladder. Six numbers cannot support 21
+# per-model answers, and 15 of the 21 models here publish a single setting, so
+# for them there is no curve to ask. Pooling the six is the only estimate the
+# evidence carries.
 #
-# Marginal return falls by a third between 0.3 and 0.4 and is flat across the
-# entire top half. That break is the knee, and buying past it is paying for a
-# curve that has stopped rising. TARGET_F is placed there.
+# Pooled, normalizing each family's price span to 0-to-1 and its capability to
+# a fraction of its own low-to-max gain, marginal capability per doubling of
+# price runs:
 #
-# For scale, the capability curve is steeply concave: Claude Opus 5 collects
-# 70 percent of everything max effort buys it within the first 30 percent of
-# its price span.
-TARGET_F = 0.35
+#   f 0.10 to 0.30    75, 75, 71, 69, 66   holding near its peak
+#   f 0.35 to 0.45    60, 54, 47           falling
+#   f 0.50 to 1.00    36, 37, 38, 38, 38, 38, 36, 36, 36, 36   flat
+#
+# The fall is over by 0.47, where marginal return first comes within a tenth
+# of the flat tail it holds all the way to max. Past that point every further
+# doubling of price buys the same 36 points as the one before it: the curve has
+# stopped bending, so there is no longer a reason to stop anywhere in
+# particular, and the money buys a constant rate rather than a knee.
+#
+# 0.47 is where the last of the bend is, which is as close to the frontier as
+# a model gets before the return goes flat. It sits between medium, at 0.30,
+# and high, at 0.57, nearer to high. That matches what the labs' own defaults
+# and most people's habits land on, and it was derived here rather than read
+# off that habit.
+#
+# It captures 58.8 percent of everything the whole low-to-max climb buys, at
+# roughly half the price span. The old value of 0.35 sat inside the falling
+# stretch rather than at the end of it and captured 46.6 percent, so it was
+# quoting every model 12 points of its own available gain short of the point
+# where paying more stops being worth it.
+TARGET_F = 0.47
 
 # Where each label falls on its own model's price span, pooled across the
 # families that publish a full ladder. Used only to place a model that
@@ -323,6 +345,21 @@ POOLED_CURVE = [(0.0, 0.00), (0.1, 0.17), (0.2, 0.33), (0.3, 0.48),
 # Correlations came out between minus 0.16 and minus 0.07 with median errors of
 # 41 to 85 percent. Timing does not predict price on this board. The idea is
 # recorded here so it is not tried a third time.
+# How many capability figures a model's rungs must share before its own curve
+# is allowed to speak for what effort buys it.
+#
+# One figure is not a capability curve. Claude Sonnet 5 publishes six settings,
+# but four of them carry a single benchmark each, so the only figure common to
+# every rung is GDPval. Fitting the whole climb to that one benchmark put its
+# capability shift at minus 24.9 points, against minus 9.7 from the pooled
+# curve, on the strength of one number that happens to climb steeply.
+#
+# Below this threshold the model still uses its own prices, which are real and
+# which place it on the ladder, and borrows the pooled curve for what the climb
+# buys. Price and capability are separated because the evidence for them is
+# separate: a model can publish a full price ladder and almost no benchmarks.
+MIN_CORE_FOR_OWN_CAP = 4
+
 POOLED_LADDER_DOUBLINGS = 1.97
 
 # How many percentile points a full low-to-max climb buys, pooled. Same use.
@@ -718,6 +755,56 @@ def _load_corpus(require_price):
             if v is not None:
                 rec[key] = v
         fams.setdefault(name, []).append(rec)
+
+    # Price the rungs the board leaves blank, so a real ladder is not thrown
+    # away for want of one column.
+    #
+    # Artificial Analysis publishes a cost per task for some effort settings and
+    # not others. Claude Sonnet 5 is the clearest case: it publishes six
+    # settings, and only max and reasoning-off carry a cost. The ladder code
+    # needs two priced rungs, so it saw one, gave up, and fell back to reading
+    # the word "max" off a table. A model with a six-rung ladder was being
+    # placed by a label.
+    #
+    # The blank rungs are not blank on the other columns. Every one of them
+    # publishes time to first token, and within a family that tracks cost per
+    # task almost exactly: median r = +0.989 across the six families that
+    # publish three or more priced rungs, positive in all six, with a pooled
+    # log-log slope of 0.37. Both quantities are driven by the same thing, which
+    # is how long the model thinks.
+    #
+    # Holdout test, dropping each known price in turn and predicting it from the
+    # nearest surviving rung: median error 20 percent, worst 46, all 26 inside
+    # 50. That is not a measurement, and it is marked as an estimate. It is
+    # still far better than what it replaces, which is a label carrying about a
+    # third of a ladder in error.
+    #
+    # Tested and rejected: reconstructing cost from implied output tokens
+    # (tokens per second times generation time) at the published output price.
+    # It fails, r = 0.385 and a median error of 69 percent, because the speed
+    # columns are measured on a short standard prompt while cost per task is
+    # measured across the evaluation suite. Different workloads. Recorded so it
+    # is not tried again.
+    TTFT_TO_COST = 0.37
+    filled = 0
+    for _fam, _recs in fams.items():
+        _priced = [r for r in _recs
+                   if r.get("aaCostPerTask") and r.get("ttft")]
+        if not _priced:
+            continue
+        for _r in _recs:
+            if _r.get("aaCostPerTask") or not _r.get("ttft"):
+                continue
+            # Anchor on the priced rung nearest in latency, because a short
+            # extrapolation carries less error than a long one.
+            _a = min(_priced, key=lambda x: abs(math.log(x["ttft"])
+                                                - math.log(_r["ttft"])))
+            _r["aaCostPerTask"] = _a["aaCostPerTask"] * (
+                _r["ttft"] / _a["ttft"]) ** TTFT_TO_COST
+            _r["costEstimated"] = True
+            filled += 1
+    if filled:
+        print(f"rungs priced from their own latency: {filled}")
     out = {}
     for name, recs in fams.items():
         if require_price:
@@ -1335,7 +1422,30 @@ def main():
     # Output price per token is deliberately absent: effort changes how many
     # tokens a model spends, never what one costs. Throughput is absent too,
     # measured at 1.02 across a full climb.
-    SCALED_RAW = ["aaCostPerTask", "lbCostPerSuccessTask", "ttft", "aaTotalResponse"]
+    # Every raw value that answers to effort, and only those.
+    #
+    # Which ones those are is measured, not assumed. Full-span ratio, cheapest
+    # rung to max rung, across the families on this board that publish both:
+    #
+    #   cost per task        n=10   x3.83 median, 95% x2.40 to x4.53
+    #   time to first token  n=12   x66.3 median, x1.58 to x133.8 across families
+    #   total response       n=12   x14.8 median
+    #   tokens per second    n=21   x1.081 mean, 95% x1.026 to x1.139
+    #   output price per 1M  n=12   x1.000, every family, no exceptions
+    #
+    # Output price is the one that genuinely does not move: a lab charges the
+    # same dollars per million tokens whatever the effort setting, and the
+    # board says so in all twelve families without a single exception. Effort
+    # buys more tokens, not costlier ones. So it is left alone, and that is a
+    # measurement rather than an omission.
+    #
+    # Output speed was left alone too, and that was wrong. The effect is small
+    # and easy to dismiss by eye, since 9 of 21 families move less than 6
+    # percent, but it is real: the mean is 8.1 percent faster at max effort
+    # with a 95 percent interval of 2.6 to 13.9, which excludes no movement.
+    # A model reasoning harder streams slightly faster once it starts.
+    SCALED_RAW = ["aaCostPerTask", "lbCostPerSuccessTask", "ttft",
+                  "aaTotalResponse", "tokensPerSec"]
 
     # Full-span multiplier per figure, low to max, pooled across families.
     # A move of df along the curve multiplies by ELASTICITY ** df.
@@ -1376,6 +1486,9 @@ def main():
         "lbCostPerSuccessTask": 3.92,
         "ttft": 35.6,
         "aaTotalResponse": 11.7,
+        # Geometric mean across 21 families, 95% interval x1.026 to x1.139.
+        # Only used where a model has no speed curve of its own.
+        "tokensPerSec": 1.081,
     }
 
     # Capability is everything the dials score that is not a price or a clock.
@@ -1677,10 +1790,14 @@ def main():
         if bp:
             core = [m for m in CAP_METRICS
                     if all(r.get(m) is not None for _, r in bp)]
-            if core:
+            if True:
+                thin = len(core) < MIN_CORE_FOR_OWN_CAP
                 pts = []
                 for var, r in bp:
-                    cap = sum(pctile(m, r[m]) for m in core) / len(core)
+                    # Prices are real whatever the benchmark coverage. Capability
+                    # is only this model's own when enough figures are shared.
+                    cap = (None if thin
+                           else sum(pctile(m, r[m]) for m in core) / len(core))
                     pts.append((math.log2(r["aaCostPerTask"]), cap, var))
                 pts.sort()
                 lo_p, hi_p = pts[0][0], pts[-1][0]
@@ -1692,11 +1809,10 @@ def main():
         if len(ks) < 2:
             return None
         core = [m for m in CAP_METRICS if all(m in pv[k] for k in ks)]
-        if not core:
-            return None
+        thin = len(core) < MIN_CORE_FOR_OWN_CAP
         pts = []
         for k in ks:
-            cap = sum(pv[k][m] for m in core) / len(core)
+            cap = None if thin else sum(pv[k][m] for m in core) / len(core)
             pts.append((math.log2(cost_of(k)), cap, inc[k]["variant"]))
         pts.sort()
         lo_p, hi_p = pts[0][0], pts[-1][0]
@@ -1816,10 +1932,21 @@ def main():
                 return None
             if abs(f_now - TARGET_F) < 1e-9:
                 return None
-            cap_now = interp(curve, f_now, 1)
-            cap_tgt = interp(curve, TARGET_F, 1)
             p_now = interp(curve, f_now, 2)
             p_tgt = interp(curve, TARGET_F, 2)
+            if curve[0][1] is None:
+                # Real prices, too few shared benchmarks to say what the climb
+                # buys this model. Keep the measured position and price, borrow
+                # the pooled curve for capability, and carry the pooled error.
+                d_frac = pooled_cap_frac(TARGET_F) - pooled_cap_frac(f_now)
+                return {"price": 2 ** (p_tgt - p_now),
+                        "cap": d_frac * POOLED_LADDER_CAP,
+                        "sd": 0.30 * POOLED_LADDER_CAP,
+                        "own": True,
+                        "pooled_cap": True,
+                        "from_f": f_now}
+            cap_now = interp(curve, f_now, 1)
+            cap_tgt = interp(curve, TARGET_F, 1)
             # Error is how far this model's own curve sits from the pooled one
             # over the stretch being crossed. A model whose ladder behaves like
             # everybody else's is a safe interpolation; one that does not is not.
