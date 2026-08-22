@@ -330,7 +330,7 @@
     <label for="delay">How long a block takes to reach other miners <b id="delayVal"></b></label>
     <input type="range" id="delay" min="0" max="1000" step="1" aria-label="Propagation delay">
   </div>
-  <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound, not a measured propagation time; real propagation is usually much faster.</p>
+  <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists to cite, so 500 ms is a representative estimate, the midpoint of this slider's own range, not a measured figure; real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
 
   <p class="result-line" id="resultLine"></p>
 
@@ -628,13 +628,16 @@
   window.addEventListener('resize', requestRender);
 
   // defaults: open at Kaspa's real block rate (10 a second) so the panels
-  // show a live difference immediately, with delay at the slider's honest
-  // top end, rusty-kaspa's own NETWORK_DELAY_BOUND (5s), a protocol worst
-  // case, not a measurement (see the note under the delay slider). Dragging
-  // the rate slider left still reaches Bitcoin's regime, where the two
-  // panels converge.
+  // show a live difference immediately. Delay opens at 500ms, this
+  // slider's own log-scale midpoint: no published measurement of real
+  // Kaspa block propagation exists to cite, so this is a labeled
+  // representative estimate, not a measured figure (see the note under the
+  // delay slider); rusty-kaspa's own NETWORK_DELAY_BOUND (5s, the slider's
+  // top end) is a separate, stated protocol worst case, not a claim about
+  // typical propagation. Dragging the rate slider left still reaches
+  // Bitcoin's regime, where the two panels converge.
   rateInput.value = Math.round(T_KASPA * 1000);
-  delayInput.value = 1000;
+  delayInput.value = 500;
   onSliderChange();
 
   if (reducedMotion) {
