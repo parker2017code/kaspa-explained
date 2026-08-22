@@ -32,7 +32,19 @@ BANNED = {
     # "actually" earns its place when it marks claimed against verified, which
     # is this site's core distinction. Flag it only where no such contrast is
     # nearby.
-    "filler-intensifier": r"\b(genuinely|truly|very|quite|somewhat)\b",
+    # filler-intensifier was removed on 22 August 2026, by the owner, and the
+    # reasoning is worth keeping because this file will tempt someone to add it
+    # back. It banned genuinely, truly, very, quite and somewhat outright. That
+    # is a blunt instrument aimed at a real problem: those words usually pad a
+    # sentence that would land harder without them. Usually is not always. It
+    # blocked two commits in one day over "the very top of its own interval"
+    # and "genuinely unsettled", where the word was carrying the meaning rather
+    # than padding it, and the rewrite in both cases was worse.
+    #
+    # A word list cannot tell padding from emphasis. A reader can. The rules
+    # that survive here are the ones a machine can actually judge: em dashes are
+    # a formatting choice with a yes or no answer, reading grade is arithmetic,
+    # and a repeated device is countable. Taste is not on that list.
     "performed-enthusiasm": r"(!|\bexcited to (share|announce)\b|\bthrilled\b|\bincredible\b|\bamazing\b)",
 }
 
