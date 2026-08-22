@@ -62,7 +62,7 @@
   .row{display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end;}
   .field{display:flex; flex-direction:column; gap:.3rem; min-width:220px; flex:1;}
   .field label{font-size:.8rem; color:var(--muted);}
-  .field .valline{font-size:.85rem; color:var(--text); font-variant-numeric:tabular-nums;}
+  .field .valline{font-size:1rem; color:var(--text); font-variant-numeric:tabular-nums;}
   input[type=range]{
     accent-color:var(--cyan); width:100%; height:44px; margin:0; padding:0;
     background:transparent; -webkit-appearance:none; appearance:none; display:block;
@@ -101,14 +101,14 @@
   @media (max-width:640px){.cmp{grid-template-columns:1fr;}}
   .side{border:0; border-radius:18px; padding:.85rem; background:var(--card-bg); box-shadow:var(--card-shadow);}
   .side h3{margin:0 0 .15rem; display:flex; align-items:center; gap:.4rem;}
-  .side .sub{font-size:.72rem; color:var(--faint); margin:0 0 .6rem;}
+  .side .sub{font-size:1rem; color:var(--faint); margin:0 0 .6rem;}
   .gauge-row{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; column-gap:.5rem; font-size:.78rem; color:var(--muted); margin-bottom:.25rem;}
   .gauge-row output{white-space:nowrap;}
   .gauge{position:relative; height:14px; border-radius:980px; background:var(--field-bg); border:1px solid var(--field-line); overflow:visible; margin-top:1.1rem; margin-bottom:.35rem;}
   .gauge .fill{position:absolute; inset:0 auto 0 0; border-radius:980px; background:var(--cyan); overflow:hidden;}
   .gauge .cap{position:absolute; top:-4px; bottom:-4px; width:3px; background:var(--text); border-radius:2px;}
   .gauge .cap::after{content:"cap"; position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:.62rem; color:var(--faint); white-space:nowrap;}
-  .over-badge{display:inline-block; margin-bottom:.6rem; font-size:.72rem; font-weight:700; color:var(--pink); background:rgba(var(--pink-rgb),.14); border-radius:980px; padding:.15rem .55rem;}
+  .over-badge{display:inline-block; margin-bottom:.6rem; font-size:1rem; font-weight:700; color:var(--pink); background:rgba(var(--pink-rgb),.14); border-radius:18px; padding:.4rem .7rem; line-height:1.35;}
   .over-badge[hidden]{display:none;}
   .bps-block{margin-bottom:1.1rem; padding-bottom:.9rem; border-bottom:1px solid var(--line);}
   .bps-block label{font-size:.95rem; color:var(--text); font-weight:650;}
@@ -122,12 +122,12 @@
   .block{width:20px; height:20px; border-radius:8px; border:1px solid var(--field-line); background:var(--field-bg); display:flex; align-items:center; justify-content:center; font-size:.6rem; color:var(--faint);}
   .block.ok{background:color-mix(in srgb, var(--cyan) 28%, var(--field-bg)); border-color:var(--cyan); color:var(--cyan);}
   .block.over{background:color-mix(in srgb, var(--pink) 32%, var(--field-bg)); border-color:var(--pink); color:var(--pink);}
-  .verdict{font-size:.82rem; border-left:3px solid var(--cyan); border-radius:0 8px 8px 0; padding:.5rem .6rem; margin-top:.2rem; background:rgba(var(--cyan-rgb),.06); color:var(--text);}
+  .verdict{font-size:1rem; border-left:3px solid var(--cyan); border-radius:0 8px 8px 0; padding:.5rem .6rem; margin-top:.2rem; background:rgba(var(--cyan-rgb),.06); color:var(--text);}
   .verdict.safe{border-left-color:var(--green); background:rgba(var(--green-rgb),.1); color:var(--green);}
   .verdict.unsafe{border-left-color:var(--pink); background:rgba(var(--pink-rgb),.1); color:var(--pink);}
   .verdict.adaptive{border-left-color:var(--cyan); background:rgba(var(--cyan-rgb),.08); color:var(--cyan);}
 
-  ul.honest{margin:.3rem 0 0; padding-left:1.1rem; font-size:.9rem; color:var(--muted);}
+  ul.honest{margin:.3rem 0 0; padding-left:1.1rem; font-size:1rem; color:var(--muted);}
   ul.honest li{margin-bottom:.5rem;}
   ul.honest strong{color:var(--text);}
 
@@ -137,7 +137,7 @@
   details summary::before{content:"+"; font-weight:800; margin-right:.4em;}
   details[open] summary::before{content:"\2212";}
   details[open] summary{margin-bottom:.6rem;}
-  details .model-body{font-size:.85rem; color:var(--muted);}
+  details .model-body{font-size:1rem; color:var(--muted);}
   details table{border-collapse:collapse; font-size:.8rem; margin:.6rem 0;}
   details td, details th{border-bottom:1px solid var(--line); padding:.25rem .5rem; text-align:right;}
   details th{color:var(--faint); font-weight:600;}
@@ -166,7 +166,7 @@
         <label for="bps-slider">Block rate: how many blocks the network creates per second</label>
         <input type="range" class="primary" id="bps-slider" min="1" max="100" step="1" value="10" aria-describedby="bps-out bps-hint">
         <span class="valline" id="bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
-        <span class="valline" id="bps-hint" style="color:var(--faint); font-size:.78rem;">rusty-kaspa's own k-table for GHOSTDAG stops at 32 blocks/sec; push past it to see why that ceiling belongs to GHOSTDAG, not to DAGKnight.</span>
+        <span class="valline" id="bps-hint" style="color:var(--faint);">rusty-kaspa's own k-table for GHOSTDAG stops at 32 blocks/sec; push past it to see why that ceiling belongs to GHOSTDAG, not to DAGKnight.</span>
       </div>
     </div>
     <div class="row">
@@ -339,15 +339,26 @@
     syncThemeBtn();
   });
 
+  // Same Poisson-tail search as rusty-kaspa's calculate_ghostdag_k (bps.rs), and it reproduces
+  // that function's own compiled table exactly for every bps/D combination it actually covers
+  // (1 through 32 bps at D = 5s: 18, 31, 43, 55, 67, 79, 90, 102, 113, 124, ..., 362). rusty-kaspa's
+  // literal term-by-term version (exp(-x) computed once, multiplied by a running fraction) only
+  // ever runs at those small x values, so it never hits a limit of IEEE-754 double math: once x
+  // passes roughly 745, exp(-x) underflows to exactly 0 and every term vanishes with it, and the
+  // running fraction (x^k/k!) can separately overflow to Infinity before reaching the distribution's
+  // real mass. Both this page's block-rate slider (up to 100 bps) and its latency sliders can reach
+  // x = 2·D·λ past that point, somewhere rusty-kaspa's own code never goes, so the same search is
+  // written here in log space (tracking log(term) and exponentiating only the current term) to stay
+  // numerically correct there too, without changing which k it finds.
   function ghostdagK(x, delta){
-    var kHat = 0, sigma = 0, fraction = 1.0;
-    var exp = Math.exp(-x);
+    var kHat = 0, sigma = 0;
+    var logTerm = -x;
     var guard = 0;
     while (true){
-      sigma += exp * fraction;
-      if (1 - sigma < delta || guard > 5000) return kHat;
+      sigma += Math.exp(logTerm);
+      if (1 - sigma < delta || guard > 20000) return kHat;
       kHat += 1;
-      fraction *= x / kHat;
+      logTerm += Math.log(x) - Math.log(kHat);
       guard++;
     }
   }
