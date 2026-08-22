@@ -9,6 +9,14 @@ grep -RhoE 'https?://[^"'"'"')<[:space:]]+' \
   --include='*.md' \
   --include='*.txt' \
   --include='*.yml' \
+  --exclude-dir=.git \
+  --exclude-dir=.claude \
+  --exclude-dir=node_modules \
+  --exclude-dir=_preview-site \
+  --exclude-dir=visual-audit \
+  --exclude-dir=exports \
+  --exclude-dir=.freebuff \
+  --exclude='kaspa-x-posts-*.md' \
   . \
   | sed 's/[`.,;]*$//' \
   | grep -Ev '(\{|\}|&lt;|&gt;|<|>)' \
