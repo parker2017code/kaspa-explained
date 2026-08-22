@@ -521,8 +521,12 @@
       : 'Attacking ' + c.name + ' for one hour would cost about';
 
     updateCompareNote(c);
+    // Proof-of-stake's own limitsNote (in computePos below) already states
+    // the price-impact floor for that case, so this box only adds new
+    // information for the proof-of-work buy-outright case, which otherwise
+    // had no such caveat at all.
     var impactEl = document.getElementById('impactNote');
-    var showImpact = c.security === 'pos' || (state.mode === 'buy' && !c.noBuy);
+    var showImpact = c.security === 'pow' && state.mode === 'buy' && !c.noBuy;
     impactEl.style.display = showImpact ? 'block' : 'none';
 
     if (c.security === 'pow') computePow(c); else computePos(c);

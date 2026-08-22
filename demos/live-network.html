@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Watch the network | Kaspa Explained</title>
-<meta name="description" content="A live read of Kaspa's public API: real blocks arriving several a second, most carrying nothing but the miner's own reward.">
+<meta name="description" content="A live read of Kaspa's public API: real blocks arriving about 10 a second, most carrying nothing but the miner's own reward, sampled honestly.">
 <meta name="robots" content="index,follow">
 <meta name="dateModified" content="2026-08-22">
 <link rel="canonical" href="https://kaspaexplained.com/demos/live-network">
@@ -67,6 +67,8 @@
     .tip-dot.fresh { animation: tipPop .5s cubic-bezier(.2,.8,.2,1); }
   }
   @keyframes tipPop { 0% { transform: scale(1.5); opacity: .3; } 100% { transform: scale(1); opacity: .85; } }
+  .sample-line { font-size: .84rem; color: var(--muted); margin: 0 0 16px; max-width: 52ch; }
+  .sample-line strong { color: var(--text); font-weight: 650; }
 
   .feed-wrap { border-top: 1px solid var(--line); padding-top: 14px; }
   .feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
@@ -135,9 +137,9 @@
     <h1>Watch the network</h1>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
-  <p class="lead">Real blocks, read live from Kaspa's own public API every 5 seconds. No simulation: if the API can't be reached, this page says so instead of faking it.</p>
+  <p class="lead">Real blocks, read live from Kaspa's own public API. Kaspa makes about 10 a second; this page checks in every 9 seconds and shows what it actually fetched, not a simulation of the rest. If the API can't be reached, this page says so instead of faking it.</p>
 
-  <div class="fail-banner" id="failBanner" role="status"><b>Can't reach the public network right now.</b> <span id="failDetail">Retrying every 5 seconds. The explanation below still applies; nothing on this page is invented while it waits.</span></div>
+  <div class="fail-banner" id="failBanner" role="status"><b>Can't reach the public network right now.</b> <span id="failDetail">Retrying every 9 seconds. The explanation below still applies; nothing on this page is invented while it waits.</span></div>
 
   <div class="stage">
     <div class="parallel-row">
@@ -146,13 +148,15 @@
     </div>
     <div class="tip-dots" id="tipDots" aria-hidden="true"></div>
 
+    <p class="sample-line" id="sampleLine">Measuring the network's real pace&hellip;</p>
+
     <div class="feed-wrap">
       <div class="feed" id="feed"><p class="feed-empty" id="feedEmpty">Reading the first blocks&hellip;</p></div>
     </div>
 
     <div class="controls-row">
       <button class="pause-btn" id="pauseBtn" type="button">Pause</button>
-      <span class="poll-note" id="statusLine">Checking every 5 seconds.</span>
+      <span class="poll-note" id="statusLine">Checking every 9 seconds.</span>
     </div>
 
     <div class="stat-tile">
@@ -191,7 +195,10 @@
       <h3>What a full block explorer has that this page doesn't</h3>
       <p>Explorers like Kaspa.stream run their own indexer against a database, which lets them show things a single API read cannot: a miner leaderboard built by clustering many blocks' payout addresses over time, top-address balances, and historical charts. Every one of those requires storing and aggregating history somewhere; a static page calling the public API on each visit has no database to build that from, and re-deriving it client-side on every load would mean hammering the API far past anything reasonable. This page only shows what one API read, right now, actually contains.</p>
 
-      <p class="evidence-note">Endpoints used: <code>api.kaspa.org/info/blockdag</code> (tip hashes, polled every 5 seconds; the API's own cache doesn't refresh faster than about 8 seconds anyway) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, header + transactions + color). Source for the API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22. Covenant and block-producer caveats: this site's own <code>CLAIMS.yml</code>.</p>
+      <h3>Why this only shows a handful of blocks per check</h3>
+      <p>api.kaspa.org sits behind a Cloudflare edge cache with <code>max-age=8</code>: two requests inside that window get the identical cached response, so checking faster than every 8 seconds would not surface a single extra block, only waste requests. This page checks every 9 seconds. But Kaspa itself is producing roughly 10 blocks a second, so each check's <code>tipHashes</code> array (the network's current open tip set, typically 5 to 9 hashes) is a small sample of everything that actually happened since the last check, not the full count. The line above the block feed states both numbers plainly: how many blocks the network produced in that window against how many this page could fetch and show. The blocks-per-second figure next to it is not looked up anywhere; it is computed live from the change in <code>blockCount</code> between this page's own polls.</p>
+
+      <p class="evidence-note">Endpoints used: <code>api.kaspa.org/info/blockdag</code> (tip hashes and <code>blockCount</code>, polled every 9 seconds; the API's own cache doesn't refresh faster than about 8 seconds, confirmed live 2026-08-22) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, header + transactions + color, capped at 16 per check; observed tip-set width stayed at 5-9 across dozens of live samples, and no per-IP rate limit is documented or was observed). Source for the API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22. Covenant and block-producer caveats: this site's own <code>CLAIMS.yml</code>.</p>
     </div>
   </details>
 
@@ -217,14 +224,26 @@
 
 (function () {
   "use strict";
-  var POLL_MS = 5000;
+  // api.kaspa.org serves info/blockdag behind a Cloudflare edge cache with
+  // max-age=8: polling faster than that returns byte-identical cached data.
+  // Verified live 2026-08-22 (curl, repeated GETs, cf-cache-status + age
+  // headers): the cache turns over roughly every 8-9 seconds, and blockCount
+  // rises by about 80-90 in that window, which is Kaspa's real ~10 blocks/sec
+  // rate. Checking every 9 seconds tracks the cache instead of re-fetching
+  // the same snapshot.
+  var POLL_MS = 9000;
   var MAX_CARDS = 18;
-  var MAX_NEW_PER_CYCLE = 6;
+  // tipHashes (the open tip set) ran 5-9 wide across dozens of live samples
+  // taken 2026-08-22, with no documented or observed per-IP rate limit on
+  // api.kaspa.org (checked openapi.json and response headers). 16 gives
+  // headroom above the observed range without hammering the API.
+  var MAX_NEW_PER_CYCLE = 16;
   var COINBASE_SUBNET = "0100000000000000000000000000000000000000";
 
   var feedEl = document.getElementById("feed");
   var tipCountEl = document.getElementById("tipCount");
   var tipDotsEl = document.getElementById("tipDots");
+  var sampleLineEl = document.getElementById("sampleLine");
   var statusLineEl = document.getElementById("statusLine");
   var failBanner = document.getElementById("failBanner");
   var pauseBtn = document.getElementById("pauseBtn");
@@ -237,6 +256,18 @@
   var paused = false;
   var timer = null;
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Real network pace, measured from this page's own polls, never assumed.
+  var prevBlockCount = null;
+  var prevPollAt = null;
+  var rateSamples = []; // {blocks, seconds}, most recent last, capped
+
+  function measuredBps() {
+    if (!rateSamples.length) return null;
+    var blocks = 0, seconds = 0;
+    rateSamples.forEach(function (s) { blocks += s.blocks; seconds += s.seconds; });
+    return seconds > 0 ? blocks / seconds : null;
+  }
 
   function fetchWithTimeout(url, timeoutMs) {
     var controller = new AbortController();
@@ -379,6 +410,20 @@
     }
   }
 
+  function updateSampleLine(networkNew, fetchedCount) {
+    var bps = measuredBps();
+    var bpsText = bps ? bps.toFixed(1) : "–";
+    if (networkNew === null) {
+      sampleLineEl.innerHTML = "Measuring the network's real pace&hellip;";
+      return;
+    }
+    if (networkNew <= 0) {
+      sampleLineEl.innerHTML = "No new cached data yet: api.kaspa.org's own cache only turns over every 8&ndash;9 seconds, so this check saw the same snapshot as the last one.";
+      return;
+    }
+    sampleLineEl.innerHTML = "<strong>" + fetchedCount + " of about " + networkNew + "</strong> blocks the network made since the last check are shown below. Kaspa is running at roughly <strong>" + bpsText + " blocks a second</strong> right now, measured from this page's own checks. That gap is this page's polling limit, not the network slowing down.";
+  }
+
   function tick() {
     if (paused || document.hidden) return;
     fetchWithTimeout("https://api.kaspa.org/info/blockdag", 6000)
@@ -387,10 +432,25 @@
         var tips = dag.tipHashes || [];
         tipCountEl.textContent = tips.length;
         renderTipDots(tips.length);
-        setStatus("ok", "Live, checking every 5 seconds. Last checked " + new Date().toLocaleTimeString());
+        setStatus("ok", "Live, checking every 9 seconds. Last checked " + new Date().toLocaleTimeString());
+
+        var blockCount = Number(dag.blockCount);
+        var now = Date.now();
+        var networkNew = null;
+        if (prevBlockCount !== null && !isNaN(blockCount)) {
+          networkNew = blockCount - prevBlockCount;
+          var elapsedS = (now - prevPollAt) / 1000;
+          if (networkNew > 0 && elapsedS > 0.5) {
+            rateSamples.push({ blocks: networkNew, seconds: elapsedS });
+            if (rateSamples.length > 4) rateSamples.shift();
+          }
+        }
+        prevBlockCount = isNaN(blockCount) ? prevBlockCount : blockCount;
+        prevPollAt = now;
 
         var fresh = tips.filter(function (h) { return !seenHashes[h]; }).slice(0, MAX_NEW_PER_CYCLE);
         fresh.forEach(function (h) { seenHashes[h] = true; });
+        updateSampleLine(networkNew, fresh.length);
         if (!fresh.length) return;
 
         return Promise.all(fresh.map(function (h) {
@@ -411,7 +471,7 @@
         });
       })
       .catch(function () {
-        setStatus("error", "Can't reach the public API right now. Retrying every 5 seconds.");
+        setStatus("error", "Can't reach the public API right now. Retrying every 9 seconds.");
       });
   }
 
