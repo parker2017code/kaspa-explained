@@ -163,8 +163,9 @@
     <div class="row bps-block">
       <div class="field">
         <label for="bps-slider">Block rate: how many blocks the network creates per second</label>
-        <input type="range" class="primary" id="bps-slider" min="1" max="32" step="1" value="10" aria-describedby="bps-out">
+        <input type="range" class="primary" id="bps-slider" min="1" max="100" step="1" value="10" aria-describedby="bps-out bps-hint">
         <span class="valline" id="bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
+        <span class="valline" id="bps-hint" style="color:var(--faint); font-size:.78rem;">rusty-kaspa's own k-table for GHOSTDAG stops at 32 blocks/sec; push past it to see why that ceiling belongs to GHOSTDAG, not to DAGKnight.</span>
       </div>
     </div>
     <div class="row">
@@ -192,10 +193,11 @@
   <div class="cmp">
     <div class="side" id="side-fixed">
       <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
-      <p class="sub">The margin (k) is set once, in advance. It does not move once actual latency changes.</p>
-      <div class="gauge-row"><span>configured margin (k): blocks GHOSTDAG always waits for</span><output id="fixed-k-out">124</output></div>
+      <p class="sub">Mainnet reads this margin from a table computed once, for one block rate. It cannot move when latency changes, and the table itself has no entry past 32 blocks/sec.</p>
+      <div class="gauge-row"><span>configured margin (k): the value mainnet's table has on file for this block rate</span><output id="fixed-k-out">124</output></div>
       <div class="gauge"><div class="fill" id="fixed-fill" style="width:100%; background:var(--cyan);"></div><div class="cap" id="fixed-cap"></div></div>
-      <div class="gauge-row"><span>margin size this latency actually needs</span><output id="fixed-req-out">31</output></div>
+      <p id="fixed-tableend" class="over-badge" hidden></p>
+      <div class="gauge-row"><span>margin size this latency actually needs, at the block rate set above</span><output id="fixed-req-out">31</output></div>
       <p id="fixed-over" class="over-badge" hidden></p>
       <div class="blockstrip" id="fixed-strip" aria-hidden="true"></div>
       <div class="gauge-row"><span>about how long that wait takes</span><output id="fixed-time-out">12.4 s</output></div>
@@ -203,8 +205,8 @@
     </div>
     <div class="side" id="side-adaptive">
       <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
-      <p class="sub">No fixed setting. The margin tracks whatever latency the client currently assumes conditions could reach.</p>
-      <div class="gauge-row"><span>effective margin (k) right now</span><output id="adapt-k-out">55</output></div>
+      <p class="sub">No table to run out of. The paper's design computes this margin from whatever latency is actually happening, at any block rate, because it was never chosen in advance.</p>
+      <div class="gauge-row"><span>effective margin (k) right now &mdash; same ruler as the gauge on the left, so the two are directly comparable</span><output id="adapt-k-out">55</output></div>
       <div class="gauge"><div class="fill" id="adapt-fill" style="width:44%; background:var(--green);"></div></div>
       <div class="gauge-row"><span>cost: wider merge sets to walk before finalizing</span><output id="adapt-cost-out">moderate</output></div>
       <div class="blockstrip" id="adapt-strip" aria-hidden="true"></div>
@@ -221,6 +223,7 @@
       <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
       <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
       <li><strong>Efficiency is unsolved.</strong> KIP-2 itself lists the current DAGKnight pseudocode as "highly inefficient" and its rewrite as unfinished work, a stated reason this is still research four years on.</li>
+      <li><strong>The 32 blocks/sec ceiling on the slider above belongs to GHOSTDAG, not to DAGKnight.</strong> rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32 blocks/sec; the fallback arm past that reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22). GHOSTDAG needs a k chosen in advance for a given rate, so running it past 32 needs a developer to compute a new k and hard-fork the network; nothing today defines one there. DAGKnight's whole premise, per <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, is removing that a priori k, so it has no table to run out of, which is why this slider lets it keep going. That range is shown to demonstrate the gap, not to assert a target: KIP-2 lists the optimal block rate as open research with no number recommended, and the widely repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</li>
       <li><strong>No published cost figure exists, but the efficiency work is real and some of it now sits on kaspanet's own branch, not just a side fork.</strong> Contributor coderofstuff (40 commits to kaspanet/rusty-kaspa) develops the UMC-voting redesign on personal fork branches first, then merges it directly into kaspanet/rusty-kaspa's own <code>dagknight</code> branch: the <code>dk-umc-proposed</code> branch merged in on August 14, 2026, identical commit and all. Their explanatory write-up naming the bottleneck behind KIP-2's "highly inefficient" (the paper's recursive UMC-voting algorithm at O(n squared) worst case, with an O(n times K) amortized replacement proposed) still lives only on an unofficial personal wiki, not kaspanet's own docs. It is real, named engineering inside the project's own repository, still unmerged to master and not reviewed or adopted as the shipped algorithm. Details below.</li>
     </ul>
   </div>
@@ -270,7 +273,7 @@
       does not expose, so they are cited here rather than wired into the sliders.</p>
       <p><strong>Where the efficiency question is actually being worked: kaspanet's own branch, plus one contributor's personal fork and wiki.</strong>
       kaspanet/rusty-kaspa's own <code>dagknight</code> branch is active: latest commit
-      <a href="https://github.com/kaspanet/rusty-kaspa/commit/bc83e8bd4218c4568c556817aba8694b6c28b079">"Merge branch 'dk-umc-proposed' into dagknight"</a>,
+      <a href="https://github.com/kaspanet/rusty-kaspa/commit/956c82fd764d6f412d715a4b0706e6c34e12a49c">"Merge branch 'dk-umc-proposed' into dagknight"</a>,
       August 14, 2026, preceded by a run of <code>[DK::UMC]</code> and <code>[DK::CZM]</code> commits from
       August 12 to 14, 2026 (verified against the GitHub API commit log, checked 2026-08-22). Both
       coderofstuff (40 commits to the official repo) and freshair18 (9 commits) are credited
