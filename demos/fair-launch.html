@@ -182,13 +182,18 @@
   .result-line b { color: var(--green); }
   .resetBtn {
     margin-left: auto;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--line);
     border-radius: 980px;
     background: var(--control-bg);
     color: var(--text);
     font-size: 11.5px;
     font-weight: 700;
-    padding: 2px 10px;
+    padding: 2px 14px;
     cursor: pointer;
   }
   .resetBtn:hover { background: var(--control-hover); }
@@ -502,8 +507,11 @@
         svg.appendChild(kLabel);
       }
 
-      // dashed projection beyond chain's actual current age
-      if (chain.ageNow < maxYear) {
+      // Dashed projection beyond the chain's own current age. Kaspa (tau === Infinity)
+      // has no modeled decay at all, it is flat zero by rule, not a projection, so it
+      // never gets this treatment: giving it a fake "switch to projected" marker was the
+      // bug that made the measured/projected boundary look inconsistent across chains.
+      if (chain.ageNow < maxYear && chain.tau !== Infinity) {
         var pts2 = [];
         for (var i2 = 0; i2 <= steps; i2++) {
           var yr2 = chain.ageNow + (i2 / steps) * (maxYear - chain.ageNow);
@@ -515,22 +523,38 @@
         path2.setAttribute('fill', 'none');
         path2.setAttribute('stroke', chain.color);
         path2.setAttribute('stroke-width', '2');
-        path2.setAttribute('stroke-dasharray', '5 4');
-        path2.setAttribute('opacity', '0.6');
+        // Keep the same per-chain dash rhythm past the switch, just fainter: a line
+        // that changes dash PATTERN at the switch reads as a different mark appearing;
+        // one that keeps its rhythm and fades reads as "the same line, now projected."
+        path2.setAttribute('stroke-dasharray', chain.dash || '5 4');
+        path2.setAttribute('opacity', '0.45');
         svg.appendChild(path2);
 
         var todayX = xForYear(chain.ageNow);
+        var todayY = yForPct(valueAt(chain, chain.ageNow));
         var tmark = document.createElementNS(ns, 'line');
         tmark.setAttribute('x1', todayX); tmark.setAttribute('x2', todayX);
         tmark.setAttribute('y1', padT); tmark.setAttribute('y2', H - padB);
         tmark.setAttribute('stroke', chain.color);
         tmark.setAttribute('stroke-width', '1');
         tmark.setAttribute('class', 'today-mark');
-        tmark.setAttribute('opacity', '0.35');
+        tmark.setAttribute('opacity', '0.45');
         svg.appendChild(tmark);
 
-        // today marker: same shape/color pairing as the genesis marker
-        drawMarker(ns, todayX, yForPct(valueAt(chain, chain.ageNow)), chain.shape, chain.color);
+        // Switch-point marker: same shape/color pairing as the genesis marker, so it
+        // reads as "this chain's line" rather than a new, unrelated symbol.
+        drawMarker(ns, todayX, todayY, chain.shape, chain.color);
+
+        // The switch is explained right where it happens, not left to a legend: each
+        // chain turns dashed at its OWN current age, so the label carries that age.
+        var lbl = document.createElementNS(ns, 'text');
+        lbl.setAttribute('x', Math.min(todayX + 7, W - padR - 2));
+        lbl.setAttribute('y', key === 'ethereum' ? todayY + 13 : todayY - 8);
+        lbl.setAttribute('text-anchor', todayX + 7 > W - padR - 2 ? 'end' : 'start');
+        lbl.setAttribute('fill', chain.color);
+        lbl.setAttribute('class', 'switch-label');
+        lbl.textContent = 'modeled from age ' + chain.ageNow;
+        svg.appendChild(lbl);
       }
     });
 
