@@ -186,7 +186,28 @@
       margin: 1.1rem 0 .3rem; }
     .mp-pareto-title { font-size: .92rem; }
     .mp-pareto-why { font-size: .78rem; color: var(--muted); line-height: 1.5; flex: 1 1 16rem; min-width: 0; }
-    .mp-pareto-wrap { overflow-x: auto; }
+    /* The chart is wider than a phone. It scrolls, which the audit confirmed
+       is not clipping, but a thin dark scrollbar is easy to miss and the model
+       names the caption calls out by name sit at the right edge. Give it a
+       visible edge fade and a permanent scrollbar so the affordance is not
+       invisible. */
+    .mp-pareto-wrap { overflow-x: auto; scrollbar-width: thin; }
+    @media (max-width: 860px) {
+      .mp-pareto-wrap {
+        -webkit-mask-image: linear-gradient(to right, #000 88%, transparent 100%);
+        mask-image: linear-gradient(to right, #000 88%, transparent 100%);
+      }
+      .mp-pareto-wrap:focus-within,
+      .mp-pareto-wrap:active { -webkit-mask-image: none; mask-image: none; }
+      .mp-pareto-wrap::-webkit-scrollbar { height: 6px; }
+      .mp-pareto-wrap::-webkit-scrollbar-thumb {
+        background: var(--muted); border-radius: 3px;
+      }
+      .mp-pareto-scrollnote {
+        color: var(--muted); font-size: 0.82rem; margin: 4px 0 0;
+      }
+    }
+    @media (min-width: 861px) { .mp-pareto-scrollnote { display: none; } }
     .mp-pareto svg { display: block; width: 100%; height: auto; min-width: 480px; }
     .mp-pareto .ax { stroke: var(--line); stroke-width: 1; }
     .mp-pareto .gr { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; opacity: .55; }
@@ -296,14 +317,15 @@
               <li><b>The board overalls agree with each other far more than their own benchmarks agree with one another.</b> Artificial Analysis's intelligence index and LiveBench Overall move together at r = 0.930 across 38 models. LiveBench Overall and ARC-AGI-2 move together at r = 0.868 across 20. Pick two single benchmarks instead of two overalls and the agreement drops well below that. An overall averages away each benchmark's own noise and keeps only the shared skill underneath. Two overalls agreeing is not proof that their own benchmarks measure the same thing.</li>
               <li><b>LiveBench Overall is not independent evidence. It is arithmetic.</b> It is the plain average of its seven category scores, weighted equally. Checked across all 44 published rows, the biggest gap between that average and the published number is 0.057. So predicting a LiveBench category from LiveBench Overall is partly predicting a number from itself: the arithmetic alone produces an r squared near 0.143, before any real link between the two is measured.</li>
               <li><b>Each model appears once, at the setting worth running.</b> These boards publish a model several times over, once per effort setting, and 37 rows for 21 models is a list nobody can read. It also invites you to hold one lab's max effort against another lab's medium and call it a win. So each model ships at the setting that buys the most capability per dollar, not the setting that scores highest. The rule: capability minus eight points for every doubling of price, where capability is measured only on the figures every setting of that model published. Eight is set by what these ladders cost. Paying three times as much for ten more points works out to 6.3 points per doubling, and that trade is refused. Claude Opus 5 at max effort scores 63.8 against 65.9 at medium on the thirteen figures both settings publish, which is a tie, and charges $2.34 a task against $0.72. Medium ships. Price, speed and latency on every row always come from the setting that shipped.</li>
-              <li><b>Ten figures, chosen on how far apart the top five sit, not on reputation.</b> Every figure on these boards was ranked by its own top-five spread on the honest scale. The widest one in each dial's territory is the one that ships: CritPt at 24.9 points, ARC-AGI-2 at 21.0, Humanity's Last Exam at 17.0, Omniscience accuracy at 15.2, LiveBench language at 9.4, non-hallucination at 8.2, LiveBench coding at 7.9, LiveBench agentic coding at 6.9, LiveBench instruction following at 6.9, and LM Arena WebDev at 6.5. A figure the frontier has already maxed out cannot tell the leaders apart, however famous the name.</li>
-              <li><b>A benchmark is here because it still tells the leaders apart, not because it is famous.</b> Every figure was checked on its top-five gap: how far apart the five strongest models are on it. A test the best models have already maxed out cannot rank them. That cut GPQA Diamond, which spans two points across the top five, and with it the AA Intelligence Index, LiveBench reasoning, AA-LCR, Terminal-Bench v2.1, MMMU Pro and LiveBench overall. CritPt was checked against the same test and kept: its top five split by 24.9 points, the widest gap of any figure on the page.</li>
+              <li><b>Ten figures, chosen on how far apart the top five sit, not on reputation.</b> Every figure on these boards was ranked by its own top-five spread on the honest scale. The widest one in each dial's territory is the one that ships: CritPt at 34.2 points, Humanity's Last Exam at 24.4, ARC-AGI-2 at 14.2, LM Arena WebDev at 11.2, Omniscience accuracy at 10.9, LiveBench language at 9.1, non-hallucination at 8.2, LiveBench coding at 7.9, LiveBench instruction following at 6.9, and LiveBench agentic coding at 4.9. These move whenever the operating point moves, because they are measured after every model is placed on it. A figure the frontier has already maxed out cannot tell the leaders apart, however famous the name.</li>
+              <li><b>Two of the ten are closer to each other than the page would like.</b> On the models where both are measured, ARC-AGI-2 and Omniscience accuracy move together at <b>r = 0.84</b> across 14 models, and ARC-AGI-2 and Humanity's Last Exam at 0.81. Each is the only figure behind its own dial, so turning up both of those dials counts much of the same evidence twice. The aggregate numbers above hide this: across all ten the median is far lower, and imputed values pull the pair's apparent agreement down to 0.52 because the estimates are smoother than the measurements. The measured figure is the honest one.</li>
+              <li><b>A benchmark is here because it still tells the leaders apart, not because it is famous.</b> Every figure was checked on its top-five gap: how far apart the five strongest models are on it. A test the best models have already maxed out cannot rank them. That cut GPQA Diamond, which spans two points across the top five, and with it the AA Intelligence Index, LiveBench reasoning, AA-LCR, Terminal-Bench v2.1, MMMU Pro and LiveBench overall. CritPt was checked against the same test and kept: its top five split by 34.2 points, the widest gap of any figure on the page.</li>
               <li><b>Cost is not scored.</b> It is the horizontal axis of the value chart below and nothing else. Scoring it as an eleventh dial would have counted it twice: once toward the score, and again toward where the model lands on that chart. A cheap model would have earned credit for being cheap in both places.</li>
               <li><b>Speed is not scored either.</b> On the honest scale, time to first token separates the top five by 0.3 points. Total response time separates them by 0.9. Every model shipping today is fast, measured against the all-time floor these boards track. A dial that cannot separate the leaders is ranking noise with a decimal point on it, the same test every scored figure had to pass.</li>
               <li><b>One board here is read and not scored, on purpose.</b> LM Arena's Agent board prints the size of a number without its sign. Whether a model did better or worse than the field shows up only as a small arrow, and the switch from better to worse falls at row 28 of 50. The last row reads 19.82 percent and means minus 19.82. Scoring what is printed would have turned the weakest half of that board into the strongest.</li>
               <li><b>Nothing is counted twice.</b> Each figure feeds exactly one dial. No board's own overall score feeds anything, because those are blends of figures already scored here. Input price is not loaded either: it tracks output price at 0.98, so one price figure does the work of both.</li>
               <li><b>There is no default coverage floor.</b> The roster is every model these boards publish, not a pool that needed a minimum figure count to keep weak entries out. A model is ranked on whatever it published, and its row says how much of your question the score actually covers. You set a floor of your own with the coverage control, which counts against the dials you turned up rather than against the whole page.</li>
-              <li><b>Every model is quoted at the same point on its own effort curve, because otherwise none of this compares.</b> These boards test whatever each lab submitted. Claude Opus 5 appears at five settings, GLM-5.2 only at max, Grok 4.5 only at high. Ranking those against each other ranks submissions, so every model is moved to one common point first. That point is <b>0.40 of the way up each model's own price span</b>, between medium effort and high.</li>
+              <li><b>Every model is quoted at the same point on its own effort curve, because otherwise none of this compares.</b> These boards test whatever each lab submitted. Claude Opus 5 appears at five settings, GLM-5.2 only at max, Grok 4.5 only at high. Ranking those against each other ranks submissions, so every model is moved to one common point first. That point is <b>0.40 of the way up each model's own price span</b>, between medium effort and high. It is fitted from the data each time the page is rebuilt, and the rebuild stops rather than shipping a number the evidence has moved away from. Read the figure as thin: an independent sweep of 108 configurations, bootstrapped 4000 times, put the knee at 0.30 on Artificial Analysis alone with a 95% interval of 0.20 to 0.40. The pooled fit across both boards gives 0.40, so 0.40 ships, at the top of that interval rather than the middle of it. Six families carry this, and it is the least certain number here.</li>
               <li><b>That point is a position, not a label, and the difference matters more than it sounds.</b> Measured as a fraction along a model’s own price ladder, where 0 is its cheapest published setting and 1 its dearest, the word "high" lands at 0.00 for GPT-5.6 Terra, which is its cheapest setting, and at 1.00 for Gemini 3.7 Flash, which is its dearest. Sol’s high sits at 0.52 and Claude Opus 5’s at 0.62. The same word spans the whole ladder, so quoting everything at "high" would put one model at the bottom of its curve and another at the top and call that fair.</li>
               <li><b>The position is derived from where the curve stops paying, and every rung a model publishes is used to find it.</b> Ladders are read off the full board rather than off whatever settings happened to be wired here. GPT-5.6 Luna arrived with two of its six, so its ladder started at $0.03 and 53 seconds when the model really starts at $0.01 and under a second, and the correction pushed its price the wrong way. A model that prints no setting at all is placed by what its work consumed: cost over output price recovers the tokens a task took, which predicts position at <b>r&nbsp;=&nbsp;0.665</b> where the clock alone manages 0.389. Three features together reach <b>R²&nbsp;=&nbsp;0.646</b> in-sample, fitted and measured on the same 52 rows, and the placement is shrunk by exactly that figure, so it moves two thirds of the way to the fit and a third toward no claim.</li>
               <li><b>A model with its own ladder is interpolated on it; a model without one borrows the shared curve and says so.</b> Twelve models here publish two or more priced settings, so they are read straight off their own measured curve and carry little assumption. The rest publish one setting, which is a single point and no curve at all, so the pooled shape stands in and the row carries a much wider error: a label places a model anywhere from 0.00 to 1.00 of its span, and the interval on those rows is sized to admit it.</li>
@@ -328,7 +350,7 @@
               <li><b>The thinking budget is spent late, and that is fitted too.</b> Reading the share spent at each position across those families gives f to the power 3.5, with a root mean square error of 0.111. Every model on the page moves on this, with no exceptions and nothing invented: GPT-5.6 Sol goes from 209 seconds to 4.6, Claude Sonnet 5 from 172.6 to 6.2. GLM-5.2 has a floor of 1.91 seconds and a budget of 0.04, so it moves 2 percent, and DeepSeek V4 Pro does not move at all. Those models were never thinking before they answered, so there is nothing to take away, which is the result a pooled multiplier could not produce.</li>
               <li><b>Room to the ceiling does not predict what effort buys, and it was tested.</b> The obvious guess is that a model already near the top of a test has little left to gain, so effort should matter less to it. Measured across every figure and family with a full ladder, the correlation between room remaining and points gained is minus 0.04, which is nothing. What predicts the gain is which test it is: the non-hallucination rate moves 1 to 3 points whatever the room, and GDPval moves 14 to 19 with less room than that. So the correction stays per figure and no headroom term was added.</li>
               <li><b>A moved row says so, and carries the error to prove it.</b> Moving a model down from max to the common point cuts its price toward <b>0.40</b> of the max-effort price and lowers its score by an amount that varies by family, averaging around 18 points with a spread of about 7. Every figure on a moved row is drawn through that spread in the simulation, and a moved row can lose runs it would have won at max, which is the point.</li>
-              <li><b>A missing figure is estimated from whatever correlates with it, weighted by how much that correlate explains.</b> The old rule wanted three donors agreeing at 0.70 and threw the rest away, which is a strange way to treat evidence: a donor at 0.45 is worth about a fifth of a figure, so use a fifth of it. Every donor now counts, weighted by its r squared, and the answer is pulled back toward the middle of the field by however much they fail to explain. Strong donors land near their prediction; one weak donor lands near the middle with a wide error; nothing at all lands in the middle exactly. Blank figures sit at <b>1.19%</b> of the grid, 5 cells out of 420 across 21 models and 20 figures.</li>
+              <li><b>A missing figure is estimated from whatever correlates with it, weighted by how much that correlate explains.</b> The old rule wanted three donors agreeing at 0.70 and threw the rest away, which is a strange way to treat evidence: a donor at 0.45 is worth about a fifth of a figure, so use a fifth of it. Every donor now counts, weighted by its r squared, and the answer is pulled back toward the middle of the field by however much they fail to explain. Strong donors land near their prediction; one weak donor lands near the middle with a wide error; nothing at all lands in the middle exactly. Blank figures sit at <b>0%</b> of the grid, no blank cells at all across the 210 in the grid across 21 models and 20 figures.</li>
               <li><b>The estimates were tested by hiding real answers.</b> Each model's figures were hidden in turn and predicted from the other twenty, then checked against what that model actually published. A prediction lands 12.5 points off on average, with a tenth of them more than 23 points off. It also declares its own error, and 94.6 percent of the held-out misses fell inside the interval it declared. That last number is why these ship: the simulation discounts an estimate by exactly the error it claims, and the claim holds up. Looser settings filled twice as many figures but overstated their own confidence, so they were dropped.</li>
               <li><b>Price and speed are never estimated.</b> A predicted price on a value chart would argue for a model on a number nobody published. Speed is refused for a different reason: it does not track capability at all, and asking the regression for it produced the worst miss in the whole test, 87 points on tokens per second. How fast a model serves is a fact about the hardware behind it.</li>
               <li><b>Missing a dial's one figure does not zero the dial for every model.</b> A model missing that figure is scored on whichever other dials it has. A dial reads no data for a model only when the single figure behind it is absent for that model.</li>
@@ -1146,6 +1168,11 @@
   // a strength for all 21, including the dearest ones, which is the opposite
   // of what the sentence claims. So each dial is read against how the rest of
   // the field scores on that same dial.
+  function clearScaleNote() {
+    var el = $('mpScale');
+    if (el) el.textContent = '';
+  }
+
   function drivers(m) {
     var out = [];
     DIALS.forEach(function (d) {
@@ -2057,6 +2084,8 @@
       '" role="img" aria-label="Score against cost per task. ' + front.length +
       ' of ' + pts.length + ' models are not beaten on both at once.">' + g.join('') +
       '</svg></div>' +
+      '<p class="mp-pareto-scrollnote">Scroll the chart sideways to see every '
+      + 'model named.</p>' +
       '<ul class="mp-pareto-key">' +
       '<li><i class="k-front"></i>On the line, measured on all of what you asked</li>' +
       '<li><i class="k-partial"></i>On the line, part of it estimated rather than measured (starred)</li>' +
@@ -2103,6 +2132,7 @@
       empty.textContent = 'Pick a job above, or turn up a dial. Nothing is scored until something matters.';
       renderPareto([]);
       if (tieNoteEl()) tieNoteEl().hidden = true;
+      clearScaleNote();
       scheduleMonteCarlo();
       return;
     }
@@ -2131,6 +2161,7 @@
       empty.innerHTML = emptyReason(openOnly);
       renderPareto([]);
       if (tieNoteEl()) tieNoteEl().hidden = true;
+      clearScaleNote();
       scheduleMonteCarlo();
       return;
     }
@@ -2184,6 +2215,11 @@
     renderPareto(rows, W);
     var topScore = rows[0].s, lowScore = rows[rows.length - 1].s;
 
+    // Every early return above has to clear this, not just leave it. With all
+    // dials at zero the page said "nothing is scored" and, one line above it,
+    // "this field runs 71 to 96" from whatever was scored last. A number
+    // asserted next to a statement that there is no number is worse than a
+    // blank.
     // A reader seeing 73 reads it as 73 percent of something. It is not. Say
     // what the number is and how wide the field is, on this question, now.
     var scaleEl = $('mpScale');
