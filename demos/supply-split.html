@@ -100,6 +100,7 @@
     outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
     outline-offset: 3px;
   }
+  .fictional-note { font-size: .82rem; color: var(--faint); margin: -4px 0 18px; }
 </style>
 </head>
 <body>
@@ -109,6 +110,7 @@
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
   <p class="lead">You and Sam hold the same token. Right now any coin of yours equals any coin of Sam's. Update just one of you, and that stops being true, for good.</p>
+  <p class="fictional-note">A made-up token, used as an example. The standard is real; this token is not.</p>
 
   <div class="stage">
     <div class="scene">
@@ -122,7 +124,7 @@
         <div class="coin-row" id="rowSam"></div>
       </div>
     </div>
-    <p class="supply-line" id="supplyLine">9 KAI. <b>One shared supply.</b></p>
+    <p class="supply-line" id="supplyLine">9 coins. <b>One shared supply.</b></p>
     <div class="controls">
       <button class="action-btn" id="actionBtn" type="button">Update Sam's coins</button>
       <button class="reset-btn" id="resetBtn" type="button">Reset</button>
@@ -203,10 +205,10 @@
 
   function updateSam() {
     buildRow(rowSam, SAM_COUNT, true);
-    supplyLine.innerHTML = TOTAL + " KAI. <b>Two kinds of coin now.</b>";
+    supplyLine.innerHTML = TOTAL + " coins. <b>Two kinds of coin now.</b>";
     caption.className = "caption";
     caption.innerHTML = "Sam's coins now carry extra state yours don't. KCC-0020 lets an issuer update some holders and skip everyone else.";
-    btn.textContent = "Pay Sam 2 KAI";
+    btn.textContent = "Pay Sam 2 coins";
     step = "updated";
   }
 
@@ -228,7 +230,7 @@
     buildRow(rowSam, SAM_COUNT, false);
     linkGlyph.textContent = "⇄";
     linkGlyph.classList.remove("blocked");
-    supplyLine.innerHTML = TOTAL + " KAI. <b>One shared supply.</b>";
+    supplyLine.innerHTML = TOTAL + " coins. <b>One shared supply.</b>";
     caption.className = "caption";
     caption.innerHTML = "Either of you could pay the other any amount. A coin is a coin.";
     btn.disabled = false;
