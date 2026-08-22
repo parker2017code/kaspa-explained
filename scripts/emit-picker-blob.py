@@ -30,20 +30,42 @@ PAGE = ROOT / "model-picker.html"
 # Every dial carries two or three figures. No dial carries one: a control built
 # on a single number is that number's leaderboard with a slider on it.
 METRICS = [
-    "hle", "lbMath", "arenaHardPrompts",
-    "aaGpqaDiamond", "aaCritpt", "aaMmmuPro", "lbReasoning",
-    "textMath",
-    "scicode", "lbCoding", "webdevArena", "textCoding",
-    "lbAgenticCoding", "tau3Banking", "aaTbv2", "aaTau2Telecom",
-    "gdpval", "lbDataAnalysis", "aaTbHard", "aaItbench",
-    "lbInstructionFollowing", "arenaTextInstructionFollowing", "aaIfbench",
-    "arenaMultiTurn",
-    "omniNonHallucination", "omniAccuracy", "arenaNonEnglish", "aaLcr",
-    "arenaCreativeWriting", "lbLanguage", "arenaLongerQuery", "textExpert",
-    "tokensPerSec", "ttft", "aaFirstAnswer", "aaTotalResponse",
-    "aaCostPerTask", "lbCostPerSuccessTask", "aaOutputPrice",
-    "aaCacheHitPrice",
+    # Twenty figures, two per dial, chosen on measured spread across this
+    # roster rather than on reputation.
+    #
+    # The test is how far apart the top five sit on each figure, on the honest
+    # scale. A figure where they land within a point or two cannot tell the
+    # leaders apart, and averaging it in mostly adds noise. What survived, by
+    # that spread: CritPt 31.8, ARC-AGI-2 21.2, Humanity's Last Exam 19.8,
+    # Omniscience accuracy 12.2, tokens per second 11.8, tau3-Banking 11.3.
+    # What went: output price at 0.4, time to first token at 0.3, total
+    # response at 0.9, the cache hit price at 1.4.
+    #
+    # The cost of this rule, stated plainly because it is real: dropping the
+    # figures the field agrees on makes the field look further apart than it
+    # is. The honest scale was built to show how close these models actually
+    # are, and scoring only the figures that separate them pushes against that.
+    # It is the owner's call and it is deliberate.
+    #
+    # LM Arena falls from ten figures to three, which is not a judgment about
+    # Arena. Elo compresses at the top by construction, so its boards land at
+    # the saturated end of this test almost uniformly.
+    "arcAgi2", "hle",
+    "aaCritpt", "lbMath",
+    "webdevArena", "lbCoding",
+    "tau3Banking", "lbAgenticCoding",
+    "gdpval", "lbDataAnalysis",
+    "lbInstructionFollowing", "arenaTextInstructionFollowing",
+    "omniAccuracy", "omniNonHallucination",
+    "arenaCreativeWriting", "lbLanguage",
+    "tokensPerSec", "aaFirstAnswer",
+    "aaCostPerTask", "lbCostPerSuccessTask",
 ]
+
+# ARC-AGI-1 is read and used, and deliberately not scored. Its top five sit
+# within 2.0 points, the same saturation that took GPQA Diamond out, and it
+# tracks ARC-AGI-2 at r = 0.920. It still earns its keep as ladder evidence:
+# it is published at every effort rung with a price beside it.
 
 # Three figures wired on 21 August so that ten dials carry three or four legs
 # each with nothing weighted above anything else.
@@ -63,6 +85,8 @@ def source_of(metric):
     """Which board publishes a figure, by the naming the emitter already uses."""
     if metric.startswith("lb"):
         return "LiveBench"
+    if metric.startswith("arc"):
+        return "ARC Prize"
     if metric.startswith(("arena", "webdev", "text")):
         return "LM Arena"
     return "Artificial Analysis"
@@ -116,7 +140,14 @@ def source_counts():
 # quality bar. At 9 it admits every model these three boards publish, including
 # each lab's lower effort tiers, which are exactly the rows a buyer comparing
 # price against capability needs to see.
-MIN_METRICS = 9
+# Proportional to the grid, not a fixed count.
+#
+# It was 9, which was 22.5 percent of a 40-figure grid and became 45 percent of
+# a 20-figure one the moment the scored set was cut, silently dropping
+# Qwen3.8 2.4T A95B for coverage that had not changed. Same failure as the
+# hardcoded per-source counts: a number written against one grid size, left
+# behind when the grid moved.
+MIN_METRICS = max(4, round(len(METRICS) * 0.225))
 
 # Figures that are not scored and are published anyway, as evidence of how
 # close this field is.
@@ -272,43 +303,38 @@ COST_PENALTY = 8.0
 #
 # So the target is a position, and every model is interpolated to it along its
 # own curve. Where that position sits is derived, and it is ONE position for
-# every model, not a position fitted per model.
+# every model.
 #
-# It has to be one position, and the reason is in the data. Six families on
-# this board publish three or more priced settings, which is what it takes to
-# see a curve bend at all. Ask each of them separately where its own returns
-# flatten and the answers are 0.15, 0.19, 0.31, 0.48, 0.78, 0.78: a median of
-# 0.40 and a spread covering most of the ladder. Six numbers cannot support 21
-# per-model answers, and 15 of the 21 models here publish a single setting, so
-# for them there is no curve to ask. Pooling the six is the only estimate the
-# evidence carries.
+# The derivation changed on 21 August, and the reason is worth keeping. It used
+# to look for where marginal capability per doubling of price goes flat, on the
+# six Artificial Analysis families that publish three or more priced rungs.
+# That test only works if the curve HAS a flat tail. ARC Prize publishes a
+# score and a price at every rung for twenty more families, and on ARC the
+# returns keep falling all the way to the top rung without ever flattening, so
+# "the first point within a tenth of the tail" just returns the end of the
+# curve. Run that way, ARC says 0.75, which is not a knee, it is the last data
+# point.
 #
-# Pooled, normalizing each family's price span to 0-to-1 and its capability to
-# a fraction of its own low-to-max gain, marginal capability per doubling of
-# price runs:
+# The test now is the knee itself: the point of maximum distance below the
+# straight chord joining the cheapest rung to the dearest, on each family's
+# own curve normalized to 0-to-1 on both axes. That is defined whether or not
+# a flat tail exists, and it is what "where diminishing returns set in"
+# actually means.
 #
-#   f 0.10 to 0.30    75, 75, 71, 69, 66   holding near its peak
-#   f 0.35 to 0.45    60, 54, 47           falling
-#   f 0.50 to 1.00    36, 37, 38, 38, 38, 38, 36, 36, 36, 36   flat
+# Pooled over all 26 families across both boards:
 #
-# The fall is over by 0.47, where marginal return first comes within a tenth
-# of the flat tail it holds all the way to max. Past that point every further
-# doubling of price buys the same 36 points as the one before it: the curve has
-# stopped bending, so there is no longer a reason to stop anywhere in
-# particular, and the money buys a constant rate rather than a knee.
+#   Artificial Analysis alone, 6 families    knee at 0.43
+#   ARC Prize alone, 20 families             knee at 0.53
+#   both pooled, 26 families                 knee at 0.43
 #
-# 0.47 is where the last of the bend is, which is as close to the frontier as
-# a model gets before the return goes flat. It sits between medium, at 0.30,
-# and high, at 0.57, nearer to high. That matches what the labs' own defaults
-# and most people's habits land on, and it was derived here rather than read
-# off that habit.
+# It captures 57.1 percent of everything the full climb to max effort buys, at
+# well under half the price span. It sits between medium, at 0.30, and high, at
+# 0.57, nearer to medium than the old value was.
 #
-# It captures 58.8 percent of everything the whole low-to-max climb buys, at
-# roughly half the price span. The old value of 0.35 sat inside the falling
-# stretch rather than at the end of it and captured 46.6 percent, so it was
-# quoting every model 12 points of its own available gain short of the point
-# where paying more stops being worth it.
-TARGET_F = 0.47
+# Asked per family the knee lands anywhere from 0.01 to 0.99, median 0.48. That
+# spread is the argument for one pooled position rather than twenty-six fitted
+# ones, and it is wider than the old figures claimed.
+TARGET_F = 0.43
 
 # Where each label falls on its own model's price span, pooled across the
 # families that publish a full ladder. Used only to place a model that
@@ -373,6 +399,16 @@ POOLED_CURVE = [(0.0, 0.00), (0.1, 0.17), (0.2, 0.33), (0.3, 0.48),
 # which place it on the ladder, and borrows the pooled curve for what the climb
 # buys. Price and capability are separated because the evidence for them is
 # separate: a model can publish a full price ladder and almost no benchmarks.
+# An absolute floor, deliberately NOT scaled to the grid.
+#
+# An audit suggested scaling this the way MIN_METRICS now scales, and that is
+# wrong, which is worth writing down because the argument sounds right. The two
+# constants answer different questions. MIN_METRICS asks what share of the
+# question a model has been measured on, so it is a proportion and has to move
+# with the grid. This asks whether there is enough evidence to call something a
+# curve, and four points is four points whether the page scores twenty figures
+# or forty. Scaling it down to two put Claude Sonnet 5 from last to first on a
+# capability curve fitted to two benchmarks.
 MIN_CORE_FOR_OWN_CAP = 4
 
 POOLED_LADDER_DOUBLINGS = 1.97
@@ -770,6 +806,42 @@ def load_livebench_rungs(_cache={}):
                 continue
             rec = {k: v for k, v in zip(LB_COLUMNS, vals) if v is not None}
             out[(lb_norm(cells[0]), lb_rung(cells[0]))] = rec
+    _cache["v"] = out
+    return out
+
+
+ARC_CORPUS = ROOT / "data" / "arc-agi-2026-08-21.md"
+
+
+def load_arc(_cache={}):
+    """ARC Prize rows: {family: [{variant, arcAgi1, arcAgi2, aaCostPerTask}]}.
+
+    The only board here that publishes a score and a price at every effort
+    setting a lab exposes, which makes one row a point on a capability ladder
+    and a price ladder at once. Artificial Analysis has six families with three
+    or more priced rungs; this has twenty, so it is the larger half of the
+    evidence for what effort costs and what it buys.
+
+    Its dollars are its own task suite and are not comparable in absolute terms
+    to Artificial Analysis cost per task. Only the ratio between a family's own
+    rungs is used, which is what a ladder is made of.
+    """
+    if "v" in _cache:
+        return _cache["v"]
+    out = {}
+    if ARC_CORPUS.exists():
+        for line in ARC_CORPUS.read_text(encoding="utf-8").splitlines():
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) != 5 or cells[1] not in EFFORT_ORDER_BASE:
+                continue
+            rec = {"variant": cells[1]}
+            for key, cell in (("arcAgi1", cells[2]), ("arcAgi2", cells[3]),
+                              ("aaCostPerTask", cells[4])):
+                val = corpus_number(cell)
+                if val is not None:
+                    rec[key] = val
+            if "aaCostPerTask" in rec:
+                out.setdefault(cells[0], []).append(rec)
     _cache["v"] = out
     return out
 
@@ -1331,6 +1403,10 @@ def full_board_ranges(metric_meta):
     """
     out = dict(ARENA_FULL_RANGE)
     out.update(livebench_full_ranges())
+    # ARC is marked out of 100 and the human panel scores 100 on ARC-AGI-2, so
+    # the ends of the scale are the real ends rather than a board's floor.
+    out["arcAgi1"] = (0.0, 100.0)
+    out["arcAgi2"] = (0.0, 100.0)
 
     if LADDER_CORPUS.exists():
         lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
@@ -1405,6 +1481,8 @@ def main():
         "arenaNonEnglish": {"higher": True, "unit": "elo"},
         "aaFirstAnswer": {"higher": False, "unit": "s"},
         "aaCacheHitPrice": {"higher": False, "unit": "$/1M"},
+        "arcAgi1": {"higher": True, "unit": "%"},
+        "arcAgi2": {"higher": True, "unit": "%"},
     }
     for _m, _meta in EXTRA_META.items():
         d["metrics"].setdefault(_m, dict(_meta))
@@ -1474,6 +1552,37 @@ def main():
             _bf += 1
     if _bf:
         print(f"figures backfilled from the status board: {_bf}")
+
+    # Attach ARC Prize scores at the rung they were measured at.
+    #
+    # Names match the roster directly on this board, which is unusual and worth
+    # not breaking: ARC prints "GPT-5.6 Sol" and "Claude Fable 5" exactly as
+    # Artificial Analysis does.
+    _arc = load_arc()
+    _arc_hits = 0
+    for v in inc.values():
+        _recs = _arc.get(v["name"])
+        if not _recs:
+            continue
+        _want = tier_of(v.get("variant"))
+        _pick = next((r for r in _recs if tier_of(r.get("variant")) == _want), None)
+        if _pick is None:
+            # Nearest rung rather than the first one printed, and the source
+            # line says so, the same rule the status board backfill follows.
+            _tgt = EFFORT_ORDER_BASE.get(v.get("variant"), 3)
+            _pick = min(_recs, key=lambda r: abs(
+                EFFORT_ORDER_BASE.get(r.get("variant"), 3) - _tgt))
+        _same = tier_of(_pick.get("variant")) == _want
+        for _m in ("arcAgi1", "arcAgi2"):
+            if _m in v["raw"] or _pick.get(_m) is None:
+                continue
+            v["raw"][_m] = {"value": float(_pick[_m]),
+                            "tier": _pick.get("variant"),
+                            "source": "arc prize" if _same
+                                      else "arc prize, nearest setting"}
+            _arc_hits += 1
+    if _arc_hits:
+        print(f"ARC Prize figures attached: {_arc_hits}")
 
     # Score the Arena text figures with Style Control on, verified board by board
     # against the live toggle rather than inferred from the page text.
@@ -2641,6 +2750,25 @@ def main():
             prov.append({"measured": 1, "sibling": 2}.get(kind[m], 3))
             h = honest(m, unpctile(m, val[m]))
             hpct.append(round(h, 1) if h is not None else None)
+
+            def to_honest(width):
+                """A percentile-scale error converted to honest points.
+
+                Everything below is measured in percentile points, and the page
+                scores on the honest scale, where this roster spans about 74 to
+                88 rather than 0 to 100. Handing the simulation a percentile
+                width and letting it add that to an honest value made the noise
+                several times larger than the gaps it was meant to sit inside,
+                which put a model ranked third behind two ranked fourth and
+                fifth. Converted through the same transform the value took.
+                """
+                if width is None or h is None:
+                    return width
+                lo = honest(m, unpctile(m, max(0.0, val[m] - width)))
+                hi = honest(m, unpctile(m, min(100.0, val[m] + width)))
+                if lo is None or hi is None:
+                    return width
+                return abs(hi - lo) / 2.0
             av.append(1)
             if kind[m] == "measured":
                 est.append(0)
@@ -2648,18 +2776,20 @@ def main():
                 # error of that move, per figure. It is still a measurement, so
                 # it is not marked estimated, but the simulation has to know
                 # how far it was carried.
-                esd.append(round(metric_sd[m], 2) if m in metric_sd else None)
+                esd.append(round(to_honest(metric_sd[m]), 2)
+                           if m in metric_sd else None)
                 c = None
                 slug = v.get("arena_slug") or key
                 if m in ARENA_CI_SECTIONS and span[m]:
                     got = ci_raw.get(slug, {}).get(m)
                     if got is not None:
-                        c = round(got / span[m] * 100, 2)
+                        c = round(to_honest(got / span[m] * 100), 2)
                         has_ci = True
                 ci.append(c)
             else:
                 est.append(1)
-                esd.append(sd[m])
+                esd.append(round(to_honest(sd[m]), 2)
+                           if sd.get(m) is not None else None)
                 ci.append(None)
                 n_est += 1
         raw = v["raw"]
@@ -2703,10 +2833,11 @@ def main():
         rows.append(row)
 
     note = (
-        "Artificial Analysis, LiveBench 2026-06-25 and LM Arena, all read 20 August 2026. "
-        "Twenty-five figures across ten dials, kept or cut on whether they still tell the "
-        "leading models apart rather than on how well known they are. Every dial carries two "
-        "or three of them. Each model appears once, at the effort setting that buys the most "
+        f"Artificial Analysis, LiveBench 2026-06-25, LM Arena and ARC Prize, read 20 and "
+        f"21 August 2026. {len(METRICS)} figures across ten dials, kept or cut on whether they "
+        "still tell the leading models apart rather than on how well known they are. Every "
+        "dial carries two of them, weighted the same. Each model appears once, at the effort "
+        "setting that buys the most "
         "capability per dollar rather than the setting that scores highest, because the top "
         "rung on these ladders often costs three times as much for a difference the figures "
         "cannot see. Price, latency and throughput always come from that setting. When a model "

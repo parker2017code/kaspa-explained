@@ -36,50 +36,19 @@ Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
 ecosystem context, never adoption evidence. `kaspa-developments.html` says this
 in its own checked-line so a future reader cannot miss it.
 
-**PICK-UP BLOCK, 2026-08-20 LATE. MODEL PICKER NORMALIZED ON EFFORT CURVES. GATE GREEN, DEPLOYED.**
+**PICK-UP BLOCK, 2026-08-22. MODEL PICKER REWRITE IN PROGRESS, UNCOMMITTED.**
 
-1. Check `git log --oneline -1` against origin before trusting anything here. Read the date from the environment before writing any stamp. Head is `cabbd7d`. Twelve commits shipped this session, oldest first: `ff8e67b` one row per model, `a69171d` one effort setting, `e860cbe` what a point is worth, `75f926f` the too-close benchmarks, `488cd11` per-figure rungs, `6dfebdb` Fable normalized, `ff44ef7` tier corrections, `0e9ff58` curve position not label, `5b2bf13` prose cut, `7b28b28` clock partial, `cabbd7d` clock universal.
+1. Verify before trusting anything here. `git status --short`, `git log --oneline -1` against origin. Both HEAD and origin/main sit at `7df640f` as of this write-up. Everything below in "The model picker, briefly" describes uncommitted working-tree state on top of that commit. It sits in the working tree only, awaiting a commit and a deploy. Read the date from the environment before writing any stamp.
 
-2. **WHAT THE PAGE NOW DOES, IN ONE LINE.** 21 models, one row each, every model quoted at the same POSITION on its own effort curve rather than at the same labeled setting, with every figure, price and clock moved there separately and each carrying its own error.
+2. **WHAT CHANGED, IN ONE LINE.** Scored figures cut from 25 to 20, 2 per dial across 10 dials, no figure on 2 dials; ARC Prize wired in as a fourth data source, ARC-AGI-2 scored and ARC-AGI-1 kept only as ladder evidence; `MIN_METRICS` made proportional to the figure count instead of a fixed 9; both per-figure movement and blank-rung pricing now run on a model's own clocks with predictor sets chosen by leave-one-model-out r-squared instead of in-sample fit.
 
-3. **THE CENTRAL IDEA, AND WHY THE OBVIOUS VERSION IS WRONG.** Labels are not comparable across labs. Measured as a fraction `f` along a model's own log-price ladder, 0 at its cheapest published setting and 1 at its dearest, the word "high" lands at 0.00 for GPT-5.6 Terra, which is its cheapest, and 1.00 for Gemini 3.7 Flash, which is its dearest. Sol's high sits at 0.52, Claude Opus 5's at 0.62. Quoting everything at "high" puts one model at the bottom of its curve and another at the top. `TARGET_F = 0.35` is a position, derived, and every model is interpolated to it.
+3. Full numbers and derivations, including `TARGET_F` (now 0.43, re-derived with ARC included) and `MIN_CORE_FOR_OWN_CAP` (back to an absolute floor of 4 after a wrong attempt to scale it), are under "The model picker, briefly" below. Read that section before touching any constant in `scripts/emit-picker-blob.py`.
 
-4. **HOW TARGET_F WAS DERIVED. Do not change it without redoing this.** Pooling the families that publish three or more settings and reading marginal capability per doubling of price along the normalized curve gives 30.2, 19.4 and 18.2 points per doubling over the first third, then 11.9, 11.9, then a flat 10.3, 9.8, 9.8, 9.8, 9.8 across the whole top half. Marginal return falls by a third at the 0.3-to-0.4 break and never recovers. That is the knee. It sits past most labs' medium (pooled f 0.30) and short of most labs' high (pooled f 0.57), which is the band the owner asked for.
+4. `check-model-picker.py` passes on the working tree: 10 dials, all weights resolve. The full publish gate (`check-site.sh`) has not been run this pass; run it before committing.
 
-5. **EVERY FIGURE MOVES SEPARATELY. This was the second big error and it is fixed.** A full low-to-max climb buys 71.9 percentile points on Terminal-Bench v2.1 and 2.2 on the non-hallucination rate on the four-family fit. On the 24-family corpus fit the non-hallucination rate is **minus 7.0 raw points**, quartiles minus 18.0 to 0.0: more effort makes a model measurably more likely to make things up. The sign flipped when the family count went from 4 to 24, which is the clearest argument in this file for fitting on the whole board rather than the shipped roster. The pooled number is 23.3, so one shift for all figures understated Terminal-Bench by 48 points and overstated hallucination resistance by 21. Some figures move backwards: Claude Opus 5 loses 10 points of AA-LCR climbing to max while GPT-5.6 Sol gains 70 on the same figure. A model with its own ladder is read off its own curve figure by figure with no pooling; a model without one borrows how much that figure responds board-wide. Constants live in `per_metric_gain()` and `metric_shift()` in `scripts/emit-picker-blob.py`.
+5. **TOP ITEM FOR NEXT SESSION.** Wire ARC Prize into the ladder machinery (`BOARD_LADDER`, `own_curve()`, the cost reconstruction fits): it is currently only used for its own scored/ladder-evidence figures, not for any of the effort-curve fitting, which still sees only the 6 Artificial Analysis families with 3+ priced rungs against ARC's 20. Then re-derive `TARGET_F` and `POOLED_CURVE` in code, with an assertion, instead of the hand-computed literal and hardcoded lookup table sitting there now. Rebuild the page copy last, once those numbers stop moving.
 
-6. **THE CLOCK IS A FLOOR PLUS THINKING TIME. Best-fitting law found this session.** Latency is not one multiplier: across the ten Artificial Analysis families with a ladder, a full climb multiplies the wait by anywhere from 0.96 to 133.8. What predicts it is how slow the model already is at the top, and log ratio against log max-effort latency fits at **r = 0.970**. Every model starts from about the same floor: the cheapest setting of each family reads 0.92, 1.67, 1.78, 1.96, 2.78, 3.07, 3.51, 4.29 seconds, median 1.91, while max-effort readings run 0.88 to 223. All the spread is thinking. The thinking budget is spent late, fitted as `f ** 3.5` with rms 0.111, so only about 2.5 percent of it happens before `TARGET_F`. Sol goes 209.1s to 4.6s, Sonnet 5 172.6 to 6.2, Fable 141.4 to 5.5, while GLM-5.2 moves 2 percent and DeepSeek V4 Pro not at all, because they were never thinking before answering. `CLOCK_SHAPE`, `POOLED_FLOOR` and `clock_at_target()` in the emitter.
-
-7. **HYPOTHESES TESTED THIS SESSION, WITH VERDICTS. Do not re-litigate without re-measuring.**
-   - Cost collapses far faster than capability when models are normalized down: **CONFIRMED**. The models submitted at max lose 59 percent of price for about 2.0 points of Terminal-Bench. Median across all 17 moved models is minus 26 percent price for minus 0.7 points.
-   - The clock collapses harder still: **CONFIRMED**, and it is the largest effect on the board. Full climb multiplies price by 3.9, total response by 11.7, time to first token by 35.6 in the 4-family fit and 13.2 in the 10-family fit, against capability moving 29.7 points on a field spanning about 35.
-   - Correction should scale with how much room a model has on that axis: **CONFIRMED FOR CLOCKS** at r = 0.970, which is what the floor-plus-thinking model is.
-   - Same idea for benchmarks, that a model near a test's ceiling has less to gain: **REFUTED**. Correlation between room remaining and points gained is minus 0.043 across 32 figure-by-model observations. What predicts the gain is which test it is, not which model. No headroom term was added.
-   - A per-lab offset on the cross-figure regression: **REFUTED** earlier. Moved mean error 12.5 to 12.3 and left calibration untouched, which on 111 predictions is noise. Reasoning recorded next to `NO_IMPUTE`.
-
-8. **THE OTHER TWO ESTIMATORS, both validated by holding data out.** Sibling fill: a figure the shipped setting never published is carried from that model's nearest setting, shifted by how far apart the two measured on everything they share. Cross-metric regression: a figure no setting published is predicted from correlated figures the model does have, needing three separate correlations at r >= 0.70 with at least twelve models behind each. Validated by hiding each model's figures in turn: predictions land 12.5 points off on average and 94.6 percent of held-out misses fall inside the interval the prediction declares. Looser settings filled twice as many figures and overstated their confidence, so they were dropped. Price and speed are never predicted.
-
-9. **TIER CORRECTIONS. The audit's 147 was inflated; five survive.** Silence is not disagreement: LiveBench printing "Kimi K3" with no suffix while AA prints "(max)" is one board making a claim, not two disagreeing. What counts is a board printing a different setting. Three models where Arena tested a rung below everyone else, so their Arena figures carry `high` and are not moved down: Claude Fable 5, DeepSeek V4 Pro 0813, DeepSeek V4 Flash 0731. Two where AA prints nothing but LiveBench and Arena both print High, so the model gets that rung: Gemini 3.6 Flash, Gemini 3.1 Pro Preview. Claude Opus 5 was already correct, its high and max Arena rows never merged. `ARENA_TIER` and `VARIANT_FIX` in the emitter. Also `EFFORT_ALIAS`: AA charts Claude Fable 5 as "(with fallback)" while its own prose calls it "Adaptive Reasoning, Max Effort, Opus 4.8 Fallback", so it is max, and before that mapping it was the one model escaping normalization entirely while ranked first.
-
-9c. **THE PRICE LADDER IS THE BEST-MEASURED THING HERE, not the weakest. Settled 20 August; do not reopen.** It rests on 24 adjacent rung steps with a median ratio of 1.57 and quartiles of 1.46 and 1.71, a 17 percent spread across the interquartile range. Counting families undersells it: ten families, twenty-four measurements. Reconstructing prices for the fifteen families that publish effort settings without prices was tried and fails. Cost per task is output tokens times price per token and price per token does not move with effort, so a rung's cost ratio should be its token ratio, and the board publishes tokens per second and both timings. Four forms were tested against the 22 steps carrying both a price and a timing: tokens per second times total response, tokens per second times time to first token, and each timing alone. Correlations landed between minus 0.16 and minus 0.07, median errors 41 to 85 percent. Timing does not predict price on this board. Recorded so it is not tried a third time.
-
-10. **LADDER FITTING RULES.** Pooled by source then averaged across sources equally, never a flat average over observations, because the boards do not sample independently and LiveBench republishing the same model across five releases would otherwise set the ladder for everyone. Inside a source, weighted by release: `RELEASE_DECAY = [1.0, 0.6, 0.35]` and `RELEASE_TAIL = 0.1`. A rotating benchmark gets harder each release and the ladder widens with it, measured: Claude 4.5 Opus reads a medium-to-high gap of 11.2 points on the 2025-11-25 LiveBench release and 16.9 on 2026-01-08, and GPT-5.1's reasoning-on gap goes 20.0 to 29.4 over the same span. Effort buys more on harder tasks. Scores are never comparable across releases; compute every gap within one.
-
-11. **DATA COLLECTED THIS SESSION, all in `data/`, all read visually with no API.** `aa-all-status-2026-08-20.md` is the big one: 610 models, Status filter set to All, 41 columns. The agent reported 54 families with two or more settings; that counted date-versioned rows. The real numbers are 25 families with two or more EFFORT settings and 10 with a price at two or more of them, and both are now measured by the emitter rather than taken on report. Also `arena-text-all-categories-2026-08-20.md` (PARTIAL: 6 of 29 categories, being Overall, Multi-Turn, Hard Prompts English, and three Occupational sub-categories. No Style Control or Factuality variants captured at all. The agent died when the laptop slept. Restart fresh), `livebench-historical-2026-08-20.md` (nine releases: 2024-06-24 v1, 2024-07-26, 2024-08-31, 2024-11-25, 2025-04-02, 2025-04-25, 2025-05-30, 2025-11-25, 2025-12-23. MISSING 2026-01-08 only, because the agent died when the laptop slept. Verify before trusting; restart it fresh rather than resuming, it died twice), `livebench-subtasks-2026-08-20.md` (all 23 components, 44 models, cross-checked two ways), `arena-agent-categories-2026-08-20.md` (Overall/Code/Chat/Work at 50 rows each plus all five signal tables), `arena-extra-2026-08-20.md` (Vision Arena's 9 undocumented sub-categories), `aa-extra-2026-08-20.md` (AA-Briefcase, AutomationBench, Harvey LAB, EnterpriseOps-Gym), `livebench-extra-2026-08-20.md`, `tier-audit-2026-08-20.md`.
-
-12. **PARTLY WIRED IN NOW.** `load_ladder_corpus_all()` parses `aa-all-status-2026-08-20.md` and the per-figure gains are fit on it: up to 24 families for a capability figure, against 4 before. A capability ladder needs two rungs and not a price at each, which is why the count is 24 and not 10. The price and position curve is still fit on the 10 priced families, correctly, because a price curve needs prices. STILL NOT WIRED: the LiveBench historical releases, the Arena text categories, and the Arena agent sub-boards. Neither are the LiveBench historical releases, the Arena text categories, or the Arena agent sub-boards. Wiring those in is the single highest-value next step and every constant in items 4 through 7 should be refit once they are.
-
-12b. **STYLE CONTROL: measured, recorded, not yet wired.** `data/arena-style-control-2026-08-20.md`. LM Arena's Style Control strips formatting and length from the ranking and the gap to the plain board says how much of a model's standing is presentation. Across 33 models the median loses 10 points. GPT-5.6 Sol loses 28, Luna 22, Terra 20, Claude Sonnet 5 19, Claude Fable 5 13. Claude Opus 5 is the only real gainer, plus 16 at max and plus 12 at high, moving from rank 12 to rank 2 while Fable falls from 1 to 5. DONE and VERIFIED: the four Arena text figures are scored with Style Control on, from `data/arena-style-control-verified-2026-08-20.md`, each board confirmed against the live toggle by the owner. MEASURED, was a guess: the reasoning-off floor. `EFFORT_ORDER_BASE["Non-reasoning"]` was 0, two rungs below low. LiveBench historical publishes the same model off and on across ten releases; seven pairs name the tier on the on side, which is what it takes to place the floor. A full low-to-max climb is 17.0 LiveBench points (median of 10 within-model steps); the seven pairs put off 10.0 to 19.7 below low, median 16.1, which is 0.95 of a ladder or 3.79 rungs. Off is now -1.8 and LADDER_SPAN is max minus min. 31 further pairs carry a bare "Thinking" with no tier and are excluded rather than guessed at. No roster model is measured non-reasoning, so this moved the page by a median 0.70 points and nothing on cost. NOTE the trap: LADDER_SPAN cancels inside `g["gain"]/GAIN_REF`, so it is only ever a ratio; the page moved because families whose ladder starts at OFF now normalize over the true longer span. ALSO: LM Arena is near-useless as a ladder source, only 2 families publish 2+ settings. It is rich for dials and for the style axis, not for effort. REFUTED, recorded so it is not retried: style dependence predicts nothing else measured. Tested against cost per task, price per unit of effort ladder, capability per unit of ladder, tok/s, ttft, context, coverage, open weights, board f, capability given up, and overall capability. Eleven tests, zero survive. Overall capability hit r = -0.488 against a 0.47 threshold at n=18 but collapses to -0.29 dropping Claude Opus 5, and Spearman is -0.387. Keep style out of the effort normalization; it is an independent axis and must be read, not inferred. TOGGLE TELL, do not get this wrong again: a board read WITH the correction on prints "Default" by the plots; with it off it prints "Remove Style Control". That is the opposite of the obvious reading and it cost a full withdrawal. Never infer the setting from page furniture; ask. `webdevArena` is a fifth Arena figure from a separate board and stays plain. METHOD: Elo is a relative fit, so a raw before and after is invalid; the median model shifts +21, +8 and +33 on the three boards, which is scale not signal. Center on the median. Centered, style dependence is a model trait that transfers across boards at r = 0.955 to 0.977. Claude Opus 5 is the most presentation-dependent model measured, -27 high and -33 max on Hard Prompts, -31 and -37 on Coding. Claude Fable 5 is flat within a point.
-
-13. **CLOSENESS EVIDENCE, not scored.** Figures cut for saturation are shown as evidence that the field is close, never ranked on: GPQA Diamond (20 models span 89 to 95 percent, top five inside 1 point), CritPt, MMMU Pro, LiveBench reasoning, LM Arena Coding, plus eleven LiveBench component tasks. Components can never be scored, because a component is part of a category already on the page. `CLOSENESS`, `SUBTASK_PICKS` in the emitter, `CLOSE_DIAL` and `CAT_DIAL` on the page.
-
-14. **THE PROSE WAS CUT ON THE OWNER'S INSTRUCTION.** Roughly 600 words sat between the value chart and the ranking; it is 139 now. The closeness panel collapses behind one line and lists four figures, not fifteen. Do not let it grow back.
-
-15. **KNOWN DEFECTS AND OPEN QUESTIONS.** Three Qwen models (3.8 Max, 27B, 2.4T A95B) publish no effort setting on any board, so they are quoted unnormalized and this is not disclosed on their rows. The Arena Agent board prints unsigned magnitudes for what are negative values below rank 28, confirmed across all 24 tables, so it is read and never scored. Qwen3.8 Max license disagrees across boards (LiveBench says open, AA and Arena say Proprietary; we follow AA and Arena). The asterisk on AA's Intelligence Index appears on 434 of 610 rows and the site never explains it.
-
-16. **AGENT OPERATIONS, learned the hard way.** Three separate agents flagged mid-flight `SendMessage` instructions as prompt injection and correctly ignored them. Instructions must go in the spawn brief; mid-flight messages are not reliable. Agents also share one browser pane and interfere with each other, closing tabs and typing into each other's search boxes, and coordinate-based clicking was broken this session. Keep concurrent browser agents low or expect re-verification work.
-
-17. **THE DAILY JOB is the X-post calendar**, local and uncommitted by standing instruction. Aug 3-19 done. Aug 20 still not written.
+6. Other files sitting modified this session and out of scope for the model-picker work: `data/arena-text-all-categories-2026-08-20.md`, `kaspa-x-posts-august-2026.md`. Leave them alone unless the task at hand covers them.
 
 
 ## What this is for
@@ -133,58 +102,221 @@ and the "as of" line inside any dated post.
 ## The model picker, briefly
 
 One page of 72, and it carries more machinery than the rest combined, so it
-gets one section rather than a third of this document. Rebuilt three times
-this session; read this version, not memory of an earlier pass.
+gets one section rather than a third of this document.
 
-**Local, verified, gate-clean, ready to push: 9 dials, 17 models, every
-dial a clean 50/50 pair.** Owner's instructions arrived in stages and each
-stage changed the design: first, reconsider the whole benchmark set (3-5
-per dial, up to 2 per source, drop saturated benchmarks, redefine dials
-that don't fit). That produced a version where 6 of 9 dials could not draw
-one benchmark from each of Artificial Analysis, LiveBench, and LM Arena,
-because Arena runs exactly four boards total and none of the six ever had
-a fifth to claim. Second stage, on seeing that gap: "must use at least 1
-source from each per dial, or dial must change," which produced a 5-dial
-version merging the six into two broad blends (one an 8-benchmark
-"reasoning and real-world work," the other a 7-benchmark "honest, fast,
-and cheap" that still couldn't reach Arena, since Arena has never
-published cost, speed, or hallucination data under any framing). Owner's
-verdict on that result: the source-purity rule itself was the problem, not
-the dials, stated directly as a test of whether the arbitrary rule would
-be caught rather than mechanically satisfied. Third and final stage: back
-to 9 dials, each blending exactly 2 benchmarks at a flat 50/50, picked for
-what they measure rather than for which source published them, with no
-source-count requirement at all. Writing code and agentic coding trimmed
-from their original 3 benchmarks to the 2 most distinct legs (an
-automated eval plus a live Arena judgment in both cases); general quality
-trimmed from 4 to 2 (Artificial Analysis Intelligence Index plus Arena
-Text Overall). Reasoning, finishing real work, honesty, long context,
-speed, and cost are their original clean 2-benchmark pairs, several of
-them single-source by nature (responsiveness is two Artificial Analysis
-figures because no other source tracks speed; honesty is two Artificial
-Analysis figures because neither other source tracks hallucination). A
-tenth dial, following instructions, was tried again and dropped again:
-IFBench, its only real second benchmark, has real scores for 5 of 17
-models, the same thin-coverage floor (real data for fewer than roughly 10
-of 17) that sank every other rejected candidate this session. GPQA
-Diamond, Omniscience Index, and MMMU Pro stay dropped for the same
-reasons as before (saturated, double-counting, category error). Roster
-stays at 17: all three previously excluded models (Claude Opus 4.8 High,
-Claude Opus 4.7 High, GPT-5.5 xHigh) still carry zero Artificial Analysis
-data, and every one of the nine dials draws on at least one Artificial
-Analysis figure, so the exclusion holds regardless of how the dials are
-shaped. `check-model-picker.py` passes (9 dials, all weights resolve);
-`check-site.sh` reaches "Site checks passed."
+**State below describes the working tree. The last commit is behind it.** HEAD and
+origin/main both sit at `7df640f`. Everything in this section describes
+uncommitted changes on top of it. The emitter is finished and the blob is
+frozen for this pass. Run `git status --short` before assuming the live
+page matches this description.
 
-**Two real display bugs from earlier this session (truncated benchmark
-list; percentage from `dialMix()`'s separation-share instead of the real
-weight) stayed fixed through all four rebuilds**, reverified live each
-time: every dial's inline text now names both benchmarks backing it at a
-plain 50%, matching the "Which benchmarks, and why" panel underneath.
+**SHAPE.** 10 dials, 2 figures each, weight 1/1, no figure repeated across
+dials. 20 scored figures, cut from 25. Selection test: how far apart the
+top five models sit on a figure, on the honest scale (worst-ever to
+best-ever across every model ever measured on that board, not a percentile
+of this roster). A figure whose top five land within a point or two cannot
+separate the field and is cut from scoring; it can still appear as
+closeness evidence. Surviving spreads, top five: CritPt 30.2 points,
+ARC-AGI-2 21.2, HLE 18.8, Omniscience accuracy 12.6, tokens per second
+11.8, tau3-Banking 11.3. Cut: output price 0.4, time to first token 0.3,
+total response 0.9, cache hit price 1.4. `METRICS` in
+`scripts/emit-picker-blob.py`, `DIALS` in `model-picker.html`.
 
-Dial sliders run 0-10 (11 steps); the badge that counts sources is derived,
-not stored, because a hardcoded count silently goes stale the day a source
-stops covering everything (see the `var`-hoisting trap in "The traps").
+Cost of the cut, stated because it is real: dropping figures the field
+agrees on makes the field look further apart than it actually is. Owner's
+call, made deliberately.
+
+Sources are FOUR boards, derived not hardcoded: `source_counts()` reads the
+split off `METRICS` via `source_of()` and asserts it sums to the total.
+Current split: Artificial Analysis 9, LiveBench 7, LM Arena 3, ARC Prize 1,
+sum 20. `source_of()` had no branch for the `arc` prefix until this pass,
+so ARC figures were being filed under Artificial Analysis (AA read as 10,
+a fourth board invisible). Fixed: another instance of the bug class below.
+
+**ARC PRIZE IS A FOURTH SOURCE.** `data/arc-agi-2026-08-21.md`, pasted by
+the owner from arcprize.org, read 21 August. The only board here that
+publishes both a capability score and a cost per task at every effort rung
+a lab exposes, so one row is a point on a capability ladder and a price
+ladder at once.
+
+ARC-AGI-2 is one of the 20 scored figures, on the `reason` dial paired with
+HLE. ARC-AGI-1 is loaded and used but deliberately NOT scored: top five sit
+within 2.0 points, the same saturation that took GPQA Diamond out, and it
+correlates with ARC-AGI-2 at r = 0.920. It stays on the page as ladder
+evidence, kept because it is published at every rung with a price beside
+it, attached at each model's chosen rung by `load_arc()`.
+
+**TARGET_F = 0.43. The derivation changed on 21 August; the reasoning
+matters more than the number.** Every model is read at the same fraction
+along its own log-price effort ladder, not at the same labeled setting:
+labels are not comparable across labs (the word "high" sits at 0.00 of
+GPT-5.6 Terra's own ladder and 1.00 of Gemini 3.7 Flash's).
+
+The old test looked for where marginal capability per doubling of price
+goes flat, on the 6 Artificial Analysis families that publish 3 or more
+priced rungs. That test only works if a flat tail exists. On ARC Prize the
+returns keep falling all the way to the top rung and never flatten, so
+"the first point within a tenth of the tail" just returns the last data
+point on the curve, which is how an audit got 0.75 out of it.
+
+The test now is the knee itself: the point of maximum distance below the
+straight chord joining the cheapest rung to the dearest, on each family's
+own curve normalized 0-to-1 on both axes. That is defined whether or not a
+flat tail exists. Pooled over 26 families across both boards it gives 0.43.
+Artificial Analysis alone: 0.43. ARC Prize alone: 0.53. Per-family range
+0.01 to 0.99, median 0.48, which is the argument for one pooled position
+rather than 26 fitted ones. It sits between medium (0.30) and high (0.57),
+nearer medium than the old value was. Full derivation in
+`emit-picker-blob.py`, in the comment block directly above `TARGET_F`.
+
+This closes last session's open question about `TARGET_F` predating the
+ARC data: it has now been re-pooled with ARC included, and 0.43 is the
+re-derived answer, not the old one.
+
+**MIN_METRICS is now proportional**, `max(4, round(len(METRICS) * 0.225))`,
+currently 4. It was a fixed 9, which was 22.5 percent of a 40-figure grid
+and silently became a 45 percent floor the moment the scored set fell to
+20, dropping Qwen3.8 2.4T A95B for coverage that had not changed. Same
+failure as the hardcoded source counts; see "Bug class" below.
+
+**PER-FIGURE MOVEMENT RUNS ON A MODEL'S OWN CLOCKS.** Everything that
+answers to effort answers to how long the model thinks, and the clocks
+(`ttft`, `aaTotalResponse`, `tokensPerSec`) publish at more rungs than the
+benchmarks do. `CLOCK_SETS` nests 4 predictor sets, from 3 clocks up to 9
+columns (adding intelligence index, first-answer time, the P25/P75 latency
+spread, LiveBench overall, LiveBench cost per success task). Each figure
+takes the smallest set that survives leave-one-model-out r-squared, never
+the in-sample number: fitted on everything, tau3-Banking reads r2 0.944 and
+falls to 0.242 held out one model at a time. A figure clearing nothing
+keeps its old board-wide movement rule.
+
+**BLANK RUNGS ARE PRICED FROM A MODEL'S OWN CLOCKS TOO**, multivariate,
+tiered to whatever that model's rungs actually publish (`SCALED_RAW`: cost
+per task, LiveBench cost per success task, time to first token, total
+response, tokens per second). Drops to a smaller feature set rather than
+falling straight to a single-slope estimate the moment one column is
+missing.
+
+**SIMULATION ERROR BARS WERE ON THE WRONG SCALE, now fixed.** The panel
+draws each figure from a normal spread around its value and counts wins
+across `MC_RUNS = 4000` runs. The spread was being handed to it in
+percentile-scale points while the page scores on the honest scale, where
+this roster spans roughly 74 to 88 rather than 0 to 100. A percentile-width
+error is several times wider than the honest-scale gaps it was landing on,
+which scrambled the win-probability order: a model ranked third by score
+could win more simulated runs than the models ranked fourth and fifth.
+Every error width (`es`, the sibling-shift spread, the estimate spread) is
+now converted through the same `honest(unpctile(...))` transform the value
+itself takes, in `to_honest()` in the emitter.
+
+**ROSTER: 21 models.** `check-model-picker.py` passes on the working tree:
+10 dials, all weights resolve to a loaded figure.
+
+**`ci_note` is fixed, not outstanding.** It now derives its figure count
+from `len(METRICS)` and names all four boards, rather than a hardcoded
+sentence. Kept in the bug-class list below as a past instance, not a live
+one.
+
+**TRAPS CARRIED FORWARD, still true, do not re-litigate without
+re-measuring:**
+- LM Arena's Style Control marker reads backwards. A board captured WITH
+  the correction on prints "Default Leaderboard Plots"; WITHOUT it prints
+  "Remove Style Control". Never infer the setting from page furniture, ask.
+- `data/arena-style-controlled-scores-2026-08-20.md` is RETRACTED: its
+  Coding table has the plain and style-controlled columns swapped, caught
+  against a verified capture. Do not read numbers out of it.
+- REFUTED: style dependence predicts nothing else measured. 11 tests
+  against cost per task, price per unit of effort ladder, capability per
+  unit of ladder, tokens per second, time to first token, context, coverage,
+  open weights, board f, capability given up, and overall capability. 0
+  survive.
+- REFUTED: reconstructing cost per task from implied output tokens at the
+  posted output price. r = 0.385, median error 69 percent. The speed
+  columns are measured on a short standard prompt; cost per task is
+  measured across the full evaluation suite. Different workloads. Do not
+  retry.
+
+**OPEN, largest structural debt on this page: the effort model's two
+central constants are asserted in the source, not derived at runtime.**
+
+`TARGET_F = 0.43` is a hand-computed literal. The derivation is written out
+in the comment above it and the analysis was run in a scratch script, but
+no function in `emit-picker-blob.py` reproduces it. If the underlying
+boards change, nothing recomputes it and nothing fails. This is exactly how
+the old 0.47 came to be defended by a test that only worked on the 6
+families it was derived from and broke the moment 20 more arrived.
+
+`POOLED_CURVE` is worse: an 11-point lookup table, hardcoded, of capability
+fraction against ladder position, and `pooled_cap_frac()` interpolates that
+table at runtime. Every model without its own capability curve is moved
+along it. It is not fitted from `data/aa-all-status-2026-08-20.md` or
+`data/arc-agi-2026-08-21.md` when the script runs.
+
+Both are the same bug class below, in its most consequential form: a
+number written against one snapshot of the data and left behind when the
+data moved.
+
+**What did NOT get done, so it is not mistaken for finished.** ARC Prize is
+read for its scored figures and its ladder rows are loaded by `load_arc()`,
+but ARC is NOT yet wired into `BOARD_LADDER`, `own_curve()`, or the cost
+reconstruction fits. Those still see only the Artificial Analysis board's
+6 families with 3 or more priced rungs; ARC has 20. Wiring it in is the
+single highest-value change available to the effort model. Deliberately
+deferred, not attempted: every emitter change invalidates the numbers
+quoted in the page copy, and the copy was already being rewritten against
+a frozen blob.
+
+Suggested next-session order: wire ARC into the ladder machinery first,
+then re-derive `TARGET_F` and `POOLED_CURVE` in code with an assertion,
+then rebuild the page copy last, once the numbers stop moving.
+
+## Bug class: a constant sized to one grid, left behind when the grid moved
+
+Five instances, same shape every time: a number or rule written against
+the figure, source, or data-snapshot state at the moment it was written,
+left standing after that state changed.
+
+1. Per-source figure counts hardcoded at 13, 7, 5. Summed to 25 once the
+   real figure count reached 32; the page printed "thirty-two figures" and
+   the stale 13/7/5 breakdown in the same sentence. Fixed: `source_counts()`
+   derives the split from `METRICS` and asserts the parts sum to the whole.
+2. `MIN_METRICS = 9`, a fixed count. Was 22.5 percent of a 40-figure grid,
+   became a 45 percent floor the moment the scored set fell to 20, and
+   silently dropped a model whose real coverage had not changed. Fixed:
+   `max(4, round(len(METRICS) * 0.225))`.
+3. `FIG`, a hand-maintained figure-name map duplicating `PROV`. Went stale
+   the moment 5 figures were added to `PROV` with no matching `FIG` entry;
+   raw metric keys ("aaTau2Telecom", "aaTbHard", "aaItbench") printed in the
+   dial summary instead of names. Fixed: `FIG` falls back to `PROV` for any
+   key it does not carry.
+4. `ci_note`, a hardcoded sentence describing the blob. Said "Twenty-five
+   figures" against a true 20 and described a placement rule (cost-optimal
+   effort setting) that `TARGET_F` had already replaced. Fixed: derives the
+   figure count and names the rule and boards live.
+5. `source_of()` had no branch for the `arc` prefix, so every ARC Prize
+   figure was counted as Artificial Analysis. AA read as 10 figures instead
+   of 9, and the page never disclosed a fourth board was in the mix at all.
+   Fixed: `source_of()` now returns "ARC Prize" for that prefix.
+
+**A sixth instance, the sharpest yet, and it cuts the other way: deriving
+a number is not always the fix.** An audit recommended scaling
+`MIN_CORE_FOR_OWN_CAP` with the grid the same way `MIN_METRICS` now scales.
+That recommendation was WRONG and was applied before being caught.
+`MIN_METRICS` asks what share of the question a model has been measured
+on, a proportion, so it has to move with the grid. `MIN_CORE_FOR_OWN_CAP`
+asks whether there is enough evidence to call something a curve, and 4
+points is 4 points at any grid size. Scaling it down to 2 put Claude
+Sonnet 5 from last place to first on a capability curve fitted to 2
+benchmarks. Reverted: `MIN_CORE_FOR_OWN_CAP = 4`, an absolute floor again.
+
+Lesson, stated once: derive a count or description from the thing it
+describes, and assert the derived value against what a human would say by
+hand. A hardcoded number is a snapshot standing in a formula's place, and
+nothing tells the two apart until the underlying count moves. But not
+every constant is a proportion in hiding: a minimum-evidence floor answers
+"is this enough to trust," not "what share of the total is this," and
+forcing the second shape onto the first question breaks it just as
+silently as leaving a stale number in place.
 
 
 ## Serving and rendering
@@ -565,70 +697,4 @@ sparse-real-row blind spot
 gap-filling is now scoped to individual dial cells rather than whole
 synthetic rows. Long-prose argument-drift re-read (item 4 in earlier
 copies of this list) is closed, clean, see the pick-up block.
-
-## Model picker, state at end of 21 August 2026
-
-Deployed through commit 63a147c. Every check below was run and passed; the
-numbers are the evidence, not decoration.
-
-THE SCALE. 0 is the worst result anyone has recorded on a figure, 100 is the
-best, across every model ever measured on that board. Not a percentile across
-the 21 models here, which made this page's own bottom model 0 and its own top
-100 whatever the real gap. Not the range each test prints out of, which answers
-what share of the exam was answered rather than whether anyone has done better.
-LiveBench needs all eleven releases for this: the captured board is the top
-forty of the current release, where the best model reads 100 because it is the
-best in the file. All releases give 604 rows and real floors, coding 6.1 rather
-than 65.4, agentic coding 1.7 rather than 18.5. CAVEAT, do not lose it:
-LiveBench refreshes its questions twice a year, so the oldest floors are floors
-on an earlier edition of the test.
-
-32 FIGURES, not 25. Seven came back on 21 August after being cut for not
-separating the leaders: GPQA Diamond, CritPt, MMMU-Pro and LiveBench reasoning
-from the SATURATED list, plus Arena's Coding, Math and Expert boards which were
-captured and never wired. Cutting a benchmark for being saturated made sense on
-a percentile scale, where a one-point gap gets stretched to fill the chart. On
-an absolute scale it guarantees the page overstates how far apart models are.
-Composites stay out forever: Intelligence Index, Omniscience Index, LiveBench
-Overall and Arena Text Overall are blends of figures already scored here.
-
-LADDERS COME FROM THE FULL BOARD, not from picker-data.json. That file carries
-whichever settings were pulled when it was built. GPT-5.6 Luna had two of its
-six, so its ladder started at $0.03 and 53.75s when the model really starts at
-$0.01 and 0.84s, and the correction pushed its price the wrong way. A truncated
-ladder is worse than no ladder: no ladder falls back to pooled and says so, a
-truncated one looks like a measurement and is silently wrong.
-
-PLACING A MODEL WITH NO EFFORT LABEL. Effort is tokens emitted. Cost per task
-over output price recovers the tokens a task took and predicts position at
-r = 0.665 across 55 labeled rows, against 0.389 for time to first token and
-0.630 for total response. All three together give R2 = 0.646, and the estimate
-is shrunk toward the target by exactly that. A model with a price but no clock
-falls back to tokens alone at r2 = 0.442 and is shrunk harder. Deliberately NOT
-stratified by price tier although the fit is much better on dear models
-(r2 0.73 against 0.26): splitting leaves 27 rows a side and a rule fitted on 27
-applied to three models is the worse trade.
-
-IMPUTATION IS A CONTINUUM, not a cutoff. Was three donors at r >= 0.70 or
-nothing. Now the floor is 0.25, one donor is enough, every donor is weighted by
-r squared, and the prediction is shrunk toward the field median by what the
-donors fail to explain. Blank figures fell from 19 percent of the grid to 1.2
-percent, 8 of 672. 17 of 21 models are complete on all 32.
-
-AUDITED, all 21 models: every one has a cost per task and every one has been
-moved to the common point. The only real gap the audit found was Muse Spark
-1.1, which arrived through Arena and LiveBench only and was missing fifteen AA
-figures including its price. Backfilled from the board, now 32 of 32 at $0.168.
-
-STYLE CONTROL TRAP, do not get this wrong again: a board captured WITH the
-correction on prints "Default Leaderboard Plots"; one captured WITHOUT it prints
-"Remove Style Control". That reads backwards and it cost a full withdrawal of
-published findings. Never infer the setting from page furniture, ask.
-
-REFUTED AND RECORDED so they are not retried: style dependence predicts nothing
-else measured (11 tests, 0 survive; capability reached r = -0.488 against a 0.47
-threshold and collapses to -0.291 without Claude Opus 5, Spearman -0.387).
-Room to the ceiling does not predict effort gain (r = -0.043). Per-lab
-regression offsets are noise. Cross-model placement from the clock alone fails
-(r = 0.389, 15 percent explained, error of about three effort rungs).
 
