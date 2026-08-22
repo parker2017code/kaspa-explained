@@ -18,6 +18,13 @@ done
 
 bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
+
+# Kaspa.org marketing-site source ban (AGENTS.md, clarified 2026-08-22). This
+# leaked into CLAIMS.yml source fields and public pages four times in one day
+# before this gate existed; see scripts/check-source-ban.sh for the exact rule
+# and the kaspa-org-callout marker that keeps legitimate stale-source citations
+# working.
+bash scripts/check-source-ban.sh
 python3 scripts/check-status-freshness.py
 python3 scripts/build-sitemap.py --check
 bash scripts/check-redirect-stubs.sh
@@ -50,6 +57,14 @@ python3 scripts/check-html.py
 python3 scripts/check-search-map.py
 python3 scripts/check-copy-quality.py
 
+# Density budget (design/density-budget.md, 2026-08-22): 150 words before first
+# interaction, 60-word paragraph cap, 30-word table-cell cap, collapsed
+# <details> content exempt. ADVISORY for now, on purpose, since the current
+# site heavily violates it and the rebuild has not landed; see the
+# DENSITY_GATE_BLOCKING switch at the top of scripts/check-density.sh to make
+# it fail the build once it has.
+bash scripts/check-density.sh
+
 # The node audits are per-machine optional, but they must not kill the gate:
 # with set -e, a missing node binary used to abort right here and silently
 # skip every check below this line (claim consistency, anchors, forbidden
@@ -69,8 +84,14 @@ if [[ -n "$NODE_BIN" ]]; then
   "$NODE_BIN" scripts/audit-domain-terms.mjs
   "$NODE_BIN" scripts/audit-content-flow.mjs
   "$NODE_BIN" scripts/audit-visual-guardrails.mjs
+  # Heading-as-link color gate (2026-08-22): card/section titles that happen
+  # to be links rendered in inline-link blue instead of heading color, twice.
+  # A grep can't catch it reliably because the real failure is a specificity
+  # fight in styles.css, not a literal token; see the script for the exact
+  # rule and its data-heading-link-ok opt-out.
+  "$NODE_BIN" scripts/check-heading-link-color.mjs
 else
-  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {

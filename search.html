@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Search Kaspa Explained | Kaspa Explained</title>
   <meta name="description" content="Search the Kaspa Explained page map by topic, audience, status, and source type.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -30,8 +40,8 @@
   <meta name="twitter:description" content="Search the Kaspa Explained page map by topic, audience, status, and source type.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -48,6 +58,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -65,6 +76,10 @@
         <input id="site-search" type="search" placeholder="Try GHOSTDAG, receipts, Toccata, UTXO, beginner, DeFi..." autocomplete="off">
       </label>
       <p class="fit-note" id="search-count">Showing all pages.</p>
+      <details class="deep-dive">
+        <summary>How this search works</summary>
+        <p>It matches each page's title, short description, and a hidden keyword list first, then indexes every linked page's live text in the background, so a term that only appears in a destination page's body will match once that background pass finishes.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -241,6 +256,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
@@ -293,16 +309,41 @@
       return [normalized, ...expanded.map(normalize)].filter(Boolean);
     }
 
+    // Rank matches so a title/summary hit always outranks a body-text-only hit.
+    // Tier 2: the term appears in the page's own title, card blurb, or curated
+    // keyword list (the data this page shows before any background fetch runs).
+    // Tier 1: the term appears only in the fetched body text, and only counts
+    // if the literal (normalized) query string is present there, no alias
+    // expansion, so a rare term can't be diluted by a loosely related synonym.
+    // Tier 0: no match, hidden.
+    function matchScore(item, terms, normalizedQuery) {
+      const metaHaystack = normalize(item.textContent + ' ' + item.dataset.search);
+      const metaPhrase = normalizedQuery && metaHaystack.includes(normalizedQuery);
+      const metaMatch = metaPhrase || terms.every((term) => candidatesFor(term).some((candidate) => metaHaystack.includes(candidate)));
+      if (metaMatch) return 2;
+
+      if (fullIndexReady) {
+        const bodyHaystack = normalize(item.dataset.fulltext || '');
+        const bodyPhrase = normalizedQuery && bodyHaystack.includes(normalizedQuery);
+        const bodyMatch = bodyPhrase || terms.every((term) => bodyHaystack.includes(normalize(term)));
+        if (bodyMatch) return 1;
+      }
+      return 0;
+    }
+
     function updateSearch() {
       const normalizedQuery = normalize(input.value);
       const terms = normalizedQuery.split(/\s+/).filter(Boolean);
       let visible = 0;
-      for (const item of results) {
-        const haystack = normalize(item.textContent + ' ' + item.dataset.search + ' ' + (item.dataset.fulltext || ''));
-        const phraseMatch = normalizedQuery && haystack.includes(normalizedQuery);
-        const match = !terms.length || phraseMatch || terms.every((term) => candidatesFor(term).some((candidate) => haystack.includes(candidate)));
-        item.hidden = !match;
-        if (match) visible += 1;
+      const scored = results.map((item, index) => {
+        const score = terms.length ? matchScore(item, terms, normalizedQuery) : 2;
+        return { item, score, index };
+      });
+      scored.sort((a, b) => b.score - a.score || a.index - b.index);
+      for (const { item, score } of scored) {
+        item.hidden = score === 0;
+        if (score > 0) visible += 1;
+        item.parentElement.appendChild(item);
       }
       const indexNote = fullIndexReady ? '' : ' Page text is still indexing.';
       count.textContent = terms.length ? `${visible} page${visible === 1 ? '' : 's'} match.${indexNote}` : fullIndexReady ? 'Showing all pages.' : 'Showing all pages. Indexing page text...';
@@ -319,10 +360,22 @@
     input.addEventListener('input', updateSearch);
     updateSearch();
 
+    // Normalize a path so "/search", "/search.html", and "/search/" all match
+    // regardless of which form a link or location.pathname happens to use.
+    function normalizePath(path) {
+      const trimmed = path.replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/+$/, '');
+      return trimmed === '' ? '/' : trimmed;
+    }
+
     async function hydrateFullTextIndex() {
+      const currentPath = normalizePath(window.location.pathname);
       const internalResults = results
         .map((item) => ({ item, href: item.querySelector('a[href]')?.getAttribute('href') }))
-        .filter(({ href }) => href && href.startsWith('/'));
+        .filter(({ href }) => href && href.startsWith('/'))
+        // Skip this page itself. Fetching /search would pull this very results
+        // list (titles, blurbs, and hidden keywords for every other page) into
+        // the Search card's own index, matching whatever anyone else searches for.
+        .filter(({ href }) => normalizePath(href) !== currentPath);
 
       await Promise.all(internalResults.map(async ({ item, href }) => {
         try {
@@ -330,7 +383,10 @@
           if (!response.ok) return;
           const html = await response.text();
           const doc = parser.parseFromString(html, 'text/html');
-          doc.querySelectorAll('script, style, nav, footer').forEach((node) => node.remove());
+          // Strip shared chrome that appears on every page (nav, footer) and
+          // the auto-generated "Keep reading" recirculation block, none of
+          // which describe what this specific page is about.
+          doc.querySelectorAll('script, style, nav, header, footer, .site-related').forEach((node) => node.remove());
           const meta = Array.from(doc.querySelectorAll('meta[name="description"], meta[property="og:description"]'))
             .map((node) => node.getAttribute('content') || '')
             .join(' ');

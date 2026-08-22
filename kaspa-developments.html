@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>What changed in Kaspa this month | Kaspa Explained</title>
   <meta name="description" content="What actually changed in Kaspa this month, with the things that did not change named too.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -63,8 +73,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -78,6 +88,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -89,8 +100,13 @@
     <section class="section">
       <p class="eyebrow">Ecosystem developments</p>
       <h1>What changed in Kaspa this month</h1>
-      <p class="lead">Toccata activated on June 30. No new mainnet release followed it through this window, and yet the covenant footprint on mainnet grew about fifteenfold in the first week of August. Most of the movement below is in the layers above consensus: a new standards process, a compiler, and the first token markets that trade on L1 itself. Six "Toccata Cleanup" pull requests later merged into rusty-kaspa on August 19 to 21, past this page's check date. They remove pre-Toccata code paths and make protocol version 10 unconditional; one activates Toccata on devnet, cleanup after the mainnet fork rather than a new activation.</p>
-      <p class="fit-note"><strong>Checked:</strong> August 8, 2026 against release tags, raw KIP and KCC files, project READMEs, repo commit history, and mainnet readings, with the KCC merges and rusty-kaspa cleanup PRs above rechecked August 22. This page tracks what runs on Kaspa L1 only. L2 and sidechain activity is not counted as Kaspa ecosystem progress here. Repo activity is not uptake, and a draft is not a standard.</p>
+      <p class="lead">Toccata activated on June 30. No new mainnet release followed it through this window, and yet the covenant footprint on mainnet grew about fifteenfold in the first week of August. Most of the movement below is in the layers above consensus: a new standards process, a compiler, and the first token markets that trade on L1 itself.</p>
+      <details class="deep-dive">
+        <summary>Six cleanup pull requests, merged after this page's check date</summary>
+        <p>Six "Toccata Cleanup" pull requests later merged into rusty-kaspa on August 19 to 21, past this page's check date. They remove pre-Toccata code paths and make protocol version 10 unconditional; one activates Toccata on devnet, cleanup after the mainnet fork rather than a new activation.</p>
+      </details>
+      <p class="fit-note"><strong>Checked:</strong> August 8, 2026 against release tags, raw KIP and KCC files, project READMEs, repo commit history, and mainnet readings, with the KCC merges, the rusty-kaspa cleanup PRs, the covenant template breakdown, and the kaspa.org marketing pages above rechecked August 22.</p>
+      <p class="fit-note">This page tracks what runs on Kaspa L1 only. L2 and sidechain activity is not counted as Kaspa ecosystem progress here. Repo activity is not uptake, and a draft is not a standard.</p>
     </section>
 
     <section class="section">
@@ -107,17 +123,35 @@
             </tr>
             <tr>
               <td>July 15</td>
-              <td>KIP-16, KIP-17, KIP-20, and KIP-21 all moved to <code>Status: Active</code> in kips commit <a href="https://github.com/kaspanet/kips/commit/e4ae2332117b">e4ae2332</a>. Until then they still read as activated on Testnet-10 only. The spec repo caught up with the network two weeks late.</td>
+              <td>
+                KIP-16, KIP-17, KIP-20, and KIP-21 all moved to <code>Status: Active</code>, two weeks behind the network.
+                <details class="cell-detail">
+                  <summary>The commit</summary>
+                  <p>They moved together in kips commit <a href="https://github.com/kaspanet/kips/commit/e4ae2332117b">e4ae2332</a>. Until then they still read as activated on Testnet-10 only.</p>
+                </details>
+              </td>
               <td><span class="status-pill live">Bookkeeping</span></td>
             </tr>
             <tr>
               <td>July 8 to 31</td>
-              <td>Argent moved into its own <a href="https://github.com/argent-lang">argent-lang</a> org and the old personal path now returns a 301. Fifty-eight of its seventy-six commits landed in July, adding Inter-Covenant Communication, actor enums, a VS Code extension for <code>.ag</code> files, local compiler wrappers, and a starter template. Three repos now: argent, argent-playground from July 9, and argent-template from July 24. Its README says the main pieces are present and names audit, not a missing feature, as what stands between it and careful production use.</td>
+              <td>
+                Argent moved into its own <a href="https://github.com/argent-lang">argent-lang</a> org; its README names audit, not a missing feature, as the gate to production use.
+                <details class="cell-detail">
+                  <summary>July's commits and new repos</summary>
+                  <p>The old personal path now returns a 301. Fifty-eight of its seventy-six commits landed in July, adding Inter-Covenant Communication, actor enums, a VS Code extension for <code>.ag</code> files, local compiler wrappers, and a starter template. Three repos now: argent, argent-playground from July 9, and argent-template from July 24.</p>
+                </details>
+              </td>
               <td><span class="status-pill target">Unaudited</span></td>
             </tr>
             <tr>
               <td>July 8 to 28</td>
-              <td>Ten commits in <a href="https://github.com/kaspanet/vprogs">vprogs</a>, all runtime and prover work, closing on July 28 with a program-agnostic daemon engine and a vprun CLI. Still zero releases, zero tags, nothing on crates.io.</td>
+              <td>
+                Ten commits in <a href="https://github.com/kaspanet/vprogs">vprogs</a>, closing July 28 with a program-agnostic daemon engine and a vprun CLI.
+                <details class="cell-detail">
+                  <summary>Release status</summary>
+                  <p>All runtime and prover work. Still zero releases, zero tags, nothing on crates.io.</p>
+                </details>
+              </td>
               <td><span class="status-pill research">Roadmap</span></td>
             </tr>
             <tr>
@@ -127,12 +161,24 @@
             </tr>
             <tr>
               <td>July 25 to August 8</td>
-              <td>The mainnet covenant footprint went from 1,841 covenants ever created to 27,166, and live covenant value from 253.98 KAS to about 1.32 million. Sixty-seven covenant token markets now run on bonding curves, four of them graduated into automated market maker pools. This is the first L1 usage on Kaspa large enough to need its own numbers.</td>
+              <td>
+                Covenants ever created: 1,841 to 27,166. Live covenant value: 253.98 KAS to about 1.32 million. First L1 usage large enough to need its own numbers.
+                <details class="cell-detail">
+                  <summary>Token markets</summary>
+                  <p>Sixty-seven covenant token markets now run on bonding curves, four of them graduated into automated market maker pools.</p>
+                </details>
+              </td>
               <td><span class="status-pill live">On mainnet</span></td>
             </tr>
             <tr>
               <td>August 3 to 7</td>
-              <td>Twenty commits in <a href="https://github.com/kaspanet/silverscript">kaspanet/silverscript</a>, including a <code>g16.verify</code> Groth16 verifier builtin on August 7 and a round of core syntax renames on August 3. Still zero releases and zero tags, so the audit gate Argent waits on has not moved.</td>
+              <td>
+                Twenty commits in <a href="https://github.com/kaspanet/silverscript">kaspanet/silverscript</a>. Still zero releases and zero tags, so the audit gate Argent waits on has not moved.
+                <details class="cell-detail">
+                  <summary>What landed</summary>
+                  <p>A <code>g16.verify</code> Groth16 verifier builtin on August 7 and a round of core syntax renames on August 3.</p>
+                </details>
+              </td>
               <td><span class="status-pill target">Unreleased</span></td>
             </tr>
             <tr>
@@ -142,7 +188,13 @@
             </tr>
             <tr>
               <td>Nothing</td>
-              <td>No rusty-kaspa release exists after v2.0.1 from June 15. In this window three commits reached master: a Windows linker fix on July 8, a bridge dashboard fix on July 27, and a RISC0 Groth16 verifier image-id helper on August 2. Consensus did not move.</td>
+              <td>
+                No rusty-kaspa release exists after v2.0.1 from June 15. Consensus did not move.
+                <details class="cell-detail">
+                  <summary>The three commits that did land</summary>
+                  <p>A Windows linker fix on July 8, a bridge dashboard fix on July 27, and a RISC0 Groth16 verifier image-id helper on August 2.</p>
+                </details>
+              </td>
               <td><span class="status-pill live">No change</span></td>
             </tr>
           </tbody>
@@ -165,7 +217,9 @@
         </table>
       </div>
       <p>The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)." And on what adoption would even mean: "Acceptance marks an ecosystem convergence point; it does not make the convention protocol ground truth."</p>
-      <p>In this July 8 to August 8 window, seven specs sat open as pull requests and none had merged. That changed on August 20, after this page's check date: KCC-0001, KCC-0002, and KCC-0020 merged, each still carrying <code>Status: Draft</code> in its own document. A merged draft is not an accepted standard, the KCC process has no ratified specification yet, and KCC-0021 token metadata and KCC-0402 payment channels remain open pull requests. The bulk KCC-0008 through KCC-0024 token and commerce set was closed unmerged across three separate attempts, and KCC-0025, a license agreement, closed unmerged too. The one you will hear about is KCC-0020, usually written "KCC20". Talk about it is active, and people still disagree on whether metadata belongs inside the token spec at all. The repo numbering uses four digits and is the canonical form.</p>
+      <p>In this July 8 to August 8 window, seven specs sat open as pull requests and none had merged. That changed on August 20, after this page's check date: KCC-0001, KCC-0002, and KCC-0020 merged, each still carrying <code>Status: Draft</code> in its own document.</p>
+      <p>A merged draft is not an accepted standard, the KCC process has no ratified specification yet, and KCC-0021 token metadata and KCC-0402 payment channels remain open pull requests. The bulk KCC-0008 through KCC-0024 token and commerce set was closed unmerged across three separate attempts, and KCC-0025, a license agreement, closed unmerged too.</p>
+      <p>The one you will hear about is KCC-0020, usually written "KCC20". Talk about it is active, and people still disagree on whether metadata belongs inside the token spec at all. The repo numbering uses four digits and is the canonical form.</p>
       <p>The paperwork lags the code in the other direction too: transaction version 1 and <code>computeBudget</code> already run on mainnet while KIP-24 and KIP-25, which specify them, are still open pull requests. The <a href="/status#implementation-evidence">status page evidence table</a> has the detail.</p>
     </section>
 
@@ -183,9 +237,21 @@
           </tbody>
         </table>
       </div>
-      <p>That narrowed the created-covenant gap to Testnet-10 from 267 times the mainnet count to 29 times by August 8. It has since widened back out: as of August 22, mainnet has created 28,107 covenants against Testnet-10's 1,082,602, a ratio of about 1 to 38.5. The active-covenant gap moved the other way over the same stretch, narrowing from about 1 to 199 (373 mainnet, 74,199 Testnet-10) to about 1 to 156 (517 mainnet, 80,822 Testnet-10). Created and active are different measures and they are not moving together. Of the mainnet total as of August 8, 90 covenants are KCC20 tokens holding 1,116.37 KAS between them, four are SilverScript escrows and all four are still burned, and 27,072 are p2sh commitments holding the other 1,316,675.89 KAS.</p>
-      <p>The sentence that changed is the one about trading. Mainnet carries 86 token markets on bonding curves as of August 22, seven of which have graduated into automated market maker pools, with trades landing continuously. We took one of them, txid <code>dfca8076</code>, to the Kaspa REST API directly: accepted, transaction version 1, pay-to-script-hash outputs, and a covenant balance matching the indexer to the sompi. So the market exists in consensus data, not only in a third-party reading of it.</p>
-      <p>Scale is the part to keep straight. As of August 22, all live covenant value on mainnet is about 1.75 million KAS, roughly 51,000 dollars at the CoinGecko price of $0.02916 per KAS read August 22, 2026. Kascov's market endpoint reports 93 markets, but seven of those are LP-share tokens duplicating the market_id and covenant_id of a graduated pool already counted, so the real count is 86. Summing reserve_sompi across the 84 priced bonding and graduated entries (excluding the 7 LP-share duplicates and 2 unpriced entries) gives about 1.75 million KAS held in those markets, within 0.14 percent of the independently computed live covenant value above, which is what confirms the unit is sompi. This is a working token-launch venue, not a market with depth. Lending is still absent.</p>
+      <p>That narrowed the created-covenant gap to Testnet-10 from 267 times the mainnet count to 29 times by August 8. It has since widened back out: as of August 22, mainnet has created 28,107 covenants against Testnet-10's 1,082,602, a ratio of about 1 to 38.5.</p>
+      <p>The active-covenant gap moved the other way over the same stretch, narrowing from about 1 to 199 (373 mainnet, 74,199 Testnet-10) to about 1 to 156 (517 mainnet, 80,822 Testnet-10). Created and active are different measures and they are not moving together.</p>
+      <details class="deep-dive">
+        <summary>The mainnet covenant total, broken down by template</summary>
+        <p>Refreshed from kascov's own template breakdown, of the mainnet total as of August 22, 109 covenants are KCC20 tokens holding about 1,569 KAS between them, four are SilverScript escrows and all four are still burned, and the remaining 27,994 are p2sh-style commitments, including wallet vault scripts kascov now tracks under their own template names, holding the rest, about 1,748,524 KAS.</p>
+      </details>
+      <p>The sentence that changed is the one about trading. Mainnet carries 86 token markets on bonding curves as of August 22, seven of which have graduated into automated market maker pools, with trades landing continuously.</p>
+      <p>We took one of them, txid <code>dfca8076</code>, to the Kaspa REST API directly: accepted, transaction version 1, pay-to-script-hash outputs, and a covenant balance matching the indexer to the sompi. The market exists in consensus data, not only in a third-party reading of it.</p>
+      <p>Scale is the part to keep straight. As of August 22, all live covenant value on mainnet is about 1.75 million KAS, roughly 51,200 dollars at the CoinGecko price of $0.02926 per KAS read August 22, 2026.</p>
+      <p>Kascov's market endpoint reports 93 markets, but seven of those are LP-share tokens duplicating the market_id and covenant_id of a graduated pool already counted, so the real count is 86.</p>
+      <details class="deep-dive">
+        <summary>How the 1.75 million KAS figure was cross-checked</summary>
+        <p>Summing reserve_sompi across the 84 priced bonding and graduated entries (excluding the 7 LP-share duplicates and 2 unpriced entries) gives about 1.75 million KAS held in those markets, within 0.14 percent of the independently computed live covenant value above, which is what confirms the unit is sompi.</p>
+      </details>
+      <p>This is a working token-launch venue, not a market with depth. Lending is still absent.</p>
       <p>Two caveats on those numbers. kascov's template labels are guesses, so an app it does not know could be hiding in the p2sh entries. Block explorers also still do not decode covenant data and there is no "get UTXOs by covenant ID" RPC, so anyone measuring this is piecing it together from raw transactions.</p>
       <p>None of this makes the activation less real, and the growth is the story. The consensus rules are in force, the primitives work, and people have started using them for something. <a href="/toccata-explained">What still has to be built</a> covers what the tooling still cannot do.</p>
     </section>
@@ -194,9 +260,14 @@
       <p class="eyebrow">Ahead</p>
       <h2>What is next</h2>
       <p>The nearest dated event is not a feature. Emission stepped down to 23.12465141 KAS per second at DAA score 504,909,000, which the network passed around August 5, and the next step drops it to 21.82676446 at DAA 531,207,000, roughly September 4. Steps fire on DAA score, so the score is exact and the date is an estimate.</p>
-      <p>After that the roadmap is DAGKnight, described by kaspa.org as the consensus upgrade following Toccata and targeting block times in the 40 to 25 millisecond range. Its code branch has not been touched since March 22, and KIP-2 still reads <code>Status: Proposed</code>. Mainnet ordering remains GHOSTDAG. Further out sits a proposed 2027 hard fork covering 10 millisecond blocks, 100 blocks per second, on-chain payment channels, and hashrate-adaptive finality windows aimed at keeping local payments working through a netsplit.</p>
-      <p>vProgs is the app-layer end of that roadmap. The real line is narrower than people draw it: joining separate covenant apps into one atomic transaction already works on Toccata, and Argent's Inter-Covenant Communication shows it. vProgs is for shared mutable state, where many users write to one app state at once. There, L1 composition tends to be exit-style, settling when somebody leaves rather than the moment they act.</p>
-      <p>One caution on reading official pages. Checked again on August 8, kaspa.org/lore still says "The next hardfork is Toccata" and "A mature implementation is already up and running on TN12," and kaspa.org/build still says Toccata is "Currently live on TN12 ahead of mainnet activation." That is thirty-nine days after it activated on mainnet. kaspa.org/developments serves the same page as build. docs.kaspa.org has it right. When those disagree, the release tag and the DAA score settle it.</p>
+      <p>After that the roadmap is DAGKnight, described by kaspa.org as the consensus upgrade following Toccata and targeting block times in the 40 to 25 millisecond range. Its code branch has not been touched since March 22, and KIP-2 still reads <code>Status: Proposed</code>. Mainnet ordering remains GHOSTDAG.</p>
+      <p>Further out sits a proposed 2027 hard fork covering 10 millisecond blocks, 100 blocks per second, on-chain payment channels, and hashrate-adaptive finality windows aimed at keeping local payments working through a netsplit.</p>
+      <p>vProgs is the app-layer end of that roadmap. The real line is narrower than people draw it: joining separate covenant apps into one atomic transaction already works on Toccata, and Argent's Inter-Covenant Communication shows it.</p>
+      <p>vProgs is for shared mutable state, where many users write to one app state at once. There, L1 composition tends to be exit-style, settling when somebody leaves rather than the moment they act.</p>
+      <!-- kaspa-org-callout: quoting kaspa.org's stale Toccata text on purpose, to show it is still wrong 53 days after mainnet activation; two GitHub issues filed upstream about it August 22 -->
+      <p>One caution on reading official pages. Checked again on August 22, kaspa.org/lore still says "The next hardfork is Toccata" and "A mature implementation is already up and running on TN12," and kaspa.org/build still says Toccata is "Currently live on TN12 ahead of mainnet activation." That is fifty-three days after it activated on mainnet.</p>
+      <!-- kaspa-org-callout: same stale-source call-out as above, naming the duplicate route -->
+      <p>kaspa.org/developments serves the same page as build. docs.kaspa.org has it right. When those disagree, the release tag and the DAA score settle it.</p>
       <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a>, <a href="https://github.com/kaspanet/kips">Kaspa KIPs</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases">rusty-kaspa releases</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs">coinbase.rs subsidy table</a>, <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/kaspanet/vprogs">vprogs</a>, <a href="https://kas-smiths.org">Kas Smiths forum</a>, <a href="https://api.kaspa.org/info/blockdag">mainnet REST status</a>, and <a href="https://kascov.io">kascov</a>.</p>
     </section>
 <!-- related-links:start -->
@@ -241,6 +312,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

@@ -30,7 +30,8 @@ FIELDS = {
     "devs_monthly_active": "dev", "devs_full_time": "devft", "steward": "stew",
     "wallets_of_5": "wal", "us_spot_etf": "etf", "cme_futures": "cme",
     "daily_transactions": "tx", "daily_transactions_raw": "txraw", "tx_note": "txnote",
-    "privacy_default": "priv", "market_cap_usd": "cap",
+    "privacy_default": "priv", "market_cap_usd": "cap", "hashrate_ehs": "hr",
+    "emission_native_per_day": "emn", "emission_usd_per_day": "emu",
     "purpose": "why", "weakness": "weak", "measured_2026_08_01": "meas",
 }
 

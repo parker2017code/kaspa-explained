@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One token becomes two | Kaspa Explained</title>
+<meta name="description" content="You and Sam hold the same token. Update just one of you, and a payment between you gets refused for good. This is KCC-0020's permanent supply split.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/supply-split">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
+    --line: #4a453d; --line-bright: #746e60;
+    --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
+    --green: #66d1c1; --cyan: #2997ff; --purple: #bf5af2; --pink: #ff9f0a;
+    --red: #ff6961; --ink: #06201b;
+    --control-bg: #2c2c2e; --control-hover: #3a3a3c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --display-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
+    --line: #d8d4cb; --line-bright: #bcb6a8;
+    --text: #211e1a; --muted: #646057; --faint: #757066;
+    --green: #0e7c6b; --cyan: #0071e3; --purple: #6e56cf; --pink: #b25000;
+    --red: #c0342a; --ink: #ffffff;
+    --control-bg: #e8e8ed; --control-hover: #dededf;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--body-font); margin: 0; }
+  body { padding: 20px 16px 48px; font-size: 15px; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; }
+  .top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .theme-toggle { flex: none; min-height: 44px; min-width: 44px; border: 0; border-radius: 980px; padding: 0 14px; background: var(--control-bg); color: var(--text); font-size: .8rem; font-weight: 500; cursor: pointer; }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.014em; line-height: 1.2; margin: 0 0 6px; }
+  .lead { font-size: 1.02rem; color: var(--muted); margin: 0 0 22px; max-width: 60ch; }
+  .stage {
+    background: var(--card-bg); border-radius: 18px; padding: 24px 16px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .scene { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; flex-wrap: wrap; }
+  .wallet { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 128px; }
+  .wallet-label { font-size: .84rem; font-weight: 650; color: var(--text); }
+  .coin-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 132px; min-height: 40px; }
+  .coin {
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: .95rem; background: var(--bg-2); border: 2px solid var(--line); flex: none;
+    transition: transform .5s cubic-bezier(.2,.8,.2,1), border-color .4s, background .4s;
+  }
+  .coin.flagged { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 16%, var(--bg-2)); }
+  .coin.sending { animation: attempt .6s cubic-bezier(.2,.8,.2,1); }
+  @keyframes attempt {
+    0% { transform: translateX(0) scale(1); }
+    45% { transform: translateX(48px) scale(1.12); border-color: var(--red); }
+    72% { transform: translateX(48px) scale(1.12); border-color: var(--red); }
+    100% { transform: translateX(0) scale(1); border-color: var(--red); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coin { transition: none; }
+    .coin.sending { animation: none; border-color: var(--red); }
+  }
+  .link-glyph { font-size: 1.9rem; font-weight: 300; color: var(--faint); min-width: 40px; text-align: center; transition: color .4s, transform .3s; line-height: 1; }
+  .link-glyph.blocked { color: var(--red); }
+  .supply-line { font-size: .84rem; color: var(--muted); text-align: center; }
+  .supply-line b { color: var(--text); }
+  .action-btn {
+    min-height: 48px; border: 0; border-radius: 980px; padding: 12px 28px; font: inherit; font-size: 1rem;
+    font-weight: 650; cursor: pointer; background: var(--brand-gradient); color: var(--ink);
+  }
+  .action-btn:hover { filter: brightness(1.05); }
+  .action-btn:disabled { opacity: .5; cursor: default; filter: none; }
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .reset-btn {
+    min-height: 44px; min-width: 44px; border: 0; background: none; color: var(--faint);
+    font: inherit; font-size: .88rem; font-weight: 500; cursor: pointer; padding: 0 10px; border-radius: 980px;
+  }
+  .reset-btn:hover { color: var(--text); background: var(--control-bg); }
+  .caption { min-height: 44px; font-size: .92rem; color: var(--muted); text-align: center; max-width: 44ch; }
+  .caption b { color: var(--text); }
+  .caption.refuse-msg b { color: var(--red); }
+  .consequence { font-size: .88rem; color: var(--muted); text-align: center; max-width: 48ch; margin: 4px auto 0; }
+  details { margin-top: 22px; }
+  summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; }
+  .quotes-body { margin-top: 12px; }
+  blockquote { margin: 0 0 12px; padding: 6px 0 6px 12px; border-left: 3px solid var(--cyan); font-size: .88rem; line-height: 1.5; }
+  cite { display: block; font-style: normal; font-size: .76rem; color: var(--faint); margin-top: 4px; }
+  cite a { color: var(--faint); }
+  .note { font-size: .78rem; color: var(--faint); margin-top: 10px; }
+  footer { font-size: .76rem; color: var(--faint); margin-top: 18px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="top-row">
+    <h1>When one token becomes two</h1>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="lead">You and Sam hold the same token. Right now any coin of yours equals any coin of Sam's. Update just one of you, and that stops being true, for good.</p>
+
+  <div class="stage">
+    <div class="scene">
+      <div class="wallet">
+        <div class="wallet-label">You</div>
+        <div class="coin-row" id="rowYou"></div>
+      </div>
+      <div class="link-glyph" id="linkGlyph" aria-hidden="true">&#8644;</div>
+      <div class="wallet">
+        <div class="wallet-label">Sam</div>
+        <div class="coin-row" id="rowSam"></div>
+      </div>
+    </div>
+    <p class="supply-line" id="supplyLine">9 KAI. <b>One shared supply.</b></p>
+    <div class="controls">
+      <button class="action-btn" id="actionBtn" type="button">Update Sam's coins</button>
+      <button class="reset-btn" id="resetBtn" type="button">Reset</button>
+    </div>
+    <p class="caption" id="caption">Either of you could pay the other any amount. A coin is a coin.</p>
+  </div>
+
+  <p class="consequence">A price, a balance, an exchange listing: anything that assumed one supply of this token now has to track two.</p>
+
+  <details>
+    <summary>What the spec's own authors said about this</summary>
+    <div class="quotes-body">
+      <p class="note">This demo is a simplified stand-in for KCC-0020, a draft Kaspa token rule that lets an issuer update the state of some holders and not others. Issue #14, opened by Knitser on kaspanet/kccs, August 21, 2026, reports that this same mechanism permanently splits a token's supply once triggered. Two KCC-0020 co-authors replied. This is not a universal bug: one pattern below is defended as intended, a different one is conceded as a wrong pattern the standard does not yet handle. The reporter never withdrew his concern, and the issue is still open.</p>
+      <blockquote>
+        &ldquo;My view is that the combination of extended state, alongside token-specific entry points, allows for various use cases which are not only write-once, nor only for a singleton token. The standard transfer function, though, is meant to transfer fungible tokens, hence, it assumes that inputs and outputs state (excluding ownership and amount) must be identical (or else could not be treated as fungible)&rdquo;
+        <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+      </blockquote>
+      <blockquote>
+        &ldquo;I can relate bcs example extensions that come to mind indeed illustrate this. for instance a <code>frozen</code> bool indicator which can be used by stable coin issuer for black listing, indeed renders the token as temporarily non fungible.&rdquo;
+        <cite>Michael Sutton, KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+      </blockquote>
+      <blockquote>
+        &ldquo;I had one conceptual exception, but I think it means it's a wrong pattern. The example would be some contract using the ext state for storing receipt-like information&hellip; It mutates all the time but isn't part of the state that matters. I guess this pattern only makes sense if it was well defined as part of the std, and not as an opaque virtual state&rdquo;
+        <cite>Michael Sutton, KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+      </blockquote>
+      <blockquote>
+        &ldquo;I agree that kind of pattern should either be defined in the standard or implemented in a non state storage (maybe the payload, as you once suggested).&rdquo;
+        <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+      </blockquote>
+      <p class="note">KCC-0020 (Fungible Token Covenant Specification), authors Sivan Helfer, Michael Sutton, and Romain Billot, Status: Draft as of August 21, 2026. No spec change has merged as of this writing. Source: <a href="https://github.com/kaspanet/kccs/blob/main/kcc-0020.md" target="_blank" rel="noopener">github.com/kaspanet/kccs/blob/main/kcc-0020.md</a>.</p>
+    </div>
+  </details>
+
+  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
+</main>
+
+<script>
+(function () {
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() { themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light"; }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    syncTheme();
+  });
+})();
+
+(function () {
+  "use strict";
+  var YOU_COUNT = 4, SAM_COUNT = 5, TOTAL = YOU_COUNT + SAM_COUNT;
+  var COIN_GLYPH = "●";
+  var step; // start -> updated -> refused
+  var rowYou = document.getElementById("rowYou");
+  var rowSam = document.getElementById("rowSam");
+  var linkGlyph = document.getElementById("linkGlyph");
+  var supplyLine = document.getElementById("supplyLine");
+  var btn = document.getElementById("actionBtn");
+  var resetBtn = document.getElementById("resetBtn");
+  var caption = document.getElementById("caption");
+
+  function buildRow(container, count, flagged) {
+    container.innerHTML = "";
+    for (var i = 0; i < count; i++) {
+      var el = document.createElement("div");
+      el.className = "coin" + (flagged ? " flagged" : "");
+      el.textContent = COIN_GLYPH;
+      el.setAttribute("role", "img");
+      el.setAttribute("aria-label", (flagged ? "updated coin" : "coin"));
+      container.appendChild(el);
+    }
+  }
+
+  function updateSam() {
+    buildRow(rowSam, SAM_COUNT, true);
+    supplyLine.innerHTML = TOTAL + " KAI. <b>Two kinds of coin now.</b>";
+    caption.className = "caption";
+    caption.innerHTML = "Sam's coins now carry extra state yours don't. KCC-0020 lets an issuer update some holders and skip everyone else.";
+    btn.textContent = "Pay Sam 2 KAI";
+    step = "updated";
+  }
+
+  function paySam() {
+    var coins = rowYou.querySelectorAll(".coin");
+    for (var i = 0; i < 2 && i < coins.length; i++) {
+      coins[i].classList.add("sending");
+    }
+    linkGlyph.textContent = "⊘";
+    linkGlyph.classList.add("blocked");
+    caption.className = "caption refuse-msg";
+    caption.innerHTML = "<b>Refused.</b> Your coins and Sam's just became two separate, permanently unmergeable supplies of the same named token, because KCC-0020 let an issuer update Sam's holders without updating yours.";
+    btn.disabled = true;
+    step = "refused";
+  }
+
+  function resetDemo() {
+    buildRow(rowYou, YOU_COUNT, false);
+    buildRow(rowSam, SAM_COUNT, false);
+    linkGlyph.textContent = "⇄";
+    linkGlyph.classList.remove("blocked");
+    supplyLine.innerHTML = TOTAL + " KAI. <b>One shared supply.</b>";
+    caption.className = "caption";
+    caption.innerHTML = "Either of you could pay the other any amount. A coin is a coin.";
+    btn.disabled = false;
+    btn.textContent = "Update Sam's coins";
+    step = "start";
+  }
+
+  btn.addEventListener("click", function () {
+    if (step === "start") { updateSam(); }
+    else if (step === "updated") { paySam(); }
+  });
+  resetBtn.addEventListener("click", resetDemo);
+
+  resetDemo();
+})();
+</script>
+</body>
+</html>

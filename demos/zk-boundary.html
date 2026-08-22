@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What a proof can't prove | Kaspa Explained</title>
+<meta name="description" content="Kaspa's Toccata upgrade checks ZK proofs on-chain. Watch one succeed on the thing it can prove, and fail on the thing it cannot.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/zk-boundary">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
+    --line: #4a453d; --line-bright: #746e60;
+    --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
+    --green: #66d1c1; --cyan: #2997ff; --purple: #bf5af2; --pink: #ff9f0a;
+    --red: #ff6961; --ink: #06201b;
+    --control-bg: #2c2c2e; --control-hover: #3a3a3c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --display-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
+    --line: #d8d4cb; --line-bright: #bcb6a8;
+    --text: #211e1a; --muted: #646057; --faint: #757066;
+    --green: #0e7c6b; --cyan: #0071e3; --purple: #6e56cf; --pink: #b25000;
+    --red: #c0342a; --ink: #ffffff;
+    --control-bg: #e8e8ed; --control-hover: #dededf;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--body-font); margin: 0; }
+  body { padding: 20px 16px 64px; font-size: 17px; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .eyebrow { color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .08em; margin: 0; }
+  .theme-toggle { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 980px; padding: 6px 18px; background: var(--control-bg); color: var(--text); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 { font-family: var(--display-font); font-weight: 700; font-size: clamp(1.4rem, 3.2vw, 1.8rem); letter-spacing: -.014em; line-height: 1.1; margin: 0 0 8px; }
+  .lead { font-size: 1rem; color: var(--muted); margin: 0 0 22px; max-width: 48ch; }
+  .stage { background: var(--card-bg); border-radius: 18px; padding: 22px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .segmented { display: flex; flex-wrap: wrap; justify-content: center; background: var(--bg-2); border-radius: 22px; padding: 4px; gap: 4px; max-width: 100%; }
+  .segmented button {
+    border: 0; background: transparent; color: var(--muted); font: inherit; font-size: .86rem; font-weight: 600;
+    padding: 9px 14px; min-height: 44px; border-radius: 980px; cursor: pointer; transition: background .25s, color .25s;
+    white-space: nowrap; flex: 0 0 auto;
+  }
+  @media (max-width: 400px) {
+    .segmented button { font-size: .8rem; padding: 9px 12px; }
+  }
+  .segmented button[aria-pressed="true"] { background: var(--control-bg); color: var(--text); }
+  .claim-text { font-size: 1.02rem; text-align: center; max-width: 40ch; color: var(--text); min-height: 48px; }
+  .steps { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; }
+  .step {
+    display: flex; align-items: center; gap: 10px; background: var(--bg-2); border-radius: 14px; padding: 10px 14px;
+    font-size: .88rem; color: var(--faint); opacity: .5; transition: opacity .3s, background .3s;
+  }
+  .step.active { opacity: 1; }
+  .step.pass { background: color-mix(in srgb, var(--green) 14%, var(--bg-2)); color: var(--text); }
+  .step.fail { background: color-mix(in srgb, var(--red) 14%, var(--bg-2)); color: var(--text); }
+  .step .mark { width: 22px; height: 22px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; background: var(--control-bg); color: var(--faint); transition: background .3s, color .3s, transform .3s; }
+  .step.pass .mark { background: var(--green); color: var(--ink); transform: scale(1.1); }
+  .step.fail .mark { background: var(--red); color: var(--ink); transform: scale(1.1); }
+  @media (prefers-reduced-motion: reduce) { .step, .step .mark { transition: none; } }
+  .action-btn {
+    min-height: 48px; border: 0; border-radius: 980px; padding: 12px 28px; font: inherit; font-size: 1rem;
+    font-weight: 650; cursor: pointer; background: var(--brand-gradient); color: var(--ink);
+  }
+  .action-btn:hover { filter: brightness(1.05); }
+  .action-btn:disabled { opacity: .5; cursor: default; filter: none; }
+  .caption { min-height: 44px; font-size: .92rem; color: var(--muted); text-align: center; max-width: 42ch; }
+  .caption b { color: var(--text); }
+  .caption.fail-msg b { color: var(--red); }
+  .caption.pass-msg b { color: var(--green); }
+  .consequence { width: 100%; max-width: 460px; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .45s ease, opacity .4s ease; }
+  .consequence.shown { max-height: 320px; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .consequence { transition: none; } }
+  .cmp-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cmp-col { flex: 1 1 160px; background: var(--bg-2); border-radius: 14px; padding: 12px 14px; }
+  .cmp-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin: 0 0 6px; font-weight: 700; }
+  .cmp-text { font-size: .86rem; line-height: 1.4; color: var(--text); margin: 0; }
+  .payoff { margin: 14px 0 0; font-size: 1rem; font-weight: 650; text-align: center; color: var(--text); line-height: 1.4; }
+  details { margin-top: 22px; }
+  summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; }
+  .quotes-body { margin-top: 12px; font-size: .88rem; color: var(--muted); }
+  .quotes-body p { margin: 0 0 10px; }
+  .quotes-body a { color: var(--faint); }
+  .banner { font-size: .78rem; color: var(--faint); margin: 16px 0 0; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <p class="eyebrow">Kaspa Explained &middot; Demo</p>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+
+  <h1>What a proof can't prove</h1>
+  <p class="lead">Kaspa's Toccata upgrade checks ZK proofs (math proofs a computer can verify without redoing the work) on-chain. Pick what to prove, then run it.</p>
+
+  <div class="stage">
+    <div class="segmented" role="group" aria-label="What to prove" id="segmented">
+      <button type="button" data-claim="secret" aria-pressed="true">A secret number</button>
+      <button type="button" data-claim="price" aria-pressed="false">Today's real BTC price</button>
+      <button type="button" data-claim="oracle" aria-pressed="false">Price + an oracle</button>
+    </div>
+    <p class="claim-text" id="claimText"></p>
+    <div class="steps" id="steps"></div>
+    <button class="action-btn" id="runBtn" type="button">Generate proof</button>
+    <p class="caption" id="caption"></p>
+    <div class="consequence" id="consequence" aria-live="polite">
+      <div class="cmp-row">
+        <div class="cmp-col">
+          <p class="cmp-label">Ask a centralized server</p>
+          <p class="cmp-text" id="serverText"></p>
+        </div>
+        <div class="cmp-col">
+          <p class="cmp-label">Check the proof yourself</p>
+          <p class="cmp-text" id="proofText"></p>
+        </div>
+      </div>
+      <p class="payoff" id="payoff"></p>
+    </div>
+  </div>
+
+  <details>
+    <summary>Why this happens, and how it maps to Kaspa</summary>
+    <div class="quotes-body">
+      <p>Kaspa's Toccata hard fork added <code>OpZkPrecompile</code> (KIP-16, Status: Active), an opcode that checks a proof against a chosen proof system, initially Groth16 and RISC0-Succinct. The opcode confirms a proof verifies against a given verifying key and public inputs. It says nothing about where those public inputs came from.</p>
+      <p>Proving "I know a secret number" is exactly that kind of self-contained check: everything the proof needs is already in its own inputs. Proving "the real price of BTC right now" asks the proof to vouch for a fact about the outside world, something no arithmetic check can do by itself. That gap needs an external anchor instead, such as a light client, a finality certificate, or a reporter set with something to lose.</p>
+      <p>The reason this beats asking a server for the same yes/no answer: a server's answer is only as good as your trust in that server, and checking it means either taking its word or getting access to whatever private data it based the answer on. A verified proof is checked against Kaspa's own public ledger, by anyone, using only the verifying key and the public inputs already on that ledger. Nothing about the app's private internal state has to be exposed for the check to work. One public ledger, many apps, and each app's own state stays its own.</p>
+      <p>So how does a real fact from outside the chain, a price, a bridge event, a sports score, ever get into a proof's public inputs? Someone has to attest to it: sign a statement saying "this is the value," and hand the app that signature instead of the raw fact. The proof can then check the signature the same way it checks any other public input. That's an oracle. It's not a cryptographic trick that removes the trust problem, it's a trust decision: pick a signer, and believe them.</p>
+      <p>Kaspa's L1 does not ship an oracle system. KIP-16 (Status: Active) added the verifier opcode, wired to Groth16 and RISC0-Succinct. What an app builds on top, which oracle to trust, how many signers to require, what happens when they disagree, is an application-level choice, not something the protocol decides for you. Whether that arrangement is trustworthy is a question about the signer, never a question the on-chain math can answer.</p>
+      <p>Kaspa's 10 blocks per second means a signed attestation can land on-chain and start accumulating proof-of-work in about a second, instead of waiting on a slower chain's block time. That's a real property: it shortens how long an app has to sit on stale data before acting on it. It does not touch who you're trusting. A faster chain gets you a wrong price faster, exactly as easily as a right one.</p>
+      <p>Sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16, OpZkPrecompile</a>, <a href="https://docs.kaspa.org/programmability" target="_blank" rel="noopener">docs.kaspa.org/programmability</a>. No proof is actually computed here; this toy names what a proof would and would not cover, and no network requests are made.</p>
+    </div>
+  </details>
+
+  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
+</main>
+
+<script>
+(function () {
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() { themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light"; }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    syncTheme();
+  });
+})();
+
+(function () {
+  "use strict";
+  var CLAIMS = {
+    secret: {
+      text: '"I know a number that, doubled, equals 84."',
+      steps: [
+        { label: "Input received", result: "pass" },
+        { label: "Math checked against the input", result: "pass" },
+        { label: "That's the whole claim, nothing else to check", result: "pass" }
+      ],
+      final: 'pass',
+      caption: '<b>Proof accepted.</b> Everything the claim needed was already inside the proof’s own inputs. There is nothing left outside the math to doubt.',
+      server: 'A server could say yes, this is true, too. All you would have is its word for it.',
+      proof: 'Anyone checks this proof against Kaspa’s public ledger themselves, no server, no asking, no exposing the secret number itself.',
+      payoff: 'Same public ledger for everyone, but the app never had to show anyone its secret number to prove the claim.'
+    },
+    price: {
+      text: '"BTC’s real market price right now is $61,240."',
+      steps: [
+        { label: "Input received", result: "pass" },
+        { label: "Math checked against the input", result: "pass" },
+        { label: "Is that number actually true right now?", result: "fail" }
+      ],
+      final: 'fail',
+      caption: '<b>Refused at the last step.</b> The proof correctly checked its own arithmetic. It has no way to check whether $61,240 is the real, current price. That needs an outside anchor, a proof over inputs no one verified is a proof over the wrong thing.',
+      server: 'A price feed actually could tell you BTC’s real price right now, if you trust that feed.',
+      proof: 'This proof can only check its own math. It has no way to see the outside world, trusted or not.',
+      payoff: 'The point isn’t that proofs beat servers at everything. A proof only replaces trust for a claim entirely inside its own inputs, like the secret number above, not for a fact about the world outside them.'
+    },
+    oracle: {
+      text: '"An oracle signed: BTC’s real price right now is $61,240."',
+      steps: [
+        { label: "Input received", result: "pass" },
+        { label: "Signature checked against the oracle’s public key", result: "pass" },
+        { label: "Is that number actually true right now?", result: "fail" }
+      ],
+      final: 'fail',
+      caption: '<b>Refused again, on the same step.</b> The proof now checks something real: that this specific oracle signed this specific number. It still cannot check whether $61,240 is the real price. A lying or mistaken oracle produces the exact same passing signature check.',
+      server: 'Trust the oracle’s report directly, the same way you’d trust any price feed. Wrong or not, the proof can’t tell you.',
+      proof: 'Verify only that this key signed this number. Whether the number is true is on the oracle, not the math.',
+      payoff: 'An oracle turns an unprovable fact into a provable signature, and that’s genuinely useful. But the trust question didn’t go away, it moved from "is this true" to "do I trust whoever signed it."'
+    }
+  };
+
+  var current = "secret";
+  var claimText = document.getElementById("claimText");
+  var stepsEl = document.getElementById("steps");
+  var runBtn = document.getElementById("runBtn");
+  var caption = document.getElementById("caption");
+  var segmented = document.getElementById("segmented");
+  var consequence = document.getElementById("consequence");
+  var serverText = document.getElementById("serverText");
+  var proofText = document.getElementById("proofText");
+  var payoff = document.getElementById("payoff");
+  var busy = false;
+
+  function renderIdle() {
+    var c = CLAIMS[current];
+    claimText.textContent = c.text;
+    stepsEl.innerHTML = "";
+    c.steps.forEach(function (st) {
+      var el = document.createElement("div");
+      el.className = "step";
+      el.innerHTML = '<span class="mark">&middot;</span><span>' + st.label + "</span>";
+      stepsEl.appendChild(el);
+    });
+    caption.className = "caption";
+    caption.textContent = "Click to run the proof.";
+    runBtn.disabled = false;
+    runBtn.textContent = "Generate proof";
+    consequence.classList.remove("shown");
+  }
+
+  function run() {
+    if (busy) return;
+    busy = true;
+    runBtn.disabled = true;
+    var c = CLAIMS[current];
+    var stepEls = stepsEl.children;
+    var i = 0;
+    function next() {
+      if (i >= stepEls.length) {
+        caption.className = "caption " + (c.final === "pass" ? "pass-msg" : "fail-msg");
+        caption.innerHTML = c.caption;
+        serverText.textContent = c.server;
+        proofText.textContent = c.proof;
+        payoff.textContent = c.payoff;
+        consequence.classList.add("shown");
+        runBtn.disabled = false;
+        busy = false;
+        return;
+      }
+      var st = c.steps[i];
+      var el = stepEls[i];
+      el.className = "step active " + st.result;
+      el.querySelector(".mark").textContent = st.result === "pass" ? "✓" : "✕";
+      i++;
+      setTimeout(next, 420);
+    }
+    next();
+  }
+
+  segmented.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-claim]");
+    if (!btn || busy) return;
+    current = btn.getAttribute("data-claim");
+    Array.prototype.forEach.call(segmented.children, function (b) {
+      b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+    });
+    renderIdle();
+  });
+
+  runBtn.addEventListener("click", run);
+
+  renderIdle();
+})();
+</script>
+</body>
+</html>

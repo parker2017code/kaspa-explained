@@ -11,6 +11,7 @@ Usage:
   python3 scripts/check-prose.py <paths>    # limit to given files
 """
 import glob
+import subprocess
 import html
 import json
 import os
@@ -46,6 +47,29 @@ BANNED = {
     # a formatting choice with a yes or no answer, reading grade is arithmetic,
     # and a repeated device is countable. Taste is not on that list.
     "performed-enthusiasm": r"(!|\bexcited to (share|announce)\b|\bthrilled\b|\bincredible\b|\bamazing\b)",
+    # Owner standard, 22 August 2026: category nouns and filler adjectives as
+    # placeholders where a real thing belongs. Most of the owner's list
+    # (landscape, space, framework, approach, solution, essential) is NOT
+    # here: this site uses "space" and "framework" correctly and often
+    # (block space, design space, the vProgs execution framework, "a 279 page
+    # framework for judging monetary systems"), and "approach"/"solution"/
+    # "essential"/"landscape" are ordinary English words with legitimate
+    # literal use. Banning them would have hit real, correct sentences. Only
+    # the words below tested at zero genuine hits on the shipped site and
+    # have no plausible literal use in this genre: they are hype filler
+    # almost every time. If one ever earns its place, narrow the pattern
+    # rather than reopening the whole owner list.
+    "category-noun-filler": r"\b(robust|seamless|comprehensive|crucial|cutting-edge|realm)\b",
+    # "It's about X, Y, and Z" summarizing a claim into three abstract nouns.
+    # The narrower cousin of the already-banned "not X, but Y" contrast: this
+    # is the other shape the owner named as an overused tricolon reflex.
+    "tricolon-aboutness": r"\bit(?:'s| is) (?:all )?about\s+[a-z][\w-]*,\s*[a-z][\w-]*,?\s+and\s+[a-z][\w-]*\b",
+    # An unprompted offer to keep going. The site never asks the reader
+    # whether to continue; a page states what it states and stops.
+    "unprompted-expand-offer": r"\b(let me know if you'?d like|happy to (elaborate|expand|dive deeper)|would you like me to (expand|elaborate)|feel free to ask (for more|if you))\b",
+    # Performed contrition. Fix an error in one sentence and continue; do not
+    # perform the apology first.
+    "performed-contrition": r"\b(i apologi[sz]e|sorry for (the|any)|my apologies)\b",
 }
 
 # Ration these. Roughly one per page each.
@@ -60,9 +84,20 @@ RATIONED = {
 }
 RATION_LIMIT = 1
 
+def _ignored(path):
+    """True when git ignores the path, so it is a draft rather than site copy."""
+    try:
+        r = subprocess.run(["git", "check-ignore", "-q", path],
+                           capture_output=True, timeout=10)
+        return r.returncode == 0
+    except Exception:
+        return False
+
+
 SKIP_FILES = {
     "PROSE_STANDARD.md", "COPY_STYLE.md", "AGENTS.md", "CLAUDE.md",
     "MAINTENANCE.md", "CONTENT_BRIEF.md", "README.md", "CLAIMS.yml",
+    "PLAN-REDESIGN.md", "PLAN-2026-08-22.md", "RESEARCH-2026-08-22.md",
 }
 
 
@@ -181,6 +216,10 @@ def main():
         paths = args
     else:
         paths = sorted(glob.glob("*.html")) + sorted(glob.glob("*.md"))
+        # Only judge what ships. Gitignored drafts and scratch files are not
+        # site copy, and scanning them fails the gate on content no reader
+        # will ever see. check-links.sh hit this same class of bug.
+        paths = [p for p in paths if not _ignored(p)]
     paths = [p for p in paths if os.path.basename(p) not in SKIP_FILES]
 
     rows = [r for r in (analyse(p) for p in paths) if r]

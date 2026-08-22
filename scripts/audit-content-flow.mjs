@@ -34,12 +34,14 @@ const longReferenceAllowed = new Set([
 const normalPageWordLimit = 2400;
 const essayPageWordLimit = 4000;
 
-const personalEssayFiles = new Set([
-  "toccata-essay.html",
-  "toccata-expressiveness-upgrade.html",
-  "toccata-expressiveness-upgrade-part-2.html",
-  "toccata-expressiveness-upgrade-part-3.html",
-]);
+// Shared with scripts/check-density.sh so the two content gates agree on
+// which pages are essays. See scripts/essay-pages.json and
+// design/density-budget.md, "Page-type scope."
+const essayPages = JSON.parse(fs.readFileSync(path.join(root, "scripts/essay-pages.json"), "utf8")).essays;
+
+const personalEssayFiles = new Set(
+  essayPages.filter((page) => page.extended_word_limit).map((page) => page.file),
+);
 
 function fail(message) {
   failures.push(message);

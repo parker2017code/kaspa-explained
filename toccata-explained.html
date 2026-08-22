@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Toccata Explained: Kaspa Covenants, ZK Apps, and vProgs | Kaspa Explained</title>
   <meta name="description" content="Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -41,8 +51,8 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -59,6 +69,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -71,10 +82,13 @@
       <p class="eyebrow">Protocol upgrade</p>
       <h1>Kaspa Toccata explained</h1>
       <p class="lead">A Kaspa coin can now carry a rule about how it is allowed to move next, and the network itself checks that rule. Toccata turned that on at the base layer, without turning Kaspa into an EVM.</p>
-      <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See <a href="/toccata-status">Toccata status</a> for what's checked since.</p>
+      <details class="source-more">
+        <summary>Activation record: exact release, DAA score, and date</summary>
+        <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See <a href="/toccata-status">Toccata status</a> for what's checked since.</p>
+      </details>
       <div class="actions">
         <a class="button primary" href="/build-on-kaspa">Build on Kaspa</a>
-        <a class="button" href="/what-is-kaspa">TPS by workload</a>
+        <a class="button" href="/what-is-kaspa#throughput">TPS by workload</a>
         <a class="button" href="/sources#code-tracking">Primary links</a>
       </div>
     </section>
@@ -114,29 +128,23 @@
         </table>
       </div>
       <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
+      <p class="fit-note">Try the <a href="/demos/covenant-breaker">covenant breaker</a>: attack a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and see the exact rule that stops each one.</p>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">Proofs and lanes</p>
       <h2>Proofs move the work off L1, then settle back</h2>
       <p>One proof can stand for many off-chain app actions. That L1 transaction may weigh more than a simple payment, but it is a settlement or a check, not the computation itself.</p>
-      <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own. Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process.</p>
+      <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own.</p>
+      <p>Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process. The <a href="/demos/zk-boundary">ZK boundary demo</a> builds a claim and shows a proof succeed on a chosen computation, then fail to establish an outside fact with no named anchor.</p>
       <p>KIP-21 answers a separate cost problem. Based apps use Kaspa L1 ordering, and the simple design gets expensive fast: every app would have to prove which L1 transactions were for it and which were not, so at scale proving what isn't yours turns into the real burden. Partitioned sequencing commitments let a prover follow one app lane instead.</p>
-    </section>
-
-    <section class="section prose-section" data-audience="specialist">
-      <p class="eyebrow">Standard fee floor</p>
-      <h2>Operator changes</h2>
-      <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor covered only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live. Mempool policy and consensus stay separate rule sets, which is why a zero-fee transaction can still be valid to consensus while an upgraded node drops an underpriced standard transaction from relay on policy. Upgrade steps for node operators, wallets, exchanges, and pools are on <a href="/toccata-status">Toccata status</a>.</p>
-      <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, so ZK-STARK proofs can fit.</p>
-      <p>Pools and solo miners need to keep post-Toccata block-template fields and test mining flows against them. The hands-on version is <a href="/kaspa-mining">mining Kaspa</a>.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Primitives and products</p>
       <h2>Seven things between a rule and an app</h2>
       <p>Shipping a consensus rule is like shipping a new instruction in a processor. The instruction is real the moment the chip ships, and useless to almost everyone until somebody writes a compiler that emits it and enough shared convention that two teams can read each other's output. Toccata shipped the instructions on June 30. July was spent on the toolchain.</p>
-      <p>Checked July 29, 2026. Rows and covenants rechecked August 14. Anything merely announced is left out.</p>
+      <p>Checked July 29, 2026. Rows and covenants rechecked August 22. Anything merely announced is left out.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Piece</th><th>What it does</th><th>Where it is</th></tr></thead>
@@ -151,16 +159,22 @@
           </tbody>
         </table>
       </div>
-      <p>Four of those seven are the reason mainnet holds 517 active covenants worth about 1.75 million KAS as of August 22, while Testnet-10 holds 80,822 active covenants. The rules are equally available on both. Only one is a place where the missing pieces do not matter yet. Mainnet covenant creation rose fifteenfold to August 8, then slowed to about 2 percent growth the following week, reaching 28,107 covenants ever created by August 22.</p>
-      <p>Conventions cannot be settled by a protocol upgrade, because they are agreements between people who ship independent software. That argument happens in the open at <a href="https://kas-smiths.org">kas-smiths.org</a> and in the public Core R&amp;D Telegram group, where the token standard draft KCC-0020 still has an open disagreement about whether token metadata belongs inside the spec. Treat everything there as proposal-stage: a thread with a confident name is still a thread, and the test is an active KIP or a ratified KCC, tracked on <a href="/kips">the KIP and KCC page</a>.</p>
-      <p>Issuing a token against KCC-0020 today means inheriting behavior its own co-authors describe as intended rather than a bug: its transfer rule requires identical extended-state commitments to consolidate, but only a cell's own holder can authorize a state update to it, so a partial rollout across holders permanently splits the supply (<a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a>, still open). KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). More on both at <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>Four of those seven are the reason mainnet holds 517 active covenants worth about 1.75 million KAS as of August 22, while Testnet-10 holds about 80,507 active covenants. The rules are equally available on both; only one is a place where the missing pieces do not matter yet.</p>
+      <p>Mainnet covenant creation rose fifteenfold to August 8, then slowed to about 2 percent growth the following week, reaching 28,107 covenants ever created by August 22.</p>
+      <p>Conventions cannot be settled by a protocol upgrade, because they are agreements between people who ship independent software. That argument happens in the open at <a href="https://kas-smiths.org">kas-smiths.org</a> and in the public Core R&amp;D Telegram group, where the token standard draft KCC-0020 still has an open disagreement about whether token metadata belongs inside the spec.</p>
+      <p>Treat everything there as proposal-stage: a thread with a confident name is still a thread, and the test is an active KIP or a ratified KCC, tracked on <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>Issuing a token against KCC-0020 today means inheriting a permanent supply-split consequence: its transfer rule requires identical extended-state commitments to consolidate, but only a cell's own holder can authorize a state update to it, so a partial rollout across holders permanently splits the supply.</p>
+      <p>Co-authors defend one pattern behind this as intended, a frozen or blacklist flag, but conceded a second pattern, ephemeral state that mutates without affecting fungibility, is a wrong one needing a spec fix. The reporter's concern stands unwithdrawn, and <a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a> remains open with no spec edit.</p>
+      <p>KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). More on both at <a href="/kips">the KIP and KCC page</a>.</p>
+      <p class="fit-note">The <a href="/demos/supply-split">supply split demo</a> lets you issue a token, roll it out unevenly, and watch the supply fracture into groups that can never consolidate again.</p>
       <p>The two projects below are the current attempts at closing the rest of the gap.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Application language</p>
       <h2>Argent, the layer between a covenant and an app</h2>
-      <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do. Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates, and the compiler turns a readable description of an application into the Silverscript the network already checks.</p>
+      <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do.</p>
+      <p>Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates, and the compiler turns a readable description of an application into the Silverscript the network already checks.</p>
       <p>Argent's own README sets the production gate as an audit: first Silverscript's, then its own. Michael Sutton holds 73 of the compiler's 77 commits, 58 of them in July, when the project moved into an <code>argent-lang</code> organization. No repository carries a tagged release. Silverscript itself still calls its bytecode artifact experimental and recommends it only on testnet-10.</p>
       <p>The language model, a worked covenant example, the README's own words on what already works, and the repository signals are on <a href="/argent-explained">Argent and Silverscript, explained</a>.</p>
     </section>
@@ -170,7 +184,8 @@
       <h2>vProgs, and the line Toccata does not cross</h2>
       <p>Two vProgs transactions touching different resources never wait on each other, and a proof lands on Kaspa L1 instead of a replay of every step.</p>
       <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Full vProgs and native Kaspa DeFi are not live on mainnet.</p>
-      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state into separate named resources, built from the read and write list a transaction declares up front. Each resource acts like its own lane, so only the transactions touching the same one have to settle their order. Hans Moog's vProgs walkthrough does not claim a raw TPS number.</p>
+      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state into separate named resources, built from the read and write list a transaction declares up front.</p>
+      <p>Each resource acts like its own lane, so only the transactions touching the same one have to settle their order. Hans Moog's vProgs walkthrough does not claim a raw TPS number.</p>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo calls itself an early-development Rust framework for based computation on Kaspa. Its README splits the framework into six layers, from shared types up to a runnable node, and the repo tree carries more, including a ZK side with a RISC Zero backend.</p>
       <div class="table-wrap">
         <table class="reality-table" id="vprogs-table">
@@ -183,15 +198,28 @@
           </tbody>
         </table>
       </div>
-      <p class="hint" id="vprogs-stamp">Baseline read on August 14, 2026, unchanged. This table refreshes from the repository when the page loads.</p>
+      <p class="hint" id="vprogs-stamp">Baseline read on August 22, 2026, unchanged. This table refreshes from the repository when the page loads.</p>
       <p>An active repo is evidence of work, not of readiness. The line between this and Toccata is narrower than usually drawn: joining separately compiled covenant apps into one all-or-nothing transaction works on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is the shared mutable state case, which has not reached testnet.</p>
       <p>The model fits products with many users hitting one app, or a proof too big for a covenant spend to carry, which describes few Kaspa apps today.</p>
+    </section>
+
+    <section class="section prose-section" data-audience="specialist">
+      <p class="eyebrow">Standard fee floor</p>
+      <h2>Operator changes</h2>
+      <details class="source-more">
+        <summary>For node operators and miners: the new fee floor, mempool policy, and mining specs</summary>
+        <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor covered only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live.</p>
+        <p>Mempool policy and consensus stay separate rule sets, which is why a zero-fee transaction can still be valid to consensus while an upgraded node drops an underpriced standard transaction from relay on policy. Upgrade steps for node operators, wallets, exchanges, and pools are on <a href="/toccata-status">Toccata status</a>.</p>
+        <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, so ZK-STARK proofs can fit.</p>
+        <p>Pools and solo miners need to keep post-Toccata block-template fields and test mining flows against them. The hands-on version is <a href="/kaspa-mining">mining Kaspa</a>.</p>
+      </details>
     </section>
 
     <section class="section">
       <p class="eyebrow">App case</p>
       <h2>Coordination markets, where a rule replaces an operator</h2>
-      <p>The assurance-funding row above is a coordination market: it pays out only once enough strangers commit to the same condition. A website can run that loop too, and usually a website is the right answer. The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A covenant moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
+      <p>The assurance-funding row above is a coordination market: it pays out only once enough strangers commit to the same condition. A website can run that loop too, and usually a website is the right answer.</p>
+      <p>The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A covenant moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
       <p class="fit-note"><strong>Status: research direction.</strong> Two problems have no shipped answer. A covenant cannot see the outside world, so anything settling on a price or an event needs an oracle whose trust model is spelled out first. And no wallet yet shows a user the condition they are about to sign.</p>
       <p>Which argues for starting narrow: one condition, one payout rule, and a group small enough to name everyone in it. Assurance funding for a single repeat event is a real test with real users at the end.</p>
     </section>
@@ -268,6 +296,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

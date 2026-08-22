@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained</title>
   <meta name="description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -30,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -45,6 +55,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -56,7 +67,8 @@
       <p class="eyebrow">Proposal tracker</p>
       <h1>KIPs and KCCs</h1>
       <p class="lead">Two separate processes decide what Kaspa becomes. One changes the protocol, one does not. This page reads both straight from their repositories, so what you see is the current state rather than a label somebody typed once.</p>
-      <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API. It ships when it is implemented and activated. A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change at all. The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)."</p>
+      <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API. It ships when it is implemented and activated. A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change at all.</p>
+      <p>The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)."</p>
       <p>The two get confused constantly. A merged KIP marked Active is protocol law. An open KCC pull request is a draft one person wrote and others are arguing about, and calling it a standard is how people end up building against something that never lands.</p>
     </section>
 
@@ -86,15 +98,18 @@
           </tbody>
         </table>
       </div>
-      <p class="hint" id="kip-stamp">Baseline read from the KIP repository on August 7, 2026. This table refreshes from the repository when the page loads.</p>
-      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the DAGKnight upgrade, has been Proposed for years and is still Proposed: it runs on an internal devnet, and there is no testnet and no date. Ten further KIPs sit open as pull requests, including browser extension wallet APIs, a compute budget for script execution, and a quantum-resistance script type.</p>
+      <p class="hint" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
+      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the DAGKnight upgrade, has been Proposed for years and is still Proposed: it runs on an internal devnet, and there is no testnet and no date.</p>
+      <p>Eleven further KIPs sit open as pull requests, including browser extension wallet APIs, a compute budget for script execution, and a quantum-resistance script type.</p>
       <p><a href="https://github.com/kaspanet/kips">Read the KIP repository</a> for the full text of any proposal, including the rejected one.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Conventions</p>
       <h2 id="kcc">Kaspa Calls for Conventions</h2>
-      <p>The KCC repository was created on July 15, 2026. Three specifications have merged into it: KCC-0001, KCC-0002, and KCC-0020. Each one's own document header still reads <code>Status: Draft</code>. A merged file in this repo is a checked-in draft, not an adopted standard: the README's own bar for acceptance is a Comments-URI discussion window and consensus among implementers, and none of the three has cleared that.</p>
+      <p>The KCC repository was created on July 15, 2026. Three specifications have merged into it: KCC-0001, KCC-0002, and KCC-0020. Each one's own document header still reads <code>Status: Draft</code>.</p>
+      <p>A merged file in this repo is a checked-in draft, not an adopted standard: the README's own bar for acceptance is a Comments-URI discussion window and consensus among implementers, and none of the three has cleared that.</p>
+      <p class="fit-note">KCC-0001 defines the covenant byte layout these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
       <div class="table-wrap">
         <table class="reality-table" id="kcc-table">
           <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
@@ -110,19 +125,39 @@
         </table>
       </div>
       <p class="hint" id="kcc-stamp">Baseline read from the KCC repository on August 22, 2026. This table refreshes from the repository when the page loads; the live fetch below only lists currently open pull requests, so the three merged drafts and the closed proposals stay as this baseline describes them.</p>
-      <p>The two open pull requests both claim adoption evidence the repository itself does not carry. KCC-0021's author says the reader implementation kascov and the wallet KaspaRocket already use its metadata convention. KCC-0402's author says a reference implementation, k402, has payment-channel transactions live on mainnet. Neither claim could be confirmed independently; treat both as the author's word until a merge or an outside source backs them.</p>
+      <p>The two open pull requests both claim adoption evidence the repository itself does not carry. KCC-0021's author says the reader implementation kascov and the wallet KaspaRocket already use its metadata convention. KCC-0402's author says a reference implementation, k402, has payment-channel transactions live on mainnet.</p>
+      <p>Neither claim could be confirmed independently; treat both as the author's word until a merge or an outside source backs them.</p>
       <p>The four-digit repository numbering is canonical. Forum shorthand like "KCC20" is convenient and is not the identifier in the repository, which matters when someone claims a token already follows a ratified standard. Nothing has been ratified.</p>
-      <p>KCC-0020 is the one to watch. It is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant whose owner can be either a public key or a covenant ID. A convention appearing in a compiler's test suite, or in a merged draft file, before it is accepted is normal, and it is not acceptance.</p>
-      <p>Anyone weighing whether to issue a token against this draft is asking the right question: what breaks later. Three answers exist today. <a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton both treated this as intended behavior for extended-state tokens rather than a bug: Sutton confirmed with his own stablecoin-blacklist example that it "indeed renders the token as temporarily non fungible." Separately, <a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>, opened July 26, 2026 by KaspaCom, is the only production implementer of a KCC token standard stating its own conformance level in writing: KaspaCom's deployed KCC20V2 "should be described as partially aligned, not fully conforming" with KCC-0001, 0002, 0020, and 0021. And the standard's own template shape is already fragmenting on mainnet: one launchpad's 74 live tokens span four separate template generations, with no migration path between them, only opt-in burn and reissue, according to a kas-smiths.org post from 0xKnitser on August 15, 2026. A token issued against KCC-0020 today inherits a permanent supply-split consequence its own co-authors call intended design behavior, an admitted partial-conformance gap in the one production deployment, and a launchpad that has already forked its own template four times.</p>
-      <p>A second gap sits in the same spec, separate from the supply-split consequence: borrowed receive. Shawn described it on the same forum thread, July 10, 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs pre-signed, outpoint bound transactions." A stranger borrowing a token into a UTXO before a pre-signed spend lands invalidates that transaction and forces a rebuild. There's no signature-level fix. Shawn explained why a month later: "the v1 sighash folds the spent input's own outpoint into the signed message unconditionally," and AnyoneCanPay "only zeroes the other inputs' outpoints, never the signed input's own." Authorization has to move to something the covenant checks against its own state, not the transaction signature; nothing has merged.</p>
-      <p>KCC-0021, the covenant token metadata standard, is why the same forum keeps citing image URLs going dead: covenant tokens have no metadata standard on mainnet without it, so name, ticker, and image all live off-chain today. 0xKnitser cross-checked one live launchpad's published logos on August 15, 2026 and found 5 of 19 dead within days, and 3 more serving HTML instead of an image. KCC-0021 stays an open, unmerged pull request.</p>
+      <p>KCC-0020 is the one to watch. It is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant whose owner can be either a public key or a covenant ID.</p>
+      <p>A convention appearing in a compiler's test suite, or in a merged draft file, before it is accepted is normal, and it is not acceptance.</p>
+      <p>Anyone weighing whether to issue a token against this draft is asking the right question: what breaks later.</p>
+      <p>A token issued against KCC-0020 today inherits three known defects: a permanent supply-split consequence its co-authors partly defend and partly call a wrong pattern still needing a spec fix, one production deployment that admits partial conformance, and a launchpad already on its fourth incompatible template.</p>
+      <details class="deep-dive">
+        <summary>The supply-split consequence, defended in part, conceded in part</summary>
+        <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. Knitser has not withdrawn his original concern, and no spec change has merged.</p>
+      </details>
+      <details class="deep-dive">
+        <summary>The one production implementer's own conformance admission</summary>
+        <p><a href="https://github.com/kaspanet/kccs/issues/11">Issue #11</a>, opened July 26, 2026 by KaspaCom, is the only production implementer of a KCC token standard stating its own conformance level in writing: KaspaCom's deployed KCC20V2 "should be described as partially aligned, not fully conforming" with KCC-0001, 0002, 0020, and 0021.</p>
+      </details>
+      <details class="deep-dive">
+        <summary>The launchpad already forking its own template four times</summary>
+        <p>The standard's own template shape is already fragmenting on mainnet: one launchpad's 74 live tokens span four separate template generations, with no migration path between them, only opt-in burn and reissue, according to a kas-smiths.org post from 0xKnitser on August 15, 2026.</p>
+      </details>
+      <p class="fit-note">The <a href="/demos/supply-split">supply split demo</a> lets you issue a token, roll it out unevenly, and watch the supply fracture into groups that can never consolidate again, the unresolved tradeoff behind issue #14 made tangible.</p>
+      <p>A second gap sits in the same spec: borrowed receive. Shawn described it on the same forum thread, July 10, 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs pre-signed, outpoint bound transactions." Borrowing a token into a UTXO before a pre-signed spend lands invalidates the transaction and forces a rebuild. There's no signature-level fix.</p>
+      <p>Shawn explained why a month later: "the v1 sighash folds the spent input's own outpoint into the signed message unconditionally," and AnyoneCanPay "only zeroes the other inputs' outpoints, never the signed input's own." Authorization has to move to something the covenant checks against its own state, not the transaction signature; nothing has merged.</p>
+      <p>KCC-0021, the covenant token metadata standard, is why the same forum keeps citing image URLs going dead: covenant tokens have no metadata standard on mainnet without it, so name, ticker, and image all live off-chain today.</p>
+      <p>0xKnitser cross-checked one live launchpad's published logos on August 15, 2026 and found 5 of 19 dead within days, and 3 more serving HTML instead of an image.</p>
+      <p>KCC-0021 stays an open, unmerged pull request.</p>
       <p><a href="https://github.com/kaspanet/kccs">Read the KCC repository</a>, or follow the discussion on <a href="https://kas-smiths.org/">kas-smiths.org</a>.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">How this page stays honest</p>
       <h2>Where these numbers come from</h2>
-      <p>Both tables above are written into the page as a baseline, verified by hand on the date stamped under each one. When the page loads it asks the two repositories for their current state and replaces the baseline if anything moved, then says when it last checked. If GitHub is unreachable or rate-limits the request, the baseline stays and the stamp tells you it is a baseline. Nothing here is generated from memory.</p>
+      <p>Both tables above are written into the page as a baseline, verified by hand on the date stamped under each one. When the page loads it asks the two repositories for their current state and replaces the baseline if anything moved, then says when it last checked.</p>
+      <p>If GitHub is unreachable or rate-limits the request, the baseline stays and the stamp tells you it is a baseline. Nothing here is generated from memory.</p>
       <p>A status word on this page is never evidence that something works. It is evidence of where a document sits in a process. For what is actually running on mainnet, use the <a href="/status">live status page</a>, and for the difference between a primitive being activated and an application being usable, see <a href="/toccata-explained">what still has to be built</a>.</p>
     </section>
 <!-- related-links:start -->
@@ -205,6 +240,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

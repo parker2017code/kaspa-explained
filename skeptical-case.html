@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Kaspa Risks and Open Questions | Kaspa Explained</title>
   <meta name="description" content="The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -53,8 +63,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -71,6 +81,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -86,7 +97,15 @@
     </section>
 
     <section class="section">
-      <h2>Main objections</h2>
+      <div class="answer-block">
+        <p class="eyebrow">Short answer</p>
+        <p>Node and indexer pressure, a security budget that needs fees to eventually replace block rewards, the real external cost of proof-of-work hardware and power, thin liquidity, mining concentration, and an app roadmap still years from proven repeat use: those are the load-bearing risks.</p>
+        <p>Toccata activated on mainnet; vProgs, DAGKnight, and native DeFi did not activate with it, and a testnet demo of one is not evidence for the rest.</p>
+      </div>
+    </section>
+
+    <section class="section deep-dive-plain">
+      <h2>The seven objections, one by one</h2>
       <div class="summary-grid grid-cards">
         <article><span>Verification cost</span><p>Higher block rates raise the bandwidth, CPU, and storage a node needs. Push that too far and only a few well-funded operators can still check the chain.</p></article>
         <article><span>Security budget</span><p>Block rewards decline over time. Unless fees and demand replace that revenue, miner income falls and so does the cost of attacking the network.</p></article>
@@ -96,17 +115,29 @@
         <article><span>Roadmap execution</span><p>Toccata activated on mainnet. vProgs, DAGKnight, and native DeFi are still separate tracks on separate timelines. Treating them as one shipped bundle overstates how much is done.</p></article>
         <article><span>User demand</span><p>Low fees and spare room are needed for apps to exist. They are no proof that anyone will use them twice.</p></article>
       </div>
+      <p class="fit-note">No premine does not mean no early concentration. The <a href="/demos/fair-launch">fair-launch comparison</a> plots Kaspa's genesis supply against Ethereum, Cardano, and XRP, and what a fair launch does and doesn't guarantee.</p>
     </section>
 
-    <section class="section prose-section">
-      <h2>Proof-of-Work external cost</h2>
+    <section class="section deep-dive-plain">
+      <h2>Proof-of-work's external cost</h2>
       <p>Proof of work buys its Sybil resistance with real goods: power, ASICs, buildings, cooling, supply chains, time. A miner cannot fake identities to gain a bigger say. More say means more hash power, and hash power costs money every hour it runs.</p>
       <p>That changes the math on attacks. An attacker needs hardware, power deals, and a bill that runs every day. Money in a wallet is not enough. New KAS goes to miners who already spent those things. Staking sends new supply and votes back to whoever already holds tokens.</p>
       <p>A node checks the chain no matter who mines it. Mining to your own node lets you help make blocks, and you still carry the same outside risks as any other miner: ASIC supply, cheap power, pool behavior, and regulators.</p>
+      <p class="fit-note">The <a href="/demos/attack-cost">attack cost calculator</a> prices a 51% attack in dollars per hour against current hash rate and hardware cost, next to other chains for scale.</p>
     </section>
 
-    <section class="section">
-      <h2>Evidence that would answer them</h2>
+    <section class="section deep-dive-plain">
+      <h2>What pays for the hash rate</h2>
+      <p>Kaspa's block reward is 2.31246515 KAS (api.kaspa.org/info/blockreward). At 10 blocks per second that's 864,000 blocks a day, so 1,997,970 KAS of new supply a day. At $0.02934513 per KAS (CoinGecko, fetched live), that's about $58,631 a day paid to miners, funding a network running at roughly 311.5 PH/s (api.kaspa.org/info/hashrate).</p>
+      <p>Fee revenue is a rounding error next to that. Kaspa runs about 77,207 transactions a day at a median fee of $0.000063 (both from this site's own <a href="/chain-comparer">chain data</a>), which is 77,207 &times; $0.000063, about $4.86 a day. Divide the two: $58,631 &divide; $4.86 is roughly 12,054. Fees fund about 0.0083% of what miners are actually paid. The other 99.99% is new supply, not demand.</p>
+      <p>The subsidy is also shrinking on its own schedule. Kaspa's reward steps down every month by a factor of 2<sup>&minus;1/12</sup>, about 5.61%, per rusty-kaspa's <code>coinbase.rs</code> subsidy table. Twelve of those steps compound to exactly half, so holding KAS price flat, the daily payout to miners falls to about $29,315 a year from now and about $3,664 in four years. Fees would still be running at roughly $4.86 a day if nothing else changed, meaning they'd need to grow about 6,000-fold in a year and 750-fold in four just to stay this far behind, not to catch up.</p>
+      <p>What would catching up actually take? Holding today's $0.000063 median fee flat, matching today's $58,631 subsidy from fees alone needs about 10,771 transactions per second, sustained, not peak. That's roughly 12,000 times Kaspa's own measured 0.895 TPS, and higher than any sustained rate in this site's own comparison data, including Solana's 1,175. Holding today's transaction count flat instead, the same match needs a median fee near $0.76, about six times Bitcoin's own $0.1317 median. Neither looks close, and both would have to happen while the subsidy itself keeps shrinking underneath them.</p>
+      <p>None of that is unique to Kaspa. Bitcoin has run this exact deficit, subsidy funding almost all of miner income, for its entire existence, and it is still the most attacked-resistant chain that exists. A security budget paid mostly by new supply is normal for a young network, not a special defect. Price appreciation alone can offset a shrinking subsidy for a long time, and a falling budget does not switch a network off: it lowers the hash rate that stays profitable to run, and the real question is whether what's left still makes an attack uneconomic against the value it's protecting, not whether the subsidy hits zero. What this arithmetic does establish is narrower and still true: today, right now, Kaspa's security is bought almost entirely with inflation, not with people paying to use the chain, and no visible trend closes that gap on fees alone.</p>
+      <p class="fit-note">The <a href="/demos/attack-cost">attack cost calculator</a> prices what it costs to outrun this hash rate for an hour. This section is what pays for the hash rate the attacker would have to beat.</p>
+    </section>
+
+    <section class="section deep-dive-plain">
+      <h2>Evidence that would answer each objection</h2>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Concern</th><th>Weak answer</th><th>Strong answer</th></tr></thead>
@@ -121,14 +152,19 @@
       </div>
     </section>
 
-    <section class="section">
-      <h2>App talk can outrun the evidence</h2>
+    <section class="section deep-dive-plain">
+      <h2>Where app-roadmap talk outruns the evidence</h2>
       <p class="lead">Toccata shipped. vProgs, DAGKnight, native DeFi, and coordination markets did not ship with it. A testnet demo of one is not mainnet proof for the rest, or even for the one it demoed.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Risk</th><th>What would answer it?</th></tr></thead>
           <tbody>
-            <tr><td>Toccata tooling stays rough after it turns on.</td><td>Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, with v2.0.1 released after it. What's left to check: stable releases, docs that work, and builder examples anyone can repeat. TN10/TN12 tests alone are not enough.</td></tr>
+            <tr><td>Toccata tooling stays rough after it turns on.</td><td>Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, with v2.0.1 released after it.
+              <details class="cell-detail">
+                <summary>What's left to check</summary>
+                <p>What's left to check: stable releases, docs that work, and builder examples anyone can repeat. TN10/TN12 tests alone are not enough.</p>
+              </details>
+            </td></tr>
             <tr><td>Native apps stay demos with no users.</td><td>Repeat users, real fee demand, wallets, separate indexers, and apps that keep working.</td></tr>
             <tr><td>DeFi claims get ahead of custody and oracles.</td><td>Audited custody rules and real wallet signing. An oracle design, liquidation rules, and settlement that gets accepted.</td></tr>
             <tr><td>Based-app language becomes too abstract.</td><td>Real products where app state is tied to Kaspa ordering, proofs, settlement, or exits.</td></tr>
@@ -137,7 +173,7 @@
       </div>
     </section>
 
-    <section class="section prose-section">
+    <section class="section deep-dive-plain">
       <h2>What to watch</h2>
       <p>Count the separate explorers, APIs, wallets, and node operators. The more there are, the less rides on any one going down or going bad. Watch whether roadmap items turn into apps with repeat users outside the teams that built them. A working demo alone doesn't count. Liquidity, custody support, and fee demand will settle whether the thesis holds, whatever the design does. And watch the words: in a hype cycle, live, testnet, roadmap, and research claims get flattened into one story first.</p>
       <p>For the price and hash-rate version, read <a href="/kaspa-mining">Kaspa price, hash rate, and the mining cycle</a>.</p>
@@ -184,6 +220,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

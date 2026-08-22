@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Kaspa Explained: What KAS Is, How GHOSTDAG Works, and What Is Live Now</title>
   <meta name="description" content="What KAS is, how the proof-of-work blockDAG and GHOSTDAG order blocks, and which Kaspa claims are live mainnet versus roadmap.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -56,8 +66,8 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
   <script defer src="live-kaspa.js?v=20260620-toccata-status"></script>
 </head>
 <body>
@@ -75,6 +85,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -98,188 +109,96 @@
           <a href="/sources"><span>Sources</span><strong>Primary documents</strong><small>Releases, KIPs, docs, APIs, papers, and repo links.</small></a>
         </div>
         <p class="source-inline">New to crypto itself? Start with <a href="/start-here">Start Here</a>.</p>
+        <details class="deep-dive">
+          <summary>What each label means</summary>
+          <p>Mainnet: shipped and observable on-chain today. Testnet: built and running, not yet on mainnet. Roadmap: planned, with a stated target. Research: an open design question, not yet a plan. <a href="/kaspa-claims-checker">Check any claim</a> against these four.</p>
+        </details>
       </div>
     </section>
 
     <section id="toccata-status-preview" class="section status-workbench" aria-labelledby="toccata-status-preview-title">
       <div>
-        <p class="eyebrow">Mainnet programmability</p>
-        <h2 id="toccata-status-preview-title">Toccata activation record</h2>
-        <p class="lead">Toccata is live. It activated at DAA score <strong>474,165,565</strong>, the score set by Rusty Kaspa v2.0.0, and mainnet now runs L1 covenants, covenant IDs, ZK proof verification, sequencing commitments, and the based-app groundwork. Wallet, explorer, SDK, and app support still need their own receipts.</p>
+        <p class="eyebrow">What's live now</p>
+        <h2 id="toccata-status-preview-title">Toccata is active, and covenants are climbing</h2>
+        <p class="lead">Toccata activated at DAA score <strong>474,165,565</strong>. Mainnet runs L1 covenants, ZK proof verification, and sequencing commitments. Covenants created grew from 1,841 on July 25 to 28,107 by August 22.</p>
         <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>.</p>
       </div>
       <div class="status-lane-grid grid-cards">
         <a href="/toccata-status"><span>Activation</span><strong>The activation record</strong><small>The score, the release, and the dated evidence trail.</small></a>
         <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong><small>Covenants, ZK checks, lanes, based apps, and vProgs boundaries.</small></a>
-        <a href="/what-is-kaspa"><span>Capacity</span><strong>TPS of what?</strong><small>Payments, covenants, proofs, tokens, and future app throughput differ.</small></a>
+        <a href="/kaspa-developments"><span>This month</span><strong>Full developments log</strong><small>KCC process, KIP status, and covenant growth in detail.</small></a>
         <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>Releases, KIPs, Testnet-10, vProgs, and Argent.</small></a>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="whats-new-title">
-      <p class="eyebrow">Latest developments</p>
-      <h2 id="whats-new-title">What changed this month</h2>
-      <p>Toccata activated on June 30. No new mainnet release has shipped since, though six "Toccata Cleanup" pull requests merged August 19 to 21, removing pre-Toccata code paths and making protocol version 10 unconditional. Most of the movement below is in the layers above consensus.</p>
-      <div class="reference-grid grid-cards">
-        <article>
-          <h3>A second standards process appeared</h3>
-          <p>Kaspa Calls for Conventions launched on July 15 for ecosystem-level agreements. Three specifications merged on August 20, each still marked Draft in its own file. Two remain open pull requests, a bulk set closed unmerged, and a KCC cannot change consensus; KCC-0020 also carries a permanent-supply-split consequence its own co-authors call intended design behavior (<a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a>).</p>
-        </article>
-        <article>
-          <h3>The Toccata KIPs went active</h3>
-          <p>KIP-16, 17, 20, and 21 moved to <code>Status: Active</code> on July 15. They had still been marked testnet-only for two weeks after mainnet activation.</p>
-        </article>
-        <article>
-          <h3>Mainnet covenants grew fifteenfold</h3>
-          <p>28,107 covenants ever created by August 22, up from 1,841 on July 25, and 86 token markets now trade on mainnet. Total live value is about 1.75 million KAS, near 51,400 dollars. Real usage, thin depth.</p>
-        </article>
+    <section id="demos" class="section" aria-labelledby="demos-title">
+      <p class="eyebrow">Try it</p>
+      <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
+      <p class="lead">Two sliders: block rate, propagation delay. Push block rate to 100 per second and a single chain discards 83.3 percent of the work; the blockDAG discards none.</p>
+      <div class="live-demo-frame">
+        <iframe id="collision-frame" src="/demos/collision-sim" title="Collision simulator: single chain vs blockDAG" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
-      <p class="actions"><a class="button primary" href="/kaspa-developments">Read the full developments log</a> <a class="button" href="/toccata-explained">What still has to be built</a></p>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow">Tools</p>
-      <h2>Two things you can drive yourself</h2>
-      <p class="lead">Both are scored from published numbers read on the same day. Move the dials and the ranking reorders.</p>
       <div class="grid-cards site-related-grid">
-        <a href="/chain-comparer">
-          <h3>Which chain fits the job?</h3>
-          <p>Twenty layer ones on the same fields. Set what your job needs and see where Kaspa lands, including the jobs where it does not.</p>
-        </a>
-        <a href="/model-picker">
-          <h3>Which AI model should you use?</h3>
-          <p>21 models scored across four leaderboards at once. Not a Kaspa page, just a useful one.</p>
-        </a>
+        <a href="/demos/confirmation-risk"><h3>Confirmation risk</h3><p>Watch reversal odds fall as blue work stacks up. Fast blocks, not instant finality.</p></a>
+        <a href="/demos/emission-schedule"><h3>Emission schedule</h3><p>Slide through time and watch the block reward shrink, never a cliff.</p></a>
+        <a href="/demos/mass-calculator"><h3>Mass calculator</h3><p>Pick a transaction shape and see which mass dimension actually gets charged.</p></a>
       </div>
-    </section>
-
-    <section id="blockdag-demo" class="protocol-demo section" data-demo-mode="dag" data-reader-mode="simple" aria-labelledby="blockdag-demo-title">
-      <div class="protocol-demo-head">
-        <div>
-          <p class="eyebrow">BlockDAG model</p>
-          <h2 id="blockdag-demo-title">Compare the chain and the graph</h2>
-          <p class="lead">A single chain has to pick a winner: when two blocks arrive close together, one gets built on and the other is discarded, work and all. A blockDAG keeps both, links them into the graph as parents, and lets GHOSTDAG sort out the order afterward.</p>
-        </div>
-        <div class="demo-status-card" aria-live="polite">
-          <span>Current view</span>
-          <strong id="demo-status-label">Kaspa blockDAG</strong>
-        </div>
+      <div class="actions">
+        <a class="button primary" href="/demos">All 13 demos</a>
+        <a class="button" href="/chain-comparer">Compare chains</a>
+        <a class="button" href="/model-picker">Compare AI models</a>
       </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('collision-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            ['h1', '#theme-toggle', 'p.intro', '.formula'].forEach(function (sel) {
+              var el = doc.querySelector(sel);
+              if (el) {
+                el.style.display = 'none';
+              } else if (window.console && console.warn) {
+                console.warn('Embedded demo hide selector matched nothing: ' + sel);
+              }
+            });
+            var footnote = doc.querySelector('main > p:last-of-type');
+            if (footnote) footnote.style.display = 'none';
+            var resize = function () {
+              frame.style.height = doc.body.scrollHeight + 'px';
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
 
-      <div class="demo-grid">
-        <div class="demo-workspace" aria-label="Blockchain and blockDAG visual model">
-          <svg viewBox="0 0 760 420" role="img" aria-labelledby="demo-svg-title demo-svg-desc">
-            <title id="demo-svg-title">Blockchain versus blockDAG visual model</title>
-            <desc id="demo-svg-desc">A simplified diagram that can show a linear chain, a Kaspa-style blockDAG, or a higher-throughput burst where parallel blocks are still referenced and ordered.</desc>
-            <defs>
-              <marker id="demo-arrow" viewBox="0 0 6 6" markerWidth="3.2" markerHeight="3.2" refX="5.2" refY="3" orient="auto" markerUnits="strokeWidth">
-                <path d="M0 0 L6 3 L0 6 Z"></path>
-              </marker>
-            </defs>
-
-            <g class="demo-layer demo-layer-chain">
-              <path class="demo-edge selected" d="M92 216 L218 216 L344 216 L470 216 L596 216" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge rejected" d="M344 216 L444 124" marker-end="url(#demo-arrow)"></path>
-              <g class="demo-block selected" transform="translate(92 216)"><circle r="30"></circle><text y="6">A</text></g>
-              <g class="demo-block selected" transform="translate(218 216)"><circle r="30"></circle><text y="6">B</text></g>
-              <g class="demo-block selected" transform="translate(344 216)"><circle r="30"></circle><text y="6">C</text></g>
-              <g class="demo-block side" transform="translate(444 124)"><circle r="28"></circle><text y="6">X</text></g>
-              <g class="demo-block selected" transform="translate(470 216)"><circle r="30"></circle><text y="6">D</text></g>
-              <g class="demo-block selected" transform="translate(596 216)"><circle r="30"></circle><text y="6">E</text></g>
-              <text class="demo-label" x="90" y="330">One selected path. Competing work falls out of the record.</text>
-            </g>
-
-            <g class="demo-layer demo-layer-dag">
-              <path class="demo-edge" d="M94 218 L214 126" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M94 218 L214 218" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M94 218 L214 310" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M214 126 L342 166" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M214 218 L342 166" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M214 218 L342 270" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M214 310 L342 270" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M342 166 L470 126" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M342 166 L470 218" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M342 270 L470 218" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M342 270 L470 310" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M470 126 L596 188" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M470 218 L596 188" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M470 218 L596 280" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge selected" d="M94 218 L214 218 L342 166 L470 218 L596 188" marker-end="url(#demo-arrow)"></path>
-              <g class="demo-block selected" transform="translate(94 218)"><circle r="30"></circle><text y="6">A</text></g>
-              <g class="demo-block included" transform="translate(214 126)"><circle r="28"></circle><text y="6">B</text></g>
-              <g class="demo-block selected" transform="translate(214 218)"><circle r="30"></circle><text y="6">C</text></g>
-              <g class="demo-block included" transform="translate(214 310)"><circle r="28"></circle><text y="6">D</text></g>
-              <g class="demo-block selected" transform="translate(342 166)"><circle r="30"></circle><text y="6">E</text></g>
-              <g class="demo-block included" transform="translate(342 270)"><circle r="28"></circle><text y="6">F</text></g>
-              <g class="demo-block included" transform="translate(470 126)"><circle r="28"></circle><text y="6">G</text></g>
-              <g class="demo-block selected" transform="translate(470 218)"><circle r="30"></circle><text y="6">H</text></g>
-              <g class="demo-block included" transform="translate(470 310)"><circle r="28"></circle><text y="6">I</text></g>
-              <g class="demo-block selected" transform="translate(596 188)"><circle r="30"></circle><text y="6">J</text></g>
-              <g class="demo-block included" transform="translate(596 280)"><circle r="28"></circle><text y="6">K</text></g>
-              <text class="demo-label" x="90" y="362">Parallel blocks can stay visible, then GHOSTDAG orders the history.</text>
-            </g>
-
-            <g class="demo-layer demo-layer-pressure">
-              <path class="demo-edge" d="M78 210 L190 70 L335 90 L480 70 L640 140" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M78 210 L190 165 L335 195 L480 180 L640 140" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M78 210 L190 255 L335 270 L480 270 L640 315" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M78 210 L190 345 L335 350 L480 350 L640 315" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M190 70 L335 195 L480 180" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M190 165 L335 90 L480 70" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M190 255 L335 350 L480 270" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge" d="M335 195 L480 270 L640 315" marker-end="url(#demo-arrow)"></path>
-              <path class="demo-edge selected" d="M78 210 L190 165 L335 195 L480 180 L640 140" marker-end="url(#demo-arrow)"></path>
-              <g class="demo-block selected" transform="translate(78 210)"><circle r="28"></circle><text y="6">0</text></g>
-              <g class="demo-block included" transform="translate(190 70)"><circle r="24"></circle><text y="6">1</text></g>
-              <g class="demo-block selected" transform="translate(190 165)"><circle r="28"></circle><text y="6">2</text></g>
-              <g class="demo-block included" transform="translate(190 255)"><circle r="24"></circle><text y="6">3</text></g>
-              <g class="demo-block included" transform="translate(190 345)"><circle r="24"></circle><text y="6">4</text></g>
-              <g class="demo-block included" transform="translate(335 90)"><circle r="24"></circle><text y="6">5</text></g>
-              <g class="demo-block selected" transform="translate(335 195)"><circle r="28"></circle><text y="6">6</text></g>
-              <g class="demo-block included" transform="translate(335 270)"><circle r="24"></circle><text y="6">7</text></g>
-              <g class="demo-block included" transform="translate(335 350)"><circle r="24"></circle><text y="6">8</text></g>
-              <g class="demo-block included" transform="translate(480 70)"><circle r="24"></circle><text y="6">9</text></g>
-              <g class="demo-block selected" transform="translate(480 180)"><circle r="30"></circle><text y="6">10</text></g>
-              <g class="demo-block included" transform="translate(480 270)"><circle r="28"></circle><text y="6">11</text></g>
-              <g class="demo-block included" transform="translate(480 350)"><circle r="28"></circle><text y="6">12</text></g>
-              <g class="demo-block selected" transform="translate(640 140)"><circle r="30"></circle><text y="6">13</text></g>
-              <g class="demo-block included" transform="translate(640 315)"><circle r="28"></circle><text y="6">14</text></g>
-              <text class="demo-label" x="76" y="402">Higher block rate only helps if the graph stays bounded and ordered.</text>
-            </g>
-          </svg>
-        </div>
-
-        <aside class="demo-control-panel" aria-label="BlockDAG visual controls">
-          <div>
-            <span class="control-label">Choose the view</span>
-            <div class="segmented-control" role="group" aria-label="Diagram view">
-              <button type="button" data-demo-mode="chain">Single chain</button>
-              <button type="button" data-demo-mode="dag" aria-pressed="true">BlockDAG</button>
-              <button type="button" data-demo-mode="pressure">Higher load</button>
-            </div>
-          </div>
-
-          <div>
-            <span class="control-label">Reader mode</span>
-            <div class="segmented-control compact" role="group" aria-label="Reader level">
-              <button type="button" data-reader-mode="simple" aria-pressed="true">Plain</button>
-              <button type="button" data-reader-mode="bitcoin">Bitcoin user</button>
-              <button type="button" data-reader-mode="builder">Builder</button>
-            </div>
-          </div>
-
-          <div class="demo-explainer">
-            <span id="demo-mode-tag">Kaspa blockDAG</span>
-            <p id="demo-explainer-text">Kaspa's losing blocks still count toward security. GHOSTDAG is the rule that turns the graph into one ordered payment history instead of throwing the losers away.</p>
-          </div>
-
-          <dl class="demo-metrics" aria-label="Teaching model assumptions">
-            <div><dt>Model</dt><dd>Simulated</dd></div>
-            <div><dt>Mainnet</dt><dd>10 BPS era</dd></div>
-            <div><dt>Boundary</dt><dd>Fast inclusion, slower finality</dd></div>
-          </dl>
-        </aside>
-      </div>
+        // The toggle in the site header changes this page's own
+        // document.documentElement.dataset.theme, but that is a separate
+        // document from the one inside the iframe: nothing else pushes the
+        // new value across the boundary. Without this, clicking the header
+        // toggle while this demo is already loaded leaves it stranded in
+        // whatever theme it started in until the next full page load. A
+        // MutationObserver on the parent's own theme attribute is what
+        // actually fires on every toggle, regardless of which control
+        // changed it, so it mirrors the value into the iframe's document
+        // the moment it changes here.
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
@@ -330,77 +249,14 @@
       <p class="live-footnote" id="live-updated">Waiting for live data.</p>
     </section>
 
-    <section class="section status-workbench" aria-labelledby="status-workbench-title">
-      <div>
-        <p class="eyebrow">Status</p>
-        <h2 id="status-workbench-title">Live, testnet, roadmap, research</h2>
-        <p class="lead">Four buckets, each with its own evidence bar. Risk sits underneath all of them.</p>
-      </div>
-      <div class="status-lane-grid grid-cards">
-        <a href="/kaspa-claims-checker"><span>Live</span><strong>10 BPS PoW blockDAG</strong><small>Mining, UTXO ownership, GHOSTDAG, wallets, nodes, explorers.</small></a>
-        <a href="/toccata-status"><span>Testnet</span><strong>TN10/TN12 rehearsal</strong><small>Builder evidence that preceded mainnet activation.</small></a>
-        <a href="/build-on-kaspa"><span>Roadmap</span><strong>Apps that prove rules</strong><small>Richer app state, based apps, later vProgs, shared ordering.</small></a>
-        <a href="/status"><span>Research</span><strong>DAGKnight consensus</strong><small>Parameterless, adaptive ordering. Mainnet runs GHOSTDAG today.</small></a>
-        <a href="/skeptical-case"><span>Risk</span><strong>What's still unproven</strong><small>Liquidity, node cost, mining concentration, fee demand, apps.</small></a>
-      </div>
-    </section>
-
-    <section class="section build-path-console" aria-labelledby="build-path-title">
-      <div>
-        <p class="eyebrow">Build path</p>
-        <h2 id="build-path-title">What can you build now?</h2>
-        <p class="lead">Moving money and verifying receipts are live today. Toccata adds covenant rules and proof-based app primitives on top.</p>
-      </div>
-      <div class="build-path-grid grid-cards">
-        <article>
-          <span>Now</span>
-          <strong>Move and inspect money</strong>
-          <p>Wallets, payments, receipts, exchange flows, mining/node visibility, and better confirmation-risk UX.</p>
-        </article>
-        <article>
-          <span>Now</span>
-          <strong>Verify receipts</strong>
-          <p>Apps can show txid, amount, address, accepted status, source, timestamp, and fallback verification links.</p>
-        </article>
-        <article>
-          <span>Toccata work</span>
-          <strong>Enforce spending rules</strong>
-          <p>Vault limits, delays, escrow, assurance contracts, asset rules, and bounded UTXO state machines are the near-term app surface.</p>
-        </article>
-        <article>
-          <span>Later</span>
-          <strong>Prove richer app logic</strong>
-          <p>Markets, lending, funding rules, attestations, and shared commitments need richer app-state, custody, oracle, and proof paths.</p>
-        </article>
-      </div>
-      <div class="actions">
-        <a class="button primary" href="/build-on-kaspa">Build this now</a>
-      </div>
-      <p class="source-inline">For the full path, open the <a href="/build-on-kaspa">build page</a>.</p>
-    </section>
-
-    <section class="section transaction-path" aria-labelledby="transaction-path-title">
-      <div>
-        <p class="eyebrow">Transaction path</p>
-        <h2 id="transaction-path-title">Wallet to confirmation</h2>
-        <p class="lead">Five steps from signed transaction to a history nodes won't reorganize away.</p>
-      </div>
-      <div class="transaction-rail grid-cards" aria-label="Simplified Kaspa transaction path">
-        <article><span>1</span><strong>Create</strong><p>Wallet prepares inputs, outputs, amount, and fee.</p></article>
-        <article><span>2</span><strong>Broadcast</strong><p>The transaction reaches nodes and miners.</p></article>
-        <article><span>3</span><strong>Mine</strong><p>A miner includes it in a proof-of-work block.</p></article>
-        <article><span>4</span><strong>Order</strong><p>The block joins the DAG and GHOSTDAG orders history.</p></article>
-        <article><span>5</span><strong>Confirm</strong><p>Confidence rises as more accepted work piles on top of it.</p></article>
-      </div>
-    </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/start-here"><span>Next</span><strong>Start with the problem</strong><p>New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
+        <a href="/start-here"><span>Next</span><strong>Start with the problem</strong><p>New to crypto? Start here.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Live, testnet, roadmap, and research, checked today.</p></a>
+        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, and why.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
@@ -435,6 +291,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
@@ -443,65 +300,5 @@
       </nav>
     </div>
   </footer>
-  <script>
-    (function () {
-      const demo = document.getElementById("blockdag-demo");
-      if (!demo) return;
-
-      const statusLabel = document.getElementById("demo-status-label");
-      const modeTag = document.getElementById("demo-mode-tag");
-      const explainer = document.getElementById("demo-explainer-text");
-
-      const labels = {
-        chain: "Single-chain selection",
-        dag: "Kaspa blockDAG",
-        pressure: "Higher load"
-      };
-
-      const copy = {
-        simple: {
-          chain: "A single chain has to pick one branch. When two honest blocks arrive close together, one of them falls out of the record entirely.",
-          dag: "Kaspa's losing blocks still count toward security. GHOSTDAG keeps them in the graph and orders everything into one payment history.",
-      pressure: "A higher block rate only helps if the graph stays bounded and ordered. Those bounds decide how much parallel work becomes usable throughput."
-        },
-        bitcoin: {
-      chain: "Bitcoin keeps one chain dominant and treats competing branches as temporary. That conservative design is exactly what limits how often blocks can appear.",
-          dag: "Kaspa keeps Proof of Work and UTXOs but changes the structure underneath them. Parallel blocks get folded into the record and ordered rather than orphaned as waste.",
-          pressure: "The tradeoff is engineering: block rate, propagation delay, pruning, and ordering depth set the safety boundary. Fast blocks are not a free security upgrade."
-        },
-        builder: {
-          chain: "A linear chain gives applications a simple ordering surface. The constraint shows up the moment users want lower latency or higher activity without leaving Proof of Work.",
-          dag: "The builder surface starts with accepted transactions, payloads, UTXOs, and ordering evidence. App claims still need source, status, and replay boundaries.",
-      pressure: "For apps, high-frequency ordering is only an input, and product claims still need node, SDK, network, endpoint, tx-shape, and failure-class evidence behind them."
-        }
-      };
-
-      const setPressed = (selector, attr, value) => {
-        demo.querySelectorAll(selector).forEach((button) => {
-          button.setAttribute("aria-pressed", String(button.dataset[attr] === value));
-        });
-      };
-
-      const render = () => {
-        const mode = demo.dataset.demoMode || "dag";
-        const reader = demo.dataset.readerMode || "simple";
-        statusLabel.textContent = labels[mode];
-        modeTag.textContent = labels[mode];
-        explainer.textContent = copy[reader][mode];
-        setPressed("[data-demo-mode]", "demoMode", mode);
-        setPressed("[data-reader-mode]", "readerMode", reader);
-      };
-
-      demo.addEventListener("click", (event) => {
-        const modeButton = event.target.closest("button[data-demo-mode]");
-        const readerButton = event.target.closest("button[data-reader-mode]");
-        if (modeButton) demo.dataset.demoMode = modeButton.dataset.demoMode;
-        if (readerButton) demo.dataset.readerMode = readerButton.dataset.readerMode;
-        if (modeButton || readerButton) render();
-      });
-
-      render();
-    })();
-  </script>
 </body>
 </html>

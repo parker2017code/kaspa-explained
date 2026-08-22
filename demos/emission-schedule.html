@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaspa Emission Schedule</title>
+<meta name="description" content="Zoom out to Kaspa's whole supply history, or zoom in around today, and see what the block reward was and how much had been mined at any point.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/emission-schedule">
+<script>
+(function(){
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+})();
+</script>
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#100e0c; --card-bg:#322f2a;
+    --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --cyan:#2997ff; --pink:#ff9f0a;
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --field-bg:#221f1c; --field-line:#4a453d;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --bg:#fbfaf6; --card-bg:#fbfaf6;
+    --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --cyan:#0071e3; --pink:#b25000;
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --field-bg:#ffffff; --field-line:#d2d2d7;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px; line-height:1.5; padding:20px 16px 48px;
+  }
+  .wrap{max-width:720px; margin:0 auto;}
+  .top-row{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  h1{ font-weight:700; letter-spacing:-.014em; line-height:1.2; margin:0 0 6px; font-size:1.3rem; }
+  .lead{ color:var(--muted); font-weight:420; margin:0 0 22px; font-size:1.02rem; max-width:60ch; }
+  .theme-toggle{
+    min-height:44px; min-width:44px; border:0; border-radius:980px; padding:0 14px;
+    background:var(--control-bg); color:var(--text); font-size:.8rem; font-weight:500; cursor:pointer; flex:none;
+  }
+  .theme-toggle:hover{background:var(--control-hover);}
+
+  /* view switch */
+  .view-switch{ display:flex; gap:6px; margin-bottom:16px; }
+  .view-switch button{
+    flex:1; min-height:44px; border:1px solid var(--field-line); border-radius:980px;
+    background:var(--control-bg); color:var(--muted); font:inherit; font-size:.86rem; font-weight:650;
+    cursor:pointer; padding:0 12px;
+  }
+  .view-switch button:hover{ background:var(--control-hover); }
+  .view-switch button[aria-pressed="true"]{ background:var(--green); color:var(--field-bg); border-color:var(--green); }
+
+  /* primary control */
+  .primary-control{ margin-bottom:6px; }
+  .primary-control label{ display:block; font-size:.82rem; color:var(--faint); margin-bottom:6px; }
+  .primary-control .big-readout{ font-size:1.5rem; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+  input[type=range]{
+    width:100%; height:44px; accent-color:var(--green); padding-block:14px;
+  }
+  .marks{ display:flex; justify-content:space-between; font-size:.7rem; color:var(--faint); margin-top:2px; }
+
+  .result-line{ font-size:1.05rem; margin:20px 0 8px; }
+  .result-line b{ color:var(--green); }
+  .supply-line{ font-size:.92rem; color:var(--muted); margin:0 0 20px; }
+  .supply-line b{ color:var(--text); }
+  .tag{
+    display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    padding:1px 6px; border-radius:5px; margin-left:4px; vertical-align:1px;
+  }
+  .tag.measured{ background:color-mix(in srgb, var(--green) 22%, transparent); color:var(--green); }
+  .tag.projected{ background:color-mix(in srgb, var(--pink) 20%, transparent); color:var(--pink); }
+
+  .panel{
+    background:var(--card-bg); border-radius:18px; padding:14px 16px 16px;
+    margin-bottom:16px; box-shadow:var(--shadow-card);
+  }
+  svg{display:block; width:100%; height:auto;}
+
+  .status{
+    display:flex; gap:8px; align-items:center; font-size:.76rem; color:var(--faint);
+    margin: 4px 0 18px;
+  }
+  .status .dot{width:7px; height:7px; border-radius:50%; background:var(--green); flex:none;}
+  .status.offline .dot{background:var(--pink);}
+  .chart-caption{ font-size:.76rem; color:var(--faint); margin:8px 0 0; }
+
+  .live-footer{
+    font-size:1rem; margin:26px 0 6px; padding-top:16px; border-top:1px solid var(--field-line); color:var(--text);
+  }
+  .live-footer b{ color:var(--green); }
+
+  details{
+    background:var(--card-bg); border-radius:14px; padding:10px 14px; margin-top:8px; box-shadow:var(--shadow-card);
+  }
+  summary{cursor:pointer; font-size:.88rem; font-weight:600; color:var(--cyan); list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+"; font-weight:800; margin-right:6px;}
+  details[open] summary::before{content:"\2212";}
+  details p{ color:var(--muted); font-size:.86rem; line-height:1.6; }
+  code{
+    background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; padding:1px 5px; font-size:.85em;
+  }
+  a{color:var(--cyan);}
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+  footer{font-size:.76rem; color:var(--faint); margin-top:18px;}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row">
+    <h1>How fast the new supply shrinks</h1>
+    <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch color theme">Light</button>
+  </div>
+  <p class="lead">Every block pays a little less, in small steps, not a cliff. Zoom out to see Kaspa's whole issuance history, or zoom in to move around today.</p>
+
+  <div class="status" id="statusBar" role="status">
+    <span class="dot"></span>
+    <span id="statusText">Checking the live network&hellip;</span>
+  </div>
+
+  <div class="view-switch" role="group" aria-label="Time range">
+    <button type="button" id="viewToday" aria-pressed="true">Around today</button>
+    <button type="button" id="viewAll" aria-pressed="false">All time, since genesis</button>
+  </div>
+
+  <div class="primary-control">
+    <label for="timeSlider" id="sliderLabel">How far in the future: <span class="big-readout" id="timeReadout">today</span></label>
+    <input type="range" id="timeSlider" min="0" max="120" step="1" value="0" aria-label="Point in time">
+    <div class="marks" id="sliderMarks"><span>today</span><span>1 year</span><span>3 years</span><span>10 years</span></div>
+  </div>
+
+  <p class="result-line" id="resultLine"></p>
+  <p class="supply-line" id="supplyLine"></p>
+
+  <div class="panel">
+    <svg id="curveSvg" viewBox="0 0 700 200" preserveAspectRatio="none" role="img" aria-labelledby="curveTitle">
+      <title id="curveTitle">Block reward over time, a smooth staircase down, no cliff</title>
+    </svg>
+    <p class="chart-caption" id="chartCaption">Each bar is one month. Taller bar means a bigger block reward. The highlighted bar is the month you're looking at above.</p>
+  </div>
+
+  <details>
+    <summary>How this works, and the sources</summary>
+    <p>Kaspa's reward drops by about 5.61% (a factor of 2 to the power of &minus;1/12) roughly every month, forever, on a schedule fixed in the software from day one. There is no single "halving day": every step is the same small size as the one before it, and the trigger is a block counter internal to the network, not the calendar. The counter is called DAA score, the network's own clock.</p>
+    <p>For roughly the first six months after mainnet (Nov 2021), the reward held flat at 500 KAS per block, a bootstrap period, not part of the halving schedule. Verified in rusty-kaspa's <code>consensus/core/src/config/params.rs</code>: <code>pre_deflationary_phase_base_subsidy</code> is 500 KAS, active until <code>deflationary_phase_daa_score</code> 15,519,600. After that, the monthly-halving schedule took over, starting at 440 KAS per block-second, per the <code>SUBSIDY_BY_MONTH_TABLE</code> in <code>consensus/src/processes/coinbase.rs</code>.</p>
+    <p>On 5 May 2025, the Crescendo hard fork moved Kaspa from 1 block per second to 10 (DAA score 110,165,000, per the v1.0.0 release notes). That split the same monthly reward across ten times as many blocks; it did not change how much is issued per month. That's why a reward chart drawn before and after Crescendo looks continuous instead of jumping.</p>
+    <p>The reward right now, the total mined to date, and Kaspa's maximum supply all come from a live read of <code>api.kaspa.org/info/blockdag</code> and <code>api.kaspa.org/info/coinsupply</code>. If that fails, the page falls back to a reading captured 2026&#8209;08&#8209;22: DAA score 519,830,954, reward 2.31 KAS per block, 27.655 billion KAS mined of a 28.704 billion KAS maximum.</p>
+    <p>Exact formula: reward(n) = 23.12465141 &times; 2<sup>&minus;n/12</sup> KAS per second, where n = 0 begins at DAA score 504,909,000 and each step advances the DAA score by 26,298,000 (one month at 10 BPS). Divide by the current blocks-per-second to get KAS per block. Verified against <code>SUBSIDY_BY_MONTH_TABLE</code> and <code>SECONDS_PER_MONTH = 2,629,800</code> in rusty-kaspa's <code>consensus/src/processes/coinbase.rs</code>.</p>
+    <p>Total supply issued before today is a measured figure, not a guess: it's read live from the network. Total supply issued at any point before today that this page's slider lets you visit, and every point after today, is this page's own model of the schedule above, scaled to land on that live reading at today's mark. Treat pre-today figures as close estimates of the real historical curve and post-today figures as projection, not as a network reading, since nothing has mined those blocks yet.</p>
+  </details>
+
+  <p class="live-footer" id="liveFooter" aria-live="polite"></p>
+  <footer>Part of <a href="/kaspa-mining">Kaspa mining</a> on Kaspa Explained.</footer>
+</div>
+
+<script>
+(function(){
+  // ---- Sourced protocol constants (rusty-kaspa, see the details panel above) ----
+  var MONTH_SECONDS = 2629800;              // SECONDS_PER_MONTH, coinbase.rs
+  var DEFLATIONARY_DAA = 15519600;          // deflationary_phase_daa_score, params.rs
+  var PRE_DEFLATIONARY_KAS_PER_SEC = 500;   // pre_deflationary_phase_base_subsidy, params.rs (1 BPS era)
+  var CRESCENDO_DAA = 110165000;            // crescendo activation DAA score, v1.0.0 release notes
+  var DEFLATION_START_KAS_PER_SEC = 440;    // SUBSIDY_BY_MONTH_TABLE[0] / 1e8, coinbase.rs
+  var GENESIS_MS = 1637609671037;           // rusty-kaspa genesis.rs mainnet genesis timestamp
+
+  var T1_MONTHS = DEFLATIONARY_DAA / MONTH_SECONDS;               // ~5.90 months
+  var CRESCENDO_MONTHS = CRESCENDO_DAA / MONTH_SECONDS;           // ~41.9 months
+
+  var FALLBACK_DAA = 519830954;
+  var FALLBACK_CIRCULATING = 27655321539;   // KAS, api.kaspa.org/info/coinsupply, 2026-08-22
+  var FALLBACK_MAX_SUPPLY = 28704035605;    // KAS, api.kaspa.org/info/coinsupply, 2026-08-22
+  var FALLBACK_ASOF = '2026-08-22';
+
+  var maxSupply = FALLBACK_MAX_SUPPLY;
+  var circulatingToday = FALLBACK_CIRCULATING;
+  var calibScale = 1;
+
+  // ---- Core schedule model, expressed as g = months since genesis ----
+  function secondsSinceGenesis(daa) {
+    return daa < CRESCENDO_DAA ? daa : CRESCENDO_DAA + (daa - CRESCENDO_DAA) / 10;
+  }
+  function gFromDaa(daa) { return secondsSinceGenesis(daa) / MONTH_SECONDS; }
+  function bpsAtG(g) { return g < CRESCENDO_MONTHS ? 1 : 10; }
+  function rewardPerSecAtG(g) {
+    if (g < T1_MONTHS) return PRE_DEFLATIONARY_KAS_PER_SEC;
+    return DEFLATION_START_KAS_PER_SEC * Math.pow(2, -(g - T1_MONTHS) / 12);
+  }
+  function rewardPerBlockAtG(g) { return rewardPerSecAtG(g) / bpsAtG(g); }
+  // Closed-form integral of rewardPerSecAtG from 0 to g, in raw (uncalibrated) KAS.
+  function rawCumulativeAtG(g) {
+    if (g <= T1_MONTHS) return PRE_DEFLATIONARY_KAS_PER_SEC * g * MONTH_SECONDS;
+    var base = PRE_DEFLATIONARY_KAS_PER_SEC * T1_MONTHS * MONTH_SECONDS;
+    var u = g - T1_MONTHS;
+    var tail = DEFLATION_START_KAS_PER_SEC * MONTH_SECONDS * (12 / Math.LN2) * (1 - Math.pow(2, -u / 12));
+    return base + tail;
+  }
+  function cumulativeAtG(g) { return rawCumulativeAtG(Math.max(0, g)) * calibScale; }
+  function dateAtG(g) {
+    // The month length used throughout this model is a fixed average (SECONDS_PER_MONTH,
+    // sourced from coinbase.rs), so its calendar-date output drifts a little from the real
+    // calendar over several years. Right at today's real, live-fetched mark, show "today"
+    // instead of the drifted model date; the drift only shows up away from that anchor.
+    if (Math.abs(g - gToday) < 0.5) return 'today';
+    var d = new Date(GENESIS_MS + g * MONTH_SECONDS * 1000);
+    return d.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+  }
+
+  var gToday = gFromDaa(FALLBACK_DAA);
+  var mode = 'today'; // 'today' or 'all'
+  var ALL_MAX_MONTHS = 240; // 20 years since genesis: covers the interesting part of the curve
+
+  function recalibrate() {
+    var raw = rawCumulativeAtG(gToday);
+    calibScale = raw > 0 ? (circulatingToday / raw) : 1;
+  }
+  recalibrate();
+
+  function fmtReward(v) {
+    if (v <= 0) return '0.00';
+    var d = 2;
+    while (d < 6 && parseFloat(v.toFixed(d)) === 0) d++;
+    return v.toFixed(d);
+  }
+  function fmtBillions(kas) { return (kas / 1e9).toFixed(2); }
+  function fmtPct(kas) { return Math.min(100, (kas / maxSupply) * 100).toFixed(1); }
+
+  function humanMonths(m){
+    if (m === 0) return 'today';
+    if (m < 12) return m === 1 ? '1 month from now' : (m + ' months from now');
+    var years = m / 12;
+    if (Math.abs(years - Math.round(years)) < 0.05) {
+      var yr = Math.round(years);
+      return yr === 1 ? '1 year from now' : (yr + ' years from now');
+    }
+    return years.toFixed(1) + ' years from now';
+  }
+  function yearsSinceGenesis(g) {
+    var y = g / 12;
+    return y.toFixed(1);
+  }
+
+  function paintCurve(gCenter, gMin, gMax) {
+    var svg = document.getElementById('curveSvg');
+    var W = 700, H = 200, pad = 10;
+    var count = Math.round(gMax - gMin) + 1;
+    var barW = (W - pad * 2) / count;
+    var maxR = rewardPerBlockAtG(gMin), minR = rewardPerBlockAtG(gMax);
+    if (maxR === minR) { maxR = minR + 0.0001; }
+    var bars = [];
+    for (var i = 0; i < count; i++) {
+      var g = gMin + i;
+      var r = rewardPerBlockAtG(g);
+      var h = (r - minR) / (maxR - minR) * (H - 30) + 10;
+      var x = pad + i * barW;
+      var y = H - h;
+      var isCurrent = Math.round(g) === Math.round(gCenter);
+      var isFuture = g > gToday + 0.5;
+      var fill = isCurrent ? 'var(--green)' : 'var(--cyan)';
+      var opacity = isCurrent ? 1 : (isFuture ? 0.28 : 0.55);
+      bars.push('<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(1,barW-1).toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+fill+'" opacity="'+opacity+'" style="transition:opacity .2s ease"></rect>');
+    }
+    var markup = '<title>Block reward over time, a smooth staircase down, no cliff</title>' + bars.join('');
+    if (mode === 'all' && gToday > gMin && gToday < gMax) {
+      var todayX = pad + (gToday - gMin) * barW;
+      markup += '<line x1="'+todayX.toFixed(1)+'" x2="'+todayX.toFixed(1)+'" y1="0" y2="'+H+'" stroke="var(--faint)" stroke-width="1" stroke-dasharray="3 3"></line>';
+      markup += '<text x="'+(todayX+4).toFixed(1)+'" y="12" font-size="10" fill="var(--faint)">today</text>';
+    }
+    svg.innerHTML = markup;
+  }
+
+  function render(){
+    var slider = document.getElementById('timeSlider');
+    var val = parseInt(slider.value, 10);
+    var g, gMin, gMax;
+
+    if (mode === 'today') {
+      g = gToday + val;
+      gMin = gToday; gMax = gToday + 120;
+      document.getElementById('timeReadout').textContent = humanMonths(val);
+    } else {
+      g = val;
+      gMin = 0; gMax = ALL_MAX_MONTHS;
+      document.getElementById('timeReadout').textContent = (g < 0.05 ? 'genesis' : (yearsSinceGenesis(g) + ' years since genesis'));
+    }
+
+    var reward = rewardPerBlockAtG(g);
+    var supply = cumulativeAtG(g);
+    var pct = fmtPct(supply);
+    var isFuture = g > gToday + 0.02;
+    var tag = isFuture ? '<span class="tag projected">Projected</span>' : '<span class="tag measured">Measured</span>';
+
+    var line;
+    if (!isFuture && mode === 'today' && val === 0) {
+      line = 'Right now each block pays <b>' + fmtReward(reward) + ' KAS</b>.';
+    } else if (mode === 'today') {
+      var pctLess = (1 - reward / rewardPerBlockAtG(gToday)) * 100;
+      line = humanMonths(val).replace(/^./, function(c){return c.toUpperCase();}) +
+        ' (around ' + dateAtG(g) + '), each block pays about <b>' + fmtReward(reward) + ' KAS</b>, ' +
+        Math.max(0, pctLess).toFixed(pctLess < 100 && pctLess >= 0 ? 2 : 0) + '% less than today.';
+    } else {
+      line = (g < 0.05 ? 'At genesis' : ('On ' + dateAtG(g))) + ', each block ' + (isFuture ? 'will pay' : 'paid') +
+        ' about <b>' + fmtReward(reward) + ' KAS</b>. ' + tag;
+    }
+    document.getElementById('resultLine').innerHTML = line;
+
+    document.getElementById('supplyLine').innerHTML =
+      'By ' + (g < 0.05 ? 'genesis' : dateAtG(g)) + ', about <b>' + fmtBillions(supply) + ' billion KAS</b> ' +
+      (isFuture ? 'will have been' : 'had been') + ' issued, roughly <b>' + pct + '%</b> of the ' +
+      fmtBillions(maxSupply) + ' billion KAS maximum. ' + tag;
+
+    document.getElementById('liveFooter').innerHTML =
+      (mode === 'all'
+        ? 'You just moved to ' + (g < 0.05 ? 'genesis' : (yearsSinceGenesis(g) + ' years after genesis')) + ': the reward was about <b>' + fmtReward(reward) + ' KAS</b> per block, with about <b>' + pct + '%</b> of all Kaspa issued by then.'
+        : 'You just set the clock to ' + humanMonths(val) + ': the reward would be about <b>' + fmtReward(reward) + ' KAS</b> per block, ' + pct + '% of all Kaspa issued by then.');
+
+    paintCurve(g, gMin, gMax);
+  }
+
+  function setStatus(ok, text){
+    var bar = document.getElementById('statusBar');
+    bar.classList.toggle('offline', !ok);
+    document.getElementById('statusText').textContent = text;
+  }
+
+  function fetchLive(){
+    if (!('fetch' in window)){
+      setStatus(false, 'No network access. Showing a reading from ' + FALLBACK_ASOF + '.');
+      return;
+    }
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    var timeout = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 6000);
+    Promise.all([
+      fetch('https://api.kaspa.org/info/blockdag', ctrl ? {signal: ctrl.signal} : {}).then(function(r){ return r.json(); }),
+      fetch('https://api.kaspa.org/info/coinsupply', ctrl ? {signal: ctrl.signal} : {}).then(function(r){ return r.json(); })
+    ]).then(function(results){
+      clearTimeout(timeout);
+      var blockdag = results[0], supply = results[1];
+      var daa = parseInt(blockdag.virtualDaaScore, 10);
+      if (!isNaN(daa)) { gToday = gFromDaa(daa); }
+      var circ = parseFloat(supply.circulatingSupply) / 1e8;
+      var max = parseFloat(supply.maxSupply) / 1e8;
+      if (!isNaN(circ) && circ > 0) circulatingToday = circ;
+      if (!isNaN(max) && max > 0) maxSupply = max;
+      recalibrate();
+      setStatus(true, 'Reading live from the network.');
+      render();
+    }).catch(function(){
+      clearTimeout(timeout);
+      setStatus(false, 'Network unreachable. Showing a reading from ' + FALLBACK_ASOF + '.');
+    });
+  }
+
+  function setMode(next) {
+    mode = next;
+    var slider = document.getElementById('timeSlider');
+    var today = document.getElementById('viewToday');
+    var all = document.getElementById('viewAll');
+    today.setAttribute('aria-pressed', String(mode === 'today'));
+    all.setAttribute('aria-pressed', String(mode === 'all'));
+    if (mode === 'today') {
+      slider.min = 0; slider.max = 120; slider.value = 0;
+      document.getElementById('sliderLabel').firstChild.textContent = 'How far in the future: ';
+      document.getElementById('sliderMarks').innerHTML = '<span>today</span><span>1 year</span><span>3 years</span><span>10 years</span>';
+      document.getElementById('chartCaption').textContent = 'Each bar is one month from today. Taller bar means a bigger block reward. The highlighted bar is the month you\'re looking at above.';
+    } else {
+      slider.min = 0; slider.max = ALL_MAX_MONTHS; slider.value = Math.round(gToday);
+      document.getElementById('sliderLabel').firstChild.textContent = 'Point in Kaspa\'s history: ';
+      document.getElementById('sliderMarks').innerHTML = '<span>genesis</span><span>' + Math.round(gToday/12) + ' yrs (today)</span><span>' + Math.round(ALL_MAX_MONTHS/12) + ' yrs</span>';
+      document.getElementById('chartCaption').textContent = 'Each bar is one month since genesis. Solid bars are mined history; faint bars past the "today" line are projection, not a network reading.';
+    }
+    render();
+  }
+
+  document.getElementById('timeSlider').addEventListener('input', render);
+  document.getElementById('viewToday').addEventListener('click', function(){ setMode('today'); });
+  document.getElementById('viewAll').addEventListener('click', function(){ setMode('all'); });
+
+  (function initThemeToggle(){
+    var key = "kaspa-explained-theme";
+    var btn = document.getElementById('theme-toggle');
+    function sync(){
+      btn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+    }
+    sync();
+    btn.addEventListener('click', function(){
+      var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem(key, next); } catch (e) {}
+      sync();
+    });
+  })();
+
+  render();
+  fetchLive();
+})();
+</script>
+</body>
+</html>

@@ -29,6 +29,10 @@ from pathlib import Path
 
 manifest = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 allowed = {"/" if page == "index.html" else f"/{page.removesuffix('.html')}" for page in manifest["pages"]}
+# Demos live in their own directory and are registered via sitemapExtraFiles
+# rather than the pages array, so allow their index and their individual URLs.
+allowed |= {"/demos"}
+allowed |= {f"/{f.removesuffix('.html')}" for f in manifest.get("sitemapExtraFiles", []) if f.startswith("demos/")}
 links = []
 for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
     href, _label = line.split("|", 1)

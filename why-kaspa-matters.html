@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Kaspa Design Case | Kaspa Explained</title>
   <meta name="description" content="What Kaspa is trying to be: money nobody can quietly change the rules on, that still settles fast.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -63,8 +73,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -81,6 +91,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -91,12 +102,15 @@
   <main id="top" tabindex="-1" class="why-page">
     <section class="why-hero section">
       <h1>Kaspa's design case</h1>
-      <p class="lead">Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet is that Bitcoin-style <a href="/glossary#proof-of-work">Proof-of-Work</a> security and censorship resistance can run closer to real time without giving up either one.</p>
+      <div class="answer-block">
+        <p class="eyebrow">Answer</p>
+        <p>Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet is that Bitcoin-style <a href="/glossary#proof-of-work">Proof-of-Work</a> security and censorship resistance can run closer to real time without giving up either one.</p>
+      </div>
     </section>
 
     <section id="kaspa-jobs" class="section">
       <h2>Start with the job</h2>
-      <p>Five jobs, and Kaspa is at a different stage on each one.</p>
+      <p>Five jobs, Kaspa at a different stage on each.</p>
       <div class="table-wrap mini-preview">
         <table class="reality-table">
           <thead>
@@ -110,7 +124,13 @@
             <tr><td>Self-custodied money</td><td>Fair-launched Proof-of-Work UTXO asset with direct wallet control.</td><td>Live</td></tr>
             <tr><td>Fast payment feel</td><td>10 BPS blockDAG gets a payment into a block faster than slow PoW chains.</td><td>Live, with confirmation tradeoffs</td></tr>
             <tr><td>One shared record</td><td>GHOSTDAG orders parallel honest blocks in a DAG.</td><td>Live</td></tr>
-            <tr><td>Assets with rules</td><td>Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork into L1.</td><td>Covenant rules live on L1; wallet and app evidence next</td></tr>
+            <tr><td>Assets with rules</td><td>Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork into L1.</td><td>
+              Covenant rules live on L1; wallet and app evidence next
+              <details class="cell-detail">
+                <summary>Why "evidence next"</summary>
+                <p>Covenant rules run in consensus today. Wallets and developer tooling have not caught up yet, so builder evidence is what to watch next. See Programmability, below, for what builders get today.</p>
+              </details>
+            </td></tr>
             <tr><td>Group commitments</td><td>Base RTD today. RTD-derived attestations, oracles, and TangVM come later.</td><td>Base idea live; app systems still future work</td></tr>
           </tbody>
         </table>
@@ -121,7 +141,8 @@
       <p class="eyebrow">Six families</p>
       <h2>What the other networks are already good at</h2>
       <p>Sort a ranking page by market cap and BTC, ETH, USDT, DOGE, and the week's meme token all land in one column, as though they were the same kind of thing. They were never chasing the same job.</p>
-      <p>Bitcoin has the longest track record as a store of value. Ethereum has the deepest pool of smart contracts. Solana has the most polished fast-app feel. Kaspa leads on none of the three today. A paragraph can't rank them honestly. That's a tool's job: the <a href="/chain-comparer">chain comparer</a> scores twenty layer ones on fields measured the same day and reorders as the dials move.</p>
+      <p>Bitcoin has the longest track record as a store of value. Ethereum has the deepest pool of smart contracts. Solana has the most polished fast-app feel. Kaspa leads on none of the three today.</p>
+      <p>A paragraph can't rank them honestly. That's a tool's job: the <a href="/chain-comparer">chain comparer</a> scores twenty layer ones on fields measured the same day and reorders as the dials move.</p>
       <div class="reference-grid grid-cards">
         <article>
           <h3>Hard money: Bitcoin</h3>
@@ -177,7 +198,8 @@
           </tbody>
         </table>
       </div>
-      <p>Visa settles fast because nobody outside Visa has to check its work. Banks, contracts, one company's servers, and a fraud team do it, and that company can undo errors, block users, and change the rules at will. A public chain asks thousands of strangers to check the same rules, with no one in charge, so independent nodes can throw out bad history without asking anyone. That is the slow part. The app layer can be Visa-fast; a base layer anyone can check cannot.</p>
+      <p>Visa settles fast because nobody outside Visa has to check its work. Banks, contracts, one company's servers, and a fraud team do it, and that company can undo errors, block users, and change the rules at will.</p>
+      <p>A public chain asks thousands of strangers to check the same rules, with no one in charge, so independent nodes can throw out bad history without asking anyone. That is the slow part. The app layer can be Visa-fast; a base layer anyone can check cannot.</p>
       <p>Concentration arrives by a different door in each model. ASIC cost gathers around whoever has the capital, the cheap power, and the chips. Proof of stake skips the hardware, so holding the token buys the say instead.</p>
       <p>Every one of those costs still lands on Kaspa. The bet it makes against them is narrow, and it starts with keeping the blocks that lose the race.</p>
     </section>
@@ -186,7 +208,8 @@
       <h2>Kaspa focuses on latency</h2>
       <p>Bitcoin proved strangers can agree on scarce digital money with nobody in charge. It pays for that with a slow block interval, picked partly because network lag has to stay small next to block production. Every Nakamoto-style system carries that tradeoff by design.</p>
       <p>Kaspa comes out of the research line asking whether mining work that a single chain throws away as a collision can count toward consensus instead.</p>
-      <p>The goal has a name. <a href="/glossary#rtd">RTD</a>, Real-Time Decentralization, is Hashdag's term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack. Blue work is what makes it measurable, letting nodes compare total work across a graph instead of a single chain.</p>
+      <p>The goal has a name. <a href="/glossary#rtd">RTD</a>, Real-Time Decentralization, is Hashdag's term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack.</p>
+      <p>Blue work is what makes it measurable, letting nodes compare total work across a graph instead of a single chain.</p>
       <div class="concept-diagram dag-concept" role="img" aria-label="Parallel blocks reference earlier blocks and are ordered by GHOSTDAG">
         <svg viewBox="0 0 760 260" aria-hidden="true">
           <path class="diagram-link" d="M70 130 L190 75 L320 105 L455 70 L610 118"></path>
@@ -206,14 +229,16 @@
         </svg>
         <p><strong>GHOSTDAG does not make every block equal.</strong> It gives nodes a rule for ordering the graph.</p>
       </div>
-      <p>Two more parts keep that graph small enough to check. Storage-mass pricing charges a transaction for the UTXO footprint it leaves behind for good, on top of its raw size. Pruning and bounded anticones cap what a node has to hold and how far the parallel edges can spread, which is what lets an ordinary machine keep up with a fast proof-of-work DAG.</p>
+      <p>Two more parts keep that graph small enough to check. Storage-mass pricing charges a transaction for the UTXO footprint it leaves behind for good, on top of its raw size.</p>
+      <p>Pruning and bounded anticones cap what a node has to hold and how far the parallel edges can spread, which is what lets an ordinary machine keep up with a fast proof-of-work DAG.</p>
       <p>Hashdag's writing points that speed at shared commitments. Price charts aren't the target. The simplest version is Kickstarter-like funding, where money moves only if enough people commit and a public rule holds the threshold instead of a company that can wave it away.</p>
     </section>
 
     <section class="section prose-section">
       <h2>Inclusion and confirmation are separate claims</h2>
       <p>Any fast block-producing system can get a transaction into a block quickly. That's inclusion. It says nothing about confirmation: how fast the network gives strong confidence the transaction won't reverse. Mixing the two up is the most common way "fast blockchain" claims mislead.</p>
-      <p>Proof of Stake usually gets fast finality by quickly counting votes from staked validators, which ties confirmation speed to how well those validators coordinate and how the stake is spread. On Solana a stake-weighted schedule picks which validator leads each slot and puts the transactions in order. Push decentralization further and that job gets harder, which often drives the system toward committees or other sampling shortcuts.</p>
+      <p>Proof of Stake usually gets fast finality by quickly counting votes from staked validators, which ties confirmation speed to how well those validators coordinate and how the stake is spread.</p>
+      <p>On Solana a stake-weighted schedule picks which validator leads each slot and puts the transactions in order. Push decentralization further and that job gets harder, which often drives the system toward committees or other sampling shortcuts.</p>
       <p>Proof of Work samples security a different way. A block is proof the finder beat the rest of the network's hash power for that round, so the protocol never has to poll most of the miners before it confirms anything. Block speed and miner headcount come apart.</p>
       <p>The two models also split on cost. Proof of Work brings outside cost into consensus, in power bills and hardware. Proof of Stake backs the ledger with token ownership inside the system instead. That gap changes who can censor, how new coins are issued, and what an attack costs.</p>
       <p>"10 BPS" by itself is not the claim. K, finality depth, and merge depth all scale with the block rate, and they are what keep high block production from turning into runaway parallelism.</p>
@@ -225,25 +250,35 @@
         <div class="quad-cell sol"><strong>Solana</strong> <span>fast UX, stake-vote finality</span></div>
         <div class="axis x-axis">faster inclusion</div>
       </div>
+      <p>The <a href="/demos/confirmation-risk">confirmation risk</a> demo shows reversal odds fall as blue work stacks up, the mechanism behind Kaspa's quadrant position above.</p>
     </section>
 
     <section id="kaspa-apps" class="section">
       <h2>Programmability, by status</h2>
-      <p>Kaspa's app-layer path runs through Toccata, spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, and vProgs groundwork. Toccata activated at DAA score 474,165,565 on Rusty Kaspa v2.0.1, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 outlook explains why the original May 5 target moved. The covenant rules are live on L1; wallet support, tooling, and app usage are the next evidence to watch.</p>
-      <p>The mechanism is that money can carry a rule forward. Transaction introspection, covenant IDs, sequencing commitments, and proof checks do that work in consensus itself, so a covenant-style app runs as a controlled UTXO state machine, never a global account VM. Apps prove the richer logic around it. vProgs are a Kaspa-native verifiable-program design with their own proving and settlement assumptions, so calling them rollups brings in the wrong ones.</p>
+      <p>Kaspa's app-layer path runs through Toccata, spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, and vProgs groundwork. Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 outlook explains why the original May 5 target moved.</p>
+      <p>The covenant rules are live on L1; wallet support, tooling, and app usage are the next evidence to watch.</p>
+      <p>The mechanism is that money can carry a rule forward. Transaction introspection, covenant IDs, sequencing commitments, and proof checks do that work in consensus itself, so a covenant-style app runs as a controlled UTXO state machine, never a global account VM.</p>
+      <p>Apps prove the richer logic around it. vProgs are a Kaspa-native verifiable-program design with their own proving and settlement assumptions, so calling them rollups brings in the wrong ones.</p>
       <p>Builders get three things today and should say which one the product needs.</p>
       <div class="reference-grid grid-cards">
         <article><h3>Fast PoW payment feel</h3><p>Payments, receipts, and node reads run on the live network now.</p></article>
         <article><h3>UTXO rule design</h3><p>Vault, escrow, and asset rules map onto limited outputs now that Toccata is activated. Wallets and dev tools have not caught up, so the first builds bring their own.</p></article>
         <article><h3>Shared sequencing thesis</h3><p>Based apps take their order from Kaspa and prove results back to it, with no sequencer of their own. That is roadmap work, and "live" waits on wallet, tooling, and transaction evidence.</p></article>
       </div>
-      <p>Naming a category is not shipping one. On Ethereum, "lending" means audited contracts, oracle feeds, and liquidation logic that have taken years of attack, so a Kaspa version needs its own custody model, oracle terms, liquidity, and proof that what it claims is really accepted on-chain. Kaspa brings no built-in liquidity or distribution either; a founder has to bring that plan. "Kaspa is fast" tells a reader nothing. "The vault needs a spend cap the protocol enforces" tells them why the network was picked.</p>
+      <details class="deep-dive">
+        <summary>What shipping a category actually takes</summary>
+        <p>Naming a category is not shipping one. On Ethereum, "lending" means audited contracts, oracle feeds, and liquidation logic that have taken years of attack, so a Kaspa version needs its own custody model, oracle terms, liquidity, and proof that what it claims is really accepted on-chain. Kaspa brings no built-in liquidity or distribution; a founder brings that plan.</p>
+      </details>
+      <p>"Kaspa is fast" tells a reader nothing. "The vault needs a spend cap the protocol enforces" tells them why the network was picked.</p>
     </section>
 
     <section class="section">
       <h2>Current boundaries and execution risk</h2>
-      <p>The work sorts by how far along it is. Toccata's covenant rules are live on L1, though Kaspa-native DeFi built on top of them is still roadmap. DAGKnight is a research and upgrade track, vProgs are roadmap design, and RTD-derived oracle, TangVM, and attestation flows are app-level builds over basic Kaspa parts. Coordination markets stay a research direction until shipped products and repeat use exist.</p>
-      <p>Design is not adoption. On the network side, the case weakens if node costs rise too far at higher BPS, or if falling emissions aren't made up by real fee demand. On the app side, it weakens if Toccata's live rules fail to draw apps people use, or if bridge and oracle systems add trusted choke points that undercut the whole point. Rivals can also win users just by being good enough for the job, which is why the design claim only counts once it turns into wallets, exchanges, apps, and liquidity people use.</p>
+      <p>The work sorts by how far along it is. Toccata's covenant rules are live on L1, though Kaspa-native DeFi built on top of them is still roadmap. DAGKnight is a research and upgrade track, vProgs are roadmap design, and RTD-derived oracle, TangVM, and attestation flows are app-level builds over basic Kaspa parts.</p>
+      <p>Coordination markets stay a research direction until shipped products and repeat use exist.</p>
+      <p>Design is not adoption. On the network side, the case weakens if node costs rise too far at higher BPS, or if falling emissions aren't made up by real fee demand.</p>
+      <p>On the app side, it weakens if Toccata's live rules fail to draw apps people use, or if bridge and oracle systems add trusted choke points that undercut the whole point.</p>
+      <p>Rivals can also win users just by being good enough for the job, which is why the design claim only counts once it turns into wallets, exchanges, apps, and liquidity people use.</p>
     </section>
 
     <section id="kaspa-tests" class="section">
@@ -262,8 +297,10 @@
         <span>What part of the system is actually centralized?</span>
         <span>What is the specific failure mode?</span>
       </div>
-      <p>Two answers do most of the sorting. If removing the token stops the network, it is a necessary native asset; if an existing coin or an ordinary database could run the same product, the token is decoration. And market cap is the number most often misread: price multiplied by circulating supply measures neither revenue nor capital invested nor how much could be sold without crashing the price. A market cap that looks small next to a much larger FDV is a dilution warning.</p>
-      <p>KAS clears the token-necessity question more easily than most app tokens do: it is the asset a PoW UTXO blockDAG network tracks, charges fees in, and pays out as the mining reward. Liquidity, security budget, mining concentration, node requirements, and app-layer execution are all still open, and the questions above are where a reader works through them. But remove KAS and there is no network left underneath it, and the fair launch leaves no insider allocation to discount for.</p>
+      <p>Two answers do most of the sorting. If removing the token stops the network, it is a necessary native asset; if an existing coin or an ordinary database could run the same product, the token is decoration.</p>
+      <p>And market cap is the number most often misread: price multiplied by circulating supply measures neither revenue nor capital invested nor how much could be sold without crashing the price. A market cap that looks small next to a much larger FDV is a dilution warning.</p>
+      <p>KAS clears the token-necessity question more easily than most app tokens do. It is the asset a PoW UTXO blockDAG network tracks, charges fees in, and pays out as the mining reward. Liquidity, security budget, mining concentration, node requirements, and app-layer execution all stay open. The questions above are where a reader works through them.</p>
+      <p>But remove KAS and there is no network left underneath it, and the fair launch leaves no insider allocation to discount for.</p>
     </section>
 
     <section class="section">
@@ -321,6 +358,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

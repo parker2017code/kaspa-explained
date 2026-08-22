@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mass Calculator, What's Kaspa's TPS?</title>
+<meta name="description" content="Pick a transaction shape and see which mass dimension actually gets charged.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/mass-calculator">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c;
+    --bg-2: #1c1a17;
+    --panel: #1c1a17;
+    --panel-strong: #221f1c;
+    --card-bg: #322f2a;
+    --line: #4a453d;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --green: #66d1c1;
+    --cyan: #2997ff;
+    --purple: #bf5af2;
+    --pink: #ff9f0a;
+    --ink: #06201b;
+    --accent-soft: rgba(102, 209, 193, .12);
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6;
+    --bg-2: #f3f0ea;
+    --panel: #f3f0ea;
+    --panel-strong: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line: #d8d4cb;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --green: #0e7c6b;
+    --cyan: #0071e3;
+    --purple: #6e56cf;
+    --pink: #b25000;
+    --ink: #ffffff;
+    --accent-soft: rgba(14, 124, 107, .1);
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px 16px 56px;
+  }
+  .demo-topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .theme-toggle {
+    flex: none;
+    min-height: 44px;
+    min-width: 44px;
+    border: 0;
+    border-radius: 980px;
+    padding: 0 14px;
+    background: var(--control-bg);
+    color: var(--text);
+    font-size: .8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 { font-size: 1.35rem; margin: 0 0 6px; }
+  p.intro { color: var(--muted); max-width: 68ch; margin: 0 0 18px; }
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .reset-btn {
+    margin-left: 4px;
+    min-height: 34px;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: .85rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { color: var(--text); }
+  .presets button {
+    min-height: 44px;
+    background: var(--control-bg);
+    border: 0;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: .85rem;
+    cursor: pointer;
+  }
+  .presets button:hover { background: var(--control-hover); }
+  .presets button[aria-pressed="true"] {
+    background: var(--accent-soft);
+    color: var(--green);
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: var(--card-bg);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 16px;
+  }
+  .panel h2 {
+    font-size: .95rem;
+    margin: 0 0 14px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .field label b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .field input[type=range] { width: 100%; height: 44px; accent-color: var(--green); }
+  .field input[type=number] {
+    width: 100%;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+  }
+  .radios {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .radios label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .85rem;
+    color: var(--text);
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .radios input { accent-color: var(--green); }
+  .budget-field { margin-top: 10px; }
+  .budget-field[hidden] { display: none; }
+
+  .bar-row { margin-bottom: 16px; }
+  .bar-row:last-of-type { margin-bottom: 10px; }
+  .bar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: .85rem;
+    margin-bottom: 5px;
+  }
+  .bar-head .name { color: var(--text); font-weight: 600; }
+  .bar-head .nums { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .8rem; }
+  .bar-track {
+    position: relative;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 8px 0 0 8px;
+    background: var(--green);
+    transition: width .15s ease;
+  }
+  .bar-row.binding .bar-fill { background: var(--pink); }
+  .bar-row.binding .bar-head .name { color: var(--pink); }
+  .binding-tag { font-weight: 400; color: var(--pink); }
+  .binding-tag[hidden] { display: none; }
+
+  .result {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .result .big {
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--cyan);
+  }
+  .result .label { color: var(--faint); font-size: .82rem; }
+  .result .sub { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+
+  details {
+    margin-top: 24px;
+    background: var(--card-bg);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+  details[open] summary::before { content: "\2212"; }
+  details .formula-body { margin-top: 12px; color: var(--muted); font-size: .88rem; }
+  details .formula-body h3 { font-size: .85rem; color: var(--faint); margin: 16px 0 4px; text-transform: uppercase; letter-spacing: .03em; }
+  details .formula-body h3:first-child { margin-top: 0; }
+  code, .code-block {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .85rem;
+  }
+  .code-block {
+    display: block;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px 0 8px;
+    color: var(--muted);
+    white-space: pre-wrap;
+  }
+  .sources { color: var(--faint); font-size: .78rem; margin-top: 24px; }
+  .sources a { color: var(--faint); }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="demo-topbar">
+    <h1>What's Kaspa's TPS? It depends what you're sending.</h1>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">Light</button>
+  </div>
+  <p class="intro">
+    Kaspa doesn't charge by byte count alone. Every transaction is measured on three limits,
+    compute, storage, and transient (proof data), and charged by whichever is largest, never
+    the sum. Build one below and see which limit binds.
+  </p>
+
+  <div class="presets" role="group" aria-label="Transaction presets">
+    <button type="button" data-preset="plain" aria-pressed="true">Plain 1-in 1-out payment</button>
+    <button type="button" data-preset="change">1-in 2-out with change</button>
+    <button type="button" data-preset="covenant">Covenant transaction</button>
+    <button type="button" data-preset="proof">ZK proof transaction</button>
+    <button type="button" class="reset-btn" id="resetBtn">Reset</button>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Build the transaction</h2>
+
+      <div class="field">
+        <label for="inputs">Inputs <b id="inputsVal">1</b></label>
+        <input type="range" id="inputs" min="1" max="10" step="1" value="1">
+      </div>
+
+      <div class="field">
+        <label for="outputs">Outputs <b id="outputsVal">1</b></label>
+        <input type="range" id="outputs" min="1" max="10" step="1" value="1">
+      </div>
+
+      <div class="field">
+        <label for="amount">Amount per output (KAS) <b id="amountVal">1,000</b></label>
+        <input type="range" id="amount" min="0" max="6" step="0.02" value="3">
+      </div>
+
+      <div class="field">
+        <label for="payload">Payload / proof bytes <b id="payloadVal">0</b></label>
+        <input type="range" id="payload" min="0" max="25000" step="50" value="0">
+      </div>
+
+      <div class="field">
+        <span style="display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;">Script per input</span>
+        <div class="radios">
+          <label><input type="radio" name="scriptType" value="simple" checked> Simple signature (1 signature check)</label>
+          <label><input type="radio" name="scriptType" value="covenant"> Covenant / compute budget</label>
+        </div>
+        <div class="budget-field field" id="budgetField" hidden>
+          <label for="budget">Compute budget units per input <b id="budgetVal">50</b></label>
+          <input type="range" id="budget" min="1" max="500" step="1" value="50">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Mass, per block limit</h2>
+
+      <div class="bar-row" id="computeRow">
+        <div class="bar-head">
+          <span class="name">Compute mass <span class="binding-tag" id="computeTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="computeMass">0</span> / 500,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="computeFill" role="meter" aria-label="Compute mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="bar-row" id="storageRow">
+        <div class="bar-head">
+          <span class="name">Storage mass <span class="binding-tag" id="storageTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="storageMass">0</span> / 500,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="storageFill" role="meter" aria-label="Storage mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="bar-row" id="transientRow">
+        <div class="bar-head">
+          <span class="name">Transient mass <span class="binding-tag" id="transientTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="transientMass">0</span> / 1,000,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="transientFill" role="meter" aria-label="Transient mass against its 1,000,000 block limit" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="result">
+        <div><span class="big" id="tpsOut">0</span> <span class="label">TPS at 10 blocks/second</span></div>
+        <div class="sub"><span id="tpbOut">0</span> transactions of this shape fit per block, on the dimension that binds.</div>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show the mass formulas</summary>
+    <div class="formula-body">
+      <h3>Transaction size</h3>
+      <span class="code-block">size = 94 (fixed header: version, in/out counts, locktime,
+subnetwork id, gas, payload hash, payload length)
+     + payload_bytes
+     + inputs × (118 fixed bytes: outpoint 36, sig-script length field 8,
+                 signature script ~66, sequence 8; +2 if covenant/v1)
+     + outputs × (52 fixed bytes (value 8, version 2, script-length field 8,
+                 P2PK-style script 34)
+                 + 34 per output, if that output carries a covenant id)</span>
+
+      <h3>Compute mass</h3>
+      <span class="code-block">compute_mass = size × mass_per_tx_byte (1)
+             + Σ(2 + output_script_len) × mass_per_script_pub_key_byte (10)
+             + script_mass
+
+script_mass = inputs × 1 sigop × GRAMS_PER_SIGOP_COUNT_UNIT (1000)      [simple]
+            = inputs × compute_budget_units × GRAMS_PER_COMPUTE_BUDGET_UNIT (100)  [covenant]</span>
+
+      <h3>Transient mass</h3>
+      <span class="code-block">transient_mass = size × TRANSIENT_BYTE_TO_MASS_FACTOR (4)</span>
+
+      <h3>Storage mass (KIP-0009)</h3>
+      <span class="code-block">C = STORAGE_MASS_PARAMETER (1,000,000,000,000)
+utxo_plurality(output) = ceil((63 + script_bytes + 32 if covenant else 0) / 100)
+     A P2PK-style output (script 34) has plurality 1. A covenant-carrying
+     output (63 + 34 + 32 = 129 bytes) crosses the 100-byte unit and has
+     plurality 2, which squares its weight below.
+storage_mass = max(0, outputs × plurality² × C / out_amount_sompi
+                    − inputs × C / in_amount_sompi)
+in_amount_sompi assumes no fee: total out value split evenly across inputs.</span>
+
+      <h3>Which dimension binds</h3>
+      <span class="code-block">Compute and storage share a 500,000 block-mass limit; transient's
+limit is 1,000,000, so it is normalized to the same scale before
+comparison: transient_norm = transient_mass × 500,000/1,000,000.
+tx_mass = max(compute_mass, storage_mass, transient_norm)
+tx_per_block = floor(500,000 / tx_mass)
+TPS = tx_per_block × 10 blocks/second</span>
+
+      <p style="margin-top:10px;">
+        This models a standard Schnorr P2PK-style input/output shape and assumes value is
+        conserved with no fee. Real network TPS is lower once relay policy, fee markets, and
+        mempool behavior are added on top of this pure mass ceiling.
+      </p>
+    </div>
+  </details>
+
+  <p class="sources">
+    Formulas verified against
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">core constants</a>.
+    Offline calculator, no network requests.
+  </p>
+</main>
+
+<script>
+(function () {
+  var themeKey = "kaspa-explained-theme";
+  var savedTheme = null;
+  try { savedTheme = localStorage.getItem(themeKey); } catch (e) {}
+  document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncThemeBtn() {
+    themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  }
+  syncThemeBtn();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(themeKey, next); } catch (e) {}
+    syncThemeBtn();
+  });
+})();
+
+(function(){
+  // --- constants, sourced from rusty-kaspa consensus/core/src/{mass/mod.rs,config/params.rs,constants.rs} ---
+  var MASS_PER_TX_BYTE = 1;
+  var MASS_PER_SCRIPT_PUBKEY_BYTE = 10;
+  var GRAMS_PER_SIGOP_COUNT_UNIT = 1000;
+  var GRAMS_PER_COMPUTE_BUDGET_UNIT = 100;
+  var TRANSIENT_BYTE_TO_MASS_FACTOR = 4;
+  var STORAGE_MASS_PARAMETER = 1e12;
+  var SOMPI_PER_KASPA = 1e8;
+  var HEADER_BYTES = 94; // version 2 + in-count 8 + out-count 8 + locktime 8 + subnetwork 20 + gas 8 + payload-hash 32 + payload-len 8
+  var INPUT_FIXED_BYTES = 118; // outpoint 36 + sigscript-len 8 + sigscript ~66 + sequence 8
+  var OUTPUT_FIXED_BYTES = 52; // value 8 + version 2 + scriptlen 8 + script 34 (P2PK-style)
+  var SCRIPT_PUBKEY_BYTES = 36; // 2 (version) + 34 (script)
+  var COVENANT_EXTRA_BYTES = 34; // 2 authorizing_input + 32 covenant_id, added per covenant-carrying output
+  var COMPUTE_BUDGET_FIELD_BYTES = 2; // per input, v1 transactions
+  var UTXO_CONST_STORAGE = 63; // fixed per-UTXO storage overhead, KIP-9
+  var UTXO_UNIT_SIZE = 100; // bytes per storage-mass "unit" of plurality, KIP-9
+  var COVENANT_ID_BYTES = 32; // hash size added to a covenant-carrying output's plurality calc
+  var BLOCK_COMPUTE_LIMIT = 500000;
+  var BLOCK_STORAGE_LIMIT = 500000;
+  var BLOCK_TRANSIENT_LIMIT = 1000000;
+  var BLOCKS_PER_SECOND = 10;
+
+  var inputsEl = document.getElementById('inputs');
+  var outputsEl = document.getElementById('outputs');
+  var amountEl = document.getElementById('amount');
+  var payloadEl = document.getElementById('payload');
+  var budgetEl = document.getElementById('budget');
+  var budgetField = document.getElementById('budgetField');
+  var scriptRadios = document.getElementsByName('scriptType');
+  var presetButtons = document.querySelectorAll('.presets button');
+
+  function amountKAS() {
+    // log scale 0..6 -> 1 KAS .. 1,000,000 KAS
+    return Math.pow(10, parseFloat(amountEl.value));
+  }
+
+  function currentScriptType() {
+    for (var i = 0; i < scriptRadios.length; i++) if (scriptRadios[i].checked) return scriptRadios[i].value;
+    return 'simple';
+  }
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  function compute() {
+    var inputs = parseInt(inputsEl.value, 10);
+    var outputs = parseInt(outputsEl.value, 10);
+    var outAmountKas = amountKAS();
+    var payloadBytes = parseInt(payloadEl.value, 10);
+    var scriptType = currentScriptType();
+    var budgetUnits = parseInt(budgetEl.value, 10);
+    var isCovenant = scriptType === 'covenant';
+
+    var size = HEADER_BYTES + payloadBytes
+      + inputs * (INPUT_FIXED_BYTES + (isCovenant ? COMPUTE_BUDGET_FIELD_BYTES : 0))
+      + outputs * (OUTPUT_FIXED_BYTES + (isCovenant ? COVENANT_EXTRA_BYTES : 0));
+
+    var computeMassForSize = size * MASS_PER_TX_BYTE;
+    var scriptPubKeyMass = outputs * SCRIPT_PUBKEY_BYTES * MASS_PER_SCRIPT_PUBKEY_BYTE;
+    var scriptMass = isCovenant
+      ? inputs * budgetUnits * GRAMS_PER_COMPUTE_BUDGET_UNIT
+      : inputs * 1 * GRAMS_PER_SIGOP_COUNT_UNIT;
+
+    var computeMass = computeMassForSize + scriptPubKeyMass + scriptMass;
+    var transientMass = size * TRANSIENT_BYTE_TO_MASS_FACTOR;
+
+    // KIP-9 generalized storage mass: each output's contribution is scaled by
+    // its utxo_plurality, squared. A covenant-carrying output stores an
+    // authorizing_input and a covenant_id alongside the script, so it is
+    // bigger on disk and can reach plurality 2 while an ordinary output
+    // stays at plurality 1.
+    var outScriptLen = OUTPUT_FIXED_BYTES - 8 - 2 - 8; // strip value/version/scriptlen-field, leaving the script itself
+    var outPlurality = Math.ceil((UTXO_CONST_STORAGE + outScriptLen + (isCovenant ? COVENANT_ID_BYTES : 0)) / UTXO_UNIT_SIZE);
+    var outAmountSompi = outAmountKas * SOMPI_PER_KASPA;
+    var totalOutSompi = outputs * outAmountSompi;
+    var inAmountSompi = Math.max(totalOutSompi / inputs, 1);
+    var harmonicOuts = outputs * outPlurality * outPlurality * (STORAGE_MASS_PARAMETER / outAmountSompi);
+    var linearIns = inputs * (STORAGE_MASS_PARAMETER / inAmountSompi);
+    var storageMass = Math.max(0, harmonicOuts - linearIns);
+
+    var transientNormalized = transientMass * (BLOCK_COMPUTE_LIMIT / BLOCK_TRANSIENT_LIMIT);
+    var txMass = Math.max(computeMass, storageMass, transientNormalized);
+
+    var binding = 'compute';
+    if (storageMass === txMass && storageMass > computeMass) binding = 'storage';
+    if (transientNormalized === txMass && transientNormalized > computeMass && transientNormalized >= storageMass) binding = 'transient';
+
+    var txPerBlock = Math.floor(BLOCK_COMPUTE_LIMIT / txMass);
+    var tps = txPerBlock * BLOCKS_PER_SECOND;
+
+    return { computeMass: computeMass, storageMass: storageMass, transientMass: transientMass,
+             txMass: txMass, binding: binding, txPerBlock: txPerBlock, tps: tps, outPlurality: outPlurality };
+  }
+
+  function render() {
+    var r = compute();
+
+    document.getElementById('computeMass').textContent = fmt(r.computeMass);
+    document.getElementById('storageMass').textContent = fmt(r.storageMass);
+    document.getElementById('transientMass').textContent = fmt(r.transientMass);
+
+    setBar('computeFill', r.computeMass, BLOCK_COMPUTE_LIMIT);
+    setBar('storageFill', r.storageMass, BLOCK_STORAGE_LIMIT);
+    setBar('transientFill', r.transientMass, BLOCK_TRANSIENT_LIMIT);
+
+    document.getElementById('computeRow').classList.toggle('binding', r.binding === 'compute');
+    document.getElementById('storageRow').classList.toggle('binding', r.binding === 'storage');
+    document.getElementById('transientRow').classList.toggle('binding', r.binding === 'transient');
+    document.getElementById('computeTag').hidden = r.binding !== 'compute';
+    document.getElementById('storageTag').hidden = r.binding !== 'storage';
+    document.getElementById('transientTag').hidden = r.binding !== 'transient';
+
+    document.getElementById('tpsOut').textContent = fmt(r.tps);
+    document.getElementById('tpbOut').textContent = fmt(r.txPerBlock);
+
+    document.getElementById('inputsVal').textContent = inputsEl.value;
+    document.getElementById('outputsVal').textContent = outputsEl.value;
+    document.getElementById('amountVal').textContent = fmt(amountKAS());
+    document.getElementById('payloadVal').textContent = fmt(parseInt(payloadEl.value, 10));
+    document.getElementById('budgetVal').textContent = budgetEl.value;
+  }
+
+  function setBar(id, value, limit) {
+    var el = document.getElementById(id);
+    var pct = Math.min(100, (value / limit) * 100);
+    el.style.width = pct + '%';
+    el.setAttribute('aria-valuenow', Math.round(value));
+  }
+
+  function onScriptTypeChange() {
+    budgetField.hidden = currentScriptType() !== 'covenant';
+    render();
+  }
+
+  var applyingPreset = false;
+  function clearPresetState() {
+    if (applyingPreset) return;
+    presetButtons.forEach(function(b) { b.setAttribute('aria-pressed', 'false'); });
+  }
+
+  [inputsEl, outputsEl, amountEl, payloadEl, budgetEl].forEach(function(el) {
+    el.addEventListener('input', function() { clearPresetState(); render(); });
+  });
+  for (var i = 0; i < scriptRadios.length; i++) scriptRadios[i].addEventListener('change', function() { clearPresetState(); onScriptTypeChange(); });
+
+  var presets = {
+    plain:    { inputs: 1, outputs: 1, amount: 3,    payload: 0,    script: 'simple',   budget: 50 },
+    change:   { inputs: 1, outputs: 2, amount: 2.7,  payload: 0,    script: 'simple',   budget: 50 },
+    covenant: { inputs: 1, outputs: 1, amount: 3,    payload: 0,    script: 'covenant', budget: 50 },
+    proof:    { inputs: 1, outputs: 1, amount: 3,    payload: 8000, script: 'simple',   budget: 50 }
+  };
+
+  function applyPreset(name) {
+    var p = presets[name];
+    if (!p) return;
+    applyingPreset = true;
+    inputsEl.value = p.inputs;
+    outputsEl.value = p.outputs;
+    amountEl.value = p.amount;
+    payloadEl.value = p.payload;
+    budgetEl.value = p.budget;
+    for (var i = 0; i < scriptRadios.length; i++) scriptRadios[i].checked = (scriptRadios[i].value === p.script);
+    budgetField.hidden = p.script !== 'covenant';
+    presetButtons.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.preset === name ? 'true' : 'false'); });
+    render();
+    applyingPreset = false;
+  }
+
+  presetButtons.forEach(function(b) {
+    b.addEventListener('click', function() { applyPreset(b.dataset.preset); });
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function() { applyPreset('plain'); });
+
+  applyPreset('plain');
+})();
+</script>
+</body>
+</html>

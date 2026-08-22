@@ -28,6 +28,8 @@ class DateParser(HTMLParser):
 def url_for(path):
     if path == "index.html":
         return f"{DOMAIN}/"
+    if path.endswith("/index.html"):
+        return f"{DOMAIN}/{path[:-len('index.html')]}"
     if path.endswith(".html"):
         path = path[:-5]
     return f"{DOMAIN}/{path}"
@@ -74,7 +76,7 @@ def build_sitemap():
         })
 
     for path in EXTRA_FILES:
-        loc = f"{DOMAIN}/{path}"
+        loc = url_for(path) if path.endswith(".html") else f"{DOMAIN}/{path}"
         old = existing.get(loc, {})
         entries.append({
             "loc": loc,

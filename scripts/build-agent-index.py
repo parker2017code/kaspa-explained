@@ -10,6 +10,7 @@ import sys
 MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 DOMAIN = MANIFEST["domain"]
 PAGES = MANIFEST["pages"]
+DEMOS = MANIFEST.get("demos", [])
 REFERENCE_FILES = [
     "llms.txt",
     "CLAIMS.yml",
@@ -82,6 +83,8 @@ def compact_text(value):
 def href_for(page):
     if page == "index.html":
         return "/"
+    if page.endswith("/index.html"):
+        return f"/{page[:-len('index.html')]}"
     return f"/{page[:-5]}" if page.endswith(".html") else f"/{page}"
 
 
@@ -117,8 +120,10 @@ def read_reference_file(path):
 
 def build_index():
     pages = [parse_page(page) for page in PAGES]
+    demos = [parse_page(demo) for demo in DEMOS]
     reference_files = [read_reference_file(path) for path in REFERENCE_FILES]
     version_dates = [page["dateModified"] for page in pages if page["dateModified"]]
+    version_dates.extend(demo["dateModified"] for demo in demos if demo["dateModified"])
     version_dates.extend(MANIFEST.get("sitemapExtraLastmod", {}).values())
     return {
         "name": "Kaspa Explained Agent Index",
@@ -141,6 +146,7 @@ def build_index():
         ],
         "mcpNote": "This static index is the zero-cost agent gateway. A hosted MCP endpoint can wrap this data later, but GitHub Pages cannot run the MCP JSON-RPC server protocol by itself.",
         "pages": pages,
+        "demos": demos,
         "referenceFiles": reference_files,
     }
 

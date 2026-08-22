@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Covenant Breaker, attack a Kaspa vault covenant</title>
+<meta name="description" content="A covenant locks a spending rule into a coin. Try to get money out of this vault without following every rule, and see why the safest-looking attack is the one that actually works.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/covenant-breaker">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c;
+    --bg-2: #1c1a17;
+    --panel: #1c1a17;
+    --panel-strong: #221f1c;
+    --card-bg: #322f2a;
+    --line: #4a453d;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --green: #66d1c1;
+    --cyan: #2997ff;
+    --purple: #bf5af2;
+    --pink: #ff9f0a;
+    --ink: #06201b;
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6;
+    --bg-2: #f3f0ea;
+    --panel: #f3f0ea;
+    --panel-strong: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line: #d8d4cb;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --green: #0e7c6b;
+    --cyan: #0071e3;
+    --purple: #6e56cf;
+    --pink: #b25000;
+    --ink: #ffffff;
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 900px; margin: 0 auto; padding: 20px 16px 56px; }
+  .topbar { display: flex; align-items: center; justify-content: flex-end; max-width: 900px; margin: 0 auto; padding: 14px 16px 0; }
+  .theme-toggle {
+    min-height: 44px; min-width: 44px;
+    border: 0; border-radius: 980px; padding: 6px 16px;
+    background: var(--control-bg); color: var(--text);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 {
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -.014em;
+    line-height: 1.08;
+    margin: 0 0 10px;
+  }
+  h2 { font-size: 1rem; margin: 0 0 10px; }
+  p.intro {
+    color: var(--text);
+    max-width: 68ch;
+    margin: 0 0 8px;
+    font-size: clamp(1.19rem, 1.9vw, 1.42rem);
+    font-weight: 420;
+    line-height: 1.45;
+  }
+  p.stakes {
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 0 0 14px;
+    font-size: clamp(1rem, 1.5vw, 1.14rem);
+    font-weight: 420;
+    line-height: 1.5;
+  }
+  p.fictional-note {
+    display: inline-block;
+    color: var(--muted);
+    background: var(--field-bg);
+    max-width: 68ch;
+    margin: 0 0 14px;
+    font-size: .84rem;
+    font-weight: 600;
+    line-height: 1.5;
+    padding: 6px 12px;
+    border-radius: 980px;
+  }
+  p.status-line {
+    color: var(--faint);
+    max-width: 68ch;
+    margin: 0 0 22px;
+    font-size: .88rem;
+    line-height: 1.55;
+    padding: 10px 14px;
+    background: var(--field-bg);
+    border-radius: 10px;
+  }
+  p.status-line a { color: var(--cyan); }
+  a { color: var(--cyan); }
+  .panel {
+    background: var(--card-bg);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .panel h2 {
+    font-size: .85rem;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .panel-lead { font-size: .92rem; color: var(--muted); margin: -4px 0 14px; max-width: 60ch; }
+
+  /* Vault state */
+  .vault-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .stat {
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .stat span { display: block; font-size: .74rem; color: var(--faint); margin-bottom: 3px; }
+  .stat b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+  .stat.dead b { color: var(--pink); }
+
+  .rules-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .rules-list li {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: .88rem;
+  }
+  .rules-list b {
+    flex: 0 0 auto;
+    font-size: .72rem;
+    color: var(--green);
+    background: color-mix(in srgb, var(--green) 12%, transparent);
+    border: 0;
+    border-radius: 980px;
+    padding: 2px 9px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+  .rules-list span { color: var(--muted); }
+
+  /* Composer */
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: .84rem; color: var(--muted); margin-bottom: 4px; }
+  .field-hint { margin: 4px 0 0; font-size: .78rem; color: var(--faint); }
+  .field input[type=number], .field select {
+    width: 100%;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+  }
+  fieldset { border: 1px solid var(--field-line); border-radius: 8px; padding: 8px 10px; margin: 0 0 12px; }
+  fieldset legend { font-size: .84rem; color: var(--muted); padding: 0 4px; }
+  fieldset label { display: inline-flex; align-items: center; gap: 5px; margin-right: 14px; font-size: .88rem; }
+
+  .attack-group { margin-bottom: 14px; }
+  .attack-group-label { font-size: .76rem; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; margin: 0 0 8px; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  button {
+    font: inherit;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 0;
+    background: var(--control-bg);
+    color: var(--text);
+    padding: 10px 14px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  button:hover { background: var(--control-hover); }
+  button.primary {
+    background: var(--green);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  button.primary:hover { background: color-mix(in srgb, var(--green) 85%, black); }
+  button.attack {
+    background: color-mix(in srgb, var(--pink) 16%, var(--control-bg));
+  }
+  button.attack.repeat {
+    background: color-mix(in srgb, var(--purple) 20%, var(--control-bg));
+    font-weight: 600;
+  }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .presets button { font-size: .86rem; min-height: 44px; line-height: 1.25; }
+
+  /* Verdict */
+  #verdict { min-height: 20px; }
+  .verdict-box {
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 0;
+    font-size: .92rem;
+  }
+  .verdict-box.pass {
+    background: color-mix(in srgb, var(--green) 12%, transparent);
+  }
+  .verdict-box.fail {
+    background: color-mix(in srgb, var(--pink) 12%, transparent);
+  }
+  .verdict-box strong { display: block; margin-bottom: 3px; }
+  .verdict-box .rule-ref { display: block; margin-top: 6px; font-size: .78rem; color: var(--faint); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+  .table-wrap {
+    overflow-x: auto;
+    background: var(--card-bg);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); white-space: nowrap; }
+  th { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: .05em; border-bottom: 1px solid var(--line); }
+  tr.fail-row td { color: var(--pink); }
+  tr.pass-row td.result { color: var(--green); }
+
+  details {
+    background: var(--field-bg);
+    border: 0;
+    border-radius: 14px;
+    padding: 10px 14px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; color: var(--faint); }
+  details[open] summary::before { content: "▾ "; }
+  .rule-code {
+    margin: 12px 0 0;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: var(--muted);
+    background: var(--bg-2);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+  }
+  .rule-code b { color: var(--pink); font-weight: 600; }
+  .rule-code i { color: var(--faint); font-style: normal; }
+  .sources { margin-top: 12px; font-size: .85rem; color: var(--muted); }
+  .sources a { display: inline-block; margin-right: 10px; }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .verdict-box, .stat { transition: background-color .2s ease, border-color .2s ease; }
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">Light</button>
+</div>
+<main>
+  <h1>Covenant breaker</h1>
+  <p class="fictional-note">This is a worked example, not a real vault. The address, the balance, and the 10,000 KAS below are made up; nothing here is on any real blockchain.</p>
+  <p class="intro">A covenant is a rule locked into a coin that controls how it can be spent later. This vault holds 10,000 KAS behind four such rules. Get any of it to an address you control without satisfying all four.</p>
+  <p class="stakes">Four rules stand between you and the balance below. Try to break one directly, or find the way through that never breaks any of them at all.</p>
+  <p class="status-line">Status: the cap, the destination lock, and the delay shown here run on Kaspa mainnet today, using opcodes and covenant identity that activated with the Toccata upgrade (<a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>, both status Active). The rule is written below in Argent's syntax; <a href="/argent-explained">Argent itself</a> is a proposed contract language, still in research, not yet released. Only the notation is illustrative. The enforcement it describes is live.</p>
+
+  <section class="panel">
+    <h2>Try to get money out of the vault</h2>
+    <p class="panel-lead">Set up an attempt by hand below, or start from one of these.</p>
+
+    <div class="attack-group">
+      <p class="attack-group-label">Direct attempts, each breaks one rule on purpose</p>
+      <div class="presets" role="group" aria-label="Direct attempts">
+        <button type="button" class="attack" data-preset="drain">Take it all right now</button>
+        <button type="button" class="attack" data-preset="skip">Withdraw before the wait is up</button>
+        <button type="button" class="attack" data-preset="redirect">Send it to my own address</button>
+        <button type="button" class="attack" data-preset="recover-redirect">Trigger recovery, then redirect it</button>
+      </div>
+    </div>
+    <div class="attack-group">
+      <p class="attack-group-label">Break no rule at all</p>
+      <div class="presets" role="group" aria-label="Legal repetition">
+        <button type="button" class="attack repeat" data-preset="patient">Withdraw the max, hour after hour</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div>
+        <fieldset>
+          <legend>How you're trying to get it out</legend>
+          <label><input type="radio" name="entry" value="withdraw" checked> Normal withdrawal</label>
+          <label><input type="radio" name="entry" value="recover"> Emergency recovery</label>
+        </fieldset>
+        <div class="field" id="amount-field">
+          <label for="amount">Amount to withdraw (KAS)</label>
+          <input type="number" id="amount" value="500" min="1" step="1">
+        </div>
+        <div class="field">
+          <label for="dest">Where the money goes</label>
+          <select id="dest">
+            <option value="payout">The vault's own payout address</option>
+            <option value="recovery">The vault's own recovery address</option>
+            <option value="attacker">An address you control, not the vault's</option>
+          </select>
+        </div>
+        <div class="field" id="elapsed-field">
+          <label for="elapsed">Time since the vault's last withdrawal (DAA score, Kaspa's block counter)</label>
+          <input type="number" id="elapsed" value="36000" min="0" step="1000">
+          <p class="field-hint" id="elapsed-hint">&asymp; 60 minutes</p>
+        </div>
+      </div>
+      <div>
+        <div class="btn-row" style="margin-top:0">
+          <button type="button" class="primary" id="submit">Try it</button>
+          <button type="button" id="reset">Start over</button>
+        </div>
+        <div id="verdict" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Vault state (made up, for this example)</h2>
+    <div class="vault-stats" id="stats"></div>
+  </section>
+
+  <section class="panel">
+    <h2>What the covenant enforces</h2>
+    <ul class="rules-list">
+      <li><b>Who can sign</b><span>A withdrawal needs the owner's signature. Recovery needs the recovery key instead. No other key works.</span></li>
+      <li><b>Where it can go</b><span>A withdrawal may pay only the vault's fixed payout address, at most 500 KAS in this one transaction. Recovery may pay only the fixed recovery address, and always empties the vault.</span></li>
+      <li><b>What comes next</b><span>Every withdrawal must recreate the vault with the same KIP-20 covenant ID and the updated balance and last-spend score. A transaction that doesn't is spending a lookalike, not the vault.</span></li>
+      <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks/second) before it is valid again.</span></li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ledger-panel" hidden>
+    <h2>Attempts so far</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Attempt</th><th>Amount</th><th>Sent to</th><th>Result</th></tr></thead>
+        <tbody id="ledger-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <details>
+    <summary>Rule definitions and sources</summary>
+    <pre class="rule-code"><b>state</b> VaultState {
+    byte[32] owner_pk_hash;
+    byte[32] recovery_pk_hash;
+    byte[32] payout_spk_hash;
+    byte[32] recovery_spk_hash;
+    int balance;
+    int last_spend_daa;
+}
+
+<b>actor</b> Vault <b>owns</b> VaultState {
+
+    <b>entry</b> withdraw(int amount, sig owner_sig, pubkey owner_pk)
+        <b>emits</b> next: Vault
+    {
+        require(blake2b(owner_pk) == owner_pk_hash);
+        require(checkSig(owner_sig, owner_pk));
+
+        <i>// where it can go: fixed cap, fixed destination</i>
+        require(amount &lt;= 500 &amp;&amp; amount &lt;= balance);
+        require(tx.outputSpkHash(0) == payout_spk_hash);
+        require(tx.outputAmount(0) == amount);
+
+        <i>// how soon again: time since this covenant's own last spend</i>
+        require(tx.inputDaaScore(self) - last_spend_daa &gt;= 36000);
+
+        <i>// what comes next: same KIP-20 covenant id, updated state</i>
+        VaultState new_state = {
+            owner_pk_hash: owner_pk_hash,
+            recovery_pk_hash: recovery_pk_hash,
+            payout_spk_hash: payout_spk_hash,
+            recovery_spk_hash: recovery_spk_hash,
+            balance: balance - amount,
+            last_spend_daa: tx.inputDaaScore(self),
+        };
+        <b>become</b> next &lt;- Vault(new_state);
+    }
+
+    <b>entry</b> recover(sig recovery_sig, pubkey recovery_pk) {
+        require(blake2b(recovery_pk) == recovery_pk_hash);
+        require(checkSig(recovery_sig, recovery_pk));
+
+        <i>// no cap, no delay: recovery ignores both</i>
+        <i>// but the destination is still fixed, and the vault ends</i>
+        require(tx.outputSpkHash(0) == recovery_spk_hash);
+        require(tx.outputAmount(0) == balance);
+        <i>// no `become`: this covenant's lineage ends here</i>
+    }
+}</pre>
+    <p class="sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research and not yet released; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's actual status. Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>. Both KIP-17 and its continuation-identity companion, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, are live on Kaspa mainnet as of the Toccata upgrade: a spend either carries the same <code>covenant_id</code> as the UTXO it consumes, or proves a fresh one through the genesis hash, so a forged lookalike UTXO cannot claim an existing covenant's identity. See <a href="/toccata-explained">Toccata explained</a> for how these primitives compose into real applications.</p>
+  </details>
+</main>
+
+<script>
+(function () {
+  var CAP = 500;
+  var DELAY = 36000;
+  var START_BALANCE = 10000;
+
+  var vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+  var txCount = 0;
+
+  var statsEl = document.getElementById('stats');
+  var verdictEl = document.getElementById('verdict');
+  var ledgerPanel = document.getElementById('ledger-panel');
+  var ledgerBody = document.getElementById('ledger-body');
+
+  var amountInput = document.getElementById('amount');
+  var destSelect = document.getElementById('dest');
+  var elapsedInput = document.getElementById('elapsed');
+  var elapsedHint = document.getElementById('elapsed-hint');
+  var amountField = document.getElementById('amount-field');
+  var elapsedField = document.getElementById('elapsed-field');
+
+  function daaToMinutes(daa) {
+    return Math.round(daa / 10 / 60);
+  }
+  function updateElapsedHint() {
+    var v = Math.max(0, parseInt(elapsedInput.value, 10) || 0);
+    elapsedHint.textContent = '≈ ' + daaToMinutes(v) + ' minutes';
+  }
+  elapsedInput.addEventListener('input', updateElapsedHint);
+
+  function entryValue() {
+    return document.querySelector('input[name=entry]:checked').value;
+  }
+
+  function renderStats() {
+    var deadClass = vault.ended ? ' dead' : '';
+    statsEl.innerHTML =
+      '<div class="stat' + deadClass + '"><span>Balance</span><b>' + vault.balance.toLocaleString() + ' KAS</b></div>' +
+      '<div class="stat"><span>Per-tx cap</span><b>' + CAP + ' KAS</b></div>' +
+      '<div class="stat"><span>Required delay</span><b>~' + daaToMinutes(DELAY) + ' min</b></div>' +
+      '<div class="stat"><span>Last spend, ago</span><b>~' + daaToMinutes(vault.lastSpendDaa) + ' min mark</b></div>' +
+      '<div class="stat"><span>Status</span><b>' + (vault.ended ? 'Ended (recovered)' : 'Live') + '</b></div>';
+  }
+
+  function updateFieldVisibility() {
+    var isRecover = entryValue() === 'recover';
+    amountField.style.display = isRecover ? 'none' : '';
+    elapsedField.style.display = isRecover ? 'none' : '';
+    if (isRecover) destSelect.value = 'recovery';
+  }
+
+  function pathLabel(entry) {
+    return entry === 'recover' ? 'Emergency recovery' : 'Normal withdrawal';
+  }
+
+  function logTx(entry, amount, destLbl, ok, category) {
+    txCount++;
+    var row = document.createElement('tr');
+    row.className = ok ? 'pass-row' : 'fail-row';
+    row.innerHTML = '<td>' + txCount + '</td><td>' + pathLabel(entry) + '</td><td>' + amount + '</td><td>' + destLbl + '</td>' +
+      '<td class="result">' + (ok ? 'sent through' : 'blocked: ' + category) + '</td>';
+    ledgerBody.appendChild(row);
+    ledgerPanel.hidden = false;
+  }
+
+  function destLabel(v) {
+    return v === 'payout' ? 'payout address' : v === 'recovery' ? 'recovery address' : 'address you control';
+  }
+
+  // Returns {ok, sentence, ref, category, terminal}
+  function evaluate(entry, amount, dest, elapsed) {
+    if (vault.ended) {
+      return { ok: false, category: 'what comes next', sentence: 'Blocked: the vault ended when recovery ran. There is nothing left to spend from.', ref: 'no `become`' };
+    }
+    if (entry === 'recover') {
+      if (dest !== 'recovery') {
+        return { ok: false, category: 'where it can go', sentence: 'Blocked: recovery can only ever pay the vault’s own recovery address, no matter whose key signs it.', ref: 'require(tx.outputSpkHash(0) == recovery_spk_hash)' };
+      }
+      return { ok: true, category: null, sentence: 'Sent: the full balance reached the recovery address. The vault is gone for good, on purpose.', ref: 'no `become`: lineage ends here', terminal: true };
+    }
+    // withdraw
+    if (amount > CAP) {
+      return { ok: false, category: 'where it can go', sentence: 'Blocked: a single withdrawal can move at most 500 KAS, and this one asks for more.', ref: 'require(amount &lt;= 500)' };
+    }
+    if (amount > vault.balance) {
+      return { ok: false, category: 'where it can go', sentence: 'Blocked: the vault doesn’t have this much left to give.', ref: 'require(amount &lt;= balance)' };
+    }
+    if (dest !== 'payout') {
+      return { ok: false, category: 'where it can go', sentence: 'Blocked: a normal withdrawal can only pay the vault’s one payout address, never anywhere else.', ref: 'require(tx.outputSpkHash(0) == payout_spk_hash)' };
+    }
+    if (elapsed < DELAY) {
+      var mins = Math.round(elapsed / 10 / 60);
+      return { ok: false, category: 'how soon again', sentence: 'Blocked: only ' + mins + ' of the required 60 minutes have passed since the last withdrawal.', ref: 'require(tx.inputDaaScore(self) - last_spend_daa &gt;= 36000)' };
+    }
+    return { ok: true, category: null, sentence: 'Sent: ' + amount + ' KAS reached the payout address, and the vault re-forms with the lower balance.', ref: 'same covenant ID, new balance, new clock' };
+  }
+
+  function apply(entry, amount, dest, elapsed) {
+    var result = evaluate(entry, amount, dest, elapsed);
+    logTx(entry, entry === 'recover' ? vault.balance : amount, destLabel(dest), result.ok, result.category);
+    if (result.ok) {
+      if (entry === 'recover') {
+        vault.balance = 0;
+        vault.ended = true;
+      } else {
+        vault.balance -= amount;
+        vault.currentDaa += elapsed;
+        vault.lastSpendDaa = vault.currentDaa;
+      }
+    }
+    renderStats();
+    return result;
+  }
+
+  function showVerdict(result) {
+    var box = document.createElement('div');
+    box.className = 'verdict-box ' + (result.ok ? 'pass' : 'fail');
+    box.innerHTML = '<strong>' + result.sentence + '</strong>' + (result.ref ? '<span class="rule-ref">' + result.ref + '</span>' : '');
+    verdictEl.innerHTML = '';
+    verdictEl.appendChild(box);
+  }
+
+  document.getElementById('submit').addEventListener('click', function () {
+    var entry = entryValue();
+    var amount = Math.max(0, parseInt(amountInput.value, 10) || 0);
+    var dest = destSelect.value;
+    var elapsed = Math.max(0, parseInt(elapsedInput.value, 10) || 0);
+    var result = apply(entry, amount, dest, elapsed);
+    showVerdict(result);
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+    txCount = 0;
+    ledgerBody.innerHTML = '';
+    ledgerPanel.hidden = true;
+    verdictEl.innerHTML = '';
+    renderStats();
+  });
+
+  document.querySelectorAll('input[name=entry]').forEach(function (r) {
+    r.addEventListener('change', updateFieldVisibility);
+  });
+
+  document.querySelectorAll('[data-preset]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var preset = btn.getAttribute('data-preset');
+      if (preset === 'patient') {
+        runPatientAttack();
+        return;
+      }
+      var isRecoverPreset = preset === 'recover-redirect';
+      document.querySelector('input[name=entry][value=' + (isRecoverPreset ? 'recover' : 'withdraw') + ']').checked = true;
+      updateFieldVisibility();
+      if (preset === 'drain') {
+        amountInput.value = vault.balance || START_BALANCE;
+        destSelect.value = 'payout';
+        elapsedInput.value = DELAY;
+      } else if (preset === 'skip') {
+        amountInput.value = CAP;
+        destSelect.value = 'payout';
+        elapsedInput.value = 0;
+      } else if (preset === 'redirect') {
+        amountInput.value = CAP;
+        destSelect.value = 'attacker';
+        elapsedInput.value = DELAY;
+      } else if (isRecoverPreset) {
+        destSelect.value = 'attacker';
+      }
+      updateElapsedHint();
+      document.getElementById('submit').click();
+    });
+  });
+
+  function runPatientAttack() {
+    document.querySelector('input[name=entry][value=withdraw]').checked = true;
+    updateFieldVisibility();
+    destSelect.value = 'payout';
+    var guard = 0;
+    while (vault.balance > 0 && !vault.ended && guard < 200) {
+      var amount = Math.min(CAP, vault.balance);
+      apply('withdraw', amount, 'payout', DELAY);
+      guard++;
+    }
+    var totalHours = Math.round((vault.currentDaa / 10 / 3600) * 10) / 10;
+    var box = document.createElement('div');
+    box.className = 'verdict-box pass';
+    box.innerHTML = '<strong>' + guard + ' withdrawals, spaced an hour apart, emptied the vault in about ' + totalHours + ' hours, and every single one obeyed the cap, the destination, and the delay.</strong>' +
+      'The rules bound one transaction at a time. Nothing in the covenant counts a running total or limits how many times withdraw() gets called, so they never bounded the vault itself, and it was gone before the end of the day.';
+    verdictEl.innerHTML = '';
+    verdictEl.appendChild(box);
+  }
+
+  updateFieldVisibility();
+  updateElapsedHint();
+  renderStats();
+
+  var themeKey = "kaspa-explained-theme";
+  var savedTheme = null;
+  try { savedTheme = localStorage.getItem(themeKey); } catch (e) {}
+  document.documentElement.dataset.theme = savedTheme === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() {
+    themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(themeKey, next); } catch (e) {}
+    syncTheme();
+  });
+})();
+</script>
+</body>
+</html>

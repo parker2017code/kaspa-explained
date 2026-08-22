@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>What Is Kaspa? Proof-of-Work blockDAG Explained | Kaspa Explained</title>
   <meta name="description" content="What is Kaspa? KAS, Proof of Work, blockDAGs, GHOSTDAG, 10 BPS, and what's live on mainnet versus still roadmap.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -29,7 +39,7 @@
   <meta name="twitter:title" content="What Is Kaspa? | Kaspa Explained">
   <meta name="twitter:description" content="What is Kaspa? KAS, Proof of Work, blockDAGs, GHOSTDAG, 10 BPS, and what's live on mainnet versus still roadmap.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -58,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -76,6 +86,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -88,7 +99,7 @@
       <p class="eyebrow">Beginner answer</p>
       <h1>What is Kaspa?</h1>
       <p class="lead">Kaspa is a live proof-of-work blockDAG network. It keeps Bitcoin-style mining and UTXO ownership, and GHOSTDAG orders parallel blocks into one payment history.</p>
-      <p class="fit-note">The limits get their own page: <a href="/skeptical-case">Risks and Open Questions</a> covers adoption, node load, and the security budget.</p>
+      <p class="fit-note">Limits get their own page: <a href="/skeptical-case">Risks and Open Questions</a> covers adoption, node load, and security budget.</p>
     </section>
 
     <section class="section">
@@ -97,15 +108,15 @@
       <div class="summary-grid grid-cards">
         <article>
           <span>Coin</span>
-          <p>KAS is the native coin people send, receive, mine, and pay fees with.</p>
+          <p>KAS is the native coin people send, receive, mine, and pay fees.</p>
         </article>
         <article>
           <span>Security</span>
-          <p>Miners spend real energy, hardware, and operating time to produce each block. That is Proof of Work, and Kaspa runs on it.</p>
+          <p>Miners spend real energy and hardware to produce each block. That is Proof of Work.</p>
         </article>
         <article>
           <span>Ownership</span>
-          <p>A wallet spends specific unspent outputs, called UTXOs. There is no single running balance to debit.</p>
+          <p>A wallet spends specific unspent outputs, called UTXOs, not a single running balance.</p>
         </article>
       </div>
     </section>
@@ -113,8 +124,13 @@
     <section class="section prose-section">
       <p class="eyebrow">The core move</p>
       <h2>Parallel blocks are the whole design</h2>
-      <p>A block takes time to reach the rest of the world, so when blocks are produced faster than they propagate, miners keep building on information that is already out of date and keep producing competing blocks. A single chain can only keep one of each pair. Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions are rare too. It works, and it is why a Bitcoin payment settles at the pace it does.</p>
-      <p>Kaspa takes the other road: keep the fast blocks and fix the ordering. A block references every tip its miner could see, so two blocks found a moment apart both land in the record as parents of whatever gets mined next. That shape is what the word blockDAG names, and <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order.</p>
+      <p>A block takes time to reach the rest of the world. When blocks outrun that propagation, miners build on stale information and produce competing blocks that a single chain can only keep one of.</p>
+      <details class="deep-dive">
+        <summary>Why Bitcoin chose the opposite trade-off</summary>
+        <p>Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions are rare too. It works, and it is why a Bitcoin payment settles at the pace it does.</p>
+      </details>
+      <p>Kaspa takes the other road instead: keep the fast blocks and fix the ordering. A block references every tip its miner could see, so two blocks found a moment apart both land in the record as parents of whatever gets mined next.</p>
+      <p>That shape is what the word blockDAG names, and <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. The <a href="/demos/collision-sim">collision simulator</a> shows two near-simultaneous blocks both surviving in the record.</p>
       <p>What you feel is inclusion speed. Mainnet produces ten blocks per second, so a broadcast transaction usually appears inside a block in about a second. What you should not assume is settlement: appearing in a block and being safe from reversal are separate events, and the gap between them is what <a href="#finality">confirmations</a> measure.</p>
       <p>The rest of Kaspa is deliberately unadventurous. Supply is capped and released on a fixed emission schedule with no premine, and application rules built on top inherit that base without changing it.</p>
     </section>
@@ -140,8 +156,18 @@
           <p>Walk that spine from genesis to the current tip, absorbing each <a href="/glossary#mergeset">mergeset</a> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
         </article>
       </div>
-      <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <a href="/glossary#anticone">anticone</a>: the blocks that came neither before it nor after it. A single chain has no way to rank an anticone, which is why it discards one side of it. GHOSTDAG ranks it instead, using one behavioral difference between honest miners and hidden ones. An honest miner publishes a block the second it is found, so within a propagation delay everyone else sees it and starts referencing it, and its anticone stays small by construction. A miner building a secret history does the opposite. Nobody can reference blocks they were never shown, so withheld blocks surface later carrying wide anticones. The security parameter k caps how many blue blocks may sit in any blue block's anticone, and its value is derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin.</p>
-      <p>The first spend of a coin wins, any conflicting spend later in the sequence is rejected, and that is how a graph with no single newest block still produces exactly one payment history. Every node runs the identical procedure over the identical graph, so they all derive the identical order without voting, messaging, or a committee. Blue work is also the tiebreak between competing histories: Bitcoin compares chains by accumulated work, Kaspa compares them by accumulated work in the blue set, and an attacker whose blocks are colored red is spending real electricity that buys no weight in that comparison. Losing blocks stop being waste, so the block rate can rise without the orphan rate eating the security budget.</p>
+      <p class="fit-note">The <a href="/demos/ghostdag-playground">GHOSTDAG playground</a> lets you add blocks by hand and watch blue and red resolve live.</p>
+      <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <a href="/glossary#anticone">anticone</a>: the blocks that came neither before it nor after it.</p>
+      <p>A single chain has no way to rank an anticone, which is why it discards one side of it. GHOSTDAG ranks it instead, using one behavioral difference between honest miners and hidden ones.</p>
+      <p>An honest miner publishes a block the second it is found. A miner building a secret history does the opposite.</p>
+      <details class="deep-dive">
+        <summary>Why honest and hidden miners produce different anticones</summary>
+        <p>Within a propagation delay, everyone else sees an honest miner's block and starts referencing it, so its anticone stays small by construction. Nobody can reference blocks they were never shown, so a hidden miner's withheld blocks surface later carrying wide anticones.</p>
+      </details>
+      <p>The security parameter k caps how many blue blocks may sit in any blue block's anticone, and its value is derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin.</p>
+      <p>The first spend of a coin wins, any conflicting spend later in the sequence is rejected, and that is how a graph with no single newest block still produces exactly one payment history. Every node runs the identical procedure over the identical graph, so they all derive the identical order without voting, messaging, or a committee.</p>
+      <p>Blue work is also the tiebreak between competing histories: Bitcoin compares chains by accumulated work, Kaspa compares them by accumulated work in the blue set, and an attacker whose blocks are colored red is spending real electricity that buys no weight in that comparison.</p>
+      <p>Losing blocks stop being waste, so the block rate can rise without the orphan rate eating the security budget.</p>
     </section>
 
     <section id="finality" class="section">
@@ -154,15 +180,18 @@
         <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
         <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
-      <p>On a single chain a confirmation is easy to picture: one more block stacked on the block holding your payment. Kaspa has no single stack. Your block sits in a graph, and what piles up on it is blue work, the proof-of-work carried by every later blue block whose history includes yours. Undoing the payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, which is why Kaspa's risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
+      <p>On a single chain a confirmation is easy to picture: one more block stacked on the block holding your payment. Kaspa has no single stack. Your block sits in a graph, and what piles up on it is blue work, the proof-of-work carried by every later blue block whose history includes yours.</p>
+      <p>Undoing the payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count.</p>
+      <p>At 10 BPS those references arrive quickly, which is why Kaspa's risk curve drops steeply in the first seconds. Steeply is not vertically. The <a href="/demos/confirmation-risk">confirmation risk</a> demo shows reversal odds fall as blue work stacks up.</p>
       <p class="fit-note"><a href="/glossary#finality-depth">Finality depth</a> answers a different question: how far back the protocol will let anyone rewrite. It is a consensus parameter, it sits far deeper than any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
-      <p>Kaspa publishes no universal confirmation count, and a single number would be the wrong shape of answer. Three things move the honest one. The value at stake sets how much an attacker stands to gain. Current hash rate and its spread set what competing work would cost to produce. Whether the payment can be undone outside the protocol counts too, because a shipping hold or a customer relationship tolerates a thinner wait than handing over a good nobody can claw back. Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
+      <p>Kaspa publishes no universal confirmation count, and a single number would be the wrong shape of answer. Three things move the honest one. The value at stake sets how much an attacker stands to gain. Current hash rate and its spread set what competing work would cost to produce.</p>
+      <p>Whether the payment can be undone outside the protocol counts too, because a shipping hold or a customer relationship tolerates a thinner wait than handing over a good nobody can claw back. Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
     </section>
 
     <section id="throughput" class="section">
       <p class="eyebrow">Throughput</p>
       <h2>Ask "TPS of what?"</h2>
-      <p class="fit-note"><strong>Status checked August 1, 2026:</strong> Kaspa mainnet runs the Crescendo-era 10 BPS network. Toccata went live at DAA 474,165,565 and changed proof and covenant capacity. Plain payment TPS tracks the 10 BPS network and transaction mix.</p>
+      <p class="fit-note"><strong>Status checked August 22, 2026:</strong> Kaspa mainnet runs the Crescendo-era 10 BPS network. Toccata went live at DAA 474,165,565 and changed proof and covenant capacity. Plain payment TPS tracks the 10 BPS network and transaction mix.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -176,11 +205,13 @@
           </tbody>
         </table>
       </div>
-      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process.</p>
-      <div class="section" data-audience="specialist">
-        <h3>Where the payment numbers come from</h3>
-        <p>Kaspa mainnet makes ten blocks per second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in. A signed plain P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's careful math; add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block, the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the top end to the often-quoted 3.4k TPS. Benchmarks built on fake minimum-size transactions score higher than that, and what they measure is a lab ceiling.</p>
-        <p>A raw count of transactions per block hides the real limit, which is mass. The implementation measures three dimensions: compute mass from serialized bytes, script-public-key bytes, and signature-operation or compute-budget work; transient byte mass; and storage mass. Each is normalized against its own block limit, and a transaction is charged whichever of the three is largest, never their sum. Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
+      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process. The <a href="/demos/mass-calculator">mass calculator</a> shows which mass dimension a given transaction shape actually gets charged.</p>
+      <details class="deep-dive" data-audience="specialist">
+        <summary>Where the payment numbers come from</summary>
+        <p>Kaspa mainnet makes ten blocks per second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in.</p>
+<p>A signed plain P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's careful math; add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block, the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the top end to the often-quoted 3.4k TPS. Benchmarks built on fake minimum-size transactions score higher than that, and what they measure is a lab ceiling.</p>
+        <p>A raw count of transactions per block hides the real limit, which is mass. The implementation measures three dimensions: compute mass from serialized bytes, script-public-key bytes, and signature-operation or compute-budget work; transient byte mass; and storage mass. Each is normalized against its own block limit, and a transaction is charged whichever of the three is largest, never their sum.</p>
+<p>Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
         <p><a href="/toccata-explained">Toccata</a> leaves the payment limit alone. Transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000, and the Toccata guide ties that rise to fitting STARK-sized proofs. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee. It is mostly an upgrade to what L1 transactions can say and check.</p>
         <div class="table-wrap">
           <table class="reality-table">
@@ -195,8 +226,9 @@
             </tbody>
           </table>
         </div>
-        <p>vProgs remain roadmap architecture. Toccata ships the parts vProg-style systems need without shipping vProgs. KIP-21 stops every prover from having to follow the whole DAG for every app: its partitioned commitment design targets O(activity) proving, so a prover for one app lane tracks only that lane. Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at 10 BPS is a worst-case 500 user-lane updates per second, and user transaction throughput still needs its own transaction-shape math on top. The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into Silverscript, with an audit as the gate its README sets before real use.</p>
-      </div>
+        <p>vProgs remain roadmap architecture. Toccata ships the parts vProg-style systems need without shipping vProgs. KIP-21 stops every prover from having to follow the whole DAG for every app: its partitioned commitment design targets O(activity) proving, so a prover for one app lane tracks only that lane.</p>
+<p>Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at 10 BPS is a worst-case 500 user-lane updates per second, and user transaction throughput still needs its own transaction-shape math on top. The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into Silverscript, with an audit as the gate its README sets before real use.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -281,6 +313,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

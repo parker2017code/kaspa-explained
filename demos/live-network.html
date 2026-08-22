@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch the network | Kaspa Explained</title>
+<meta name="description" content="A live read of Kaspa's public API: real blocks arriving several a second, most carrying nothing but the miner's own reward.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/live-network">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
+    --line: #4a453d; --line-bright: #746e60;
+    --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
+    --green: #66d1c1; --cyan: #2997ff; --purple: #bf5af2; --pink: #ff9f0a;
+    --red: #ff6961; --ink: #06201b;
+    --control-bg: #2c2c2e; --control-hover: #3a3a3c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --display-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono-font: ui-monospace, Menlo, Consolas, monospace;
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
+    --line: #d8d4cb; --line-bright: #bcb6a8;
+    --text: #211e1a; --muted: #646057; --faint: #757066;
+    --green: #0e7c6b; --cyan: #0071e3; --purple: #6e56cf; --pink: #b25000;
+    --red: #c0342a; --ink: #ffffff;
+    --control-bg: #e8e8ed; --control-hover: #dededf;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--body-font); margin: 0; }
+  body { padding: 20px 16px 48px; font-size: 15px; line-height: 1.5; }
+  main { max-width: 720px; margin: 0 auto; }
+  .top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .theme-toggle { flex: none; min-height: 44px; min-width: 44px; border: 0; border-radius: 980px; padding: 0 14px; background: var(--control-bg); color: var(--text); font-size: .8rem; font-weight: 500; cursor: pointer; }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.014em; line-height: 1.2; margin: 0 0 6px; }
+  .lead { font-size: 1.02rem; color: var(--muted); margin: 0 0 18px; max-width: 62ch; }
+
+  .status-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: .82rem; color: var(--faint); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; }
+  .status-dot[data-state="ok"] { background: var(--green); }
+  .status-dot[data-state="error"] { background: var(--red); }
+  .status-dot[data-state="paused"] { background: var(--pink); }
+  .status-row strong { color: var(--text); font-weight: 600; }
+
+  .fail-banner { display: none; background: color-mix(in srgb, var(--red) 12%, var(--card-bg)); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; font-size: .9rem; }
+  .fail-banner.show { display: block; }
+  .fail-banner b { color: var(--red); }
+
+  .stage { background: var(--card-bg); border-radius: 18px; padding: 18px 16px; box-shadow: var(--shadow); }
+
+  .parallel-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+  .parallel-count { font-family: var(--display-font); font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+  .parallel-label { font-size: .86rem; color: var(--muted); max-width: 40ch; }
+  .tip-dots { display: flex; gap: 5px; margin: 8px 0 16px; flex-wrap: wrap; }
+  .tip-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--cyan); opacity: .85; }
+  @media (prefers-reduced-motion: no-preference) {
+    .tip-dot.fresh { animation: tipPop .5s cubic-bezier(.2,.8,.2,1); }
+  }
+  @keyframes tipPop { 0% { transform: scale(1.5); opacity: .3; } 100% { transform: scale(1); opacity: .85; } }
+
+  .feed-wrap { border-top: 1px solid var(--line); padding-top: 14px; }
+  .feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+  .block-card { display: flex; align-items: center; gap: 10px; background: var(--bg-2); border-radius: 8px; padding: 10px 12px; }
+  .block-card.is-empty { opacity: .82; }
+  @media (prefers-reduced-motion: no-preference) {
+    .block-card.just-arrived { animation: cardIn .4s cubic-bezier(.2,.8,.2,1); }
+  }
+  @keyframes cardIn { 0% { transform: translateY(-8px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+  .meter { flex: none; display: flex; gap: 2px; align-items: center; width: 66px; }
+  .meter i { width: 8px; height: 16px; border-radius: 2px; background: var(--line-bright); flex: none; }
+  .meter i.filled { background: var(--green); }
+  .block-main { flex: 1 1 auto; min-width: 0; }
+  .block-top { display: flex; align-items: center; gap: 8px; font-size: .84rem; }
+  .block-top .content-word { font-weight: 650; }
+  .content-word.empty-word { color: var(--faint); }
+  .content-word.has-tx { color: var(--green); }
+  .block-time { color: var(--faint); font-size: .74rem; margin-left: auto; flex: none; }
+  .block-sub { font-size: .74rem; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .block-sub code { font-family: var(--mono-font); }
+  .tag-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .tag { display: inline-flex; align-items: center; gap: 3px; font-size: .7rem; font-weight: 650; padding: 2px 8px; border-radius: 999px; }
+  .tag.covenant { color: color-mix(in srgb, var(--purple) 78%, var(--text)); background: color-mix(in srgb, var(--purple) 14%, transparent); }
+  .tag.app { color: color-mix(in srgb, var(--cyan) 78%, var(--text)); background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+  .tag.red-block { color: color-mix(in srgb, var(--red) 78%, var(--text)); background: color-mix(in srgb, var(--red) 14%, transparent); }
+  .feed-empty { font-size: .86rem; color: var(--faint); padding: 20px 4px; text-align: center; }
+
+  .controls-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .pause-btn { min-height: 44px; border: 0; border-radius: 980px; padding: 0 20px; font: inherit; font-size: .92rem; font-weight: 650; cursor: pointer; background: var(--control-bg); color: var(--text); }
+  .pause-btn:hover { background: var(--control-hover); }
+  .poll-note { font-size: .76rem; color: var(--faint); }
+
+  .stat-tile { display: flex; flex-direction: column; gap: 4px; background: var(--panel-strong); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
+  .stat-tile .stat-num { font-family: var(--display-font); font-size: 1.5rem; font-weight: 700; }
+  .stat-tile .stat-label { font-size: .8rem; color: var(--muted); }
+  .stat-tile .stat-compare { font-size: .74rem; color: var(--faint); margin-top: 4px; }
+
+  .payoff { font-size: 1.02rem; font-weight: 500; margin: 20px 0 0; padding: 14px 16px; border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--green) 8%, transparent); }
+
+  details { margin-top: 22px; }
+  summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary:before { content: "+ "; color: var(--green); font-weight: 700; }
+  details[open] summary:before { content: "\2212 "; }
+  .deep-body { margin-top: 10px; font-size: .88rem; color: var(--muted); }
+  .deep-body h3 { font-size: .92rem; color: var(--text); margin: 16px 0 6px; }
+  .deep-body h3:first-child { margin-top: 0; }
+  .deep-body p { margin: 0 0 10px; }
+  .deep-body code { font-family: var(--mono-font); font-size: .84em; background: var(--bg-2); padding: 1px 5px; border-radius: 4px; }
+  .deep-body ul { margin: 0 0 10px; padding-left: 20px; }
+  .deep-body li { margin-bottom: 4px; }
+  .evidence-note { border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--cyan) 6%, transparent); padding: 10px 14px; margin: 10px 0; font-size: .84rem; }
+
+  footer { font-size: .76rem; color: var(--faint); margin-top: 18px; }
+  footer a { color: var(--faint); }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="top-row">
+    <h1>Watch the network</h1>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="lead">Real blocks, read live from Kaspa's own public API every 5 seconds. No simulation: if the API can't be reached, this page says so instead of faking it.</p>
+
+  <div class="fail-banner" id="failBanner" role="status"><b>Can't reach the public network right now.</b> <span id="failDetail">Retrying every 5 seconds. The explanation below still applies; nothing on this page is invented while it waits.</span></div>
+
+  <div class="stage">
+    <div class="parallel-row">
+      <span class="parallel-count" id="tipCount">&ndash;</span>
+      <span class="parallel-label" id="tipLabel">blocks racing for the same spot right now. Kaspa doesn't make them wait in line.</span>
+    </div>
+    <div class="tip-dots" id="tipDots" aria-hidden="true"></div>
+
+    <div class="feed-wrap">
+      <div class="feed" id="feed"><p class="feed-empty" id="feedEmpty">Reading the first blocks&hellip;</p></div>
+    </div>
+
+    <div class="controls-row">
+      <button class="pause-btn" id="pauseBtn" type="button">Pause</button>
+      <span class="poll-note" id="statusLine">Checking every 5 seconds.</span>
+    </div>
+
+    <div class="stat-tile">
+      <span class="stat-num" id="sessionPct">&ndash;</span>
+      <span class="stat-label" id="sessionLabel">of the blocks this page has watched this session carried nothing but the miner's own reward.</span>
+      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 89.5% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+    </div>
+  </div>
+
+  <p class="payoff" id="payoff">Kaspa targets 10 new blocks every second. Most of what you're watching arrive is a block holding exactly one transaction: the miner paying itself.</p>
+
+  <details>
+    <summary>What this page shows, what it can't, and why</summary>
+    <div class="deep-body">
+      <h3>Blocks, in parallel</h3>
+      <p>Kaspa doesn't pick one miner's block and discard the rest the way a single-chain network does. Several blocks can be valid at once; GHOSTDAG later orders and merges them instead of throwing them away. The count at the top of this page is <code>tipHashes</code> from a live read of <code>api.kaspa.org/info/blockdag</code>: the number of block tips the network is holding open right now. Each new tip is then fetched individually from <code>api.kaspa.org/blocks/{blockId}</code>.</p>
+
+      <h3>Who mined it</h3>
+      <p>Each block card names the payout address and the self-reported miner tag from the block's own coinbase data (the API's <code>extra.minerAddress</code> and <code>extra.minerInfo</code> fields). Neither is a verified identity: a pool can rotate payout addresses, and the tag is a plain string the miner chose to write, not something the network checks. This site's own data notes 32 distinct coinbase payout addresses over a short sample as "block producers," explicitly flagging that rotation would inflate that count. Treat every miner label here the same way.</p>
+
+      <h3>Blue and red</h3>
+      <p>A block tagged <span class="tag red-block">red</span> below was real and mined honestly, but arrived too late in its local ordering to be counted in the ledger's accepted history; a "blue" block was. That is GHOSTDAG's actual job: keep the block, decide whether it counts.</p>
+
+      <h3>What's inside: mostly nothing yet</h3>
+      <p>A block with only its own coinbase transaction and zero spends is marked <span class="content-word empty-word">Empty</span>. Most blocks arrive that way today. That is not this page failing to find activity: it is Kaspa's actual current usage. The same figure appears sitewide: about 0.9 transactions per second sustained, and 89.5% of the raw transaction count is the one-per-block coinbase payout, not economic activity (<code>data/l1-chains.json</code>, cross-checked against live API reads).</p>
+
+      <h3>Covenants</h3>
+      <p>When a transaction output carries a network-verified <code>covenantId</code>, this page shows a <span class="tag covenant">covenant</span> tag. That field comes straight from the API's own parsed transaction data, not a guess: Toccata-era Kaspa enforces covenants and covenant IDs in consensus, and the site's own August 2026 reads found roughly 28,000 ever created and about 500 still active. They are uncommon in the ordinary block feed; expect long stretches with none.</p>
+
+      <h3>App attribution: only where it's really written down</h3>
+      <p>Kaspa has no protocol-level field that names an app. What this page can honestly show is narrower: some transactions carry a plain-text tag at the front of their payload, such as <code>ciph_msg:1:comm:&hellip;</code>, which identifies the on-chain messaging protocol some Kaspa apps use to write encrypted messages into transactions. When a payload starts with a tag like that, this page shows an <span class="tag app">app: ciph_msg</span> pill and nothing more: it is reading a literal string the transaction's own sender chose to include, not inferring anything. Any other payload here is unlabeled binary; guessing what wrote it would be exactly the kind of fabricated attribution this page exists not to do, so it stays unlabeled.</p>
+
+      <h3>A ZK opcode call is not shown</h3>
+      <p>Kaspa's script system supports a ZK verifier opcode, but the public REST API returns transaction scripts as opaque hex, not as decoded opcodes. Detecting one would mean disassembling script bytes client-side and matching a specific opcode value, which this page does not attempt. If that byte-level check turns out to be cheap and reliable, it's a reasonable thing to add later; today it isn't shown, rather than shown as a guess.</p>
+
+      <h3>What a full block explorer has that this page doesn't</h3>
+      <p>Explorers like Kaspa.stream run their own indexer against a database, which lets them show things a single API read cannot: a miner leaderboard built by clustering many blocks' payout addresses over time, top-address balances, and historical charts. Every one of those requires storing and aggregating history somewhere; a static page calling the public API on each visit has no database to build that from, and re-deriving it client-side on every load would mean hammering the API far past anything reasonable. This page only shows what one API read, right now, actually contains.</p>
+
+      <p class="evidence-note">Endpoints used: <code>api.kaspa.org/info/blockdag</code> (tip hashes, polled every 5 seconds; the API's own cache doesn't refresh faster than about 8 seconds anyway) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, header + transactions + color). Source for the API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22. Covenant and block-producer caveats: this site's own <code>CLAIMS.yml</code>.</p>
+    </div>
+  </details>
+
+  <footer>Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</footer>
+</main>
+
+<script>
+(function () {
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() { themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light"; }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    syncTheme();
+  });
+})();
+
+(function () {
+  "use strict";
+  var POLL_MS = 5000;
+  var MAX_CARDS = 18;
+  var MAX_NEW_PER_CYCLE = 6;
+  var COINBASE_SUBNET = "0100000000000000000000000000000000000000";
+
+  var feedEl = document.getElementById("feed");
+  var tipCountEl = document.getElementById("tipCount");
+  var tipDotsEl = document.getElementById("tipDots");
+  var statusLineEl = document.getElementById("statusLine");
+  var failBanner = document.getElementById("failBanner");
+  var pauseBtn = document.getElementById("pauseBtn");
+  var sessionPctEl = document.getElementById("sessionPct");
+  var payoffEl = document.getElementById("payoff");
+
+  var seenHashes = {};
+  var cards = []; // newest first
+  var stats = { blocksSeen: 0, coinbaseOnly: 0 };
+  var paused = false;
+  var timer = null;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function fetchWithTimeout(url, timeoutMs) {
+    var controller = new AbortController();
+    var t = setTimeout(function () { controller.abort(); }, timeoutMs || 6000);
+    return fetch(url, { cache: "no-store", signal: controller.signal }).finally(function () { clearTimeout(t); });
+  }
+
+  function hexToAscii(hex, maxBytes) {
+    if (!hex) return "";
+    var n = Math.min(hex.length, (maxBytes || 20) * 2);
+    var out = "";
+    for (var i = 0; i + 1 < n; i += 2) {
+      var code = parseInt(hex.substr(i, 2), 16);
+      if (isNaN(code)) return out;
+      out += String.fromCharCode(code);
+    }
+    return out;
+  }
+
+  function shortHash(h) { return h ? h.slice(0, 10) + "…" : ""; }
+  function shortAddr(a) {
+    if (!a) return "unknown";
+    var body = a.replace(/^kaspa:/, "");
+    return "kaspa:" + body.slice(0, 6) + "…" + body.slice(-4);
+  }
+
+  function classifyBlock(blockJson, hash) {
+    var header = blockJson.header || {};
+    var verbose = blockJson.verboseData || {};
+    var extra = blockJson.extra || {};
+    var txs = blockJson.transactions || [];
+    var spendTxs = txs.filter(function (t) { return t.subnetworkId !== COINBASE_SUBNET; });
+    var isEmpty = spendTxs.length === 0;
+
+    var hasCovenant = false;
+    var appTag = null;
+    txs.forEach(function (t) {
+      (t.outputs || []).forEach(function (o) {
+        if (o.covenant && o.covenant.covenantId) hasCovenant = true;
+      });
+      if (!appTag && t.payload) {
+        var ascii = hexToAscii(t.payload, 24);
+        var m = /^([a-zA-Z0-9_]{2,16}):/.exec(ascii);
+        if (m && ascii.indexOf("ciph_msg:") === 0) appTag = "ciph_msg";
+      }
+    });
+
+    return {
+      hash: hash,
+      timestamp: Number(header.timestamp) || Date.now(),
+      txCount: txs.length,
+      spendCount: spendTxs.length,
+      isEmpty: isEmpty,
+      minerAddress: extra.minerAddress || "",
+      minerInfo: extra.minerInfo || "",
+      color: verbose.color || extra.color || null,
+      hasCovenant: hasCovenant,
+      appTag: appTag
+    };
+  }
+
+  function relTime(ms) {
+    var s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+    if (s < 5) return "just now";
+    if (s < 60) return s + "s ago";
+    return Math.round(s / 60) + "m ago";
+  }
+
+  function renderMeter(card) {
+    var filled = card.isEmpty ? 1 : Math.min(4, 1 + card.spendCount);
+    var out = "";
+    for (var i = 0; i < 4; i++) out += '<i class="' + (i < filled ? "filled" : "") + '"></i>';
+    return out;
+  }
+
+  function renderCard(card, isNew) {
+    var el = document.createElement("div");
+    el.className = "block-card" + (card.isEmpty ? " is-empty" : "") + (isNew && !reduceMotion ? " just-arrived" : "");
+    var contentWord = card.isEmpty
+      ? '<span class="content-word empty-word">Empty block</span>'
+      : '<span class="content-word has-tx">' + card.spendCount + ' real transfer' + (card.spendCount === 1 ? "" : "s") + '</span>';
+    var tags = "";
+    if (card.color === "red") tags += '<span class="tag red-block">red, not counted</span>';
+    if (card.hasCovenant) tags += '<span class="tag covenant">covenant</span>';
+    if (card.appTag) tags += '<span class="tag app">app: ' + card.appTag + '</span>';
+
+    el.innerHTML =
+      '<div class="meter" aria-hidden="true">' + renderMeter(card) + '</div>' +
+      '<div class="block-main">' +
+        '<div class="block-top">' + contentWord + '<span class="block-time">' + relTime(card.timestamp) + '</span></div>' +
+        '<div class="block-sub" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
+        (tags ? '<div class="tag-row">' + tags + '</div>' : "") +
+      '</div>';
+    return el;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderFeed() {
+    feedEl.innerHTML = "";
+    if (!cards.length) {
+      var p = document.createElement("p");
+      p.className = "feed-empty";
+      p.textContent = "Reading the first blocks…";
+      feedEl.appendChild(p);
+      return;
+    }
+    cards.forEach(function (c, i) { feedEl.appendChild(renderCard(c, i === 0 && c._fresh)); });
+  }
+
+  function updatePayoff() {
+    var pct = stats.blocksSeen ? Math.round((stats.coinbaseOnly / stats.blocksSeen) * 100) : null;
+    if (pct === null) return;
+    payoffEl.textContent = "Kaspa targets 10 new blocks every second. Of the " + stats.blocksSeen + " this page has actually watched arrive this session, " + pct + "% held nothing but the miner paying itself. That is what you are looking at.";
+  }
+
+  function updateSessionStat() {
+    if (!stats.blocksSeen) { sessionPctEl.textContent = "–"; return; }
+    var pct = Math.round((stats.coinbaseOnly / stats.blocksSeen) * 100);
+    sessionPctEl.textContent = pct + "%  (" + stats.blocksSeen + " seen)";
+    updatePayoff();
+  }
+
+  function setStatus(state, text) {
+    statusLineEl.textContent = text;
+    failBanner.classList.toggle("show", state === "error");
+  }
+
+  function renderTipDots(n) {
+    tipDotsEl.innerHTML = "";
+    var count = Math.min(n, 24);
+    for (var i = 0; i < count; i++) {
+      var d = document.createElement("span");
+      d.className = "tip-dot fresh";
+      tipDotsEl.appendChild(d);
+    }
+  }
+
+  function tick() {
+    if (paused || document.hidden) return;
+    fetchWithTimeout("https://api.kaspa.org/info/blockdag", 6000)
+      .then(function (r) { if (!r.ok) throw new Error("bad status " + r.status); return r.json(); })
+      .then(function (dag) {
+        var tips = dag.tipHashes || [];
+        tipCountEl.textContent = tips.length;
+        renderTipDots(tips.length);
+        setStatus("ok", "Live, checking every 5 seconds. Last checked " + new Date().toLocaleTimeString());
+
+        var fresh = tips.filter(function (h) { return !seenHashes[h]; }).slice(0, MAX_NEW_PER_CYCLE);
+        fresh.forEach(function (h) { seenHashes[h] = true; });
+        if (!fresh.length) return;
+
+        return Promise.all(fresh.map(function (h) {
+          return fetchWithTimeout("https://api.kaspa.org/blocks/" + h + "?includeTransactions=true&includeColor=true", 6000)
+            .then(function (r) { if (!r.ok) throw new Error("block fetch failed"); return r.json(); })
+            .then(function (blk) { return classifyBlock(blk, h); })
+            .catch(function () { return null; });
+        })).then(function (results) {
+          results.filter(Boolean).forEach(function (card) {
+            card._fresh = true;
+            cards.unshift(card);
+            stats.blocksSeen++;
+            if (card.isEmpty) stats.coinbaseOnly++;
+          });
+          if (cards.length > MAX_CARDS) cards.length = MAX_CARDS;
+          renderFeed();
+          updateSessionStat();
+        });
+      })
+      .catch(function () {
+        setStatus("error", "Can't reach the public API right now. Retrying every 5 seconds.");
+      });
+  }
+
+  pauseBtn.addEventListener("click", function () {
+    paused = !paused;
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+    if (paused) {
+      setStatus("paused", "Paused. Showing the last blocks read.");
+    } else {
+      tick();
+    }
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && !paused) tick();
+  });
+
+  tick();
+  timer = setInterval(tick, POLL_MS);
+})();
+</script>
+</body>
+</html>

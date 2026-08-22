@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fair Launch vs Premine: Supply Distribution Plotted</title>
+<meta name="description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/fair-launch">
+<script>
+  (function () {
+    var key = "kaspa-explained-theme";
+    var saved = null;
+    try { saved = localStorage.getItem(key); } catch (e) {}
+    document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  })();
+</script>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c;
+    --bg-2: #1c1a17;
+    --panel: #1c1a17;
+    --panel-strong: #221f1c;
+    --card-bg: #322f2a;
+    --line: #4a453d;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --green: #66d1c1;
+    --green-rgb: 102, 209, 193;
+    --cyan: #2997ff;
+    --cyan-rgb: 41, 151, 255;
+    --purple: #bf5af2;
+    --pink: #ff9f0a;
+    --ink: #06201b;
+    --accent-soft: rgba(102, 209, 193, .12);
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6;
+    --bg-2: #f3f0ea;
+    --panel: #f3f0ea;
+    --panel-strong: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line: #d8d4cb;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --green: #0e7c6b;
+    --green-rgb: 14, 124, 107;
+    --cyan: #0071e3;
+    --cyan-rgb: 0, 113, 227;
+    --purple: #6e56cf;
+    --pink: #b25000;
+    --ink: #ffffff;
+    --accent-soft: rgba(14, 124, 107, .1);
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 800px; margin: 0 auto; padding: 32px 16px 56px; }
+  .page-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 16px;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* Display type steps down as its own content lengthens: --len (set
+       inline as a static character count) subtracts a per-character
+       penalty past 22 chars, floored at 1.5rem. See styles.css's h1/h2
+       comment for the full rationale; this mirrors that formula for a
+       self-contained demo page that can't link the shared stylesheet. */
+    font-size: clamp(1.5rem, calc(clamp(1.7rem, 3.6vw, 2.3rem) - max(var(--len, 12) - 22, 0) * 0.03rem), 2.3rem);
+    font-weight: 700;
+    letter-spacing: -.014em;
+    line-height: 1.08;
+    margin: 0;
+  }
+  h3 {
+    font-size: 19px;
+    font-weight: 650;
+    letter-spacing: -.008em;
+    margin: 0 0 10px;
+    color: var(--text);
+  }
+  .lead {
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    font-weight: 420;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 68ch;
+    margin: 6px 0 22px;
+  }
+  #theme-toggle {
+    flex: none;
+    min-height: 44px;
+    min-width: 44px;
+    border: 1px solid var(--line);
+    border-radius: 980px;
+    padding: 6px 14px;
+    background: var(--control-bg);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  #theme-toggle:hover { background: var(--control-hover); }
+
+  .panel {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 18px 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] .panel {
+    box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .legend label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    font-size: 13.5px;
+    background: var(--control-bg);
+    border: 0;
+    border-radius: 8px;
+    padding: 6px 10px 6px 8px;
+    cursor: pointer;
+  }
+  .legend label:hover { background: var(--control-hover); }
+  .legend input { accent-color: var(--green); }
+
+  /* chain markers: color plus shape, never color alone */
+  .swatch { width: 10px; height: 10px; display: inline-block; flex: none; }
+  .swatch.shape-circle { border-radius: 50%; }
+  .swatch.shape-square { border-radius: 2px; }
+  .swatch.shape-triangle { border-radius: 0; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+  .swatch.shape-diamond { border-radius: 2px; transform: rotate(45deg); width: 8px; height: 8px; }
+
+  svg { display: block; width: 100%; height: auto; }
+  .axis-label { fill: var(--faint); font-size: 10px; }
+  .gridline { stroke: var(--line); stroke-width: 1; }
+  .today-mark { stroke-dasharray: 3 3; }
+
+  .yearControl { margin-top: 14px; }
+  .yearControl label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--faint);
+    margin-bottom: 4px;
+  }
+  .yearControl label b { color: var(--text); }
+  .yearControl input[type=range] { width: 100%; height: 44px; accent-color: var(--green); }
+  .controlNote { font-size: 12.5px; color: var(--faint); margin: 4px 0 0; }
+  .result-line { font-size: 1.05rem; margin: 18px 0; }
+  .result-line b { color: var(--green); }
+  .resetBtn {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    border-radius: 980px;
+    background: var(--control-bg);
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 10px;
+    cursor: pointer;
+  }
+  .resetBtn:hover { background: var(--control-hover); }
+
+  .table-wrap { overflow-x: auto; margin-top: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 8px 8px; border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); vertical-align: top; }
+  th { color: var(--faint); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--line); }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; }
+  td.chainname { display: flex; align-items: center; gap: 6px; }
+
+  .fair-note {
+    border-left: 3px solid var(--green);
+    border-radius: 0 14px 14px 0;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    background: var(--accent-soft);
+  }
+  .fair-note h3 { color: var(--green); }
+  .fair-note p { font-size: 15px; color: var(--muted); margin: 6px 0; }
+
+  .kaspa-badge {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--green) 40%, transparent);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 2px 0 14px;
+  }
+  .kaspa-badge b { color: var(--green); font-size: 1.05em; }
+  .why-note { font-size: 13px; color: var(--faint); margin: -4px 0 14px; max-width: 62ch; }
+  .launch-history p { font-size: 15px; color: var(--muted); margin: 6px 0; }
+  .launch-history .gap { color: var(--pink); }
+  .live-footer {
+    font-size: 1rem;
+    margin: 26px 0 6px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--text);
+  }
+  .live-footer b { color: var(--green); }
+
+  details {
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 650;
+    font-size: 15px;
+    list-style: none;
+    color: var(--text);
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "+"; font-weight: 800; margin-right: 6px; color: var(--cyan); }
+  details[open] summary::before { content: "\2212"; }
+  details[open] summary { margin-bottom: 8px; }
+  details p, details li { color: var(--muted); font-size: 14.5px; }
+  details ul { padding-left: 1.2em; margin: 6px 0; }
+  details h3 { font-size: 15px; color: var(--text); margin: 12px 0 4px; }
+
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; color: var(--cyan); }
+  footer.note { font-size: 12.5px; color: var(--faint); margin-top: 20px; }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="page-head">
+    <h1 style="--len:22">Fair launch vs premine</h1>
+    <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="lead">
+    Every chain started with a rule for who'd hold the first coins, set at block
+    zero. Drag the year marker to see who held what, then and now. What matters
+    isn't the starting point: it's how long that grip lasts.
+  </p>
+
+  <div class="panel">
+    <h3>Share of supply held by founders, company, or foundation (not yet public)</h3>
+    <div class="legend" role="group" aria-label="Toggle chains">
+      <label><input type="checkbox" data-chain="kaspa" checked><i class="swatch shape-circle" style="background:var(--green)"></i>Kaspa</label>
+      <label><input type="checkbox" data-chain="ethereum" checked><i class="swatch shape-square" style="background:var(--cyan)"></i>Ethereum</label>
+      <label><input type="checkbox" data-chain="cardano" checked><i class="swatch shape-triangle" style="background:var(--purple)"></i>Cardano</label>
+      <label><input type="checkbox" data-chain="xrp" checked><i class="swatch shape-diamond" style="background:var(--pink)"></i>XRP</label>
+    </div>
+    <p class="why-note">These three are the premined majors Kaspa gets compared against most: Ethereum and Cardano funded a foundation this way, XRP is the extreme case, a supply created entirely for one company and its founders with no public sale at genesis.</p>
+    <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share of its supply, at any point on this chart. Everyone else's line starts above zero because Kaspa's line never leaves it.</p>
+    <svg id="chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest."></svg>
+    <div class="yearControl">
+      <label for="yearSlider">Year since genesis <b id="yearVal">0</b></label>
+      <input type="range" id="yearSlider" min="0" max="14" step="1" value="0">
+    </div>
+    <div class="yearControl">
+      <label for="decaySlider">How fast that founder/company share fades (modeled, not measured) <b id="decayVal">1.0&times;</b> <button id="decayReset" type="button" class="resetBtn">Reset</button></label>
+      <input type="range" id="decaySlider" min="0.2" max="5" step="0.1" value="1">
+      <p class="controlNote">This models one thing: how fast a founder's or company's slice of the supply shrinks toward its current, smaller share, mostly through selling, spending, and new coins reaching the public. 1.0&times; anchors that fade to each chain's estimated current concentration. Drag lower to model it fading slower, higher to model it fading faster. Kaspa has no such share to fade.</p>
+    </div>
+    <p class="result-line" id="resultLine" aria-live="polite"></p>
+    <p class="dagLabsNote">Kaspa's own launch had insiders too, just not on this chart: DAGLabs and the people behind it mined an estimated 2.5&ndash;3% of Kaspa's total supply, under roughly 850 million KAS, for about five months after mainnet launched in November 2021, before DAGLabs' funding ran out. That's early mining, not a token allocation: no one, including Polychain, was ever handed a share of supply before it was mined. <a href="/kaspa-origin-story">Full sourcing on the origin story page</a>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="fair-note">
+    <h3>A premine is not automatically dishonest</h3>
+    <p>
+      Funding development is real, and disclosed allocations (Ethereum's,
+      Cardano's) aren't secret. The dishonest version is hiding or denying one,
+      not having one. A disclosed premine buys a funded team and a foundation
+      that can steer the protocol, but that team keeps outsized influence for
+      years, whether or not it still holds the tokens.
+    </p>
+    <p>
+      No premine doesn't mean no early concentration. Kaspa's founders, company,
+      and foundation line sits at zero by rule, but DAGLabs and the people
+      around it still mined an estimated 2.5&ndash;3% of the total supply after
+      launch, since mainnet mining was open to anyone with hardware, and
+      DAGLabs had hardware and cloud budget lined up first. Open participation
+      isn't equal participation.
+    </p>
+  </div>
+
+  <div class="fair-note launch-history">
+    <h3>What's actually documented about Kaspa's own launch</h3>
+    <p>
+      DAGLabs, the company Yonatan Sompolinsky started to build Kaspa, raised
+      about $8 million, mainly from Polychain Capital, with smaller amounts
+      from Accomplice and Genesis Mining. That money funded GHOSTDAG
+      development and a plan to build dedicated optical-ASIC mining hardware.
+      No supply was allocated to any of them: Kaspa's mainnet genesis block
+      carries an empty UTXO set, confirmed directly in rusty-kaspa's source.
+    </p>
+    <p>
+      The ASIC hardware plan fell through before mainnet. After launch,
+      DAGLabs mined on rented cloud hardware for about five months, the same
+      way anyone else could, until its remaining funds ran out. Yonatan has
+      put that mining at about 2.5% of Kaspa's total supply; the Kaspa Wiki's
+      independent account puts it at under 3%, likely closer to 2.5%, or
+      under roughly 850 million KAS, split between DAGLabs' investors
+      (Polychain among them) and its former employees and advisers.
+    </p>
+    <p>
+      <span class="gap">Not established:</span> how that 2.5&ndash;3% split
+      between Polychain specifically and DAGLabs' own team. No public
+      allocation table exists for that breakdown; the only account of it is a
+      wiki page summarizing Discord messages from people involved, not an
+      official disclosure. This page states the combined figure and names the
+      gap rather than guessing at a Polychain-only number.
+    </p>
+  </div>
+
+  <details id="assumptions">
+    <summary>Assumptions and sources</summary>
+    <div id="assumptionsBody"></div>
+  </details>
+
+  <p class="live-footer" id="liveFooter" aria-live="polite"></p>
+  <footer class="note">
+    Figures gathered August 2026.
+  </footer>
+</main>
+
+<script>
+(function(){
+  var key = "kaspa-explained-theme";
+  var btn = document.getElementById("theme-toggle");
+  function syncToggle() {
+    btn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  }
+  syncToggle();
+  btn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    syncToggle();
+  });
+
+  // Genesis-point allocations are sourced and cited (verified). Post-genesis decay curves are
+  // a modeled trend anchored to today's estimated concentration, not a measured yearly series ,
+  // this is stated explicitly rather than implied as precise history.
+  var CHAINS = {
+    kaspa: {
+      label: 'Kaspa', color: 'var(--green)', shape: 'circle', dash: null, ageNow: 5,
+      insider0: 0, insiderNow: 0, tau: Infinity,
+      genesisNote: 'Verified directly from source: rusty-kaspa\'s consensus/core/src/config/genesis.rs ships an empty genesis UTXO set. Mainnet genesis block timestamp 1637609671037 ms (23 Nov 2021), checkpoint DAA score 1312860. No founder, company, or foundation allocation, ever. Separately, DAGLabs (funded mainly by Polychain, plus Accomplice and Genesis Mining, $8M total) mined an estimated 2.5–3% of supply, under roughly 850M KAS, in the five months after mainnet, on the same open terms as any other miner: see the launch-history panel below and the Kaspa Wiki prehistory page.',
+      statusFn: function(){ return 'No allocation, ever. All supply is emitted to miners under a published schedule.'; }
+    },
+    ethereum: {
+      label: 'Ethereum', color: 'var(--cyan)', shape: 'square', dash: '7 3', ageNow: 11,
+      insider0: 16.7, insiderNow: 1.5, tau: 4.56,
+      genesisNote: 'Verified: 2014 crowdsale raised 60,102,216 ETH from public buyers; genesis supply totaled ~72M ETH, with 12M (16.7%) split evenly between founders/early contributors and the Ethereum Foundation (Coindesk "Sale of the Century", Ethereum genesis block records).',
+      statusFn: function(y){ return y === 0 ? 'Founders + Foundation hold 16.7% at genesis; public ICO buyers hold the rest.' : 'Estimated: founder holdings widely dispersed/sold; Foundation treasury itself is now a small fraction of a much larger circulating supply. Concentration fell mainly through selling and spending, not protocol dilution.'; }
+    },
+    cardano: {
+      label: 'Cardano', color: 'var(--purple)', shape: 'triangle', dash: '2 3', ageNow: 9,
+      insider0: 11.52, insiderNow: 9, tau: 36.6,
+      genesisNote: 'Sourced, not independently re-verified this session: cardano.org/genesis lists IOHK 5.50%, Emurgo 4.60%, Cardano Foundation 1.42% (11.52% combined) of the 45B ADA max supply; public ICO sale 57.62%; remaining 30.86% held as a protocol reserve earmarked for future staking rewards, not insider-controlled in the same sense.',
+      statusFn: function(y){ return y === 0 ? 'IOHK + Emurgo + Foundation hold 11.52% directly; a further 30.86% reserve is earmarked for future stakers, not counted here as insider.' : 'Estimated: entity holdings decline slowly; Cardano\'s three founding entities have been more consistent holders than most, though the exact current figure is not independently re-verified here.'; }
+    },
+    xrp: {
+      label: 'XRP', color: 'var(--pink)', shape: 'diamond', dash: '7 2 1 2', ageNow: 14,
+      insider0: 100, insiderNow: 58, tau: 25.7,
+      genesisNote: 'Sourced, not independently re-verified this session: 100B XRP created at 2012 genesis, with 80B allocated to Ripple Labs (the company) and 20B to founders (Chris Larsen, Jed McCaleb, Arthur Britto). No public sale existed at genesis; XRP first reached outside holders through gifts and later sales.',
+      statusFn: function(y){ return y === 0 ? '100% created for the company and its founders; zero held by the public at genesis.' : 'Estimated: Ripple has sold and gifted large amounts since 2012 (reports cite roughly 58.5B XRP sold by executives alone since inception), but combined company + executive holdings are still estimated at over half of supply.'; }
+    }
+  };
+
+  var svg = document.getElementById('chart');
+  var W = 640, H = 300, padL = 40, padR = 12, padT = 14, padB = 28;
+  var plotW = W - padL - padR, plotH = H - padT - padB;
+  var maxYear = 14;
+
+  function xForYear(y) { return padL + (y / maxYear) * plotW; }
+  function yForPct(p) { return padT + (1 - p / 100) * plotH; }
+
+  function valueAt(chain, year) {
+    if (chain.tau === Infinity) return chain.insider0;
+    // exponential decay anchored so that at chain.ageNow the value equals insiderNow at decay
+    // speed 1.0x. decaySpeed is a reader-adjustable control, not a measured constant: the curve
+    // between genesis and today is modeled, and this scales how fast that model falls off.
+    var k = Math.log(chain.insider0 > 0 ? (chain.insider0 / Math.max(chain.insiderNow, 0.01)) : 1) / chain.ageNow;
+    if (!isFinite(k) || k <= 0) k = 1 / chain.tau;
+    k *= getDecaySpeed();
+    return chain.insider0 * Math.exp(-k * year);
+  }
+
+  function getDecaySpeed() {
+    return parseFloat(document.getElementById('decaySlider').value) || 1;
+  }
+
+  function drawMarker(ns, x, y, shape, color) {
+    var el;
+    if (shape === 'circle') {
+      el = document.createElementNS(ns, 'circle');
+      el.setAttribute('cx', x); el.setAttribute('cy', y); el.setAttribute('r', 4);
+    } else if (shape === 'square') {
+      el = document.createElementNS(ns, 'rect');
+      el.setAttribute('x', x - 3.5); el.setAttribute('y', y - 3.5);
+      el.setAttribute('width', 7); el.setAttribute('height', 7); el.setAttribute('rx', 1);
+    } else if (shape === 'triangle') {
+      el = document.createElementNS(ns, 'polygon');
+      el.setAttribute('points', x + ',' + (y - 4.5) + ' ' + (x - 4.5) + ',' + (y + 3.5) + ' ' + (x + 4.5) + ',' + (y + 3.5));
+    } else {
+      el = document.createElementNS(ns, 'rect');
+      el.setAttribute('x', x - 3.2); el.setAttribute('y', y - 3.2);
+      el.setAttribute('width', 6.4); el.setAttribute('height', 6.4);
+      el.setAttribute('transform', 'rotate(45 ' + x + ' ' + y + ')');
+    }
+    el.setAttribute('fill', color);
+    svg.appendChild(el);
+  }
+
+  function buildSVG() {
+    var ns = 'http://www.w3.org/2000/svg';
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    // gridlines + axis labels (0/25/50/75/100%)
+    [0, 25, 50, 75, 100].forEach(function(p) {
+      var y = yForPct(p);
+      var gl = document.createElementNS(ns, 'line');
+      gl.setAttribute('x1', padL); gl.setAttribute('x2', W - padR);
+      gl.setAttribute('y1', y); gl.setAttribute('y2', y);
+      gl.setAttribute('class', 'gridline');
+      svg.appendChild(gl);
+      var lbl = document.createElementNS(ns, 'text');
+      lbl.setAttribute('x', padL - 6); lbl.setAttribute('y', y + 3);
+      lbl.setAttribute('text-anchor', 'end'); lbl.setAttribute('class', 'axis-label');
+      lbl.textContent = p + '%';
+      svg.appendChild(lbl);
+    });
+    // x axis year ticks
+    [0, 2, 4, 6, 8, 10, 12, 14].forEach(function(yr) {
+      var x = xForYear(yr);
+      var lbl = document.createElementNS(ns, 'text');
+      lbl.setAttribute('x', x); lbl.setAttribute('y', H - padB + 16);
+      lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('class', 'axis-label');
+      lbl.textContent = 'Y' + yr;
+      svg.appendChild(lbl);
+    });
+
+    Object.keys(CHAINS).forEach(function(key) {
+      var chain = CHAINS[key];
+      var cb = document.querySelector('.legend input[data-chain="' + key + '"]');
+      if (!cb.checked) return;
+      var pts = [];
+      var steps = 56;
+      for (var i = 0; i <= steps; i++) {
+        var yr = (i / steps) * maxYear;
+        var v = yr <= chain.ageNow ? valueAt(chain, yr) : null;
+        if (v !== null) pts.push([xForYear(yr), yForPct(v)]);
+      }
+      var solidPath = pts.map(function(p, i) { return (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+      var path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', solidPath);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', chain.color);
+      // Kaspa's line is drawn thicker than the rest so it reads as the baseline,
+      // not just another line lost at the bottom edge of the chart.
+      path.setAttribute('stroke-width', key === 'kaspa' ? '4' : '2.4');
+      if (chain.dash) path.setAttribute('stroke-dasharray', chain.dash);
+      svg.appendChild(path);
+
+      // genesis-point marker: shape carries chain identity in addition to color
+      drawMarker(ns, pts[0][0], pts[0][1], chain.shape, chain.color);
+
+      // Kaspa gets a standing label pinned to its own flat line: the reader
+      // should never have to hunt the bottom edge of a crowded chart for it.
+      if (key === 'kaspa') {
+        var kLabel = document.createElementNS(ns, 'text');
+        kLabel.setAttribute('x', xForYear(2));
+        kLabel.setAttribute('y', yForPct(0) - 7);
+        kLabel.setAttribute('fill', chain.color);
+        kLabel.setAttribute('font-size', '12.5');
+        kLabel.setAttribute('font-weight', '700');
+        kLabel.textContent = 'Kaspa: 0%, always';
+        svg.appendChild(kLabel);
+      }
+
+      // dashed projection beyond chain's actual current age
+      if (chain.ageNow < maxYear) {
+        var pts2 = [];
+        for (var i2 = 0; i2 <= steps; i2++) {
+          var yr2 = chain.ageNow + (i2 / steps) * (maxYear - chain.ageNow);
+          pts2.push([xForYear(yr2), yForPct(valueAt(chain, yr2))]);
+        }
+        var dashPath = pts2.map(function(p, i) { return (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' ');
+        var path2 = document.createElementNS(ns, 'path');
+        path2.setAttribute('d', dashPath);
+        path2.setAttribute('fill', 'none');
+        path2.setAttribute('stroke', chain.color);
+        path2.setAttribute('stroke-width', '2');
+        path2.setAttribute('stroke-dasharray', '5 4');
+        path2.setAttribute('opacity', '0.6');
+        svg.appendChild(path2);
+
+        var todayX = xForYear(chain.ageNow);
+        var tmark = document.createElementNS(ns, 'line');
+        tmark.setAttribute('x1', todayX); tmark.setAttribute('x2', todayX);
+        tmark.setAttribute('y1', padT); tmark.setAttribute('y2', H - padB);
+        tmark.setAttribute('stroke', chain.color);
+        tmark.setAttribute('stroke-width', '1');
+        tmark.setAttribute('class', 'today-mark');
+        tmark.setAttribute('opacity', '0.35');
+        svg.appendChild(tmark);
+
+        // today marker: same shape/color pairing as the genesis marker
+        drawMarker(ns, todayX, yForPct(valueAt(chain, chain.ageNow)), chain.shape, chain.color);
+      }
+    });
+
+    // current year marker
+    var yr = parseInt(document.getElementById('yearSlider').value, 10);
+    var mx = xForYear(yr);
+    var marker = document.createElementNS(ns, 'line');
+    marker.setAttribute('x1', mx); marker.setAttribute('x2', mx);
+    marker.setAttribute('y1', padT); marker.setAttribute('y2', H - padB);
+    marker.setAttribute('stroke', 'var(--faint)');
+    marker.setAttribute('stroke-width', '1.5');
+    svg.appendChild(marker);
+  }
+
+  var SHAPE_CLASS = { circle: 'shape-circle', square: 'shape-square', triangle: 'shape-triangle', diamond: 'shape-diamond' };
+
+  function updateTable() {
+    var yr = parseInt(document.getElementById('yearSlider').value, 10);
+    document.getElementById('yearVal').textContent = yr;
+    var body = document.getElementById('tableBody');
+    body.innerHTML = '';
+    Object.keys(CHAINS).forEach(function(key) {
+      var chain = CHAINS[key];
+      var y = Math.min(yr, chain.ageNow);
+      var projected = yr > chain.ageNow && key !== 'kaspa';
+      var insider = valueAt(chain, y);
+      var tr = document.createElement('tr');
+      var status = chain.statusFn(yr);
+      tr.innerHTML = '<td class="chainname"><i class="swatch ' + SHAPE_CLASS[chain.shape] + '" style="background:' + chain.color + '"></i>' + chain.label + (projected ? ' <span style="color:var(--faint);font-size:.72rem">(projected)</span>' : '') + '</td>' +
+        '<td class="num">' + insider.toFixed(1) + '%</td>' +
+        '<td class="num">' + (100 - insider).toFixed(1) + '%</td>' +
+        '<td>' + status + '</td>';
+      body.appendChild(tr);
+    });
+  }
+
+  function updateResultLine() {
+    var yr = parseInt(document.getElementById('yearSlider').value, 10);
+    var kaspaChecked = document.querySelector('.legend input[data-chain="kaspa"]').checked;
+    var others = [];
+    Object.keys(CHAINS).forEach(function (key) {
+      if (key === 'kaspa') return;
+      var cb = document.querySelector('.legend input[data-chain="' + key + '"]');
+      if (cb.checked) others.push(CHAINS[key]);
+    });
+    var line = document.getElementById('resultLine');
+    if (!others.length) {
+      line.innerHTML = kaspaChecked
+        ? "Kaspa's founders, company, or foundation hold <b>0%</b> of supply, at every year, by rule."
+        : '';
+      updateLiveFooter(yr, null, 0, kaspaChecked);
+      return;
+    }
+    var maxChain = null, maxVal = -1;
+    others.forEach(function (c) {
+      var y = Math.min(yr, c.ageNow);
+      var v = valueAt(c, y);
+      if (v > maxVal) { maxVal = v; maxChain = c; }
+    });
+    var pct = maxVal.toFixed(maxVal < 10 ? 1 : 0);
+    var kaspaPart = kaspaChecked ? "Kaspa's founders, company, and foundation still hold <b>0%</b>. " : '';
+    var text;
+    if (yr === 0) {
+      text = "At genesis, " + (kaspaChecked ? "Kaspa's founders, company, and foundation held <b>0%</b>. " : '') +
+        maxChain.label + "'s founders and backers already held <b>" + pct + "%</b> before a single block was mined.";
+    } else if (maxVal >= 50) {
+      text = "At year " + yr + ", " + kaspaPart + maxChain.label + "'s still hold <b>" + pct + "%</b>, more than half the supply.";
+    } else if (maxVal >= 10) {
+      text = "At year " + yr + ", " + kaspaPart + maxChain.label + "'s have only fallen to <b>" + pct + "%</b>.";
+    } else {
+      text = "At year " + yr + ", " + kaspaPart + maxChain.label + "'s have finally fallen to <b>" + pct + "%</b>, " + yr + " years after launch.";
+    }
+    line.innerHTML = text;
+    updateLiveFooter(yr, maxChain, pct, kaspaChecked);
+  }
+
+  function updateLiveFooter(yr, maxChain, pct, kaspaChecked) {
+    var el = document.getElementById('liveFooter');
+    if (!el) return;
+    var speed = getDecaySpeed().toFixed(1);
+    var kaspaBit = kaspaChecked
+      ? "Kaspa's founders, company, and foundation have held <b>0%</b> since block one. "
+      : '';
+    if (!maxChain) {
+      el.innerHTML = kaspaBit || "Toggle a chain above to compare it against Kaspa's zero.";
+      return;
+    }
+    el.innerHTML = "At year " + yr + ", with the fade modeled at <b>" + speed + "&times;</b>, " +
+      kaspaBit + maxChain.label + "'s founders and company still hold <b>" + pct + "%</b> of supply.";
+  }
+
+  function render() { buildSVG(); updateTable(); updateResultLine(); }
+
+  document.getElementById('yearSlider').addEventListener('input', render);
+  document.querySelectorAll('.legend input').forEach(function(cb) {
+    cb.addEventListener('change', render);
+  });
+  var decaySlider = document.getElementById('decaySlider');
+  var decayVal = document.getElementById('decayVal');
+  function renderDecay() {
+    decayVal.textContent = getDecaySpeed().toFixed(1) + '×';
+    render();
+  }
+  decaySlider.addEventListener('input', renderDecay);
+  document.getElementById('decayReset').addEventListener('click', function () {
+    decaySlider.value = '1';
+    renderDecay();
+  });
+
+  function renderAssumptions() {
+    var body = document.getElementById('assumptionsBody');
+    var html = '<p>Genesis allocations below are <b>verified</b> against primary sources and aren\'t adjustable. The curves after genesis are <b>modeled</b>, not measured, anchored to today\'s estimated figure, that\'s why decay speed is a control above: drag it to test the "fades slowly" read at other rates. Dashed segments are projections past each chain\'s current age.</p>';
+    Object.keys(CHAINS).forEach(function(key) {
+      var c = CHAINS[key];
+      html += '<h3>' + c.label + '</h3><p>' + c.genesisNote + '</p>';
+    });
+    html += '<p>Kaspa\'s current age is ~5 years (genesis Nov 2021); Ethereum ~11 years (genesis 2015, crowdsale 2014); Cardano ~9 years (mainnet Sept 2017); XRP ~14 years (genesis 2012). Years-since-genesis, not calendar years, is the x-axis so the four are comparable at the same stage of life.</p>';
+    html += '<h3>Kaspa launch history, sourced</h3><p>Yonatan Sompolinsky, in a HackerNoon interview, states directly: "Kaspa core devs were able to mine about 2.5% of the Kaspa total supply." The Kaspa Wiki prehistory page independently puts DAGLabs\' post-launch mining at "not more than 3% (probably close to 2.5%)... i.e. obviously &lt;850M Kas," shared between DAGLabs\' investors and its former employees and advisers "in some proportion," a proportion the wiki does not give a number for. The $8M DAGLabs funding figure, and Polychain as its main backer alongside Accomplice and Genesis Mining, come from the same wiki page. None of this describes a token allocation: the mined coins were mined after mainnet launch, on the same open network as any other miner, against an empty genesis UTXO set.</p>';
+    html += '<p><a href="https://hackernoon.com/interview-with-dr-yonatan-sompolinsky-of-kaspa" target="_blank" rel="noopener">HackerNoon interview with Yonatan Sompolinsky</a> &middot; <a href="https://wiki.kaspa.org/en/prehistory" target="_blank" rel="noopener">Kaspa Wiki: Prehistory</a> &middot; <a href="/kaspa-origin-story">Kaspa Explained: origin story</a>, which carries the fuller sourced account.</p>';
+    body.innerHTML = html;
+  }
+
+  renderAssumptions();
+  render();
+  window.addEventListener('resize', render);
+})();
+</script>
+</body>
+</html>

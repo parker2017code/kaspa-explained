@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confirmation Risk Over Time</title>
+<meta name="description" content="Faster blocks mean you see a payment sooner, not that it's final sooner. Watch the risk of reversal fall as you wait.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/confirmation-risk">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c;
+    --card-bg: #322f2a;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --green: #66d1c1;
+    --cyan: #2997ff;
+    --purple: #bf5af2;
+    --pink: #ff9f0a;
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --green: #0e7c6b;
+    --cyan: #0071e3;
+    --purple: #6e56cf;
+    --pink: #b25000;
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; }
+  .top-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -.014em; line-height: 1.2; margin: 0 0 6px; }
+  .theme-toggle {
+    flex: none; min-height: 44px; min-width: 44px; border: 0; border-radius: 980px; padding: 0 14px;
+    background: var(--control-bg); color: var(--text); font-size: .8rem; font-weight: 500; cursor: pointer;
+  }
+  .theme-toggle:hover { background: var(--control-hover); }
+  p.intro { color: var(--muted); font-weight: 420; max-width: 62ch; margin: 0 0 22px; font-size: 1.02rem; }
+  a { color: var(--cyan); }
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+
+  /* primary control */
+  .primary-control { margin-bottom: 22px; }
+  .primary-control label { display: block; font-size: .82rem; color: var(--faint); margin-bottom: 6px; }
+  .primary-control .big-readout { font-size: 1.5rem; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--green); }
+  .primary-control input[type=range] { height: 44px; }
+  .marks { display: flex; justify-content: space-between; font-size: .7rem; color: var(--faint); margin-top: 2px; }
+
+  /* secondary controls, visually quiet */
+  .secondary-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; opacity: .85; }
+  .secondary-row .tag { font-size: .78rem; color: var(--faint); }
+  .pill-group { display: inline-flex; gap: 4px; background: var(--field-bg); border-radius: 980px; padding: 3px; }
+  .pill-group button {
+    border: 0; background: transparent; color: var(--muted); font-size: .76rem; font-weight: 500;
+    padding: 5px 12px; border-radius: 980px; cursor: pointer;
+    min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pill-group button[aria-pressed="true"] { background: var(--control-bg); color: var(--text); }
+
+  .panel {
+    background: var(--card-bg); border-radius: 18px; box-shadow: var(--shadow-card);
+    padding: 14px 16px 10px; margin-bottom: 16px;
+  }
+  .panel svg { display: block; width: 100%; height: auto; }
+  .cr-tick-label { font-size: .68rem; fill: var(--muted); }
+  .cr-gridline { stroke: var(--line-bright); stroke-width: .6; opacity: .35; }
+  .cr-tol-line { stroke: var(--pink); stroke-width: 1.2; stroke-dasharray: 5 4; }
+  .cr-curve { fill: none; stroke-width: 2.4; }
+  .cr-curve-label { font-size: .7rem; font-weight: 600; }
+
+  .cr-readout { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; margin-bottom: 16px; }
+  .cr-readout li {
+    display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 14px; background: var(--card-bg); font-size: .9rem;
+    box-shadow: var(--shadow-card);
+  }
+  .cr-readout .cr-swatch { width: 10px; height: 10px; border-radius: 3px; }
+  .cr-readout b { color: var(--text); }
+  .cr-readout .cr-wait { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text); text-align: right; white-space: nowrap; }
+
+  .chain-note { font-size: .78rem; color: var(--faint); margin: 0 0 20px; }
+  .result-line { font-size: 1rem; margin: 18px 0; }
+  .result-line b { color: var(--text); }
+  footer { font-size: .76rem; color: var(--faint); margin-top: 18px; }
+
+  details {
+    background: var(--card-bg); border-radius: 14px; padding: 10px 14px; margin-top: 8px; box-shadow: var(--shadow-card);
+  }
+  summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--cyan); list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+  details[open] summary::before { content: "\2212"; }
+  details p, details li { color: var(--muted); font-size: .86rem; line-height: 1.6; }
+  .formula { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; background: var(--field-bg); border: 1px solid var(--field-line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; color: var(--text); margin: 10px 0; }
+  code { background: var(--field-bg); border: 1px solid var(--field-line); border-radius: 8px; padding: 1px 5px; font-size: .85em; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top-row">
+    <h1>How long until a payment is safe</h1>
+    <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="intro">Waiting is what makes a payment safe, not the block count. Drag to change how strong the attacker is, and watch how long each chain needs.</p>
+
+  <div class="primary-control">
+    <label for="crShare">How much mining power the attacker controls: <span class="big-readout" id="crShareOut"></span></label>
+    <input type="range" id="crShare" min="1" max="60" value="10" step="1" aria-label="Attacker share of network hash rate, percent">
+    <div class="marks"><span>weak, 1%</span><span>past the 50% line, 60%</span></div>
+  </div>
+
+  <div class="secondary-row">
+    <span class="tag">how careful you want to be</span>
+    <div class="pill-group" id="crTolGroup" role="group" aria-label="Risk tolerance">
+      <button type="button" data-tol="5">relaxed</button>
+      <button type="button" data-tol="1" aria-pressed="true">normal</button>
+      <button type="button" data-tol="0.1">strict</button>
+    </div>
+  </div>
+
+  <ul class="cr-readout" id="crReadout"></ul>
+  <p class="result-line" id="crResultLine"></p>
+  <p class="chain-note">A reorg is not a paperwork problem. If the block carrying your payment gets replaced, the payment can vanish and the attacker can spend the same coins again somewhere else. That double-spend is what this whole wait protects against.</p>
+  <p class="chain-note">Safe here means the attacker has lost the race to out-mine the payment: a probability that falls the longer you wait, and that depends on how much hash power the attacker has, which is what the chart below shows. Finality is a different kind of guarantee, not a point on that curve. Past 432,000 blocks, 12 hours at Kaspa's 10 blocks per second, a node refuses to reorganize at all, regardless of the attacker's share. The two thresholds differ in kind, not just in degree: the curve below is a race an attacker can still enter with enough hash power, while the 12-hour rule is a wall the protocol will not move past no matter how much hash power shows up.</p>
+
+  <div class="panel">
+    <svg id="crChart" viewBox="0 0 720 340" role="img" aria-labelledby="crChartTitle crChartDesc">
+      <title id="crChartTitle">Chance of reversal against how long you wait</title>
+      <desc id="crChartDesc">Line chart. Horizontal axis is wait time, log scale. Vertical axis is the chance an attacker still reverses the payment, 0 to 100 percent. Each chain's line carries its own color, dash pattern, and label. A dashed line marks the chosen risk tolerance. Exact wait times are listed above the chart as text.</desc>
+    </svg>
+  </div>
+
+  <p class="chain-note">Three chains, same three this site compares everywhere: Bitcoin and Litecoin as classic single-chain proof of work at different speeds, Kaspa as the fast blockDAG this site explains.</p>
+
+  <details>
+    <summary>The model, and where the Kaspa line is an approximation</summary>
+    <p><b>Model.</b> This is the "double-spend race" from Satoshi Nakamoto's Bitcoin whitepaper, section 11 (2008). An attacker holding a share of the network's mining power races to out-produce the blocks already confirming a payment. The whitepaper models that race as a Poisson process and asks: what is the chance the attacker still catches up after z blocks.</p>
+    <div class="formula">P(z) = 1 &minus; &sum;<sub>k=0</sub><sup>z</sup> Poisson(k; &lambda;)&middot;(1 &minus; (q/p)<sup>z&minus;k</sup>), &lambda;=z&middot;q/p, q&lt;p</div>
+    <p>Block count is converted to wait time using each chain's target block interval (Bitcoin 600 s, Litecoin 150 s, Kaspa 0.1 s), which is why Bitcoin's line visibly steps every ten minutes while Kaspa's looks smooth.</p>
+        <p><b>Where the Kaspa line is an approximation.</b> Kaspa is not a single chain. GHOSTDAG keeps parallel blocks instead of discarding them and orders them by accumulated work across a DAG, not a simple block count. Feeding Kaspa's block interval into this single-chain formula is a stand-in, not a derivation from GHOSTDAG's own security proof. It likely understates Kaspa's real security, since a naive fast chain would waste a lot of honest work to collisions that GHOSTDAG does not waste. It may also understate how GHOSTDAG's bounded tolerance for parallel blocks affects very recent ordering. Net effect not established with confidence either way.</p>
+        <p><b>Finality is a different, harder guarantee, not shown here.</b> This site's <a href="../chain-comparer.html">chain comparer</a> puts Kaspa's finality boundary at 12 hours: a fixed rule past which a node will not reorganize at all, no matter the attacker's share. It sits far to the right of anything on this chart.</p>
+        <p><b>Is 12 hours arbitrary?</b> It is a chosen constant, not one derived from a security proof the way GHOSTDAG's own k parameter is. In rusty-kaspa's consensus code, <code>FINALITY_DURATION</code> is a plain 43,200-second (12-hour) constant, and the block-count threshold is just that duration times blocks per second: 432,000 blocks at 10 BPS. Compare that to GHOSTDAG's k, which the same codebase computes from a target probability bound through a named function, <code>calculate_ghostdag_k</code>. Finality duration has no equivalent formula behind it in the source. It is a judgment call about how much margin is enough, held fixed in wall-clock time even as Kaspa's blocks per second have changed, and picked to sit well past the point where the curve above has already fallen close to zero for any attacker share worth trying. This site does not dress that up as derived math: it is a number someone chose.</p>
+  </details>
+
+  <footer>Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() {
+    themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("kaspa-explained-theme", next); } catch (e) {}
+    syncTheme();
+  });
+
+  // ---- log-gamma (Lanczos, g=7) so Poisson pmf stays stable for huge lambda ----
+  var LANCZOS_G = 7;
+  var LANCZOS_COEF = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  function logGamma(x) {
+    if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - logGamma(1 - x);
+    x -= 1;
+    var a = LANCZOS_COEF[0];
+    var t = x + LANCZOS_G + 0.5;
+    for (var i = 1; i < LANCZOS_G + 2; i++) a += LANCZOS_COEF[i] / (x + i);
+    return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+  }
+  function logPoissonPmf(k, lambda) {
+    if (lambda <= 0) return k === 0 ? 0 : -Infinity;
+    return k * Math.log(lambda) - lambda - logGamma(k + 1);
+  }
+
+  function reversalProb(q, z) {
+    var p = 1 - q;
+    if (q >= p) return 1;
+    if (z <= 0) return 1;
+    var ratio = q / p;
+    var lambda = z * ratio;
+    var spread = Math.max(8, 12 * Math.sqrt(lambda + 1));
+    var kLo = Math.max(0, Math.floor(lambda - spread));
+    var kHi = Math.min(z, Math.ceil(lambda + spread));
+    var sum = 0;
+    for (var k = kLo; k <= kHi; k++) {
+      var logPmf = logPoissonPmf(k, lambda);
+      if (logPmf < -700) continue;
+      var pmf = Math.exp(logPmf);
+      var resid = 1 - Math.pow(ratio, z - k);
+      sum += pmf * resid;
+    }
+    return Math.max(0, Math.min(1, 1 - sum));
+  }
+
+  function blocksToReach(q, tolerance, zMax) {
+    if (q >= 0.5) return null;
+    var lo = 0, hi = zMax;
+    if (reversalProb(q, hi) > tolerance) return null;
+    while (hi - lo > 1) {
+      var mid = Math.floor((lo + hi) / 2);
+      if (reversalProb(q, mid) <= tolerance) hi = mid; else lo = mid;
+    }
+    return hi;
+  }
+
+  function fmtTime(seconds) {
+    if (seconds < 1) return Math.round(seconds * 1000) + ' ms';
+    if (seconds < 60) return Math.round(seconds) + ' s';
+    if (seconds < 3600) return Math.round(seconds / 60) + ' min';
+    if (seconds < 86400) return Math.round(seconds / 3600) + ' h';
+    return Math.round(seconds / 86400) + ' d';
+  }
+
+  var CHAINS = [
+    { id: 'bitcoin', name: 'Bitcoin', blockTime: 600, color: 'var(--pink)', dash: 'none' },
+    { id: 'litecoin', name: 'Litecoin', blockTime: 150, color: 'var(--purple)', dash: '9 6' },
+    { id: 'kaspa', name: 'Kaspa', blockTime: 0.1, color: 'var(--green)', dash: '1.5 4.5' }
+  ];
+
+  var shareSlider = document.getElementById('crShare');
+  var shareOut = document.getElementById('crShareOut');
+  var readout = document.getElementById('crReadout');
+  var svg = document.getElementById('crChart');
+  var tolGroup = document.getElementById('crTolGroup');
+  var tolerance = 0.01;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Persistent rows, one per chain, built once. render() updates each row's
+  // content in place rather than tearing the list down, so the wait-time
+  // figure (the headline computed number in this demo) can animate to its
+  // new value across renders instead of hard-snapping every drag tick.
+  var rows = {};
+  CHAINS.forEach(function (c) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="cr-swatch" style="background:' + c.color + '"></span>' +
+      '<span><b>' + c.name + '</b> <span class="cr-msg"></span></span>' +
+      '<span class="cr-wait"></span>';
+    readout.appendChild(li);
+    rows[c.id] = { li: li, msg: li.querySelector('.cr-msg'), wait: li.querySelector('.cr-wait'), displayedSeconds: null, raf: null };
+  });
+
+  function setRowState(row, mode, waitSeconds) {
+    if (mode === 'never') {
+      if (row.raf) { cancelAnimationFrame(row.raf); row.raf = null; }
+      row.displayedSeconds = null;
+      row.msg.textContent = 'never becomes safe at this attacker strength.';
+      row.wait.textContent = 'waiting never helps';
+      return;
+    }
+    if (mode === 'toolong') {
+      if (row.raf) { cancelAnimationFrame(row.raf); row.raf = null; }
+      row.displayedSeconds = null;
+      row.msg.textContent = 'would take an impractically long wait.';
+      row.wait.textContent = 'too long';
+      return;
+    }
+    row.msg.textContent = 'becomes safe';
+    if (reducedMotion || row.displayedSeconds == null) {
+      row.displayedSeconds = waitSeconds;
+      row.wait.textContent = fmtTime(waitSeconds);
+      return;
+    }
+    if (row.raf) cancelAnimationFrame(row.raf);
+    var from = row.displayedSeconds;
+    var to = waitSeconds;
+    var start = performance.now();
+    var duration = 200;
+    function step(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      row.wait.textContent = fmtTime(from + (to - from) * eased);
+      if (t < 1) {
+        row.raf = requestAnimationFrame(step);
+      } else {
+        row.raf = null;
+        row.displayedSeconds = to;
+        row.wait.textContent = fmtTime(to);
+      }
+    }
+    row.raf = requestAnimationFrame(step);
+  }
+
+  tolGroup.addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    tolGroup.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+    tolerance = parseFloat(btn.getAttribute('data-tol')) / 100;
+    render();
+  });
+
+  var W = 720, H = 340;
+  var PAD_L = 20, PAD_R = 14, PAD_T = 14, PAD_B = 30;
+  var PLOT_W = W - PAD_L - PAD_R, PLOT_H = H - PAD_T - PAD_B;
+  var T_MIN = 0.05, T_MAX = 4 * 3600;
+
+  function xForTime(t) {
+    var lo = Math.log10(T_MIN), hi = Math.log10(T_MAX);
+    return PAD_L + PLOT_W * (Math.log10(t) - lo) / (hi - lo);
+  }
+  function yForProb(p) { return PAD_T + PLOT_H * (1 - p); }
+
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+
+  function buildAxes(frag) {
+    [0, 25, 50, 75, 100].forEach(function (pct) {
+      var y = yForProb(pct / 100);
+      frag.appendChild(svgEl('line', { class: 'cr-gridline', x1: PAD_L, y1: y, x2: PAD_L + PLOT_W, y2: y }));
+      var lbl = svgEl('text', { class: 'cr-tick-label', x: PAD_L + 4, y: y - 4, 'text-anchor': 'start' });
+      lbl.textContent = pct + '% chance of reversal';
+      frag.appendChild(lbl);
+    });
+    var ticks = [0.1, 1, 10, 60, 600, 3600];
+    var labels = ['0.1 s', '1 s', '10 s', '1 min', '10 min', '1 h'];
+    ticks.forEach(function (t, i) {
+      var x = xForTime(t);
+      var lbl = svgEl('text', { class: 'cr-tick-label', x: x, y: PAD_T + PLOT_H + 18, 'text-anchor': 'middle' });
+      lbl.textContent = labels[i];
+      frag.appendChild(lbl);
+    });
+  }
+
+  var SAMPLES = 90;
+  function curvePoints(q, blockTime) {
+    var pts = [];
+    var lo = Math.log10(T_MIN), hi = Math.log10(T_MAX);
+    for (var i = 0; i <= SAMPLES; i++) {
+      var t = Math.pow(10, lo + (hi - lo) * (i / SAMPLES));
+      var z = Math.max(0, Math.round(t / blockTime));
+      pts.push([xForTime(t), yForProb(reversalProb(q, z))]);
+    }
+    return pts;
+  }
+  function pathFromPoints(pts) {
+    return pts.map(function (pt, i) { return (i === 0 ? 'M' : 'L') + pt[0].toFixed(2) + ' ' + pt[1].toFixed(2); }).join(' ');
+  }
+
+  function render() {
+    var share = +shareSlider.value / 100;
+    shareOut.textContent = shareSlider.value + '%';
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var frag = document.createDocumentFragment();
+    buildAxes(frag);
+
+    var tolY = yForProb(tolerance);
+    frag.appendChild(svgEl('line', { class: 'cr-tol-line', x1: PAD_L, y1: tolY, x2: PAD_L + PLOT_W, y2: tolY }));
+
+    var labelSpots = [];
+    var results = [];
+    CHAINS.forEach(function (c) {
+      var pts = curvePoints(share, c.blockTime);
+      var path = svgEl('path', { class: 'cr-curve', d: pathFromPoints(pts), stroke: c.color, 'stroke-dasharray': c.dash });
+      frag.appendChild(path);
+      var last = pts[pts.length - 1];
+      labelSpots.push({ name: c.name, color: c.color, x: Math.min(last[0] + 8, W - PAD_R - 4), y: last[1] + 3 });
+
+      var z = blocksToReach(share, tolerance, 20000000);
+      var waitSeconds = (z === null) ? null : z * c.blockTime;
+      results.push({ name: c.name, waitSeconds: waitSeconds, neverSafe: share >= 0.5, tooLong: z === null && share < 0.5 });
+      var row = rows[c.id];
+      if (share >= 0.5) {
+        setRowState(row, 'never', null);
+      } else if (z === null) {
+        setRowState(row, 'toolong', null);
+      } else {
+        setRowState(row, 'safe', waitSeconds);
+      }
+    });
+
+    // Curve end-labels often land within a few pixels of each other when
+    // multiple chains have already reached ~0% by the right edge of the
+    // chart; spread them out vertically so none overlap.
+    labelSpots.sort(function (a, b) { return a.y - b.y; });
+    var MIN_GAP = 13;
+    for (var i = 1; i < labelSpots.length; i++) {
+      if (labelSpots[i].y < labelSpots[i - 1].y + MIN_GAP) {
+        labelSpots[i].y = labelSpots[i - 1].y + MIN_GAP;
+      }
+    }
+    labelSpots.forEach(function (spot) {
+      var curveLbl = svgEl('text', {
+        class: 'cr-curve-label', x: spot.x, y: spot.y,
+        'text-anchor': spot.x > W - PAD_R - 30 ? 'end' : 'start', fill: spot.color
+      });
+      curveLbl.textContent = spot.name;
+      frag.appendChild(curveLbl);
+    });
+
+    svg.appendChild(frag);
+
+    // One plain sentence naming what the current settings produce: fastest
+    // chain to become safe versus slowest, so a reader gets the headline
+    // comparison without reading the full per-chain list above.
+    var resultEl = document.getElementById('crResultLine');
+    var safeOnes = results.filter(function (r) { return r.waitSeconds !== null; });
+    if (safeOnes.length === 0) {
+      resultEl.innerHTML = 'At <b>' + shareSlider.value + '%</b> attacker strength, none of these chains ever becomes safe: the attacker can out-mine any wait.';
+    } else {
+      safeOnes.sort(function (a, b) { return a.waitSeconds - b.waitSeconds; });
+      var fastest = safeOnes[0], slowest = safeOnes[safeOnes.length - 1];
+      if (fastest === slowest) {
+        resultEl.innerHTML = 'At <b>' + shareSlider.value + '%</b> attacker strength, <b>' + fastest.name + '</b> becomes safe in ' + fmtTime(fastest.waitSeconds) + '.';
+      } else {
+        resultEl.innerHTML = 'At <b>' + shareSlider.value + '%</b> attacker strength, <b>' + fastest.name + '</b> becomes safe in ' + fmtTime(fastest.waitSeconds) + ', while <b>' + slowest.name + '</b> needs ' + fmtTime(slowest.waitSeconds) + '.';
+      }
+    }
+  }
+
+  shareSlider.addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>

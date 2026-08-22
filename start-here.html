@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Start Here | Kaspa Explained</title>
   <meta name="description" content="New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -30,8 +40,8 @@
   <meta name="twitter:description" content="New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -48,6 +58,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -60,6 +71,10 @@
       <h1>Start with the problem</h1>
       <p class="lead">Every crypto design answers one question: what breaks when you take away the single trusted operator?</p>
       <blockquote>A bank holds your balance, checks each change, and cleans up the mess when something goes wrong. Take the bank out and that work does not vanish. Keys, agreement rules, rewards, and open markets are what grows back in its place, and each one arrives with a bill.</blockquote>
+      <details class="deep-dive">
+        <summary>What "grows back" means, one line each</summary>
+        <p>Keys stand in for a login: whoever holds the private key can move the balance, and nobody else can. Agreement rules replace the bank's internal ledger check: strangers running independent software still have to land on one shared history. Rewards replace payroll: something has to pay for the work of proposing and checking blocks. Open markets replace a teller window: getting a balance in or out means finding another party to trade with. No issuer stands behind it.</p>
+      </details>
     </section>
 
     <section id="records" class="section">
@@ -92,7 +107,9 @@
     <section id="keys" class="section">
       <p class="eyebrow">Proof without a login desk</p>
       <h2>Keys take over from the account</h2>
-      <p>No operator means no password reset and no support desk, so math stands in for both. A transaction is a signed instruction that a stranger's node can check alone: spend this value, create that value, pay this fee. A block is a batch of those instructions tied to the history behind it, and a node takes the whole batch or none of it. Without keys, the network falls back on a central login desk or an ID registry to decide who may move a balance.</p>
+      <p>No operator means no password reset and no support desk, so math stands in for both.</p>
+      <p>A transaction is a signed instruction that a stranger's node can check alone: spend this value, create that value, pay this fee. A block is a batch of those instructions tied to the history behind it, and a node takes the whole batch or none of it.</p>
+      <p>Without keys, the network falls back on a central login desk or an ID registry to decide who may move a balance.</p>
       <div class="reference-grid grid-cards">
         <article>
           <h3>Private key</h3>
@@ -116,7 +133,9 @@
     <section id="consensus" class="section">
       <p class="eyebrow">Agreement</p>
       <h2>A record only counts if strangers agree on it</h2>
-      <p>Show Bob one ledger and Carol another and the same coin has just been spent twice. Thousands of independent computers see network messages land in different orders, and they still have to end up on one shared history. Consensus is the set of rules that gets them there. What those rules have to stop is a short list, and every design choice below traces back to it.</p>
+      <p>Show Bob one ledger and Carol another and the same coin has just been spent twice.</p>
+      <p>Thousands of independent computers see network messages land in different orders, and they still have to end up on one shared history. Consensus is the set of rules that gets them there.</p>
+      <p>What those rules have to stop is a short list, and every design choice below traces back to it.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Attack</th><th>Plain meaning</th><th>Why users care</th></tr></thead>
@@ -144,7 +163,9 @@
           <p>Collateral does the same job from inside. Validators post the native asset and can lose it for bad behavior the protocol can prove, which trades the power bill for wealth concentration, delegation, and staking providers with real say over who validates. Ethereum, Solana, and most newer networks run some version of it.</p>
         </article>
       </div>
-      <p>Either way the network needs an internal unit of value, and that is the job the token does. It is the thing the ledger tracks, the fee asset that keeps spam costly, the reward that pays for security, and the way people get in and out without an issuer approving each participant. Speed, privacy, security, node cost, and decentralization all pull against each other here, which the <a href="/why-kaspa-matters">how Kaspa compares</a> lays out choice by choice.</p>
+      <p>Either way the network needs an internal unit of value, and that is the job the token does.</p>
+      <p>It is the thing the ledger tracks, the fee asset that keeps spam costly, the reward that pays for security, and the way people get in and out without an issuer approving each participant.</p>
+      <p>Speed, privacy, security, node cost, and decentralization all pull against each other here, which the <a href="/why-kaspa-matters">how Kaspa compares</a> lays out choice by choice.</p>
       <p class="fit-note"><strong>Simple check:</strong> most tokens do not need to exist. Ask what this one does that BTC, ETH, USDC, or a plain database does not already do.</p>
     </section>
 
@@ -192,7 +213,9 @@
     <section id="kaspa" class="section">
       <p class="eyebrow">Where Kaspa enters</p>
       <h2>Keep the mining, fix the ordering</h2>
-      <p>Bitcoin-style chains pick one block path at a time and throw the rest away. That is conservative and it works, and it caps how fast blocks can arrive: two honest miners who solve a block seconds apart end up competing, and only one of them counts. Kaspa's bet is that a mined UTXO network can keep both blocks, order them with GHOSTDAG, and bring payments closer to real time without changing what the mining secures. Payments, receipts, wallets, proofs, custody, and later rule-based apps all fit that shape, which <a href="/why-kaspa-matters">how Kaspa compares</a> works through against Bitcoin, Ethereum, and Solana.</p>
+      <p>Bitcoin-style chains pick one block path at a time and throw the rest away. That is conservative and it works, and it caps how fast blocks can arrive: two honest miners who solve a block seconds apart end up competing, and only one of them counts.</p>
+      <p>Kaspa's bet is that a mined UTXO network can keep both blocks, order them with GHOSTDAG, and bring payments closer to real time without changing what the mining secures.</p>
+      <p>Payments, receipts, wallets, proofs, custody, and later rule-based apps all fit that shape, which <a href="/why-kaspa-matters">how Kaspa compares</a> works through against Bitcoin, Ethereum, and Solana.</p>
       <div class="overview-grid grid-cards">
         <article>
           <span>Live now</span>
@@ -316,6 +339,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

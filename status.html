@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Kaspa Status | Kaspa Explained</title>
   <meta name="description" content="What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -41,8 +51,8 @@
     "about": ["Kaspa", "Proof of Work", "GHOSTDAG", "Crescendo", "Toccata", "vProgs", "DAGKnight"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -59,6 +69,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -70,6 +81,14 @@
     <section class="status-hero section">
       <p class="eyebrow">Current status</p>
       <h1>Kaspa current status</h1>
+      <div class="answer-block">
+        <p class="eyebrow">Live on mainnet right now</p>
+        <p>Proof-of-work GHOSTDAG consensus, 10 BPS Crescendo, and Toccata's L1 spend rules, asset rules, ZK proof checks, and sequencing commitments are all live.</p>
+        <details class="source-more">
+          <summary>Exact numbers, checked August 22, 2026</summary>
+          <p>Checked August 22, 2026 against a synced v2.0.1 node: virtual DAA score 519,826,161, about 27.655 billion KAS in supply, block reward 2.31246515 KAS.</p>
+        </details>
+      </div>
       <p class="lead">Kaspa's <a href="/glossary#blockdag">blockDAG</a> keeps every honest block miners make, and <a href="/glossary#ghostdag">GHOSTDAG</a> orders them into one <a href="/glossary#utxo">UTXO</a> history. This page labels what runs on mainnet today and what is still on the way.</p>
       <div class="status-legend" aria-label="Status legend">
         <span class="legend-label">Legend</span>
@@ -79,7 +98,7 @@
         <span class="status-pill research">Research</span>
         <span class="status-pill not-live">Not live</span>
       </div>
-      <p class="fit-note"><strong>Checked:</strong> August 22, 2026. Public mainnet REST checks reported <code>kaspa-mainnet</code> on a synced v2.0.1 node. Virtual DAA score was 519,826,161, well above the activation score. Supply came back at about 27.655 billion KAS, with a block reward of 2.31246515 KAS at the current emission step. <strong>Toccata:</strong> the status table below has the activation record; <a href="/toccata-status">Toccata status</a> has the post-activation checks.</p>
+      <p class="fit-note">The table below has Toccata's activation record; <a href="/toccata-status">Toccata status</a> has the post-activation checks.</p>
       <nav class="jump-list" aria-label="Status page shortcuts">
         <a href="#usable-now">Usable now</a>
         <a href="#status-snapshot">Status table</a>
@@ -152,19 +171,37 @@
             <tr>
               <td>Crescendo 10 BPS</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>10 blocks per second is live. Michael Sutton put the throughput gain at roughly 8-9x and the confirmation-time gain around 30%. Neither figure is instant finality, and a flat "10x faster confirmations" claim goes past his own numbers.</td>
+              <td>
+                10 BPS is live: roughly 8-9x throughput, about 30% faster confirmations, not instant finality.
+                <details class="cell-detail">
+                  <summary>Sutton's numbers, and the claim that overshoots them</summary>
+                  <p>Michael Sutton put the throughput gain at roughly 8-9x and the confirmation-time gain around 30%. Neither figure is instant finality, and a flat "10x faster confirmations" claim goes past his own numbers.</p>
+                </details>
+              </td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/releases">rusty-kaspa releases</a>; <a href="https://medium.com/@michaelsuttonil/unveiling-the-crescendo-hard-fork-roadmap-10bps-and-more-6072329e177f">Crescendo roadmap note</a></td>
             </tr>
             <tr>
               <td>August 22 L1 snapshot</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Mainnet REST readout: virtual DAA 519,826,161, about 27.655 billion KAS from the supply endpoint, 2.31246515 KAS per block. The node answering was v2.0.1 and synced. These numbers move by the hour; recheck before quoting them. Skip the block and header counts from this endpoint. It spreads reads across backend nodes with different pruning states, so the figure covers only the node that answered. A prior check on August 8 saw two reads a minute apart return 1,488,846 and 26,573,222.</td>
+              <td>
+                Virtual DAA 519,826,161, about 27.655 billion KAS supply, 2.31246515 KAS per block, from a synced v2.0.1 node.
+                <details class="cell-detail">
+                  <summary>Why this snapshot is not a block or header count</summary>
+                  <p>These numbers move by the hour; recheck before quoting them. Skip the block and header counts from this endpoint. It spreads reads across backend nodes with different pruning states, so the figure covers only the node that answered. A prior check on August 8 saw two reads a minute apart return 1,488,846 and 26,573,222.</p>
+                </details>
+              </td>
               <td><a href="https://api.kaspa.org/info/blockdag">mainnet blockDAG API</a>; <a href="https://api.kaspa.org/info/coinsupply">supply API</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a></td>
             </tr>
             <tr>
               <td>Emission schedule</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Emission steps down every 2,629,800 seconds by a factor of 2<sup>-1/12</sup>, about 5.61% a step, 426 steps deep in the consensus table. The steps are triggered by DAA score, which is exact, so quote that. It went 25.95654359 KAS/sec at DAA 452,313,000, then 24.49971474 at 478,611,000, then 23.12465141 at 504,909,000, which is where the network sits now. That step fired around August 5, 2026 and the block reward API moved with it, from 2.44997148 to 2.31246515 KAS per block. The next step is 21.82676446 KAS/sec at DAA 531,207,000, roughly September 4, 2026. Calendar dates drift because they depend on how fast blocks land. The DAA triggers do not. No month is a cliff, and the August step was routine, the same as May, June, and July.</td>
+              <td>
+                Steps down about 5.61% roughly every 30 days, triggered by DAA score, not the calendar. Currently 23.12465141 KAS/sec.
+                <details class="cell-detail">
+                  <summary>The step schedule and the numbers behind it</summary>
+                  <p>Emission steps down every 2,629,800 seconds by a factor of 2<sup>-1/12</sup>, about 5.61% a step, 426 steps deep in the consensus table. The steps are triggered by DAA score, which is exact, so quote that. It went 25.95654359 KAS/sec at DAA 452,313,000, then 24.49971474 at 478,611,000, then 23.12465141 at 504,909,000, which is where the network sits now. That step fired around August 5, 2026 and the block reward API moved with it, from 2.44997148 to 2.31246515 KAS per block. The next step is 21.82676446 KAS/sec at DAA 531,207,000, roughly September 4, 2026. Calendar dates drift because they depend on how fast blocks land. The DAA triggers do not. No month is a cliff, and the August step was routine, the same as May, June, and July.</p>
+                </details>
+              </td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs">coinbase.rs subsidy table</a>; <a href="https://api.kaspa.org/info/blockreward">block reward API</a>; <a href="https://wiki.kaspa.org/en/tokenomics">Kaspa Wiki tokenomics</a></td>
             </tr>
             <tr>
@@ -176,7 +213,13 @@
             <tr>
               <td>Toccata</td>
               <td><span class="status-pill live">Live</span></td>
-              <td>Hard fork for L1 spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, standalone based-zk apps, and vProgs groundwork. v2.0.0 set mainnet activation at DAA 474,165,565, and v2.0.1 followed as the Toccata release.</td>
+              <td>
+                Hard fork for L1 spend rules, asset rules, Silverscript, ZK proof checks, and sequencing commitments.
+                <details class="cell-detail">
+                  <summary>Activation record</summary>
+                  <p>v2.0.0 set mainnet activation at DAA 474,165,565, and v2.0.1 followed as the Toccata release, adding standalone based-zk apps and vProgs groundwork.</p>
+                </details>
+              </td>
               <td><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 release</a>; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>; <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3 release</a>; <a href="https://github.com/kaspanet/kips">Kaspa KIPs</a></td>
             </tr>
             <tr>
@@ -200,8 +243,14 @@
             <tr>
               <td>100 BPS / netsplit-resilient payments</td>
               <td><span class="status-pill research">Research</span></td>
-              <td>Kaspa.org puts 10-millisecond blocks, 100 BPS, and netsplit-resilient local payments in a proposed 2027 hard fork. That page is the only place this claim appears, and it is not treated as a reliable source on this site; no spec, code, release, or activation evidence exists yet anywhere else.</td>
-              <td><a href="https://kaspa.org/lore">Kaspa.org lore</a></td>
+              <td>
+                A proposed 2027 hard fork target: 10-millisecond blocks, 100 BPS, netsplit-resilient local payments. No spec, code, or release yet.
+                <details class="cell-detail">
+                  <summary>Where this claim comes from</summary>
+                  <p>Kaspa.org puts 10-millisecond blocks, 100 BPS, and netsplit-resilient local payments in a proposed 2027 hard fork. That page is the only place this claim appears, and it is not treated as a reliable source on this site; no spec, code, release, or activation evidence exists yet anywhere else.</p>
+                </details>
+              </td>
+              <td>No anchor source. The only place this appears is a kaspa.org roadmap page, which this site does not accept as a source.</td>
             </tr>
             <tr>
               <td>RTD-derived oracle / TangVM flows</td>
@@ -230,7 +279,13 @@
           <tbody>
             <tr>
               <td>Mainnet speed means a fixed huge TPS number.</td>
-              <td>10 BPS is live. Simple-payment capacity runs roughly 2.5k to 3.4k TPS depending on transaction shape. Covenant apps, ZK proofs, tokens, and vProg-style systems each need their own workload number. See <a href="/what-is-kaspa">What is Kaspa</a>.</td>
+              <td>
+                10 BPS is live; simple-payment capacity runs roughly 2.5k-3.4k TPS.
+                <details class="cell-detail">
+                  <summary>Why one TPS number doesn't cover every workload</summary>
+                  <p>The 2.5k-3.4k range depends on transaction shape. Covenant apps, ZK proofs, tokens, and vProg-style systems each need their own workload number. See <a href="/what-is-kaspa">What is Kaspa</a>.</p>
+                </details>
+              </td>
               <td>One number turns a real technical edge into a brittle marketing claim.</td>
             </tr>
             <tr>
@@ -255,7 +310,13 @@
             </tr>
             <tr>
               <td>Toccata means one action can already span several apps, all or nothing.</td>
-              <td>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk apps. Composing separately compiled covenant apps atomically in one transaction is possible on Toccata itself. Argent's Inter-Covenant Communication does exactly that, so far only in unaudited offline demos. <a href="/toccata-explained">vProgs</a> still differs on shared mutable state, the case where many users change one app state at once.</td>
+              <td>
+                Composing separately compiled covenant apps atomically in one transaction works on Toccata today, in unaudited demos.
+                <details class="cell-detail">
+                  <summary>What Toccata covers, and what still needs vProgs</summary>
+                  <p>Toccata is the foundation for covenant rules, ZK proof checks, sequencing commitments, and based-zk apps. Argent's Inter-Covenant Communication composes separately compiled covenant apps atomically in one transaction, so far only in unaudited offline demos. <a href="/toccata-explained">vProgs</a> still differs on shared mutable state, the case where many users change one app state at once.</p>
+                </details>
+              </td>
               <td>Fast L1 coordination is one claim. Several apps acting in one operation is another.</td>
             </tr>
             <tr>
@@ -284,13 +345,13 @@
             <tr><td>Liquidity</td><td>Users, miners, and builders can get in and out without pain.</td><td>Liquidity can be pure betting. It does not show that anyone uses the product.</td></tr>
             <tr><td>Developer activity</td><td>Tools, wallets, and apps keep getting better.</td><td>Commits and posts are noisy. Neither shows that a user got something.</td></tr>
             <tr><td>Integrations</td><td>Wallets, explorers, exchanges, and receipt tools carry working support for the network.</td><td>A listing or a partner post can sit there with no use behind it.</td></tr>
-            <tr><td>Workflow-linked on-chain activity</td><td>Repeat transactions tied to wallets, app state, receipts, or access show real pull.</td><td>Campaigns, raw mints, spam, and scripted loops pump the count.</td></tr>
-            <tr><td>Receipt and payload activity</td><td>Payment receipts and payload records show on-chain data doing real work.</td><td>Scripted loops, or records nobody ever redeems, can look like uptake.</td></tr>
+            <tr><td>Workflow-linked on-chain activity</td><td>Repeat transactions tied to wallets, app state, receipts, or payment payloads show real pull.</td><td>Campaigns, raw mints, spam, and scripted loops pump the count, and records nobody redeems don't show it.</td></tr>
             <tr><td>Toccata-era apps</td><td>Vault, asset, proof, and market rules turning into apps people use.</td><td>TN10/TN12 tests and demos can run ahead of the wallets, explorers, and liquidity apps need.</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Four numbers get read as adoption when they are not. Price brings attention and liquidity, and it also moves on leverage, thin float, and market cycles that have nothing to do with the protocol; the <a href="/kaspa-mining">mining page</a> splits price from hash rate, ASIC markets, and fees. Social attention helps teaching, and it also breeds hype that outruns the software that shipped. Roadmap buzz counts demos, testnets, and shipped mainnet features as one number: Toccata shipped, DAGKnight and vProgs have not. A raw transaction count means nothing until it is split into users, spam, exchange moves, apps, and tests.</p>
+      <p>Four numbers get read as adoption when they are not. Price brings attention and liquidity, and it also moves on leverage, thin float, and market cycles that have nothing to do with the protocol; the <a href="/kaspa-mining">mining page</a> splits price from hash rate, ASIC markets, and fees. Social attention helps teaching, and it breeds hype that outruns the software that shipped.</p>
+      <p>Roadmap buzz counts demos, testnets, and shipped mainnet features as one number: Toccata shipped, DAGKnight and vProgs have not. A raw transaction count means nothing until it is split into users, spam, exchange moves, apps, and tests.</p>
       <ol class="learning-steps grid-cards">
         <li><strong>Users understand the benefit.</strong> <span>Wallets and guides make fast PoW confirmation easy for a non-expert to follow.</span></li>
         <li><strong>Running your own stays real.</strong> <span>What a node or a miner needs does not narrow to a handful of operators.</span></li>
@@ -373,7 +434,13 @@
               <tr>
                 <td>Argent</td>
                 <td><a href="https://github.com/argent-lang/argent">argent-lang/argent</a> is an actor-based language and compiler for stateful, multi-contract applications on covenant-native UTXO rails. It compiles <code>.ag</code> source to plain Silverscript contracts and portable artifacts that <code>argent-runtime</code> turns into transactions: actors, state, transitions, named emits, and terminal <code>become</code> dispatch. It is where most of Michael Sutton's July output went, and it stayed active through July 31, adding Inter-Covenant Communication, actor enums, commitment-forest route planning, and a VS Code extension. Two sibling repos appeared: <a href="https://github.com/argent-lang/argent-playground">argent-playground</a> on July 9 and <a href="https://github.com/argent-lang/argent-template">argent-template</a> on July 24. Examples now run well past the original Stones and Tickets.</td>
-          <td>The README calls the main pieces present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, and closed and open ICC. The gate it sets for itself is an audit. A production path opens once Silverscript completes its audit and is released, and Argent needs further audit and hardening after that. No release, no tag, no crates.io publish. Breaking-change commits on July 23 and 24 mean the ABI is still moving. A runtime transaction builder does exist now, <code>argent-runtime</code>'s <code>TxBuilder</code> and <code>TxContext</code>, which the README lists under what is useful today; what is still missing is generated app-specific builder APIs. The playground demos, including the DEX one, run fully offline against hardcoded fixtures with no node or RPC connection, so none of them is a deployment.</td>
+          <td>
+            Compiler and runtime exist, gated on a Silverscript audit. No release, no crates.io publish.
+            <details class="cell-detail">
+              <summary>What the README claims</summary>
+              <p>The README calls the main pieces present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, and closed and open ICC. The gate it sets for itself is an audit. A production path opens once Silverscript completes its audit and is released, and Argent needs further audit and hardening after that. No release, no tag, no crates.io publish. Breaking-change commits on July 23 and 24 mean the ABI is still moving. A runtime transaction builder does exist now, <code>argent-runtime</code>'s <code>TxBuilder</code> and <code>TxContext</code>, which the README lists under what is useful today; what is still missing is generated app-specific builder APIs. The playground demos, including the DEX one, run fully offline against hardcoded fixtures with no node or RPC connection, so none of them is a deployment.</p>
+            </details>
+          </td>
               </tr>
               <tr>
                 <td>vProgs</td>
@@ -407,7 +474,7 @@
       <div class="reference-grid grid-cards">
         <article>
           <h3>Is DAGKnight live?</h3>
-          <p>No. DAGKnight is an adaptive consensus direction, still in research. Mainnet runs GHOSTDAG.</p>
+          <p>No. DAGKnight is an adaptive consensus direction, still in research. Mainnet runs GHOSTDAG. The <a href="/demos/parameterless">parameterless demo</a> sets a latency assumption by hand and shows a fixed security parameter break where an adaptive one does not.</p>
         </article>
         <article>
           <h3>Is Toccata live?</h3>
@@ -415,7 +482,7 @@
         </article>
         <article>
           <h3>Are Kaspa smart contracts live?</h3>
-          <p>Toccata put the L1 pieces live on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. A mature native app layer, with audited apps and broad tooling, is still ahead. Richer programmability through vProgs is later work.</p>
+          <p>Toccata put the L1 pieces live on mainnet: spend rules, asset rules, ZK proof checks, and sequencing commitments. A mature native app layer, with audited apps and broad tooling, is still ahead. Richer programmability through vProgs is later work. The <a href="/demos/shared-state">shared state demo</a> shows what Toccata already gives you against what vProgs would add.</p>
         </article>
       </div>
     </section>
@@ -461,6 +528,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

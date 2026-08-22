@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Node Cost and Pruning | Kaspa Explained</title>
+<meta name="description" content="What running a node costs across chains, why some keep everything forever, and why Kaspa's stays near 50 GB no matter how long it has run.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/node-cost">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#100e0c; --bg-2:#1c1a17; --panel:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
+    --line:#4a453d; --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --cyan:#2997ff; --purple:#bf5af2; --pink:#ff9f0a; --ink:#06201b;
+    --amber:#ff9f0a;
+    --accent-soft:rgba(102,209,193,.12);
+    --amber-soft:rgba(255,159,10,.14);
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --field-bg:#221f1c; --field-line:#4a453d;
+    --card-shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --display-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --bg:#fbfaf6; --bg-2:#f3f0ea; --panel:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
+    --line:#d8d4cb; --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --cyan:#0071e3; --purple:#6e56cf; --pink:#b25000; --ink:#ffffff;
+    --amber:#b25000;
+    --accent-soft:rgba(14,124,107,.1);
+    --amber-soft:rgba(178,80,0,.1);
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --field-bg:#ffffff; --field-line:#d2d2d7;
+    --card-shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text); font-family:var(--body-font);
+    font-size:15px; line-height:1.5; padding:20px 16px 48px;
+  }
+  .wrap{max-width:780px; margin:0 auto;}
+  .top-row{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+  .theme-toggle{
+    flex:none; min-height:44px; min-width:44px; border:0; border-radius:980px; padding:0 14px;
+    background:var(--control-bg); color:var(--text); font-size:.8rem; font-weight:500; cursor:pointer;
+  }
+  .theme-toggle:hover{background:var(--control-hover);}
+  h1{
+    font-size:1.3rem; font-weight:700; letter-spacing:-.014em; line-height:1.2; margin:0 0 6px;
+  }
+  h2{font-family:var(--display-font); font-weight:650; letter-spacing:-.008em; font-size:1.2rem; margin:0 0 10px;}
+  .lead{color:var(--muted); font-weight:420; font-size:1.02rem; line-height:1.5; margin:0 0 20px; max-width:60ch;}
+  .payoff{
+    font-size:.98rem; font-weight:600; color:var(--text); background:var(--accent-soft);
+    border-radius:14px; padding:12px 16px; margin:0 0 14px; transition:background .2s;
+  }
+  .panel{
+    border:0; background:var(--card-bg); box-shadow:var(--card-shadow); border-radius:18px; padding:20px; margin-bottom:18px;
+  }
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .chip{
+    border:0; background:var(--control-bg); color:var(--text);
+    border-radius:980px; padding:6px 12px; font-size:.82rem; cursor:pointer;
+    font-family:inherit; min-height:44px; display:inline-flex; align-items:center;
+  }
+  .chip[aria-pressed="true"]{background:var(--green); color:var(--ink); font-weight:600;}
+  .chip:hover{background:var(--control-hover);}
+  .zoom-row{display:flex; align-items:center; gap:10px; margin:2px 0 14px;}
+  .zoom-btn{
+    border:0; background:var(--control-bg); color:var(--text); border-radius:980px; padding:0 14px;
+    font-size:.8rem; cursor:pointer; min-height:44px; font-family:inherit;
+  }
+  .zoom-btn[aria-pressed="true"]{background:var(--purple); color:#fff; font-weight:600;}
+  .zoom-btn:hover{background:var(--control-hover);}
+  .zoom-btn[aria-pressed="true"]:hover{filter:brightness(1.08);}
+  .bars{display:flex; flex-direction:column; gap:4px;}
+  .bar-row{display:grid; grid-template-columns:120px 1fr 74px; align-items:center; gap:10px; font-size:.84rem; padding:4px 0;}
+  .bar-row .name{color:var(--text);}
+  .bar-track{background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; height:20px; position:relative; overflow:hidden;}
+  .bar-fill{position:absolute; left:0; top:0; bottom:0; background:var(--cyan); border-radius:8px 0 0 8px; min-width:6px; transition:width .25s ease-out;}
+  .bar-row.kaspa .bar-fill{background:var(--green);}
+  .bar-row .val{text-align:right; color:var(--muted); font-variant-numeric:tabular-nums;}
+  .bar-note{grid-column:1 / -1; font-size:.76rem; color:var(--faint); padding:0 0 6px 0; max-width:62ch;}
+  .scale-note{font-size:.76rem; color:var(--faint); margin-top:8px;}
+
+  .window-controls{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:14px;}
+  .window-controls label{font-size:.82rem; color:var(--muted); flex:none; max-width:100%;}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; flex:1; min-width:140px;
+    height:44px; padding:19px 0; background:transparent; outline:none;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:6px; background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px;
+  }
+  input[type=range]::-moz-range-track{
+    height:6px; background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; margin-top:-7px;
+    width:18px; height:18px; border-radius:50%; background:var(--green); border:2px solid var(--bg); cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%; background:var(--green); border:2px solid var(--bg); cursor:pointer;
+  }
+  #hoursLabel{font-size:.84rem; color:var(--text); font-variant-numeric:tabular-nums; flex:none;}
+  .window-diagram-wrap{position:relative; margin-bottom:34px;}
+  .window-diagram{
+    position:relative; height:48px; border-radius:8px; overflow:hidden; border:1px solid var(--field-line);
+    display:flex;
+  }
+  .window-kept{background:var(--accent-soft); display:flex; align-items:center; padding-left:10px; font-size:.76rem; color:var(--green); font-weight:600;}
+  .window-discarded{background:var(--field-bg); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; font-size:.76rem; color:var(--faint); font-weight:600;}
+  .finality-line{
+    position:absolute; top:0; bottom:0; width:2px; background:var(--amber); opacity:.85;
+  }
+  .finality-line-label{
+    position:absolute; top:100%; transform:translate(-50%,4px); font-size:.68rem; color:var(--amber); white-space:nowrap;
+  }
+  .pruning-boundary-label{
+    position:absolute; left:100%; top:100%; transform:translate(-100%,4px);
+    font-size:.72rem; color:var(--faint); white-space:nowrap;
+  }
+  .window-marker{
+    position:absolute; top:0; bottom:0; width:2px; background:var(--text);
+    transition:left .2s ease-out;
+  }
+  .window-marker::after{
+    content:""; position:absolute; top:-4px; left:50%; transform:translateX(-50%);
+    width:8px; height:8px; border-radius:50%; background:var(--text);
+  }
+  .window-status{font-size:.9rem; margin:0; font-weight:600; transition:color .2s ease-out;}
+  .window-status.kept{color:var(--green);}
+  .window-status.margin{color:var(--amber);}
+  .window-status.discarded{color:var(--faint);}
+  @media (prefers-reduced-motion: reduce){
+    .window-marker, .window-status, .bar-fill{transition:none;}
+  }
+  .boundary-card{
+    display:grid; grid-template-columns:1fr; gap:10px;
+  }
+  .boundary-row{border-left:3px solid var(--line-bright); padding-left:12px;}
+  .boundary-row.finality{border-left-color:var(--amber);}
+  .boundary-row.pruning{border-left-color:var(--green);}
+  .boundary-row strong{font-size:1rem; display:block;}
+  .boundary-row span{color:var(--faint); font-size:.82rem;}
+  p.prose{font-size:.94rem;}
+  details{border:0; background:var(--panel); border-radius:14px; padding:10px 14px; margin-top:8px;}
+  summary{cursor:pointer; font-size:.88rem; font-weight:600; color:var(--cyan); list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+"; font-weight:800; margin-right:6px;}
+  details[open] summary::before{content:"\2212";}
+  .formula{font-size:.82rem; color:var(--muted); margin-top:10px;}
+  .formula p{margin:0 0 10px;}
+  code{background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; padding:1px 5px; font-size:.85em;}
+  a{color:var(--cyan);}
+  footer{font-size:.76rem; color:var(--faint); margin-top:18px;}
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+
+</style>
+<script>
+(function(){
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row">
+    <h1>What a node actually costs</h1>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="lead">Disk space by chain, why some keep every block forever, and why a Kaspa node holds near 50 GB no matter how long it has run.</p>
+
+  <div class="panel">
+    <h2>Compare node storage</h2>
+    <div class="chips" id="chipRow" role="group" aria-label="Toggle chains to compare"></div>
+    <div class="zoom-row">
+      <button type="button" class="zoom-btn" id="zoomBtn" aria-pressed="false">Zoom into the small end</button>
+    </div>
+    <div class="bars" id="barRows"></div>
+    <p class="scale-note" id="scaleNote">Linear scale: bar length is proportional to gigabytes, not to its logarithm. A bar under 3% of the row width is floored to stay visible; read its number, not its length. Figures are this site's own chain dataset, captured 2026&#8209;08&#8209;01.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Would Kaspa be small if it didn't prune?</h2>
+    <p class="prose">No. It would already be bigger than it is today, and it would keep growing forever. Pruning is what keeps the pruned figure above flat, not an incidental detail.</p>
+    <p class="payoff" id="growthPayoff">A node that never pruned would already hold at least about 76 GB of coinbase transactions alone since genesis, before a single user payment, block header, or byte of DAG bookkeeping is counted. The real pruned node running today is 50 GB, total.</p>
+    <p class="scale-note">This is an estimate built from real protocol constants (block rate history, genesis date, transaction byte sizes), not a measurement and not an invented curve. It is a floor: block headers, per-block DAG metadata, and every user transaction are left out because no published figure covers their size, so the true unpruned number is higher, likely well above this floor. See the arithmetic below.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Why 10 blocks a second doesn't balloon the disk</h2>
+    <p class="prose">This is a pruned Kaspa node, not one run with <code>--archival</code> (below), and not another chain.</p>
+    <div class="window-controls">
+      <label for="hoursSlider">Hours since a block was produced</label>
+      <input type="range" id="hoursSlider" min="0" max="36" step="0.5" value="6">
+      <span id="hoursLabel">6 hr</span>
+    </div>
+    <div class="window-diagram-wrap">
+      <div class="window-diagram" id="windowDiagram" role="img" aria-label="A block's age against the finality point at 12 hours and the pruning point at 30 hours">
+        <div class="window-kept" id="windowKept" style="flex:0 0 83.33%;">kept</div>
+        <div class="window-discarded" id="windowDiscarded" style="flex:0 0 16.67%;">discarded</div>
+        <div class="finality-line" style="left:33.33%;"></div>
+        <div class="window-marker" id="windowMarker"></div>
+      </div>
+      <span class="finality-line-label" style="left:33.33%;">finality, 12 hr</span>
+      <span class="pruning-boundary-label">pruning, 30 hr</span>
+    </div>
+    <p class="window-status" id="windowStatus"></p>
+    <p class="scale-note">Two different lines, not one. Finality is where a reorg becomes impossible. Pruning is where a node actually throws the block away, deeper than that, on purpose.</p>
+  </div>
+
+  <div class="panel boundary-card">
+    <div class="boundary-row finality">
+      <strong>Finality: 432,000 blocks, 12 hours</strong>
+      <span>Past this depth, Kaspa nodes refuse any reorganization that would rewrite the block. Not "very unlikely," refused outright by protocol rule.</span>
+    </div>
+    <div class="boundary-row pruning">
+      <strong>Pruning: 1,080,000 blocks, 30 hours</strong>
+      <span>This, not finality, is where a node actually discards old block data. It sits 648,000 blocks, about 18 hours, past the point where a reorg is already impossible.</span>
+    </div>
+    <p class="prose" style="margin:0;">432,000 is not an arbitrary cutoff and it is not the discard point either. It is where the safety guarantee ends. The extra 18 hours the node keeps past that is a deliberate margin the protocol's own code adds on top, not a number squeezed to the edge of the security proof. Full derivation and sources are in the collapsible below.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Full node, archival node, and what actually makes this safe</h2>
+    <p class="prose">A default Kaspa node is not the only option, and pruning is not one cut, it is two, backed by a specific proof rather than a guess.</p>
+    <p class="prose"><strong>Full node vs. archival node.</strong> The behavior above is what a default node does. Anyone who wants every block kept forever can run the same rusty-kaspa software with its own <code>--archival</code> flag, documented in the node's own help text as running "an archival node: avoids deleting old block data when moving the pruning point," with a plain warning attached: "heavy disk usage." No published size exists for a mainnet node run this way, so this page does not estimate one.</p>
+    <p class="prose"><strong>First-order and second-order pruning.</strong> Pruning itself is two passes, not one. First, at the 1,080,000-block boundary above, a node discards block bodies and transactions, keeping headers. Second, deeper still, it discards most of the headers too, keeping only a sparse "posterity" chain of headers spaced about 24 hours apart back to genesis, plus a cryptographic pruning proof that lets a new node verify that sparse chain is genuine. Source: rusty-kaspa's pruning-processor code and KIP-15.</p>
+    <p class="prose"><strong>MuHash: the actual answer to "is this safe."</strong> None of this works without a way to prove the current UTXO set, who owns what, right now, is correct without replaying the history that produced it. MuHash is Kaspa's answer: a rolling, order-independent commitment over the UTXO set, so a node can add and remove entries as coins are created and spent and land on the same fingerprint it would get from hashing everything at once (rusty-kaspa's <code>crypto/muhash</code> crate). A pruned node checks each new block's UTXO commitment against that fingerprint instead of re-deriving it from years of transactions. That check, not an assumption that old data probably doesn't matter, is what makes discarding it safe.</p>
+  </div>
+
+  <p class="prose">A pruned Kaspa node runs about 50 GB. Bitcoin's default is 758 GB, Ethereum's around 2 TB, Solana's 2.5 TB, Internet Computer's 32 TB. That gap is not better compression. Each of those keeps more history than Kaspa does, by choice or by design, for reasons the panel above breaks down chain by chain.</p>
+
+  <details>
+    <summary>How each chain handles history, and why</summary>
+    <div class="formula" id="historyNotesBody">
+      <!-- filled by script -->
+    </div>
+  </details>
+
+  <details>
+    <summary>The arithmetic behind the unpruned comparison</summary>
+    <div class="formula">
+      <p><strong>Block count since genesis.</strong> Kaspa's mainnet genesis is timestamped November 22, 2021 (rusty-kaspa <code>genesis.rs</code>). The Crescendo hard fork moved the network from 1 block/second to 10 blocks/second on May 5, 2025, mainnet DAA score 110,165,000 (rusty-kaspa v1.0.0 release notes). That gives two eras: about 1,260 days at 1 block/sec (108,864,000 blocks), then about 474 days at 10 blocks/sec through today, August 22, 2026 (409,536,000 blocks). Total: about 518,400,000 blocks ever produced. This part is measured, not estimated, aside from ordinary day-rounding.</p>
+      <p><strong>Bytes per coinbase transaction.</strong> Every block carries exactly one coinbase transaction, a structural fact, not an estimate. Its size is modeled here as a transaction header (94 bytes) plus one output (52 bytes) &mdash; 146 bytes &mdash; using the same byte-level constants this site's own <a href="/demos/mass-calculator">mass calculator</a> sources from rusty-kaspa's transaction serialization code (<code>consensus/core/src/mass/mod.rs</code>, <code>constants.rs</code>). This is an ESTIMATE: real coinbase transactions can carry extra payload (miner tags and similar), which this model does not include, so 146 bytes is a floor, not a measurement.</p>
+      <p><strong>The multiplication.</strong> 518,400,000 blocks &times; 146 bytes &asymp; 75,700,000,000 bytes &asymp; 76 GB. This counts only the mandatory coinbase transaction in every block. It excludes block headers, GHOSTDAG/DAG parent-pointer metadata, and every ordinary user transaction ever sent, none of which have a published per-block byte figure in this site's sources, so the real unpruned total is higher than 76 GB, and could be substantially higher.</p>
+      <p><strong>What this does and doesn't show.</strong> It shows that even the smallest, most conservative slice of unpruned growth (one mandatory transaction type, modeled at its smallest plausible size) already exceeds the actual pruned node running today, 50 GB. It does not show a growth curve over time, a total including user transactions, or a true unpruned figure, because those inputs are not sourced anywhere this site can check. No number here is invented; where an input is a genuine measurement it is labeled as such above, and where it is a model built from real but incomplete constants, it is labeled ESTIMATE.</p>
+      <p>Finality and pruning depth: rusty-kaspa <code>consensus/core/src/config/{params.rs,bps.rs,constants.rs}</code>. <code>FINALITY_DURATION</code> is 43,200 seconds (12 hours); <code>PRUNING_DURATION</code> is 108,000 seconds (30 hours). At mainnet's 10 blocks/second, <code>finality_depth()</code> = 432,000 blocks and <code>pruning_depth()</code> takes the larger of a formula (finality depth plus safety terms for merge depth and anticone/mergeset size, referencing the project's <a href="https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf">Prunality analysis</a>) and the flat 108,000-second floor; at 10 BPS the flat floor wins, giving 1,080,000 blocks. No source found explains why 30 hours specifically, rather than a different round number, was chosen for that floor; it reads as a margin the protocol's authors judged sufficient rather than a value derived from a unique calculation. KIP-15 independently states the same figure in its own words: a node "prunes the transaction and header data after c. 52 hours (30 hours post-Crescendo)."</p>
+      <p>Archival mode: rusty-kaspa <code>kaspad</code> CLI, <code>--archival</code> flag, help text "Run as an archival node: avoids deleting old block data when moving the pruning point (Warning: heavy disk usage)," plus <code>--retention-period-days</code> for partial retention. First-order and second-order pruning, and the posterity-header chain: rusty-kaspa's pruning-processor source (<code>consensus/src/pipeline/pruning_processor</code>) and KIP-15. MuHash: rusty-kaspa <code>crypto/muhash/src/lib.rs</code>, documented there as a rolling (homomorphic) hash supporting order-independent <code>add_element</code>/<code>remove_element</code>.</p>
+    </div>
+  </details>
+
+  <footer>All comparisons offline, no network requests. Related: <a href="/kaspa-mining">Kaspa mining</a>, <a href="/glossary#pruning">glossary: pruning</a>.</footer>
+</div>
+
+<script>
+(function(){
+  var CHAINS = [
+    {name:'Kaspa', disk:50, launched:2021, kaspa:true},
+    {name:'Bitcoin', disk:758, launched:2009},
+    {name:'Ethereum', disk:2000, launched:2015},
+    {name:'Solana', disk:2500, launched:2020},
+    {name:'Internet Computer', disk:32000, launched:2021},
+    {name:'BNB Chain', disk:3000, launched:2020},
+    {name:'Cardano', disk:250, launched:2017},
+    {name:'Avalanche', disk:1000, launched:2020},
+    {name:'TRON', disk:3000, launched:2018},
+    {name:'Sui', disk:4000, launched:2023},
+    {name:'Aptos', disk:3000, launched:2022},
+    {name:'TON (Gram)', disk:1000, launched:2021},
+    {name:'Near', disk:2500, launched:2020},
+    {name:'Hedera', disk:5000, launched:2019},
+    {name:'Algorand', disk:100, launched:2019},
+    {name:'Litecoin', disk:229.9, launched:2011},
+    {name:'Monero', disk:250, launched:2014},
+    {name:'Polkadot', disk:2000, launched:2020},
+    {name:'Stellar', disk:100, launched:2015},
+    {name:'Bitcoin Cash', disk:217, launched:2017}
+  ];
+  var DEFAULT_ON = ['Kaspa','Bitcoin','Ethereum','Solana','Internet Computer'];
+  var SMALL_SET = ['Kaspa','Litecoin','Bitcoin Cash','Monero','Cardano','Stellar','Algorand'];
+  var active = {};
+  DEFAULT_ON.forEach(function(n){ active[n] = true; });
+  var zoomed = false;
+
+  var HISTORY_NOTES = {
+    'Kaspa': 'Prunes past the pruning boundary below, keeping the live UTXO set plus a rolling window of recent blocks. That window is bounded, so the pruned size holds near 50 GB regardless of how long the chain has run.',
+    'Bitcoin': 'A default full node keeps every block since genesis; nothing is discarded unless the operator turns on prune mode, which then cannot fully serve historic blocks to new peers. 758 GB is the full, unpruned history. Source: bitcoin.org/en/full-node.',
+    'Ethereum': 'A normal (non-archive) node keeps only recent state and prunes the rest, but still stores full block and receipt history back toward genesis by default; newer clients can trim pre-merge block data under a partial-history-expiry option. A full archive node that keeps every historical state is far bigger, close to 12 TB. Source: geth.ethereum.org sync-mode and history-pruning docs.',
+    'Solana': 'Validators bound their local ledger with a size limit and drop older data past it; the figure here reflects that bounded ledger plus the current account database. It falls well short of the chain’s full unpruned history. Source: Solana validator operations docs.',
+    'Internet Computer': 'Each replica stores the full state of every canister on its subnet. There is no finality-based pruning boundary the way Kaspa or Bitcoin have one, so storage grows with total app state; node machines carry tens of terabytes of SSD to hold it. Source: internetcomputer.org.'
+  };
+  var HISTORY_ORDER = ['Kaspa','Bitcoin','Ethereum','Solana','Internet Computer'];
+
+  var themeKey = "kaspa-explained-theme";
+  var themeBtn = document.getElementById('theme-toggle');
+  function syncThemeLabel(){
+    themeBtn.textContent = document.documentElement.dataset.theme === 'light' ? 'Dark' : 'Light';
+  }
+  syncThemeLabel();
+  themeBtn.addEventListener('click', function(){
+    var next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(themeKey, next); } catch (e) {}
+    syncThemeLabel();
+  });
+
+  function fmtDisk(gb){
+    if (gb >= 1000) return (gb/1000).toLocaleString(undefined,{maximumFractionDigits:1}) + ' TB';
+    return gb.toLocaleString(undefined,{maximumFractionDigits:1}) + ' GB';
+  }
+
+  function renderChips(){
+    var row = document.getElementById('chipRow');
+    row.innerHTML = '';
+    CHAINS.forEach(function(c){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = c.name;
+      btn.setAttribute('aria-pressed', active[c.name] ? 'true' : 'false');
+      btn.addEventListener('click', function(){
+        active[c.name] = !active[c.name];
+        renderChips();
+        renderBars();
+      });
+      row.appendChild(btn);
+    });
+  }
+
+  function renderBars(){
+    var container = document.getElementById('barRows');
+    container.innerHTML = '';
+    var pool = zoomed ? CHAINS.filter(function(c){ return SMALL_SET.indexOf(c.name) !== -1; }) : CHAINS;
+    var shown = pool.filter(function(c){ return zoomed ? true : active[c.name]; });
+    if (!shown.length){ return; }
+    var maxDisk = Math.max.apply(null, shown.map(function(c){ return c.disk; }));
+    shown.sort(function(a,b){ return a.disk - b.disk; });
+    shown.forEach(function(c){
+      var row = document.createElement('div');
+      row.className = 'bar-row' + (c.kaspa ? ' kaspa' : '');
+      var pct = Math.max((c.disk / maxDisk) * 100, 3);
+      row.innerHTML =
+        '<span class="name">' + c.name + '</span>' +
+        '<span class="bar-track"><span class="bar-fill" style="width:' + pct.toFixed(1) + '%"></span></span>' +
+        '<span class="val">' + fmtDisk(c.disk) + '</span>';
+      container.appendChild(row);
+      if (!zoomed && HISTORY_NOTES[c.name]){
+        var note = document.createElement('div');
+        note.className = 'bar-note';
+        note.textContent = c.name + ': ' + HISTORY_NOTES[c.name];
+        container.appendChild(note);
+      }
+    });
+  }
+
+  document.getElementById('zoomBtn').addEventListener('click', function(){
+    zoomed = !zoomed;
+    this.setAttribute('aria-pressed', zoomed ? 'true' : 'false');
+    this.textContent = zoomed ? 'Back to full comparison' : 'Zoom into the small end';
+    document.getElementById('scaleNote').textContent = zoomed
+      ? 'Zoomed to chains under about 300 GB, scaled linearly against each other only. Leaving zoom restores the full 20-chain comparison.'
+      : 'Linear scale: bar length is proportional to gigabytes, not to its logarithm. A bar under 3% of the row width is floored to stay visible; read its number, not its length. Figures are this site’s own chain dataset, captured 2026‑08‑01.';
+    renderBars();
+  });
+
+  function renderHistoryNotes(){
+    var body = document.getElementById('historyNotesBody');
+    var html = '';
+    HISTORY_ORDER.forEach(function(name){
+      html += '<p><strong>' + name + '.</strong> ' + HISTORY_NOTES[name] + '</p>';
+    });
+    html += '<p>The other chains in the comparison above carry only this site’s own measured or vendor-reported disk figure; their default node software’s pruning behavior was not independently verified for this page, so no explanatory note is shown for them.</p>';
+    body.innerHTML = html;
+  }
+
+  var FINALITY_HOURS = 12;   // 432,000 blocks at 10 blocks/sec
+  var PRUNING_HOURS = 30;    // 1,080,000 blocks at 10 blocks/sec
+  var WINDOW_MAX_HOURS = 36;
+  var BLOCKS_PER_HOUR = 36000; // 10 blocks/sec * 3600
+
+  function renderWindow(hours){
+    var pct = Math.min(hours / WINDOW_MAX_HOURS, 1) * 100;
+    document.getElementById('windowMarker').style.left = pct + '%';
+    var blocksDeep = Math.round(hours * BLOCKS_PER_HOUR).toLocaleString();
+    var statusEl = document.getElementById('windowStatus');
+    if (hours <= FINALITY_HOURS){
+      statusEl.className = 'window-status kept';
+      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep. Still before finality, so in principle an honest reorg could reach this far, though none has.';
+    } else if (hours <= PRUNING_HOURS){
+      statusEl.className = 'window-status margin';
+      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep, past finality. A reorg here is already refused outright; the node keeps the data anyway, as the protocol’s built-in safety margin.';
+    } else {
+      statusEl.className = 'window-status discarded';
+      statusEl.textContent = 'Discarded: ' + blocksDeep + ' blocks deep, past the pruning boundary. A node has no reason left to keep it.';
+    }
+  }
+
+  document.getElementById('hoursSlider').addEventListener('input', function(e){
+    var h = parseFloat(e.target.value);
+    document.getElementById('hoursLabel').textContent = h.toFixed(1) + ' hr';
+    renderWindow(h);
+  });
+
+  renderChips();
+  renderBars();
+  renderHistoryNotes();
+  renderWindow(6);
+})();
+</script>
+</body>
+</html>

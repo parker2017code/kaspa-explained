@@ -327,3 +327,87 @@ on whether someone who does not know the field can pick it up and play with it.
 8. Render at 390px and confirm what is above the fold.
 9. No two consecutive text-only sections.
 10. Every number on the page traces to a source or is not there.
+
+---
+
+# Version 2.1, 22 August 2026. The defensive register.
+
+Owner framing. The register to avoid is defensive: it hedges, pads, apologizes,
+and over-structures because those moves protect the writer from being wrong or
+disliked. Writing that stops being defensive stops sounding machine-generated.
+Versions 1.0 and 2.0 above already ban most of its symptoms by name (em dashes,
+throat-clearing openers, closing restatement, performed enthusiasm, hedged
+facts). What follows is the rest of the standard, reconciled rather than
+restated: it says which existing rule already covers a point, and adds only
+what was genuinely missing.
+
+**Answer first.** No restating the question, no announcing what the text will
+do. This is the throat-clearing ban above, extended to the opening move itself,
+not just its stock phrasing. Human read; a script cannot see the question a
+piece of copy is answering.
+
+**No unprompted offers to expand.** "Let me know if you'd like more detail,"
+"happy to expand on this" (the closing-restatement ban above covers the
+summary paragraph; this covers the offer that isn't a summary but is the same
+defensive reflex). Checked by `check-prose.py` as `unprompted-expand-offer`.
+
+**Commit, then qualify once.** State the position. If it needs a caveat, give
+it once, after the claim, not folded into the same sentence as a hedge. Do not
+narrate the epistemics of not knowing ("it's hard to say for certain, given
+the many factors involved") when the honest answer is just "unknown." The
+kaspaexplained.com section above already states the sharper version of this
+for confirmed facts; this extends it to opinion and judgment calls. Human
+read: telling a load-bearing qualifier from a defensive one is a judgment
+call, not a pattern match.
+
+**No tricolon reflex.** "Not X, but Y" is the `contrast` ration above. "It's
+about A, B, and C" is its cousin, a claim collapsed into three abstract nouns
+so it sounds complete without saying anything. Checked as
+`tricolon-aboutness`, banned outright rather than rationed, because unlike a
+real contrast this shape has no legitimate use once it exists.
+
+**Specific nouns over category nouns.** Landscape, realm, space, framework,
+approach, solution stand in for a real thing. Numbers over adjectives:
+robust, seamless, comprehensive, crucial, essential, cutting-edge. Only part
+of this is in the script. `space` and `framework` are used correctly and
+often on this exact site (block space, design space, the vProgs execution
+framework), and `landscape`, `approach`, `solution`, `essential` are ordinary
+English words with real literal uses; banning any of the six would hit
+correct sentences, so they stay human read, judged in context. `robust`,
+`seamless`, `comprehensive`, `crucial`, `cutting-edge`, and `realm` tested at
+zero genuine hits on the shipped site and have no plausible literal use in
+this genre, so those six are hard-banned as `category-noun-filler`. If one of
+them ever earns its place, narrow the pattern before reopening the list.
+
+**No performed contrition.** Fix an error in one sentence and continue.
+Checked as `performed-contrition` for the stock apology phrases; a genuine,
+non-formulaic correction is not a pattern the script can tell from prose that
+happens to contain the word "sorry," so read for tone past the phrase list.
+
+**No narrating the process.** "Let me think through this" is filler for
+something done silently. Applies to conversational replies about this repo,
+not to page copy the script scans; human read only.
+
+**Formatting only when the content is genuinely a list.** Three headers and
+nine bullets over four ideas is a structural tell, not a formatting choice. No
+regex distinguishes a real list from a padded one. Human read.
+
+**No moralizing.** No ethical note or safety caveat on a request or a claim
+that carries no such weight. Applies mainly to conversational replies; on the
+site itself this is the same discipline as the existing status-hedging ban
+above, not a separate rule. Human read.
+
+## What the gate checks and what a reader must
+
+Mechanical, in `check-prose.py`: every item in "Never write these" above, the
+site-voice first-person check, the rationed-device counts, sentence-length
+variance, reading grade, and the four additions in this section
+(`category-noun-filler`, `tricolon-aboutness`, `unprompted-expand-offer`,
+`performed-contrition`).
+
+Human read, no script: payload per sentence, whether a qualifier is
+load-bearing or defensive, whether a formatted list represents real list
+content, whether an apology is formulaic or a genuine correction, everything
+in "The page as an object" (version 2.0) past reading grade, and the six
+category nouns and adjectives named above that this site cannot ban outright
+without breaking correct sentences.

@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Crypto From Scratch | Kaspa Explained</title>
   <meta name="description" content="What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -30,8 +40,8 @@
   <meta name="twitter:description" content="What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -48,6 +58,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -65,8 +76,11 @@
     <section class="section prose-section">
       <p class="eyebrow">The primitive</p>
       <h2>A blockchain is a costly shared ledger</h2>
-      <p>NIST's definition is the plain one: a digital ledger that is hard to change and that shows any change, kept in many copies rather than one place, and usually with nobody in charge. Bitcoin, stablecoins, NFTs, DeFi, and smart contracts are all apps built on that one narrow idea.</p>
       <p>Ask one question. Do strangers need to agree on who owns what, and on the rules, with no firm, bank, or state as the final word? If yes, crypto is doing work nothing cheaper does. If no, it is a slow, costly database with worse support.</p>
+      <details class="deep-dive">
+        <summary>NIST's definition, and what's built on it</summary>
+        <p>NIST's definition is the plain one: a digital ledger that is hard to change and that shows any change, kept in many copies rather than one place, and usually with nobody in charge. Bitcoin, stablecoins, NFTs, DeFi, and smart contracts are all apps built on that one narrow idea.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -82,8 +96,16 @@
         <article><span>DeFi and stablecoins</span><h3>On-chain finance</h3><p>Dollar tokens, lending, and automated market makers turned early demos into daily habit.</p></article>
         <article><span>Rollups and fast L1s</span><h3>Scale and UX</h3><p>Execution moved off the base chain into L2s, fast L1s, appchains, and new consensus designs built to dodge the same bottleneck twice.</p></article>
       </div>
-      <p>A company ships an update and users get it whether they like it or not. Crypto has no such lever: miners, exchanges, wallets, and users each pick up the new rules on their own. A fork is what happens when they stop agreeing. Soft-fork style changes tighten the rules, so upgraded nodes enforce the new limits while un-upgraded nodes still see those blocks as valid. Hard-fork style changes break what old software accepts, which is sometimes planned and boring and sometimes the moment a chain splits in two.</p>
-      <p>Playing it safe costs Bitcoin fast L1 checkout, rich smart contracts, and cheap room to try things. It buys a fixed supply, PoW security, deep liquidity, over a decade of surviving attacks, and a money story short enough to say in one sentence. Bitcoin Cash split off over one number, block size. Ethereum traded Bitcoin's spare rule set for programmable state. Solana-style chains bought consumer-app speed with node hardware most people can't run, Monero and Zcash bought privacy with heavier math and legal heat, and stablecoins bet on an issuer or a pool of collateral over a central bank. Kaspa kept PoW and UTXO and swapped the single chain for a blockDAG.</p>
+      <p>A company ships an update and users get it whether they like it or not. Crypto has no such lever: miners, exchanges, wallets, and users each pick up the new rules on their own. A fork is what happens when they stop agreeing.</p>
+      <details class="deep-dive">
+        <summary>Soft forks vs. hard forks</summary>
+        <p>Soft-fork style changes tighten the rules, so upgraded nodes enforce the new limits while un-upgraded nodes still see those blocks as valid. Hard-fork style changes break what old software accepts, which is sometimes planned and boring and sometimes the moment a chain splits in two.</p>
+      </details>
+      <p>Playing it safe costs Bitcoin fast L1 checkout, rich smart contracts, and cheap room to try things. It buys a fixed supply, PoW security, deep liquidity, over a decade of surviving attacks, and a money story short enough to say in one sentence.</p>
+      <details class="deep-dive">
+        <summary>How five chains each paid for their own bet</summary>
+        <p>Bitcoin Cash split off over one number, block size. Ethereum traded Bitcoin's spare rule set for programmable state. Solana-style chains bought consumer-app speed with node hardware most people can't run, Monero and Zcash bought privacy with heavier math and legal heat, and stablecoins bet on an issuer or a pool of collateral over a central bank. Kaspa kept PoW and UTXO and swapped the single chain for a blockDAG.</p>
+      </details>
       <p>Kaspa's fair launch wasn't the plan from day one. It's what was left after research, a company called DAGLabs, an April 2021 testnet, and several hardware, presale, and business-model paths that all fell through. The <a href="/kaspa-origin-story">origin page</a> has the sourced version.</p>
     </section>
 
@@ -144,7 +166,8 @@
         </article>
         <article>
           <h3>Credit and wrapped real assets</h3>
-          <p>Normal lending runs on who you are, what you earn, and what a court can do about it. On-chain lending works because the borrower put up more than they took out. Wrapping a house or a bond in a token leaves the hard parts untouched: who owns it in law, who holds it, who can block the sale, who taxes it.</p>
+          <p>Normal lending runs on who you are, what you earn, and what a court can do about it. On-chain lending works because the borrower put up more than they took out.</p>
+          <p>Wrapping a house or a bond in a token leaves the hard parts untouched: who owns it in law, who holds it, who can block the sale, who taxes it.</p>
         </article>
       </div>
     </section>
@@ -192,14 +215,22 @@
           </tbody>
         </table>
       </div>
-      <p>Four things push the price. Someone needs the asset itself, to pay fees, settle a trade, stake, post collateral, or get into an app. Markets pay extra for scarcity people believe in, deep liquidity, and a rule set nobody can bend or censor. Higher rewards buy more mining or staking security, and a higher market value also makes the network a richer target. Then there is the loop: price rises because people expect price to rise, which can run a long time before it needs a reason.</p>
+      <p>Four things push the price. Someone needs the asset itself, to pay fees, settle a trade, stake, post collateral, or get into an app.</p>
+      <details class="deep-dive">
+        <summary>The other three forces: scarcity, security spend, and reflexivity</summary>
+        <p>Markets pay extra for scarcity people believe in, deep liquidity, and a rule set nobody can bend or censor. Higher rewards buy more mining or staking security, and a higher market value also makes the network a richer target. Then there is the loop: price rises because people expect price to rise, which can run a long time before it needs a reason.</p>
+      </details>
       <p class="fit-note"><strong>Rule:</strong> a price pump doesn't prove uptake, and a high market cap doesn't prove usefulness. A solid project can still be overpriced.</p>
     </section>
 
     <section id="market-cap" class="section">
       <p class="eyebrow">The number everyone quotes</p>
       <h2>Market cap is not company value</h2>
-      <p>Market cap is price times circulating supply, nothing more. That much cash never had to flow in, no revenue sits behind the number, and nobody could sell the whole supply at that price. Price per coin means nothing without supply attached, circulating supply can differ sharply from total supply, and a low float inflates paper valuations without a matching amount of real capital. Volume can mean liquidity, hype, wash trading, or panic. Fully diluted value shows the dilution still coming, and social dominance measures attention rather than uptake.</p>
+      <p>Market cap is price times circulating supply, nothing more. That much cash never had to flow in, no revenue sits behind the number, and nobody could sell the whole supply at that price.</p>
+      <details class="deep-dive">
+        <summary>Five more numbers that mislead: float, volume, FDV, dominance</summary>
+        <p>Price per coin means nothing without supply attached, circulating supply can differ sharply from total supply, and a low float inflates paper valuations without a matching amount of real capital. Volume can mean liquidity, hype, wash trading, or panic. Fully diluted value shows the dilution still coming, and social dominance measures attention rather than uptake.</p>
+      </details>
       <p class="fit-note"><strong>Kaspa/BTC example:</strong> one KAS costs less than one BTC simply because there are far more of them out there. Compare market cap, liquidity, access, uptake, security history, and delivery risk instead of unit price.</p>
       <div class="fit-grid grid-cards">
         <article class="section">
@@ -222,7 +253,11 @@
           </ul>
         </article>
       </div>
-      <p>Trading in an open market where early buyers profit does not make an asset a Ponzi. What does: promising a fixed return, paying yield out of new deposits instead of income, hiding who holds the supply, or building something that mainly exists so insiders have someone to sell to. Wild swings, early gains, hype, or no consumer app yet are not enough to call fraud. The flags that count are fixed yield, hidden insiders, unlock cliffs, fake partners, murky reserves, and no working system.</p>
+      <p>Trading in an open market where early buyers profit does not make an asset a Ponzi. What does: promising a fixed return, paying yield out of new deposits instead of income, hiding who holds the supply, or building something that mainly exists so insiders have someone to sell to.</p>
+      <details class="deep-dive">
+        <summary>What isn't fraud, and the six flags that are</summary>
+        <p>Wild swings, early gains, hype, or no consumer app yet are not enough to call fraud. The flags that count are fixed yield, hidden insiders, unlock cliffs, fake partners, murky reserves, and no working system.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -241,7 +276,11 @@
         </table>
       </div>
       <p>A fair launch removes the official allocation table. It does not remove the funding, coordination, early-miner, or liquidity questions that a premine would have paid for.</p>
-      <p>Who is asking changes the answer too. Users care about payments, custody, privacy, and fees. Traders watch liquidity, swings, listings, and the story. Miners watch rewards, power price, and difficulty; validators and stakers watch yield, uptime, slashing, and voting weight. Developers want tooling, grants, users, and stable rules. Exchanges and market makers want volume, custody, and spreads, funds and insiders watch entry price and unlock timing, and regulators watch fair markets, tax, AML controls, and consumer risk.</p>
+      <p>Who is asking changes the answer too. Users care about payments, custody, privacy, and fees. Traders watch liquidity, swings, listings, and the story. Miners watch rewards, power price, and difficulty; validators and stakers watch yield, uptime, slashing, and voting weight.</p>
+      <details class="deep-dive">
+        <summary>What developers, exchanges, and regulators each watch</summary>
+        <p>Developers want tooling, grants, users, and stable rules. Exchanges and market makers want volume, custody, and spreads, funds and insiders watch entry price and unlock timing, and regulators watch fair markets, tax, AML controls, and consumer risk.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -333,6 +372,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

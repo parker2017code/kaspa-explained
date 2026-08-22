@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Race for one slot | Kaspa Explained</title>
+<meta name="description" content="Two writers reach for the same piece of on-chain data at once. See what happens, and why a UTXO chain answers differently than an account-based one.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/shared-state">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
+    --line: #4a453d; --line-bright: #746e60;
+    --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
+    --green: #66d1c1; --cyan: #2997ff; --purple: #bf5af2; --pink: #ff9f0a;
+    --red: #ff6961; --ink: #06201b;
+    --control-bg: #2c2c2e; --control-hover: #3a3a3c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --display-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
+    --line: #d8d4cb; --line-bright: #bcb6a8;
+    --text: #211e1a; --muted: #646057; --faint: #757066;
+    --green: #0e7c6b; --cyan: #0071e3; --purple: #6e56cf; --pink: #b25000;
+    --red: #c0342a; --ink: #ffffff;
+    --control-bg: #e8e8ed; --control-hover: #dededf;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient: linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); font-family: var(--body-font); margin: 0; }
+  body { padding: 20px 16px 64px; font-size: 17px; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .eyebrow { color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .08em; margin: 0; }
+  .theme-toggle { min-height: 44px; min-width: 44px; border: 0; border-radius: 980px; padding: 6px 14px; background: var(--control-bg); color: var(--text); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+  .theme-toggle:hover { background: var(--control-hover); }
+  h1 { font-family: var(--display-font); font-weight: 700; font-size: clamp(1.4rem, 3.2vw, 1.8rem); letter-spacing: -.014em; line-height: 1.1; margin: 0 0 8px; }
+  .lead { font-size: 1rem; color: var(--muted); margin: 0 0 22px; max-width: 46ch; }
+  .stage {
+    background: var(--card-bg); border-radius: 18px; padding: 24px 16px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .mode-row { display: flex; gap: 8px; }
+  .mode-btn {
+    min-height: 44px; border: 0; border-radius: 980px; padding: 0 16px; background: var(--control-bg);
+    color: var(--text); font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+  }
+  .mode-btn[aria-pressed="true"] { background: var(--green); color: var(--ink); }
+  .mode-btn:hover { background: var(--control-hover); }
+  .mode-btn[aria-pressed="true"]:hover { filter: brightness(1.05); }
+  .mode-note { font-size: .8rem; color: var(--faint); text-align: center; max-width: 42ch; margin: -8px 0 0; }
+  .track { position: relative; width: 100%; max-width: 420px; height: 120px; }
+  .slot {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 64px; height: 64px; border-radius: 18px; background: var(--bg-2);
+    border: 2px dashed var(--line-bright); display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; color: var(--faint); transition: border-color .3s, background .3s;
+    text-align: center;
+  }
+  .slot.filled { border-style: solid; font-size: 1rem; }
+  .slot.filled.you { border-color: var(--green); background: color-mix(in srgb, var(--green) 16%, var(--bg-2)); color: var(--text); }
+  .slot.filled.rival { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 16%, var(--bg-2)); color: var(--text); }
+  .slot.filled.both { border-color: var(--purple); background: linear-gradient(135deg, color-mix(in srgb, var(--green) 18%, var(--bg-2)), color-mix(in srgb, var(--cyan) 18%, var(--bg-2))); color: var(--text); font-size: .78rem; line-height: 1.35; }
+  .racer {
+    position: absolute; top: 50%; width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 700;
+    transition: left 1s cubic-bezier(.2,.8,.2,1), top 1s cubic-bezier(.2,.8,.2,1), opacity .5s, transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .racer.you { left: 8%; top: 15%; background: var(--green); color: var(--ink); }
+  .racer.rival { left: 8%; top: 70%; background: var(--cyan); color: var(--ink); }
+  .racer.at-slot { left: 50%; top: 50%; transform: translate(-50%, -50%) scale(1.1); }
+  .racer.side-a { left: 38%; transform: translate(-50%, -50%) scale(1.05); }
+  .racer.side-b { left: 62%; transform: translate(-50%, -50%) scale(1.05); }
+  .racer.bounced { animation: bump .45s ease-out; }
+  .racer.at-slot.rejected { opacity: 0; transform: translate(-50%, -50%) scale(.4) translateY(22px); transition: opacity .4s, transform .4s; }
+  @keyframes bump {
+    0%, 100% { transform: translate(-50%, -50%) scale(1.1); }
+    30% { transform: translate(-50%, -50%) scale(.92) translateX(-12px); }
+    60% { transform: translate(-50%, -50%) scale(.96) translateX(9px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .racer { transition: opacity .2s; }
+    .racer.bounced { animation: none; }
+  }
+  .action-btn {
+    min-height: 48px; border: 0; border-radius: 980px; padding: 12px 28px; font: inherit; font-size: 1rem;
+    font-weight: 650; cursor: pointer; background: var(--brand-gradient); color: var(--ink);
+  }
+  .action-btn:hover { filter: brightness(1.05); }
+  .action-btn:disabled { opacity: .45; cursor: default; filter: none; }
+  .action-btn:disabled:hover { filter: none; }
+  .caption { min-height: 44px; font-size: .92rem; color: var(--muted); text-align: center; max-width: 46ch; }
+  .caption b { color: var(--text); }
+  .caption.you-win b { color: var(--green); }
+  .caption.rival-win b { color: var(--cyan); }
+  .caption.both-land b { color: var(--purple); }
+  .legend { display: flex; gap: 16px; font-size: .78rem; color: var(--faint); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.you { background: var(--green); }
+  .dot.rival { background: var(--cyan); }
+  .apps-panel {
+    background: var(--card-bg); border-radius: 18px; padding: 20px 16px; box-shadow: var(--shadow);
+    margin-top: 18px; display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .cross-app-lead { font-size: .92rem; color: var(--muted); text-align: center; max-width: 48ch; margin: 0; }
+  .apps-status { font-size: .76rem; color: var(--faint); text-align: center; margin: -6px 0 0; }
+  .apps-row { display: flex; align-items: center; width: 100%; max-width: 420px; }
+  .app-box {
+    flex: none; width: 76px; height: 64px; border-radius: 14px; background: var(--bg-2);
+    border: 2px solid var(--line-bright); display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 6px; font-size: .74rem; color: var(--muted);
+  }
+  .app-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--line-bright); }
+  .connector {
+    flex: 1; height: 2px; align-self: center; margin: 0 -1px;
+    background: repeating-linear-gradient(to right, var(--line-bright) 0 6px, transparent 6px 11px);
+    opacity: .55; transition: background .25s, opacity .25s;
+  }
+  .apps-row.linked .connector {
+    background: repeating-linear-gradient(to right, var(--purple) 0 8px, transparent 8px 14px);
+    opacity: 1;
+  }
+  .apps-row.linked .app-box { border-color: var(--purple); }
+  .apps-row.linked .app-dot { background: var(--purple); }
+  details { margin-top: 22px; }
+  summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; }
+  .quotes-body { margin-top: 12px; font-size: .88rem; color: var(--muted); }
+  .quotes-body p { margin: 0 0 10px; }
+  .quotes-body a { color: var(--faint); }
+  .banner { font-size: .78rem; color: var(--faint); margin: 16px 0 0; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <p class="eyebrow">Kaspa Explained &middot; Demo</p>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+
+  <h1>Race for one slot</h1>
+  <p class="lead">Two people reach for the exact same piece of on-chain data at once. Watch what happens, and why a UTXO chain like Kaspa answers differently than an account-based chain like Ethereum.</p>
+
+  <div class="stage">
+    <div class="mode-row" role="group" aria-label="Choose which design to test">
+      <button class="mode-btn" id="modeUtxo" type="button" aria-pressed="true">Kaspa: UTXO</button>
+      <button class="mode-btn" id="modeAccount" type="button" aria-pressed="false">Account model (e.g. Ethereum)</button>
+    </div>
+    <p class="mode-note" id="modeNote">Kaspa spends a one-time coin. Only one writer can ever land here.</p>
+    <div class="track" id="track">
+      <div class="slot" id="slot">&mdash;</div>
+      <div class="racer you" id="racerYou">You</div>
+      <div class="racer rival" id="racerRival">Rival</div>
+    </div>
+    <div class="legend">
+      <span><span class="dot you"></span>you</span>
+      <span><span class="dot rival"></span>rival</span>
+    </div>
+    <button class="action-btn" id="actionBtn" type="button">Grab it</button>
+    <p class="caption" id="caption">One shared slot. You and a rival both want it right now.</p>
+  </div>
+
+  <details>
+    <summary>Why this happens, and what it simplifies</summary>
+    <div class="quotes-body">
+      <p><strong>Kaspa: UTXO.</strong> A payment, a token balance, or an app's data on Kaspa lives in one owned, one-time-spendable cell (a UTXO). Two transactions can both try to spend that same cell at once, the way you and the rival just did. Only one confirms. The network does not compare which one paid more or arrived "more validly"; it resolves by which one lands first. The other is rejected outright and has to rebuild against what is left, not merge with the winner and not wait in line behind it.</p>
+      <p><strong>Account model.</strong> Ethereum and similar chains track a running balance or contract state instead of one-time coins. Two writers to the very same account do not need to reject one another the same way: both operations can apply, one after the other, in whatever order the network settles on. Nobody's write is thrown out just for arriving second; it just lands after the first one instead of in place of it. That ordering-not-rejection behavior is the account-side half of the same question this page asks.</p>
+      <p>This is a simplified model of outpoint contention and of account-style sequencing, not real network timing (mempool propagation, block ordering, gas and fee markets).</p>
+      <p><strong>What actually blocks the double-spend.</strong> Nothing stops two conflicting spends from being broadcast in the first place: a wallet can sign and send two transactions against the same coin, and the network does not check for that at broadcast time. What cannot happen is both landing in the accepted state. It is not even a single-block rule: a block cannot hold two of its own transactions spending the same coin, rusty-kaspa's consensus rejects that block outright as invalid. But Kaspa is a DAG, so the real race is usually between two different blocks confirming in parallel, not two transactions in one block. GHOSTDAG orders every block into one sequence first, then each block's transactions are replayed in that order against a running UTXO diff; whichever spend lands earlier in that order is accepted, the other block stays valid and stays in the DAG, but its conflicting transaction fails validation against the state it is checked against and never joins the accepted set. That ordering-after-the-fact is also why two operations touching separate coins cannot be made to depend on each other the way two calls into one shared account can: each spend is checked against a snapshot GHOSTDAG fixes later, not against a promise that the other side will also succeed. Sources: rusty-kaspa's <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block-body double-spend check</a> and the <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">mergeset acceptance loop</a> that orders and replays transactions by GHOSTDAG before applying them to the UTXO diff.</p>
+      <p><strong>Where the panel below fits.</strong> The race above is about two writers hitting one slot inside a single app. Composing several separately built apps into one atomic transaction is a related but different question, and it is possible on Toccata itself: Argent's Inter-Covenant Communication does it, so far only in unaudited offline demos, per its own README. KIP-21's partitioned sequencing lanes (Status: Active) are about scaling that kind of throughput, not about letting apps reach into each other's state. Neither changes the one-slot outcome shown above, and neither is what the panel below is about. Sources: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a>.</p>
+      <p><strong>vProgs, and its status.</strong> The gap those two don't close: many different users writing to one shared app's state at once (an exchange pool, say), where L1 composition today tends to be exit-style, settling when someone leaves rather than the instant they act. vProgs is a roadmap proposal aimed at that gap, not a shipped feature: its own repository README opens with "This repository is in early development / prototype phase. APIs and architecture may change significantly," and as of this writing it carries zero releases and zero tags. Its own architect, Kaspa core developer Michael Sutton, frames the actual design tradeoff as a choice between "losing synchronous composability or losing sovereignty," and describes one target as "standalone, non-composable sovereign vprogs" settling back to L1 through their own exit path, which is the tradeoff the panel below shows. Sources: <a href="https://github.com/kaspanet/vprogs" target="_blank" rel="noopener">kaspanet/vprogs</a>, <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1" target="_blank" rel="noopener">Michael Sutton's based-apps design notes</a>.</p>
+    </div>
+  </details>
+
+  <div class="apps-panel">
+    <p class="cross-app-lead">The race above is about two writers hitting the very same slot. A separate question: can two different apps reach into each other's state at all?</p>
+    <div class="mode-row" role="group" aria-label="Choose today or the proposed change">
+      <button class="mode-btn" id="modeToday" type="button" aria-pressed="true">Today</button>
+      <button class="mode-btn" id="modeVprogs" type="button" aria-pressed="false">vProgs, proposed</button>
+    </div>
+    <p class="apps-status" id="appsStatus">vProgs status: roadmap proposal, not running on mainnet. Its own repository calls itself &ldquo;early development / prototype phase.&rdquo; Zero releases, zero tags, as of this writing.</p>
+    <div class="apps-row" id="appsRow">
+      <div class="app-box"><span class="app-dot"></span>App A</div>
+      <div class="connector"></div>
+      <div class="app-box"><span class="app-dot"></span>App B</div>
+      <div class="connector"></div>
+      <div class="app-box"><span class="app-dot"></span>App C</div>
+    </div>
+    <p class="caption" id="appsCaption">Each app's state lives behind its own wall. Two different apps' data never touches, even though both sit on the same public chain. Moving value between them today means leaving one (an exit) and entering the other, not one live call across the wall.</p>
+  </div>
+
+  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
+</main>
+
+<script>
+(function () {
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var themeBtn = document.getElementById("theme-toggle");
+  function syncTheme() { themeBtn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light"; }
+  syncTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    syncTheme();
+  });
+})();
+
+(function () {
+  "use strict";
+  var btn = document.getElementById("actionBtn");
+  var caption = document.getElementById("caption");
+  var slot = document.getElementById("slot");
+  var racerYou = document.getElementById("racerYou");
+  var racerRival = document.getElementById("racerRival");
+  var modeUtxoBtn = document.getElementById("modeUtxo");
+  var modeAccountBtn = document.getElementById("modeAccount");
+  var modeNote = document.getElementById("modeNote");
+  var model = "utxo"; // "utxo" | "account"
+  var busy = false;
+
+  var MODE_NOTES = {
+    utxo: "Kaspa spends a one-time coin. Only one writer can ever land here.",
+    account: "An account model tracks a running balance. Both writers can land, just in order."
+  };
+  var MODE_IDLE_CAPTION = {
+    utxo: "One shared slot. You and a rival both want it right now.",
+    account: "One shared account. You and a rival both write to it right now."
+  };
+
+  function resetRacers() {
+    racerYou.className = "racer you";
+    racerRival.className = "racer rival";
+    racerYou.textContent = "You";
+    racerRival.textContent = "Rival";
+    slot.className = "slot";
+    slot.textContent = "—";
+  }
+
+  function setMode(next) {
+    if (busy) return;
+    model = next;
+    modeUtxoBtn.setAttribute("aria-pressed", model === "utxo" ? "true" : "false");
+    modeAccountBtn.setAttribute("aria-pressed", model === "account" ? "true" : "false");
+    modeNote.textContent = MODE_NOTES[model];
+    caption.className = "caption";
+    caption.textContent = MODE_IDLE_CAPTION[model];
+    resetRacers();
+  }
+
+  function runUtxo() {
+    var youFirst = Math.random() < 0.5;
+    racerYou.className = "racer you at-slot";
+    racerRival.className = "racer rival at-slot";
+
+    setTimeout(function () {
+      var winner = youFirst ? racerYou : racerRival;
+      var loser = youFirst ? racerRival : racerYou;
+      slot.className = "slot filled " + (youFirst ? "you" : "rival");
+      slot.textContent = youFirst ? "You" : "Rival";
+      winner.classList.add("winner-lock");
+      loser.classList.add("bounced");
+
+      setTimeout(function () {
+        loser.classList.add("rejected");
+        caption.className = "caption " + (youFirst ? "you-win" : "rival-win");
+        caption.innerHTML = youFirst
+          ? "<b>You won.</b> Your transaction reached the slot first, that is the only reason. The rival's is rejected outright, not merged, not queued."
+          : "<b>The rival won.</b> Their transaction reached the slot first, that is the only reason. Yours is rejected outright, not merged, not queued.";
+        btn.disabled = false;
+        busy = false;
+      }, 480);
+    }, 700);
+  }
+
+  function runAccount() {
+    var youFirst = Math.random() < 0.5;
+    racerYou.className = "racer you at-slot " + (youFirst ? "side-a" : "side-b");
+    racerRival.className = "racer rival at-slot " + (youFirst ? "side-b" : "side-a");
+
+    setTimeout(function () {
+      slot.className = "slot filled both";
+      slot.textContent = youFirst ? "1 You · 2 Rival" : "1 Rival · 2 You";
+      caption.className = "caption both-land";
+      caption.innerHTML = "<b>Both landed.</b> An account model tracks a running balance, not a one-time coin, so two writers to it just get sequenced, one after the other. Nobody here is rejected the way the UTXO side rejects the loser.";
+      btn.disabled = false;
+      busy = false;
+    }, 700);
+  }
+
+  function run() {
+    if (busy) return;
+    busy = true;
+    btn.disabled = true;
+    caption.className = "caption";
+    caption.textContent = model === "utxo" ? "Racing for the slot…" : "Both writing to the account…";
+    if (model === "utxo") { runUtxo(); } else { runAccount(); }
+  }
+
+  btn.addEventListener("click", function () {
+    resetRacers();
+    setTimeout(function () { run(); }, 20);
+  });
+
+  modeUtxoBtn.addEventListener("click", function () { setMode("utxo"); });
+  modeAccountBtn.addEventListener("click", function () { setMode("account"); });
+
+  setMode("utxo");
+})();
+
+(function () {
+  "use strict";
+  var todayBtn = document.getElementById("modeToday");
+  var vprogsBtn = document.getElementById("modeVprogs");
+  var appsRow = document.getElementById("appsRow");
+  var appsCaption = document.getElementById("appsCaption");
+
+  var CAPTIONS = {
+    today: "Each app's state lives behind its own wall. Two different apps' data never touches, even though both sit on the same public chain. Moving value between them today means leaving one (an exit) and entering the other, not one live call across the wall.",
+    vprogs: "vProgs (proposed, not running on mainnet) aims to let apps reach across that wall directly, without merging into one shared program. Its own author frames the tradeoff plainly: reaching for that live interaction means losing some standalone independence; keeping full independence means giving up the live interaction. That give-and-take, not a free upgrade, is what “sovereignty” means here."
+  };
+
+  function setAppsMode(mode) {
+    todayBtn.setAttribute("aria-pressed", mode === "today" ? "true" : "false");
+    vprogsBtn.setAttribute("aria-pressed", mode === "vprogs" ? "true" : "false");
+    appsRow.className = "apps-row" + (mode === "vprogs" ? " linked" : "");
+    appsCaption.textContent = CAPTIONS[mode];
+  }
+
+  todayBtn.addEventListener("click", function () { setAppsMode("today"); });
+  vprogsBtn.addEventListener("click", function () { setAppsMode("vprogs"); });
+})();
+</script>
+</body>
+</html>

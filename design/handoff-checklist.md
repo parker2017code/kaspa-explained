@@ -1,0 +1,50 @@
+# Handoff checklist
+
+Nothing reaches the owner until every line here is done BY AN AGENT, not by him.
+He is the last reviewer, never the first tester.
+
+## Cold read, required per demo and per page
+
+An agent loads it fresh, having not built it, and before touching anything writes
+down what it thinks the thing is for. If that first read is wrong, the page fails.
+
+Then, for every visible element:
+1. What am I looking at?
+2. What does this axis, number, or label mean?
+3. Why do I care?
+4. What am I supposed to do here?
+
+An element that cannot answer all four from what is on screen is a defect.
+Answers found only in source or in a collapsible do not count.
+
+## Hard limits
+
+- Under 40 words before the interactive thing.
+- No jargon without its plain meaning in the same label.
+- Human units. Days and weeks, never raw seconds. "Halves in a year", never an exponent.
+- Round numbers on screen. Full precision lives in the collapsible.
+- One obvious primary interaction. A second control must be visibly quieter.
+- Small titles.
+- It must respond instantly and feel alive. prefers-reduced-motion gets a static equivalent.
+
+## Verified, not asserted
+
+- Every link fetched, status recorded.
+- Live domain checked, not just localhost. Localhost passing means nothing has shipped.
+- Click path walked in a browser and stated explicitly in the report.
+- Gate green on a clean clone, not the dirty tree.
+
+## The standard
+
+"UI UX should be superb. Modern. Feel like a modern startup, crypto, Tesla, Apple.
+Apple is the vibe. It should feel awesome and cool and fun."
+
+Not words. Not a clunky square interface. If it reads as something an AI produced
+and nobody re-read, it fails.
+
+## Design standard
+
+The bar for this site is macOS and iOS. Not "modern," not "clean," Apple
+specifically. Read design/STANDARD.md before writing any markup or CSS, and
+design/handoff-checklist.md before reporting anything as done. Both govern
+every page and every demo. Correct but unusable is a failure here.

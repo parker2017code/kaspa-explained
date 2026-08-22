@@ -1,0 +1,20 @@
+{
+  "_comment": "Shared source of truth for which live pages are essays. Read by scripts/audit-content-flow.mjs (Node) and scripts/check-density.sh (embedded Python), so the two content gates cannot drift on which pages count as an essay the way they did on 2026-08-22. See design/density-budget.md, 'Page-type scope,' for what qualifies a page for this list and what each field controls. Redirect stubs (e.g. toccata-expressiveness-upgrade*.html) do not belong here: they carry no prose and are not in site-manifest.json's live pages.",
+  "essays": [
+    {
+      "file": "toccata-essay.html",
+      "extended_word_limit": true,
+      "reason": "Authored personal essay, deliberately voiced, 3,901 visible words. Needs the 4,000-word content-flow ceiling because it runs over the normal 2,400."
+    },
+    {
+      "file": "skeptical-case.html",
+      "extended_word_limit": false,
+      "reason": "Argues a case in continuous prose; reverted 2026-08-22 from a collapsed version because burying the argument was the worst defect found in that rewrite. 1,555 visible words, under the normal 2,400-word ceiling, so it does not need the extended one."
+    },
+    {
+      "file": "the-instrument.html",
+      "extended_word_limit": false,
+      "reason": "Hosted guest piece by Moose, explicitly outside the site's checked claim set; owner confirmed it stays untouched. 191 visible words, far under the normal ceiling."
+    }
+  ]
+}

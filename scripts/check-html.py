@@ -60,6 +60,8 @@ class PageParser(HTMLParser):
 def expected_url(page):
     if page == "index.html":
         return f"{DOMAIN}/"
+    if page.endswith("/index.html"):
+        return f"{DOMAIN}/{page[:-len('index.html')]}"
     if page.endswith(".html"):
         page = page[:-5]
     return f"{DOMAIN}/{page}"
@@ -87,7 +89,10 @@ def main():
     sitemap_urls = set(sitemap_dates)
     iso_date = re.compile(r"^\d{4}-\d{2}-\d{2}$")
     manifest_urls = {expected_url(page) for page in PAGES}
-    allowed_sitemap_urls = manifest_urls | {f"{DOMAIN}/{path}" for path in SITEMAP_EXTRA_FILES}
+    allowed_sitemap_urls = manifest_urls | {
+        expected_url(path) if path.endswith(".html") else f"{DOMAIN}/{path}"
+        for path in SITEMAP_EXTRA_FILES
+    }
 
     if not manifest_urls.issubset(sitemap_urls):
         missing = sorted(manifest_urls - sitemap_urls)

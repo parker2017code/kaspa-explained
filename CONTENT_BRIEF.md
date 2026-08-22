@@ -602,3 +602,10 @@ Preserve:
 - clear live/near-term/roadmap/research separation
 
 After pushing, verify the live site before claiming a change is live. GitHub Pages can serve cached pages for a short period after push.
+
+## Design standard
+
+The bar for this site is macOS and iOS. Not "modern," not "clean," Apple
+specifically. Read design/STANDARD.md before writing any markup or CSS, and
+design/handoff-checklist.md before reporting anything as done. Both govern
+every page and every demo. Correct but unusable is a failure here.

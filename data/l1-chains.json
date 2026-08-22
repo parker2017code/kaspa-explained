@@ -12,10 +12,10 @@
    "custody": "BitGo has Kaspa staged in its SDK (commits April and May 2026) but production returns 'Coin unsupported'. A KAS ticker exists at BitGo as an ERC20 on Ethereum, which is a false-positive trap. Copper lists Monero for external transfer only, not custody.",
    "us_spot_etf": "live means an 8-A12B plus EFFECT and an actual listing. filed means an S-1 on file and not effective.",
    "steward": "The entity presented on the chain's own pages. Kaspa and Monero name none; independent community non-profits exist for Kaspa but none is presented as the network's steward.",
-   "tps_sustained": "Windows differ by what each chain publishes. Genuine 30-day means: Bitcoin, Ethereum, Litecoin, Monero, Sui, Aptos, Near, Kaspa. One-hour or one-day snapshots: Solana, BNB Chain, Cardano, Avalanche, TRON, TON, Hedera, Algorand, ICP, Stellar. Cardano's 0.14 is a quiet-hour reading and is not representative. Kaspa's 0.895 is a real 30-day mean but the chain is bursty: monthly means ran from 0.58 to 318.97 over the last year, and the peak hour hit 2,229.",
+   "tps_sustained": "Windows differ by what each chain publishes. Genuine 30-day means: Bitcoin, Ethereum, Litecoin, Monero, Sui, Aptos, Near, Kaspa. One-hour or one-day snapshots: Solana, BNB Chain, Cardano, Avalanche, TRON, Hedera, Algorand, ICP, Stellar. Cardano's 0.14 is a quiet-hour reading and is not representative. Kaspa's 0.895 is a real 30-day mean but the chain is bursty: monthly means ran from 0.58 to 318.97 over the last year, and the peak hour hit 2,229. TON's figure (corrected 2026-08-22) is daily_transactions / 86400, not a raw snapshot: the prior value matched TON's own raw, uncleaned transaction count (7x its cleaned count), which the page's own copy already called out as roughly 6.5x inflated while still scoring the dial from it. Solana's figure matches neither its cleaned nor raw published transaction total and is not reconciled; treated as unverified rather than corrected, since there is nothing in hand to correct it against.",
    "tps_claimed": "The project's own headline number where it publishes one. Sui's 200,000 is its docs figure for benchmark conditions, about 3,200 times the observed 62.79. Polkadot's 623,000 is extrapolated from a Kusama test at 23 percent of cores, not measured on Polkadot. Near's 1,000,000 and Aptos's 160,000 are second-hand from Chainspect, not fetched from the projects. Bitcoin, Litecoin, Monero, Kaspa, Near, Ethereum and Stellar publish no headline TPS.",
    "nakamoto_coefficient": "NOT COMPARABLE ACROSS ROWS. PoW chains here (Bitcoin 3, Litecoin 2, Monero 2, Kaspa 2) use one definition: pools controlling more than half of block production. PoS rows mostly use a 33-percent-of-stake threshold. Polkadot's 166 is the least trustworthy number in the set: a Polkadot Forum analysis puts it at 25, at 14 after clustering, and after finding one address cluster running 92 to 105 validators, at no more than 4. Polkadot is recorded as unknown here: the published figures span 166 to 4 depending on whether validators run by one operator are counted once or separately, and that is a disagreement rather than a measurement.",
-   "finality_s": "PoW rows use 6 confirmations as the convention. Kaspa's 10 seconds is the practical settlement convention; its consensus finality boundary is 12 hours, or 432,000 blocks at 10 BPS. Cardano is probabilistic and its 120 seconds may be quoting the not-yet-live Peras target rather than live behavior, so it is recorded as unknown.",
+   "finality_s": "This dial scores only a coded, consensus-enforced finality boundary, the point past which the protocol itself rejects a reorganization. A chain that has no such rule is marked unscored here, not given a substitute: Bitcoin, Litecoin, Monero and Bitcoin Cash have no coded reorg limit in consensus, only a 6-confirmation convention miners and exchanges use by custom, so their finality_s is null rather than that convention's number. An earlier version of this dial scored those four chains on the 6-confirmation convention while scoring Kaspa on its coded rule, which mixed two different kinds of number on one axis and made Kaspa look worse for being the one chain here that documents a hard guarantee at all. Corrected 2026-08-22. Kaspa's rusty-kaspa finality_depth parameter (params.rs) is 432,000 blocks, 12 hours at 10 blocks per second, past which a reorg is invalid, not merely improbable; that protocol rule, not Kaspa's roughly 10-second practical settlement convention, is what this dial scores. The practical-wait figure still describes how fast a payment stops looking risky in practice; see the confirmation-risk demo, which keeps the two numbers separate for exactly this reason. Kaspa's finality_depth reflects GHOSTDAG, the consensus rule running on mainnet today. DAGKnight is a research proposal (KIP-2, Status: Proposed) with no mainnet implementation and no release; it is not scored here and would only change this analysis if it ships. Among the rest, finality_s reflects each chain's own published protocol-level finality mechanism (for example Ethereum's Casper FFG justified/finalized checkpoints); those were not independently re-audited in this pass, and this correction is scoped to the PoW convention-versus-rule mismatch that was flagged. Cardano is probabilistic and its 120 seconds may be quoting the not-yet-live Peras target rather than live behavior, so it stays recorded as unknown.",
    "block_producers": "Counts different things by design. PoW rows count mining pools seen producing blocks. Kaspa's 32 is distinct coinbase payout addresses over a 7-minute sample, so pools rotating addresses would inflate it. Hedera's 29 are permissioned council nodes; the public cannot run one.",
    "smart_contracts": "general means a full contract platform. limited means script-level rules only: Bitcoin Script, and for Kaspa post-Toccata, UTXO covenants plus ZK verifier precompiles, with no account-based VM.",
    "daily_transactions": "Counted on the most comparable basis available, with each chain's own headline shown alongside where the two differ. The headline is the inflated one every time. Kaspa's raw 737,701 is 89.5 percent coinbase; Solana's raw 281 million is 51.5 percent validator votes; Aptos's raw figure is 27.5 percent block metadata; TON counts one user action as several account-level transactions.",
@@ -28,7 +28,9 @@
    "filecoin_messages": "Explorer message totals for Filecoin run roughly 20x the explicit on-chain message count, because they include internal and cron messages. The figure here is explicit messages only, and over half of those are storage proofs rather than user activity.",
    "devs_rollup": "Electric Capital ecosystem figures are recursive rollups of child ecosystems. Where a chain has no children the number is chain-alone; where it does, it is not. Kaspa has zero children.",
    "scope": "Twenty layer ones, chosen as the ones a reader is actually weighing Kaspa against. Dropped from an earlier set of 32: chains with almost no measurable public activity, or none an independent explorer can verify, where a ranking teaches nothing.",
-   "measurement": "Ten of the twenty were re-measured against live endpoints on 1 Aug 2026. Bitcoin, Ethereum, Litecoin, Bitcoin Cash, Cardano and Stellar came from Blockchair's per-chain stats, taking block interval from blocks in 24h and demand from transactions in 24h. Avalanche, BNB Chain and Cronos came from their own RPC endpoints, timing 500 blocks; Solana from getBlockTime across 1000 slots. That work found real drift rather than rounding: Ethereum's sustained rate had been 34 percent high, Stellar's 53 percent, Cardano's 33 percent low. The remaining ten carry figures gathered earlier and not re-checked on that date, and each row records which of its fields were. Kaspa's 10 blocks per second is a protocol constant from the Crescendo fork, not a reading, so it is not in the measured list."
+   "measurement": "Ten of the twenty were re-measured against live endpoints on 1 Aug 2026. Bitcoin, Ethereum, Litecoin, Bitcoin Cash, Cardano and Stellar came from Blockchair's per-chain stats, taking block interval from blocks in 24h and demand from transactions in 24h. Avalanche, BNB Chain and Cronos came from their own RPC endpoints, timing 500 blocks; Solana from getBlockTime across 1000 slots. That work found real drift rather than rounding: Ethereum's sustained rate had been 34 percent high, Stellar's 53 percent, Cardano's 33 percent low. The remaining ten carry figures gathered earlier and not re-checked on that date, and each row records which of its fields were. Kaspa's 10 blocks per second is a protocol constant from the Crescendo fork, not a reading, so it is not in the measured list.",
+   "hashrate_ehs": "Computed 2026-08-22 from each chain's live network difficulty via hashrate = difficulty * 2^32 / block_time for Bitcoin, Bitcoin Cash and Litecoin (Blockchair), hashrate = difficulty / block_time for Monero (Blockchair, RandomX uses an unscaled difficulty), and read directly from api.kaspa.org/info/hashrate for Kaspa. This figure is reference-only and is not wired into any scored dial on chain-comparer.html: Bitcoin's SHA-256, Bitcoin Cash's SHA-256, Litecoin's Scrypt, Kaspa's kHeavyHash and Monero's RandomX cost different hardware, different work per hash and different energy per hash to acquire, RandomX by deliberate ASIC-resistant design, so a hash of one algorithm does not convert to a hash of another. Ranking these five chains against each other on a single EH/s axis presented cross-algorithm hash rates as one ranked property, which they are not; a same-algorithm-only comparison would cover just Bitcoin and Bitcoin Cash, both SHA-256, since Litecoin, Monero and Kaspa each run an algorithm no other chain here uses. Corrected 2026-08-22: the dial that scored this field (formerly 'Proof-of-work hash power') was dropped and replaced by a security-spend dial scored on emission_usd_per_day instead, which normalizes to dollars and is genuinely comparable across consensus families. Bitcoin's 912.5 EH/s is roughly 2,900 times Kaspa's 0.312 EH/s; read that as network hash power, not as a dollar-for-dollar attack-cost figure.",
+   "emission": "New tokens issued per day, in native units and in US dollars: daily_native = block reward times blocks/day (86,400 / block_time_s), daily_usd = daily_native times a live spot price fetched from CoinGecko's simple-price endpoint on 2026-08-22 (Bitcoin $77,055, Litecoin $51.78, Monero $426.74, Bitcoin Cash $277.75, Kaspa $0.0292121). Block rewards used: Bitcoin 3.125 BTC (halved April 2024), Litecoin 6.25 LTC (halved August 2023), Monero 0.6 XMR (fixed tail emission since May 2022, no further halving), Bitcoin Cash 3.125 BCH (halved April 2024, same schedule length as Bitcoin from a different genesis height), Kaspa 2.31246515 KAS/block at 10 blocks/second (matches this file's fees_vs_subsidy_2026_08_22 claim in CLAIMS.yml, 1,997,970 KAS/day). This is a same-day snapshot multiplied through, not a forecast: a price move changes the dollar figure without changing the native-unit issuance rate. Sourced for the five proof-of-work chains in this set only. Every proof-of-stake, BFT, federated and permissioned chain here is left null rather than estimated: getting a comparable daily-issuance dollar figure for those chains needs each one's current staking ratio, validator reward curve and, for burn-adjusted chains such as Ethereum's EIP-1559 net issuance, a netting calculation this pass did not do. Do not fill those in with a guessed number; mark them as not sourced instead."
   },
   "sources": {
    "devs": "developerreport.com API and data.opendevdata.org parquet snapshot 20260731T125446",
@@ -52,7 +54,7 @@
    "us_spot_etf": "live",
    "cme_futures": true,
    "block_time_s": 564.71,
-   "finality_s": 3695,
+   "finality_s": null,
    "tps_sustained": 7.185,
    "tps_claimed": null,
    "median_fee_usd": 0.1317,
@@ -72,7 +74,10 @@
    "measured_2026_08_01": [
     "block_time_s",
     "tps_sustained"
-   ]
+   ],
+   "emission_native_per_day": 478.1215,
+   "emission_usd_per_day": 36841653.24,
+   "hashrate_ehs": 912.54
   },
   "Ethereum": {
    "devs_monthly_active": 7641,
@@ -136,7 +141,7 @@
    "tx_note": "51.5% of the raw count is validator vote transactions",
    "privacy_default": 0,
    "purpose": "One fast chain for consumer apps, where everything shares the same state.",
-   "weakness": "A 256 GB validator machine, and half its headline transaction count is validator votes.",
+   "weakness": "A 256 GB validator machine, and half its headline transaction count is validator votes. Its measured throughput also matches neither published transaction total; treat that figure as unreconciled, not verified.",
    "tps_peak_observed": 7669,
    "security": "pos",
    "measured_2026_08_01": [
@@ -370,7 +375,7 @@
    "cme_futures": false,
    "block_time_s": 0.431,
    "finality_s": 0.8,
-   "tps_sustained": 39.13,
+   "tps_sustained": 5.618,
    "tps_claimed": 104715,
    "median_fee_usd": null,
    "block_producers": 397,
@@ -382,7 +387,7 @@
    "launched": 2021,
    "daily_transactions": 485433,
    "daily_transactions_raw": 3142820,
-   "tx_note": "the raw count is account-level, so one user action becomes several",
+   "tx_note": "the raw count is account-level, so one user action becomes several; tps_sustained is daily_transactions / 86400, corrected 2026-08-22 from a figure that matched the raw count instead",
    "privacy_default": 0,
    "purpose": "Payments inside Telegram, at the scale of a messaging app.",
    "weakness": "Counts one user action as several transactions, so its headline is roughly 6.5x inflated.",
@@ -508,7 +513,7 @@
    "us_spot_etf": "live",
    "cme_futures": false,
    "block_time_s": 166.15,
-   "finality_s": 904,
+   "finality_s": null,
    "tps_sustained": 2.025,
    "tps_claimed": null,
    "median_fee_usd": 0.0004,
@@ -527,7 +532,10 @@
    "measured_2026_08_01": [
     "block_time_s",
     "tps_sustained"
-   ]
+   ],
+   "emission_native_per_day": 3250.0752,
+   "emission_usd_per_day": 168288.9,
+   "hashrate_ehs": 0.002479
   },
   "Monero": {
    "devs_monthly_active": 335,
@@ -542,7 +550,7 @@
    "us_spot_etf": "none",
    "cme_futures": false,
    "block_time_s": 120.21,
-   "finality_s": 721,
+   "finality_s": null,
    "tps_sustained": 0.309,
    "tps_claimed": null,
    "median_fee_usd": 0.0161,
@@ -558,7 +566,10 @@
    "weakness": "No contracts, no custody at BitGo or Copper, no wallet support in the majors.",
    "tps_peak_observed": 1.63,
    "security": "pow",
-   "measured_2026_08_01": []
+   "measured_2026_08_01": [],
+   "emission_native_per_day": 431.2453,
+   "emission_usd_per_day": 184029.63,
+   "hashrate_ehs": 5.7e-09
   },
   "Kaspa": {
    "devs_monthly_active": 40,
@@ -575,7 +586,7 @@
    "us_spot_etf": "none",
    "cme_futures": false,
    "block_time_s": 0.1,
-   "finality_s": 10,
+   "finality_s": 43200,
    "tps_sustained": 0.895,
    "tps_claimed": null,
    "median_fee_usd": 6.3e-05,
@@ -595,7 +606,10 @@
    "tps_peak_observed": 2229.2,
    "sc_note": "Covenants, covenant IDs and ZK proof checks, live since Toccata.",
    "security": "pow",
-   "measured_2026_08_01": []
+   "measured_2026_08_01": [],
+   "emission_native_per_day": 1997970,
+   "emission_usd_per_day": 58357.75,
+   "hashrate_ehs": 0.31207
   },
   "Polkadot": {
    "devs_monthly_active": 804,
@@ -732,7 +746,10 @@
    "measured_2026_08_01": [
     "block_time_s",
     "tps_sustained"
-   ]
+   ],
+   "emission_native_per_day": 465.6216,
+   "emission_usd_per_day": 129326.4,
+   "hashrate_ehs": 3.44
   }
  }
 }

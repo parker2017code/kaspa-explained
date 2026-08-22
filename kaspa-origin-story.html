@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Kaspa Origin Story: Fair Launch, Failed Plans, and Crescendo | Kaspa Explained</title>
   <meta name="description" content="How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -40,8 +50,8 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -58,6 +68,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -75,13 +86,18 @@
     <section class="section prose-section">
       <p class="eyebrow">Launch thesis</p>
       <h2>The origin story is a constraint story</h2>
-      <p>Every earlier structure would have made Kaspa answer to something outside the protocol: a hardware deal, a presale contract, a startup balance sheet, or a supporting role under someone else's apps. The fair launch proved nothing about later adoption, price, or whether the tech would work. It took the premine, the pre-sale, and the insider table off the starting line.</p>
+      <p>Every earlier structure would have made Kaspa answer to something outside the protocol. The fair launch took that outside claim off the table before mainnet existed.</p>
+      <details class="deep-dive">
+        <summary>What the fair launch did and didn't prove</summary>
+        <p>Every earlier structure would have made Kaspa answer to something outside the protocol: a hardware deal, a presale contract, a startup balance sheet, or a supporting role under someone else's apps. The fair launch proved nothing about later adoption, price, or whether the tech would work. It took the premine, the pre-sale, and the insider table off the starting line.</p>
+      </details>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">Research first</p>
       <h2>The problem came before the coin</h2>
-      <p>Bitcoin at high block rates has one weak point: two honest miners can solve a block seconds apart, and the single-chain rule throws one of those blocks' work away. Kaspa's research line starts from that exact waste. A blockDAG keeps both blocks visible instead of dropping one, then uses a rule like GHOSTDAG to order that graph into one shared payment history.</p>
+      <p>Bitcoin at high block rates has one weak point: two honest miners can solve a block seconds apart, and the single-chain rule throws one of those blocks' work away. Kaspa's research line starts from that exact waste.</p>
+      <p>A blockDAG keeps both blocks visible instead of dropping one, then uses a rule like GHOSTDAG to order that graph into one shared payment history.</p>
       <p>DBLP lists Yonatan Sompolinsky and Aviv Zohar's 2018 paper, <a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">PHANTOM: A Scalable BlockDAG Protocol</a>, as an IACR ePrint paper. That paper sits on the same blockDAG research line as SPECTRE before it and the protocols running Kaspa today after it.</p>
       <p>A July 2017 Epicenter episode with Zohar and Sompolinsky describes SPECTRE as dropping the blockchain data structure so blocks can be made all the time and merged after, rather than racing for one slot.</p>
     </section>
@@ -89,7 +105,8 @@
     <section class="section prose-section">
       <p class="eyebrow">DAGLabs and testnet</p>
       <h2>DAGLabs came first, then the fair launch</h2>
-      <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, by Yonatan Sompolinsky and Guy Corem, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018 to build a business on DAG protocols. Either way, DAGLabs paid for and ran part of the pre-mainnet path before Kaspa became a public, community-mined network.</p>
+      <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, by Yonatan Sompolinsky and Guy Corem, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018 to build a business on DAG protocols.</p>
+      <p>Either way, DAGLabs paid for and ran part of the pre-mainnet path before Kaspa became a public, community-mined network.</p>
       <p>Polychain belongs in the pre-mainnet DAGLabs funding story, and it cuts both ways. Kaspa had no token premine. It also had a VC-funded DAGLabs backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
       <p>Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a generalization of Nakamoto Consensus. The April 2021 Investing.com article lists the testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard. It framed the project as testnet first, mainnet later, with no pre-mining and no founder allocations planned.</p>
       <p>Yonatan's Hashdag archive describes the original Kaspad codebase as an adaptation of the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
@@ -105,7 +122,8 @@
         </article>
         <article>
           <h3>DeFi sequencing path</h3>
-          <p>The April 2021 launch article framed Kaspa as faster ordering rails for DeFi apps running on Ethereum. The later Uphold interview recap keeps the same theme underneath: Kaspa's specialty is sequencing, which matters most where transaction order and MEV move real money. That's the source for the "base sequencing layer for another ecosystem" idea. It is not a claim that Kaspa ever shipped as an Ethereum L2.</p>
+          <p>The April 2021 launch article framed Kaspa as faster ordering rails for DeFi apps running on Ethereum. The later Uphold interview recap keeps the same theme underneath: Kaspa's specialty is sequencing, which matters most where transaction order and MEV move real money.</p>
+          <p>That's the source for the "base sequencing layer for another ecosystem" idea. It is not a claim that Kaspa ever shipped as an Ethereum L2.</p>
         </article>
         <article>
           <h3>Gamenet path</h3>
@@ -123,16 +141,21 @@
       <h2>Mainnet launched without a premine</h2>
       <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a UTXO commitment that trace back to an empty genesis. Mining made the whole supply.</p>
       <p>No premine means no official token allocation before mining started. It does not mean equal access to early mining.</p>
+      <p class="fit-note">The <a href="/demos/fair-launch">fair launch demo</a> plots Kaspa's mined-from-zero supply curve against several other major coins' premine and presale allocations.</p>
       <p>Yonatan later estimated Kaspa's core developers mined about 2.5% of total supply after launch. The Kaspa Wiki prehistory page puts the related DAGLabs/Polychain estimate below 3%, roughly 840 million KAS, and says the tighter number is probably closer to 2.5% and under 850 million KAS. That's early-miner context, a separate question from whether there was a premine.</p>
-      <p>Yonatan's own archive is blunter than the lore. He calls the launch messy, says he baked several bad ideas into the first gamenet rules, and describes a few thousand CPUs finding the project within days, pushing hashrate up no matter what the plan wanted. The Black Tuesday post puts it in one clause: the gamenet idea never caught air, so he swapped the random block reward for a flat one.</p>
+      <p>Yonatan's own archive is blunter than the lore. He calls the launch messy, says he baked several bad ideas into the first gamenet rules, and describes a few thousand CPUs finding the project within days, pushing hashrate up no matter what the plan wanted.</p>
+      <p>The Black Tuesday post puts it in one clause: the gamenet idea never caught air, so he swapped the random block reward for a flat one.</p>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">Early stress</p>
       <h2>Kaspa had to survive real failure</h2>
       <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing a certainly-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
-      <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published. Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
-      <p>A dust attack on Yom Kippur, September 2023, was a separate event from the November 2021 launch bug. Kaspa researcher Shai Wyborski's post-mortem gives the mechanism: each attacking transaction spent one UTXO and created 238, so every block added about 1,185 entries to a set where each one costs roughly 85 bytes. That is near 100 KB of permanent state per block, about 5 GB a day. He counted 57 million attacker UTXOs created before September 28 and put the contained damage at "5GB of junk UTXO data we will have to carry permanently." The lasting answer was not a patch but KIP-9's extended mass formula, which prices state growth into transaction mass so the same attack costs the attacker instead of the network.</p>
+      <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published.</p>
+      <p>Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
+      <p>A dust attack on Yom Kippur, September 2023, was a separate event from the November 2021 launch bug. Kaspa researcher Shai Wyborski's post-mortem gives the mechanism: each attacking transaction spent one UTXO and created 238, so every block added about 1,185 entries to a set where each one costs roughly 85 bytes.</p>
+      <p>That is near 100 KB of permanent state per block, about 5 GB a day. He counted 57 million attacker UTXOs created before September 28 and put the contained damage at "5GB of junk UTXO data we will have to carry permanently."</p>
+      <p>The lasting answer was not a patch but KIP-9's extended mass formula, which prices state growth into transaction mass so the same attack costs the attacker instead of the network.</p>
     </section>
 
     <section class="section prose-section">
@@ -234,6 +257,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

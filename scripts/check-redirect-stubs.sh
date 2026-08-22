@@ -19,6 +19,14 @@ def page_to_path(page):
 
 
 live_paths = {page_to_path(page) for page in live_pages}
+# Demos are real pages registered through sitemapExtraFiles rather than the
+# pages array, because they carry their own self-contained chrome and are not
+# subject to the per-page shell gate. They belong in the sitemap all the same.
+live_paths |= {
+    "/demos/" if f == "demos/index.html" else "/" + f[:-len(".html")]
+    for f in manifest.get("sitemapExtraFiles", [])
+    if f.startswith("demos/")
+}
 
 sitemap_text = Path("sitemap.xml").read_text(encoding="utf-8")
 sitemap_paths = set(re.findall(rf"<loc>{re.escape(domain)}(/[^<]*)</loc>", sitemap_text))

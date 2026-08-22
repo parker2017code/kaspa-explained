@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <title>Demos: things to drive, not just read | Kaspa Explained</title>
+  <meta name="description" content="Seventeen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/demos/">
+  <link rel="icon" href="../kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="../favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Demos: things to drive, not just read | Kaspa Explained">
+  <meta property="og:description" content="Seventeen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaspaexplained.com/demos/">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Demos: things to drive, not just read | Kaspa Explained">
+  <meta name="twitter:description" content="Seventeen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-22">
+  <link rel="stylesheet" href="../styles.css?v=20260822-touch-targets">
+  <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
+  <style>
+    /* Each card was <article><h2><a>title</a></h2><p>description</p></article>:
+       only the heading text was a real link, so the description and the rest
+       of the card's roughly 322x185 area (a live link area of only about
+       245x36) were dead to both clicks and taps on a card styled to look
+       entirely tappable. .card-link now wraps the whole heading+description
+       as one real anchor, and the container gets a hover state so the whole
+       card reads, and responds, as one object. */
+    .quick-grid article { cursor: pointer; }
+    /* Card titles use the site's shared h2 clamp (design/house-style.md),
+       which scales off viewport width (vw), not the card's own width. At
+       four columns (roughly 1100px+) each card is narrower than it is at
+       two columns, so a vw-driven size actually grows while the box it has
+       to fit in shrinks: measured 274px-wide cards at 1280px hitting a
+       46px h2 and wrapping to 3-4 lines, worse than at any narrower
+       breakpoint. Scoping the card h2 to the card's own inline size via a
+       container query fixes that at the source: cqi here is calibrated so
+       a short title still renders at the same ~30px it already does at
+       390 and 768, where card width happens to match. The character-count
+       penalty (--len, set per title below) still applies on top, in the
+       shared styles.css h1/h2 comment. */
+    .quick-grid article { container-type: inline-size; }
+    .quick-grid article h2 {
+      font-size: clamp(1.35rem, calc(9.4cqi - max(var(--len, 12) - 20, 0) * 0.4cqi), 2.9rem);
+    }
+    .quick-grid article .card-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .quick-grid article .card-link:hover h2 { text-decoration: underline; }
+    /* !important is needed here: styles.css's light-theme override for
+       .quick-grid article's background outranks a plain hover rule by
+       specificity (it's scoped under :root[data-theme="light"]), so a
+       same-specificity hover rule is silently beaten in light mode. */
+    .quick-grid article:hover { background: var(--control-hover) !important; }
+    /* Standard site focus ring, restated here in case a future edit drops
+       the shared stylesheet link; see design/house-style.md Focus states. */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+      outline-offset: 3px;
+    }
+    /* styles.css sizes the nav .theme-toggle at min-height: 32px above 520px
+       wide (it only grows to 44x44 in its own <=520px media query). This
+       page owns no styles.css edit, so the fix is scoped here instead. */
+    @media (min-width: 521px) {
+      .theme-toggle {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1">
+    <section class="sources-hero section">
+      <p class="eyebrow">Demos</p>
+      <h1>Things to drive, not just read</h1>
+      <p class="lead">Seventeen interactive demos. Each one replaces a paragraph with something you can push on. Every model and its sources are stated on the demo itself.</p>
+    </section>
+
+    <section class="section">
+      <div class="quick-grid">
+        <article>
+          <a class="card-link" href="/demos/attack-cost">
+            <h2 style="--len:20">Cost of a 51% attack</h2>
+            <p>See what it would really cost, in dollars per hour, to attack Kaspa and five other chains.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/collision-sim">
+            <h2 style="--len:17">Chain vs blockDAG</h2>
+            <p>Watch two blocks arrive seconds apart, and see why a blockDAG keeps both instead of throwing one away.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/confirmation-risk">
+            <h2 style="--len:17">Fast is not final</h2>
+            <p>See how long a payment actually needs before it's safe to trust, as the attacker gets stronger.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/covenant-breaker">
+            <h2 style="--len:16">Covenant breaker</h2>
+            <p>Try to break a real vault's rules yourself, and see exactly which attack gets through and why.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/emission-schedule">
+            <h2 style="--len:17">Emission schedule</h2>
+            <p>Scrub through time and watch the block reward shrink in small steps, never a cliff.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/fair-launch">
+            <h2 style="--len:22">Fair launch vs premine</h2>
+            <p>Compare Kaspa's zero-premine start to other chains' insider allocations, and see how long those holdings last.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/ghostdag-playground">
+            <h2 style="--len:19">GHOSTDAG playground</h2>
+            <p>Hide some blocks, release them later, and see why the network locks the hidden ones out for good.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/mass-calculator">
+            <h2 style="--len:16">Kaspa's real TPS</h2>
+            <p>Build a transaction yourself and see which limit, not a flat byte count, decides how many fit in a block.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/node-cost">
+            <h2 style="--len:17">What a node costs</h2>
+            <p>Compare disk space across chains, and see why running a Kaspa node stays cheap no matter how long it's been running.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/parameterless">
+            <h2 style="--len:23">Parameterless consensus</h2>
+            <p>Push network delay past its limit, and watch a fixed safety margin break where an adjustable one keeps up.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/shared-state">
+            <h2 style="--len:20">The shared-state gap</h2>
+            <p>See what many people can already do together on Kaspa today, and what's still missing to go further.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/supply-split">
+            <h2 style="--len:23">KCC-0020's supply split</h2>
+            <p>Split a token in two, try to merge it back, and watch the network refuse for good.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/zk-boundary">
+            <h2 style="--len:15">The ZK boundary</h2>
+            <p>Pick a claim, generate a proof, and see exactly what it does and doesn't guarantee.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/fee-market">
+            <h2 style="--len:14">The fee market</h2>
+            <p>Crowd the chain and watch what gets picked. Paying more raises your odds; it does not buy a slot.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/utxo-vs-accounts">
+            <h2 style="--len:17">Coins or balances</h2>
+            <p>Spend from both models at once and see why one queues, one collides, and one hands you change.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/dag-time">
+            <h2 style="--len:24">DAA score and block time</h2>
+            <p>Turn a DAA score into a real date, then try to cheat a timestamp and watch the network refuse it.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/live-network">
+            <h2>The network, live</h2>
+            <p>Watch real blocks arrive several a second, and see how little is actually inside them.</p>
+          </a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/demos">Demos</a>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

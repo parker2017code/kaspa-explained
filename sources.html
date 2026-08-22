@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Sources & Reference Map | Kaspa Explained</title>
   <meta name="description" content="Every source this site uses, ranked by how much weight it gets and why.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -29,19 +39,19 @@
   <meta name="twitter:title" content="Sources & Reference Map | Kaspa Explained">
   <meta name="twitter:description" content="Every source this site uses, ranked by how much weight it gets and why.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-14">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Sources & Reference Map",
     "url": "https://kaspaexplained.com/sources",
-    "dateModified": "2026-08-14",
+    "dateModified": "2026-08-22",
     "description": "Source hierarchy, public reference map, and credited external learning resources used by Kaspa Explained."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -58,6 +68,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -87,13 +98,16 @@
     <section id="source-hierarchy" class="section">
       <p class="eyebrow">Source hierarchy</p>
       <h2>What settles a claim</h2>
-      <p>Four tiers, in order of what they can prove. Code, KIPs, release tags, activation records, and research papers settle a claim outright. A node you run or a mainnet REST endpoint settles the current numbers: DAA score, supply, block reward, hashrate. Interviews, recaps, Kaspa.com Learn Kaspa, KASmedia, and conference talks explain a claim that was settled somewhere else, which makes them good for vocabulary and reasoning and weak for status. X posts, replies, and dashboards sit at the bottom: they point at links worth chasing, and nothing more.</p>
-      <p>Some rows below rule out the source you would reach for first.</p>
+      <p>Four tiers, in order of what they can prove. Code, KIPs, release tags, activation records, and research papers settle a claim outright. A node you run or a mainnet REST endpoint settles the current numbers: DAA score, supply, block reward, hashrate.</p>
+      <p>Interviews, recaps, Kaspa.com Learn Kaspa, KASmedia, and conference talks explain a claim that was settled somewhere else, which makes them good for vocabulary and reasoning and weak for status. X posts, replies, and dashboards sit at the bottom: they point at links worth chasing, and nothing more.</p>
     </section>
 
     <section id="claim-source" class="section">
       <p class="eyebrow">What source to use</p>
       <h2>Match statements to sources</h2>
+      <details class="deep-dive">
+        <summary>Open the 14-row table: best source and caution for each claim type, from origin history to DAGKnight status</summary>
+      <p>Some rows below rule out the source you would reach for first.</p>
       <div class="table-wrap">
         <table class="reality-table claim-source-table">
           <thead>
@@ -182,6 +196,7 @@
           </tbody>
         </table>
       </div>
+      </details>
     </section>
 
     <section id="code-tracking" class="section">
@@ -385,7 +400,8 @@
     <section class="section">
       <p class="eyebrow">Kaspa Builders' Workshop</p>
       <h2>kas-smiths.org</h2>
-      <p><a href="https://kas-smiths.org">kas-smiths.org</a> is the Discourse forum core developer Michael Sutton started in mid-July 2026 for Kaspa Calls for Conventions (KCCs). Covenant representation, authority schemes, and token standards get argued out in its General, Asset Standards, and Product Use Cases categories before any of it lands as a draft in the companion <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a> repo. It is the venue where KCC standards actually get worked out, not a settled record: a thread there is proposal-stage the same way a Telegram design discussion is, and a name that sounds like a shipped standard is not shipped until it has a merged KIP and a release tag.</p>
+      <p><a href="https://kas-smiths.org">kas-smiths.org</a> is the Discourse forum core developer Michael Sutton started in mid-July 2026 for Kaspa Calls for Conventions (KCCs). Covenant representation, authority schemes, and token standards get argued out in its General, Asset Standards, and Product Use Cases categories before any of it lands as a draft in the companion <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a> repo.</p>
+      <p>It is the venue where KCC standards actually get worked out, not a settled record: a thread there is proposal-stage the same way a Telegram design discussion is, and a name that sounds like a shipped standard is not shipped until it has a merged KIP and a release tag.</p>
       <p>Its own search box is weak. Query the endpoints directly instead: <code>/search.json?q=</code> for full-text search across topics, and <code>/u/&lt;username&gt;/activity.json</code> to pull one contributor's post history.</p>
     </section>
 
@@ -393,7 +409,8 @@
       <p class="eyebrow">X without an X account</p>
       <h2>kaspa.social</h2>
       <p><a href="https://kaspa.social">kaspa.social</a> aggregates Kaspa-related X posts into a live feed, alongside a price and network-stats ticker and a link out to community forums. It is the practical way to read core-contributor X activity, Michael Sutton, IzioDev, and the rest, without holding an X account.</p>
-      <p>It is a scrape, not a curated source. A founder's technical update and an unrelated hype quote land in the same feed with the same weight, and there is no vetting layer between the two. Use it to find a post worth chasing, then verify the claim against the original account or a primary source; it does not establish anything by itself.</p>
+      <p>It is a scrape, not a curated source. A founder's technical update and an unrelated hype quote land in the same feed with the same weight, and there is no vetting layer between the two.</p>
+      <p>Use it to find a post worth chasing, then verify the claim against the original account or a primary source; it does not establish anything by itself.</p>
     </section>
 
     <section class="section">
@@ -481,7 +498,8 @@
           <li><a href="https://github.com/kaspanet/kips">Kaspa KIPs</a>, <a href="https://github.com/kaspanet/kips/pull/31">KIP-16</a>, <a href="https://github.com/kaspanet/kips/pull/32">KIP-17</a>, <a href="https://github.com/kaspanet/kips/pull/35">KIP-20</a>, <a href="https://github.com/kaspanet/kips/pull/36">KIP-21</a>, <a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a>, and <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> for proposal status and protocol-change records.</li>
           <li><a href="https://research.kas.pa/t/on-the-design-of-based-zk-rollups-over-kaspas-utxo-based-dag-consensus/208">Kaspa Research on based ZK rollups</a> for architecture context around L1-sequenced actions and off-chain execution. Production activation needs release and network evidence.</li>
           <li><a href="https://research.kas.pa/">Kaspa Research</a> and <a href="https://qa.kas.pa/">Kaspa Q&amp;A</a> for research and technical answers.</li>
-          <li><a href="https://kaspa.org/">Kaspa.org</a>, <a href="https://kaspa.org/lore">Lore</a>, <a href="https://kaspa.org/build">Build</a>, and <a href="https://kaspa.org/hodl">HODL</a> for the current public Kaspa/KasMedia entry point, source discovery, builder routing, and beginner wallet flow.</li>
+          <!-- kaspa-org-callout: named to explain why these pages are excluded, not to recommend them as sources -->
+          <li><a href="https://kaspa.org/">Kaspa.org</a>, <a href="https://kaspa.org/lore">Lore</a>, <a href="https://kaspa.org/build">Build</a>, and <a href="https://kaspa.org/hodl">HODL</a> are the public entry point for source discovery, builder routing, and beginner wallet flow. Named here only to explain why they are not accepted as sources: their roadmap and Toccata-status prose ran weeks stale after mainnet activation (see the Official roadmap framing row above), and two upstream issues are open about it as of August 22, 2026. Use docs.kaspa.org, wiki.kaspa.org, or the linked KIPs and releases instead.</li>
           <li><a href="https://kasmagazine.com/">KASmedia</a> and <a href="https://kaspa.com/learn-kaspa">Kaspa.com Learn Kaspa</a> for community context and introductory vocabulary.</li>
           <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 transcript</a> and <a href="https://www.youtube.com/live/GaJmYV8OHfQ">full recording</a> for explanatory framing.</li>
           <li><a href="https://tokenize-event.com/theatre-2-blockchain-technologies-and-the-potential-of-web3/utilising-decentralised-tech-secure-digital-wallets">Kaspa: Mining the Internet</a>, <a href="https://www.youtube.com/watch?v=VIZGKoIaGR0">Oxford address</a>, and <a href="https://www.youtube.com/watch?v=S1dS1xvvFss">Oxford Q&amp;A</a> for RTD and coordination-market framing.</li>
@@ -585,6 +603,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

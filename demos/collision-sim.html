@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collision Simulator, Chain vs BlockDAG</title>
+<meta name="description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
+<meta name="robots" content="index,follow">
+<meta name="dateModified" content="2026-08-22">
+<link rel="canonical" href="https://kaspaexplained.com/demos/collision-sim">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #100e0c;
+    --card-bg: #322f2a;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --cyan: #2997ff;
+    --green: #66d1c1;
+    --pink: #ff9f0a;
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+    --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --cyan: #0071e3;
+    --green: #0e7c6b;
+    --pink: #b25000;
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+    --card-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 48px;
+  }
+  .top-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -.014em;
+    line-height: 1.2;
+    margin: 0 0 6px;
+  }
+  #theme-toggle {
+    flex: none;
+    min-height: 44px;
+    min-width: 44px;
+    border: 0;
+    border-radius: 980px;
+    padding: 0 14px;
+    background: var(--control-bg);
+    color: var(--text);
+    font-size: .8rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  #theme-toggle:hover { background: var(--control-hover); }
+  p.intro {
+    color: var(--muted);
+    font-weight: 420;
+    max-width: 60ch;
+    margin: 0 0 22px;
+    font-size: 1.02rem;
+  }
+
+  /* --- primary control --- */
+  .primary-control { margin-bottom: 6px; }
+  .primary-control label {
+    display: block;
+    font-size: .82rem;
+    color: var(--faint);
+    margin-bottom: 6px;
+  }
+  .primary-control .big-readout {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  /* 44px is the tap/click hit area, built from a transparent-padded input
+     box around a thin visual track, not a thick track. The native control
+     is stripped and rebuilt: the input itself is 44px tall and fully
+     clickable, the drawn track stays a slim 4px, and the thumb centers on
+     it via negative margin (WebKit) or its own box (Firefox). */
+  input[type=range] {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    accent-color: var(--green);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--field-line);
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-top: -9px;
+    cursor: pointer;
+  }
+  input[type=range]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--field-line);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--green);
+    cursor: pointer;
+  }
+  /* The rate slider is log-scale from Bitcoin's 1/600 Hz to 100 Hz, so its
+     marks cannot be evenly spaced text: Kaspa's 10-a-second mark sits at
+     about 79% along that scale, not the midpoint. Position marks by their
+     real fraction of the scale instead of space-between. */
+  .marks {
+    position: relative;
+    height: 1.4em;
+    font-size: .7rem;
+    color: var(--faint);
+    margin-top: 2px;
+  }
+  .marks span { position: absolute; top: 0; white-space: nowrap; }
+  .marks span:first-child { left: 0; }
+  .marks span:last-child { right: 0; }
+  /* Below this width the "Kaspa, 10 a second" mark (positioned by its real
+     79%-of-scale fraction) collides with the "100 a second" mark at the
+     right edge; stack the marks instead of trying to squeeze them onto one
+     line at their exact scale positions. */
+  @media (max-width: 480px) {
+    .marks {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      height: auto;
+    }
+    .marks span { position: static; transform: none !important; }
+  }
+  .honesty-note {
+    font-size: .76rem;
+    color: var(--faint);
+    margin: 6px 0 20px;
+  }
+
+  /* --- secondary control, visually quieter --- */
+  .secondary-control {
+    margin: 0 0 22px;
+    opacity: .82;
+  }
+  .secondary-control label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .78rem;
+    color: var(--faint);
+    margin-bottom: 4px;
+  }
+  .secondary-control label b { color: var(--muted); font-weight: 600; }
+  .secondary-control input[type=range] { height: 44px; }
+
+  .panel {
+    background: var(--card-bg);
+    border-radius: 18px;
+    box-shadow: var(--card-shadow);
+    padding: 12px 14px 14px;
+    margin-bottom: 14px;
+  }
+  .panel h2 {
+    font-size: .95rem;
+    font-weight: 650;
+    letter-spacing: -.006em;
+    margin: 0 0 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .panel h2 .stat {
+    font-weight: 400;
+    font-size: .82rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .panel h2 .stat b { color: var(--pink); }
+  .panel.dag h2 .stat b { color: var(--green); }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 130px;
+    border-radius: 8px;
+    background: var(--field-bg);
+  }
+  button#step {
+    min-height: 34px;
+    background: var(--control-bg);
+    border: 0;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0 16px;
+    font-size: .9rem;
+    cursor: pointer;
+  }
+  button#step:hover { background: var(--control-hover); }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+  /* A range input's own colored fill (accent-color) sits directly under a
+     3px outline with no offset room to spare on a 22-30px-tall track, which
+     makes the standard 28%-alpha cyan ring nearly invisible against it.
+     Give sliders specifically a stronger, more offset ring so focus is
+     actually visible against the fill. */
+  input[type=range]:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 65%, transparent);
+    outline-offset: 4px;
+  }
+  footer { font-size: .76rem; color: var(--faint); margin-top: 18px; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    font-size: .78rem;
+    color: var(--faint);
+    margin-top: 4px;
+  }
+  .legend i {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  .result-line {
+    font-size: 1rem;
+    margin: 18px 0;
+  }
+  .result-line b { color: var(--text); }
+
+  details {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    box-shadow: var(--card-shadow);
+  }
+  summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--cyan); list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+  details[open] summary::before { content: "\2212"; }
+  details p { color: var(--muted); font-size: .86rem; line-height: 1.6; }
+  details a { color: var(--cyan); }
+  details b { color: var(--text); }
+  .formula {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    color: var(--muted);
+    font-size: .86rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="top-row">
+    <h1>Why blocks collide</h1>
+    <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+  </div>
+  <p class="intro">
+    Two miners can finish a block seconds apart. Watch what a single chain
+    throws away, and what a blockDAG keeps instead.
+  </p>
+
+  <div class="primary-control">
+    <label for="rate">How fast blocks are found: <span class="big-readout" id="rateVal"></span></label>
+    <input type="range" id="rate" min="0" max="1000" step="1" aria-label="Block rate">
+    <div class="marks"><span>Bitcoin, 1 every 10 min</span><span style="left:79.1%; transform:translateX(-50%)">Kaspa, 10 a second</span><span>100 a second</span></div>
+  </div>
+  <p class="honesty-note" id="honestyNote"></p>
+
+  <div class="secondary-control">
+    <label for="delay">How long a block takes to reach other miners <b id="delayVal"></b></label>
+    <input type="range" id="delay" min="0" max="1000" step="1" aria-label="Propagation delay">
+  </div>
+
+  <p class="result-line" id="resultLine"></p>
+
+  <div class="panel">
+    <h2>Single chain <span class="stat" id="chainStat">so far: 0 kept, 0 thrown away</span></h2>
+    <canvas id="chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
+    <div class="legend"><span><i style="background:var(--green)"></i>kept</span><span><i style="background:var(--pink)"></i>thrown away</span></div>
+  </div>
+
+  <div class="panel dag">
+    <h2>BlockDAG <span class="stat">every block kept</span></h2>
+    <canvas id="dagCanvas" role="img" aria-label="BlockDAG of the same recent blocks, all kept and ordered by parent references instead of being discarded."></canvas>
+    <div class="legend"><span><i style="background:var(--green)"></i>every block kept, ordered by parents</span></div>
+  </div>
+
+  <button id="step" hidden>Step one block</button>
+
+  <details>
+    <summary>How this works, and the sources</summary>
+    <p>Blocks arrive at random, like raindrops: a Poisson process with rate &lambda;. A block collides with the one before it if the next block is found before the first one finishes spreading across the network, which takes time d. That gives a plain formula for how often a collision happens:</p>
+    <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
+    <p>A single chain can only keep one block per collision, so the loser's work is wasted. A blockDAG references every block a miner could see when it started working, so both survive and get ordered instead of discarded.</p>
+    <p><b>Where this comes from.</b> Block creation as a Poisson process of rate &lambda;, and network propagation delay as the thing that causes concurrent blocks, are exactly the model in Sompolinsky, Wyborski and Zohar's PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>): "Block creation follows a Poisson process with parameter &lambda;," bounded by a network delay diameter D. <b>Verified</b> against that primary source. The paper's own math goes further than this demo: it bounds how many blocks can be created within a delay window (the anticone size k, used to tune GHOSTDAG itself), via a Poisson-tail formula in D&middot;&lambda;. This page's p = 1 &minus; e<sup>&minus;&lambda;d</sup> is the simpler building block underneath that: the chance at least one more block arrives before the first one finishes propagating, which is standard Poisson-process math (P(0 arrivals in time d) = e<sup>&minus;&lambda;d</sup>) and matches the same collision mechanism used in the Bitcoin fork-rate literature (Decker &amp; Wattenhofer, <i>Information Propagation in the Bitcoin Network</i>, IEEE P2P 2013). <b>Inferred</b> from that Poisson identity rather than quoted directly from either paper. This demo simplifies further by testing only whether a block collides with the immediately preceding one, not the full multi-block anticone GHOSTDAG actually resolves; it is a simplification of the source math, not the source math itself.</p>
+    <p>Playback speed is compressed so slow chains are still watchable: a real Bitcoin block, on average one every 10 minutes, plays back in under two seconds here. The collision math above uses the real rate and delay, not the playback speed; only what you see on screen is sped up.</p>
+    <p>Respects reduced-motion: turns into a manual step button instead of continuous animation.</p>
+  </details>
+
+  <footer>Simulated in your browser. No live network data.</footer>
+</main>
+
+<script>
+(function(){
+  const RATE_LOG_MIN = Math.log10(1/600), RATE_LOG_MAX = Math.log10(100);
+  const DELAY_LOG_MIN = Math.log10(0.05), DELAY_LOG_MAX = Math.log10(5);
+  const rateInput = document.getElementById('rate');
+  const delayInput = document.getElementById('delay');
+  const rateVal = document.getElementById('rateVal');
+  const delayVal = document.getElementById('delayVal');
+  const chainCanvas = document.getElementById('chainCanvas');
+  const dagCanvas = document.getElementById('dagCanvas');
+  const chainCtx = chainCanvas.getContext('2d');
+  const dagCtx = dagCanvas.getContext('2d');
+  const stepBtn = document.getElementById('step');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function lambda() {
+    const t = rateInput.value / 1000;
+    return Math.pow(10, RATE_LOG_MIN + t * (RATE_LOG_MAX - RATE_LOG_MIN));
+  }
+  function delay() {
+    const t = delayInput.value / 1000;
+    return Math.pow(10, DELAY_LOG_MIN + t * (DELAY_LOG_MAX - DELAY_LOG_MIN));
+  }
+  function fmtRate(r) {
+    if (r < 1) return '1 every ' + humanDuration(1 / r);
+    return r.toFixed(r < 10 ? 1 : 0) + ' a second';
+  }
+  function fmtDelay(d) {
+    if (d < 1) return Math.round(d * 1000) + ' ms';
+    return d.toFixed(1) + ' s';
+  }
+  function humanDuration(seconds) {
+    if (seconds < 1) return Math.max(1, Math.round(seconds * 1000)) + ' ms';
+    if (seconds < 60) return (seconds < 10 ? seconds.toFixed(1) : Math.round(seconds)) + ' seconds';
+    if (seconds < 3600) return Math.round(seconds / 60) + ' minutes';
+    return (seconds / 3600).toFixed(1) + ' hours';
+  }
+
+  // Real mean interval between blocks, in seconds, at the chosen rate.
+  function meanIntervalReal() { return 1 / lambda(); }
+  // On-screen playback interval: compressed so slow rates stay watchable
+  // and fast rates visibly speed up, while the collision math above still
+  // uses the real rate and delay.
+  function playbackInterval() {
+    return Math.min(1.6, Math.max(0.09, meanIntervalReal() * 0.35));
+  }
+
+  const N = 20; // visible blocks per strip
+  let virtualClock = 0;
+  let total = 0, discarded = 0;
+  let chainTip = { id: 0, tSeen: 0 };
+  let dagTips = [{ id: 0, tSeen: 0 }];
+  let chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: 0 }];
+  let dagBlocks = [{ id: 0, miner: 0, parents: [], born: 0 }];
+  let autoTimer = null;
+  let rafId = null;
+
+  function nextInterArrivalReal() { return -Math.log(Math.random()) * meanIntervalReal(); }
+
+  function resetSim() {
+    virtualClock = 0; total = 0; discarded = 0;
+    chainTip = { id: 0, tSeen: 0 };
+    dagTips = [{ id: 0, tSeen: 0 }];
+    chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: performance.now() }];
+    dagBlocks = [{ id: 0, miner: 0, parents: [], born: performance.now() }];
+  }
+
+  function generateEvent() {
+    const L = lambda(), D = delay();
+    virtualClock += (-Math.log(Math.random()) / L);
+    const tMake = virtualClock;
+    const tSeen = tMake + D;
+    const miner = Math.floor(Math.random() * 4);
+    const id = ++total;
+    const now = performance.now();
+
+    // single chain
+    const orphaned = tMake < chainTip.tSeen;
+    if (orphaned) discarded++;
+    else chainTip = { id, tSeen };
+    chainBlocks.push({ id, miner, orphaned, born: now });
+    if (chainBlocks.length > N) chainBlocks.shift();
+
+    // blockDAG
+    let visible = dagTips.filter(t => t.tSeen <= tMake);
+    if (visible.length === 0) visible = dagTips.slice();
+    const parentIds = visible.map(t => t.id);
+    dagTips = dagTips.filter(t => parentIds.indexOf(t.id) === -1);
+    dagTips.push({ id, tSeen });
+    dagBlocks.push({ id, miner, parents: parentIds, born: now });
+    if (dagBlocks.length > N) dagBlocks.shift();
+
+    updateStats();
+  }
+
+  function updateStats() {
+    document.getElementById('chainStat').textContent = 'so far: ' + (total - discarded) + ' kept, ' + discarded + ' thrown away';
+    const predicted = (1 - Math.exp(-lambda() * delay())) * 100;
+    document.getElementById('resultLine').innerHTML =
+      'At this speed, about <b>' + predicted.toFixed(0) + '%</b> of blocks collide. A single chain throws that work away. The blockDAG keeps all of it.';
+  }
+
+  function fitCanvas(c) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = c.clientWidth, h = c.clientHeight;
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
+      c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    }
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { w, h };
+  }
+
+  function laneY(h, miner) { return 20 + miner * (h - 40) / 3; }
+  function slotX(w, i, len) {
+    const margin = 22;
+    if (len <= 1) return w - margin;
+    return margin + i * (w - 2 * margin) / (N - 1);
+  }
+
+  // ease-out pop: 0 -> 1 over ~260ms with slight overshoot
+  function popScale(ageMs) {
+    if (reducedMotion) return 1;
+    const t = Math.min(1, ageMs / 260);
+    const eased = 1 - Math.pow(1 - t, 3);
+    return 0.4 + eased * 0.6 + (t < 1 ? Math.sin(t * Math.PI) * 0.15 : 0);
+  }
+
+  function render() {
+    const now = performance.now();
+    const cs = fitCanvas(chainCanvas);
+    chainCtx.clearRect(0, 0, cs.w, cs.h);
+    const style = getComputedStyle(document.documentElement);
+    const green = style.getPropertyValue('--green').trim();
+    const pink = style.getPropertyValue('--pink').trim();
+    const line = style.getPropertyValue('--line-bright').trim();
+
+    chainCtx.strokeStyle = line;
+    chainCtx.lineWidth = 1.5;
+    let prevX = null, prevY = null;
+    chainBlocks.forEach((b, i) => {
+      const x = slotX(cs.w, i, chainBlocks.length);
+      const y = laneY(cs.h, b.miner);
+      if (!b.orphaned && prevX !== null) {
+        chainCtx.beginPath();
+        chainCtx.moveTo(prevX, prevY);
+        chainCtx.lineTo(x, y);
+        chainCtx.stroke();
+      }
+      if (!b.orphaned) { prevX = x; prevY = y; }
+    });
+    chainBlocks.forEach((b, i) => {
+      const x = slotX(cs.w, i, chainBlocks.length);
+      const y = laneY(cs.h, b.miner);
+      const scale = popScale(now - b.born);
+      chainCtx.globalAlpha = b.orphaned ? 0.45 : 1;
+      chainCtx.fillStyle = b.orphaned ? pink : green;
+      chainCtx.beginPath();
+      chainCtx.arc(x, y, (b.orphaned ? 5 : 6) * scale, 0, Math.PI * 2);
+      chainCtx.fill();
+      chainCtx.globalAlpha = 1;
+    });
+
+    const ds = fitCanvas(dagCanvas);
+    dagCtx.clearRect(0, 0, ds.w, ds.h);
+    const idIndex = {};
+    dagBlocks.forEach((b, i) => { idIndex[b.id] = i; });
+    dagCtx.strokeStyle = line;
+    dagCtx.lineWidth = 1.2;
+    dagBlocks.forEach((b, i) => {
+      const x = slotX(ds.w, i, dagBlocks.length);
+      const y = laneY(ds.h, b.miner);
+      b.parents.forEach(pid => {
+        const pi = idIndex[pid];
+        if (pi === undefined) return;
+        const pb = dagBlocks[pi];
+        const px = slotX(ds.w, pi, dagBlocks.length);
+        const py = laneY(ds.h, pb.miner);
+        dagCtx.beginPath();
+        dagCtx.moveTo(px, py);
+        dagCtx.lineTo(x, y);
+        dagCtx.stroke();
+      });
+    });
+    dagBlocks.forEach((b, i) => {
+      const x = slotX(ds.w, i, dagBlocks.length);
+      const y = laneY(ds.h, b.miner);
+      const scale = popScale(now - b.born);
+      dagCtx.fillStyle = green;
+      dagCtx.beginPath();
+      dagCtx.arc(x, y, 6 * scale, 0, Math.PI * 2);
+      dagCtx.fill();
+    });
+
+    const stillAnimating = chainBlocks.some(b => now - b.born < 260) || dagBlocks.some(b => now - b.born < 260);
+    if (!reducedMotion && stillAnimating) {
+      rafId = requestAnimationFrame(render);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function requestRender() {
+    if (rafId === null) rafId = requestAnimationFrame(render);
+  }
+
+  function scheduleNext() {
+    if (reducedMotion) return;
+    const waitMs = playbackInterval() * 1000;
+    autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
+  }
+
+  function updateHonesty() {
+    const real = meanIntervalReal();
+    const shown = playbackInterval();
+    if (Math.abs(real - shown) / real > 0.15) {
+      document.getElementById('honestyNote').textContent =
+        'A real block this rare (one every ' + humanDuration(real) + ') plays back roughly every ' + shown.toFixed(shown < 1 ? 2 : 1) + ' s here, so you can actually watch it.';
+    } else {
+      document.getElementById('honestyNote').textContent = 'Playing back at real speed.';
+    }
+  }
+
+  function onSliderChange() {
+    rateVal.textContent = fmtRate(lambda());
+    delayVal.textContent = fmtDelay(delay());
+    updateHonesty();
+    if (autoTimer) clearTimeout(autoTimer);
+    resetSim();
+    updateStats();
+    requestRender();
+    if (!reducedMotion) scheduleNext();
+  }
+
+  rateInput.addEventListener('input', onSliderChange);
+  delayInput.addEventListener('input', onSliderChange);
+  window.addEventListener('resize', requestRender);
+
+  // defaults: start near Bitcoin's regime
+  rateInput.value = 0;
+  delayInput.value = Math.round((Math.log10(2) - DELAY_LOG_MIN) / (DELAY_LOG_MAX - DELAY_LOG_MIN) * 1000);
+  onSliderChange();
+
+  if (reducedMotion) {
+    stepBtn.hidden = false;
+    stepBtn.addEventListener('click', function () { generateEvent(); render(); });
+  }
+})();
+
+// theme: data-theme attribute + localStorage, matching design/page-template.html
+(function () {
+  var key = "kaspa-explained-theme";
+  var saved = null;
+  try { saved = localStorage.getItem(key); } catch (e) {}
+  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var btn = document.getElementById("theme-toggle");
+  // This page is embedded live on the homepage inside an iframe. That iframe
+  // shares the parent's origin and its own document reads the same
+  // "kaspa-explained-theme" localStorage key, but it is a separate DOM: a
+  // click on this toggle while embedded flips this iframe's own look without
+  // the parent page changing, while still overwriting the shared storage
+  // key underneath it. The next real navigation anywhere on the site then
+  // reads that clobbered value and silently lands in the wrong theme. The
+  // toggle only belongs to a reader who opened this page directly; hide it
+  // when framed so the embedded preview can only ever follow the site's
+  // theme, never fork it.
+  if (window.self !== window.top) {
+    if (btn) btn.hidden = true;
+    return;
+  }
+  function sync() {
+    btn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+  }
+  sync();
+  btn.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(key, next); } catch (e) {}
+    sync();
+  });
+})();
+</script>
+</body>
+</html>

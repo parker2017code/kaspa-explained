@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
   <title>Build on Kaspa: Toccata App Ideas and Builder Paths | Kaspa Explained</title>
   <meta name="description" content="Three ways to build on Kaspa, and how to work out which one your idea needs.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -59,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
-  <script defer src="nav.js?v=20260708-dark-default"></script>
+  <link rel="stylesheet" href="styles.css?v=20260822-touch-targets">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -77,6 +87,7 @@
         <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -89,8 +100,11 @@
       <p class="eyebrow">Build on Kaspa</p>
       <h1>Build Kaspa apps</h1>
       <p class="lead">Toccata activated at DAA 474,165,565. Spend limits, escrow paths, asset rules, and proof checks are now in L1 script, readable before funds move.</p>
-      <p class="fit-note"><strong>Status:</strong> payments are live today, and Toccata's rules are active on mainnet. Read <a href="/toccata-explained">Toccata Explained</a> for how covenants, proof checks, and activity lanes work.</p>
-      <p class="fit-note"><strong>Before pitching:</strong> run product claims through <a href="/status">Status</a>, and adoption risk through <a href="/skeptical-case">Risks</a>.</p>
+      <details class="source-more">
+        <summary>Status, and where to check a product claim before pitching it</summary>
+        <p class="fit-note"><strong>Status:</strong> payments are live today, and Toccata's rules are active on mainnet. Read <a href="/toccata-explained">Toccata Explained</a> for how covenants, proof checks, and activity lanes work.</p>
+        <p class="fit-note"><strong>Before pitching:</strong> run product claims through <a href="/status">Status</a>, and adoption risk through <a href="/skeptical-case">Risks</a>.</p>
+      </details>
       <div class="actions">
         <a class="button primary" href="#routes">Pick a route</a>
         <a class="button" href="#build">What to build</a>
@@ -120,7 +134,13 @@
           <thead><tr><th>What the app needs</th><th>Route</th><th>Why that one</th></tr></thead>
           <tbody>
             <tr><td>Payment, receipt, balance, withdrawal, or support evidence</td><td><a href="/status">Live network work</a></td><td>Current wallets, APIs, and accepted-transaction checks already handle this.</td></tr>
-            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="/toccata-explained">Toccata covenants</a></td><td>A bounded spend rule is simpler to build and to audit than a full app runtime. If the product splits into states that never touch, use one covenant per state and the parallel work comes free.</td></tr>
+            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="/toccata-explained">Toccata covenants</a></td><td>
+              A bounded spend rule is simpler to build and audit than a full app runtime.
+              <details class="cell-detail">
+                <summary>When to split into more than one covenant</summary>
+                <p>If the product splits into states that never touch, use one covenant per state and the parallel work comes free.</p>
+              </details>
+            </td></tr>
             <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td>Based app or replay path</td><td>The app proves or replays its own state without needing cross-app atomicity.</td></tr>
             <tr><td>Each action needs its own proof, privacy check, or custom validity rule</td><td>Inline ZK</td><td>It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
             <tr><td>The claim depends on another chain, an oracle, a price, or a real-world event</td><td>Name the anchor first</td><td>Source root, finality certificate, oracle, or challenge process. Pick one before writing proof code.</td></tr>
@@ -129,8 +149,9 @@
         </table>
       </div>
       <p>Start a based app as deterministic replay of accepted transactions, and add ZK only once proofs, privacy, or bridge logic become the product edge.</p>
-      <p>Issuing a fungible token means building against KCC-0020, a draft standard with an open correctness gap and an admitted partial-conformance implementation, tracked in full on <a href="/kips">the KIP and KCC page</a>.</p>
-      <p>A covenant can only inspect the transaction spending it, not the wider chain. Reading shared on-chain state, a price, a pool balance, consumes it in the same breath, and Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB's. A builder raised the gap in the Kaspa Core R&D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no KIP yet says whether the fix belongs at L1 or in a future vProg.</p>
+      <p>Issuing a fungible token means building against KCC-0020, a draft standard with a permanent supply-split consequence its co-authors partly defend and partly call a wrong pattern still needing a spec fix, plus an admitted partial-conformance implementation, tracked in full on <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>A covenant can only inspect the transaction spending it, not the wider chain. Reading shared on-chain state, a price, a pool balance, consumes it in the same breath, and Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB's.</p>
+      <p>A builder raised the gap in the Kaspa Core R&D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no KIP yet says whether the fix belongs at L1 or in a future vProg.</p>
     </section>
 
     <section id="build" class="section">
@@ -169,7 +190,8 @@
         <article><span>User-visible result</span><p>What a wallet user, builder, or node runner can see right now.</p></article>
         <article><span>Remaining blocker</span><p>Whatever stands between this and a wider public claim, named plainly.</p></article>
       </div>
-      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on TN10 or TN12 and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored. Merged code proves the code exists, not that the network runs it, and mixing those lanes in a public post turns a testnet demo into a mainnet rumor.</p>
+      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on TN10 or TN12 and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored.</p>
+      <p>Merged code proves the code exists, not that the network runs it, and mixing those lanes in a public post turns a testnet demo into a mainnet rumor.</p>
       <details class="source-more" data-audience="specialist">
         <summary>Advanced state-transition proof note</summary>
         <p>State-transition proof models follow one pattern: selected-parent root plus current root plus leaf write witnesses. That keeps validation local to the single transition. Clients never have to maintain the whole incremental SMT.</p>
@@ -387,6 +409,7 @@ amount: "31112708372"</code></pre>
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
+          <a href="/demos">Demos</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
