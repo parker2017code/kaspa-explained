@@ -29,6 +29,21 @@ PAGE = ROOT / "model-picker.html"
 # 25 figures across 10 dials: Artificial Analysis 13, LiveBench 7, LM Arena 5.
 # Every dial carries two or three figures. No dial carries one: a control built
 # on a single number is that number's leaderboard with a slider on it.
+# Raw values the page needs even though no dial scores them any more.
+#
+# Cost per task is the horizontal axis of the value chart and the most checked
+# number here. Speed and the clocks are printed on every row. None of them are
+# scored, and removing them from METRICS quietly orphaned them: the status
+# board backfill loops over METRICS, so Muse Spark 1.1, whose figures come from
+# that backfill rather than from picker-data.json, lost its published $0.29 and
+# rendered with no price at all. A figure can stop being scored and still have
+# to reach the page.
+RAW_ALSO = [
+    "aaCostPerTask", "lbCostPerSuccessTask", "aaOutputPrice",
+    "tokensPerSec", "ttft", "aaTotalResponse", "aaFirstAnswer",
+]
+
+
 METRICS = [
     # Ten benchmarks, one per dial, all of them capability.
     #
@@ -1642,7 +1657,7 @@ def main():
         if _pick is None:
             continue
         _same = tier_of(_pick.get("variant")) == _want
-        for _m in METRICS:
+        for _m in list(METRICS) + RAW_ALSO:
             if _m in _v["raw"] or _pick.get(_m) is None:
                 continue
             _v["raw"][_m] = {"value": float(_pick[_m]),
