@@ -350,8 +350,11 @@
 
   <details>
     <summary>How this works, and the sources</summary>
-    <p>Blocks arrive at random, like raindrops: a Poisson process with rate &lambda;. A block collides with the one before it if the next block is found before the first one finishes spreading across the network, which takes time d. That gives a plain formula for how often a collision happens:</p>
+    <p>Blocks arrive at random, like raindrops: a Poisson process with rate &lambda;. A block collides with the one before it if the next block is found before the first one finishes spreading across the network, which takes time d. That gives a plain formula for how often a given block collides with at least one other:</p>
     <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
+    <p>That collision probability is not the number this page leads with. Once a single chain keeps a block, it will not accept anything that arrives before that block finishes propagating, so a run of colliding blocks only ever keeps the first and discards the rest, the same way a non-paralyzable dead-time counter drops any event landing inside its recovery window without extending that window. Working through that identity gives a lower share than p:</p>
+    <div class="formula">discarded share = &lambda;d &divide; (1 + &lambda;d) &nbsp;&nbsp; kept share = 1 &divide; (1 + &lambda;d)</div>
+    <p><b>Inferred</b> from the dead-time-counter identity above, matching this simulator's own discard rule rather than quoted from a source. At Kaspa's defaults, &lambda;d = 5, so p works out to about 99% while the discarded share is about 83%, which is the figure the running tally above converges toward.</p>
     <p>A single chain can only keep one block per collision, so the loser's work is wasted. A blockDAG references every block a miner could see when it started working, so both survive and get ordered instead of discarded.</p>
     <p><b>Where this comes from.</b> Block creation as a Poisson process of rate &lambda;, and network propagation delay as the thing that causes concurrent blocks, are exactly the model in Sompolinsky, Wyborski and Zohar's PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>): "Block creation follows a Poisson process with parameter &lambda;," bounded by a network delay diameter D. <b>Verified</b> against that primary source. The paper's own math goes further than this demo: it bounds how many blocks can be created within a delay window (the anticone size k, used to tune GHOSTDAG itself), via a Poisson-tail formula in D&middot;&lambda;. This page's p = 1 &minus; e<sup>&minus;&lambda;d</sup> is the simpler building block underneath that: the chance at least one more block arrives before the first one finishes propagating, which is standard Poisson-process math (P(0 arrivals in time d) = e<sup>&minus;&lambda;d</sup>) and matches the same collision mechanism used in the Bitcoin fork-rate literature (Decker &amp; Wattenhofer, <i>Information Propagation in the Bitcoin Network</i>, IEEE P2P 2013). <b>Inferred</b> from that Poisson identity rather than quoted directly from either paper. This demo simplifies further by testing only whether a block collides with the immediately preceding one, not the full multi-block anticone GHOSTDAG actually resolves; it is a simplification of the source math, not the source math itself.</p>
     <p>Playback speed scales with the rate instead of landing every setting at the same pace: a real Bitcoin block, on average one every 10 minutes, plays back roughly every 6 seconds here, about a hundredth of real time, so the wait still feels slow rather than reading as a label. Kaspa's real rate, ten a second, plays back close to real time, because a 100ms block is already watchable as itself. The collision math above always uses the real rate and delay, not the playback speed; only what you see on screen is sped up or slowed down for legibility.</p>
@@ -471,10 +474,16 @@
   }
 
   function updateStats() {
-    document.getElementById('chainStat').textContent = 'so far: ' + (total - discarded) + ' kept, ' + discarded + ' thrown away';
-    const predicted = (1 - Math.exp(-lambda() * delay())) * 100;
+    const kept = total - discarded;
+    const observedDiscardPct = total > 0 ? (discarded / total * 100) : 0;
+    const ld = lambda() * delay();
+    const predictedDiscardPct = (ld / (1 + ld)) * 100;
+    document.getElementById('chainStat').textContent =
+      'so far: ' + kept + ' kept, ' + discarded + ' thrown away (' + observedDiscardPct.toFixed(0) + '% discarded)';
     document.getElementById('resultLine').innerHTML =
-      'At this speed, about <b>' + predicted.toFixed(0) + '%</b> of blocks collide. A single chain throws that work away. The blockDAG keeps all of it.';
+      'At this speed, a single chain is expected to throw away about <b>' + predictedDiscardPct.toFixed(0) +
+      '%</b> of the blocks it makes, in the long run. The tally in the panel below is a running sample: it reads ' +
+      'differently early on and drifts toward that figure as more blocks are produced. The blockDAG keeps all of it.';
   }
 
   function fitCanvas(c) {
