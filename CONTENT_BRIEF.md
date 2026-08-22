@@ -466,7 +466,7 @@ Discovery and replies:
 - https://x.com/IzioDev
 - https://x.com/coderofstuff_
 - https://x.com/FreshAir08
-- https://kasmedia.com/article/eliot-mea-and-oracles (Eliott Mea; his X account no longer resolves)
+- https://kasmagazine.com/article/eliot-mea-and-oracles (Eliott Mea; his X account no longer resolves)
 - https://x.com/KasSigner
 
 Read replies as well as top-level posts when researching a current technical point.
@@ -488,7 +488,7 @@ Important transcript-backed sources currently used:
 
 - https://www.youtube.com/live/GaJmYV8OHfQ
 - https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work
-- https://kasmedia.com/article/weeklyknight-08282025
+- https://kasmagazine.com/article/weeklyknight-08282025
 - https://www.youtube.com/watch?v=VIZGKoIaGR0
 - https://www.youtube.com/watch?v=S1dS1xvvFss
 - https://www.youtube.com/watch?v=xHlOcR1x2tU
