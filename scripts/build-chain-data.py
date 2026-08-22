@@ -32,7 +32,7 @@ FIELDS = {
     "daily_transactions": "tx", "daily_transactions_raw": "txraw", "tx_note": "txnote",
     "privacy_default": "priv", "market_cap_usd": "cap", "hashrate_ehs": "hr",
     "emission_native_per_day": "emn", "emission_usd_per_day": "emu",
-    "purpose": "why", "weakness": "weak", "measured_2026_08_01": "meas",
+    "purpose": "why", "weakness": "weak", "measured_2026_08_22": "meas",
 }
 
 

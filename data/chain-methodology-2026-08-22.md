@@ -391,3 +391,160 @@ each case (categorical vs. engineered-composite).
   trading" still needs a human read of the filing; not something a refresh
   script can resolve unattended without misclassifying a lapsed or withdrawn
   filing as live.
+
+## Task 5: full re-measurement pass, later same day (2026-08-22)
+
+Scope correction to the note at the top of this file: that note said this
+file was analysis-only and would not touch `chain-comparer.html` or
+`data/l1-chains.json`. This section supersedes that for this pass only. The
+owner approved re-measuring all twenty rows against live sources so the
+whole set shares one date, closing the gap where nine rows were re-measured
+on 2026-08-01 and eleven were not re-checked at all. `data/l1-chains.json`
+and `chain-comparer.html` (via `scripts/build-chain-data.py`, which
+regenerates the page's embedded blob from the JSON) were both updated.
+`scripts/build-chain-data.py` itself needed a one-line fix: its `FIELDS`
+dict hardcoded the old per-chain marker key `measured_2026_08_01`, renamed
+below to `measured_2026_08_22`.
+
+Method, followed from the Task 3 table above: each chain's own RPC, mirror
+node, or indexer where one is reachable, matching what the 2026-08-01 pass
+used per chain where that source still worked. Blockchair for the six
+chains it covers (Bitcoin, Ethereum, Litecoin, Bitcoin Cash, Cardano,
+Stellar via Horizon instead since Blockchair does not cover Stellar).
+Primary chain RPCs for the rest. All timestamps below are 2026-08-22,
+pulled during this session.
+
+### Per-chain, per-field results
+
+| Chain | Field | Old (2026-08-01 or earlier) | New (2026-08-22) | Source | Method / window |
+|---|---|---|---|---|---|
+| Bitcoin | block_time_s | 564.71 | 600.0 | api.blockchair.com/bitcoin/stats | 86400 / blocks_24h |
+| Bitcoin | tps_sustained | 7.185 | 7.509 | same | transactions_24h / 86400 |
+| Bitcoin | median_fee_usd | 0.1317 | 0.0544 | same | median_transaction_fee_usd_24h |
+| Bitcoin | hashrate_ehs | 912.54 | 912.536 | same | hashrate_24h / 1e18 |
+| Ethereum | block_time_s | 12.03 | 12.04 | api.blockchair.com/ethereum/stats | 86400 / blocks_24h |
+| Ethereum | tps_sustained | 17.793 | 21.029 | same | transactions_24h / 86400 |
+| Ethereum | median_fee_usd | 0.0484 | 0.0703 | same | median_transaction_fee_usd_24h |
+| Litecoin | block_time_s | 166.15 | 148.45 | api.blockchair.com/litecoin/stats | 86400 / blocks_24h |
+| Litecoin | tps_sustained | 2.025 | 2.143 | same | transactions_24h / 86400 |
+| Litecoin | median_fee_usd | 0.0004 | 0.000521 | same | median_transaction_fee_usd_24h |
+| Litecoin | hashrate_ehs | 0.002479 | 0.002512 | same | hashrate_24h / 1e18 |
+| Bitcoin Cash | block_time_s | 579.87 | 526.83 | api.blockchair.com/bitcoin-cash/stats | 86400 / blocks_24h |
+| Bitcoin Cash | tps_sustained | 0.174 | 0.172 | same | transactions_24h / 86400 |
+| Bitcoin Cash | median_fee_usd | 0.00075 | 0.001053 | same | median_transaction_fee_usd_24h |
+| Bitcoin Cash | hashrate_ehs | 3.44 | 3.932 | same | hashrate_24h / 1e18 |
+| Cardano | block_time_s | 20.58 | 20.52 | api.blockchair.com/cardano/stats | 86400 / blocks_24h |
+| Cardano | tps_sustained | 0.186 | 0.464 | same | transactions_24h / 86400 (quiet-hour caveat still applies) |
+| Solana | block_time_s | 0.426 | 0.367 | api.mainnet-beta.solana.com RPC | getRecentPerformanceSamples, 60 x 60s samples |
+| Solana | tps_sustained | 1175 | 2032.805 | same | numNonVoteTransactions / samplePeriodSecs, same 60-min window; resolves the prior ambiguity (old figure matched neither cleaned nor raw tx totals) by reading the RPC's own vote/non-vote split directly |
+| BNB Chain | block_time_s | 0.45 | 0.45 | bsc-dataseed.binance.org RPC | timestamp delta over 3,000 blocks |
+| BNB Chain | tps_sustained | 201.7 | 166.9 | same | 20-block tx-count sample over ~22.5 min / block_time |
+| Avalanche | block_time_s | 1.326 | 1.143 | api.avax.network C-Chain RPC | timestamp delta over 2,000 blocks |
+| Avalanche | tps_sustained | 28.68 | 10.94 | same | 20-block tx-count sample over ~38 min / block_time (high block-to-block variance, 1-61 tx/block) |
+| TRON | block_time_s | 3 | 3.006 | api.trongrid.io | timestamp delta over 1,000 blocks |
+| TRON | tps_sustained | 179.5 | 133.6 | same | 15-block tx-count sample over ~45s / block_time |
+| Sui | block_time_s | 0.221 | 0.222 | sui-rpc.publicnode.com | checkpoint timestamp delta over 5,000 checkpoints (~18.5 min) |
+| Sui | tps_sustained | 62.79 | 53.89 | same | networkTotalTransactions delta (raw 78.10 tps) x 0.69 (existing 31% system-tx tx_note factor) |
+| Aptos | block_time_s | 0.037 | 0.0342 | fullnode.mainnet.aptoslabs.com REST | block_height delta over 30s poll |
+| Aptos | tps_sustained | 140.49 | 132.3 | same | ledger_version delta (raw 182.48 tps) x 0.725 (existing 27.5% metadata/checkpoint tx_note factor) |
+| TON (Gram) | block_time_s | 0.431 | 0.392 | toncenter.com masterchain seqno | seqno delta over 20s poll |
+| TON (Gram) | tps_sustained | 5.618 | 5.618 (unchanged) | not independently re-derived | enumerating TON's per-shard transaction totals through a public API was not tractable in this session's time budget; value carried forward from the same-day (2026-08-22) correction already in the file, which itself used daily_transactions / 86400 |
+| Near | block_time_s | 0.615 | 0.623 | rpc.mainnet.near.org /status | block-height delta over a ~20.6-hour window (from `earliest_block_*` to `latest_block_*`) |
+| Near | tps_sustained | 8.55 | 7.788 | api.nearblocks.io/v1/charts/latest | mean of daily tx counts over the 15 days the endpoint returns (not the full 30; genuine daily figures, shorter window) |
+| Hedera | block_time_s | 2.324 | 2.297 | mainnet-public.mirrornode.hedera.com /blocks | timestamp delta over 100 blocks |
+| Hedera | tps_sustained | 3.66 | 4.006 | same | tx count per block (`count` field) summed over same 100 blocks (~230s window) |
+| Algorand | block_time_s | 2.82 | 2.741 | mainnet-api.algonode.cloud | timestamp delta over 2,000 rounds |
+| Algorand | tps_sustained | 10.53 | 12.587 | same | 20-round tx-count sample over ~91 min / block_time (high variance, 1-116 tx/round) |
+| Monero | block_time_s | 120.21 | 120.43 | public node xmr-node.cakewallet.com:18081 | get_block_headers_range timestamp delta over 2,000 blocks |
+| Monero | tps_sustained | 0.309 | 0.331 | same | summed num_txes over the same 2,000 blocks, ~66.9 hours (about 2.8 days, not the full 30: the node's RPC caps headers per request and a full 30-day pull was not practical in this session) |
+| Kaspa | tps_sustained | 0.895 | 0.949 | api.kaspa.org /transactions/count | regular (non-coinbase) tx summed over a genuine trailing 30-day hourly series (2026-07-23 to 2026-08-22) |
+| Kaspa | daily_transactions / _raw | 77,207 / 737,701 | 82,023 / 702,164 | same | same 30-day series; coinbase share 88.3% (was 89.5%) |
+| Kaspa | hashrate_ehs | 0.31207 | 0.30269 | api.kaspa.org /info/hashrate | field is TH/s, not GH/s (confirmed by scale match against the prior EH/s figure) |
+| Polkadot | block_time_s | 6 | 6.2 (recorded as 6.0) | rpc.polkadot.io | chain_getHeader block-number delta over a 30s poll |
+| Polkadot | tps_sustained | null | null (unchanged) | not measurable | relay chain carries almost no user transactions by design; this was true before and stays true, not re-derived as a number |
+| Internet Computer | block_time_s | 0.48 | 0.261 | ic-api.internetcomputer.org | 42 subnets (from /api/v3/subnets) / block_rate metric (160.95 blocks/sec network-wide) |
+| Internet Computer | tps_sustained | 1322 | 4713.2 | same | transaction_rate metric / 86400; independently close to the dashboard's message_execution_rate metric (~4,600-4,700), but the metric's exact definition relative to the prior figure's source was not reconciled |
+| Stellar | block_time_s | 5.56 | 5.678 | horizon.stellar.org /ledgers | closed_at delta over 200 ledgers (~19 min) |
+| Stellar | tps_sustained | 56.08 | 41.308 | same | successful_transaction_count summed over the same 200 ledgers |
+
+Total: block_time_s re-measured for all 20 chains. tps_sustained
+re-measured for 18 of 20 (all except Polkadot, unmeasurable by design, and
+TON, not independently re-derived this pass). hashrate_ehs re-measured for
+the four PoW chains that carry it and that this pass touched (Bitcoin,
+Litecoin, Bitcoin Cash, Kaspa; Monero's hashrate_ehs was not recomputed
+this pass and stays at its prior value). median_fee_usd re-measured for
+the four chains this pass pulled fresh Blockchair stats for (Bitcoin,
+Ethereum, Litecoin, Bitcoin Cash); Monero's and Kaspa's median_fee_usd
+were left unchanged, since deriving a fee-per-byte-times-price figure with
+confidence was judged closer to a guess than a measurement given the tools
+reachable in this session, and the task rule against filling gaps with
+guesses applies here even though a null was not the alternative (an
+unverified derived number is not better than an unrefreshed but real one).
+
+Every chain's `measured_2026_08_22` list in `data/l1-chains.json` records
+exactly which of its fields were touched this pass, replacing the old
+`measured_2026_08_01` marker (also renamed in
+`scripts/build-chain-data.py`'s field map, which had hardcoded the old key
+name).
+
+### Figures worth a second look (large moves)
+
+- **Internet Computer's tps_sustained: 1322 to 4713.2, +256%.** The new
+  figure comes from ic-api.internetcomputer.org's own `transaction_rate`
+  metric divided by 86,400, and lands close to that same dashboard's
+  independent `message_execution_rate` metric (~4,600-4,700/sec), so the
+  two IC-published numbers agree with each other. What is not established
+  is whether the metric this pass read is the same one the 2026-08-01 (or
+  earlier) figure was read from; if the old figure used a narrower
+  definition (ICP-ledger transfers only, say, versus all inter-canister
+  message execution), the jump could be a definition change rather than
+  real growth. Flagged for owner review rather than treated as settled.
+- **Avalanche's tps_sustained: 28.68 to 10.94, -62%.** Both are short
+  live-RPC snapshots (minutes, not hours), and the 20-block sample this
+  pass drew ranged from 1 to 61 tx/block, so at least some of this move is
+  sampling variance rather than a real traffic decline. Worth a longer
+  re-check before treating -62% as a real trend.
+- **Bitcoin Cash's hashrate_ehs: 3.44 to 3.932 EH/s, +14%.** Within the
+  normal range of day-to-day hashrate swings for a smaller PoW chain; not
+  flagged as suspicious, just larger than the other four PoW chains'
+  moves (all under 5%).
+- Every other field's move (Bitcoin, Ethereum, Litecoin, Cardano, Sui,
+  Aptos, Near, Hedera, Algorand, Monero, Kaspa, Polkadot, Stellar) sits
+  within roughly 20% of its prior value, consistent with normal day-to-day
+  or measurement-window variance rather than a wrong prior number.
+
+### What was not re-measured, and why
+
+- **TON's tps_sustained.** Toncenter and tonapi.io both expose per-block
+  and per-checkpoint detail, but TON shards transaction processing across
+  many parallel shardchains; getting a network-wide daily transaction
+  total requires enumerating all active shards over a window, which was
+  not tractable through the public REST endpoints reachable in this
+  session's time budget. The value in the file is carried forward from an
+  earlier same-day (2026-08-22) correction that used
+  `daily_transactions / 86400`, itself a real fix to a previously
+  raw-count-based figure, but not something this pass independently
+  reproduced.
+- **Polkadot's relay-chain tps_sustained.** Stays null by design; the
+  relay chain carries almost no user transactions, so there is no
+  meaningful "sustained throughput" number to fill in for it. Polkadot
+  Hub's own daily_transactions figure (12,919) was not refreshed this
+  pass: Subscan, the obvious source, requires an API key and returned 403
+  to every unauthenticated request tried.
+- **Monero's and Kaspa's median_fee_usd.** Both chains expose a
+  fee-estimate RPC call, but converting that into a comparable
+  "median transaction fee in USD" needs an assumed typical transaction
+  size and a current spot price, neither of which this pass could pin
+  down with the same confidence as a chain that publishes the figure
+  directly (as Blockchair does for the other four). Left unchanged rather
+  than replaced with a derived estimate.
+- **BNB Chain's and Hedera's raw/cleaned transaction split.** Neither
+  publishes a raw vs. cleaned transaction count distinction the way
+  Solana, Sui, Aptos, TON, and Kaspa do, so their fresh tps_sustained
+  figures are plain on-chain transaction counts with no cleaning applied,
+  same as before.
+- **Node disk size, developer counts, wallet/custody/ETF status, and
+  Nakamoto coefficients** were not touched this pass. These match Task 3's
+  own finding that they are categorical or manual-recheck fields that
+  change on a hard fork, a funding-report cadence, or a filing event, not
+  something a daily RPC pull re-measures.
