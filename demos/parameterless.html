@@ -352,6 +352,13 @@
   }
 
   var DELTA = 0.01;    // GHOSTDAG_TAIL_DELTA
+  var BPS_TABLE_MAX = 32;   // rusty-kaspa's Bps<BPS>::ghostdag_k() match arms stop here; the fallback arm panics above it
+  var BPS_SLIDER_MAX = 100; // exploratory range on this slider only; not a confirmed network target, see honesty note below
+  var L_SLIDER_MAX = 20;
+  // One shared ruler for both gauges, sized to the largest k either side could need across the
+  // full slider range, so a gauge's fill reflects true magnitude instead of silently re-scaling
+  // itself to look the same width every time.
+  var SHARED_SCALE = ghostdagK(2 * L_SLIDER_MAX * BPS_SLIDER_MAX, DELTA) * 1.05;
 
   var bpsSlider = document.getElementById("bps-slider");
   var dSlider = document.getElementById("d-slider");
@@ -364,6 +371,7 @@
   var fixedReqOut = document.getElementById("fixed-req-out");
   var fixedFill = document.getElementById("fixed-fill");
   var fixedCap = document.getElementById("fixed-cap");
+  var fixedTableEnd = document.getElementById("fixed-tableend");
   var fixedOver = document.getElementById("fixed-over");
   var fixedStrip = document.getElementById("fixed-strip");
   var fixedTimeOut = document.getElementById("fixed-time-out");
@@ -394,27 +402,44 @@
     var BPS = parseFloat(bpsSlider.value);
     var D = parseFloat(dSlider.value);
     var L = parseFloat(lSlider.value);
-    var configuredK = ghostdagK(2 * D * BPS, DELTA);
+
+    // GHOSTDAG needs a k chosen in advance for one exact block rate. rusty-kaspa's own table
+    // only has entries for 1 through 32 bps (Bps<BPS>::ghostdag_k() panics past that), so past
+    // 32 the fixed side is frozen at the table's last defined point: there is no live value to
+    // show. requiredK uses the real, chosen block rate on both sides, since "how much margin
+    // this latency actually needs" isn't a GHOSTDAG-specific question.
+    var beyondTable = BPS > BPS_TABLE_MAX;
+    var tableBps = Math.min(BPS, BPS_TABLE_MAX);
+    var configuredK = ghostdagK(2 * D * tableBps, DELTA);
     var requiredK = ghostdagK(2 * L * BPS, DELTA);
 
     bpsOut.textContent = BPS + " block" + (BPS === 1 ? "" : "s") + "/sec" +
-      (BPS === 10 ? " (Kaspa mainnet's Crescendo-era rate)" : "");
-    dOut.textContent = "D = " + D.toFixed(1) + " s \u2192 configured margin (k) = " + configuredK;
+      (BPS === 10 ? " (Kaspa mainnet's Crescendo-era rate)" : "") +
+      (beyondTable ? " \u2014 past GHOSTDAG's 32 bps table" : "");
+    dOut.textContent = "D = " + D.toFixed(1) + " s \u2192 configured margin (k) = " + configuredK +
+      (beyondTable ? " (frozen, bps=32)" : "");
     lOut.textContent = L.toFixed(1) + " s (margin (k) this actually needs: " + requiredK + ")";
 
-    // Fixed (GHOSTDAG) side. Scale is anchored to the configured cap itself, not the
-    // moving required value, so a reader can see the fill cross the cap marker instead
-    // of the whole gauge silently re-scaling to hide the overshoot.
+    // Fixed (GHOSTDAG) side. Both gauges below share one absolute ruler (SHARED_SCALE) sized to
+    // the largest k either side could need across the whole slider range, so a fill's width
+    // reflects real magnitude and is directly comparable between the two sides, instead of each
+    // gauge silently re-scaling itself to always look the same width.
     fixedKOut.textContent = configuredK;
     fixedReqOut.textContent = requiredK;
     var over = requiredK > configuredK;
-    var fixedScale = Math.max(configuredK * 1.8, 1);
-    var capPct = Math.min(96, (configuredK / fixedScale) * 100);
+    var capPct = Math.min(96, (configuredK / SHARED_SCALE) * 100);
     fixedCap.style.left = capPct + "%";
-    fixedFill.style.width = Math.min(100, (requiredK / fixedScale) * 100) + "%";
+    fixedFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
     fixedFill.style.background = over ? "var(--pink)" : "var(--cyan)";
 
-    if (over && requiredK > fixedScale){
+    if (beyondTable){
+      fixedTableEnd.hidden = false;
+      fixedTableEnd.textContent = "No k exists past 32 bps: the table stops there and rusty-kaspa's code panics. Shown frozen at bps=32's value.";
+    } else {
+      fixedTableEnd.hidden = true;
+    }
+
+    if (over && !beyondTable){
       var factor = (requiredK / configuredK);
       fixedOver.hidden = false;
       fixedOver.textContent = "needs " + factor.toFixed(1) + "\u00d7 the configured margin";
@@ -430,10 +455,18 @@
       return sample > configuredK ? "over" : "ok";
     });
 
-    var fixedTime = configuredK / BPS;
-    fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
+    if (beyondTable){
+      fixedTimeOut.textContent = "\u2014 (no such network exists on mainnet)";
+    } else {
+      var fixedTime = configuredK / BPS;
+      fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
+    }
 
-    if (over){
+    if (beyondTable){
+      fixedVerdict.className = "verdict unsafe";
+      fixedVerdict.textContent = "Undefined. rusty-kaspa's k-table has no entry past 32 blocks/sec; the compiled code panics rather than pick a number. " +
+        "Running GHOSTDAG here at all needs someone to compute a new k and hard-fork first, which is exactly the a-priori choice DAGKnight is designed to remove.";
+    } else if (over){
       fixedVerdict.className = "verdict unsafe";
       fixedVerdict.textContent = "Cap exceeded. Actual latency (" + L.toFixed(1) + " s) needs a margin (k) of " + requiredK +
         ", but the network is fixed at " + configuredK + ". Honest blocks that disagree this much now look like an attack.";
@@ -443,12 +476,12 @@
         configuredK + " covers it with room to spare.";
     }
 
-    // Adaptive (DAGKnight-style, simulated) side: its margin always equals whatever
-    // is actually required right now, on its own scale, so it never has a cap to cross.
-    var adaptScale = Math.max(requiredK * 1.15, 1);
+    // Adaptive (DAGKnight-style, simulated) side: its margin always equals whatever is
+    // actually required right now, on the SAME shared ruler as the fixed side, so it never
+    // has a cap to cross and its growth or shrinkage stays visible rather than self-normalized.
     adaptKOut.textContent = requiredK;
-    adaptFill.style.width = Math.min(100, (requiredK / adaptScale) * 100) + "%";
-    var costLabel = requiredK < 40 ? "low" : requiredK < 100 ? "moderate" : "high";
+    adaptFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
+    var costLabel = requiredK < 40 ? "low" : requiredK < 150 ? "moderate" : requiredK < 600 ? "high" : "extreme";
     adaptCostOut.textContent = costLabel + " (confirmations take longer while latency is high)";
 
     makeStrip(adaptStrip, stripCount, function(){ return "ok"; });
@@ -456,11 +489,15 @@
     var adaptTime = requiredK / BPS;
     adaptTimeOut.textContent = fmtSeconds(adaptTime);
 
-    adaptVerdict.textContent = "No fixed cap to exceed. Its margin (k) is " + requiredK + " right now, whatever the moment's " +
+    adaptVerdict.textContent = "No fixed cap and no table to run out of. Its margin (k) is " + requiredK + " right now, whatever the moment's " +
       "worst-case latency requires, and it relaxes again once conditions calm, never retuned by a person. " +
       "(Simulated relationship; see the model note below.)";
 
-    if (over){
+    if (beyondTable){
+      payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG has nothing to run on: rusty-kaspa's own k-table stops at 32 and the code panics past it. " +
+        "DAGKnight's design has no table to run out of, so nothing stops it here: it would need a margin of " + requiredK + " blocks, computed the same way as always. " +
+        "That gap is the entire claim in \u201cparameterless,\u201d not a marketing figure for how fast either one runs today.";
+    } else if (over){
       payoffLine.textContent = "At " + BPS + " blocks/sec, honest blocks this far apart now read as an attack to GHOSTDAG, " +
         "because it was fixed to assume " + D.toFixed(1) + " s of delay and reality just asked for more; DAGKnight would " +
         "simply widen to " + requiredK + " and keep going.";
@@ -471,7 +508,8 @@
     }
 
     var live = document.getElementById("live-region");
-    live.textContent = over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.";
+    live.textContent = beyondTable ? "The fixed-margin side has no defined value past 32 blocks per second." :
+      (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
   }
 
   function clearScenarioState(){

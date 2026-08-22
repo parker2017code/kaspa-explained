@@ -180,6 +180,10 @@
     color: var(--faint);
     margin: 6px 0 20px;
   }
+  .honesty-note code {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .95em;
+  }
 
   /* --- secondary control, visually quieter --- */
   .secondary-control {
@@ -326,6 +330,7 @@
     <label for="delay">How long a block takes to reach other miners <b id="delayVal"></b></label>
     <input type="range" id="delay" min="0" max="1000" step="1" aria-label="Propagation delay">
   </div>
+  <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound, not a measured propagation time; real propagation is usually much faster.</p>
 
   <p class="result-line" id="resultLine"></p>
 
@@ -353,7 +358,7 @@
     <p>Respects reduced-motion: turns into a manual step button instead of continuous animation.</p>
   </details>
 
-  <footer>Simulated in your browser. No live network data.</footer>
+  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
 </main>
 
 <script>
