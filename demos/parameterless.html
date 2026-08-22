@@ -102,8 +102,9 @@
   .side{border:0; border-radius:18px; padding:.85rem; background:var(--card-bg); box-shadow:var(--card-shadow);}
   .side h3{margin:0 0 .15rem; display:flex; align-items:center; gap:.4rem;}
   .side .sub{font-size:.72rem; color:var(--faint); margin:0 0 .6rem;}
-  .gauge-row{display:flex; align-items:baseline; justify-content:space-between; font-size:.78rem; color:var(--muted); margin-bottom:.25rem;}
-  .gauge{position:relative; height:14px; border-radius:980px; background:var(--field-bg); border:1px solid var(--field-line); overflow:visible; margin-bottom:.35rem;}
+  .gauge-row{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; column-gap:.5rem; font-size:.78rem; color:var(--muted); margin-bottom:.25rem;}
+  .gauge-row output{white-space:nowrap;}
+  .gauge{position:relative; height:14px; border-radius:980px; background:var(--field-bg); border:1px solid var(--field-line); overflow:visible; margin-top:1.1rem; margin-bottom:.35rem;}
   .gauge .fill{position:absolute; inset:0 auto 0 0; border-radius:980px; background:var(--cyan); overflow:hidden;}
   .gauge .cap{position:absolute; top:-4px; bottom:-4px; width:3px; background:var(--text); border-radius:2px;}
   .gauge .cap::after{content:"cap"; position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:.62rem; color:var(--faint); white-space:nowrap;}
@@ -194,10 +195,10 @@
     <div class="side" id="side-fixed">
       <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
       <p class="sub">Mainnet reads this margin from a table computed once, for one block rate. It cannot move when latency changes, and the table itself has no entry past 32 blocks/sec.</p>
-      <div class="gauge-row"><span>configured margin (k): the value mainnet's table has on file for this block rate</span><output id="fixed-k-out">124</output></div>
+      <div class="gauge-row"><span>configured margin (k): mainnet's table value for this block rate</span><output id="fixed-k-out">124</output></div>
       <div class="gauge"><div class="fill" id="fixed-fill" style="width:100%; background:var(--cyan);"></div><div class="cap" id="fixed-cap"></div></div>
       <p id="fixed-tableend" class="over-badge" hidden></p>
-      <div class="gauge-row"><span>margin size this latency actually needs, at the block rate set above</span><output id="fixed-req-out">31</output></div>
+      <div class="gauge-row"><span>margin size this latency actually needs</span><output id="fixed-req-out">31</output></div>
       <p id="fixed-over" class="over-badge" hidden></p>
       <div class="blockstrip" id="fixed-strip" aria-hidden="true"></div>
       <div class="gauge-row"><span>about how long that wait takes</span><output id="fixed-time-out">12.4 s</output></div>
@@ -206,7 +207,7 @@
     <div class="side" id="side-adaptive">
       <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
       <p class="sub">No table to run out of. The paper's design computes this margin from whatever latency is actually happening, at any block rate, because it was never chosen in advance.</p>
-      <div class="gauge-row"><span>effective margin (k) right now &mdash; same ruler as the gauge on the left, so the two are directly comparable</span><output id="adapt-k-out">55</output></div>
+      <div class="gauge-row"><span>effective margin (k) right now (same scale as the gauge at left)</span><output id="adapt-k-out">55</output></div>
       <div class="gauge"><div class="fill" id="adapt-fill" style="width:44%; background:var(--green);"></div></div>
       <div class="gauge-row"><span>cost: wider merge sets to walk before finalizing</span><output id="adapt-cost-out">moderate</output></div>
       <div class="blockstrip" id="adapt-strip" aria-hidden="true"></div>
@@ -456,7 +457,7 @@
     });
 
     if (beyondTable){
-      fixedTimeOut.textContent = "\u2014 (no such network exists on mainnet)";
+      fixedTimeOut.textContent = "\u2014";
     } else {
       var fixedTime = configuredK / BPS;
       fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
