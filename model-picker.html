@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-20">
-  <link rel="stylesheet" href="styles.css?v=20260822-navrows">
+  <link rel="stylesheet" href="styles.css?v=20260822-readsize">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
   <style>
     .mp-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
@@ -68,16 +68,16 @@
     .mp-mc-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 18px 0 10px;
                   padding-top: 16px; border-top: 1px solid var(--line); }
     .mp-mc-title { font-size: .9rem; color: var(--text); }
-    .mp-mc-why { font-size: .8rem; color: var(--muted); }
-    .mp-mc-verdict { margin: 0 0 10px; font-size: .92rem; line-height: 1.55; color: var(--text); }
+    .mp-mc-why { font-size: 1rem; color: var(--muted); }
+    .mp-mc-verdict { margin: 0 0 10px; font-size: 1rem; line-height: 1.55; color: var(--text); }
     .mp-mc-list { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 6px; }
     .mp-mc-row { display: grid; grid-template-columns: minmax(0,150px) 1fr 46px; align-items: center; gap: 10px; }
     .mp-mc-name { font-size: .85rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .mp-mc-bar { height: 8px; border-radius: 999px; background: var(--control-bg); overflow: hidden; }
     .mp-mc-bar i { display: block; height: 100%; background: var(--green); border-radius: 999px; }
     .mp-mc-pct { font-size: .82rem; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
-    .mp-mc-foot { margin: 0; font-size: .78rem; color: var(--muted); line-height: 1.5; }
-    .mp-tie-note { margin: 0 0 10px; font-size: .84rem; color: var(--muted); line-height: 1.5; }
+    .mp-mc-foot { margin: 0; font-size: 1rem; color: var(--muted); line-height: 1.5; }
+    .mp-tie-note { margin: 0 0 10px; font-size: 1rem; color: var(--muted); line-height: 1.5; }
     .mp-why-dial { grid-column: 1 / -1; font-style: normal; font-size: .8rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
     .mp-mix { display: block; font-size: .74rem; color: var(--faint); margin-top: 3px; font-variant-numeric: tabular-nums; }
     .mp-range-row { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; margin-bottom: 13px; }
@@ -105,16 +105,16 @@
     /* The description is a block, or it runs straight into the end of the label
        and reads as one mangled sentence. */
     .mp-method { margin: 0 0 12px; }
-    .mp-method > summary { cursor: pointer; color: var(--muted); font-size: .84rem; padding: 3px 0; }
+    .mp-method > summary { cursor: pointer; color: var(--muted); font-size: 1rem; padding: 3px 0; }
     .mp-method > summary:hover { color: var(--text); }
     .mp-method ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; }
-    .mp-method li { color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .mp-method li { color: var(--muted); font-size: 1rem; line-height: 1.55; }
     .mp-method b { color: var(--text); font-weight: 600; }
-    .mp-check em { display: block; font-style: normal; font-size: .78rem; color: var(--muted); line-height: 1.45; margin-top: 3px; }
-    .mp-cov { display: block; font-size: .93rem; color: var(--text); line-height: 1.7; }
+    .mp-check em { display: block; font-style: normal; font-size: 1rem; color: var(--muted); line-height: 1.45; margin-top: 3px; }
+    .mp-cov { display: block; font-size: 1rem; color: var(--text); line-height: 1.7; }
     .mp-cov select { font: inherit; font-size: .88rem; color: var(--text); background: var(--control-bg);
       border: 1px solid var(--line); border-radius: 8px; padding: 3px 7px; margin: 0 4px; cursor: pointer; }
-    .mp-cov-note { font-size: .78rem; color: var(--muted); line-height: 1.5; margin: 7px 0 0; }
+    .mp-cov-note { font-size: 1rem; color: var(--muted); line-height: 1.5; margin: 7px 0 0; }
     .mp-results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .mp-results-head .mp-label { margin: 0; }
     .mp-reset { font: inherit; font-size: .85rem; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -135,24 +135,24 @@
     .mp-score { font-size: 1.02rem; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
     .mp-score b { display: block; font-size: .68rem; font-weight: 600; color: var(--muted); letter-spacing: .02em; margin-top: 2px; line-height: 1.35; }
     .mp-list.real .mp-row { grid-template-columns: 26px minmax(0, 1fr) 88px; }
-    .mp-scale { margin: 0 0 10px; font-size: .82rem; color: var(--muted); line-height: 1.55; }
+    .mp-scale { margin: 0 0 10px; font-size: 1rem; color: var(--muted); line-height: 1.55; }
     .mp-close { margin: 0 0 12px; padding: 11px 13px; border: 0; border-radius: 14px; background: var(--card-bg); }
-    .mp-close p { margin: 0 0 7px; font-size: .8rem; color: var(--muted); line-height: 1.5; }
-    .mp-close p.lede { font-size: .87rem; color: var(--text); margin-bottom: 9px; }
-    .mp-close-d > summary { cursor: pointer; font-size: .86rem; color: var(--text); line-height: 1.5; }
+    .mp-close p { margin: 0 0 7px; font-size: 1rem; color: var(--muted); line-height: 1.5; }
+    .mp-close p.lede { font-size: 1rem; color: var(--text); margin-bottom: 9px; }
+    .mp-close-d > summary { cursor: pointer; font-size: 1rem; color: var(--text); line-height: 1.5; }
     .mp-close-d > summary::marker { color: var(--muted); }
     .mp-close-d[open] > summary { margin-bottom: 9px; }
     .mp-close ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
-    .mp-close li { font-size: .8rem; color: var(--text); line-height: 1.5; }
+    .mp-close li { font-size: 1rem; color: var(--text); line-height: 1.5; }
     .mp-close .n { font-weight: 700; }
     .mp-close .q { color: var(--muted); }
     .mp-empty { color: var(--muted); padding: 18px 0; line-height: 1.6; }
     .mp-gap { display: block; font-size: .78rem; color: var(--faint); margin-top: 4px; line-height: 1.5; }
     .mp-method { margin: 0 0 12px; }
-    .mp-method > summary { cursor: pointer; color: var(--muted); font-size: .84rem; padding: 3px 0; }
+    .mp-method > summary { cursor: pointer; color: var(--muted); font-size: 1rem; padding: 3px 0; }
     .mp-method > summary:hover { color: var(--text); }
     .mp-method ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; }
-    .mp-method li { color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .mp-method li { color: var(--muted); font-size: 1rem; line-height: 1.55; }
     .mp-method b { color: var(--text); font-weight: 600; }
     .mp-drivers { display: block; font-size: .78rem; color: var(--muted); margin-top: 5px; }
     .mp-drivers b { color: var(--text); font-weight: 600; }
@@ -179,7 +179,7 @@
       opacity: .75; flex: 0 0 auto; }
     .mp-prov > summary:hover, .mp-prov[open] > summary { opacity: 1; }
     .mp-prov-body { padding: .1rem 0 .35rem; min-width: 0; }
-    .mp-prov-body > p { font-size: .85rem; line-height: 1.5; margin: .4rem 0; opacity: .85; }
+    .mp-prov-body > p { font-size: 1rem; line-height: 1.5; margin: .4rem 0; opacity: .85; }
     .mp-bm { list-style: none; margin: .7rem 0 0; padding: 0;
       display: grid; gap: .55rem; min-width: 0; }
     .mp-bm > li { padding: .5rem .65rem; border-radius: .5rem; min-width: 0;
@@ -188,13 +188,13 @@
     .mp-bm-h { display: flex; flex-wrap: wrap; gap: .3rem .6rem;
       align-items: baseline; justify-content: space-between; font-size: .84rem; }
     .mp-bm-h span { font-size: .74rem; opacity: .6; white-space: nowrap; }
-    .mp-bm-d { font-size: .81rem; line-height: 1.45; opacity: .8; margin-top: .15rem; }
-    .mp-bm-m { font-size: .73rem; opacity: .55; margin-top: .3rem; }
+    .mp-bm-d { font-size: 1rem; line-height: 1.45; opacity: .8; margin-top: .15rem; }
+    .mp-bm-m { font-size: 1rem; opacity: .55; margin-top: .3rem; }
     .mp-bm-m .thin { opacity: 1; font-weight: 600; }
     .mp-pareto-head { display: flex; flex-wrap: wrap; gap: .2rem .7rem; align-items: baseline;
       margin: 1.1rem 0 .3rem; }
     .mp-pareto-title { font-size: .92rem; }
-    .mp-pareto-why { font-size: .78rem; color: var(--muted); line-height: 1.5; flex: 1 1 16rem; min-width: 0; }
+    .mp-pareto-why { font-size: 1rem; color: var(--muted); line-height: 1.5; flex: 1 1 16rem; min-width: 0; }
     /* The chart is wider than a phone. It scrolls, which the audit confirmed
        is not clipping, but a thin dark scrollbar is easy to miss and the model
        names the caption calls out by name sit at the right edge. Give it a
@@ -213,7 +213,7 @@
         background: var(--muted); border-radius: 3px;
       }
       .mp-pareto-scrollnote {
-        color: var(--muted); font-size: 0.82rem; margin: 4px 0 0;
+        color: var(--muted); font-size: 1rem; margin: 4px 0 0;
       }
     }
     @media (min-width: 861px) { .mp-pareto-scrollnote { display: none; } }
@@ -244,7 +244,7 @@
     .mp-pareto-key .k-partial { background: var(--card-bg); box-shadow: inset 0 0 0 2px var(--cyan); }
     .mp-pareto-key .k-beat { width: 9px; height: 9px; background: transparent;
       box-shadow: inset 0 0 0 1.5px var(--faint); }
-    .mp-pareto-foot { font-size: .76rem; color: var(--muted); line-height: 1.55; margin: .5rem 0 0; }
+    .mp-pareto-foot { font-size: 1rem; color: var(--muted); line-height: 1.55; margin: .5rem 0 0; }
   </style>
 </head>
 <body>
