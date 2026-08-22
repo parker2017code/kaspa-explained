@@ -354,7 +354,7 @@
     <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
     <p>A single chain can only keep one block per collision, so the loser's work is wasted. A blockDAG references every block a miner could see when it started working, so both survive and get ordered instead of discarded.</p>
     <p><b>Where this comes from.</b> Block creation as a Poisson process of rate &lambda;, and network propagation delay as the thing that causes concurrent blocks, are exactly the model in Sompolinsky, Wyborski and Zohar's PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>): "Block creation follows a Poisson process with parameter &lambda;," bounded by a network delay diameter D. <b>Verified</b> against that primary source. The paper's own math goes further than this demo: it bounds how many blocks can be created within a delay window (the anticone size k, used to tune GHOSTDAG itself), via a Poisson-tail formula in D&middot;&lambda;. This page's p = 1 &minus; e<sup>&minus;&lambda;d</sup> is the simpler building block underneath that: the chance at least one more block arrives before the first one finishes propagating, which is standard Poisson-process math (P(0 arrivals in time d) = e<sup>&minus;&lambda;d</sup>) and matches the same collision mechanism used in the Bitcoin fork-rate literature (Decker &amp; Wattenhofer, <i>Information Propagation in the Bitcoin Network</i>, IEEE P2P 2013). <b>Inferred</b> from that Poisson identity rather than quoted directly from either paper. This demo simplifies further by testing only whether a block collides with the immediately preceding one, not the full multi-block anticone GHOSTDAG actually resolves; it is a simplification of the source math, not the source math itself.</p>
-    <p>Playback speed is compressed so slow chains are still watchable: a real Bitcoin block, on average one every 10 minutes, plays back in under two seconds here. The collision math above uses the real rate and delay, not the playback speed; only what you see on screen is sped up.</p>
+    <p>Playback speed scales with the rate instead of landing every setting at the same pace: a real Bitcoin block, on average one every 10 minutes, plays back roughly every 6 seconds here, about a hundredth of real time, so the wait still feels slow rather than reading as a label. Kaspa's real rate, ten a second, plays back close to real time, because a 100ms block is already watchable as itself. The collision math above always uses the real rate and delay, not the playback speed; only what you see on screen is sped up or slowed down for legibility.</p>
     <p>Respects reduced-motion: turns into a manual step button instead of continuous animation.</p>
   </details>
 
@@ -401,11 +401,25 @@
 
   // Real mean interval between blocks, in seconds, at the chosen rate.
   function meanIntervalReal() { return 1 / lambda(); }
-  // On-screen playback interval: compressed so slow rates stay watchable
-  // and fast rates visibly speed up, while the collision math above still
-  // uses the real rate and delay.
+
+  // On-screen playback interval. The compression itself scales with the
+  // rate instead of landing every setting at the same watchable pace: a
+  // reader has to feel Bitcoin's cadence as slow, not just read a label
+  // that says so. Two calibration points, log-interpolated (a single
+  // straight line in log-log space, so the curve has no seam or clamp to
+  // hit as it crosses the whole range): at Bitcoin's real rate, playback
+  // runs at about a hundredth of real time (a 10-minute block plays back
+  // in about 6 seconds); at Kaspa's real rate, ten a second, playback runs
+  // close to real time, because 100ms blocks are already watchable as
+  // themselves. The same line extrapolates smoothly past Kaspa toward
+  // faster hypothetical rates.
+  const T_KASPA = (Math.log10(10) - RATE_LOG_MIN) / (RATE_LOG_MAX - RATE_LOG_MIN);
+  const PB_LOG_AT_BITCOIN = Math.log10(6);   // seconds of playback for a ~10-minute block
+  const PB_LOG_AT_KASPA = Math.log10(0.1);   // seconds of playback for a 100ms block
+  const PB_SLOPE = (PB_LOG_AT_KASPA - PB_LOG_AT_BITCOIN) / T_KASPA;
   function playbackInterval() {
-    return Math.min(1.6, Math.max(0.09, meanIntervalReal() * 0.35));
+    const t = rateInput.value / 1000;
+    return Math.pow(10, PB_LOG_AT_BITCOIN + PB_SLOPE * t);
   }
 
   const N = 20; // visible blocks per strip
@@ -573,14 +587,28 @@
     autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
   }
 
+  function fmtShown(s) {
+    if (s < 1) return Math.round(s * 1000) + ' ms';
+    return s.toFixed(1) + ' s';
+  }
+
   function updateHonesty() {
     const real = meanIntervalReal();
     const shown = playbackInterval();
-    if (Math.abs(real - shown) / real > 0.15) {
-      document.getElementById('honestyNote').textContent =
-        'A real block this rare (one every ' + humanDuration(real) + ') plays back roughly every ' + shown.toFixed(shown < 1 ? 2 : 1) + ' s here, so you can actually watch it.';
+    const note = document.getElementById('honestyNote');
+    if (shown < real * 0.85) {
+      const n = Math.round(real / shown);
+      note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+        ' in reality. You are watching it at about 1/' + n +
+        ' of real time here, one every ' + fmtShown(shown) + '.';
+    } else if (shown > real * 1.15) {
+      const x = shown / real;
+      note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+        ' in reality. It plays back about ' + x.toFixed(x < 10 ? 1 : 0) +
+        '× slower here, one every ' + fmtShown(shown) + ', so each one is easy to see.';
     } else {
-      document.getElementById('honestyNote').textContent = 'Playing back at real speed.';
+      note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+        ' in reality, close to what you are watching here.';
     }
   }
 
@@ -599,9 +627,14 @@
   delayInput.addEventListener('input', onSliderChange);
   window.addEventListener('resize', requestRender);
 
-  // defaults: start near Bitcoin's regime
-  rateInput.value = 0;
-  delayInput.value = Math.round((Math.log10(2) - DELAY_LOG_MIN) / (DELAY_LOG_MAX - DELAY_LOG_MIN) * 1000);
+  // defaults: open at Kaspa's real block rate (10 a second) so the panels
+  // show a live difference immediately, with delay at the slider's honest
+  // top end, rusty-kaspa's own NETWORK_DELAY_BOUND (5s), a protocol worst
+  // case, not a measurement (see the note under the delay slider). Dragging
+  // the rate slider left still reaches Bitcoin's regime, where the two
+  // panels converge.
+  rateInput.value = Math.round(T_KASPA * 1000);
+  delayInput.value = 1000;
   onSliderChange();
 
   if (reducedMotion) {

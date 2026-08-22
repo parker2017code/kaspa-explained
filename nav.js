@@ -71,6 +71,76 @@
   window.addEventListener("load", updateHeaderClearance);
   document.fonts?.ready?.then(updateHeaderClearance).catch(() => {});
 
+  // Same-page anchor pills (route jumps like "#build", "#verify", a page's
+  // own table of contents) were landing short of their target, sometimes by
+  // more than a screen, sometimes not moving at all. The browser's own
+  // smooth-scroll-to-fragment reads the target's position once and animates
+  // toward it over several frames; anything that reflows the page in that
+  // window (this file recomputing --site-header-clearance, in particular)
+  // leaves the animation chasing a target that has since moved, and some
+  // engines just stop rather than retarget. Taking the jump over here and
+  // doing it as a single instant snap removes the multi-frame window
+  // entirely, and re-snapping a couple of animation frames later catches
+  // any reflow that still lands after the jump (a details block settling
+  // its final height, for instance) so the pill always ends on the real
+  // target regardless of what shifted around it.
+  const snapToId = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return null;
+    const clearance = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue("--site-header-clearance")
+    ) || 132;
+    const targetTop = Math.max(target.getBoundingClientRect().top + window.scrollY - clearance, 0);
+    window.scrollTo({ top: targetTop, behavior: "auto" });
+    return target;
+  };
+
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const id = link.getAttribute("href").slice(1);
+    if (!id) return;
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    event.preventDefault();
+    snapToId(id);
+    history.pushState(null, "", `#${id}`);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => snapToId(id));
+    });
+    window.setTimeout(() => snapToId(id), 250);
+
+    const hadTabIndex = target.hasAttribute("tabindex");
+    if (!hadTabIndex) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+    if (!hadTabIndex) {
+      target.addEventListener("blur", () => target.removeAttribute("tabindex"), { once: true });
+    }
+  });
+
+  // Arriving from another page with a fragment already in the URL never runs
+  // the click handler above, so that landing falls back to CSS scroll-margin
+  // alone and lands short once the sticky header and late images settle. Snap
+  // on load and on hash change using the same re-snap schedule as a click.
+  const snapToHash = () => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id || !document.getElementById(id)) return;
+    snapToId(id);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => snapToId(id));
+    });
+    window.setTimeout(() => snapToId(id), 250);
+  };
+
+  window.addEventListener("hashchange", snapToHash);
+  if (window.location.hash) {
+    if (document.readyState === "complete") snapToHash();
+    else window.addEventListener("load", snapToHash, { once: true });
+  }
+
   const setOpen = (isOpen) => {
     nav.dataset.open = isOpen ? "true" : "false";
     button.setAttribute("aria-expanded", String(isOpen));
@@ -152,4 +222,80 @@
       figure.appendChild(expand);
     });
   }
+})();
+
+// Animate every <details> accordion (.source-more, .deep-dive, .guide-detail,
+// .cell-detail) open and closed instead of the native instant snap. Native
+// <details> has no transition hook at all, so this drives the height itself
+// with the Web Animations API, skips entirely under prefers-reduced-motion,
+// and never touches the reader's current scroll position: the animated
+// property is the details element's own height, not anything above it.
+(function () {
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const duration = 240;
+  const openEasing = "cubic-bezier(.2,.8,.2,1)";
+  const closeEasing = "cubic-bezier(.4,0,.2,1)";
+
+  document.querySelectorAll("details").forEach((details) => {
+    const summary = details.querySelector(":scope > summary");
+    if (!summary) return;
+
+    let animation = null;
+    let isClosing = false;
+    let isExpanding = false;
+
+    const finish = (isOpen) => {
+      details.open = isOpen;
+      details.style.height = "";
+      details.style.overflow = "";
+      animation = null;
+      isClosing = false;
+      isExpanding = false;
+    };
+
+    const shrink = () => {
+      isClosing = true;
+      const startHeight = `${details.offsetHeight}px`;
+      // The details element itself can carry vertical padding around the
+      // summary (.source-more does); the closed target has to include that
+      // padding too, or the animation undershoots and the box snaps taller
+      // the instant inline height clears and native closed layout takes over.
+      const detailsStyle = getComputedStyle(details);
+      const verticalPadding = parseFloat(detailsStyle.paddingTop) + parseFloat(detailsStyle.paddingBottom);
+      const endHeight = `${summary.offsetHeight + verticalPadding}px`;
+      details.style.overflow = "hidden";
+      if (animation) animation.cancel();
+      animation = details.animate({ height: [startHeight, endHeight] }, { duration, easing: closeEasing });
+      animation.onfinish = () => finish(false);
+      animation.oncancel = () => { isClosing = false; };
+    };
+
+    const expand = () => {
+      details.style.overflow = "hidden";
+      details.style.height = `${details.offsetHeight}px`;
+      details.open = true;
+      requestAnimationFrame(() => {
+        isExpanding = true;
+        const startHeight = details.style.height;
+        const endHeight = `${details.scrollHeight}px`;
+        if (animation) animation.cancel();
+        animation = details.animate({ height: [startHeight, endHeight] }, { duration, easing: openEasing });
+        animation.onfinish = () => finish(true);
+        animation.oncancel = () => { isExpanding = false; };
+      });
+    };
+
+    summary.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (reduceMotion()) {
+        details.open = !details.open;
+        return;
+      }
+      if (isClosing || !details.open) {
+        expand();
+      } else {
+        shrink();
+      }
+    });
+  });
 })();

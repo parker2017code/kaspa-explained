@@ -79,7 +79,8 @@ claims:
       proposition in his own words: "Kaspa is real-time bitcoin, solving scalability is great
       but not the core value prop... decentralizing each consensus round rather than chain
       quality achieved through a coarse aggregate of rounds." Treat RTD as Hashdag's own framing
-      of the design goal, not a kaspa.org marketing claim being cited as protocol fact.
+      of the design goal. Citing it as a kaspa.org marketing claim would misrepresent the source:
+      this comes directly from the researcher who coined the term.
     source: https://x.com/hashdag/status/2026991442506256843
   fair_launch_origin:
     status: narrative_guardrail
@@ -140,7 +141,8 @@ claims:
       explorers, SDKs, examples, and accepted mainnet transactions. TN10/TN12 and KIP evidence remain
       useful testnet/design evidence. On July 15, 2026 the four Toccata KIPs (16, 17, 20, 21) were
       promoted together to Status: Active in kips commit e4ae2332, replacing their earlier TN10-scoped
-      status; this is the spec repo catching up to activation, not a new protocol change. Transaction
+      status. The promotion reflects the spec repo catching up to activation that already happened
+      on mainnet; it did not itself change the protocol. Transaction
       version 1 and computeBudget run on mainnet and are documented in the operator guide, but their specs
       (KIP-24 PR #41 and KIP-25 PR #42) are still open, so cite the guide or the node rather than a merged
       KIP number. No rusty-kaspa release exists after v2.0.1 (June 15, 2026), which remains the
@@ -150,7 +152,8 @@ claims:
       outright rather than accepting them until one day before activation), the mempool/consensus
       ForkedParam machinery keyed on toccata_activation is gone, and every forked parameter
       collapses to the value it already resolved to post-activation. This is cleanup of already-
-      activated behavior, not a new activation event; it has not yet shipped in a tagged release.
+      activated behavior: it does not itself activate anything new, and it has not yet shipped in
+      a tagged release.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -237,7 +240,8 @@ claims:
       closed and open ICC examples, route-family and actor-enum examples, virtual-slot expanded state)
       apart from what is still being built (launch and bootstrap tooling, package and dependency tooling,
       diagnostics and typechecking, generated app-specific builder APIs, hardening and negative-test
-      coverage). The gate is an audit, not a missing compiler. Checked August 14, 2026: no change to the
+      coverage). What remains is the audit path: Silverscript's audit, then Argent's own. The
+      compiler itself already exists and is not what's missing. Checked August 14, 2026: no change to the
       README text since the August 7 check, and the repo has gone quiet since its last commit on August 2.
       The project has its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP
       301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, 77
@@ -393,7 +397,9 @@ claims:
       unchanged from the same check on August 1, 2026, 32 days after activation. Roadmap framing on
       these pages is not activation evidence either way: trust the release tag and DAA score over
       this prose when they conflict.
+    # kaspa-org-callout: deliberately citing kaspa.org/lore to document that it is stale
     source: https://kaspa.org/lore
+    # kaspa-org-callout: deliberately citing kaspa.org/build to document that it is stale
     supporting_source: https://kaspa.org/build
     forbidden_copy:
       - Kaspa.org's own pages confirm Toccata mainnet activation
@@ -429,16 +435,17 @@ claims:
       on main: kcc-0001.md (covenant definition and ABI), kcc-0002.md (authority schemes), and
       kcc-0020.md (fungible token covenant spec). Fetched raw from GitHub August 22, 2026, all
       three read "Status: Draft" in the document body: merged means checked into the repo as a
-      draft, not adopted as a standard. KCC-0002 merged via PR #5, opened July 20, 2026 and merged
+      draft. It does not mean adopted as a standard. KCC-0002 merged via PR #5, opened July 20, 2026 and merged
       August 20, 2026. KCC-0020 was last updated August 21, 2026; its authors are Sivan Helfer,
       Michael Sutton, and Romain Billot. KCC-0021 (covenant token metadata) is not merged: PR #6
       is open, opened July 23, 2026, still active August 21, 2026. Its body claims the convention
       "already live... runs in production in kascov" and "was adopted by KaspaRocket at deploy
       time"; that claim lives inside an open, unmerged proposal and could not be independently
-      confirmed, so it is recorded here as an unverified claim inside an open proposal, not as
-      fact. KCC-0402 (covenant payment channels) is also not merged: PR #4 is open, and its body
-      claims a k402 reference implementation "proven on Kaspa mainnet"; same treatment, an
-      unverified claim inside an open PR, not a fact. Three attempts to land a bulk KCC-0008
+      confirmed, so it is recorded here as an unverified claim inside an open proposal. It is not
+      recorded as fact. KCC-0402 (covenant payment channels) is also not merged: PR #4 is open, and
+      its body claims a k402 reference implementation "proven on Kaspa mainnet." That claim gets
+      the same treatment: an unverified claim inside an open PR. It is not recorded as fact. Three
+      attempts to land a bulk KCC-0008
       through KCC-0024 token/commerce set all closed unmerged: PR #7 (closed July 25, 2026), PR #8
       (closed July 25, 2026), and PR #10 (closed August 9, 2026); PR #9 (KCC-0016/0017) also
       closed unmerged, July 25, 2026. None of KCC-0003 through KCC-0024 exist as accepted
@@ -449,21 +456,31 @@ claims:
       numbering (four digits, KCC-0020) is canonical; forum shorthand like "KCC20" is not. The
       convention is already showing up in code ahead of acceptance: the Argent compiler ships an
       examples/icc/kcc20_asset.ag asset covenant. Community claims of KCC20 mainnet wallet
-      transfers remain unverified. Read directly in the browser August 22, 2026: KCC-0020 carries
-      a permanent-supply-split consequence its own co-authors call intended design behavior. Issue #14
-      (github.com/kaspanet/kccs/issues/14), opened August 21, 2026 by Knitser, still Open with 3
-      comments, shows the spec's transfer consolidation rule (Section 2) and its extended-state
-      update entrypoint (Section 4) contradict each other: each holder's own UTXO can only be
-      updated with that holder's authorization, so no single party, including the issuer, can
-      move every cell to a new extended-state commitment at once, and because consolidation
-      requires identical commitments across inputs, a partial update permanently splits a token's
-      supply into groups that can never consolidate again. Both co-authors who replied treated
-      this as by design: Manyfestation wrote that extended state "allows for
-      various use cases which are not only write-once, nor only for a singleton token,"
-      rejecting both of Knitser's proposed fixes, and Michael Sutton called it "a very
-      interesting observation" and confirmed with his own example, a stablecoin issuer's
-      `frozen` blacklist flag, that it "indeed renders the token as temporarily non fungible."
-      No spec change has merged. Separately, issue #11
+      transfers remain unverified. Read directly in the browser August 22, 2026, including the
+      full comment thread fetched from api.github.com/repos/kaspanet/kccs/issues/14/comments:
+      KCC-0020 carries a permanent-supply-split consequence its co-authors partly defend and
+      partly concede is a spec defect. Issue #14 (github.com/kaspanet/kccs/issues/14), opened
+      August 21, 2026 by Knitser, still Open with 3 comments, shows the spec's transfer
+      consolidation rule (Section 2) and its extended-state update entrypoint (Section 4)
+      contradict each other: each holder's own UTXO can only be updated with that holder's
+      authorization, so no single party, including the issuer, can move every cell to a new
+      extended-state commitment at once, and because consolidation requires identical commitments
+      across inputs, a partial update permanently splits a token's supply into groups that can
+      never consolidate again. Manyfestation defended one pattern as intended, writing that
+      extended state "allows for various use cases which are not only write-once, nor only for a
+      singleton token," and gave a rock-paper-scissors token-type example. Michael Sutton agreed
+      that pattern was fine, confirming with his own example, a stablecoin issuer's `frozen`
+      blacklist flag, that it "indeed renders the token as temporarily non fungible." But Sutton
+      then raised a different pattern, extended state used for ephemeral, receipt-like data that
+      "mutates all the time but isn't part of the state that matters," and said "I think it means
+      it's a wrong pattern," adding it "only makes sense if it was well defined as part of the
+      std, and not as an opaque virtual state." Manyfestation agreed: "that kind of pattern should
+      either be defined in the standard or implemented in a non state storage." That is a co-author
+      concession that a distinct pattern is a spec defect, not a resolution of Knitser's original
+      report: Knitser never replied to accept or withdraw his concern, and no spec change has
+      merged. The site's own framing of this issue must reflect all four parts: the pattern
+      defended as intended, the pattern conceded as wrong and needing a fix, the reporter's
+      unwithdrawn concern, and the issue's open status. Separately, issue #11
       (github.com/kaspanet/kccs/issues/11), opened July 26, 2026 by marciano147 writing for
       KaspaCom, still Open with 1 comment, records KaspaCom's own position on its deployed
       KCC20V2: "The existing KCC20V2 artifact should be described as partially aligned, not fully
@@ -497,6 +514,17 @@ claims:
       - merged KCC drafts are accepted standards
       - KCC-0020's extended state bug has been fixed
       - KCC-0020's co-authors disagree about whether the supply-split behavior is intended
+      - co-authors call intended design behavior
+      - co-authors call intended behavior
+      - co-authors call it intended
+      - describe as intended rather than a bug
+      - treated this as intended behavior
+      - treated as intended for extended-state tokens
+      - open, unfixed correctness bug
+      - open correctness gap
+      - bug made tangible
+      - KCC-0020's extended state bug is unresolved by design
+      - Knitser withdrew his concern about KCC-0020
       - only the issuer can authorize a KCC-0020 state update
       - KaspaCom fully conforms to KCC-0020
       - KCC-0020 tokens on the mainnet launchpad share a single template
@@ -545,7 +573,8 @@ claims:
       schema carries only previousOutpoint, signatureScript, sequence, and sigOpCount; neither has
       a compute_budget field. The node's own read-side schemas do model the field (BlockTxInputModel
       and TxInput both carry computeBudget/compute_budget), so the gap is specific to the submit
-      path, not a missing concept. Reported by daniel, kas-smiths.org/t/108 post 1, July 24, 2026,
+      path. Compute_budget is not missing as a concept: it's modeled in the node's read-side
+      schemas already, just absent from this one endpoint. Reported by daniel, kas-smiths.org/t/108 post 1, July 24, 2026,
       23:08:04 UTC: "the compute_budget field is silently dropped in the REST to RPC mapping."
       IzioDev's only workaround, post 2, July 29, 2026, 12:01:34 UTC: submit directly to a kaspad
       node instead of the REST API. Still open as of August 22, 2026.
@@ -566,10 +595,90 @@ claims:
       covenant DEX that needs a shared price board. He compared the gap to Cardano's CIP-31
       reference inputs and CIP-32 inline datums, Ergo's data inputs, and CKB's cell deps, and asked
       whether closing it needs a new KIP or belongs in L2/vProgs. Six reactions, no reply as of
-      August 22, 2026. This is a Telegram report, not a kas-smiths.org forum post, and it is not
-      independently confirmed beyond being raised and left unanswered.
+      August 22, 2026. This is a Telegram report. It has not appeared as a kas-smiths.org forum
+      post, and it is not independently confirmed beyond being raised and left unanswered.
     source: https://t.me/kasparnd
     forbidden_copy:
       - Kaspa covenants have a reference-input mechanism like Cardano or Ergo
       - the shared-state read gap has been answered with a KIP
       - the introspection gap was raised and resolved in Core R&D
+
+  fees_vs_subsidy_2026_08_22:
+    status: measurement_sensitive
+    recheck_after: 2026-08-30
+    summary: >
+      Security-budget math for August 22, 2026, computed for the skeptical-case.html "What pays for
+      the hash rate" section. Block reward 2.31246515 KAS (api.kaspa.org/info/blockreward), at 10
+      blocks per second (Crescendo, block_time_s in data/l1-chains.json), gives 864,000 blocks/day
+      and 1,997,970 KAS/day of subsidy. At $0.02934513/KAS (CoinGecko simple price, fetched live),
+      that is about $58,631/day. Daily transactions 77,207 and median_fee_usd 0.000063, both from
+      data/l1-chains.json's Kaspa entry, give daily fee revenue of about $4.86. Subsidy runs about
+      12,054 times fee revenue; fees fund roughly 0.0083% of daily miner income. Hash rate 311.5
+      PH/s (api.kaspa.org/info/hashrate, fetched live), consistent with l1-chains.json's
+      hashrate_ehs of 0.31207 EH/s. Emission steps down 2^(-1/12) per month, about 5.61%, per
+      rusty-kaspa's coinbase.rs SUBSIDY_BY_MONTH_TABLE (also cited in this file's
+      emission_schedule_may_2026 claim); 12 monthly steps compound to exactly half, so holding KAS price flat the daily
+      subsidy falls to about $29,315/day in one year and about $3,664/day in four years, still
+      roughly 6,000x and 750x today's fee revenue respectively. Holding today's median fee flat,
+      matching today's $58,631/day subsidy from fees alone needs about 10,771 tx/s sustained, a
+      roughly 12,000x rise from Kaspa's own 0.895 tps sustained figure and above every chain's
+      measured sustained rate in data/l1-chains.json, including Solana's 1,175. Holding today's
+      77,207 tx/day flat, the same match needs a median fee near $0.76/tx, about 6x Bitcoin's own
+      $0.1317 median (data/l1-chains.json). These are same-day snapshots multiplied through, not
+      predictions: KAS price, hash rate, throughput, and fee levels all move independently, and
+      price appreciation or throughput growth can each close part of the gap on their own.
+    source: https://api.kaspa.org/info/blockreward
+
+  chain_comparer_dial_corrections_2026_08_22:
+    status: measurement_sensitive
+    recheck_after: 2026-09-22
+    summary: >
+      Three chain-comparer.html/data/l1-chains.json dial fixes made 2026-08-22.
+      (1) Finality dial: previously mixed kinds of number on one axis, scoring
+      Bitcoin/Litecoin/Monero at their 6-confirmation custom conventions (3695s/904s/721s)
+      and Bitcoin Cash not at all, while scoring Kaspa at its 10-second practical
+      settlement convention rather than its coded rule, which let Kaspa's fast practical
+      number outscore everyone's slow custom convention. Corrected: the dial now scores
+      only a coded, consensus-enforced finality boundary. Bitcoin, Litecoin, Monero and
+      Bitcoin Cash have no such rule in consensus (only the 6-confirmation custom), so
+      finality_s is null for all four rather than substituted. Kaspa's finality_s is
+      43,200 seconds (432,000 blocks at 10 blocks/second, rusty-kaspa params.rs
+      finality_depth, 12 hours), reflecting GHOSTDAG, the consensus rule running on
+      mainnet. DAGKnight (KIP-2, Status: Proposed) has no mainnet implementation and is
+      not scored or added as a chain. Under the "Paying someone"
+      default preset (fast 3, cheap 3, settle 2, ready 2), Kaspa moves from rank 7 of 18
+      (score 70.2) to rank 13 of 18 (score 56.9); Kaspa's old 10-second figure had been
+      the best number on that dial, and its true 12-hour figure is the worst number on
+      that dial among all chains that publish one. (2) Hash-power dial: previously ranked
+      Bitcoin (912.54 EH/s SHA-256), Bitcoin Cash (3.44 EH/s SHA-256), Litecoin (0.002479
+      EH/s Scrypt), Kaspa (0.31207 EH/s kHeavyHash) and Monero (5.7e-9 EH/s RandomX) on one
+      axis via a binary "Secured by mining" dial (pow=100, else 0), which credited every
+      PoW chain identically regardless of actual spend and is the same unit-mismatch this
+      site's own attack-cost demo already refuses to price across algorithms. Dropped and
+      replaced with a "Pays for its own security" dial scored on emission_usd_per_day,
+      which converts to dollars and is comparable across consensus families. Under
+      the "Holding value" preset (spread 3, node 2, people 2,
+      spend/mined 2), Kaspa moves from rank 4 of 18 (score 49.6, tied for the dial's
+      maximum under the old binary credit) to rank 18 of 18, last (score 27.4): Kaspa's
+      $58,358/day security spend is the smallest of the five sourced proof-of-work chains.
+      (3) Emission field added for both PoW and PoS chains, in native units and dollars,
+      using the skeptical-case.html method: daily_native = block reward × blocks/day,
+      daily_usd = daily_native × CoinGecko spot price fetched 2026-08-22. Sourced only for
+      the five proof-of-work chains: Bitcoin 478.12 BTC/day ($36,841,653), Litecoin
+      3,250.08 LTC/day ($168,289), Monero 431.25 XMR/day ($184,030), Bitcoin Cash 465.62
+      BCH/day ($129,326), Kaspa 1,997,970 KAS/day ($58,358). That dollar figure uses a
+      KAS price of $0.0292121; this file's fees_vs_subsidy_2026_08_22 claim states
+      $58,631 from the same 1,997,970 KAS/day at $0.02934513. Both are CoinGecko
+      snapshots taken on 2026-08-22 and they differ by 0.47 percent, a price move within
+      the day, not a discrepancy in the issuance rate. Every proof-of-stake, BFT, federated and
+      permissioned chain in the set (Ethereum, Solana, BNB Chain, Cardano, Avalanche,
+      TRON, Sui, Aptos, TON, Near, Hedera, Algorand, Polkadot, Internet Computer, Stellar)
+      is left unsourced rather than estimated and is excluded from the "Pays for its own
+      security" dial rather than credited with zero. Ethereum specifically is not sourced
+      because its net issuance is burn-adjusted under EIP-1559 and moves with fee demand,
+      so there is no single native-per-day figure to quote without a netting calculation
+      this pass did not do. Chain-comparer.html shows 20 chains; the attack-cost and
+      node-cost demos show 5 (the chains each demo can price on its exact metric); the
+      emission-schedule demo shows 1 (Kaspa only). This is a scope difference stated on
+      chain-comparer.html, not an inconsistency to fix.
+    source: https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs
