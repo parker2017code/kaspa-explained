@@ -20,6 +20,7 @@ bash scripts/check-nav-sync.sh
 python3 scripts/check-claims.py
 python3 scripts/check-status-freshness.py
 python3 scripts/build-sitemap.py --check
+bash scripts/check-redirect-stubs.sh
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-grid-spans.py
 python3 scripts/check-model-picker.py

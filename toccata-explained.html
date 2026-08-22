@@ -29,14 +29,14 @@
   <meta name="twitter:title" content="Toccata Explained | Kaspa Explained">
   <meta name="twitter:description" content="Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-14">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Toccata Explained",
     "url": "https://kaspaexplained.com/toccata-explained",
-    "dateModified": "2026-08-14",
+    "dateModified": "2026-08-22",
     "description": "Toccata explained plainly: how Kaspa's activated hard fork adds covenants, covenant IDs, ZK verification, sequencing lanes, and foundations for based apps.",
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
@@ -143,7 +143,7 @@
           <tbody>
             <tr><td>A language</td><td>Covenant scripts are compiler output. SilverScript produces them.</td><td><span class="status-pill target">Experimental</span> Took a breaking change on July 12, after mainnet activation.</td></tr>
             <tr><td>A framework</td><td>Real apps are several covenants that have to agree. <a href="https://github.com/argent-lang/argent">Argent</a> is the attempt.</td><td><span class="status-pill target">Unaudited</span> Its README names an audit as the gate. 58 commits in July, no tagged release, last breaking change July 24.</td></tr>
-            <tr><td>Shared conventions</td><td>If your token and my wallet disagree about byte layout, neither works. <a href="https://github.com/kaspanet/kccs">KCCs</a> settle that.</td><td><span class="status-pill target">Proposed</span> Process opened July 15. Five open pull requests, none merged; two others withdrawn August 9 for a planned KCC-0060 renumbering.</td></tr>
+            <tr><td>Shared conventions</td><td>If your token and my wallet disagree about byte layout, neither works. <a href="https://github.com/kaspanet/kccs">KCCs</a> settle that.</td><td><span class="status-pill target">Draft</span> Process opened July 15. KCC-0001, KCC-0002, KCC-0020 merged August 20, still Draft. KCC-0021, KCC-0402 open; a bulk set closed unmerged three times.</td></tr>
             <tr><td>An index</td><td>Showing someone their tokens means finding every UTXO carrying a covenant ID.</td><td><span class="status-pill not-live">Missing</span> No <code>getUtxosByCovenantId</code> RPC. Called planned on the forum. No code.</td></tr>
             <tr><td>Explorers</td><td>Someone has to look at a covenant and see what it is.</td><td><span class="status-pill not-live">Missing</span> Block explorers do not decode covenant data. One third-party indexer, kascov, does.</td></tr>
             <tr><td>Wallets</td><td>A user signs a covenant transaction without understanding any of this.</td><td><span class="status-pill not-live">Missing</span> No verified covenant-signing support in any major Kaspa wallet.</td></tr>
@@ -151,65 +151,18 @@
           </tbody>
         </table>
       </div>
-      <p>Four of those seven are the reason mainnet holds 373 active covenants worth about 1.67 million KAS while Testnet-10 holds 74,199. The rules are equally available on both. Only one is a place where the missing pieces do not matter yet. Mainnet covenant creation rose fifteenfold to August 8, then slowed to about 2 percent growth the following week.</p>
-      <p>Conventions cannot be settled by a protocol upgrade, because they are agreements between people who ship independent software. That argument happens in the open at <a href="https://kas-smiths.org">kas-smiths.org</a> and in the public Core R&amp;D Telegram group, where the token standard draft KCC-0020 still has an open disagreement about whether token metadata belongs inside the spec. Treat everything there as proposal-stage: a thread with a confident name is still a thread, and the test is a merged KIP or a merged KCC. Track both on the <a href="/kips">KIP and KCC tracker</a>.</p>
+      <p>Four of those seven are the reason mainnet holds 517 active covenants worth about 1.75 million KAS as of August 22, while Testnet-10 holds 80,822 active covenants. The rules are equally available on both. Only one is a place where the missing pieces do not matter yet. Mainnet covenant creation rose fifteenfold to August 8, then slowed to about 2 percent growth the following week, reaching 28,107 covenants ever created by August 22.</p>
+      <p>Conventions cannot be settled by a protocol upgrade, because they are agreements between people who ship independent software. That argument happens in the open at <a href="https://kas-smiths.org">kas-smiths.org</a> and in the public Core R&amp;D Telegram group, where the token standard draft KCC-0020 still has an open disagreement about whether token metadata belongs inside the spec. Treat everything there as proposal-stage: a thread with a confident name is still a thread, and the test is an active KIP or a ratified KCC, tracked on <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>Issuing a token against KCC-0020 today means inheriting behavior its own co-authors describe as intended rather than a bug: its transfer rule requires identical extended-state commitments to consolidate, but only a cell's own holder can authorize a state update to it, so a partial rollout across holders permanently splits the supply (<a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a>, still open). KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). More on both at <a href="/kips">the KIP and KCC page</a>.</p>
       <p>The two projects below are the current attempts at closing the rest of the gap.</p>
     </section>
 
     <section class="section">
       <p class="eyebrow">Application language</p>
       <h2>Argent, the layer between a covenant and an app</h2>
-      <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do. Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates.</p>
-      <details class="source-more" data-audience="specialist">
-        <summary>Open the language model, with a worked example</summary>
-        <p>On an account chain, a contract is a thing that sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it: an application is a transaction-wide state transition over covenant UTXOs, and the compiler's job is to turn a readable description of that transition into script the network already enforces.</p>
-        <p>Four ideas carry the core, and they are not the whole surface: the documented set is eight, adding <code>delegate</code>, <code>consumes</code>, and <code>emits</code>, with the route machinery sitting behind those, and routes are where the hard parts live. A <strong>state</strong> is a typed record. An <strong>actor</strong> owns one. An <strong>entry</strong> is a way to spend that actor, taking arguments and declaring which actors it emits. And <code>become</code> names the successor the transaction creates.</p>
-        <div class="table-wrap">
-          <pre><code>state TicketState {
-    byte[32] owner;
-    int units;
-}
-
-actor Ticket owns TicketState {
-    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
-        require(blake2b(owner_pk) == owner);
-        require(checkSig(owner_sig, owner_pk));
-        require(next.value == self.value);
-
-        TicketState new_state = {
-            owner: next_owner,
-            units: units,
-        };
-
-        become next &lt;- Ticket(new_state);
-    }
-}
-
-app Tickets {
-    actor Ticket;
-}</code></pre>
-        </div>
-        <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen. If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
-        <p>Inter-Covenant Communication extends the same model across independently compiled applications, so an actor from one app can observe or authorize an actor from another inside a single atomic transaction. That is the piece that makes something like a mint controller possible: one app owns the asset rule, another owns the policy that decides when supply moves, and neither has to be recompiled into the other.</p>
-        <p>The compiler emits three things for each build: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box. An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities. That last one is KIP-20, which Toccata carried to mainnet.</p>
-      </details>
-      <p>Every example the compiler ships partitions cleanly: one UTXO per ticket, per game, per position. Two never touch the same state, so the parallel work comes free from the data model instead of a scheduler.</p>
-      <p>The hard one is shared mutable state, where many users change a single object at once, such as a pooled market maker or an order book. Those are most of what people mean by DeFi, and no public Argent code implements one. The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need. Partitioned state looks solved; shared state is a design direction with no implementation anyone can read.</p>
-      <p>Three repositories, and one person writes nearly all of it. Michael Sutton holds 73 of the compiler's 77 commits.</p>
-      <div class="table-wrap">
-        <table class="reality-table" id="argent-table">
-          <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
-          <tbody id="argent-body">
-            <tr><td>argent</td><td>2026-06-16</td><td>2026-08-02</td><td>19</td><td>None</td></tr>
-            <tr><td>argent-playground</td><td>2026-07-09</td><td>2026-07-31</td><td>6</td><td>None</td></tr>
-            <tr><td>argent-template</td><td>2026-07-24</td><td>2026-07-30</td><td>7</td><td>None</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="hint" id="argent-stamp">Baseline read on August 14, 2026. This table refreshes from GitHub when the page loads.</p>
-      <p>Fifty-eight of those commits landed in July, and the project moved out of his personal namespace into an <code>argent-lang</code> organization.</p>
-      <p>Argent's own README answers the production question in two halves, and quoting only the first gets it wrong. The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use." The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned. The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
-      <p>Silverscript, the layer underneath, still labels itself experimental and recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." Read that as the ecosystem's conservative floor rather than the project's current state, since the same page still links the old repository path. Either way, anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened.</p>
+      <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do. Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates, and the compiler turns a readable description of an application into the Silverscript the network already checks.</p>
+      <p>Argent's own README sets the production gate as an audit: first Silverscript's, then its own. Michael Sutton holds 73 of the compiler's 77 commits, 58 of them in July, when the project moved into an <code>argent-lang</code> organization. No repository carries a tagged release. Silverscript itself still calls its bytecode artifact experimental and recommends it only on testnet-10.</p>
+      <p>The language model, a worked covenant example, the README's own words on what already works, and the repository signals are on <a href="/argent-explained">Argent and Silverscript, explained</a>.</p>
     </section>
 
     <section class="section">
@@ -232,7 +185,7 @@ app Tickets {
       </div>
       <p class="hint" id="vprogs-stamp">Baseline read on August 14, 2026, unchanged. This table refreshes from the repository when the page loads.</p>
       <p>An active repo is evidence of work, not of readiness. The line between this and Toccata is narrower than usually drawn: joining separately compiled covenant apps into one all-or-nothing transaction works on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is the shared mutable state case, which has not reached testnet.</p>
-      <p>So the model fits products with many users hitting one app, or a proof too big for a covenant spend to carry. Most Kaspa apps do not need it yet. Pick the smallest state model that does the job.</p>
+      <p>The model fits products with many users hitting one app, or a proof too big for a covenant spend to carry, which describes few Kaspa apps today.</p>
     </section>
 
     <section class="section">
@@ -254,7 +207,7 @@ app Tickets {
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
         <a href="/kaspa-origin-story"><span>Previous</span><strong>Kaspa&#x27;s fair launch was the path left after the other paths failed</strong><p>How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.</p></a>
-        <a href="/toccata-status"><span>Next</span><strong>Kaspa Toccata status</strong><p>Toccata&#x27;s DAA activation score, the v2.0.1 release, covenant and ZK surfaces, TN10/TN12 evidence, and the checks builders should run next.</p></a>
+        <a href="/argent-explained"><span>Next</span><strong>Argent and Silverscript, explained</strong><p>Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says...</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
     </section>
@@ -262,23 +215,6 @@ app Tickets {
   </main>
 
   <script>
-  (function () {
-    var repos = ['argent', 'argent-playground', 'argent-template'];
-    Promise.all(repos.map(function (name) {
-      return Promise.all([
-        fetch('https://api.github.com/repos/argent-lang/' + name, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
-        fetch('https://api.github.com/repos/argent-lang/' + name + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
-      ]).then(function (p) { return { name: name, repo: p[0], rels: p[1] }; });
-    })).then(function (rows) {
-      if (rows.some(function (r) { return !r.repo; })) return;
-      document.getElementById('argent-body').innerHTML = rows.map(function (r) {
-        var rel = (Array.isArray(r.rels) && r.rels.length) ? r.rels[0].tag_name : 'None';
-        return '<tr><td>' + r.name + '</td><td>' + r.repo.created_at.slice(0, 10) + '</td><td>' +
-          r.repo.pushed_at.slice(0, 10) + '</td><td>' + r.repo.stargazers_count + '</td><td>' + rel + '</td></tr>';
-      }).join('');
-      document.getElementById('argent-stamp').textContent = 'Read live from GitHub just now.';
-    }).catch(function () { /* baseline stands */ });
-  })();
   (function () {
     var api = 'https://api.github.com/repos/kaspanet/vprogs';
     Promise.all([

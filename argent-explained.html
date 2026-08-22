@@ -3,12 +3,228 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Moved | Kaspa Explained</title>
-  <meta name="robots" content="noindex">
-  <link rel="canonical" href="https://kaspaexplained.com/toccata-explained">
-  <meta http-equiv="refresh" content="0;url=/toccata-explained">
+  <title>Argent and Silverscript, Explained | Kaspa Explained</title>
+  <meta name="description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/argent-explained">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Argent and Silverscript, Explained | Kaspa Explained">
+  <meta property="og:description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/argent-explained">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Argent and Silverscript, Explained | Kaspa Explained">
+  <meta name="twitter:description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-22">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Argent and Silverscript, Explained",
+    "url": "https://kaspaexplained.com/argent-explained",
+    "dateModified": "2026-08-22",
+    "description": "Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.",
+    "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
+  }
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260729-spanfix">
+  <script defer src="nav.js?v=20260708-dark-default"></script>
 </head>
 <body>
-  <p>This page merged into <a href="/toccata-explained">kaspaexplained.com/toccata-explained</a>.</p>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="status-page app-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Application layer</p>
+      <h1>Argent and Silverscript, explained</h1>
+      <p class="lead">Toccata made covenants enforceable. Argent is Michael Sutton's attempt at making them writable: a compiler that turns a readable application description into the Silverscript the network already checks.</p>
+      <p class="fit-note"><strong>Status:</strong> unaudited, pre-release. See <a href="/toccata-explained">Toccata explained</a> for the activated protocol surface this builds on.</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/argent-lang/argent">Argent on GitHub</a>
+        <a class="button" href="https://github.com/kaspanet/silverscript">Silverscript on GitHub</a>
+        <a class="button" href="/toccata-explained">Back to Toccata explained</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">The gap it fills</p>
+      <h2>A covenant is opcodes. An application is several that agree.</h2>
+      <p>A covenant by itself is a rule about what the next output has to look like. Writing a multi-contract application in raw covenant opcodes, then auditing it by hand, is not something most teams will do. Argent is not officially blessed by the protocol team, but it is the working attempt at that gap. An Argent actor is a covenant object that a transaction consumes and recreates, and the compiler's job is to turn a readable description of that transition into script the network already enforces.</p>
+    </section>
+
+    <section class="section prose-section" data-audience="specialist">
+      <p class="eyebrow">Language model</p>
+      <h2>Four ideas, and a worked example</h2>
+      <p>On an account chain, a contract sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it.</p>
+      <p>Four ideas carry the core, and they are not the whole surface: the documented set is eight, adding <code>delegate</code>, <code>consumes</code>, and <code>emits</code>, with the route machinery sitting behind those. A <strong>state</strong> is a typed record. An <strong>actor</strong> owns one. An <strong>entry</strong> is a way to spend that actor, taking arguments and declaring which actors it emits. And <code>become</code> names the successor the transaction creates.</p>
+      <div class="table-wrap">
+        <pre><code>state TicketState {
+    byte[32] owner;
+    int units;
+}
+
+actor Ticket owns TicketState {
+    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
+        require(blake2b(owner_pk) == owner);
+        require(checkSig(owner_sig, owner_pk));
+        require(next.value == self.value);
+
+        TicketState new_state = {
+            owner: next_owner,
+            units: units,
+        };
+
+        become next &lt;- Ticket(new_state);
+    }
+}
+
+app Tickets {
+    actor Ticket;
+}</code></pre>
+      </div>
+      <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen. If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
+      <p>Inter-Covenant Communication extends the same model across independently compiled applications, so an actor from one app can observe or authorize an actor from another inside a single atomic transaction. That is the piece that makes something like a mint controller possible: one app owns the asset rule, another owns the policy that decides when supply moves, and neither has to be recompiled into the other.</p>
+      <p>The compiler emits three things for each build: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box. An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities, which is KIP-20, the piece Toccata carried to mainnet.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">What's proven, what isn't</p>
+      <h2>Partitioned state works. Shared state is a design direction.</h2>
+      <p>Every example the compiler ships partitions cleanly: one UTXO per ticket, per game, per position. Two never touch the same state, so the parallel work comes free from the data model instead of a scheduler.</p>
+      <p>The hard one is shared mutable state, where many users change a single object at once, such as a pooled market maker or an order book. Those are most of what people mean by DeFi, and no public Argent code implements one. The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
+      <p>Three repositories, and one person writes nearly all of it. Michael Sutton holds 73 of the compiler's 77 commits, and 58 of those landed in July, when the project moved out of his personal namespace into an <code>argent-lang</code> organization.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Repository signals</p>
+      <h2>What the three repos show</h2>
+      <div class="table-wrap">
+        <table class="reality-table" id="argent-table">
+          <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
+          <tbody id="argent-body">
+            <tr><td>argent</td><td>2026-06-16</td><td>2026-08-02</td><td>19</td><td>None</td></tr>
+            <tr><td>argent-playground</td><td>2026-07-09</td><td>2026-07-31</td><td>6</td><td>None</td></tr>
+            <tr><td>argent-template</td><td>2026-07-24</td><td>2026-07-30</td><td>7</td><td>None</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" id="argent-stamp">Baseline read on August 14, 2026. This table refreshes from GitHub when the page loads.</p>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">The README, in full</p>
+      <h2>What Argent's own README actually says</h2>
+      <p>Argent's README answers the production question in two halves, and quoting only the first gets it wrong. The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use." The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned. The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
+      <p>Silverscript, the layer underneath, still labels itself experimental and recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." Read that as the ecosystem's conservative floor rather than the project's current state, since the same page still links the old repository path. Either way, anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened.</p>
+    </section>
+
+    <section class="next-step section">
+      <p class="eyebrow">Read the source</p>
+      <h2>The underlying material</h2>
+      <p class="source-inline">Primary references: <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/argent-lang/argent-playground">Argent playground</a>, <a href="https://github.com/argent-lang/argent-template">Argent template</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://docs.kaspa.org/toccata/argent">Kaspa docs, Argent chapter</a>, and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>.</p>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.</p></a>
+        <a href="/toccata-status"><span>Next</span><strong>Kaspa Toccata status</strong><p>Toccata&#x27;s DAA activation score, the v2.0.1 release, covenant and ZK surfaces, TN10/TN12 evidence, and the checks builders should run next.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <script>
+  (function () {
+    var repos = ['argent', 'argent-playground', 'argent-template'];
+    Promise.all(repos.map(function (name) {
+      return Promise.all([
+        fetch('https://api.github.com/repos/argent-lang/' + name, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
+        fetch('https://api.github.com/repos/argent-lang/' + name + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
+      ]).then(function (p) { return { name: name, repo: p[0], rels: p[1] }; });
+    })).then(function (rows) {
+      if (rows.some(function (r) { return !r.repo; })) return;
+      document.getElementById('argent-body').innerHTML = rows.map(function (r) {
+        var rel = (Array.isArray(r.rels) && r.rels.length) ? r.rels[0].tag_name : 'None';
+        return '<tr><td>' + r.name + '</td><td>' + r.repo.created_at.slice(0, 10) + '</td><td>' +
+          r.repo.pushed_at.slice(0, 10) + '</td><td>' + r.repo.stargazers_count + '</td><td>' + rel + '</td></tr>';
+      }).join('');
+      document.getElementById('argent-stamp').textContent = 'Read live from GitHub just now.';
+    }).catch(function () { /* baseline stands */ });
+  })();
+  </script>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

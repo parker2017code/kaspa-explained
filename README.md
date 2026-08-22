@@ -66,34 +66,39 @@ Use these files instead of turning the README into the source guide:
 - `.github/notes/` for internal cleanup queues and flow rules.
 
 After Toccata activation, refresh `CLI_FROM_ZERO.md`,
-`status.html`, `builder-guide.html`, `sources.html`, `CLAIMS.yml`, and
+`status.html`, `build-on-kaspa.html`, `sources.html`, `CLAIMS.yml`, and
 `llms.txt` from public activation evidence, Rusty Kaspa releases, official docs,
-and working tool commands before changing public status language.
+and working tool commands before changing public status language. (`builder-guide.html`
+is a redirect stub into `build-on-kaspa.html`, not its own page.)
 
 Use community portals, media sites, learning libraries, interviews, recaps, and public technical accounts for orientation, links, and framing. Use code, releases, KIPs, protocol docs, direct technical notes, or verifiable network evidence for activation dates, shipped-feature claims, exchange claims, and protocol guarantees.
 
 ## Site pages
 
-Use the public site itself for the page map:
+`site-manifest.json`'s `pages` array and `sitemap.xml` are the checked inventory: 25 live, indexable pages as of 2026-08-22. Every other `.html` file in the repository root is a `noindex` redirect stub (meta refresh to one of the 25); this list only covers the 25 live pages, and a filename below with no live-page description means it now redirects rather than holding content.
 
 - `index.html` routes readers by audience and knowledge level.
 - `what-is-kaspa.html` answers the highest-intent beginner search directly.
-- `kaspa-claims-checker.html` is the shareable live / testnet / targeted / roadmap / research reference.
-- `toccata-status.html` tracks Toccata status and safe wording.
-- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and now carries the dated-update changelog (the old `kaspa-status-updates.html` index merged here; that URL redirects to this page).
-- `kaspa-status-check-may-2026.html` is the current dated status snapshot.
-- `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
-- `kaspa-vprogs-explained.html` explains resource-level scheduling, based computation, and the vProgs roadmap boundary.
-- `kaspa-tps-explained.html` answers the max-TPS question by workload: simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
-- `build-on-kaspa.html` routes a builder from an app idea to the builder guide, `kaspa-app-ideas.html`, Toccata status, and a `reality-check.html` gate before publishing publicly (the old `build-this-now.html` recipes and the founder/supporter survey and matching-board pages were retired into this single builder path; those URLs redirect to `build-on-kaspa.html` or `about.html`).
-- `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`,
-  `kaspa-vs-ethereum-apps.html`, and `kaspa-coordination-markets.html` are the founder/search page cluster.
+- `why-kaspa-matters.html` bridges into why Kaspa matters: neutral money, self-custody, and public group commitments.
+- `crypto-from-scratch.html`, `chain-comparer.html`, and `model-picker.html` are the beginner curriculum, chain-comparison dial tool, and (off-topic) LLM scorer.
 - `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
+- `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
+- `argent-explained.html` explains Argent, the actor-based language compiling to Silverscript covenant applications. Added 2026-08-22 as its own live page; it does not redirect.
+- `toccata-status.html` tracks Toccata status and safe wording.
+- `toccata-essay.html` is Parker Schmidt's first-person essay on the Toccata upgrade.
+- `build-on-kaspa.html` routes a builder from an app idea to the three build paths and a status gate before publishing publicly (the old `build-this-now.html` recipes, `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, and the founder/supporter survey and matching-board pages were retired into this single builder path; those URLs now redirect to `build-on-kaspa.html`, `toccata-explained.html`, `why-kaspa-matters.html`, or `about.html`).
+- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and carries the dated-update changelog (the old `kaspa-status-updates.html` and `kaspa-status-check-may-2026.html` snapshots redirect here).
 - `skeptical-case.html` is the risks and open-questions page.
-- `sources.html` is the human source guide.
-- `search.html` is the quickest concept/page finder.
-- `ai-guidance.html` is the public prompt builder for source-checking AI questions.
+- `kaspa-mining.html` covers price/hash-rate cycles and solo mining to your own node (the old `kaspa-mining-cycle.html`, `kaspa-mining-cycle-visuals.html`, and `solo-mining-guide.html` redirect here).
+- `kaspa-developments.html` is the monthly what-changed page.
+- `kips.html` is the live-fetched KIP and KCC tracker (the old `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `kaspa-smart-contracts-status.html`, and `ghostdag-explained.html` redirect to `toccata-explained.html` or `what-is-kaspa.html`, not to this page; check `sitemap.xml` before assuming a URL is live).
 - `kaspa-claims-checker.html` is the human-readable companion to `CLAIMS.yml`.
+- `sources.html` is the human source guide.
+- `glossary.html` is the plain-English term glossary.
+- `about.html` is the editorial policy page (the old `ai-guidance.html` prompt builder and `reality-check.html` skepticism page both redirect here or to `status.html`; that guidance now lives in `llms.txt` and `about.html`/`status.html` directly).
+- `the-instrument.html` hosts Moose's monetary-systems essay.
+- `search.html` is the quickest concept/page finder.
+- `404.html` is the not-found page.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `agent-index.json` is the generated static retrieval index for AI agents.
@@ -170,7 +175,7 @@ Do not flatten everything into "live."
 - Toccata operator note: the Rusty Kaspa Toccata node setup guide adds practical upgrade evidence for node operators, wallets, exchanges, pools, miners, explorers, and indexers. It covers operator readiness: v2.0.1+ operation, one-way database migration, higher standard-fee policy for RPC submission, storageMass/storage_mass and transaction version 1 field handling, and Testnet-10 infrastructure testing. Product claims still need wallet, explorer, tooling, transaction, and user evidence.
 - June 29 L1 snapshot: public REST checks at 08:05 UTC showed `kaspa-mainnet`, virtual DAA 473,005,279, 1,102,009 blocks, about 27.542 billion KAS from the supply endpoint, and 2.59565436 KAS per block. Recheck exact values before quoting.
 - Builder tooling: Python SDK v2.0.0/v2.0.1 added Toccata-aligned wallet, lane-proof, SMT-sync, and covenant-binding support. Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts. Open KIP-24 covers transaction-v1 fields and hashing; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work. Treat these as tooling/design evidence until merged release and activation evidence changes the status.
-- TPS/capacity: use `kaspa-tps-explained.html` when the answer depends on workload. Current simple-payment capacity is a rough 2.5k-3.4k TPS range at 10 BPS from block mass and transaction shape; covenant, proof, token, and vProg-style app capacity need actual workload specs.
+- TPS/capacity: use `what-is-kaspa.html` when the answer depends on workload (`kaspa-tps-explained.html` is a redirect stub into it, not its own page). Current simple-payment capacity is a rough 2.5k-3.4k TPS range at 10 BPS from block mass and transaction shape; covenant, proof, token, and vProg-style app capacity need actual workload specs.
 - Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
 - Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
 - Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.

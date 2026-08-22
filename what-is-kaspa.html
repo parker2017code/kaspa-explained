@@ -105,7 +105,7 @@
         </article>
         <article>
           <span>Ownership</span>
-          <p>A wallet spends specific unspent outputs, called UTXOs, rather than debiting one running balance.</p>
+          <p>A wallet spends specific unspent outputs, called UTXOs. There is no single running balance to debit.</p>
         </article>
       </div>
     </section>
@@ -180,7 +180,7 @@
       <div class="section" data-audience="specialist">
         <h3>Where the payment numbers come from</h3>
         <p>Kaspa mainnet makes ten blocks per second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in. A signed plain P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's careful math; add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block, the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the top end to the often-quoted 3.4k TPS. Benchmarks built on fake minimum-size transactions score higher than that, and what they measure is a lab ceiling.</p>
-        <p>A raw count of transactions per block hides the real limit, which is mass. The implementation measures three dimensions: compute mass from serialized bytes, script-public-key bytes, and signature-operation or compute-budget work; transient byte mass; and storage mass. Each is normalized against its own block limit, and a transaction is charged the largest of the three rather than their sum. Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
+        <p>A raw count of transactions per block hides the real limit, which is mass. The implementation measures three dimensions: compute mass from serialized bytes, script-public-key bytes, and signature-operation or compute-budget work; transient byte mass; and storage mass. Each is normalized against its own block limit, and a transaction is charged whichever of the three is largest, never their sum. Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
         <p><a href="/toccata-explained">Toccata</a> leaves the payment limit alone. Transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000, and the Toccata guide ties that rise to fitting STARK-sized proofs. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee. It is mostly an upgrade to what L1 transactions can say and check.</p>
         <div class="table-wrap">
           <table class="reality-table">
@@ -190,7 +190,7 @@
             <tbody>
               <tr><td>KIP-17 covenants</td><td>Transaction introspection and script tools for stateful UTXO rules.</td><td>More expressive transactions run heavier than simple payments.</td></tr>
               <tr><td>KIP-20 covenant IDs</td><td>A 32-byte covenant identifier that gives covenant state a lineage.</td><td>Backs asset rules, at the cost of extra data and checking work.</td></tr>
-              <tr><td>KIP-16 ZK precompile</td><td><code>OpZkPrecompile</code> for proof paths such as Groth16 and RISC0-Succinct.</td><td>Proof transactions spend L1 room on checking work, not on moving coins.</td></tr>
+              <tr><td>KIP-16 ZK precompile</td><td><code>OpZkPrecompile</code> for proof paths such as Groth16 and RISC0-Succinct.</td><td>Proof transactions spend L1 room on checking work. Little of that room goes to moving coins.</td></tr>
               <tr><td>KIP-21 sequencing commitments</td><td>Partitioned lane commitments.</td><td>Cuts app proving cost. It is not itself an end-user TPS number.</td></tr>
             </tbody>
           </table>
@@ -208,7 +208,7 @@
           <tbody>
             <tr><td>Kaspa is Proof of Work, 10 BPS, ordered by GHOSTDAG</td><td><span class="status-pill live">Live</span></td><td>All three describe current mainnet in the Crescendo era.</td></tr>
             <tr><td>Toccata has activated on mainnet</td><td><span class="status-pill live">Activated</span></td><td>Toccata crossed its mainnet activation score. That protocol switch is live; app, wallet, explorer, and SDK support still need their own checks.</td></tr>
-            <tr><td>July 2026 is a sudden emission cliff</td><td><span class="status-pill not-live">Misleading</span></td><td>Emission steps down once a month, keyed to DAA score rather than the calendar. July 2026 sits inside one of those scheduled steps.</td></tr>
+            <tr><td>July 2026 is a sudden emission cliff</td><td><span class="status-pill not-live">Misleading</span></td><td>Emission steps down once a month, keyed to DAA score. The calendar has nothing to do with it. July 2026 sits inside one of those scheduled steps.</td></tr>
             <tr><td>GHOSTDAG is DAGKnight, or DAGKnight is current mainnet consensus</td><td><span class="status-pill research">Research</span></td><td>DAGKnight is a separate, later consensus design, still research and implementation work. Current mainnet consensus runs GHOSTDAG.</td></tr>
             <tr><td>10 BPS means payments are final immediately</td><td><span class="status-pill not-live">No</span></td><td>10 BPS is live and speeds up inclusion. Reversal risk falls as proof-of-work stacks up, so a recipient waits for the depth the amount at stake deserves.</td></tr>
             <tr><td>The blockDAG means unlimited TPS</td><td><span class="status-pill not-live">No</span></td><td>Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>

@@ -29,7 +29,7 @@
   <meta name="twitter:title" content="What changed in Kaspa this month | Kaspa Explained">
   <meta name="twitter:description" content="What actually changed in Kaspa this month, with the things that did not change named too.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-08">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -58,7 +58,7 @@
       {
         "@type": "Question",
         "name": "Is native DeFi live on Kaspa?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Not mature DeFi, but no longer nothing. As of August 8, 2026 Kaspa mainnet carries 67 covenant token markets on bonding curves, four of them graduated into automated market maker pools, and about 1.32 million KAS of live covenant value. Depth is thin and lending is absent. Wallet support, audited apps, and full vProgs are still roadmap work. L2 ecosystem apps are a separate claim with their own status."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Not mature DeFi, but no longer nothing. As of August 22, 2026 Kaspa mainnet carries 86 covenant token markets on bonding curves, seven of them graduated into automated market maker pools, and about 1.75 million KAS of live covenant value. Depth is thin and lending is absent. Wallet support, audited apps, and full vProgs are still roadmap work. L2 ecosystem apps are a separate claim with their own status."}
       }
     ]
   }
@@ -89,8 +89,8 @@
     <section class="section">
       <p class="eyebrow">Ecosystem developments</p>
       <h1>What changed in Kaspa this month</h1>
-      <p class="lead">Toccata activated on June 30. Since then the protocol has shipped nothing at all, and yet the covenant footprint on mainnet grew about fifteenfold in the first week of August. Everything moving is moving in the layers above consensus: a new standards process, a compiler, and the first token markets that trade on L1 itself.</p>
-      <p class="fit-note"><strong>Checked:</strong> August 8, 2026 against release tags, raw KIP and KCC files, project READMEs, repo commit history, and mainnet readings. This page tracks what runs on Kaspa L1 only. L2 and sidechain activity is not counted as Kaspa ecosystem progress here. Repo activity is not uptake, and a draft is not a standard.</p>
+      <p class="lead">Toccata activated on June 30. No new mainnet release followed it through this window, and yet the covenant footprint on mainnet grew about fifteenfold in the first week of August. Most of the movement below is in the layers above consensus: a new standards process, a compiler, and the first token markets that trade on L1 itself. Six "Toccata Cleanup" pull requests later merged into rusty-kaspa on August 19 to 21, past this page's check date. They remove pre-Toccata code paths and make protocol version 10 unconditional; one activates Toccata on devnet, cleanup after the mainnet fork rather than a new activation.</p>
+      <p class="fit-note"><strong>Checked:</strong> August 8, 2026 against release tags, raw KIP and KCC files, project READMEs, repo commit history, and mainnet readings, with the KCC merges and rusty-kaspa cleanup PRs above rechecked August 22. This page tracks what runs on Kaspa L1 only. L2 and sidechain activity is not counted as Kaspa ecosystem progress here. Repo activity is not uptake, and a draft is not a standard.</p>
     </section>
 
     <section class="section">
@@ -160,12 +160,12 @@
           <tbody>
             <tr><td>Decides</td><td>Consensus and core-node behavior</td><td>Conventions between independent implementations</td></tr>
             <tr><td>Binding on</td><td>Every node that wants to stay on the network</td><td>Whoever chooses to converge</td></tr>
-            <tr><td>Adopted so far</td><td>KIP-16, 17, 20, 21 active; KIP-2 still proposed</td><td>None. Zero merged.</td></tr>
+            <tr><td>Adopted so far</td><td>KIP-16, 17, 20, 21 active; KIP-2 still proposed</td><td>None. Three files merged as drafts, none accepted.</td></tr>
           </tbody>
         </table>
       </div>
       <p>The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in Kaspa Improvement Proposals (KIPs)." And on what adoption would even mean: "Acceptance marks an ecosystem convergence point; it does not make the convention protocol ground truth."</p>
-      <p>Seven specs are open as pull requests and none has merged: KCC-0001 covenant definition and ABI, KCC-0002 control principal references, KCC-0020 fungible tokens, KCC-0021 token metadata, KCC-0402 payment channels, a bulk KCC-0008 through KCC-0024 token and commerce set, and KCC-0025 a license agreement. The one you will hear about is KCC-0020, usually written "KCC20". It is a draft in an unmerged pull request against a repo whose standards index is still empty. Talk about it is active, and people still disagree on whether metadata belongs inside the token spec at all. The repo numbering uses four digits and is the canonical form.</p>
+      <p>In this July 8 to August 8 window, seven specs sat open as pull requests and none had merged. That changed on August 20, after this page's check date: KCC-0001, KCC-0002, and KCC-0020 merged, each still carrying <code>Status: Draft</code> in its own document. A merged draft is not an accepted standard, the KCC process has no ratified specification yet, and KCC-0021 token metadata and KCC-0402 payment channels remain open pull requests. The bulk KCC-0008 through KCC-0024 token and commerce set was closed unmerged across three separate attempts, and KCC-0025, a license agreement, closed unmerged too. The one you will hear about is KCC-0020, usually written "KCC20". Talk about it is active, and people still disagree on whether metadata belongs inside the token spec at all. The repo numbering uses four digits and is the canonical form.</p>
       <p>The paperwork lags the code in the other direction too: transaction version 1 and <code>computeBudget</code> already run on mainnet while KIP-24 and KIP-25, which specify them, are still open pull requests. The <a href="/status#implementation-evidence">status page evidence table</a> has the detail.</p>
     </section>
 
@@ -183,9 +183,9 @@
           </tbody>
         </table>
       </div>
-      <p>The gap to Testnet-10 closed from 267 times the mainnet covenant count to 29 times. Of the mainnet total, 90 covenants are KCC20 tokens holding 1,116.37 KAS between them, four are SilverScript escrows and all four are still burned, and 27,072 are p2sh commitments holding the other 1,316,675.89 KAS.</p>
-      <p>The sentence that changed is the one about trading. Mainnet now carries 67 token markets on bonding curves, four of which have graduated into automated market maker pools, with trades landing continuously. We took one of them, txid <code>dfca8076</code>, to the Kaspa REST API directly: accepted, transaction version 1, pay-to-script-hash outputs, and a covenant balance matching the indexer to the sompi. So the market exists in consensus data, not only in a third-party reading of it.</p>
-      <p>Scale is the part to keep straight. All live covenant value on mainnet is about 1.32 million KAS, roughly 35,000 dollars at the current price, and the 67 markets sum to about 515,418 KAS of exit value. This is a working token-launch venue, not a market with depth. Lending is still absent.</p>
+      <p>That narrowed the created-covenant gap to Testnet-10 from 267 times the mainnet count to 29 times by August 8. It has since widened back out: as of August 22, mainnet has created 28,107 covenants against Testnet-10's 1,082,602, a ratio of about 1 to 38.5. The active-covenant gap moved the other way over the same stretch, narrowing from about 1 to 199 (373 mainnet, 74,199 Testnet-10) to about 1 to 156 (517 mainnet, 80,822 Testnet-10). Created and active are different measures and they are not moving together. Of the mainnet total as of August 8, 90 covenants are KCC20 tokens holding 1,116.37 KAS between them, four are SilverScript escrows and all four are still burned, and 27,072 are p2sh commitments holding the other 1,316,675.89 KAS.</p>
+      <p>The sentence that changed is the one about trading. Mainnet carries 86 token markets on bonding curves as of August 22, seven of which have graduated into automated market maker pools, with trades landing continuously. We took one of them, txid <code>dfca8076</code>, to the Kaspa REST API directly: accepted, transaction version 1, pay-to-script-hash outputs, and a covenant balance matching the indexer to the sompi. So the market exists in consensus data, not only in a third-party reading of it.</p>
+      <p>Scale is the part to keep straight. As of August 22, all live covenant value on mainnet is about 1.75 million KAS, roughly 51,000 dollars at the CoinGecko price of $0.02916 per KAS read August 22, 2026. Kascov's market endpoint reports 93 markets, but seven of those are LP-share tokens duplicating the market_id and covenant_id of a graduated pool already counted, so the real count is 86. Summing reserve_sompi across the 84 priced bonding and graduated entries (excluding the 7 LP-share duplicates and 2 unpriced entries) gives about 1.75 million KAS held in those markets, within 0.14 percent of the independently computed live covenant value above, which is what confirms the unit is sompi. This is a working token-launch venue, not a market with depth. Lending is still absent.</p>
       <p>Two caveats on those numbers. kascov's template labels are guesses, so an app it does not know could be hiding in the p2sh entries. Block explorers also still do not decode covenant data and there is no "get UTXOs by covenant ID" RPC, so anyone measuring this is piecing it together from raw transactions.</p>
       <p>None of this makes the activation less real, and the growth is the story. The consensus rules are in force, the primitives work, and people have started using them for something. <a href="/toccata-explained">What still has to be built</a> covers what the tooling still cannot do.</p>
     </section>

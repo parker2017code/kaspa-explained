@@ -29,14 +29,14 @@
   <meta name="twitter:title" content="Build on Kaspa: Toccata App Ideas and Builder Paths">
   <meta name="twitter:description" content="Three ways to build on Kaspa, and how to work out which one your idea needs.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Build on Kaspa: Toccata App Ideas and Builder Paths",
     "url": "https://kaspaexplained.com/build-on-kaspa",
-    "dateModified": "2026-08-01",
+    "dateModified": "2026-08-22",
     "description": "A guide for Kaspa builders: live payment paths, Toccata app ideas, infrastructure readiness, and where to start.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
@@ -88,7 +88,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Build on Kaspa</p>
       <h1>Build Kaspa apps</h1>
-      <p class="lead">Toccata activated at DAA 474,165,565. Spend limits, escrow paths, asset rules, and proof checks are now in L1 script. You can read the rule before funds move.</p>
+      <p class="lead">Toccata activated at DAA 474,165,565. Spend limits, escrow paths, asset rules, and proof checks are now in L1 script, readable before funds move.</p>
       <p class="fit-note"><strong>Status:</strong> payments are live today, and Toccata's rules are active on mainnet. Read <a href="/toccata-explained">Toccata Explained</a> for how covenants, proof checks, and activity lanes work.</p>
       <p class="fit-note"><strong>Before pitching:</strong> run product claims through <a href="/status">Status</a>, and adoption risk through <a href="/skeptical-case">Risks</a>.</p>
       <div class="actions">
@@ -101,8 +101,8 @@
     <section id="routes" class="section">
       <p class="eyebrow">Route</p>
       <h2>Pick the route</h2>
-      <p class="lead">Plenty of Kaspa products need only payments, receipts, or better wallet UX. Toccata matters only when your product needs a spend rule the user can read before funds move. Still deciding whether the network belongs in the product at all? <a href="/why-kaspa-matters">Check which jobs gain from Kaspa</a>.</p>
-      <p>Two questions before the table below. Skipping the second one is how a product ends up with a chain bolted onto it that never needed one.</p>
+      <p class="lead">Plenty of Kaspa products need only payments, receipts, or better wallet UX. Toccata matters only when the product needs a spend rule the user can read before funds move. Still deciding if Kaspa belongs at all? <a href="/why-kaspa-matters">Check which jobs gain from Kaspa</a>.</p>
+      <p>Two questions before the table. Skip the second and a chain gets bolted onto a product that never needed one.</p>
       <div class="builder-console grid-cards" aria-label="Kaspa builder route path">
         <article>
           <span>1 / Job</span>
@@ -129,6 +129,8 @@
         </table>
       </div>
       <p>Start a based app as deterministic replay of accepted transactions, and add ZK only once proofs, privacy, or bridge logic become the product edge.</p>
+      <p>Issuing a fungible token means building against KCC-0020, a draft standard with an open correctness gap and an admitted partial-conformance implementation, tracked in full on <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>A covenant can only inspect the transaction spending it, not the wider chain. Reading shared on-chain state, a price, a pool balance, consumes it in the same breath, and Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB's. A builder raised the gap in the Kaspa Core R&D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no KIP yet says whether the fix belongs at L1 or in a future vProg.</p>
     </section>
 
     <section id="build" class="section">
@@ -143,7 +145,7 @@
         <article><h3>Proof pages</h3><p>One page carrying user action, txid, source, status label, and current blocker.</p></article>
         <article><h3>Activity dashboards</h3><p>Payments, mining, and spam pulled apart, so one raw count stops passing for a signal.</p></article>
       </div>
-      <p>Six more open up once a spend rule is doing the work. The hard part is the gap between a good UI and a rule the network enforces: address generation, a synced node, Silverscript compilation, and explorer-visible outputs all have to work before the covenant means anything.</p>
+      <p>Six more open up once a spend rule is doing the work. The hard part is the gap between a good UI and a rule the network enforces: address generation, a synced node, Silverscript compilation, and explorer-visible outputs all have to work first.</p>
       <div class="reference-grid grid-cards">
         <article><h3>Vault policies</h3><p>Spend caps, delayed withdrawal, and a recovery key, enforced by the spend script itself.</p></article>
         <article><h3>Assurance funding</h3><p>Funds release only once enough backers commit by the deadline. Miss it and refunds fire on their own.</p></article>
@@ -152,7 +154,7 @@
         <article><h3>Atomic market primitives</h3><p>Swaps, auctions, and OTC flows, with script behavior staying bounded.</p></article>
         <article><h3>Games and state machines</h3><p>Turn-based apps where player state, move routing, and settlement are separate steps.</p></article>
       </div>
-      <p>Attach a user job to every build: a budget nobody can drain at once, an asset that moves only under a controller rule. The weak version names the internal mechanism before the user problem, and that is the tell.</p>
+      <p>Attach a user job to every build: a budget nobody can drain at once, an asset that moves only under a controller rule.</p>
     </section>
 
     <section class="section">
@@ -167,7 +169,7 @@
         <article><span>User-visible result</span><p>What a wallet user, builder, or node runner can see right now.</p></article>
         <article><span>Remaining blocker</span><p>Whatever stands between this and a wider public claim, named plainly.</p></article>
       </div>
-      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on TN10 or TN12 and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored. Merged code proves the code exists, not that the network runs it, and mixing those lanes in a public post is how a testnet demo becomes a mainnet rumor.</p>
+      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on TN10 or TN12 and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored. Merged code proves the code exists, not that the network runs it, and mixing those lanes in a public post turns a testnet demo into a mainnet rumor.</p>
       <details class="source-more" data-audience="specialist">
         <summary>Advanced state-transition proof note</summary>
         <p>State-transition proof models follow one pattern: selected-parent root plus current root plus leaf write witnesses. That keeps validation local to the single transition. Clients never have to maintain the whole incremental SMT.</p>
@@ -178,7 +180,7 @@
     <section id="verify" class="section">
       <p class="eyebrow">Verify yourself</p>
       <h2>Run the checks yourself</h2>
-      <p>A wallet screen shows you a balance and asks you to believe it. A node, an RPC call, or a second explorer either agrees or doesn't. Climb the ladder when the situation calls for it: an explorer read, then a second API, then wallet software you control, then a node answering from chain state. A normal payment doesn't need every rung.</p>
+      <p>A wallet screen shows a balance and asks to be believed. A node, an RPC call, or a second explorer either agrees or doesn't. Climb the ladder when the situation calls for it: an explorer read, then a second API, then self-custody wallet software, then a node answering from chain state. A normal payment doesn't need every rung.</p>
       <p class="fit-note">Mainnet commands change with releases. Check the source links before touching real funds.</p>
       <div data-audience="specialist">
         <h3>Run a Rusty Kaspa node</h3>
@@ -220,7 +222,7 @@ npm run check:all
 npm run check:tn12</code></pre>
         <p>Fund only the printed <code>kaspatest:</code> addresses, from a faucet that serves testnet-12. Every Kaspa testnet shares that prefix, so tKAS from a Testnet-10 faucet lands on a network TN12 never sees. Anything run with <code>--submit</code> broadcasts for real.</p>
         <h3>Hosted API checks</h3>
-        <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks.</p>
+        <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks, not as a protocol source.</p>
         <div class="api-command-grid grid-cards" aria-label="Kaspa Developer Platform command examples">
           <article class="api-command-card">
             <span class="command-method command-method-post">POST</span>
@@ -256,11 +258,12 @@ npm run check:tn12</code></pre>
 amount: "31112708372"</code></pre>
           </article>
         </div>
+        <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so SilverScript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
       </div>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Before you ship</p>
+      <p class="eyebrow">Before shipping</p>
       <h2>Checks that catch the expensive mistakes</h2>
       <ol class="learning-steps grid-cards">
         <li><strong>Pick network first.</strong> <span>Mainnet uses <code>kaspa:</code>, TN12 uses <code>kaspatest:</code>, and reusing test keys for mainnet is how funds get lost.</span></li>
@@ -284,7 +287,7 @@ amount: "31112708372"</code></pre>
             <tbody>
               <tr>
                 <td>Fetch accepted state after submit</td>
-                <td>Local construction proves you built a transaction. It doesn't prove the network accepted it.</td>
+                <td>Local construction proves a transaction was built. It doesn't prove the network accepted it.</td>
                 <td>Record <code>is_accepted</code>, accepting block data, output script type, address, and amount.</td>
               </tr>
               <tr>
@@ -317,6 +320,7 @@ amount: "31112708372"</code></pre>
         <article><span>Nodes</span><p>Run Rusty Kaspa v2.0.1 or newer. The database upgrade only runs one direction, so a rollback means a full resync.</p></article>
         <article><span>Fees</span><p>Direct RPC submission now runs on the standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. That's a mempool policy number, not a consensus rule.</p></article>
         <article><span>APIs</span><p>New integrations need <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> wherever those fields apply.</p></article>
+        <article><span>Indexers</span><p>No <code>getUtxosByCovenantId</code> RPC exists on mainnet or testnet-10. Every covenant project ships its own indexer; a concrete design has sat unanswered since August 4, 2026.</p></article>
         <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, and fee estimation against Testnet-10, then against mainnet. The two won't match on every edge case.</p></article>
       </div>
       <p class="source-inline">Source: the <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Rusty Kaspa Toccata node setup guide</a>. Miners pointing an ASIC at their own node have a separate path: <a href="/kaspa-mining">mining Kaspa</a>.</p>
@@ -325,8 +329,8 @@ amount: "31112708372"</code></pre>
     <section class="section prose-section">
       <p class="eyebrow">Order of work</p>
       <h2>Build wallets and payments first</h2>
-      <p>Wallet and payment paths come first, then small covenant-shaped products, and richer based-app paths only once the product needs shared state. A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider rather than one hosted API.</p>
-      <p>Two questions stay open at every rung, and neither has a shipped answer. If a user hands off an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. And a validity proof big enough to be worth submitting trades block size against the standard-fee floor that keeps spam costly. Anyone comparing chains before committing can <a href="/why-kaspa-matters">weigh Kaspa against Ethereum and Solana</a> on execution, liquidity, and app maturity.</p>
+      <p>Wallet and payment paths come first, then small covenant-shaped products, and based-app paths only once the product needs shared state. A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider, not one hosted API.</p>
+      <p>A pair of open questions here has no shipped answer. If a user hands off an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. And a validity proof big enough to be worth submitting trades block size against the standard-fee floor that keeps spam costly.</p>
     </section>
 
     <section class="next-step section">
@@ -337,14 +341,8 @@ amount: "31112708372"</code></pre>
         <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>.</li>
         <li><a href="https://progdoc.izio.fr/overview.html">Izio's programmability overview</a> lays out the same decision tree in more depth: <a href="https://progdoc.izio.fr/state-programs.html">covenants</a>, <a href="https://progdoc.izio.fr/app-vprogs.html">based apps</a>, <a href="https://progdoc.izio.fr/verified-actions.html">inline ZK</a>, and <a href="https://progdoc.izio.fr/full-vprogs.html">full vProgs</a>.</li>
         <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> define the JavaScript SDK request shape.</li>
-        <li><a href="https://docs.kas.fyi/">Kaspa Developer Platform docs</a>: <a href="https://docs.kas.fyi/api-reference/v1/transaction/create-transaction-acceptance">transaction acceptance</a>, <a href="https://docs.kas.fyi/api-reference/v1/block/get-block-daa-score">block ranges</a>, <a href="https://docs.kas.fyi/essentials/data-types">data types</a>, and <a href="https://docs.kas.fyi/rate-limits">rate limits</a>. A hosted service does not set protocol status.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a>, and the <a href="https://tn12.kaspa.stream/">TN12 explorer</a>, all separate from the <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> activation evidence.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR #953</a> merged the <code>R0ScriptBuilder</code> helper for RISC Zero proof scripts. Tooling progress; mainnet ZK apps still need their own evidence.</li>
-        <li><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is the open PR for transaction-v1 fields and hashing; <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> is the open P2MR quantum-resistance proposal. Both stay proposals until merged and activated.</li>
-        <li><a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1">Michael Sutton's covenant++ and vProgs milestone notes</a>, and the <a href="https://gist.github.com/michaelsutton/a5c9bff6c9e9713edd0de9a3059bab9a">STARK-sized blocks note</a> on the proof, block-size, and min-fee tradeoffs.</li>
         <li><a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">Michael Sutton's vProgs masterclass</a> on app-to-app composition and prover incentives, alongside the <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo.</li>
-        <li><a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a> are test builds of an external signer and a watch-only wallet. They show where signing stops.</li>
-        <li><a href="https://www.kaskad.app/">Kaskad</a> and <a href="https://docs.kaskad.app/docs">Kaskad docs</a> cover Igra L2 lending: ecosystem evidence, separate from native Kaspa L1 DeFi.</li>
         <li><a href="/status">Kaspa Explained status</a> and the <a href="/sources">source hierarchy</a> hold the live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>

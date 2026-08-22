@@ -138,7 +138,14 @@ claims:
       status; this is the spec repo catching up to activation, not a new protocol change. Transaction
       version 1 and computeBudget run on mainnet and are documented in the operator guide, but their specs
       (KIP-24 PR #41 and KIP-25 PR #42) are still open, so cite the guide or the node rather than a merged
-      KIP number. No rusty-kaspa release exists after v2.0.1 (June 15, 2026).
+      KIP number. No rusty-kaspa release exists after v2.0.1 (June 15, 2026), which remains the
+      current mainnet release. Six "Toccata Cleanup" PRs (#1082-#1084, #1086, #1087, #1089) merged
+      August 19-21, 2026 removed the pre-Toccata conditional code paths entirely: peer negotiation
+      now requires protocol version 10 unconditionally (a node rejects protocol 7/8/9 peers
+      outright rather than accepting them until one day before activation), the mempool/consensus
+      ForkedParam machinery keyed on toccata_activation is gone, and every forked parameter
+      collapses to the value it already resolved to post-activation. This is cleanup of already-
+      activated behavior, not a new activation event; it has not yet shipped in a tagged release.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -288,24 +295,29 @@ claims:
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   native_defi:
     status: roadmap
-    recheck_after: 2026-09-04
+    recheck_after: 2026-09-05
     summary: >
       Mature native Kaspa L1 DeFi still depends on future programmability foundations and app tooling, but
       the "nothing is deployed" version of this claim expired between July 25 and August 8, 2026. Measured
-      August 21 via the kascov covenant indexer (kascov.io/data/mainnet-live.json), mainnet carries 28,107
-      covenants ever created, 517 active, 27,590 burned, and about 1,714,200 KAS of total live covenant
-      value. The three prior reads were 27,725 / 373 / 27,352 / 1,674,423 KAS on August 14 and
+      August 22 via the kascov covenant indexer (kascov.io/data/mainnet-live.json), mainnet carries 28,107
+      covenants ever created, 517 active, 27,590 burned, and 175,009,316,300,216 sompi of live covenant
+      value, which is about 1,750,093 KAS. The August 21 read gave the same 28,107 / 517 / 27,590 counts
+      against about 1,714,200 KAS of live value; only the value field moved. The prior reads were
+      27,725 / 373 / 27,352 / 1,674,423 KAS on August 14 and
       27,166 / 337 / 26,829 / 1,316,791.77 KAS on August 8. Covenant creation keeps decelerating, up
       1.4 percent in seven days against 2 percent in the six days before that, so the fifteenfold July
       surge is well and truly over. Active covenants are the exception and rose 39 percent in the same
       week, from 373 to 517, which is a different signal from creation volume and worth watching
       separately: more of what exists is being kept alive rather than burned.
-      Mainnet now lists 100 covenant token markets (kascov.io/data/mainnet/markets), of which 8 have
-      graduated into AMM pools, against 67 markets and 6 graduated on August 14. NOT re-verified on
-      August 21: the summed pool and bonding-curve value. The indexer returned those fields in units
-      that could not be confirmed against the previous read this pass, and a number whose units are
-      uncertain is worse than no number, so the August 14 figure of about 1,531,750 KAS is withdrawn
-      rather than restated or updated. Recheck that specific field against the raw JSON next pass. This was verified past the indexer on August 8: trade txid
+      The markets endpoint (kascov.io/data/mainnet/markets) returns 93 entries on August 22, but seven
+      are LP-share tokens duplicating the market_id and covenant_id of a graduated pool already counted,
+      so the real market count is 86, against 67 markets and 6 graduated on August 14. The summed pool
+      and bonding-curve value, withdrawn on August 21 because its units could not be confirmed, is
+      restored on August 22 with the units established: summing reserve_sompi across the 84 priced
+      bonding and graduated entries (excluding the 7 LP-share duplicates and 2 unpriced entries) gives
+      about 1,747,632 KAS, within 0.14 percent of the independently computed live covenant value above.
+      That agreement is what fixes the unit as sompi. Do not restate this figure without re-deriving it
+      the same way; the field name alone does not carry the unit. This was verified past the indexer on August 8: trade txid
       dfca80761ffcebcb9b2f16984ea695fe542780ab9d836b061fb527e0277c708c read as accepted on api.kaspa.org
       with transaction version 1 and p2sh outputs whose amount matched kascov to the sompi; not re-verified
       txid by txid on August 14, since the indexer total itself was read fresh. So say markets exist and
@@ -394,29 +406,92 @@ claims:
       - Kaspa oracle flows are live
   kcc_conventions:
     status: research_direction
-    recheck_after: 2026-08-23
+    recheck_after: 2026-09-05
     summary: >
       Kaspa Calls for Conventions (KCCs) are an ecosystem-standards process, separate from KIPs.
-      The kaspanet/kccs repo was created on July 15, 2026 and has not been pushed to since that
-      day: the repository root still contains no file other than README.md, and the standards
-      index table inside it is empty. Exactly one pull request has merged, the README itself.
-      Checked August 14, 2026: five specification pull requests are open and none is merged:
-      KCC-0020 fungible token covenant spec, KCC-0001 covenant definition and ABI, KCC-0402
-      covenant payment channels, KCC-0002 control principal references, and KCC-0021 covenant
-      token metadata. Two proposals seen open on August 7, a bulk KCC-0008 through KCC-0024 token
-      and commerce set and a KCC-0025 license agreement, were both withdrawn August 9 by their
-      author, who wrote "Superseded by revised proposals under KCC-0060 and subsequent numbers."
-      No KCC-0060-numbered pull request has been opened yet. The README draws the boundary itself:
-      "KCCs do not propose changes to Kaspa consensus or core-node behavior. Such changes belong in
-      Kaspa Improvement Proposals (KIPs)," and "Acceptance marks an ecosystem convergence point; it
-      does not make the convention protocol ground truth." Repo numbering (four digits, KCC-0020)
-      is canonical; forum shorthand like "KCC20" is not. The convention is already showing up in
-      code ahead of acceptance: the Argent compiler ships an examples/icc/kcc20_asset.ag asset
-      covenant. Related community claims of KCC20 mainnet wallet transfers are unverified.
+      Five states must stay distinct here and never get blurred into each other: a number used
+      only in a PR title, an open (unmerged) proposal, a merged checked-in draft, an accepted
+      standard, and an activated protocol rule enforced by consensus. Nothing tracked below has
+      reached the last two states. Confirmed August 22, 2026 via api.github.com/repos/kaspanet/kccs:
+      created_at 2026-07-15T12:21:31Z, pushed_at 2026-08-20T23:18:28Z. The repo has been pushed to
+      since creation; "not pushed to since July 15" is no longer true. Three KCC files are merged
+      on main: kcc-0001.md (covenant definition and ABI), kcc-0002.md (authority schemes), and
+      kcc-0020.md (fungible token covenant spec). Fetched raw from GitHub August 22, 2026, all
+      three read "Status: Draft" in the document body: merged means checked into the repo as a
+      draft, not adopted as a standard. KCC-0002 merged via PR #5, opened July 20, 2026 and merged
+      August 20, 2026. KCC-0020 was last updated August 21, 2026; its authors are Sivan Helfer,
+      Michael Sutton, and Romain Billot. KCC-0021 (covenant token metadata) is not merged: PR #6
+      is open, opened July 23, 2026, still active August 21, 2026. Its body claims the convention
+      "already live... runs in production in kascov" and "was adopted by KaspaRocket at deploy
+      time"; that claim lives inside an open, unmerged proposal and could not be independently
+      confirmed, so it is recorded here as an unverified claim inside an open proposal, not as
+      fact. KCC-0402 (covenant payment channels) is also not merged: PR #4 is open, and its body
+      claims a k402 reference implementation "proven on Kaspa mainnet"; same treatment, an
+      unverified claim inside an open PR, not a fact. Three attempts to land a bulk KCC-0008
+      through KCC-0024 token/commerce set all closed unmerged: PR #7 (closed July 25, 2026), PR #8
+      (closed July 25, 2026), and PR #10 (closed August 9, 2026); PR #9 (KCC-0016/0017) also
+      closed unmerged, July 25, 2026. None of KCC-0003 through KCC-0024 exist as accepted
+      standards; most exist only as numbers used in closed, unmerged PR titles. The README draws
+      its own boundary: "KCCs do not propose changes to Kaspa consensus or core-node behavior.
+      Such changes belong in Kaspa Improvement Proposals (KIPs)," and "Acceptance marks an
+      ecosystem convergence point; it does not make the convention protocol ground truth." Repo
+      numbering (four digits, KCC-0020) is canonical; forum shorthand like "KCC20" is not. The
+      convention is already showing up in code ahead of acceptance: the Argent compiler ships an
+      examples/icc/kcc20_asset.ag asset covenant. Community claims of KCC20 mainnet wallet
+      transfers remain unverified. Read directly in the browser August 22, 2026: KCC-0020 carries
+      a permanent-supply-split consequence its own co-authors call intended design behavior. Issue #14
+      (github.com/kaspanet/kccs/issues/14), opened August 21, 2026 by Knitser, still Open with 3
+      comments, shows the spec's transfer consolidation rule (Section 2) and its extended-state
+      update entrypoint (Section 4) contradict each other: each holder's own UTXO can only be
+      updated with that holder's authorization, so no single party, including the issuer, can
+      move every cell to a new extended-state commitment at once, and because consolidation
+      requires identical commitments across inputs, a partial update permanently splits a token's
+      supply into groups that can never consolidate again. Both co-authors who replied treated
+      this as by design: Manyfestation wrote that extended state "allows for
+      various use cases which are not only write-once, nor only for a singleton token,"
+      rejecting both of Knitser's proposed fixes, and Michael Sutton called it "a very
+      interesting observation" and confirmed with his own example, a stablecoin issuer's
+      `frozen` blacklist flag, that it "indeed renders the token as temporarily non fungible."
+      No spec change has merged. Separately, issue #11
+      (github.com/kaspanet/kccs/issues/11), opened July 26, 2026 by marciano147 writing for
+      KaspaCom, still Open with 1 comment, records KaspaCom's own position on its deployed
+      KCC20V2: "The existing KCC20V2 artifact should be described as partially aligned, not fully
+      conforming" with KCC-0001, 0002, 0020, and 0021. That is the only production implementer of
+      a KCC token standard on record disclaiming full conformance to it, in the implementer's own
+      words. And kas-smiths.org topic 8 post 56 by 0xKnitser, August 15, 2026
+      (kas-smiths.org/t/fungible-token-covenant-specification-kcc20/8/56), documents that one
+      mainnet launchpad's 74 live tokens already span four separate template generations with no
+      migration path between them, only opt-in burn and reissue. KCC-0020 carries a second open
+      defect distinct from the supply-split bug: borrowed receive. Shawn, kas-smiths.org/t/8 post
+      25, July 10, 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs
+      pre-signed, outpoint bound transactions... a stranger borrowing a token into it before the
+      tx lands invalidates the order and forces a rebuild." Post 53, August 10, 2026, on why there
+      is no signature-level fix: "The v1 sighash folds the spent input's own outpoint into the
+      signed message unconditionally... AnyoneCanPay only zeroes the other inputs' outpoints,
+      never the signed input's own." Authorization has to move to something outpoint-agnostic the
+      covenant checks against its own state; nothing has merged. Separately, KCC-0021 stays an
+      open, unmerged PR (kaspanet/kccs#6, opened July 23, 2026, still open August 22, 2026), and
+      concrete evidence backs why a metadata standard matters: 0xKnitser, kas-smiths.org/t/98 post
+      8, August 15, 2026, cross-checked one live launchpad's published logo URLs and found "5 of
+      19 published logo URLs were dead within days and 3 more served HTML instead of an image."
     source: https://github.com/kaspanet/kccs
     forbidden_copy:
       - KCC20 is a ratified Kaspa standard
       - KCC conventions change Kaspa consensus
+      - the kccs repo has not been pushed to since it was created
+      - KCC-0021 is a merged standard
+      - KCC-0402 is a merged standard
+      - kascov and KaspaRocket production use prove KCC-0021 is adopted
+      - a k402 mainnet deployment proves KCC-0402 is adopted
+      - merged KCC drafts are accepted standards
+      - KCC-0020's extended state bug has been fixed
+      - KCC-0020's co-authors disagree about whether the supply-split behavior is intended
+      - only the issuer can authorize a KCC-0020 state update
+      - KaspaCom fully conforms to KCC-0020
+      - KCC-0020 tokens on the mainnet launchpad share a single template
+      - KCC-0020's borrowed-receive griefing has a signature-level fix
+      - AnyoneCanPay protects a pre-signed transaction from borrowed receive
+      - KCC-0021 is a merged metadata standard
 
   covenant_tooling_and_support:
     status: builder_guardrail
@@ -432,9 +507,58 @@ claims:
       so no release has added that RPC. A covenant-ID RPC is described on the forum as planned, with
       no code and no version. Wallet support for constructing covenant transactions is UNVERIFIED;
       no KasWare, Kaspium, or KSPR covenant-signing release was found. Do not cite THTProtocol/Covex,
-      which still returns 404.
+      which still returns 404. The gap has a name and a cost: ingram_it, kas-smiths.org/t/74 post 2,
+      July 23, 2026, "Even when running a full node, developers still need to build and maintain
+      their own indexer... If an additional server is required between the user and the blockchain,
+      then the user is no longer interacting directly with the blockchain, but with the developer's
+      infrastructure." Manyfest, post 3, July 23, 2026, calls the RPC "planned to be develop[ed]",
+      no date attached. A concrete design (a satellite index keyed by covenant_id, with
+      getUtxosByCovenantId and getUtxosByOutpoints, bounded pagination, reads straight from the
+      consensus UTXO set) was posted in post 8, August 4, 2026, and remains unanswered as of
+      August 22, 2026.
     source: https://github.com/kaspanet/kaspa-python-sdk/releases
     forbidden_copy:
       - Kaspa wallets support covenant construction
       - block explorers decode covenant data
       - a covenant-ID RPC exists
+
+  tn10_rest_submit_drops_compute_budget:
+    status: builder_guardrail
+    recheck_after: 2026-09-05
+    summary: >
+      The community REST API at api-tn10.kaspa.org silently drops compute_budget when submitting
+      v1 transactions, so SilverScript covenant deployments fail with "script units exceeded the
+      amount committed in the input: used=100000, limit=9999." Verified directly against the live
+      schema at https://api-tn10.kaspa.org/openapi.json on August 22, 2026: SubmitTxModel carries
+      only version, inputs, outputs, lockTime, and subnetworkId, and its per-input SubmitTxInput
+      schema carries only previousOutpoint, signatureScript, sequence, and sigOpCount; neither has
+      a compute_budget field. The node's own read-side schemas do model the field (BlockTxInputModel
+      and TxInput both carry computeBudget/compute_budget), so the gap is specific to the submit
+      path, not a missing concept. Reported by daniel, kas-smiths.org/t/108 post 1, July 24, 2026,
+      23:08:04 UTC: "the compute_budget field is silently dropped in the REST to RPC mapping."
+      IzioDev's only workaround, post 2, July 29, 2026, 12:01:34 UTC: submit directly to a kaspad
+      node instead of the REST API. Still open as of August 22, 2026.
+    source: https://api-tn10.kaspa.org/openapi.json
+    forbidden_copy:
+      - the testnet-10 REST API forwards compute_budget correctly
+      - SilverScript covenant deployments work through the community REST API
+      - the script-units-exceeded error on TN10 is a SilverScript bug
+
+  covenant_introspection_scope:
+    status: research_direction
+    recheck_after: 2026-09-05
+    summary: >
+      Kaspa covenant introspection is scoped to the spending transaction itself; there is no
+      reference-input equivalent, so any covenant read of shared on-chain state (a price, a pool
+      balance) consumes that state in the same transaction. Raised by Ross Ku in the Kaspa Core
+      R&D Telegram group (t.me/kasparnd), Covenants topic, July 18, 2026, 17:40, while building a
+      covenant DEX that needs a shared price board. He compared the gap to Cardano's CIP-31
+      reference inputs and CIP-32 inline datums, Ergo's data inputs, and CKB's cell deps, and asked
+      whether closing it needs a new KIP or belongs in L2/vProgs. Six reactions, no reply as of
+      August 22, 2026. This is a Telegram report, not a kas-smiths.org forum post, and it is not
+      independently confirmed beyond being raised and left unanswered.
+    source: https://t.me/kasparnd
+    forbidden_copy:
+      - Kaspa covenants have a reference-input mechanism like Cardano or Ergo
+      - the shared-state read gap has been answered with a KIP
+      - the introspection gap was raised and resolved in Core R&D

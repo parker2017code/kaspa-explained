@@ -81,7 +81,7 @@ Audience paths should be distinct. The site should serve the whole spectrum:
 - journalists/analysts/source-checkers who need shipped-vs-roadmap status and primary references;
 - LLMs/search systems retrieving accurate context.
 
-A newcomer should have a slow path from `start-here.html` and `crypto-from-zero.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
+A newcomer should have a slow path from `start-here.html` and `crypto-from-scratch.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail. Do not add visible public verification boxes unless the task asks for them.
 
@@ -89,47 +89,39 @@ Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standar
 
 ## Current Site Structure
 
-The homepage should work as a router first. Its strongest traffic job is to route searchers and community debates into six clear jobs: what Kaspa is, what is live now, claim checking, risks, build paths, and sources. Toccata status, smart-contract status, finality, app ideas, and beginner curriculum pages stay one click deeper instead of competing in the primary nav. The site also has two educational layers before the Kaspa-specific pages: a true zero-start path for readers who do not know basic crypto concepts, and a crypto-aware reality-check path for readers who understand crypto basics and need sharper judgment.
+The site has 25 live pages. `sitemap.xml` and `site-manifest.json` are the authority for the page inventory; check both before naming a page as live or retired.
+
+The homepage should work as a router first. Its nav routes six clear jobs: what Kaspa is, what is live now, claim checking, risks, build paths, and sources (`what-is-kaspa.html`, `status.html`, `kaspa-claims-checker.html`, `skeptical-case.html`, `build-on-kaspa.html`, `sources.html`). Toccata status, the origin story, mining, KIP/KCC tracking, and the interactive comparison tools stay one click deeper instead of competing in the primary nav.
 
 Keep these audience paths visible:
 
-- Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-zero.html`.
-- Ask "what is Kaspa?": use `what-is-kaspa.html`, then `ghostdag-explained.html`.
-- Need the fast non-technical answer: use `overview.html`.
+- Know literally nothing about crypto: start with `start-here.html`, then `crypto-from-scratch.html`.
+- Ask "what is Kaspa?": use `what-is-kaspa.html`.
+- Need the Kaspa design case in plain terms: use `why-kaspa-matters.html`.
 - Need to check a public claim: use `kaspa-claims-checker.html`, then `status.html` or `toccata-status.html`.
-- Need a TPS/capacity answer: use `kaspa-tps-explained.html`. It separates simple payments, covenant transactions, ZK settlements, tokens, and future vProg-style app throughput.
-- Need a dated freshness snapshot: use `kaspa-status-check-may-2026.html`, then refresh it when major source evidence changes.
-- Need to know whether Toccata is live: use `toccata-status.html`.
-- Need to correct finality language: use `kaspa-confirmations-finality.html`.
-- Need to understand why coins have value or why there are so many coins: use `why-crypto-has-value.html` and `why-are-there-so-many-coins.html`.
-- Need design constraints: use `tradeoff-map.html`.
-- Need a coin-evaluation checklist: use `analyze-any-coin.html`.
-- Need problem-first crypto history: use `crypto-history.html`.
+- Need to know whether Toccata is live: use `toccata-status.html` for the activation record, `toccata-explained.html` for what it added, and `toccata-essay.html` for the argued case.
 - Need Kaspa origin/fair-launch context: use `kaspa-origin-story.html`.
-- Need a business/adoption lens without price prediction: use `adoption-metrics.html`.
-- New to crypto but already understands basic records/keys/blocks: use `what-crypto-is-good-for.html`.
 - Need current shipped-vs-roadmap status or common claim corrections: use `status.html`.
-- Need a compact first-reader path: use `overview.html`.
-- Know BTC/ETH/SOL/XRP/BNB/TRON but not Kaspa: start with `where-kaspa-fits.html`.
-- Want the app/design thesis: use `application-layer.html`.
-- Want the vProgs mental model: use `kaspa-vprogs-explained.html`.
-- Need to test whether a crypto product pitch is real or fake: use `reality-check.html`.
-- Need a builder path for an app idea: use `build-on-kaspa.html`, then `reality-check.html` before publishing publicly. (The former founder/supporter survey and matching-board pages were retired; those URLs now redirect to `about.html`.)
-- Need founder/search pages: use `kaspa-app-ideas.html`, `toccata-explained.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, and `kaspa-coordination-markets.html`.
+- Need to compare Kaspa against other layer ones on the same fields: use `chain-comparer.html`.
+- Need the Argent/Silverscript language model and a worked covenant example: use `argent-explained.html`.
+- Need mining mechanics, ASIC economics, or the price/hash-rate relationship: use `kaspa-mining.html`.
+- Need what changed this month, including what did not change: use `kaspa-developments.html`.
+- Need KIP and KCC status, including which conventions are merged drafts versus accepted standards: use `kips.html`.
+- Need a builder path for an app idea: use `build-on-kaspa.html`. (The former founder/supporter survey and matching-board pages were retired; those URLs now redirect to `about.html`.)
 - Need a fair skeptical page to link in debates: use `skeptical-case.html`.
-- Want builder-specific programmability choices: use `builder-guide.html`.
-- Need to verify a transaction without trusting one explorer: use `command-line.html`.
 - Want source-level verification: use `sources.html`, `status.html`, `kaspa-claims-checker.html`, `CLAIMS.yml`, `llms.txt`, and `CONTENT_BRIEF.md`.
 - Need quick term definitions: use `glossary.html`.
 - Need to find a concept or page quickly: use `search.html`.
-- Need quick corrections for social-media claims about TPS, finality, testnets, roadmap activation, app/project headlines, or adoption: use `faq.html#common-misconceptions` and `status.html#common-misconceptions`.
-- Need the common "why is KAS cheaper than BTC" answer: use `faq.html#kaspa-bitcoin-valuation` and `why-crypto-has-value.html#market-cap`. Keep it as valuation literacy. Price prediction is outside scope.
+- Want the long-form monetary-cost argument: use `the-instrument.html` (Moose's essay, hosted in full; his argument, not this site's claim set).
+- General-purpose tool, not Kaspa-specific, still part of the crawlable site: `model-picker.html` scores language models against benchmark numbers.
+
+The site does not currently have a dedicated FAQ page, a separate builder-tooling router, a separate application-layer/coordination-markets page, or a separate adoption-metrics page. Where earlier drafts of this brief described those as standalone pages (`faq.html`, `builder-guide.html`, `builder-evidence.html`, `application-layer.html`, `adoption-metrics.html`, `reality-check.html`, `where-kaspa-fits.html`, `ai-guidance.html`, `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `overview.html`, `command-line.html`, `kaspa-confirmations-finality.html`, `kaspa-status-check-may-2026.html`, `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `tradeoff-map.html`, `analyze-any-coin.html`, `crypto-history.html`, `what-crypto-is-good-for.html`, `crypto-from-zero.html`, `ghostdag-explained.html`), that content now lives inside `crypto-from-scratch.html`, `toccata-explained.html`, `build-on-kaspa.html`, or `kaspa-claims-checker.html`, or has not been rebuilt. Do not cite any of those filenames as live pages.
 
 The homepage includes a Bitcoin-style chain vs Kaspa blockDAG visual. Keep that visual claim narrow: parallel honest blocks can be included and ordered by GHOSTDAG. Do not use it to imply unlimited throughput, instant finality, or that scaling is solved.
 
 The "Kaspa does not wait" or "impatient" idea can be used only as restrained explanatory flavor when it points to the actual mechanism: honest work does not have to wait in a single-file chain before it can be included and ordered. Prefer concrete lines like "do not force honest work to wait in a single-file chain" over personality-heavy slogans. Do not turn this into a guarantee of instant finality, a product slogan repeated across the site, or a replacement for the concrete GHOSTDAG/blockDAG explanation.
 
-The `where-kaspa-fits.html` page should include a scannable comparison table near the top. The page's job is to help crypto-native readers understand what Kaspa is and is not competing with.
+The `chain-comparer.html` interactive is the scannable comparison surface: readers move dials for what their job needs and see which of twenty layer ones fits. Its job is to help crypto-native readers understand what Kaspa is and is not competing with.
 
 The `status.html` page is the compact status reference. Keep it shorter than the source guide. Its job is to separate live, targeted, roadmap, and research claims quickly.
 
@@ -143,17 +135,19 @@ App/project catalogs should not be public status lanes on this site. Mention an 
 
 The status page may include a compact implementation-evidence section for current dev tracks. Keep it code-grounded and below activation evidence. As of June 30, 2026, public mainnet API checks showed `kaspa-mainnet` above DAA score 474,165,565 with continued block/header growth after the score. Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the Mainnet Toccata Release and set activation at DAA score 474,165,565, roughly June 30, 2026 at 16:15 UTC. The Rusty Kaspa Toccata node setup guide adds operator evidence for v2.0.1+ upgrades, one-way node database migration, standard-fee policy changes, storageMass/storage_mass and transaction version 1 integration changes, Stratum Bridge mining guidance, and Testnet-10 infrastructure testing. `tn10-toc2` scheduled the first Testnet-10 Toccata activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; Testnet-10 REST status showed virtual DAA 532,195,959 on August 1, 2026. Raw KIP files list KIP-16, KIP-17, KIP-20, and KIP-21 as `Status: Active`, promoted together in kips commit e4ae2332 on July 15, 2026, replacing their earlier TN10-scoped status. Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts; open KIP-24 covers transaction-v1 fields and hashing for compute budgets, covenant bindings, user lanes, and ZK-friendly txids; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work; kaspanet/vprogs is an early Rust framework for based computation with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components plus the June 18 settlement-into-covenants merge; argent-lang/argent is an actor-based language and compiler above Silverscript whose README says the main pieces are present and names audit as the remaining gate, and whose old michaelsutton/argent path 301-redirects to it; rusty-kaspa/dagknight March 22 prototype/refinement activity remained a development signal. `toccata-explained.html` is the hub for this material. Do not let this section become a hype feed or imply app, wallet, SDK, liquidity, explorer, or user evidence from protocol activation alone.
 
-The `overview.html` page is the 90-second first-reader route. Keep it compact: what Kaspa is, what is live, what is not live, what the design changes, and what to read next.
+`kips.html` is the KIP/KCC tracker and carries the KCC status this brief must stay aligned with. Kaspa Calls for Conventions are an ecosystem-standards process, distinct from KIPs, and never a consensus change. KCC-0001 (covenant definition/ABI), KCC-0002 (authority schemes), and KCC-0020 (fungible token covenant spec) merged into the `kaspanet/kccs` repo on 20-21 August 2026; each still reads `Status: Draft` in its own document body, so merged means checked in as a draft, not adopted as a standard. KCC-0021 (covenant token metadata) is open PR #6 and KCC-0402 (covenant payment channels) is open PR #4; neither is merged. Every proposal numbered KCC-0008 through KCC-0025 closed unmerged. KCC-0020 carries an open correctness issue, `kaspanet/kccs` issue #14, opened August 21, 2026: its transfer-consolidation rule and its extended-state update entrypoint can conflict, permanently splitting a token's supply into groups that cannot recombine. Both replying co-authors treat the underlying behavior as intended by design, though they characterize it differently; no spec change has merged. `CLAIMS.yml`'s `kcc_conventions` entry is the source of record for KCC status and its exact forbidden phrasings; follow it rather than restating the detail here.
 
-The `adoption-metrics.html` page is the business/adoption lens. It should avoid price prediction and instead explain wallets, node health, mining distribution, fees/block demand, liquidity, developer activity, integrations, and post-Toccata app signals as evidence categories.
+`start-here.html` and `crypto-from-scratch.html` carry the compact first-reader route: what Kaspa is, what is live, what is not live, what the design changes, and what to read next. There is no separate 90-second-overview page; do not cite `overview.html`.
 
-The `application-layer.html` page is the app-opportunity and builder-imagination page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too," and it should not make generic merchant/POS payments the adoption thesis. It should explain the L1-first thesis in concrete product terms first: app receipts, vault rules, asset rules, escrow, coordination markets, attestations, public funding rules, proof checks, and apps that prove what they did. Then name the technical layer: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native paths while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed.
+There is no dedicated adoption-metrics page. `kaspa-developments.html` and `kaspa-mining.html` carry the closest non-price adoption evidence the site currently has: node/mining health, fees, hash-rate/price decoupling, and month-over-month protocol change. Do not cite `adoption-metrics.html` as live.
+
+`toccata-explained.html` is the app-opportunity page. It should explain why someone would build on Kaspa without pretending every app is live. The page should not read like "Kaspa gets L2s too," and it should not make generic merchant/POS payments the adoption thesis. It should explain the L1-first thesis in concrete product terms first: app receipts, vault rules, asset rules, escrow, coordination markets, attestations, public funding rules, proof checks, and apps that prove what they did. Then name the technical layer: Kaspa L1 supplies shared sequencing, ordering, commitments, verification hooks, settlement, and neutral primitives; apps and runtimes add semantics, incentives, proving, and user experience around those primitives. Map what other crypto networks enabled, then translate those patterns into Kaspa-native paths while preserving status discipline. Include the RTD internet-money flow as app-level research/architecture: a user defines a strategy around an external event, an application defines incentives for opt-in miners or rewarded reporters to attest, the system samples the PoW majority, and assets/logic on Kaspa can gain lower latency and closer atomicity. Do not imply this flow is shipped today or protocol-prescribed. Do not cite `application-layer.html`; it is not a live page.
 
 When explaining coordination markets, start with the product shape: users make conditional commitments, the app groups compatible commitments, a solver checks whether the group satisfies the conditions, and settlement or refunds follow. The first buildable lane can be transparent and replay-backed. The harder research target adds private accumulation, capital multiplexing, solver incentives, censorship resistance, MEV resistance, and atomic execution.
 
 When explaining app-to-app composition, make atomicity the boundary. Fast L1 ordering, proof-linked coordination, or two actions landing close together are weaker than one combined state transition where all touched apps succeed or fail together. Toccata can support covenant rules, ZK proof checks, sequencing commitments, and based-zk foundations. Full cross-app atomic composition remains later vProgs roadmap architecture.
 
-The `builder-guide.html` page is the builder-specific programmability router. It should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Credit Izio's progdoc material as builder guidance. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes, outside protocol-status lanes.
+There is no dedicated builder-programmability router; do not cite `builder-guide.html`. `build-on-kaspa.html` is the live builder-path page: it should help builders choose between covenants, based apps, inline ZK, and future full vProgs by asking about concurrency, state shape, and proof requirements. Credit Izio's progdoc material as builder guidance. Keep Python SDK, TxIndex, Silverscript, and open PRs in builder/tooling lanes, outside protocol-status lanes.
 
 SilverScript/covenant examples should be judged by the state transition they
 actually prove. A serious example shows continuation state, required output
@@ -169,11 +163,11 @@ For ZK builder wording, keep the external-anchor boundary explicit. ZK verificat
 
 The current Kaspa.org Build page is a developer-resource index. Preserve links to official docs, Rusty Kaspa releases, WASM SDK docs/examples, community REST API docs, Public Node Network docs, Docker Hub, explorer/API DB dumps, testnet faucet, KIPs, Silverscript, vProgs, Simply Kaspa Indexer, DNS Seeder, kHost, kaspa-js, and the R&D Telegram. Keep hosted APIs/public nodes labeled as best-effort or demo-friendly, and community projects labeled as projects to inspect before production use.
 
-The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source. Protocol activation authority comes from releases, KIPs, node/API readings, and activation evidence. Use KDP for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html`, `builder-guide.html`, and `command-line.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
+The Kaspa Developer Platform at `docs.kas.fyi` is a hosted API source. Protocol activation authority comes from releases, KIPs, node/API readings, and activation evidence. Use KDP for builder references around API-key access, address history, transaction acceptance checks, block ranges by blue score or DAA score, node RPC proxy access, data types, pagination, rate limits, and beginner node-running guidance. Use it in `sources.html` and `build-on-kaspa.html` as a practical hosted read path. Keep the boundary explicit: API keys, rate limits, provider uptime, and pricing are product dependencies; production systems should plan their own node/indexer or provider redundancy when reliability, privacy, or scale matters.
 
-For builder-guide UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
+For `build-on-kaspa.html` UX, use the new Kaspa.org BUIDL path as a practical runway: try live browser SDK examples, choose App SDK / Native Rust / Node, use REST or Public Node Network only for prototypes and light reads, then graduate to own-node or indexer infrastructure for production. This tells builders what to do first without implying that hosted APIs or testnet programmability are final production paths.
 
-The builder guide should also preserve practical testnet breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced testnet node with UTXO index; an unsynced node can return misleading zero balances; a generic stable mainnet binary may not support every active TN12 setting; and TN10/Toccata activation-test commands should start from the current Rusty Kaspa release notes. Old Crescendo examples are stale for this job. Put this in the builder lane and keep mainnet instructions separate from testnet-only covenant work.
+The builder path should also preserve practical testnet breadcrumbs learned from hands-on prototyping: use exact `kaspatest:` addresses; faucet use may require a browser; local balance checks need a synced testnet node with UTXO index; an unsynced node can return misleading zero balances; a generic stable mainnet binary may not support every active TN12 setting; and TN10/Toccata activation-test commands should start from the current Rusty Kaspa release notes. Old Crescendo examples are stale for this job. Put this in the builder lane and keep mainnet instructions separate from testnet-only covenant work.
 
 Builder verification lessons should be concrete and reusable: a local txid is not accepted app state; fetch accepted transaction evidence after submit; record node version, SDK version, network id, endpoint, encoding, tx version, and input budget fields; compare failing contract spends against accepted sibling spends before claiming a protocol boundary; and label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection. Keep private prototype txids out of public copy unless they independently support source evidence.
 
@@ -332,13 +326,11 @@ TPS and speed claims need measurement labels. Do not freeze one public TPS numbe
 
 ## Crypto Reality-Check Framing
 
-The `what-crypto-is-good-for.html` page is a general-audience bridge for people who do not live inside crypto. It should make the rest of the site more credible by stating that crypto is not useful for everything.
+`crypto-from-scratch.html` is the general-audience bridge for people who do not live inside crypto, and it is also where the market and context layer now lives: why a coin has a price, market cap versus company value, initial-ownership/launch design, and a three-part test for when crypto makes sense at all. It should make the rest of the site more credible by stating plainly that crypto is not useful for everything, and it should explain valuation, token necessity, launch design, actors, incentives, and design constraints without becoming investment advice or price prediction. There is no separate `what-crypto-is-good-for.html`, `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `tradeoff-map.html`, `analyze-any-coin.html`, or `crypto-history.html`; do not cite them as live pages.
 
-The `start-here.html` and `crypto-from-zero.html` pages are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
+`start-here.html` and `crypto-from-scratch.html` are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
 
-The `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `tradeoff-map.html`, `analyze-any-coin.html`, and `crypto-history.html` pages are the market and context layer. They should explain valuation, categories, token necessity, launch design, actors, incentives, scams, and design constraints without becoming investment advice or price prediction.
-
-The `reality-check.html` page is the crypto-native product judgment layer. It should help readers test pitches against concrete users, jobs, liquidity, wallet/signing flow, current-status labels, evidence, failure modes, and day-two behavior. It should not become a directory of other chains, app projects, hackathons, or market programs.
+There is no dedicated crypto-native product-judgment page; do not cite `reality-check.html`. `kaspa-claims-checker.html` and `skeptical-case.html` are the closest live analogs: they help readers test claims and pitches against current-status labels, evidence, and failure modes rather than against hype.
 
 Core frame:
 
@@ -388,7 +380,7 @@ Based apps are a real build lane. Direct L1 covenant examples such as vaults, es
 
 vProgs should be described first as apps that prove their own logic, then as app-level verifiable programs or app-level ZKVM/verifiable-program environments. Do not flatten them into ordinary rollups. The intended direction is a native-feeling, cohesive developer/user experience while keeping L1 focused on sequencing, commitments, verification, and metadata, while app runtimes execute their own logic.
 
-For application-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
+For app-layer discussion, treat Michael Sutton's vProgs framing as a roadmap target for one-dimensional program space, shared Kaspa L1 sequencing, synchronous composability, computational DAG metadata, prover incentives, and sovereignty obligations. Covenant++ milestone notes can inform the staged path: inline zk covenants, based zk covenants, canonical bridges, native-asset bridge work, and efficient sequencing commitments. STARK-sized proof support and standard minimum fee changes are design questions unless future primary sources confirm mainnet activation.
 
 ## Long-Form Interview Model
 
@@ -425,36 +417,41 @@ The May 2026 Kaspa.com Smart Contracts article separates programmability into la
 
 ## Public Crawl Map
 
-The sitemap should include public human pages and LLM/crawler files:
+`sitemap.xml` and `site-manifest.json` are the authority for this list; check both before editing it. The sitemap includes the 25 live human pages plus LLM/crawler files and the one PDF:
 
 - `/`
 - `/start-here.html`
-- `/crypto-from-zero.html`
-- `/why-crypto-has-value.html`
-- `/why-are-there-so-many-coins.html`
-- `/tradeoff-map.html`
-- `/analyze-any-coin.html`
-- `/crypto-history.html`
-- `/kaspa-origin-story.html`
-- `/adoption-metrics.html`
-- `/application-layer.html`
-- `/kaspa-vprogs-explained.html`
-- `/kaspa-tps-explained.html`
-- `/overview.html`
-- `/what-crypto-is-good-for.html`
-- `/status.html`
-- `/faq.html`
+- `/what-is-kaspa.html`
 - `/why-kaspa-matters.html`
-- `/where-kaspa-fits.html`
-- `/glossary.html`
-- `/search.html`
+- `/crypto-from-scratch.html`
+- `/chain-comparer.html`
+- `/model-picker.html`
+- `/kaspa-origin-story.html`
+- `/toccata-explained.html`
+- `/argent-explained.html`
+- `/toccata-status.html`
+- `/toccata-essay.html`
+- `/build-on-kaspa.html`
+- `/status.html`
+- `/skeptical-case.html`
+- `/kaspa-mining.html`
+- `/kaspa-developments.html`
+- `/kips.html`
+- `/kaspa-claims-checker.html`
 - `/sources.html`
-- `/ai-guidance.html`
+- `/glossary.html`
 - `/about.html`
+- `/the-instrument.html`
+- `/search.html`
+- `/404.html`
 - `/llms.txt`
+- `/agent-index.json`
 - `/CONTENT_BRIEF.md`
 - `/README.md`
 - `/CLAIMS.yml`
+- `/the-instrument.pdf`
+
+The other 47 `.html` files in the repository are `noindex` redirect stubs, not content pages. Do not describe a stub with a content summary, and do not add a stub to this list. `argent-explained.html` was a redirect stub into `toccata-explained.html` until August 22, 2026, when it became its own live page; do not describe it as redirecting.
 
 Do not advertise `AGENTS.md` in `sitemap.xml`. It can remain publicly reachable as a repository file, but it is local agent guidance outside the public content surface.
 
@@ -518,41 +515,36 @@ Quantum answer frame:
 
 ## Site Structure
 
-Primary public pages:
+Primary public pages, matching `sitemap.xml` and `site-manifest.json` (25 pages total):
 
-- `index.html` - audience-routed homepage, real-time Proof-of-Work case, interactive blockchain-vs-blockDAG teaching model, status labels, zero-start links, and compact Kaspa/adoption routes.
+- `index.html` - audience-routed homepage, real-time Proof-of-Work case, interactive blockchain-vs-blockDAG teaching model, status labels, and routes into the six primary jobs.
 - `start-here.html` - true beginner router for readers who know nothing about crypto or Kaspa.
-- `crypto-from-zero.html` - causal ladder from records, keys, transactions, blocks, consensus, incentives, tokens, and tradeoffs to Kaspa.
-- `why-crypto-has-value.html` - market-value explainer for token need, prices, market cap, open markets, speculation, launch design, and who benefits.
-- `why-are-there-so-many-coins.html` - category bridge explaining why major crypto assets are not all trying to do the same job.
-- `tradeoff-map.html` - beginner tradeoff map for speed, security, decentralization, privacy, scaling, nodes, ASICs, staking, launch design, and Kaspa.
-- `analyze-any-coin.html` - practical checklist for evaluating token necessity, supply, launch, validation, liquidity, market cap, risks, and beneficiaries.
-- `crypto-history.html` - problem-first history map from digital cash and Bitcoin through Ethereum, ICOs, DeFi, stablecoins, rollups, and Kaspa.
+- `what-is-kaspa.html` - what Kaspa is: KAS, Proof of Work, blockDAGs, GHOSTDAG, 10 BPS, and what is live on mainnet versus roadmap.
+- `why-kaspa-matters.html` - Kaspa-specific bridge page explaining the design case without claiming the roadmap is already live.
+- `crypto-from-scratch.html` - causal ladder from records, keys, transactions, blocks, consensus, incentives, and tokens through to why coins have value, market cap versus company value, launch design, and where crypto itself is useful or weak.
+- `chain-comparer.html` - interactive comparison of twenty layer ones on the same fields, dial-adjustable by reader priority.
+- `model-picker.html` - live scorer for language models against published benchmark numbers; general-purpose, not Kaspa-specific.
 - `kaspa-origin-story.html` - sourced origin page for DAGLabs, Polychain/Accomplice-era VC funding context, PHANTOM/GHOSTDAG, the April 2021 testnet, failed hardware/presale paths, fair launch, the DAGLabs/Polychain-related early-miner estimate, Black Tuesday, dust-attack context, Rust rewrite, Crescendo, and the Toccata boundary.
-- `adoption-metrics.html` - non-price adoption and business lens for wallets, nodes, mining, fees, liquidity, builders, integrations, and post-Toccata app signals.
-- `application-layer.html` - status-labeled application-layer opportunity map for what builders can use now and what Toccata, vProgs, RTD, and coordination-market research may support later.
-- `kaspa-vprogs-explained.html` - resource-lane and based-computation explainer for vProgs as roadmap architecture.
-- `kaspa-tps-explained.html` - workload-specific TPS explainer for simple payments, Toccata covenants, ZK settlements, tokens, and future vProg-style app throughput.
-- `build-on-kaspa.html` - builder path that routes an app idea to the builder guide, `kaspa-app-ideas.html`, Toccata status, and a reality-check gate before publishing publicly. (The former short-recipes page, founder/supporter survey pages, and matching-board page were retired; those URLs redirect here or to `about.html`.)
-- `kaspa-app-ideas.html` - app idea map by status lane.
-- `toccata-explained.html` - Toccata hub explaining covenants, covenant IDs, ZK proof checks, sequencing commitments, based apps, and the vProgs boundary.
-- `kaspa-covenants-explained.html` - covenant page for UTXO spend rules.
-- `kaspa-vs-ethereum-apps.html` - app and builder comparison page for Kaspa against Ethereum and Solana.
-- `kaspa-coordination-markets.html` - coordination-market page for conditional commitments and assurance funding.
-- `builder-guide.html` - builder-specific programmability router for covenants, based apps, inline ZK, future full vProgs, SDKs, and infrastructure evidence.
-- `builder-evidence.html` - proof bridge page that points readers to TN12 evidence and keeps app ideas separate from proof.
-- `overview.html` - 90-second overview for first-time readers.
-- `what-crypto-is-good-for.html` - reality-check page explaining where crypto itself is useful, where it is weak, and why Kaspa should be judged where neutral shared records are worth the cost.
+- `toccata-explained.html` - Toccata hub explaining covenants, covenant IDs, ZK proof checks, sequencing commitments, based apps, Argent, coordination markets, and the vProgs boundary.
+- `argent-explained.html` - Argent/Silverscript language model, a worked covenant example, what Argent's own README says, and the repository signals across the argent-lang org. Live page as of August 22, 2026; was a redirect stub into `toccata-explained.html` before that.
+- `toccata-status.html` - Toccata's DAA activation score, the v2.0.1 release, covenant and ZK surfaces, and TN10/TN12 evidence.
+- `toccata-essay.html` - Parker Schmidt's attributed first-person essay on the Toccata upgrade.
+- `build-on-kaspa.html` - builder path that routes an app idea to Toccata status and the three build lanes. (The former short-recipes page, founder/supporter survey pages, and matching-board page were retired; those URLs redirect here or to `about.html`.)
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
-- `faq.html` - direct search-friendly answers for common Kaspa status and concept questions.
-- `why-kaspa-matters.html` - Kaspa-specific bridge page explaining how Kaspa maps to crypto's useful jobs without claiming the roadmap is already live.
-- `where-kaspa-fits.html` - category-fit page for comparing Kaspa with other crypto categories.
-- `glossary.html` - compact plain-English glossary for common Kaspa terms.
-- `search.html` - dependency-free static page-map search for concepts, audiences, status labels, and source terms.
+- `skeptical-case.html` - the strongest case against Kaspa, argued properly, with what would show it going wrong.
+- `kaspa-mining.html` - mining mechanics, ASIC economics, and why price and hash rate move on different clocks.
+- `kaspa-developments.html` - what changed in Kaspa this month, naming what did not change too.
+- `kips.html` - KIP and KCC tracker distinguishing consensus-changing proposals (KIPs) from ecosystem conventions (KCCs), with a live-fetched KCC pull-request table.
+- `kaspa-claims-checker.html` - common Kaspa claims marked true, partly true, or wrong, with sources.
 - `sources.html` - public source hierarchy, external reference map, Kaspa.com Learn Kaspa topic index, and public crawl map.
-- `ai-guidance.html` - public prompt builder for source-checking AI questions about Kaspa status, claims, citations, and unsupported inference.
+- `glossary.html` - compact plain-English glossary for common Kaspa terms.
 - `about.html` - public editorial policy, disclosures, correction handling, and accountability page.
+- `the-instrument.html` - Moose's essay on judging monetary systems by physical cost floor, hosted in full; his argument, not this site's claim set (also published as `the-instrument.pdf`).
+- `search.html` - dependency-free static page-map search for concepts, audiences, status labels, and source terms.
+- `404.html` - not-found page.
 - `CLAIMS.yml` - reference file for status-sensitive claims and forbidden overclaims.
+
+There is no live `overview.html`, `faq.html`, `where-kaspa-fits.html`, `ai-guidance.html`, `application-layer.html`, `adoption-metrics.html`, `reality-check.html`, `builder-guide.html`, `builder-evidence.html`, `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `crypto-from-zero.html`, `why-crypto-has-value.html`, `why-are-there-so-many-coins.html`, `tradeoff-map.html`, `analyze-any-coin.html`, `crypto-history.html`, `what-crypto-is-good-for.html`, `command-line.html`, `kaspa-confirmations-finality.html`, `kaspa-status-check-may-2026.html`, or `ghostdag-explained.html`. Any of those filenames named elsewhere in this brief are stale references to retired or never-built pages, not live content; do not describe one as a page a reader can visit.
 
 LLM/source files:
 
@@ -560,7 +552,6 @@ LLM/source files:
 - `CONTENT_BRIEF.md` - editorial/project handoff.
 - `README.md` - repo setup, source discipline, and deployment notes.
 - `AGENTS.md` - local coding-agent instructions.
-- `builder-evidence.html` - bridge page for technical proof verification.
 
 ## Update Workflow
 

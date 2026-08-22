@@ -29,14 +29,14 @@
   <meta name="twitter:title" content="Kaspa Origin Story | Kaspa Explained">
   <meta name="twitter:description" content="How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="dateModified" content="2026-08-22">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "Kaspa Origin Story",
     "url": "https://kaspaexplained.com/kaspa-origin-story",
-    "dateModified": "2026-08-01",
+    "dateModified": "2026-08-22",
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
@@ -88,7 +88,7 @@
 
     <section class="section prose-section">
       <p class="eyebrow">DAGLabs and testnet</p>
-      <h2>The startup path existed before the fair launch</h2>
+      <h2>DAGLabs came first, then the fair launch</h2>
       <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, by Yonatan Sompolinsky and Guy Corem, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018 to build a business on DAG protocols. Either way, DAGLabs paid for and ran part of the pre-mainnet path before Kaspa became a public, community-mined network.</p>
       <p>Polychain belongs in the pre-mainnet DAGLabs funding story, and it cuts both ways. Kaspa had no token premine. It also had a VC-funded DAGLabs backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
       <p>Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a generalization of Nakamoto Consensus. The April 2021 Investing.com article lists the testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard. It framed the project as testnet first, mainnet later, with no pre-mining and no founder allocations planned.</p>
@@ -97,7 +97,7 @@
 
     <section class="section">
       <p class="eyebrow">Could-have-been paths</p>
-      <h2>The failed plans are part of the story</h2>
+      <h2>Failed plans are part of the story</h2>
       <div class="reference-grid grid-cards">
         <article>
           <h3>ASIC and presale path</h3>
@@ -120,8 +120,8 @@
 
     <section class="section prose-section">
       <p class="eyebrow">Launch</p>
-      <h2>The public network launched without a premine</h2>
-      <p>Kaspa.org's current lore page puts mainnet launch in November 2021: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The homepage adds the genesis proof: every coin traces back by cryptography to an empty genesis. Mining made the whole supply.</p>
+      <h2>Mainnet launched without a premine</h2>
+      <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a UTXO commitment that trace back to an empty genesis. Mining made the whole supply.</p>
       <p>No premine means no official token allocation before mining started. It does not mean equal access to early mining.</p>
       <p>Yonatan later estimated Kaspa's core developers mined about 2.5% of total supply after launch. The Kaspa Wiki prehistory page puts the related DAGLabs/Polychain estimate below 3%, roughly 840 million KAS, and says the tighter number is probably closer to 2.5% and under 850 million KAS. That's early-miner context, a separate question from whether there was a premine.</p>
       <p>Yonatan's own archive is blunter than the lore. He calls the launch messy, says he baked several bad ideas into the first gamenet rules, and describes a few thousand CPUs finding the project within days, pushing hashrate up no matter what the plan wanted. The Black Tuesday post puts it in one clause: the gamenet idea never caught air, so he swapped the random block reward for a flat one.</p>
@@ -129,7 +129,7 @@
 
     <section class="section prose-section">
       <p class="eyebrow">Early stress</p>
-      <h2>The chain had to survive real failure</h2>
+      <h2>Kaspa had to survive real failure</h2>
       <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing a certainly-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
       <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published. Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
       <p>A dust attack on Yom Kippur, September 2023, was a separate event from the November 2021 launch bug. Kaspa researcher Shai Wyborski's post-mortem gives the mechanism: each attacking transaction spent one UTXO and created 238, so every block added about 1,185 entries to a set where each one costs roughly 85 bytes. That is near 100 KB of permanent state per block, about 5 GB a day. He counted 57 million attacker UTXOs created before September 28 and put the contained damage at "5GB of junk UTXO data we will have to carry permanently." The lasting answer was not a patch but KIP-9's extended mass formula, which prices state growth into transaction mass so the same attack costs the attacker instead of the network.</p>
@@ -137,8 +137,8 @@
 
     <section class="section prose-section">
       <p class="eyebrow">Rust and Crescendo</p>
-      <h2>The first version was not the final one</h2>
-      <p>Hashdag's 2022 "Kaspa where to" archive says Michael Sutton pushed for a big refactor and Rust rewrite, because the Golang codebase carried technical debt that made it hard for new contributors to work in. Kaspa.org now sums that up as a full rewrite into Rust, paid for by a community grant.</p>
+      <h2>Golang was not the final version</h2>
+      <p>Hashdag's 2022 "Kaspa where to" archive says Michael Sutton pushed for a big refactor and Rust rewrite, because the Golang codebase carried technical debt that made it hard for new contributors to work in. How the rewrite was funded is not confirmed here.</p>
       <p>The rusty-kaspa repo describes the Rust build as a drop-in replacement for the older Golang node. Its README puts the Crescendo hard fork on May 5, 2025, moving the network from 1 BPS to 10 BPS. The v1.0.0 release notes name the exact trigger: mainnet DAA score 110,165,000.</p>
     </section>
 
@@ -146,7 +146,7 @@
       <p class="eyebrow">Toccata boundary</p>
       <h2>Crescendo and Toccata are not the same fork</h2>
       <p>"Toccata" gets pinned on 10 BPS often enough to be worth fixing. Crescendo is the fork that made 10 BPS live on mainnet. Toccata is a separate, later fork: base-layer programmability with covenants, Silverscript, ZK-facing proof checks, sequencing commitments, and native-asset groundwork, activated at DAA score 474,165,565.</p>
-      <p>Rusty Kaspa v2.0.1 is the current Toccata release; v2.0.0 shipped the activation. Wallet support, indexer support, and app usage are still building: check <a href="/toccata-status">Toccata Status</a> for where each stands.</p>
+      <p>Rusty Kaspa v2.0.1 followed as the Toccata release; v2.0.0 shipped the activation. Wallet support, indexer support, and app usage are still building: check <a href="/toccata-status">Toccata Status</a> for where each stands.</p>
     </section>
 
     <section class="section">
@@ -171,14 +171,12 @@
       <p class="eyebrow">Sources</p>
       <h2>Sources for this origin page</h2>
       <ol class="source-list grid-cards">
-        <li><a href="https://kaspa.org/lore">Kaspa.org Lore</a> - the current public summary: fair launch, research line, Rust rewrite, Crescendo, Toccata, DAGKnight, and roadmap.</li>
-        <li><a href="https://kaspa.org/">Kaspa.org homepage</a> - the genesis proof behind no premine, no hidden allocation, and fair launch.</li>
         <li><a href="https://polychain.capital/">Polychain Capital homepage</a> - Polychain's own words: an investment firm for blockchain assets.</li>
         <li><a href="https://uk.investing.com/news/cryptocurrency-news/researcher-behind-ghost-protocol-launches-cryptocurrency-network-kaspa-2355728">Investing.com April 2021 launch article</a> - DAGLabs, the April 2021 testnet, no pre-mining at launch, and DeFi sequencing.</li>
         <li><a href="https://vcorem.medium.com/daglabs-just-released-its-kaspa-tesnet-b396481eb0c6">Guy Corem testnet note</a> - the April 2021 Kaspa testnet release and its Golang Phantom/GHOSTDAG framing.</li>
         <li><a href="https://epicenter.tv/episode/192-spectre-ghosts-radical-ideas-to-scale-blockchain-tech">Epicenter episode 192</a> - GHOST, SPECTRE, and blockDAG research talk with Aviv Zohar and Yonatan Sompolinsky, July 19, 2017.</li>
         <li><a href="https://www.youtube.com/live/W2vSNVz_GEQ">Rethink Trust 2018 interview</a> - video of a July 13, 2018 Yonatan Sompolinsky interview. The page says nothing about its content.</li>
-        <li><a href="https://www.kasmedia.com/article/dr-yonatan-sompolinsky-s-interview-with-uphold-s-head-of-research-dr-martin-heisboeck">Uphold Institutional interview recap</a> - sequencing, finance, MEV, the Rust build, and future ZK work.</li>
+        <li><a href="https://kasmagazine.com/article/dr-yonatan-sompolinsky-s-interview-with-uphold-s-head-of-research-dr-martin-heisboeck">Uphold Institutional interview recap</a> - sequencing, finance, MEV, the Rust build, and future ZK work.</li>
         <li><a href="https://hashd.ag/raw">Hashdag raw archive</a> - launch plan, ASIC and presale, gamenet, Black Tuesday, and Rust refactor notes from Yonatan Sompolinsky's archive.</li>
         <li><a href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">Kaspa launch plan: responding to reality</a> - community, governance, roadmap, and upkeep after launch.</li>
         <li><a href="https://hashdag.medium.com/kaspa-black-tuesday-8c7f4fa35834">Kaspa (Black Tuesday)</a> - the November 2021 crash and its UTXO commitment.</li>
