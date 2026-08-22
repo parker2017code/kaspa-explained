@@ -548,3 +548,83 @@ name).
   own finding that they are categorical or manual-recheck fields that
   change on a hard fork, a funding-report cadence, or a filing event, not
   something a daily RPC pull re-measures.
+
+## Task 6: target-in-disguise defect, same day, later pass (2026-08-22)
+
+The owner flagged a specific failure in Task 5's own output: Bitcoin's
+`block_time_s` came back exactly 600.0 (its target) and Polkadot's came back
+exactly 6.0 (its target), a coincidence a real 24-hour observation
+essentially never produces once, let alone twice in the same twenty-row
+pass. Polkadot was a confirmed case: the pass that produced it recorded in
+its own report that it measured 6.2 and wrote down 6.0. Bitcoin was
+suspected of the same substitution.
+
+**Bitcoin, re-measured.** Blockchair's `blocks_24h` field (144, used by
+Task 5) is itself a real block count, not a target, but dividing 86,400 by
+a rounded 24-hour block count risks exactly this kind of coincidental
+round number. Re-measured directly from block timestamps instead of a
+count field: mempool.space block heights 963476 and 963620 (144 real
+blocks apart), timestamps 1787336857 and 1787423387, elapsed 86,530
+seconds. 86,530 / 144 = **600.90 s**. Cross-checked against a second,
+independent source and a larger sample: mempool.space's own
+`timeAvg` metric (`/api/v1/difficulty-adjustment`), computed over the
+roughly 1,988 blocks since the current difficulty epoch began, reads
+606,720 ms = 606.72 s. Both readings sit a little above the 600 s target,
+which is exactly what a Poisson-arrival proof-of-work chain should show:
+genuine block arrival is randomly distributed around the target, not
+locked to it, and a several-thousand-block sample rarely lands within
+rounding distance of the constant itself.
+
+**Polkadot, re-measured.** Polkadot's relay chain does not expose block
+timestamps in `chain_getHeader`; the field carries no time value.
+Re-measured the way BNB Chain, Avalanche, and TRON were measured in Task
+5: wall-clock time against `chain_getHeader`'s block number, polled twice
+from `rpc.polkadot.io`. Start: block 32,669,163 at t=1787423966.69. End:
+block 32,669,240 at t=1787424430.52, 463.83 seconds later, 77 blocks
+produced. 463.83 / 77 = **6.024 s**. An intermediate checkpoint at 26
+blocks over 156.35 s (6.013 s/block) was consistent with the final figure
+and is not used separately. This lands close to but not on the 6 s slot
+target, consistent with the known behavior of BABE: not every 6-second
+slot produces a block (a validator can be offline or lose the VRF lottery
+for that slot), so the observed average runs a little above the nominal
+slot time. This also matches the flagged pass's own admission that it
+measured 6.2.
+
+**Every other chain's `block_time_s` was checked against its protocol's
+known nominal target.** None of the other eighteen sit exactly on one:
+
+| Chain | Recorded (2026-08-22) | Known nominal target | Verdict |
+|---|---|---|---|
+| Ethereum | 12.04 | 12 s | genuine, 0.3% off target |
+| Solana | 0.367 | 0.4 s slot | genuine, target is a ceiling not a lock |
+| BNB Chain | 0.45 | 0.45 s (current protocol parameter) | independently reconfirmed this pass: 3,000 real blocks via `bsc-dataseed.binance.org` timestamps (heights spanning 117,471,619 to 117,474,619), 0.4503 s/block. BSC's PoSA validators produce blocks on a deterministic schedule rather than a Poisson race, so a tight cluster around the target is expected behavior, not a substitution; the raw block-count method still reproduced it independently |
+| Cardano | 20.52 | 20 s | genuine, 2.6% off target |
+| Avalanche | 1.143 | no fixed round target | not applicable |
+| TRON | 3.006 | 3 s | genuine, 0.2% off target |
+| Sui, Aptos, TON, Near, Hedera, Internet Computer | various | no fixed round protocol constant | not applicable |
+| Algorand | 2.741 | ~2.8-3.7 s (adaptive, not a fixed constant) | genuine, below even the low end |
+| Litecoin | 148.45 | 150 s | genuine, 1% off target |
+| Monero | 120.43 | 120 s | closest of the eighteen to its target, still genuinely off it |
+| Bitcoin Cash | 526.83 | 600 s | genuine, 12% off target, no substitution risk |
+
+**Fields updated:** `data/l1-chains.json`, Bitcoin: `block_time_s` 600.0 to
+600.90; `emission_native_per_day` 478.1215 to 449.326 and
+`emission_usd_per_day` 36,841,653.24 to 34,622,815.78, recomputed from the
+corrected block time at the same $77,055 spot price Task 5 already used
+(these two fields are derived from block_time_s and would otherwise have
+gone stale against the corrected reading). Polkadot: `block_time_s` 6.0 to
+6.024. `chain-comparer.html`'s embedded blob was rebuilt from the JSON via
+`scripts/build-chain-data.py`. Both chains keep `block_time_s` in their
+`measured_2026_08_22` list; the figures are now genuine measurements
+rather than target substitutions, so the date they carry is accurate.
+
+**Standing rule, added to this file for the next pass:** before shipping
+any block-time or block-interval figure, check it against the protocol's
+known nominal target. A recorded value that equals the target exactly, or
+rounds to it at the precision being published, is a signal to re-derive
+the figure from raw block count and elapsed wall-clock or timestamp
+window by hand rather than trust a single aggregator field, especially
+one that divides by a pre-rounded block count over a fixed calendar
+window. This applies to any dated "measured" figure across the dataset,
+not just block time: a constant dressed as an observation is the specific
+failure this file exists to catch.
