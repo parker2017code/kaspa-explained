@@ -23,6 +23,11 @@ python3 scripts/build-sitemap.py --check
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-grid-spans.py
 python3 scripts/check-model-picker.py
+python3 scripts/check-benchmark-agreement.py --check >/dev/null || {
+  python3 scripts/check-benchmark-agreement.py --check >&2
+  echo "benchmark agreement claims in model-picker.html no longer match the data" >&2
+  exit 1
+}
 python3 scripts/check-prose.py --strict >/dev/null || { python3 scripts/check-prose.py >&2; echo "prose standard violations, see PROSE_STANDARD.md" >&2; exit 1; }
 
 # Reading grade, PROSE_STANDARD.md v2.0. Shared copy is held to grade 9; blocks
