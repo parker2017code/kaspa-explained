@@ -74,8 +74,13 @@ claims:
       - ZK makes TPS unlimited
   base_rtd:
     status: live_framing
-    summary: Kaspa.org now frames real-time decentralization as Kaspa's north star; Hashdag frames RTD first as Kaspa's real-time Bitcoin-style PoW value proposition.
-    source: https://kaspa.org/lore
+    summary: >
+      Hashdag (Yonatan Sompolinsky) frames real-time decentralization as Kaspa's core value
+      proposition in his own words: "Kaspa is real-time bitcoin, solving scalability is great
+      but not the core value prop... decentralizing each consensus round rather than chain
+      quality achieved through a coarse aggregate of rounds." Treat RTD as Hashdag's own framing
+      of the design goal, not a kaspa.org marketing claim being cited as protocol fact.
+    source: https://x.com/hashdag/status/2026991442506256843
   fair_launch_origin:
     status: narrative_guardrail
     summary: >
@@ -346,16 +351,15 @@ claims:
     recheck_after: 2026-08-31
     summary: >
       DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG.
-      Checked August 1, 2026 against kaspa.org/lore: the word parameterless does not appear on that page
-      at all, and adaptive appears exactly once, inside "hashrate-adaptive finality windows" in the
-      proposed 2027 section, so neither word can be sourced to that page as a DAGKnight descriptor. What
-      the page does say is that DAGKnight is "the only 49% BFT partially synchronous protocol (in the
-      oblivious setup)" with block times "targeted for the 40-25 millisecond range," and that DAGKnight
-      "already provides safety under netsplits" while not providing progress during one. Sourcing for
-      parameterless belongs to the DAGKnight paper, not kaspa.org. The rusty-kaspa dagknight branch is
-      prototype evidence and has been dormant since March 22, 2026; the raw KIP-2 file still reads Status:
-      Proposed. Activation needs release and network confirmation.
-    source: https://kaspa.org/lore
+      The parameterless descriptor belongs to the DAGKnight paper itself, "The DAG KNIGHT Protocol: A
+      Parameterless Generalization of Nakamoto Consensus" (Sompolinsky and Sutton, IACR ePrint 2022/1494):
+      DAGKnight removes the hardcoded k parameter and adapts to observed network conditions instead of a
+      fixed anticone bound. kaspa.org's marketing pages are not a source for this repo (see AGENTS.md);
+      checked August 1, 2026, kaspa.org/lore did not even use the word parameterless. KIP-2 (raw file,
+      Status: Proposed) matches the paper: no a priori hardcoded k, wallets should incorporate k into a
+      local confirmation policy. The rusty-kaspa dagknight branch is prototype evidence and has been
+      dormant since March 22, 2026. Activation needs release and network confirmation.
+    source: https://eprint.iacr.org/2022/1494
     supporting_source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - DAGKnight is live
@@ -363,8 +367,15 @@ claims:
   one_hundred_bps_partition_resilience:
     status: research
     recheck_after: 2026-09-07
-    summary: Kaspa.org/lore places 10 millisecond blocks and 100 BPS work in a proposed 2027 hard-fork bucket, and describes the aim as on-chain payment channels plus hashrate-adaptive finality windows so local payment flows survive broken internet conditions. Use the page's own word, netsplit-resilient; the word partition does not appear on it. Treat all of this as roadmap/research until specifications, code, releases, and activation evidence exist.
-    source: https://kaspa.org/lore
+    summary: >
+      Unverified. The 10 millisecond block / 100 BPS / netsplit-resilient figure traces only to
+      kaspa.org's marketing pages, which this repo does not use as a source (see AGENTS.md). No
+      independent source, KIP, paper, or core-contributor statement confirms this specific figure:
+      KIP-2, the DAGKnight consensus proposal itself, only says the optimal BPS is an open research
+      question with a recommendation still pending, and does not name 100 BPS or "netsplit-resilient."
+      Treat the 100 BPS / netsplit-resilience pairing as unconfirmed roadmap narrative until a KIP,
+      release, or core-contributor source states it directly.
+    source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - Kaspa is 100 BPS today
       - Partition-resilient payments are live
