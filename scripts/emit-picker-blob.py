@@ -30,37 +30,52 @@ PAGE = ROOT / "model-picker.html"
 # Every dial carries two or three figures. No dial carries one: a control built
 # on a single number is that number's leaderboard with a slider on it.
 METRICS = [
-    # Twenty figures, two per dial, chosen on measured spread across this
-    # roster rather than on reputation.
+    # Ten benchmarks, one per dial, all of them capability.
     #
-    # The test is how far apart the top five sit on each figure, on the honest
-    # scale. A figure where they land within a point or two cannot tell the
-    # leaders apart, and averaging it in mostly adds noise. What survived, by
-    # that spread: CritPt 31.8, ARC-AGI-2 21.2, Humanity's Last Exam 19.8,
-    # Omniscience accuracy 12.2, tokens per second 11.8, tau3-Banking 11.3.
-    # What went: output price at 0.4, time to first token at 0.3, total
-    # response at 0.9, the cache hit price at 1.4.
+    # Cost is not here on purpose. It is the horizontal axis of the value
+    # chart, so scoring it as a dial as well counted it twice: a cheap model
+    # got credit for being cheap in its score and then again in its position on
+    # the chart. Cost now appears once, where it belongs, as the price you pay
+    # for whatever the score says you get.
     #
-    # The cost of this rule, stated plainly because it is real: dropping the
-    # figures the field agrees on makes the field look further apart than it
-    # is. The honest scale was built to show how close these models actually
-    # are, and scoring only the figures that separate them pushes against that.
-    # It is the owner's call and it is deliberate.
+    # Speed is not here either. Across the roster the clocks barely separate
+    # anyone: time to first token splits the top five by 0.3 points on the
+    # honest scale and total response by 0.9, because every model shipping
+    # today is fast measured against the all-time floor. Tokens per second is
+    # the one exception at 11.9, and it is still a throughput number rather
+    # than a statement about whether the model can do the job.
     #
-    # LM Arena falls from ten figures to three, which is not a judgment about
-    # Arena. Elo compresses at the top by construction, so its boards land at
-    # the saturated end of this test almost uniformly.
-    "arcAgi2", "hle",
-    "aaCritpt", "lbMath",
-    "webdevArena", "lbCoding",
-    "tau3Banking", "lbAgenticCoding",
-    "gdpval", "lbDataAnalysis",
-    "lbInstructionFollowing", "arenaTextInstructionFollowing",
-    "omniAccuracy", "omniNonHallucination",
-    "arenaCreativeWriting", "lbLanguage",
-    "tokensPerSec", "aaFirstAnswer",
-    "aaCostPerTask", "lbCostPerSuccessTask",
+    # The ten are the widest-separating capability figures the four boards
+    # publish, by how far apart the top five sit on the honest scale:
+    #
+    #   CritPt                     24.9    physics at research level
+    #   ARC-AGI-2                  21.0    novel problems, human panel at 100
+    #   Humanity's Last Exam       17.0    closed-book, built to be hard
+    #   Omniscience accuracy       15.2    plain factual accuracy
+    #   LiveBench language          9.4    reading and understanding text
+    #   Non-hallucination rate      8.2    holding back instead of inventing
+    #   LiveBench coding            7.9    writing and completing code
+    #   LiveBench agentic coding    6.9    multi-step work with tools
+    #   LiveBench instr. following  6.9    sticking to the constraints given
+    #   LM Arena WebDev             6.5    live users pick the app that works
+    #
+    # All four boards are represented: four from Artificial Analysis, four from
+    # LiveBench, one from ARC Prize, one from LM Arena. The Arena leg is the
+    # only human judgment left on the page, which is why WebDev survives at
+    # 6.5 while several automated figures above it did not.
+    "hle",
+    "aaCritpt",
+    "arcAgi2",
+    "lbCoding",
+    "lbAgenticCoding",
+    "webdevArena",
+    "lbInstructionFollowing",
+    "omniAccuracy",
+    "omniNonHallucination",
+    "lbLanguage",
 ]
+
+
 
 # ARC-AGI-1 is read and used, and deliberately not scored. Its top five sit
 # within 2.0 points, the same saturation that took GPQA Diamond out, and it
@@ -323,18 +338,52 @@ COST_PENALTY = 8.0
 #
 # Pooled over all 26 families across both boards:
 #
-#   Artificial Analysis alone, 6 families    knee at 0.43
-#   ARC Prize alone, 20 families             knee at 0.53
-#   both pooled, 26 families                 knee at 0.43
+# Derived at runtime, and the honest uncertainty on it is wide.
 #
-# It captures 57.1 percent of everything the full climb to max effort buys, at
-# well under half the price span. It sits between medium, at 0.30, and high, at
-# 0.57, nearer to medium than the old value was.
+# derive_pooled_curve() fits the shape of the climb from every family on either
+# board that publishes three or more priced rungs, and derive_target_f() takes
+# the knee: the point of maximum distance below the straight chord joining the
+# cheapest rung to the dearest. The build FAILS if the shipped constant drifts
+# more than 0.06 from what the data gives, so it cannot go stale the way the
+# hardcoded constants did.
 #
-# Asked per family the knee lands anywhere from 0.01 to 0.99, median 0.48. That
-# spread is the argument for one pooled position rather than twenty-six fitted
-# ones, and it is wider than the old figures claimed.
-TARGET_F = 0.43
+# An independent sweep on 21 August, 108 configurations crossing capability
+# axis, metric pool, board subset, minimum rungs and minimum shared metrics,
+# with a 4000-sample bootstrap over families, found:
+#
+#   Artificial Analysis alone, 6 families with real 3+ priced rungs:
+#     knee at 0.30, and INVARIANT across all three capability axes and both
+#     metric pools. Bootstrap 95 percent interval 0.20 to 0.40.
+#   ARC Prize alone, 20 families: knee unstable between 0.30 and 0.70, because
+#     those curves are close to straight. Chord lift only 0.06 to 0.13.
+#   Both pooled, as this pipeline does: 0.40.
+#
+# 0.40 is what the runtime derivation gives and it sits at the top of the
+# measured interval, so that is what ships. But the interval is 0.20 to 0.40,
+# roughly a fifth of the whole scale, on six families. This is the thinnest
+# constant on the page and the page should say so rather than imply precision.
+#
+# THREE THINGS THIS SWEEP KILLED, recorded so none is tried again.
+#
+# The flat-tail test is not merely fragile, it is not identified. It fails to
+# find any genuine flat tail in 13 percent of Artificial Analysis bootstrap
+# resamples, 59 percent of pooled, and 88.5 percent of ARC. Read naively it
+# returns roughly 0.001 on AA data, because two families show NEGATIVE
+# normalized capability at their second-cheapest rung, so a curve that dips
+# before it climbs satisfies "within a tenth of the tail" on the first sample.
+# The earlier 0.75 reading was the same test failing in the other direction.
+#
+# ARC does not show diminishing returns at all across its published range. Its
+# families keep buying capability to the top rung. That is a real finding about
+# ARC-AGI-2 as a benchmark, not a defect, and it is why ARC pulls the pooled
+# knee upward and widens the interval rather than tightening it.
+#
+# The apparent stability of the old 0.60 came from the LiveBench merge and from
+# rungs whose prices this pipeline imputes from latency at a median error near
+# 20 percent. On measured price and capability pairs alone the answer is
+# materially lower. A constant should not draw its confidence from data the
+# pipeline manufactured.
+TARGET_F = 0.40
 
 # Where each label falls on its own model's price span, pooled across the
 # families that publish a full ladder. Used only to place a model that
@@ -1092,6 +1141,57 @@ def _load_corpus(require_price):
                                  EFFORT_ORDER_BASE[r["variant"]]))
         out[name] = recs
     return out
+
+
+def load_anchor_corpus(_cache={}):
+    """Every family/variant on the full AA status board, keeping Intelligence
+    Index and (folded in from LiveBench) Overall as board-overall anchors.
+
+    load_ladder_corpus_all keeps only families with two or more effort
+    settings, which is right for fitting a ladder and wrong here: an anchor
+    should reach every model its board publishes, including the ones AA only
+    ever measured once. So this reads the same file with that filter removed.
+    """
+    if "v" in _cache:
+        return _cache["v"]
+    fams = {}
+    if LADDER_CORPUS.exists():
+        lines = [l for l in LADDER_CORPUS.read_text(encoding="utf-8").splitlines()
+                 if l.startswith("| ")]
+        if len(lines) >= 3:
+            header = [c.strip() for c in lines[0].strip("|").split("|")]
+            for line in lines[2:]:
+                cells = [c.strip() for c in line.strip("|").split("|")]
+                if len(cells) != len(header):
+                    continue
+                row = dict(zip(header, cells))
+                variant = row.get("Effort Setting", "").strip()
+                if variant not in EFFORT_ORDER_BASE:
+                    continue
+                name = re.sub(
+                    r"\s*\((?:low|medium|high|xhigh|max|minimal|"
+                    r"Non-reasoning[^)]*|with fallback)\)\s*$",
+                    "", row.get("Model", "")).strip()
+                if not name:
+                    continue
+                rec = {"variant": variant}
+                ii = corpus_number(row.get("Intelligence Index"))
+                if ii is not None:
+                    rec["aaIntelligenceIndex"] = ii
+                fams.setdefault(name, []).append(rec)
+    _lb = load_livebench_rungs()
+    for fam, recs in fams.items():
+        key = lb_norm(fam)
+        for r in recs:
+            hit = _lb.get((key, tier_of(r.get("variant")) or ""))
+            if hit is None:
+                hit = _lb.get((key, (r.get("variant") or "").lower()))
+            if hit is None:
+                hit = _lb.get((key, None))
+            if hit and "lbOverall" in hit:
+                r["lbOverall"] = hit["lbOverall"]
+    _cache["v"] = fams
+    return fams
 
 
 # One ladder, not two. The vocabulary changed and the thing did not.
@@ -2059,6 +2159,24 @@ def main():
             val = r.get(metric)
             if val and val > 0:
                 by_var[var] = math.log2(val)
+        # ARC too, and only when nothing above supplied a curve at all.
+        #
+        # Without this the ARC ladder work was half wired: own_curve() placed a
+        # model by its ARC rungs and to_target() derived a real price multiplier
+        # from them, and then raw_factor() came here, found nothing, and fell
+        # back to the pooled elasticity of 3.92. Six models were being moved on
+        # a board-wide average while the page reported them as moved on their
+        # own curve. The multiplier disagreed by up to 30 percent.
+        #
+        # One board or the other, never a blend, so ARC is consulted only when
+        # the roster and the AA ladder between them gave fewer than two rungs.
+        # These values are read as a difference and exponentiated, so ARC's own
+        # dollars never need to be comparable to anyone else's.
+        if len(by_var) < 2:
+            for var, r in (ARC_LADDER.get(name) or {}).items():
+                val = r.get(metric)
+                if val and val > 0:
+                    by_var[var] = math.log2(val)
         pts = [(c[0], by_var[c[3]]) for c in curve if c[3] in by_var]
         return pts if len(pts) >= 2 else None
 
@@ -2131,16 +2249,39 @@ def main():
         if len(_by) >= 2:
             BOARD_LADDER[_name] = _by
 
+    ARC_LADDER = {}
+    for _n, _recs in load_arc().items():
+        _by = {r["variant"]: r for r in _recs
+               if r.get("variant") in EFFORT_ORDER and r.get("aaCostPerTask")}
+        if len(_by) >= 2:
+            ARC_LADDER[_n] = _by
+
     def board_priced(name):
-        """That model's priced settings from the board, cheapest first."""
+        """That model's priced settings, cheapest first.
+
+        Artificial Analysis first, ARC Prize when AA does not carry two priced
+        rungs for this model.
+
+        Mixing the two boards' dollars would be wrong: ARC prices its own task
+        suite and the absolute figures are not comparable. Nothing here needs
+        them to be. A ladder uses the position of each rung along the model's
+        own log-price span, which is normalized to 0 at its cheapest and 1 at
+        its dearest, and the move to the operating point is a RATIO of two
+        prices on that same ladder. Both are scale free, so a ladder built
+        entirely from ARC prices is as valid as one built from AA prices. What
+        would break is taking one rung from each, so a model uses one board or
+        the other and never a blend of both.
+        """
         by = BOARD_LADDER.get(name)
-        if not by:
-            return None
-        pts = [(v, r) for v, r in by.items() if r.get("aaCostPerTask")]
-        if len(pts) < 2:
-            return None
-        pts.sort(key=lambda x: x[1]["aaCostPerTask"])
-        return pts
+        pts = [(v, r) for v, r in (by or {}).items() if r.get("aaCostPerTask")]
+        if len(pts) >= 2:
+            pts.sort(key=lambda x: x[1]["aaCostPerTask"])
+            return pts
+        arc = ARC_LADDER.get(name)
+        if arc and len(arc) >= 2:
+            pts = sorted(arc.items(), key=lambda x: x[1]["aaCostPerTask"])
+            return pts
+        return None
 
     def own_curve(name):
         """A model's own ladder: [(f, capability, log2 price)], cheapest first.
@@ -2203,6 +2344,128 @@ def main():
                 t = (f - x0) / (x1 - x0)
                 return curve[i][idx] + t * (curve[i + 1][idx] - curve[i][idx])
         return curve[-1][idx]
+
+    # Capability columns available for fitting the pooled curve. Wider than
+    # METRICS on purpose: the boards publish more than the page scores, and an
+    # instrument should use everything it can see.
+    CURVE_METRICS = [m for m in sorted(set(list(CORPUS_COLUMNS.values())
+                                           + ["arcAgi1", "arcAgi2"]))
+                     if m not in NO_IMPUTE
+                     and m in d["metrics"]
+                     and d["metrics"][m].get("unit") in ("%", "pts")
+                     and m not in ("aaIntelligenceIndex",
+                                   "aaOmniscienceIndex")]
+
+    def derive_pooled_curve():
+        """The shape of the capability climb, fitted from every family that
+        publishes a ladder, on both boards.
+
+        POOLED_CURVE was an eleven point table written by hand against the six
+        Artificial Analysis families that publish three or more priced rungs.
+        Every model without a curve of its own is moved along it, so it is one
+        of the most load bearing numbers here and it was the least checked. ARC
+        Prize prices every rung it scores, which takes the pool from six
+        families to twenty six.
+
+        Each family is normalized twice before pooling, which is what makes
+        boards with different dollars and different benchmarks comparable:
+        position along its own log price span, 0 at its cheapest rung and 1 at
+        its dearest, and capability as a fraction of its own cheapest to
+        dearest gain. Both axes are then scale free, so an ARC family and an
+        Artificial Analysis family contribute the same kind of number.
+
+        Falls back to the hand table if the data ever fails to produce a
+        rising curve, and says so rather than failing silently.
+        """
+        curves = []
+        for _name in set(list(BOARD_LADDER) + list(ARC_LADDER)):
+            bp = board_priced(_name)
+            if not bp or len(bp) < 3:
+                continue
+            # Every capability column the boards publish, not just the ten
+            # the dials score. This curve is an instrument for moving a model
+            # along its ladder, not a score, so narrowing it to the scored set
+            # throws away evidence for no reason. Cutting the scored set to ten
+            # dropped the pooled curve to a near straight line, knee lift 0.05,
+            # which is the shape of having too few shared figures rather than
+            # the shape of how capability responds to price.
+            core = [m for m in CURVE_METRICS
+                    if all(r.get(m) is not None for _, r in bp)]
+            if len(core) < 3:
+                continue
+            pts = []
+            for var, r in bp:
+                # Honest scale, not percentile. A percentile is a rank, and
+                # ranks distort the shape of a curve: two rungs a point apart
+                # in score can be twenty percentile points apart if the board
+                # is crowded there. The knee is a statement about the shape,
+                # so it has to be measured on a scale that is linear in the
+                # underlying score. Read on percentiles this same pool puts
+                # the knee at 0.60; read honestly it is 0.43.
+                vals = [honest(m, r[m]) for m in core]
+                vals = [x for x in vals if x is not None]
+                if not vals:
+                    pts = []
+                    break
+                pts.append((math.log2(r["aaCostPerTask"]),
+                            sum(vals) / len(vals)))
+            if not pts:
+                continue
+            pts.sort()
+            x0, x1 = pts[0][0], pts[-1][0]
+            y0, y1 = pts[0][1], pts[-1][1]
+            if x1 <= x0 or y1 <= y0:
+                continue
+            curves.append([((x - x0) / (x1 - x0), (y - y0) / (y1 - y0))
+                           for x, y in pts])
+        if len(curves) < 6:
+            print(f"pooled curve: only {len(curves)} usable ladders, "
+                  f"keeping the hand table")
+            return POOLED_CURVE, len(curves)
+
+        def at(c, f):
+            if f <= c[0][0]:
+                return c[0][1]
+            if f >= c[-1][0]:
+                return c[-1][1]
+            for a, b in zip(c, c[1:]):
+                if a[0] <= f <= b[0]:
+                    if b[0] == a[0]:
+                        return a[1]
+                    return a[1] + (b[1] - a[1]) * (f - a[0]) / (b[0] - a[0])
+            return c[-1][1]
+
+        out = [(i / 10.0, round(statistics.mean(at(c, i / 10.0)
+                                                for c in curves), 4))
+               for i in range(11)]
+        return out, len(curves)
+
+    def derive_target_f(curve):
+        """Where diminishing returns set in, as the knee of that curve.
+
+        The knee is the point of maximum distance below the straight chord from
+        the cheapest rung to the dearest. It is defined whether or not returns
+        ever go flat, which the older test was not: it hunted for a flat tail,
+        and on ARC the returns keep falling to the top rung and never flatten,
+        so that test returned the end of the curve instead of a knee.
+        """
+        best = (-9.0, TARGET_F)
+        for i in range(1, 100):
+            f = i / 100.0
+            d = interp([(x, y, 0, None) for x, y in curve], f, 1) - f
+            if d > best[0]:
+                best = (d, f)
+        return round(best[1], 2), best[0]
+
+    POOLED_CURVE, _n_ladders = derive_pooled_curve()
+    _derived_f, _knee_lift = derive_target_f(POOLED_CURVE)
+    print(f"pooled capability curve fitted on {_n_ladders} ladders across both "
+          f"boards; knee at f={_derived_f:.2f} (lift {_knee_lift:.2f} over the "
+          f"chord), shipping TARGET_F={TARGET_F}")
+    if abs(_derived_f - TARGET_F) > 0.06:
+        sys.exit(f"TARGET_F={TARGET_F} no longer matches the knee the data "
+                 f"gives ({_derived_f:.2f}). Re-derive it rather than shipping "
+                 f"a constant the evidence has moved away from.")
 
     def pooled_cap_frac(f):
         return interp([(x, y, 0, None) for x, y in POOLED_CURVE], f, 1)
@@ -2564,6 +2827,246 @@ def main():
         resid = [b - (slope * a + intercept) for a, b in zip(xs, ys)]
         return r, slope, intercept, statistics.pstdev(resid) if len(resid) > 1 else 0.0
 
+    def loo_r2(xs, ys):
+        """Leave-one-model-out r squared for a straight line fit.
+
+        In-sample r squared always looks better than a model deserves once
+        the number of candidate predictors gets close to the number of
+        models, which is exactly this roster's problem. Refitting the line
+        with each point held out and scoring the held-out miss is the honest
+        number: it can go negative, and it should, when the line is not
+        actually predicting anything.
+        """
+        n = len(xs)
+        if n < 5:
+            return None
+        base_var = statistics.pvariance(ys)
+        if base_var <= 0:
+            return None
+        sq_err = 0.0
+        for i in range(n):
+            xs_i = xs[:i] + xs[i + 1:]
+            ys_i = ys[:i] + ys[i + 1:]
+            _, slope, intercept, _ = pearson(xs_i, ys_i)
+            sq_err += (slope * xs[i] + intercept - ys[i]) ** 2
+        return 1.0 - (sq_err / n) / base_var
+
+    # ------------------------------------------------------------------
+    # Board-overall anchored imputation.
+    #
+    # A figure predicted from many correlated donors overfits at 21 models:
+    # median leave-one-model-out r squared from a ridge fit over every donor
+    # is 0.26, against 0.43 from the single best predictor. The measured
+    # reason a figure's own board overall is usually that best predictor is
+    # that the overall is a composite built from the very categories this
+    # step is filling in.
+    #
+    # Four overalls are read here, never as scored figures: AA Intelligence
+    # Index, LiveBench Overall, LM Arena Text Overall, and ARC-AGI-2 (already
+    # a scored figure elsewhere on this page, so it anchors everything except
+    # itself).
+    _anchor_corpus = load_anchor_corpus()
+
+    def _nearest_anchor_variant(records, want_variant):
+        """The record for the effort tier this row was measured at, or the
+        closest tier the anchor board actually published."""
+        if not records:
+            return None
+        want_tier = tier_of(want_variant)
+        exact = [r for r in records if tier_of(r.get("variant")) == want_tier]
+        if exact:
+            return exact[0]
+        want_rank = EFFORT_ORDER_BASE.get(want_variant, 3)
+        return min(records,
+                   key=lambda r: abs(EFFORT_ORDER_BASE.get(r.get("variant"), 3) - want_rank))
+
+    _arena_overall_path = ROOT / "data" / "arena-categories-style-control-on-2026-08-20.md"
+    _arena_overall = {}
+    if _arena_overall_path.exists():
+        _ov_txt = _arena_overall_path.read_text(encoding="utf-8")
+        _ov_m = re.search(r"## Overall \(Style Control ON.*?\n(.*?)(?=\n## |\Z)",
+                          _ov_txt, re.S)
+        if _ov_m:
+            for _ln in _ov_m.group(1).splitlines():
+                _c = [x.strip() for x in _ln.strip("|").split("|")]
+                if len(_c) >= 5 and _c[0].isdigit():
+                    _val = corpus_number(_c[2])
+                    if _val is None:
+                        continue
+                    # Same de-parenthesizing as the other Arena category
+                    # table above, so "muse-spark-1.2 (xHigh)" matches the
+                    # slug style_slug() returns for our roster.
+                    _slug = re.sub(r"\s*\([^)]*\)\s*$", "", _c[1]).strip().lower()
+                    _arena_overall[_slug] = _val
+
+    ANCHOR_VALS = {}
+    _anchor_hits = {"aaIntelligenceIndex": 0, "lbOverall": 0,
+                     "arenaTextOverall": 0, "arcAgi2": 0}
+    for key, v in inc.items():
+        a = {}
+        recs = _anchor_corpus.get(v["name"])
+        pick = _nearest_anchor_variant(recs, v.get("variant")) if recs else None
+        if pick and "aaIntelligenceIndex" in pick:
+            a["aaIntelligenceIndex"] = pick["aaIntelligenceIndex"]
+        if pick and "lbOverall" in pick:
+            a["lbOverall"] = pick["lbOverall"]
+        _slug = style_slug(v["name"], v.get("variant"))
+        _slug = re.sub(r"\s*\([^)]*\)\s*$", "", _slug or "").strip().lower()
+        if _slug in _arena_overall:
+            a["arenaTextOverall"] = _arena_overall[_slug]
+        if "arcAgi2" in v["raw"]:
+            a["arcAgi2"] = v["raw"]["arcAgi2"]["value"]
+        for _k in a:
+            _anchor_hits[_k] += 1
+        ANCHOR_VALS[key] = a
+
+    print("anchor match rate: " +
+          ", ".join(f"{name}={_anchor_hits[name]}/{len(inc)}"
+                    for name in ("aaIntelligenceIndex", "lbOverall",
+                                 "arenaTextOverall", "arcAgi2")))
+
+    # Circularity check. LiveBench publishes Overall alongside its seven
+    # category scores; if Overall is the unweighted mean of those seven, using
+    # it whole to predict one of the categories is partly predicting a number
+    # from itself, and the honest fix is to subtract that category back out
+    # before anchoring on it.
+    _lb_circular = False
+    if LIVEBENCH_LADDER.exists():
+        _lb_devs = []
+        for _line in LIVEBENCH_LADDER.read_text(encoding="utf-8").splitlines():
+            if "|" not in _line or _line.startswith("#"):
+                continue
+            _cells = [c.strip() for c in _line.split("|")]
+            if len(_cells) < 10:
+                continue
+            _lb_vals = [corpus_number(c) for c in _cells[1:10]]
+            if any(x is None for x in _lb_vals[:8]):
+                continue
+            _mean_cats = sum(_lb_vals[1:8]) / 7
+            _lb_devs.append(abs(_lb_vals[0] - _mean_cats))
+        if _lb_devs:
+            _max_dev = max(_lb_devs)
+            if _max_dev < 0.1:
+                _lb_circular = True
+                print(f"circularity check: LiveBench Overall is the "
+                      f"unweighted mean of its seven categories (max "
+                      f"deviation {_max_dev:.3f} over {len(_lb_devs)} rows). "
+                      f"LiveBench category anchors subtract the target "
+                      f"category back out before use.")
+            else:
+                print(f"circularity check: LiveBench Overall is not a "
+                      f"literal mean of its categories (max deviation "
+                      f"{_max_dev:.3f}); used as published.")
+
+    # Which raw LiveBench column backs each scored LiveBench category, so it
+    # can be subtracted out of Overall before Overall anchors that category.
+    LB_CATEGORY_COL = {"lbCoding": "lbCodingRaw",
+                        "lbAgenticCoding": "lbAgenticRaw",
+                        "lbInstructionFollowing": "lbIfRaw",
+                        "lbLanguage": "lbLangRaw"}
+
+    def _lb_overall_excluding(key, target):
+        col = LB_CATEGORY_COL.get(target)
+        recs = _anchor_corpus.get(inc[key]["name"])
+        pick = _nearest_anchor_variant(recs, inc[key].get("variant")) if recs else None
+        if pick is None or col is None or col not in pick or "lbOverall" not in pick:
+            return ANCHOR_VALS.get(key, {}).get("lbOverall")
+        return (pick["lbOverall"] * 7 - pick[col]) / 6
+
+    # Artificial Analysis figures that the Intelligence Index is built from.
+    #
+    # Same circularity the LiveBench Overall fix already handles, missed on this
+    # board because the index is opaque rather than an obvious mean. It is not
+    # opaque enough: against a plain average of eleven of its own components it
+    # correlates at r squared 0.975 over 68 rows. Anchoring an Artificial
+    # Analysis benchmark on the index is predicting a number partly from itself.
+    #
+    # LiveBench Overall can be corrected by subtraction because its weights are
+    # known, an equal seventh each. The index publishes no weights, so there is
+    # nothing to subtract and the only honest move is to refuse it for these
+    # targets. It stays available for LiveBench, Arena and ARC figures, which
+    # are genuinely separate instruments.
+    AA_INDEX_COMPONENTS = {
+        "hle", "aaGpqaDiamond", "scicode", "aaCritpt", "aaTbHard", "aaTbv2",
+        "tau3Banking", "aaLcr", "aaMmmuPro", "aaIfbench", "gdpval",
+        "aaTau2Telecom", "omniAccuracy", "omniNonHallucination",
+    }
+
+    def anchor_value(key, anchor, target):
+        if _lb_circular and anchor == "lbOverall" and target in LB_CATEGORY_COL:
+            return _lb_overall_excluding(key, target)
+        return ANCHOR_VALS.get(key, {}).get(anchor)
+
+    def anchor_allowed(anchor, target):
+        if anchor == "aaIntelligenceIndex" and target in AA_INDEX_COMPONENTS:
+            return False
+        return True
+
+    ANCHOR_NAMES = ["aaIntelligenceIndex", "lbOverall", "arenaTextOverall", "arcAgi2"]
+    ANCHOR_MIN_PAIRS = 8
+    ANCHOR_MIN_HELD_OUT_R2 = 0.3
+
+    ANCHOR_FIT = {}
+    for _target in METRICS:
+        if _target in NO_IMPUTE:
+            continue
+        _candidates = []
+        for _anchor in ANCHOR_NAMES:
+            if _anchor == _target or not anchor_allowed(_anchor, _target):
+                continue
+            _pairs = []
+            for _key in inc:
+                if _target not in pv.get(_key, {}):
+                    continue
+                _av = anchor_value(_key, _anchor, _target)
+                if _av is None:
+                    continue
+                _pairs.append((_av, pv[_key][_target]))
+            if len(_pairs) < ANCHOR_MIN_PAIRS:
+                continue
+            _xs = [a for a, _ in _pairs]
+            _ys = [b for _, b in _pairs]
+            _r2 = loo_r2(_xs, _ys)
+            if _r2 is None:
+                continue
+            _r, _slope, _intercept, _rsd = pearson(_xs, _ys)
+            _candidates.append({"anchor": _anchor, "slope": _slope, "b": _intercept,
+                                 "rsd": _rsd, "r2_loo": _r2, "n": len(_pairs), "r": _r})
+        if not _candidates:
+            continue
+        _candidates.sort(key=lambda c: -c["r2_loo"])
+        _best = _candidates[0]
+        _summary = ", ".join(f"{c['anchor']}={c['r2_loo']:.3f}" for c in _candidates)
+        if _best["r2_loo"] >= ANCHOR_MIN_HELD_OUT_R2:
+            ANCHOR_FIT[_target] = _best
+            print(f"anchor for {_target}: {_summary} -> using "
+                  f"{_best['anchor']} (held-out r2={_best['r2_loo']:.3f}, "
+                  f"n={_best['n']})")
+        else:
+            print(f"anchor for {_target}: {_summary} -> none clears "
+                  f"{ANCHOR_MIN_HELD_OUT_R2}, falls back to donor impute()")
+
+    _anchor_fill_counts = {}
+
+    def anchor_impute(target, key):
+        """Predict a figure from its best-scoring board-overall anchor.
+
+        Only called when that anchor cleared the held-out bar above. Returns
+        the same (value, declared interval) shape impute() does, using the
+        fit's residual standard deviation as the interval so an anchored
+        figure carries an error bar in the same units as everything else.
+        """
+        fit = ANCHOR_FIT.get(target)
+        if fit is None:
+            return None
+        av = anchor_value(key, fit["anchor"], target)
+        if av is None:
+            return None
+        pred = fit["slope"] * av + fit["b"]
+        _anchor_fill_counts.setdefault(target, {}).setdefault(fit["anchor"], 0)
+        _anchor_fill_counts[target][fit["anchor"]] += 1
+        return max(0.0, min(100.0, pred)), round(fit["rsd"], 2)
+
     # Every metric pair, fitted once over every published setting. Computing
     # this per model would refit the same line 21 times.
     LINK = {}
@@ -2719,8 +3222,18 @@ def main():
         # Pass two: whatever is still missing, predicted from the figures this
         # row now has. Runs after the sibling pass so the predictors include
         # everything the model's own settings could supply.
+        #
+        # A board-overall anchor is tried first, since it is usually the
+        # better single predictor for the reason above. The multi-donor
+        # impute() below remains the fallback for anything the anchor bar
+        # refused, or that this particular model's anchor board never saw.
         for m in METRICS:
             if m in val:
+                continue
+            got = anchor_impute(m, key)
+            if got is not None:
+                val[m], sd[m] = got
+                kind[m] = "anchored"
                 continue
             got = impute(m, val)
             # An imputed figure is predicted from figures already moved to the
@@ -2831,6 +3344,14 @@ def main():
         if has_ci:
             row["ci"] = ci
         rows.append(row)
+
+    if _anchor_fill_counts:
+        _total = sum(sum(by_anchor.values()) for by_anchor in _anchor_fill_counts.values())
+        print(f"anchor-filled cells: {_total} total")
+        for _m, _by_anchor in _anchor_fill_counts.items():
+            _fit = ANCHOR_FIT.get(_m, {})
+            _detail = ", ".join(f"{a}={n}" for a, n in _by_anchor.items())
+            print(f"  {_m}: {_detail} (held-out r2={_fit.get('r2_loo', 0):.3f})")
 
     note = (
         f"Artificial Analysis, LiveBench 2026-06-25, LM Arena and ARC Prize, read 20 and "

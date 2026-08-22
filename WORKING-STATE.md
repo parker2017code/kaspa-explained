@@ -1,5 +1,89 @@
 # kaspa explained working state
 
+
+## STOP. Read this first, 21 August 2026, mid-change.
+
+**The build does not currently run.** `python3 scripts/emit-picker-blob.py` exits
+with: `TARGET_F=0.6 no longer matches the knee the data gives (0.40)`. That is a
+guard working as designed, not a crash to patch around. Do not delete the guard.
+Do not bump TARGET_F to silence it. The number is unsettled and an
+agent is measuring it.
+
+Last commit is `ee06bf2`, pushed and deployed. Everything below is uncommitted
+working-tree state on top of it. The live site still serves the 20-figure page,
+which is coherent. The working tree is mid-surgery and is not.
+
+### What changed in the working tree since ee06bf2
+
+1. **Scored set cut from 20 figures to 10, one per dial, all capability.**
+   hle, aaCritpt, arcAgi2, lbCoding, lbAgenticCoding, webdevArena,
+   lbInstructionFollowing, omniAccuracy, omniNonHallucination, lbLanguage.
+   Chosen by top-five spread on the honest scale. All four boards represented.
+
+2. **Cost is no longer scored at all.** It is the horizontal axis of the value
+   chart only. This ends a real double count: a cheap model previously earned
+   credit in its score and again in its chart position. VERIFY the `cost` field
+   still populates for every model now that aaCostPerTask is not in METRICS. If
+   it does not, the chart loses its x axis.
+
+3. **Speed is no longer scored.** On the honest scale time to first token
+   separates the top five by 0.3 points and total response by 0.9.
+
+4. **ARC Prize is wired into the price ladders**, not just scored. `board_priced()`
+   falls back to `ARC_LADDER` when Artificial Analysis has fewer than two priced
+   rungs. Models on their own measured price curve went from 7 to 13 of 21.
+   A model uses one board or the other, never a blend, because ARC prices its own
+   suite. Position along a model's own span and the ratio between two of its rungs
+   are both scale free, which is all a ladder uses.
+
+5. **POOLED_CURVE and TARGET_F are now derived at runtime** by
+   `derive_pooled_curve()` and `derive_target_f()`, with a build-failing guard at
+   0.06 tolerance. This is the anti-staleness pattern and it immediately earned
+   its keep.
+
+### THE OPEN PROBLEM: the knee is not stable
+
+Same data, five answers, depending on choices that looked incidental:
+
+    0.75  flat-tail test, ARC included. WRONG: ARC returns never flatten, so
+          "first point within a tenth of the tail" returns the end of the curve.
+    0.43  scratch pass, capability as mean of raw benchmark columns, 26 families
+    0.60  runtime, capability as honest scale over 20 scored figures, 20 ladders
+    0.30  runtime, same but over 10 scored figures
+    0.40  runtime, wider metric pool, 8 usable ladders, knee lift only 0.12
+
+A lift near zero means the curve is nearly straight and NO point is a knee. If
+the robustness sweep finds the curve is effectively straight, the honest
+conclusion is that the whole "one common operating point" framing needs
+rethinking, not a better number. Do not paper over that.
+
+### Agents in flight at compaction
+
+- Operating point robustness sweep. Two knee definitions crossed with capability
+  axis, metric pool, board subset, minimum rungs, minimum shared metrics, plus a
+  bootstrap interval. This decides TARGET_F.
+- Board-overall anchored estimation. Fill a missing figure from its OWN board's
+  overall: LiveBench Overall, AA Intelligence Index, LM Arena Text Overall,
+  ARC-AGI-2. Reports r, r squared, the fitted equation, residual sd and
+  leave-one-out error per pair. WATCH FOR CIRCULARITY: if LiveBench Overall is
+  the mean of its seven categories, predicting a category from it partly
+  predicts a number from itself, and the r values need correcting down.
+- Dial restructure in model-picker.html to ten single-figure dials, removing the
+  `cheap` and `fast` dial keys from DIALS, DEFAULTS, the why map and all ten job
+  presets.
+- ARC ladder normalization audit.
+
+### Standing facts that did not change
+
+- Median out-of-sample R squared predicting each figure from the others is 0.26,
+  and PC1 carries 32.8 percent. These benchmarks are NOT redundant. One figure
+  per dial means no second reading catches a bad one. The owner chose that
+  tradeoff deliberately; the page should say so rather than imply otherwise.
+- Error bars are emitted on the honest scale, converted through the same
+  transform the value takes. MC_RUNS is 4000.
+- ARC-AGI-1 is read and deliberately not scored: top five within 2.0 points,
+  r=0.920 with ARC-AGI-2. Kept as ladder evidence.
+
 ## START HERE ON A FRESH SESSION
 
 The owner pastes this file in at the start of every session. Do these in order, before any building.
