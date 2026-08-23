@@ -514,3 +514,43 @@ Note on why this was missed for so long: every one of these reads as
 ordinary vocabulary to anyone who already knows the subject. That is
 exactly the population writing and reviewing the site, which is why a
 cold reader with no Kaspa knowledge has to be the one who checks.
+
+## The adversarial pass, still never run to completion
+
+Recorded here as well as in HANDOFF.md because it keeps getting deferred
+and then forgotten. It is the last thing before the site can be called
+done, and it runs only after everything else is green, by agents that
+built none of what they are attacking.
+
+Four jobs, and no agent gets its own work:
+
+- Break it. Drag every control to both limits and past them. Empty input,
+  absurd input, rapid clicking, double submit, back button mid
+  interaction, reload mid state, deep link into a fragment, disable
+  JavaScript, kill the network mid fetch. A wrong number, a stuck state,
+  or a blank panel is a defect.
+- Misunderstand it. Read every page as a newcomer with no Kaspa
+  vocabulary, then again as a hostile skeptic hunting for a claim to
+  catch out. Every place the two readers disagree is a defect, as is
+  every sentence either has to read twice. A page that can be honestly
+  misread is a defect even when every sentence is true.
+- Check it. Every number, date, quotation and claim against its primary
+  source, never against another page of this site. Every quotation
+  verbatim. Every invented example labeled as invented. Every live figure
+  read live by browser fetch on this origin, never curl.
+- Cross-read it. One concept, one name, one phrasing, everywhere. Two
+  pages teaching the same mechanism in different words is a defect, and
+  so is a demo whose voice does not match the guide that links to it.
+
+Every finding gets fixed and re-checked by a different agent than the one
+that found it.
+
+Two previous attempts produced false reports of sitewide breakage, both
+caused by browser contention between agents sharing one browser, and both
+disproven by measurement. Any finding must carry `location.href` captured
+in the same evaluation as the measurement.
+
+This pass matters more after the demo merge than before it, because
+eighteen demos just moved into pages they were never written for, and the
+voice mismatch between a demo and its host page is exactly what
+cross-reading is for.

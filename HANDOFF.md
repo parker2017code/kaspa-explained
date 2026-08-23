@@ -366,3 +366,84 @@ Checking a premise is right; checking it in the wrong directory produces
 a confident wrong answer, which is worse than no answer.
 
 Remove the worktree once nothing depends on it.
+
+## State at 23 August 2026, after the demo merge deploy
+
+Live at `3717fbc`, verified on kaspaexplained.com rather than locally: 77
+files, 11,287 insertions against 16,759 deletions. The clean-clone gate
+passed, which is the one that has lied before.
+
+### What changed structurally
+
+Every demo used to exist twice, as a page under `demos/` and again as an
+iframe on a topic page. All 18 are now inline in the page whose claim they
+back, and every old demo URL is a redirect stub pointing at that page's
+anchor. `demos/` is a component library, not a set of destinations. The
+full reasoning, mapping and risk analysis is in `PLAN-DEMO-MERGE.md`.
+
+The embed machinery is deleted rather than adapted. A demo used to set
+`data-embedded` pre-paint from `window.self !== window.top` and hide its
+own chrome off that, with `?preview=1` for card previews. None of that has
+a job once nothing is standalone.
+
+Weight was the point. `what-is-kaspa` loaded five documents at 198KB and
+now loads one at 149KB. The demos index was 3.2MB across 77 requests and
+is now 243KB across 4. Every iframe had been re-fetching the whole site's
+stylesheet, scripts and favicons so one widget could render.
+
+Retired to stubs: `toccata-explained`, `toccata-status`, `about`. Toccata
+activated on mainnet on 30 June 2026, so a page named after the upgrade
+was a page organized around a release. `about`'s entire substance was one
+line, that the maintainer may hold KAS, now in every footer.
+
+### The lesson worth carrying: inlining exposed code no linter had seen
+
+Every gate on this repo globbed the repo root. Demo code lived under
+`demos/` and had never been scanned. Inlining put it in front of the
+linters for the first time and they immediately found real defects, not
+noise: em dashes, first-person voice inside attributed quotes, label
+colors bypassing the `--status-color` system, a forward-looking tag using
+research pink where the documented system says roadmap purple, and a
+fee-market page showing two different multipliers for one quantity
+because the value driving the calculation was a hardcoded literal that
+never referenced its own constant.
+
+Anywhere else code is excluded from a gate by a path glob, assume the
+same backlog is sitting there.
+
+### Four gates were wrong rather than the code, again
+
+A content-flow check required a link to a page retired hours earlier. A
+check in `check-site.sh` required every page to link `/about`. A label
+color regex used a negative lookahead after `\s*`, which backtracks, so
+it false-positived on every correctly written declaration and pushed an
+agent into writing CSS with no space after a colon purely to appease it.
+A prose checker's first-person ban fired on attributed blockquotes.
+
+That is now six or more this session. On this repo a blocked commit is as
+likely to be a wrong rule as a wrong change, and the gates need the same
+scrutiny as the pages.
+
+### Outstanding, in order
+
+1. `styles.css` at 9,222 lines against a target of under 6,000. Two
+   previous attempts broke the mobile nav. The proof bar is an empty
+   computed-style diff plus a passing visual guardrail audit.
+2. Jargon used bare and defined nowhere. KIP appears 135 times and is
+   never expanded. UTXO is undefined including on the page named after
+   it. Also bps, ZK, ASIC, BFT, RPC, DEX. Full list and reasoning in
+   `TODO.md`. Do it as ONE pass; the rule that breaks under parallel work
+   is one phrasing per concept.
+3. The adversarial pass, which has never completed on this site. Four
+   jobs, no agent getting its own work: break it, misunderstand it, check
+   it, cross-read it. Detailed in the Finish standard section above.
+4. Advisory, not blocking: the render gate reports footer links at 2.0px
+   gaps against a 4px minimum at 1280 in light theme.
+
+### A caution recorded once and worth repeating
+
+`utxo-vs-accounts.html` is the owner's model page. Its demos are inline
+and open, and it sits at 296 visible words against a hard 300 ceiling and
+reading grade 9.043 against a cap of 9.0. There is almost no headroom.
+Anything added to that page has to come with something removed, and the
+page must not be treated as a place to put things.
