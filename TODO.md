@@ -222,3 +222,66 @@ THE METHODOLOGY HE ASKED FOR AND DID NOT GET, now mandatory in every
 brief: every demo verified at 390 AND 1280 in BOTH themes, with a
 screenshot, by an agent that did not build it, before anything deploys.
 His words: "I'm just really disappointed that it wasn't followed."
+
+## The sentence audits were rubber stamps
+
+The owner walked crypto-from-scratch, start-here and kaspa-origin-story
+and called them insanely long and dense. He is right, and the reason is
+worse than the pages never being audited. They WERE audited, and the pass
+reported:
+
+  why-kaspa-matters   143 strings, 141 KEEP, 0 CUT, 2 REWRITE
+  crypto-from-scratch 118 strings, 117 KEEP, 0 CUT, 1 edit
+  kaspa-origin-story   96 strings,  95 KEEP, 0 CUT, 1 REWRITE
+
+An agent read every sentence, judged almost all of them worth keeping,
+and changed nothing. The coverage numbers looked rigorous, which is why
+the report was accepted. A per-sentence verdict where the verdict is
+almost always KEEP is a rubber stamp, not an audit.
+
+Current measured lengths:
+  crypto-from-scratch  2,366 words
+  kaspa-origin-story   2,060
+  start-here           1,674
+  sources              3,443
+
+Any future cutting pass must state a target reduction before it starts
+and be judged against it, not against a coverage count. A pass that cuts
+nothing has failed and should say so rather than reporting completion.
+
+## Sources: numbers overlap, and the model is wrong
+
+Two defects, the second more important.
+
+The numbers in the source list visually overlap. Layout bug, unmeasured.
+
+The deeper problem, in his words: "Why are all the sources here? Why does
+it seem to matter? Why is it just not next to and inside of? This is a
+disaster."
+
+A source belongs attached to the claim it settles, inline, reachable at
+the moment a reader doubts the sentence. A 3,443 word page listing every
+source the site uses is a bibliography, and nobody arrives at a
+bibliography on purpose. This was half-addressed by rebuilding it as a
+lookup; the remaining move is to attach sources to claims and let the
+page shrink to whatever genuinely needs browsing.
+
+## Demos should not be their own pages
+
+His words: "Some demos have their own page. That shouldn't be the case.
+It should be a page with a demo."
+
+Today every demo exists twice: as a standalone page under `demos/`, and
+embedded on a topic page. `utxo-vs-accounts` is both a demo page and a
+topic page containing that demo.
+
+What he wants is one thing: a page about the concept, with the demo in
+it. No separate demo URL. `demos/` becomes a component library rather
+than a set of destinations. That collapses 18 demo pages plus their
+hosts into 18 topic pages and makes "every page has a demo" true by
+construction.
+
+This is a larger restructure than anything currently running and would
+invalidate the demo-ordering work. Asked him whether to run it after the
+current five agents land or stop them and do the architecture first. No
+answer yet.
