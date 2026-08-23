@@ -303,8 +303,11 @@ function auditGraphReadout() {
 
 function auditCardPadding() {
   const sectionBlock = declarationBlock(/\n\.section\s*\{([\s\S]*?)\n\}/, "section spacing");
-  if (!/padding:\s*clamp\((?:2[0-9]|3[0-9])px,/.test(sectionBlock)) {
-    fail(".section should keep generous internal padding");
+  /* The owner asked for tighter vertical rhythm sitewide. The old floor of
+     20px encoded the opposite preference and blocked the compression pass.
+     A floor still exists so sections cannot collapse to nothing. */
+  if (!/padding:\s*clamp\((?:1[2-9]|2[0-9]|3[0-9])px,/.test(sectionBlock)) {
+    fail(".section internal padding fell below the 12px floor");
   }
 
   const originProofBlock = declarationBlock(/\n\.origin-proof-strip\s*\{([\s\S]*?)\n\}/, "origin proof strip spacing");

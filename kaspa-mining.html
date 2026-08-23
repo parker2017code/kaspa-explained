@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -73,7 +73,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -186,9 +185,48 @@
         <img src="assets/mining-cycle-options/16-pow-distribution.webp" alt="Diagram comparing proof-of-work distribution through work with capital-first early allocation" width="1672" height="941" loading="lazy" decoding="async">
         <figcaption>Proof of work distributes coins through hardware, electricity, and time instead of a capital-first allocation, and miners still have to cover their costs.</figcaption>
       </figure>
-      <p>Kaspa's fast emission schedule moves supply toward its cap quickly, which is part of the hard-money thesis. The same speed front-loads distribution pressure. Early miners and early participants earned coins by running hardware, with no allocation sold up front. That's the fair-launch case.</p>
+      <p>Kaspa's fast emission schedule moves supply toward its cap quickly, which is part of the hard-money thesis. The same speed front-loads distribution pressure. Early miners earned coins by running hardware, with no allocation sold up front. That's the fair-launch case.</p>
       <p>It also means the early market absorbs a steady flow of coins moving from early miners and holders into later buyers: some take profit, some miners sell to cover power and hardware bills, some holders panic, some accumulate. Fair distribution on paper can still produce an ugly chart.</p>
-      <p>The <a href="/demos/emission-schedule">emission schedule scrubber</a> drags a DAA-score slider and shows the reward step down in real steps, no calendar cliff.</p>
+      <div class="live-demo-frame">
+        <iframe id="emission-schedule-frame" src="/demos/emission-schedule" title="Emission schedule scrubber: drag a DAA-score slider to watch the block reward step down" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('emission-schedule-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <p>Conviction usually gets tested on the downside. The upside tests it too, since rallies tempt profit-taking the same way drawdowns tempt capitulation.</p>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: the cycle as a picture</summary>
@@ -233,7 +271,47 @@
       <p>They need specialized KHeavyHash machines, electricity, facilities, cooling, firmware, logistics, and a pool or solo-mining path. Every one of those steps takes time and leaves a trail. The attack has to leave the spreadsheet and enter a supply chain.</p>
       <p>The same specialization that prices out an attacker prices out most ordinary participants too. Control settles with ASIC manufacturers, large buyers, cheap-power operators, firmware vendors, pools, and hosting sites. Used markets and more independent operators spread that control back out. A handful of dominant actors pull it in again.</p>
       <p>Proof of work turns digital security into a physical bill. Electricity, hardware, heat, buildings, freight, capital, and time all get paid before a block gets mined. Proof of stake asks holders to lock the asset and follow validator rules.</p>
-      <p>Proof of work recruits a different cast: miners carrying power bills, hosting contracts, repair costs, firmware choices, debt, and taxes, running machines that age in the real world. That friction is the security model, and it is also why mining behaves like an industry with payment terms instead of a balance sitting in a contract.</p>
+      <p>Proof of work recruits a different cast: miners carrying power bills, hosting contracts, repair costs, firmware choices, debt, and taxes, running machines that age in the real world. That friction is the security model. It's why mining behaves like an industry with payment terms, not a balance sitting in a contract.</p>
+      <div class="live-demo-frame">
+        <iframe id="attack-cost-frame" src="/demos/attack-cost" title="Attack cost calculator: pick a chain and a duration to see the dollar bill for a majority attack" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('attack-cost-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: attack cost and physical inputs</summary>
         <div class="visual-library-grid grid-cards">
@@ -300,7 +378,7 @@
           <figcaption>A miner can believe in the network and still sell. Hardware, hosting, power, repairs, taxes, and debt create pressure a holder never faces.</figcaption>
         </figure>
         <p>A holder can decide to sit still. A miner has bills: electricity, hosting, hardware debt, repairs, taxes, pool fees, upgrades. Thin margins turn a believer into a seller regardless of conviction.</p>
-        <p>Mining paid extremely well when price outran hash rate, and ASICs got expensive because that revenue opportunity was real: some machines ran tens of thousands of dollars during the hot phase. Operators with that cost basis recoup it partly by selling coins.</p>
+        <p>Mining paid well when price outran hash rate, and ASICs got expensive because that revenue opportunity was real: some machines ran tens of thousands of dollars during the hot phase. Operators with that cost basis recoup it partly by selling coins.</p>
         <p>Miner selling is a line item, the same as the power bill.</p>
       </details>
     </section>
@@ -315,6 +393,46 @@
       <p>As the block reward declines, miners need meaningful revenue from transaction fees, coin value, or both. Toccata widens the design space that could generate that fee demand: covenants, covenant IDs, ZK proof verification, sequencing commitments, and based-app foundations.</p>
       <p>Primitives are not usage. The fee side still needs shipped applications, users who come back, accepted transactions, and demand for blockspace that outlasts a launch campaign.</p>
       <p>One use case is enough, if it repeats: settlement, ordering, proofs, assets, or payment demand that keeps returning can reprice blockspace and pull fees into the security budget. Finding that thing is the open part of the experiment.</p>
+      <div class="live-demo-frame">
+        <iframe id="fee-market-frame" src="/demos/fee-market" title="Fee market simulator: load a block with real traffic and watch fees against the subsidy gap" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('fee-market-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <details class="deep-dive visual-shelf">
         <summary>Visual shelf: issuance handing off to fees</summary>
         <div class="visual-library-grid grid-cards">
@@ -405,7 +523,47 @@
       <h3>Before touching the miner</h3>
       <div class="summary-grid grid-cards">
         <article><span>ASIC</span><p>An IceRiver, Bitmain, Goldshell, or another compatible Kaspa ASIC. The bridge docs also list BzMiner support.</p></article>
-        <article><span>Node computer</span><p>A computer running Rusty Kaspa v2.0.1 or newer. Running bridge and node on the same machine avoids a second network hop while learning. The <a href="/demos/node-cost">node cost visualizer</a> drags a BPS slider to show bandwidth, CPU, and storage rise.</p></article>
+        <article><span>Node computer</span><p>A computer running Rusty Kaspa v2.0.1 or newer. Running bridge and node on the same machine avoids a second network hop while learning. A pruned Kaspa node's disk footprint stays near 50 GB regardless of how long it runs.</p>
+        <div class="live-demo-frame">
+          <iframe id="node-cost-frame" src="/demos/node-cost" title="Node cost visualizer: compare a pruned Kaspa node's disk footprint against other chains" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+        </div>
+        <script>
+        (function () {
+          var frame = document.getElementById('node-cost-frame');
+          if (!frame) return;
+          frame.addEventListener('load', function () {
+            try {
+              var doc = frame.contentDocument;
+              if (!doc) return;
+              var resize = function () {
+                var cs = doc.defaultView.getComputedStyle(doc.body);
+                var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+                frame.style.height = Math.ceil(Math.max(
+                  doc.body.scrollHeight + margins,
+                  doc.documentElement.scrollHeight,
+                  doc.body.getBoundingClientRect().height + margins
+                )) + 'px';
+              };
+              resize();
+              syncFrameTheme();
+              window.addEventListener('resize', resize);
+              if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+            } catch (e) {}
+          });
+          var syncFrameTheme = function () {
+            try {
+              var doc = frame.contentDocument;
+              if (doc && doc.documentElement) {
+                doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+              }
+            } catch (e) {}
+          };
+          new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+          });
+        })();
+        </script></article>
         <article><span>Wallet address</span><p>A Kaspa address for rewards. Copy it carefully. Never paste a private key into miner or bridge settings.</p></article>
         <article><span>Local IP</span><p>The node computer's address on the home network, such as <code>192.168.1.10</code>.</p></article>
         <article><span>Bridge config</span><p>The release archive ships the <code>stratum-bridge</code> binary and no config file. Download the sample <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">config.yaml</a> from the repository and save it as <code>bridge/config.yaml</code> beside the binary.</p></article>
@@ -676,7 +834,7 @@
         <p>Post-activation block templates can carry new transaction fields. The official node guide warns pools and custom mining stacks to preserve those fields all the way from block template to solved block submission, or risk submitting an invalid block.</p>
         <div class="summary-grid grid-cards">
           <article><span>Upgrade</span><p>Use Rusty Kaspa v2.0.1 or newer for the node and bridge path.</p></article>
-          <article><span>Activation record</span><p>Mainnet activation crossed DAA score <code>474,165,565</code>. Check <a href="/toccata-status">Toccata status</a> for post-activation checks.</p></article>
+          <article><span>Activation record</span><p>Mainnet activation crossed DAA score <code>474,165,565</code>. Check the <a href="/status">status page</a> for post-activation checks.</p></article>
           <article><span>Template fields</span><p>Custom mining software must preserve post-Toccata fields: transaction version, storage mass, compute budget, and covenant outputs.</p></article>
           <article><span>Test first</span><p>Run it on Testnet-10 where possible before trusting a mainnet mining path built after the activation score.</p></article>
         </div>
@@ -745,7 +903,7 @@
             <tr><td><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa wiki tokenomics</a></td><td>Fair-launch and no-premine context.</td></tr>
             <tr><td><a href="https://www.coinbase.com/price/kaspa">Coinbase Kaspa price page</a></td><td>All-time-high reference and market-data context.</td></tr>
             <tr><td><a href="https://www.coingecko.com/en/coins/kaspa">CoinGecko Kaspa page</a> and CoinGecko API</td><td>Dated current price read.</td></tr>
-            <tr><td><a href="/toccata-status">Kaspa Explained Toccata status</a></td><td>Activation tracked separately from the setup instructions.</td></tr>
+            <tr><td><a href="/status">Kaspa Explained status page</a></td><td>Activation tracked separately from the setup instructions.</td></tr>
           </tbody>
         </table>
       </div>
@@ -780,7 +938,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Two ways to hold money | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Drive a wallet of coins through consuming several at once, combining small ones into one, splitting one into two payments, and getting change. Then send two spenders at the same balance or coin and watch which queues, which stays parallel, and which hard-conflicts.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-23">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -220,6 +229,35 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* Embedded teaser: show only the balance/coin panels and the move buttons,
+     plus one line of context and a link to the full page. The host page
+     supplies its own heading, so this demo's own title row hides too. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 
 </head>
@@ -242,7 +280,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -283,26 +320,28 @@
     </div>
     <p class="caption" id="caption">Both sides hold 1,240 KAS. The account is one number. The wallet is four coins: 500, 300, 250, and 190 KAS. Pick a move above.</p>
 
-    <p class="model-tradeoff">Shared mutable state is what the account model is built for: two calls into one balance just need sequencing, which is why general-purpose contracts landed there first. A coin carries no shared slot to sequence, which is why UTXO validation parallelizes and a block rate like Kaspa's is possible without inventing account locks. What Kaspa does instead of an account VM to push past that is below.</p>
+    <p class="model-tradeoff embed-hide">Shared mutable state is what the account model is built for: two calls into one balance just need sequencing, which is why general-purpose contracts landed there first. A coin carries no shared slot to sequence, which is why UTXO validation parallelizes and a block rate like Kaspa's is possible without inventing account locks. What Kaspa does instead of an account VM to push past that is below.</p>
 
-    <hr class="divider">
+    <hr class="divider embed-hide">
 
-    <p class="scenario-head">Now two spenders move at the same instant</p>
-    <p class="scenario-sub">Choose which situation to put them in. Each choice tests a different kind of collision, before you run it.</p>
-    <div class="segmented" role="group" aria-label="Choose which collision to test">
+    <p class="scenario-head embed-hide">Now two spenders move at the same instant</p>
+    <p class="scenario-sub embed-hide">Choose which situation to put them in. Each choice tests a different kind of collision, before you run it.</p>
+    <div class="segmented embed-hide" role="group" aria-label="Choose which collision to test">
       <button class="seg-btn" id="segAccount" type="button" aria-pressed="false">Same account balance<span class="model-tag">tests: account model</span></button>
       <button class="seg-btn" id="segDiffCoin" type="button" aria-pressed="false">Two different coins<span class="model-tag">tests: UTXO model</span></button>
       <button class="seg-btn" id="segSameCoin" type="button" aria-pressed="false">The same coin twice<span class="model-tag">tests: UTXO model</span></button>
     </div>
-    <span class="model-badge" id="modelBadge">Choose a test above</span>
-    <div class="actors" id="actorsStage" aria-hidden="false">
+    <span class="model-badge embed-hide" id="modelBadge">Choose a test above</span>
+    <div class="actors embed-hide" id="actorsStage" aria-hidden="false">
       <div class="actor" id="actorA"><div class="avatar">A</div><span>Spender A</span></div>
       <div class="actor" id="actorB"><div class="avatar">B</div><span>Spender B</span></div>
     </div>
-    <p class="caption" id="scenarioCaption">Pick a test above to run it.</p>
+    <p class="caption embed-hide" id="scenarioCaption">Pick a test above to run it.</p>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/utxo-vs-accounts">See the full demo, with sources</a></p>
+
+  <details class="embed-hide">
     <summary>What each model is actually better at, and what Kaspa is doing about the gap</summary>
     <div class="deep-body">
       <h3>Why UTXO parallelizes and an account model doesn't</h3>
@@ -669,7 +708,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

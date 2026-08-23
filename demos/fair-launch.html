@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Fair Launch vs Premine: Supply Distribution Plotted | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -323,6 +332,35 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* Embedded teaser: show only the controls and the chart, plus one line of
+     context and a link to the full page. The host page supplies its own
+     heading, so this demo's own title row hides too. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .page-head { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -344,7 +382,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -365,7 +402,7 @@
       <label><input type="checkbox" data-chain="cardano" checked><i class="swatch shape-triangle" style="background:var(--purple)"></i>Cardano</label>
       <label><input type="checkbox" data-chain="xrp" checked><i class="swatch shape-diamond" style="background:var(--pink)"></i>XRP</label>
     </div>
-    <p class="why-note">Ethereum and Cardano funded a foundation; XRP had no public sale at all.</p>
+    <p class="why-note embed-hide">Ethereum and Cardano funded a foundation; XRP had no public sale at all.</p>
     <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share.</p>
     <svg id="chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest. Solid segments are documented history; dashed segments are modeled projection past each chain's own current age."></svg>
     <p class="chart-caption" id="chartCaption">Solid: documented history. Dashed, past the marker: modeled projection.</p>
@@ -386,7 +423,7 @@
       <input type="range" id="decaySlider" min="0.2" max="5" step="0.1" value="1">
     </div>
     <p class="result-line" id="resultLine" aria-live="polite"></p>
-    <p class="dagLabsNote">Tracks founders, company, and foundation shares only. DAGLabs itself mined an estimated 2.5&ndash;3% of supply after launch, the same way anyone with hardware could: full story below.</p>
+    <p class="dagLabsNote embed-hide">Tracks founders, company, and foundation shares only. DAGLabs itself mined an estimated 2.5&ndash;3% of supply after launch, the same way anyone with hardware could: full story below.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
@@ -395,20 +432,22 @@
     </div>
   </div>
 
-  <div class="fair-note launch-history">
+  <div class="fair-note launch-history embed-hide">
     <h3>What a <span class="term-def" tabindex="0" role="button" aria-describedby="premine-def">premine<span class="term-def__panel" id="premine-def" role="tooltip">Coins created and held before launch, before anyone else could mine or buy them.</span></span> buys, and what Kaspa's launch looked like</h3>
     <p>
       Kaspa never had one: an empty genesis UTXO set, 0% held by founders, company, or foundation, ever. DAGLabs mined an estimated 2.5&ndash;3% after launch, the same way anyone could. The Polychain-vs-team split is not established. Full sourcing below.
     </p>
   </div>
 
-  <details id="assumptions">
+  <details id="assumptions" class="embed-hide">
     <summary>Full launch history, assumptions, and sources</summary>
     <div id="assumptionsBody"></div>
   </details>
 
+  <p class="embed-cta"><a href="/demos/fair-launch">See the full demo, with sources</a></p>
+
   <p class="live-footer" id="liveFooter" aria-live="polite"></p>
-  <p class="demo-footnote">Runs entirely in your browser.</p>
+  <p class="demo-footnote embed-hide">Runs entirely in your browser.</p>
 </main>
 
 <script>
@@ -764,7 +803,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

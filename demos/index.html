@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="Sixteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
   <style>
     /* Each card was <article><h2><a>title</a></h2><p>description</p></article>:
@@ -51,6 +51,30 @@
        as one real anchor, and the container gets a hover state so the whole
        card reads, and responds, as one object. */
     .quick-grid article { cursor: pointer; }
+    /* Card preview (rendering mode 3, design/house-style.md "Three
+       renderings of one demo"): the demo itself, live and small, not a
+       screenshot and not a paragraph describing it. The iframe carries
+       ?preview=1, which the demo's own embed-init script reads to hide
+       every control and show only its visual output; this page never
+       reaches into the iframe to hide anything itself. */
+    .card-preview {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border-radius: 18px;
+      background: var(--field-bg, #221f1c);
+      margin-bottom: 10px;
+    }
+    .card-preview iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      pointer-events: none;
+    }
+
     /* Card titles use the site's shared h2 clamp (design/house-style.md),
        which scales off viewport width (vw), not the card's own width. At
        four columns (roughly 1100px+) each card is narrower than it is at
@@ -114,7 +138,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -125,102 +148,142 @@
       <p class="lead">Sixteen demos to push on instead of read. Each states its own model and sources.</p>
     </section>
 
+    <section class="section" aria-labelledby="top-demo-title">
+      <p class="eyebrow">Start here</p>
+      <h2 id="top-demo-title">Watch a blockDAG keep what a chain would drop</h2>
+      <div class="live-demo-frame">
+        <iframe id="collision-frame" src="/demos/collision-sim" title="Collision simulator: single chain vs blockDAG" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <p class="lead" style="margin-top:16px;">Ranked by how much each one matters to understanding Kaspa, most first:</p>
+      <script>
+      (function () {
+        var frame = document.getElementById('collision-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
+    </section>
+
     <section class="section">
       <div class="quick-grid">
         <article>
+          <a class="card-link" href="/demos/ghostdag-playground">
+            <div class="card-preview"><iframe src="/demos/ghostdag-playground?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:19">GHOSTDAG playground</h2>
+          </a>
+        </article>
+        <article>
           <a class="card-link" href="/demos/confirmation-risk">
+            <div class="card-preview"><iframe src="/demos/confirmation-risk?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:17">Fast is not final</h2>
-            <p>How long a payment needs before it's safe, as the attacker gets stronger.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/collision-sim">
-            <h2 style="--len:17">Chain vs blockDAG</h2>
-            <p>Two blocks arrive seconds apart. A blockDAG keeps both instead of discarding one.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/live-network">
-            <h2>The network, live</h2>
-            <p>Real blocks arrive several a second. See how little is inside them.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/node-cost">
-            <h2 style="--len:17">What a node costs</h2>
-            <p>Disk space across chains, and why a Kaspa node stays cheap over time.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/fee-market">
-            <h2 style="--len:14">The fee market</h2>
-            <p>Crowd the chain. Paying more raises your odds; it doesn't buy a slot.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/shared-state">
-            <h2 style="--len:20">The shared-state gap</h2>
-            <p>What people can already do together on Kaspa, and what's still missing.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/emission-schedule">
-            <h2 style="--len:17">Emission schedule</h2>
-            <p>Scrub through time and watch the block reward shrink, never a cliff.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/mass-calculator">
-            <h2 style="--len:16">Kaspa's real TPS</h2>
-            <p>Build a transaction and see which limit decides how many fit in a block.</p>
           </a>
         </article>
         <article>
           <a class="card-link" href="/demos/utxo-vs-accounts">
+            <div class="card-preview"><iframe src="/demos/utxo-vs-accounts?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:17">Coins or balances</h2>
-            <p>Spend from both models at once: one queues, one collides, one hands change.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/fee-market">
+            <div class="card-preview"><iframe src="/demos/fee-market?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:14">The fee market</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/mass-calculator">
+            <div class="card-preview"><iframe src="/demos/mass-calculator?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:16">Kaspa's real TPS</h2>
           </a>
         </article>
         <article>
           <a class="card-link" href="/demos/dag-time">
+            <div class="card-preview"><iframe src="/demos/dag-time?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:24">DAA score and block time</h2>
-            <p>Turn a DAA score into a date, then try to fake a timestamp.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/ghostdag-playground">
-            <h2 style="--len:19">GHOSTDAG playground</h2>
-            <p>Hide blocks, release them later, and see why the network locks them out.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/zk-boundary">
-            <h2 style="--len:15">The ZK boundary</h2>
-            <p>Pick a claim, generate a proof, see what it does and doesn't guarantee.</p>
           </a>
         </article>
         <article>
           <a class="card-link" href="/demos/fair-launch">
+            <div class="card-preview"><iframe src="/demos/fair-launch?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:22">Fair launch vs premine</h2>
-            <p>Kaspa's zero-premine start against other chains' insider allocations, over time.</p>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/covenant-breaker">
-            <h2 style="--len:16">Covenant breaker</h2>
-            <p>Try to break a real vault's rules and see which attack gets through.</p>
           </a>
         </article>
         <article>
           <a class="card-link" href="/demos/attack-cost">
+            <div class="card-preview"><iframe src="/demos/attack-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:20">Cost of a 51% attack</h2>
-            <p>What it would cost, per hour, to attack Kaspa and five other chains.</p>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/covenant-breaker">
+            <div class="card-preview"><iframe src="/demos/covenant-breaker?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:16">Covenant breaker</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/zk-boundary">
+            <div class="card-preview"><iframe src="/demos/zk-boundary?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:15">The ZK boundary</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/emission-schedule">
+            <div class="card-preview"><iframe src="/demos/emission-schedule?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:17">Emission schedule</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/node-cost">
+            <div class="card-preview"><iframe src="/demos/node-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:17">What a node costs</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/live-network">
+            <div class="card-preview"><iframe src="/demos/live-network?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2>The network, live</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/shared-state">
+            <div class="card-preview"><iframe src="/demos/shared-state?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:20">The shared-state gap</h2>
           </a>
         </article>
         <article>
           <a class="card-link" href="/demos/parameterless">
+            <div class="card-preview"><iframe src="/demos/parameterless?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:23">Parameterless consensus</h2>
-            <p>Push network delay past its limit and watch a fixed safety margin break.</p>
           </a>
         </article>
       </div>
@@ -243,7 +306,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

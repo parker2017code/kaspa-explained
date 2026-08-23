@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Kaspa Emission Schedule | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Zoom out to Kaspa's whole supply history, or zoom in around today, and see what the block reward was and how much had been mined at any point.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root{
@@ -167,6 +176,35 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the interactive slider and
+     chart, plus at most one short line. Methodology, sourcing, and the
+     live-region restatement of the readout belong only on the full demo. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -188,7 +226,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -226,7 +263,9 @@
     <p class="chart-caption" id="chartCaption">Each bar is one month. Taller bar means a bigger block reward. The highlighted bar is the month you're looking at above.</p>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/emission-schedule">See the full demo, with sources</a></p>
+
+  <details class="embed-hide">
     <summary>How this works, and the sources</summary>
     <p>Kaspa's reward drops by about 5.61% (a factor of 2 to the power of &minus;1/12) roughly every month, forever, on a schedule fixed in the software from day one. There is no single "halving day": every step is the same small size as the one before it, and the trigger is a block counter internal to the network, not the calendar. The counter is called DAA score, the network's own clock.</p>
     <p>For roughly the first six months after mainnet (Nov 2021), the reward held flat at 500 KAS per block, a bootstrap period, not part of the halving schedule. Verified in rusty-kaspa's <code>consensus/core/src/config/params.rs</code>: <code>pre_deflationary_phase_base_subsidy</code> is 500 KAS, active until <code>deflationary_phase_daa_score</code> 15,519,600. After that, the monthly-halving schedule took over, starting at 440 KAS per block-second, per the <code>SUBSIDY_BY_MONTH_TABLE</code> in <code>consensus/src/processes/coinbase.rs</code>.</p>
@@ -236,7 +275,7 @@
     <p>Total supply issued before today is a measured figure, not a guess: it's read live from the network. Total supply issued at any point before today that this page's slider lets you visit, and every point after today, is this page's own model of the schedule above, scaled to land on that live reading at today's mark. Treat pre-today figures as close estimates of the real historical curve and post-today figures as projection, not as a network reading, since nothing has mined those blocks yet.</p>
   </details>
 
-  <p class="live-footer" id="liveFooter" aria-live="polite"></p>
+  <p class="live-footer embed-hide" id="liveFooter" aria-live="polite"></p>
 </div>
 </main>
 
@@ -498,7 +537,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

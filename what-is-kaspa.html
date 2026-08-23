@@ -68,7 +68,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -90,7 +90,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -156,7 +155,47 @@
           <p>Walk that spine from genesis to the current tip, absorbing each <a href="/glossary#mergeset">mergeset</a> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
         </article>
       </div>
-      <p class="fit-note">The <a href="/demos/ghostdag-playground">GHOSTDAG playground</a> lets you add blocks by hand and watch blue and red resolve live.</p>
+      <p class="fit-note">Add blocks by hand below and watch blue and red resolve live.</p>
+      <div class="live-demo-frame">
+        <iframe id="ghostdag-playground-frame" src="/demos/ghostdag-playground" title="GHOSTDAG playground: add blocks by hand and watch blue and red resolve" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('ghostdag-playground-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <a href="/glossary#anticone">anticone</a>: the blocks that came neither before it nor after it.</p>
       <p>A single chain has no way to rank an anticone, which is why it discards one side of it. GHOSTDAG ranks it instead, using one behavioral difference between honest miners and hidden ones.</p>
       <p>An honest miner publishes a block the second it is found. A miner building a secret history does the opposite.</p>
@@ -178,7 +217,47 @@
         <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
         <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
-      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. The <a href="/demos/confirmation-risk">confirmation risk</a> demo shows the curve.</p>
+      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. Drag the slider below to see the curve.</p>
+      <div class="live-demo-frame">
+        <iframe id="confirmation-risk-frame" src="/demos/confirmation-risk" title="Confirmation risk over time: chance of reversal against how long you wait" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('confirmation-risk-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <details class="deep-dive">
         <summary>What actually sets a safe wait, and how finality depth differs</summary>
         <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
@@ -204,7 +283,47 @@
           </tbody>
         </table>
       </div>
-      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process. The <a href="/demos/mass-calculator">mass calculator</a> shows which mass dimension a given transaction shape actually gets charged.</p>
+      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process. Build a transaction below and see which mass dimension actually gets charged.</p>
+      <div class="live-demo-frame">
+        <iframe id="mass-calculator-frame" src="/demos/mass-calculator" title="Mass calculator: which mass dimension a transaction shape gets charged" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('mass-calculator-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <details class="deep-dive" data-audience="specialist">
         <summary>Where the payment numbers come from</summary>
         <p>Kaspa mainnet makes ten blocks per second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in.</p>
@@ -239,10 +358,10 @@
           <tbody>
             <tr><td>Kaspa is Proof of Work, 10 BPS, ordered by GHOSTDAG</td><td><span class="status-pill live">Live</span></td><td>All three describe current mainnet in the Crescendo era.</td></tr>
             <tr><td>Toccata has activated on mainnet</td><td><span class="status-pill live">Activated</span></td><td>Toccata crossed its mainnet activation score. That protocol switch is live; app, wallet, explorer, and SDK support still need their own checks.</td></tr>
-            <tr><td>July 2026 is a sudden emission cliff</td><td><span class="status-pill not-live">Misleading</span></td><td>Emission steps down once a month, keyed to DAA score. The calendar has nothing to do with it. July 2026 sits inside one of those scheduled steps.</td></tr>
+            <tr><td>July 2026 is a sudden emission cliff</td><td><span class="status-pill wrong">Misleading</span></td><td>Emission steps down once a month, keyed to DAA score. The calendar has nothing to do with it. July 2026 sits inside one of those scheduled steps.</td></tr>
             <tr><td>GHOSTDAG is DAGKnight, or DAGKnight is current mainnet consensus</td><td><span class="status-pill research">Research</span></td><td>DAGKnight is a separate, later consensus design, still research and implementation work. Current mainnet consensus runs GHOSTDAG.</td></tr>
-            <tr><td>10 BPS means payments are final immediately</td><td><span class="status-pill not-live">No</span></td><td>10 BPS is live and speeds up inclusion. Reversal risk falls as proof-of-work stacks up, so a recipient waits for the depth the amount at stake deserves.</td></tr>
-            <tr><td>The blockDAG means unlimited TPS</td><td><span class="status-pill not-live">No</span></td><td>Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>
+            <tr><td>10 BPS means payments are final immediately</td><td><span class="status-pill wrong">No</span></td><td>10 BPS is live and speeds up inclusion. Reversal risk falls as proof-of-work stacks up, so a recipient waits for the depth the amount at stake deserves.</td></tr>
+            <tr><td>The blockDAG means unlimited TPS</td><td><span class="status-pill wrong">No</span></td><td>Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>
           </tbody>
         </table>
       </div>
@@ -252,7 +371,47 @@
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work.</p>
+      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work. Below is a live read of Kaspa's own public API, not a simulation.</p>
+      <div class="live-demo-frame">
+        <iframe id="live-network-frame" src="/demos/live-network" title="Live read of Kaspa's public API: blocks arriving in real time" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('live-network-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
@@ -266,7 +425,7 @@
       <h2>Where to go from here</h2>
       <div class="path-grid grid-cards">
         <a href="/kaspa-origin-story"><span>Origin</span><strong>The fair-launch story.</strong><p>Research, DAGLabs, the launch paths that failed, and what came after.</p></a>
-        <a href="/toccata-status"><span>Toccata</span><strong>What activation changed.</strong><p>Covenants, covenant IDs, and ZK verification, with the evidence for each.</p></a>
+        <a href="/status"><span>Toccata</span><strong>What activation changed.</strong><p>Covenants, covenant IDs, and ZK verification, with the evidence for each.</p></a>
         <a href="/skeptical-case"><span>Risks</span><strong>The case against.</strong><p>Six open problems, and how much damage each one would do.</p></a>
       </div>
     </section>
@@ -299,7 +458,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

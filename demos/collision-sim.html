@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Collision Simulator, Chain vs BlockDAG | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -360,6 +369,42 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the interactive visual and the
+     controls that make the point, plus at most one short line. Everything
+     else this page explains (propagation caveats, the collision-math
+     derivation, sources) belongs only on the full demo, so it is marked
+     .embed-hide and dropped here, and a link back to the full page takes
+     its place. Same data-embedded switch as the chrome rule above; nothing
+     reaches in from a parent page to do this. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta {
+    margin: 14px 0 0;
+    font-size: .86rem;
+  }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -381,7 +426,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -400,13 +444,13 @@
     <input type="range" id="rate" value="791" min="0" max="1000" step="1" aria-label="Block rate">
     <div class="marks"><span>Bitcoin, 1 every 10 min</span><span style="left:79.1%; transform:translateX(-50%)">Kaspa, 10 a second</span><span>100 a second</span></div>
   </div>
-  <p class="honesty-note" id="honestyNote"></p>
+  <p class="honesty-note embed-hide" id="honestyNote"></p>
 
   <div class="secondary-control">
     <label for="delay">How long a block takes to reach other miners <b id="delayVal"></b></label>
     <input type="range" id="delay" value="500" min="0" max="1000" step="1" aria-label="Propagation delay">
   </div>
-  <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists to cite, so 500 ms is a representative estimate, the midpoint of this slider's own range, not a measured figure; real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
+  <p class="honesty-note embed-hide">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists to cite, so 500 ms is a representative estimate, the midpoint of this slider's own range, not a measured figure; real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
 
   <p class="result-line" id="resultLine"></p>
 
@@ -424,7 +468,9 @@
 
   <button id="step" hidden>Step one block</button>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/collision-sim">See the full demo, with sources</a></p>
+
+  <details class="embed-hide">
     <summary>How this works, and the sources</summary>
     <p>Blocks arrive at random, like raindrops: a Poisson process with rate &lambda;. A block collides with the one before it if the next block is found before the first one finishes spreading across the network, which takes time d. That gives a plain formula for how often a given block collides with at least one other:</p>
     <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
@@ -555,9 +601,8 @@
     document.getElementById('chainStat').textContent =
       'so far: ' + kept + ' kept, ' + discarded + ' thrown away (' + observedDiscardPct.toFixed(0) + '% discarded)';
     document.getElementById('resultLine').innerHTML =
-      'At this speed, a single chain is expected to throw away about <b>' + predictedDiscardPct.toFixed(0) +
-      '%</b> of the blocks it makes, in the long run. The tally in the panel below is a running sample: it reads ' +
-      'differently early on and drifts toward that figure as more blocks are produced. The blockDAG keeps all of it.';
+      'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of the blocks it makes here. The blockDAG keeps all of it.' +
+      '<span class="embed-hide"> The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>';
   }
 
   function fitCanvas(c) {
@@ -789,7 +834,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

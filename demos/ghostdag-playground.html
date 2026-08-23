@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>GHOSTDAG Playground | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Build a small blockDAG by hand, watch which blocks count and which get locked out, live, and see why a hidden miner's withheld blocks come back and lose.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root{
@@ -258,6 +267,42 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the interactive graph and the
+     controls that make the point, plus at most one short line. Everything
+     else this page explains (the linear-order list, the network's-live-view
+     toggle, the verdict prose, how colors get decided) belongs only on the
+     full demo, so it is marked .embed-hide and dropped here, and a link
+     back to the full page takes its place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row,
+  :root[data-embedded="true"] main > h1 { display: none; }
+  .embed-cta {
+    margin: 14px 0 0;
+    font-size: .86rem;
+  }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -279,7 +324,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -357,20 +401,22 @@
     </div>
     <p class="hover-hint">Hover or tap any block to see why.</p>
     <p class="focus-caption" id="focus-caption" aria-live="polite"></p>
-    <div class="verdict-box" id="verdict" hidden></div>
-    <div class="virtual-toggle-row">
+    <div class="verdict-box embed-hide" id="verdict" hidden></div>
+    <div class="virtual-toggle-row embed-hide">
       <button class="btn-quiet" id="btn-toggle-virtual" type="button" aria-pressed="false">Show what the network sees right now</button>
     </div>
     <p class="virtual-caption" id="virtual-caption" aria-live="polite" hidden></p>
   </div>
 
-  <div class="panel">
+  <p class="embed-cta"><a href="/demos/ghostdag-playground">See the full demo, with the linear order and how colors get decided</a></p>
+
+  <div class="panel embed-hide">
     <h2>Linear order</h2>
     <p style="color:var(--muted); font-size:.85rem; margin-top:0;">The one ordering every node agrees on: walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</p>
     <ol class="order-list" id="order-list" aria-live="polite"></ol>
   </div>
 
-  <details class="panel">
+  <details class="panel embed-hide">
     <summary style="cursor:pointer; font-weight:600;">How the colors get decided</summary>
     <p style="color:var(--muted); font-size:.85rem;">
       Every block names the tips its miner could see when it was made; those references are the whole
@@ -1121,7 +1167,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

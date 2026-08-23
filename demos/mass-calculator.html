@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Mass Calculator, What's Kaspa's TPS? | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Pick a transaction shape and see which mass dimension actually gets charged.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -338,6 +347,40 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the presets, the build
+     controls, and the mass bars/result, plus at most one short line. The
+     formula derivation and source links belong only on the full demo, so
+     they are marked .embed-hide and dropped here, with a link back to the
+     full page in their place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .demo-topbar { display: none; }
+  .embed-cta {
+    margin: 14px 0 0;
+    font-size: .86rem;
+  }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -359,7 +402,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -459,7 +501,9 @@
     </div>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/mass-calculator">See the full demo, with the mass formulas and sources</a></p>
+
+  <details class="embed-hide">
     <summary>Show the mass formulas</summary>
     <div class="formula-body">
       <h3>Transaction size</h3>
@@ -509,7 +553,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     </div>
   </details>
 
-  <p class="sources">
+  <p class="sources embed-hide">
     Formulas verified against
     <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
     <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
@@ -733,7 +777,6 @@ TPS = tx_per_block × 10 blocks/second</span>
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

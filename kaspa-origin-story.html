@@ -50,7 +50,7 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -72,7 +72,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -107,7 +106,7 @@
       <h2>DAGLabs came first, then the fair launch</h2>
       <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, by Yonatan Sompolinsky and Guy Corem, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018 to build a business on DAG protocols.</p>
       <p>Either way, DAGLabs paid for and ran part of the pre-mainnet path before Kaspa became a public, community-mined network.</p>
-      <p>Polychain belongs in the pre-mainnet DAGLabs funding story, and it cuts both ways. Kaspa had no token premine. It also had a VC-funded DAGLabs backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
+      <p>Polychain belongs in the pre-mainnet DAGLabs funding story. Kaspa had no token premine. It also had a VC-funded DAGLabs backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
       <p>Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a generalization of Nakamoto Consensus. The April 2021 Investing.com article lists the testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard. It framed the project as testnet first, mainnet later, with no pre-mining and no founder allocations planned.</p>
       <p>Yonatan's Hashdag archive describes the original Kaspad codebase as an adaptation of the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
     </section>
@@ -141,7 +140,46 @@
       <h2>Mainnet launched without a premine</h2>
       <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a UTXO commitment that trace back to an empty genesis. Mining made the whole supply.</p>
       <p>No premine means no official token allocation before mining started. It does not mean equal access to early mining.</p>
-      <p class="fit-note">The <a href="/demos/fair-launch">fair launch demo</a> plots Kaspa's mined-from-zero supply curve against several other major coins' premine and presale allocations.</p>
+      <div class="live-demo-frame">
+        <iframe id="fair-launch-frame" src="/demos/fair-launch" title="Fair launch demo: Kaspa's mined-from-zero supply plotted against Ethereum, Cardano, and XRP's premine and presale allocations" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('fair-launch-frame');
+        if (!frame) return;
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        frame.addEventListener('load', function () {
+          syncFrameTheme();
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <p>Yonatan later estimated Kaspa's core developers mined about 2.5% of total supply after launch. The Kaspa Wiki prehistory page puts the related DAGLabs/Polychain estimate below 3%, roughly 840 million KAS, and says the tighter number is probably closer to 2.5% and under 850 million KAS. That's early-miner context, a separate question from whether there was a premine.</p>
       <p>Yonatan's own archive is blunter than the lore. He calls the launch messy, says he baked several bad ideas into the first gamenet rules, and describes a few thousand CPUs finding the project within days, pushing hashrate up no matter what the plan wanted.</p>
       <p>The Black Tuesday post puts it in one clause: the gamenet idea never caught air, so he swapped the random block reward for a flat one.</p>
@@ -150,7 +188,7 @@
     <section class="section prose-section">
       <p class="eyebrow">Early stress</p>
       <h2>Kaspa had to survive real failure</h2>
-      <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing a certainly-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
+      <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing against a known-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
       <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published.</p>
       <p>Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
 
@@ -171,7 +209,48 @@
       <p class="eyebrow">Toccata boundary</p>
       <h2>Crescendo and Toccata are not the same fork</h2>
       <p>"Toccata" gets pinned on 10 BPS often enough to be worth fixing. Crescendo is the fork that made 10 BPS live on mainnet. Toccata is a separate, later fork: base-layer programmability with covenants, Silverscript, ZK-facing proof checks, sequencing commitments, and native-asset groundwork, activated at DAA score 474,165,565.</p>
-      <p>Rusty Kaspa v2.0.1 followed as the Toccata release; v2.0.0 shipped the activation. Wallet support, indexer support, and app usage are still building: check <a href="/toccata-status">Toccata Status</a> for where each stands.</p>
+      <p>Rusty Kaspa v2.0.1 followed as the Toccata release; v2.0.0 shipped the activation. Wallet support, indexer support, and app usage are still building: check <a href="/status">status page</a> for where each stands.</p>
+
+      <div class="live-demo-frame">
+        <iframe id="dag-time-frame" src="/demos/dag-time" title="DAA score and block time converter, spanning the Crescendo 1 BPS to 10 BPS boundary" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('dag-time-frame');
+        if (!frame) return;
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        frame.addEventListener('load', function () {
+          syncFrameTheme();
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section class="section">
@@ -246,7 +325,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

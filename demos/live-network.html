@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Watch the network | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="A live read of Kaspa's public API: real blocks arriving about 10 a second, most carrying nothing but the miner's own reward, sampled honestly.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -184,6 +193,40 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the live tip count, feed, and
+     controls, plus at most one short line. The multi-sentence payoff, the
+     methodology details, and the footnote belong only on the full demo, so
+     they are marked .embed-hide and dropped here, with a link back to the
+     full page in their place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta {
+    margin: 14px 0 0;
+    font-size: .86rem;
+  }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -205,7 +248,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -239,13 +281,15 @@
     <div class="stat-tile">
       <span class="stat-num" id="sessionPct">&ndash;</span>
       <span class="stat-label" id="sessionLabel">of the blocks this page has watched this session carried nothing but the miner's own reward.</span>
-      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 89.5% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+      <span class="stat-compare embed-hide">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 89.5% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
     </div>
   </div>
 
-  <p class="payoff" id="payoff">Kaspa targets 10 new blocks every second. Most of what you're watching arrive is a block holding exactly one transaction: the miner paying itself.</p>
+  <p class="payoff embed-hide" id="payoff">Kaspa targets 10 new blocks every second. Most of what you're watching arrive is a block holding exactly one transaction: the miner paying itself.</p>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/live-network">See the full demo, with sources and methodology</a></p>
+
+  <details class="embed-hide">
     <summary>What this page shows, what it can't, and why</summary>
     <div class="deep-body">
       <h3>Blocks, in parallel</h3>
@@ -279,7 +323,7 @@
     </div>
   </details>
 
-  <p class="demo-footnote">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
+  <p class="demo-footnote embed-hide">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
 </main>
 
 <script>
@@ -435,7 +479,7 @@
       '<div class="meter" aria-hidden="true">' + renderMeter(card) + '</div>' +
       '<div class="block-main">' +
         '<div class="block-top">' + contentWord + '<span class="block-time">' + relTime(card.timestamp) + '</span></div>' +
-        '<div class="block-sub" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
+        '<div class="block-sub" data-clip-ok="true" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
         (tags ? '<div class="tag-row">' + tags + '</div>' : "") +
       '</div>';
     return el;
@@ -587,7 +631,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

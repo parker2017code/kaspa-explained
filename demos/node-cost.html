@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Node Cost and Pruning | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="What running a node costs across chains, why some keep everything forever, and why Kaspa's stays near 50 GB no matter how long it has run.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root{
@@ -158,8 +167,17 @@
     position:relative; height:48px; border-radius:8px; overflow:hidden; border:1px solid var(--field-line);
     display:flex;
   }
-  .window-kept{background:var(--accent-soft); display:flex; align-items:center; padding-left:10px; font-size:.76rem; color:var(--green); font-weight:600;}
-  .window-discarded{background:var(--field-bg); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; font-size:.76rem; color:var(--faint); font-weight:600;}
+  .window-kept{background:var(--accent-soft); display:flex; align-items:center; padding-left:10px; font-size:.76rem; color:var(--green); font-weight:600; overflow:hidden;}
+  .window-discarded{background:var(--field-bg); display:flex; align-items:center; justify-content:flex-end; padding-right:10px; font-size:.76rem; color:var(--faint); font-weight:600; overflow:hidden;}
+  /* At the default 6hr position the discarded segment is only 16.67% of
+     the diagram's width. At narrow viewports that segment is too small
+     for "discarded" plus its 10px padding, and the label was rendering
+     14px past the diagram's own clipped edge (check-render.mjs clipping
+     assertion, 2026-08-23). Shrink the label and padding together below
+     480px so it fits its own segment instead of bleeding past it. */
+  @media (max-width: 480px){
+    .window-kept, .window-discarded{padding-inline: 6px; font-size:.62rem;}
+  }
   .finality-line{
     position:absolute; top:0; bottom:0; width:2px; background:var(--amber); opacity:.85;
   }
@@ -227,6 +245,36 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the chain-picker chips and the
+     storage chart, plus at most one short line. The finality/pruning slider,
+     the unpruned-growth arithmetic, and every sourcing detail belong only on
+     the full demo. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 
 </head>
@@ -249,7 +297,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -271,14 +318,16 @@
     <p class="scale-note" id="scaleNote">Linear scale: bar length is proportional to gigabytes. Bars under 3% are floored to stay visible.</p>
   </div>
 
-  <div class="panel">
+  <p class="embed-cta"><a href="/demos/node-cost">See the full demo, with the pruning math and sources</a></p>
+
+  <div class="panel embed-hide">
     <h2>Without pruning?</h2>
     <p class="prose">No, it would already be bigger, and it would keep growing forever.</p>
     <p class="payoff" id="growthPayoff">A node that never pruned would already hold at least 76 GB of coinbase transactions alone since genesis. The pruned node running today: 50 GB.</p>
     <p class="scale-note">A floor estimate from real protocol constants. Full arithmetic below.</p>
   </div>
 
-  <div class="panel">
+  <div class="panel embed-hide">
     <h2>Why 10 blocks a second doesn't balloon the disk</h2>
     <p class="prose">A pruned Kaspa node, not run with <code>--archival</code> (below), and not another chain.</p>
     <div class="window-controls">
@@ -300,7 +349,7 @@
     <p class="scale-note">Finality is where a reorg becomes impossible. Pruning is where a node actually throws the block away.</p>
   </div>
 
-  <div class="panel boundary-card">
+  <div class="panel boundary-card embed-hide">
     <div class="boundary-row finality">
       <strong>Finality: 432,000 blocks, 12 hours</strong>
       <span>Nodes refuse any reorganization that would rewrite the block.</span>
@@ -312,7 +361,7 @@
     <p class="prose" style="margin:0;">432,000 is where the safety guarantee ends; the extra 18 hours is a deliberate margin. Full derivation below.</p>
   </div>
 
-  <div class="panel">
+  <div class="panel embed-hide">
     <h2>Full vs. archival</h2>
     <p class="prose">Pruning is two passes, backed by a specific proof.</p>
     <details>
@@ -323,16 +372,16 @@
     </details>
   </div>
 
-  <p class="prose">A pruned Kaspa node runs about 50 GB: Bitcoin 758 GB, Ethereum 2 TB, Solana 2.5 TB, Internet Computer 32 TB.</p>
+  <p class="prose embed-hide">A pruned Kaspa node runs about 50 GB: Bitcoin 758 GB, Ethereum 2 TB, Solana 2.5 TB, Internet Computer 32 TB.</p>
 
-  <details>
+  <details class="embed-hide">
     <summary>How each chain handles history</summary>
     <div class="formula" id="historyNotesBody">
       <!-- filled by script -->
     </div>
   </details>
 
-  <details>
+  <details class="embed-hide">
     <summary>The unpruned arithmetic</summary>
     <div class="formula">
       <p><strong>Block count since genesis.</strong> Kaspa's mainnet genesis is timestamped November 22, 2021 (rusty-kaspa <code>genesis.rs</code>). The Crescendo hard fork moved the network from 1 block/second to 10 blocks/second on May 5, 2025, mainnet DAA score 110,165,000 (rusty-kaspa v1.0.0 release notes). That gives two eras: about 1,260 days at 1 block/sec (108,864,000 blocks), then about 474 days at 10 blocks/sec through today, August 22, 2026 (409,536,000 blocks). Total: about 518,400,000 blocks ever produced. This part is measured, not estimated, aside from ordinary day-rounding.</p>
@@ -344,7 +393,7 @@
     </div>
   </details>
 
-  <p class="demo-footnote">Related: <a href="/kaspa-mining">Kaspa mining</a>, <a href="/glossary#pruning">pruning glossary</a>.</p>
+  <p class="demo-footnote embed-hide">Related: <a href="/kaspa-mining">Kaspa mining</a>, <a href="/glossary#pruning">pruning glossary</a>.</p>
 </div>
 </main>
 
@@ -514,7 +563,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

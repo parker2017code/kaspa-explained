@@ -91,7 +91,7 @@ Use `.github/notes/COPY_CLEANUP_PLAN.md` for public wording cleanup. The standar
 
 The site has 25 live pages. `sitemap.xml` and `site-manifest.json` are the authority for the page inventory; check both before naming a page as live or retired.
 
-The homepage should work as a router first. Its nav routes six clear jobs: what Kaspa is, what is live now, claim checking, risks, build paths, and sources (`what-is-kaspa.html`, `status.html`, `kaspa-claims-checker.html`, `skeptical-case.html`, `build-on-kaspa.html`, `sources.html`). Toccata status, the origin story, mining, KIP/KCC tracking, and the interactive comparison tools stay one click deeper instead of competing in the primary nav.
+The homepage should work as a router first. Its nav routes six clear jobs: what Kaspa is, what is live now, claim checking, risks, build paths, and sources (`what-is-kaspa.html`, `status.html`, `kaspa-claims-checker.html`, `skeptical-case.html`, `build-on-kaspa.html`, `sources.html`). Activation evidence, the origin story, mining, KIP/KCC tracking, and the interactive comparison tools stay one click deeper instead of competing in the primary nav.
 
 Keep these audience paths visible:
 
@@ -529,7 +529,7 @@ Primary public pages, matching `sitemap.xml` and `site-manifest.json` (25 pages 
 - `argent-explained.html` - Argent/Silverscript language model, a worked covenant example, what Argent's own README says, and the repository signals across the argent-lang org. Live page as of August 22, 2026; was a redirect stub into `toccata-explained.html` before that.
 - `toccata-status.html` - Toccata's DAA activation score, the v2.0.1 release, covenant and ZK surfaces, and TN10/TN12 evidence.
 - `toccata-essay.html` - Parker Schmidt's attributed first-person essay on the Toccata upgrade.
-- `build-on-kaspa.html` - builder path that routes an app idea to Toccata status and the three build lanes. (The former short-recipes page, founder/supporter survey pages, and matching-board page were retired; those URLs redirect here or to `about.html`.)
+- `build-on-kaspa.html` - builder path that routes an app idea to status.html and the three build lanes. (The former short-recipes page, founder/supporter survey pages, and matching-board page were retired; those URLs redirect here or to `about.html`.)
 - `status.html` - compact status page for live, targeted, roadmap, and research items.
 - `skeptical-case.html` - the strongest case against Kaspa, argued properly, with what would show it going wrong.
 - `kaspa-mining.html` - mining mechanics, ASIC economics, and why price and hash rate move on different clocks.

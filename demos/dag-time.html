@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>DAA score and block time | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Convert a DAA score to a real date across Crescendo's rate change, then try to fake a block's timestamp and watch the network refuse it.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -212,6 +221,35 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* Embedded teaser: show only the two converter controls and their live
+     output, plus one line of context and a link to the full page. The host
+     page supplies its own heading, so this demo's own title row hides too. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -233,7 +271,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -246,7 +283,7 @@
 
   <div class="stage">
     <p class="eyebrow">1. Read a DAA score</p>
-    <p class="intro">A <b>DAA score</b> rises by about one per accepted block, not once a second: 1 block a second before <b>Crescendo</b> (5 May 2025), 10 after. This converter switches rate exactly at that boundary, marked below.</p>
+    <p class="intro embed-hide">A <b>DAA score</b> rises by about one per accepted block, not once a second: 1 block a second before <b>Crescendo</b> (5 May 2025), 10 after. This converter switches rate exactly at that boundary, marked below.</p>
 
     <div class="slider-wrap">
       <input type="range" id="dateSlider" min="-500" max="500" step="1" value="0" aria-label="Date, in days from Toccata's mainnet activation">
@@ -262,7 +299,7 @@
 
     <p class="payoff-main" id="daaPayoffMain"></p>
     <p class="payoff-sub" id="daaPayoffSub"></p>
-    <p class="caveat">Two exact points anchor this: genesis and Toccata's activation. Rates between them come from real elapsed time, not the bare protocol target. Dates after Toccata are an estimate assuming today's rate holds.</p>
+    <p class="caveat embed-hide">Two exact points anchor this: genesis and Toccata's activation. Rates between them come from real elapsed time, not the bare protocol target. Dates after Toccata are an estimate assuming today's rate holds.</p>
 
     <div class="presets">
       <button class="preset-btn" id="presetGenesis" type="button">Jump to genesis</button>
@@ -274,7 +311,7 @@
 
   <div class="stage">
     <p class="eyebrow">2. Catch a lying timestamp</p>
-    <p class="intro">A miner who backdates a block can make it look like blocks are arriving slower than they are, and cheapen mining by lowering the difficulty. So every timestamp is checked: it must land after the <b>middle time of the block's last 11 ancestors</b>, and can't sit more than 132 seconds ahead of the checking node's clock.</p>
+    <p class="intro embed-hide">A miner who backdates a block can make it look like blocks are arriving slower than they are, and cheapen mining by lowering the difficulty. So every timestamp is checked: it must land after the <b>middle time of the block's last 11 ancestors</b>, and can't sit more than 132 seconds ahead of the checking node's clock.</p>
 
     <div class="slider-wrap">
       <input type="range" id="tsSlider" min="-300" max="500" step="1" value="60" aria-label="Candidate block timestamp, in seconds from the past median time">
@@ -296,7 +333,7 @@
     </div>
   </div>
 
-  <div class="stage">
+  <div class="stage embed-hide">
     <p class="eyebrow">3. Bitcoin checks time almost the same way</p>
     <p class="intro">Bitcoin uses the same 11-block median floor, but allows a timestamp up to 2 hours ahead of now. Kaspa allows only 132 seconds: it expects a new block every tenth of a second, not every 10 minutes.</p>
     <div class="tolerance-row" aria-hidden="true">
@@ -311,7 +348,9 @@
     </div>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/dag-time">See the full demo, with sources</a></p>
+
+  <details class="embed-hide">
     <summary>How this is worked out, and where the numbers come from</summary>
     <div class="deep-body">
       <h3>DAA score is a block count, not a timer</h3>
@@ -582,7 +621,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

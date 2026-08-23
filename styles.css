@@ -95,6 +95,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -235,7 +236,7 @@ main {
   scroll-margin-top: 120px;
 }
 
-main:focus {
+main:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
   outline-offset: 3px;
 }
@@ -813,7 +814,7 @@ li,
 .hero-signal-grid a:nth-child(6n+2) span,
 .status-lane-grid a:nth-child(6n+2) span,
 .orientation-grid a:nth-child(6n+2) span {
-  color: var(--cyan);
+  color: var(--cyan-pill, var(--cyan));
 }
 
 .hero-signal-grid a:nth-child(6n+3) span,
@@ -1143,7 +1144,7 @@ li,
   border: 1px solid var(--line-bright);
   border-radius: 999px;
   margin-bottom: 14px;
-  color: var(--green);
+  color: var(--green-pill, var(--green));
   background: var(--accent-soft);
   font-size: 12px;
   font-weight: 900;
@@ -1522,7 +1523,10 @@ li,
 .timeline span {
   display: block;
   margin-bottom: 10px;
-  color: var(--cyan);
+  /* Same fix as the --cyan-pill tokens defined in the Apple layer's :root
+     blocks: --cyan measures 4.42:1 (dark) / 4.497:1 (light) as small caption
+     text on this card background, just under the 4.5:1 AA floor. */
+  color: var(--cyan-pill, var(--cyan));
   text-transform: uppercase;
   letter-spacing: .12em;
   font-size: 12px;
@@ -1533,13 +1537,16 @@ li,
   position: relative;
   overflow: visible;
   border-radius: 8px;
-  margin-top: clamp(24px, 4vw, 44px);
-  padding: clamp(24px, 4vw, 44px);
-}
-
-.home-page .section {
-  margin-top: clamp(16px, 2.4vw, 30px);
-  padding: clamp(18px, 2.8vw, 32px);
+  /* Vertical rhythm (2026-08-23): was clamp(24px, 4vw, 44px) for both
+     properties, which put roughly 88px of dead air between the end of one
+     section's content and the start of the next at desktop widths, on top
+     of whatever the "Spacing repair" padding override below added. Tightened
+     to the same tokens the homepage already proved out (see the retired
+     .home-page .section override this replaces) so every page flows the way
+     the homepage already did, instead of the homepage being the one
+     compressed exception. */
+  margin-top: clamp(16px, 2.4vw, 28px);
+  padding: clamp(20px, 2.8vw, 32px);
 }
 
 .home-page h2 {
@@ -2015,6 +2022,34 @@ blockquote {
 .reality-table td:nth-child(2):has(.status-pill),
 .reality-table th:nth-child(2) {
   min-width: 9rem;
+}
+
+/* A closed <details class="cell-detail"> inside a table cell had no
+   visual break from the sentence above it or the next cell below it,
+   so its summary line read as a stray fragment wedged between the row
+   text and the Maturity badge, worst on the stacked mobile layout. */
+.cell-detail {
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.cell-detail summary {
+  cursor: pointer;
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.cell-detail summary::marker {
+  color: var(--green);
+}
+
+.cell-detail[open] summary {
+  margin-bottom: 6px;
 }
 
 .check-grid {
@@ -2691,15 +2726,15 @@ blockquote {
   transform: translateY(-1px);
 }
 
-.builder-console article:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  top: 30px;
-  right: -10px;
-  width: 16px;
-  height: 1px;
-  background: color-mix(in srgb, var(--cyan) 44%, transparent);
-}
+/* The step-connector dash between .builder-console cards (removed 2026-08-23)
+   was tuned for a 4-across row: a short cyan tick floating between cards,
+   meant to read as a sequence arrow. build-on-kaspa.html's only live usage
+   has 2 cards, not 4, so the 4-column grid above leaves two empty tracks and
+   the tick lands in that empty space instead of between two cards, reading
+   as a stray blue line rather than a connector. Dropped rather than
+   re-tuned: the connector never earned its place next to the change in the
+   first place per STANDARD.md's restraint rule, and no other live page uses
+   this component to check the 4-card case against. */
 
 .builder-console span,
 .builder-ledger span {
@@ -2906,8 +2941,9 @@ blockquote {
   font: inherit;
 }
 
-.search-box input:focus {
-  outline: 3px solid color-mix(in srgb, var(--cyan) 24%, transparent);
+.search-box input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+  outline-offset: 3px;
   border-color: color-mix(in srgb, var(--cyan) 58%, var(--field-line));
 }
 
@@ -3197,6 +3233,15 @@ blockquote {
 
 .deep-dive {
   margin-top: 16px;
+  /* .prose-section (design/house-style.md's article-body container) is
+     deliberately excluded from the generic ".section:not(.prose-section) >
+     * + *" sibling-spacing rule below, so a paragraph directly following a
+     collapsed .deep-dive inside a .prose-section got no gap at all: p's own
+     margin-top is reset to 0 site-wide (see "p { margin-top: 0 }"), and
+     .deep-dive supplied no margin-bottom, so the two sat 1px apart. Matches
+     the existing margin-top for symmetric spacing on both sides of the
+     disclosure block. */
+  margin-bottom: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(var(--cyan-rgb), .04);
@@ -5412,9 +5457,13 @@ body::before {
   }
 }
 
-/* Spacing repair: glass borders need more inner air than flat surfaces. */
+/* Spacing repair: glass borders need more inner air than flat surfaces. This
+   used to push padding up to clamp(28px, 4vw, 52px), which fought the
+   vertical-rhythm tightening on the base .section rule above by overriding
+   it back to a larger figure through :not() specificity. Reuses the same
+   .section padding value instead of introducing a second number. */
 .section:not(.prose-section) {
-  padding: clamp(28px, 4vw, 52px);
+  padding: clamp(20px, 2.8vw, 32px);
 }
 
 .hero-copy,
@@ -6445,12 +6494,27 @@ html {
   --green-rgb: 14, 124, 107;
   --cyan: #0071e3;
   --cyan-rgb: 0, 113, 227;
+  /* Text set directly in --cyan on the card background used by
+     .hero-signal-grid/.status-lane-grid/.orientation-grid's 6n+2 label
+     span measures 4.497:1 here, just under the 4.5:1 AA floor for normal
+     text. Same fix as --purple-pill below: a dedicated, slightly darker
+     token for this text-on-card use, not a change to --cyan itself (which
+     is also used for icons/buttons against different backgrounds where it
+     already passes). #0068d1 measures 5.15:1 against this card's #fbfaf6
+     background. */
+  --cyan-pill: #0068d1;
   --link-color: #0064c2;
   --purple: #6e56cf;
   --purple-pill: var(--purple);
   --pink: #b25000;
   --ink: #ffffff;
   --accent-soft: rgba(14, 124, 107, .1);
+  /* --green as badge text on --accent-soft (the .transaction-rail step
+     numbers) measures 4.28:1, under the 4.5:1 floor. Same --<color>-pill
+     pattern as --cyan-pill/--purple-pill above: a dedicated darker token
+     for this text-on-tinted-fill use, not a change to --green itself.
+     #0a6a5c measures 5.45:1 against this fill composited on the card. */
+  --green-pill: #0a6a5c;
   --surface-soft: #f5f5f7;
   --control-bg: #e8e8ed;
   --control-hover: #dededf;
@@ -6492,11 +6556,16 @@ html {
   --green-rgb: 102, 209, 193;
   --cyan: #2997ff;
   --cyan-rgb: 41, 151, 255;
+  /* Measures 4.42:1 against the card background at the 6n+2 label span
+     (see the light-theme --cyan-pill comment); #3d9fff measures 4.82:1. */
+  --cyan-pill: #3d9fff;
   --link-color: #38a3fa;
   --purple: #bf5af2;
   --purple-pill: #ce80f5;
   --pink: #ff9f0a;
   --ink: #06201b;
+  /* Dark theme's --green already clears 4.5:1 as badge text on --accent-soft. */
+  --green-pill: var(--green);
   --accent-soft: rgba(102, 209, 193, .12);
   --surface-soft: #1d1d1f;
   --control-bg: #2c2c2e;
@@ -8545,34 +8614,82 @@ figure img,
       box (min-height + flex centering) instead of the text's padding, so
       rows sit flush against each other the way a real settings-style list
       does: compliant per row, tight as a group. */
+/* Footer compression (2026-08-23): the footer used to spell out every route
+   on the site across four labeled columns (Learn/Verify/Build/Tools, ~19
+   links), which made it read as a sitemap rather than a footer and put a
+   tall block at the bottom of every page, including all 17 demos. Apple's
+   own footer is a single quiet row: one legal line, a handful of links, done.
+   The markup keeps the original four `.footer-link-group` columns (Learn,
+   Verify, Build, Tools) so every page on the site, search included, stays
+   reachable from the footer. Compactness comes from typography and spacing
+   here, not from deleting links: small type, tight line height, minimal row
+   and column gaps, no oversized touch targets on what is reference chrome,
+   not a primary action. `scripts/check-nav-sync.sh` enforces that every
+   page's footer link set is byte-identical to index.html's, so this markup
+   is swept across all pages that carry a footer, demos included, in one
+   pass; only the CSS below changed to compress it. */
 .footer {
-  margin-top: 32px;
-  padding: 26px 0 40px;
+  margin-top: 24px;
+  padding: 18px 0 24px;
 }
 
 .footer-grid {
+  display: grid;
+  grid-template-columns: minmax(180px, .6fr) minmax(0, 1.6fr);
+  gap: 8px clamp(20px, 3vw, 36px);
+  align-items: start;
   border-top: none;
-  padding-top: 18px;
+  padding-top: 14px;
+}
+
+.footer-grid p {
+  max-width: 420px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .footer-nav-groups {
-  gap: 16px clamp(16px, 2.4vw, 26px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px 18px;
 }
 
 .footer-link-group {
-  gap: 0;
+  display: grid;
+  gap: 2px;
+  align-content: start;
 }
 
 .footer-link-group span {
-  margin-bottom: 8px;
+  margin-bottom: 3px;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .06em;
 }
 
 .footer-link-group a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0;
-  line-height: 1.3;
+  display: block;
+  min-height: 0;
+  padding: 1px 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.65;
+}
+
+.footer-link-group a:hover {
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-nav-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 18px;
+  }
 }
 
 .cc-preset,
@@ -8652,9 +8769,19 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
    and on keyboard focus, just not on tap. See design/house-style.md for the
    markup shape and the toggle script. */
 .info-affordance {
+  /* !important on the layout-critical properties is deliberate: dozens of
+     card/grid components across styles.css carry a generic `.foo-grid span
+     { display: block; margin-bottom: ... }` rule for their own label spans,
+     and `.info-affordance` is itself a <span>, so it matches those
+     ancestor selectors too. Ancestor specificity (class + type) beats this
+     component's own class-only rule, which silently blockified the (i)
+     trigger and dropped it onto its own line anywhere it was nested inside
+     one of those containers. The override makes the component immune to
+     whatever selector it happens to be nested under. */
   position: relative;
-  display: inline-flex;
+  display: inline-flex !important;
   vertical-align: middle;
+  margin: 0 !important;
 }
 
 .info-affordance__trigger {
@@ -8932,3 +9059,79 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 .tag.build     { --status-color: var(--purple-pill, var(--purple)); }
 .tag.tool      { --status-color: var(--amber); }
 .tag.reference { --status-color: var(--label-quiet); }
+
+/* ==========================================================================
+   Stat-card info affordance default (2026-08-23). A stat card is a label
+   line over a big number (.live-metric-grid article and any future card
+   shaped the same way). The info affordance used to live inside the label
+   span, so on a narrow card a long label plus the trigger's tap target
+   didn't fit one line and the icon wrapped onto a line of its own under the
+   label, the exact defect the disclosure-components rule above exists to
+   prevent. Fix: markup keeps the icon as a sibling of the label and the
+   number, not nested inside the label text, and this rule places it in the
+   open space to the right of the number, never in the text flow. Applies
+   to any card shaped this way, not just the homepage.
+   ========================================================================== */
+.live-metric-grid article {
+  position: relative;
+  padding-right: clamp(42px, 6vw, 52px);
+}
+
+.live-metric-grid article > .info-affordance {
+  position: absolute;
+  top: 50%;
+  right: clamp(10px, 1.6vw, 16px);
+  transform: translateY(-50%);
+}
+
+.live-metric-grid article > .info-affordance .info-affordance__panel {
+  left: auto;
+  right: -6px;
+  transform: translate(0, 4px);
+}
+
+.live-metric-grid article > .info-affordance:hover .info-affordance__panel,
+.live-metric-grid article > .info-affordance:focus-within .info-affordance__panel,
+.live-metric-grid article > .info-affordance.is-open .info-affordance__panel {
+  transform: translate(0, 0);
+}
+
+/* ============================================================
+   LABEL COLOR SYSTEM — wrong-claim state (2026-08-23)
+
+   The claim-maturity states (live/target/roadmap/research/testnet)
+   already had distinct colors. One state did not: pages reusing
+   .status-pill.not-live for "Wrong" ran identically to "Not yet"
+   and "Missing", so a reader could not tell an actively false
+   claim from a true absence of evidence at a glance. --red is a
+   sixth hue, reserved for that one meaning: the claim is false,
+   not merely unshipped. --status-color mechanism unchanged; see
+   design/house-style.md for the full state table.
+   ============================================================ */
+
+:root {
+  --red: #d70015;
+}
+
+:root[data-theme="dark"],
+:root:not([data-theme="light"]) {
+  --red: #ff453a;
+}
+
+.status-pill.wrong {
+  --status-color: var(--red);
+}
+
+/* live-network.html and emission-schedule.html tag their data
+   with the same quiet .tag mechanism. measured/projected is a
+   real maturity distinction (an observed fact vs. a forward
+   calculation), so it borrows the live/roadmap hues. red-block
+   reuses --red because GHOSTDAG's own term for the block is
+   "red"; the color and the word agree instead of adding a
+   second meaning to the hue. covenant/app stay the quiet
+   default: they name a data category, not a maturity or
+   correctness claim, and giving every category tag a loud color
+   would be decoration, not meaning. */
+.tag.measured   { --status-color: var(--green); }
+.tag.projected  { --status-color: var(--purple-pill, var(--purple)); }
+.tag.red-block  { --status-color: var(--red); }

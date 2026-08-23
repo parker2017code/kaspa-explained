@@ -43,6 +43,8 @@ inline script and toggled by a button (`nav.js`), persisted to
 | `--purple` | tertiary accent, used sparingly | `#bf5af2` | `#6e56cf` |
 | `--purple-pill` | roadmap status-pill color only; brighter than `--purple` in dark so the pill clears AA (see Status pills) | `#ce80f5` | `#6e56cf` (= `--purple`) |
 | `--pink` | quaternary accent, used sparingly | `#ff9f0a` | `#b25000` |
+| `--amber` | testnet status-pill and `.tag.tool`, distinct from `--pink`/research and `--cyan`/target | `#ffd60a` | `#a86800` |
+| `--red` | wrong-claim status-pill and `.tag.red-block`, the one label state that means "checked and false" | `#ff453a` | `#d70015` |
 | `--ink` | text color placed on a solid accent fill | `#06201b` | `#ffffff` |
 | `--accent-soft` | green tint at 10-12% for soft highlight fills | rgba(102,209,193,.12) | rgba(14,124,107,.1) |
 | `--control-bg` | button/input resting fill | `#2c2c2e` | `#e8e8ed` |
@@ -135,23 +137,113 @@ scales, or glows on hover. A smaller in-demo control button (a toggle, a preset
 picker) can drop to a 32-36px min-height and 8px radius rather than the full
 44px pill, but keeps the same flat, borderless, shadow-free treatment.
 
-**Status pills** (`.status-pill` in `styles.css`, demonstrated in
-`design/patterns.html` pattern 4) are the component for "live / testnet /
-roadmap / research / wrong" labeling: small, rounded 999px, colored text on a
-soft tint of that color, never relying on color alone (the word itself always
-ships with the color). Use this component wherever a status word would
-otherwise get typed out inline in prose repeatedly.
+### Label color system
 
-Every state uses one formula: label `color-mix(in srgb, var(--status-color)
-78%, var(--text))`, fill `color-mix(in srgb, var(--status-color) 14%,
-transparent)` composited over the card it sits on. The `.roadmap` state is
-the one exception: it reads `--status-color` from `--purple-pill`, not
+One mechanism covers every status and category label on the site: a label
+sets a single `--status-color` custom property and a shared base rule
+derives border, text, background, and the small leading dot from it. Nothing
+sets `background`, `color`, or `border-color` on a label state directly.
+`scripts/check-label-colors.py`, run in `scripts/check-site.sh`, fails the
+gate if a page-local `<style>` block does; see "Guarding the system" below
+for why that check exists.
+
+Two families, deliberately different in weight:
+
+- **`.status-pill`** states a claim's maturity: live, testnet, targeted,
+  roadmap, research, or wrong. Loud, rounded 999px, with a leading dot, text
+  in caps. This is the component for "live / testnet / roadmap / research /
+  wrong" labeling (demonstrated in `design/patterns.html` pattern 4). Use it
+  wherever a status word would otherwise get typed out inline in prose
+  repeatedly.
+- **`.tag`** names a category, not a maturity claim: `learn` / `verify` /
+  `build` / `tool` / `reference` page-category tags, and per-demo entity
+  tags such as `measured` / `projected` / `covenant` / `app` / `red-block`.
+  Quiet, square-cornered, no dot, so a page full of category tags does not
+  compete with the one status pill that actually matters on it.
+
+Every `.status-pill` state uses one formula: label `color-mix(in srgb,
+var(--status-color) 78%, var(--text))`, fill `color-mix(in srgb,
+var(--status-color) 14%, transparent)` composited over the card it sits on.
+`.tag` uses the same formula at a slightly lower mix (`82%`/`10%`) so it
+reads quieter at the same size. Never relies on color alone: the word itself
+always ships with the color.
+
+| state | class | token | dark hex | light hex | meaning |
+|---|---|---|---|---|---|
+| Live | `.status-pill.live` | `--green` | `#66d1c1` | `#0e7c6b` | Shipped, running on mainnet today. |
+| Testnet | `.status-pill.testnet` | `--amber` | `#ffd60a` | `#a86800` | Running on a test network, not mainnet. |
+| Targeted | `.status-pill.target` | `--cyan` | `#2997ff` | `#0071e3` | A specific near-term milestone, not yet true. |
+| Roadmap | `.status-pill.roadmap` | `--purple-pill` | `#ce80f5` | `#6e56cf` | Planned architecture, further out than a target. |
+| Research | `.status-pill.research` | `--pink` | `#ff9f0a` | `#b25000` | An open question or proposal stage, not a commitment. |
+| Wrong | `.status-pill.wrong` | `--red` | `#ff453a` | `#d70015` | The claim is actively false, not merely unshipped. |
+| Not live / unsupported | `.status-pill.not-live` | `--muted` | `#b6b0a7` | `#646057` | True absence: missing, not yet built, no evidence either way. |
+
+`not-live` and `wrong` look alike in name but mean different things and must
+not share a color: `not-live` is neutral (a thing that plainly does not
+exist yet), `wrong` is a verdict (a claim that has been checked and found
+false). Before this pass they were the same gray state; `kaspa-claims-checker.html`
+and `what-is-kaspa.html` now split "Wrong"/"Misleading" rows into `.wrong`
+and leave genuine "Not yet"/"Missing" rows on `.not-live`. `testnet` and
+`target` are also easy to confuse in prose (both mean "not mainnet yet") and
+were, for a while, the exact same cyan; `testnet` now carries `--amber`
+specifically so the two read apart at a glance.
+
+Mainnet has no separate pill state: `live` already means "running on
+mainnet," so a second "mainnet" badge next to it would just repeat the same
+fact in a second color. `testnet` is the one network marker the site needs.
+
+The `.roadmap` state reads `--status-color` from `--purple-pill`, not
 `--purple`, because `--purple` run through the shared formula lands at
 4.16:1 on `--card-bg` in dark, below AA. `--purple-pill` is a brighter purple
 used only for this pill; `--purple` itself is unchanged everywhere else it
-appears. Do not adjust the shared 78/14 formula to fix a single state —
-green, cyan, pink, and the muted (`not-live`) state all clear AA under it
-already; give a future failing state its own `--<color>-pill` token instead.
+appears. Do not adjust the shared 78/14 formula to fix one failing state;
+give it its own `--<color>-pill` token instead, the way roadmap and
+`--red`/`--wrong` (checked directly against AA, not derived) already do.
+
+Page-category tags (`.tag.learn` = `--cyan`, `.tag.verify` = `--green`,
+`.tag.build` = `--purple-pill`, `.tag.tool` = `--amber`, `.tag.reference` =
+`--muted`) borrow the maturity palette on purpose: Learn and Verify sit
+closest to "this is settled, go read it" (cyan/green), Build sits closest to
+"this is under construction" (purple, same hue as roadmap), and Tools gets
+the same amber as testnet because both mean "something you run yourself,
+not a claim to evaluate."
+
+Per-demo entity tags stay narrower. `live-network.html`'s `.tag.measured`
+and `emission-schedule.html`'s twin reuse `--green` because a measured
+figure is the same kind of claim as `live`: observed, not projected.
+`.tag.projected` reuses `--purple-pill` because a forward calculation is the
+same kind of claim as `roadmap`: real, but not yet true. `.tag.red-block`
+reuses `--red` because GHOSTDAG's own term for the block is "red"; the
+color and the word agree instead of teaching a second, unrelated meaning
+for the hue. `.tag.covenant` and `.tag.app` (both on `live-network.html`)
+stay on the quiet default with no color override: they name a data
+category, not a maturity or correctness claim, and giving every category
+tag on every demo a loud color would be decoration, not meaning.
+
+### Guarding the system
+
+Every pairing above was measured, not eyeballed: text-on-fill contrast and
+dot-on-page contrast, composited the way the browser actually renders them,
+for every state in both themes. All clear 4.5:1 (text) and 3:1 (the dot,
+treated as a non-text UI component) with real margin; see the commit that
+added `--red` for the worked numbers.
+
+The system has already broken once from a page-local override:
+`toccata-status.html` carried its own `<style>` block with
+
+    .toccata-status-table .status-pill.testnet {
+      --status-color: var(--cyan);
+    }
+
+which reasserted the exact testnet/target collision the shared rule exists
+to prevent, with higher specificity, so the fix silently lost on that one
+page while every other page was correct. `scripts/check-label-colors.py`
+scans every page's embedded `<style>` blocks for a `.status-pill.*` or
+`.tag.*` selector that sets a color property directly, or reassigns
+`--status-color` to a raw value instead of `var(--token)`, and fails
+`scripts/check-site.sh` if it finds one. To add a new state: add one
+modifier rule that sets `--status-color` to an existing or new token, check
+its contrast in both themes, and never restyle a label directly.
 
 **Tables** live inside a wrapping container: `border-radius: 18px; background:
 var(--card-bg);` plus the card shadow. Header cells: `color: var(--faint);
@@ -389,6 +481,95 @@ still opens correctly from a local file:// path with no server.
 Before calling a demo done: render it at 375px and at desktop width, in both
 light and dark, and tab through every control checking that focus is visible
 at each stop.
+
+## Three renderings of one demo
+
+Every demo file is one HTML file that renders three different ways,
+switched entirely by attributes the demo sets on its own root element
+before first paint. A host page never reaches into the iframe to hide
+anything; that hack was tried once (the homepage manipulating the embedded
+collision simulator's DOM directly) and it broke silently the first time
+the demo's markup changed. The demo decides what it shows about itself.
+
+**1. FULL** — the demo's own page, loaded directly. Everything: every
+control, every caveat, the methodology `<details>`, the sources, the
+verdict prose. This is the only rendering with no attribute set.
+
+**2. PREVIEW** — embedded inline on a content page, backing a specific
+claim (`kaspa-mining.html` embedding `fee-market`, for one). Detected the
+same way the chrome-hiding already worked: `window.self !== window.top` in
+a pre-paint script sets `document.documentElement.dataset.embedded =
+"true"`. In this mode the demo shows: the visual, moving if it moves; the
+one or two controls that actually make the point, or none at all if the
+default state already makes it; and at most one short line of context.
+Everything else, caveats, methodology, sources, multi-sentence verdict
+prose, gets `class="embed-hide"` and a CSS rule hides it:
+
+```css
+:root[data-embedded="true"] .embed-hide { display: none !important; }
+```
+
+A `.embed-cta` link (hidden by default, shown only when embedded) takes the
+place of what got hidden, pointing back at the full demo:
+
+```css
+.embed-cta { display: none; }
+:root[data-embedded="true"] .embed-cta { display: block; }
+```
+
+**Measure it, don't eyeball it.** Load the demo standalone, force
+`document.documentElement.dataset.embedded = "true"` in the console, and
+read `document.body.innerText`. If what's left is more than a line or two
+of prose once the labels and live numbers are subtracted, something that
+should be `.embed-hide` isn't.
+
+**3. CARD** — a small preview sized for a grid (`demos/index.html`'s ranked
+list, or any other page listing several demos at once), so a reader sees
+what they'd get before clicking, not a title and a sentence describing it.
+Detected by a second flag, read from the iframe's own `src` query string so
+a host page sets it just by choosing which URL to point the iframe at, with
+no DOM reach-in:
+
+```js
+document.documentElement.dataset.preview =
+  (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+```
+
+Card mode is stricter than preview mode: no controls at all, since a card
+this small is a single click target to the full demo, not a place to
+operate a slider. One CSS rule, generic across every demo file because it
+targets element types instead of demo-specific class names, so it needs no
+per-demo hand-tuning:
+
+```css
+:root[data-preview="true"] input,
+:root[data-preview="true"] select,
+:root[data-preview="true"] button:not([hidden]),
+:root[data-preview="true"] .embed-cta,
+:root[data-preview="true"] label,
+:root[data-preview="true"] .marks {
+  display: none !important;
+}
+:root[data-preview="true"] { pointer-events: none; }
+```
+
+A host page builds a card by pointing a small, non-interactive iframe at
+`/demos/<slug>?preview=1`, wrapped in a link to the full demo so the card
+itself is the click target:
+
+```html
+<div class="card-preview">
+  <iframe src="/demos/SLUG?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
+</div>
+```
+
+```css
+.card-preview { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 18px; background: var(--field-bg, #221f1c); }
+.card-preview iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+```
+
+Reference implementation: `demos/collision-sim.html` (all three modes) and
+`demos/index.html` (the CARD grid consuming fifteen other demos this way).
 
 ## Design standard
 

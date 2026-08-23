@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -73,7 +73,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -84,7 +83,7 @@
       <p class="lead">A Kaspa coin can now carry a rule about how it is allowed to move next, and the network itself checks that rule. Toccata turned that on at the base layer, without turning Kaspa into an EVM.</p>
       <details class="source-more">
         <summary>Activation record: exact release, DAA score, and date</summary>
-        <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See <a href="/toccata-status">Toccata status</a> for what's checked since.</p>
+        <p class="fit-note"><strong>Activated:</strong> Rusty Kaspa v2.0.1 is the current Toccata release. v2.0.0 set mainnet activation at DAA score 474,165,565, and mainnet crossed it June 30. See the <a href="/status">status page</a> for what's checked since.</p>
       </details>
       <div class="actions">
         <a class="button primary" href="/build-on-kaspa">Build on Kaspa</a>
@@ -96,7 +95,7 @@
     <section class="section">
       <p class="eyebrow">Direct answer</p>
       <h2>What Toccata turned on</h2>
-      <p>Four rules, worth naming exactly, because the vague version of this list is where the overclaiming starts.</p>
+      <p>Four rules, worth naming exactly: the vague version is where overclaiming starts.</p>
       <div class="summary-grid grid-cards">
         <article><span>KIP-17</span><p>A UTXO can read the transaction spending it and pin down what the next output has to look like. Vaults, escrow, spend caps, refunds.</p></article>
         <article><span>KIP-20</span><p>Covenant IDs give covenant state a lineage consensus tracks, so nobody can conjure up a fake lookalike.</p></article>
@@ -128,16 +127,94 @@
         </table>
       </div>
       <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
-      <p class="fit-note">Try the <a href="/demos/covenant-breaker">covenant breaker</a>: attack a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and see the exact rule that stops each one.</p>
+      <p class="fit-note">Try the covenant breaker: attack a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and see the exact rule that stops each one.</p>
+      <div class="live-demo-frame">
+        <iframe id="covenant-breaker-frame" src="/demos/covenant-breaker" title="Covenant breaker demo: attack a vault covenant and see which rule stops each attempt" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('covenant-breaker-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">Proofs and lanes</p>
       <h2>Proofs move the work off L1, then settle back</h2>
-      <p>One proof can stand for many off-chain app actions. That L1 transaction may weigh more than a simple payment. It records a settlement or runs a check; the computation itself happened off chain.</p>
+      <p>One proof can stand for many off-chain app actions. The L1 transaction that records the settlement or runs the check may weigh more than a simple payment, but the computation itself happened off chain.</p>
       <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own.</p>
-      <p>Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process. The <a href="/demos/zk-boundary">ZK boundary demo</a> builds a claim and shows a proof succeed on a chosen computation, then fail to establish an outside fact with no named anchor.</p>
+      <p>Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process. The ZK boundary demo below builds a claim and shows a proof succeed on a chosen computation, then fail to establish an outside fact with no named anchor.</p>
       <p>KIP-21 answers a separate cost problem. Based apps use Kaspa L1 ordering, and the simple design gets expensive fast: every app would have to prove which L1 transactions were for it and which were not, so at scale proving what isn't yours turns into the real burden. Partitioned sequencing commitments let a prover follow one app lane instead.</p>
+      <div class="live-demo-frame">
+        <iframe id="zk-boundary-frame" src="/demos/zk-boundary" title="ZK boundary demo: what a proof can and cannot establish" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('zk-boundary-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section class="section">
@@ -169,7 +246,6 @@
         <p>Co-authors defend one pattern behind this as intended, a frozen or blacklist flag, but conceded a second pattern, ephemeral state that mutates without affecting fungibility, is a wrong one needing a spec fix. The reporter's concern stands unwithdrawn, and <a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a> remains open with no spec edit.</p>
         <p>KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). Full detail on both, including the launchpad's four-generation template fork, is on <a href="/kips#supply-split">the KIP and KCC page</a>.</p>
       </details>
-      <p>The two projects below are the current attempts at closing the rest of the gap.</p>
     </section>
 
     <section class="section">
@@ -203,6 +279,45 @@
       <p class="hint" id="vprogs-stamp">Baseline read on August 22, 2026, unchanged. This table refreshes from the repository when the page loads.</p>
       <p>An active repo is evidence of work, not of readiness. The line between this and Toccata is narrower than usually drawn: joining separately compiled covenant apps into one all-or-nothing transaction works on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is the shared mutable state case, which has not reached testnet.</p>
       <p>The model fits products with many users hitting one app, or a proof too big for a covenant spend to carry, which describes few Kaspa apps today.</p>
+      <div class="live-demo-frame">
+        <iframe id="shared-state-frame" src="/demos/shared-state" title="Shared-state demo: what Toccata's atomic composition already covers, and where vProgs would extend it" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('shared-state-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section class="section prose-section" data-audience="specialist">
@@ -211,7 +326,7 @@
       <details class="source-more">
         <summary>For node operators and miners: the new fee floor, mempool policy, and mining specs</summary>
         <p>Toccata raises the standard fee floor to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor covered only direct RPC submissions; the guide says relayed transactions fall under it too once the fork is live.</p>
-        <p>Mempool policy and consensus stay separate rule sets, which is why a zero-fee transaction can still be valid to consensus while an upgraded node drops an underpriced standard transaction from relay on policy. Upgrade steps for node operators, wallets, exchanges, and pools are on <a href="/toccata-status">Toccata status</a>.</p>
+        <p>Mempool policy and consensus stay separate rule sets, which is why a zero-fee transaction can still be valid to consensus while an upgraded node drops an underpriced standard transaction from relay on policy. Upgrade steps for node operators, wallets, exchanges, and pools are on the <a href="/status">status page</a>.</p>
         <p>The byte-size change is tied to proof support. The guide points to the doubled transient-mass limit as the reason hardware specs changed, so ZK-STARK proofs can fit.</p>
         <p>Pools and solo miners need to keep post-Toccata block-template fields and test mining flows against them. The hands-on version is <a href="/kaspa-mining">mining Kaspa</a>.</p>
       </details>
@@ -221,9 +336,9 @@
       <p class="eyebrow">App case</p>
       <h2>Coordination markets, where a rule replaces an operator</h2>
       <p>The assurance-funding row above is a coordination market: it pays out only once enough strangers commit to the same condition. A website can run that loop too, and usually a website is the right answer.</p>
-      <p>The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-coord">covenant<span class="term-def__panel" id="covenant-def-coord" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, so enforcement never rests on a server keeping its word.</span></span> moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
+      <p>The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-coord">covenant<span class="term-def__panel" id="covenant-def-coord" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, so enforcement never rests on a server keeping its word.</span></span> moves the release rule out of the operator's database and into the spend rule, where breaking it means submitting a transaction that consensus throws out.</p>
       <p class="fit-note"><strong>Status: research direction.</strong> Two problems have no shipped answer. A covenant cannot see the outside world, so anything settling on a price or an event needs an oracle whose trust model is spelled out first. And no wallet yet shows a user the condition they are about to sign.</p>
-      <p>Which argues for starting narrow: one condition, one payout rule, and a group small enough to name everyone in it. Assurance funding for a single repeat event is a real test with real users at the end.</p>
+      <p>That argues for starting narrow: one condition, one payout rule, and a group small enough to name everyone in it. Assurance funding for a single repeat event is a real test with real users at the end.</p>
     </section>
 
     <section class="next-step section">
@@ -285,7 +400,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

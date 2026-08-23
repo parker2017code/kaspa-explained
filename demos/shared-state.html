@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Race for one slot | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Two writers reach for the same piece of on-chain data at once. See what happens, and why a UTXO chain answers differently than an account-based one.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-23">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -197,6 +206,43 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: this page carries two widgets
+     (the UTXO-vs-account race, and the three-mode app-composition panel);
+     only the composition panel matches what a host page embeds it for, so
+     the race widget, the details block, and the caveat/sources prose in
+     both are marked .embed-hide and dropped here, with a link back to the
+     full page taking their place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  /* styles.css sets a sitewide body{min-height:100vh}; inside an iframe that
+     floors the measured content height at whatever the iframe's own current
+     height already is, so a teaser can never report shorter than its
+     starting height to the host page's resize script. Neutralize it only
+     when embedded. */
+  :root[data-embedded="true"] body { min-height: 0; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 
 </head>
@@ -219,20 +265,19 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
 <main id="top" tabindex="-1">
-  <div class="topbar">
+  <div class="topbar embed-hide">
     <p class="eyebrow">Kaspa Explained &middot; Demo</p>
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
 
-  <h1>Race for one slot</h1>
-  <p class="lead">Two people reach for the exact same piece of on-chain data at once. Watch what happens, and why a UTXO chain like Kaspa answers differently than an account-based chain like Ethereum.</p>
+  <h1 class="embed-hide">Race for one slot</h1>
+  <p class="lead embed-hide">Two people reach for the exact same piece of on-chain data at once. Watch what happens, and why a UTXO chain like Kaspa answers differently than an account-based chain like Ethereum.</p>
 
-  <div class="stage">
+  <div class="stage embed-hide">
     <div class="mode-row" role="group" aria-label="Choose which design to test">
       <button class="mode-btn" id="modeUtxo" type="button" aria-pressed="true">Kaspa: UTXO</button>
       <button class="mode-btn" id="modeAccount" type="button" aria-pressed="false">Account model (e.g. Ethereum)</button>
@@ -251,7 +296,7 @@
     <p class="caption" id="caption">One shared slot. You and a rival both want it right now.</p>
   </div>
 
-  <details>
+  <details class="embed-hide">
     <summary>Why this happens, and what it simplifies</summary>
     <div class="quotes-body">
       <p><strong>Kaspa: UTXO.</strong> A payment, a token balance, or an app's data on Kaspa lives in one owned, one-time-spendable cell (a UTXO). Two transactions can both try to spend that same cell at once, the way you and the rival just did. Only one confirms. The network does not compare which one paid more or arrived "more validly"; it resolves by which one lands first. The other is rejected outright and has to rebuild against what is left, not merge with the winner and not wait in line behind it.</p>
@@ -265,7 +310,7 @@
   </details>
 
   <div class="apps-panel">
-    <p class="cross-app-lead">The race above is one app, two writers. A different question: can two separately built apps reach each other, and does that composition survive more than one transaction?</p>
+    <p class="cross-app-lead"><span class="embed-hide">The race above is one app, two writers. </span>A different question: can two separately built apps reach each other, and does that composition survive more than one transaction?</p>
     <div class="mode-row" role="group" aria-label="Choose which app-composition case to see">
       <button class="mode-btn" id="modeSameTx" type="button" aria-pressed="true">Same transaction</button>
       <button class="mode-btn" id="modeManyUsers" type="button" aria-pressed="false">Many users</button>
@@ -279,7 +324,8 @@
       <div class="connector" id="connBC"></div>
       <div class="app-box" id="appC"><span class="app-dot"></span>App C</div>
     </div>
-    <p class="caption" id="appsCaption">Argent's Inter-Covenant Communication lets one compiled app's actor authorize or observe another's, inside a single atomic transaction, built on covenant IDs (KIP-20) and the introspection opcodes (KIP-17) Toccata put on mainnet. Both apps' state has to be spent and recreated in that same transaction; nothing calls out to a separately timed message. Argent's own examples of this are unaudited, offline demos, not a deployment anyone can transact against.</p>
+    <p class="caption embed-hide" id="appsCaption">Argent's Inter-Covenant Communication lets one compiled app's actor authorize or observe another's, inside a single atomic transaction, built on covenant IDs (KIP-20) and the introspection opcodes (KIP-17) Toccata put on mainnet. Both apps' state has to be spent and recreated in that same transaction; nothing calls out to a separately timed message. Argent's own examples of this are unaudited, offline demos, not a deployment anyone can transact against.</p>
+    <p class="embed-cta"><a href="/demos/shared-state">See the full demo, with sources</a></p>
   </div>
 </main>
 
@@ -464,7 +510,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

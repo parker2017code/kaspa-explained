@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>What a proof can't prove | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Kaspa's Toccata upgrade checks ZK proofs on-chain. Watch one succeed on the thing it can prove, and fail on the thing it cannot.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -152,6 +161,42 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the claim picker, the proof
+     run, and the comparison it produces, plus at most one short line of
+     context. The methodology/sources details block belongs only on the
+     full demo, so it is marked .embed-hide and dropped here, and a link
+     back to the full page takes its place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  /* styles.css sets a sitewide body{min-height:100vh}; inside an iframe that
+     floors the measured content height at whatever the iframe's own current
+     height already is, so a teaser can never report shorter than its
+     starting height to the host page's resize script. Neutralize it only
+     when embedded. */
+  :root[data-embedded="true"] body { min-height: 0; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 
 </head>
@@ -174,17 +219,16 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
 <main id="top" tabindex="-1">
-  <div class="topbar">
+  <div class="topbar embed-hide">
     <p class="eyebrow">Kaspa Explained &middot; Demo</p>
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
 
-  <h1>What a proof can't prove</h1>
+  <h1 class="embed-hide">What a proof can't prove</h1>
   <p class="lead">Kaspa's Toccata upgrade checks ZK proofs (math proofs a computer can verify without redoing the work) on-chain. Pick what to prove, then run it.</p>
 
   <div class="stage">
@@ -212,7 +256,9 @@
     </div>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/zk-boundary">See the full demo, with sources</a></p>
+
+  <details class="embed-hide">
     <summary>Why this happens, and how it maps to Kaspa</summary>
     <div class="quotes-body">
       <p>Kaspa's Toccata hard fork added <code>OpZkPrecompile</code> (KIP-16, Status: Active), an opcode that checks a proof against a chosen proof system, initially Groth16 and RISC0-Succinct. The opcode confirms a proof verifies against a given verifying key and public inputs. It says nothing about where those public inputs came from.</p>
@@ -377,7 +423,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

@@ -137,3 +137,90 @@ triangle, which is the failure the ceiling was written to prevent.
 This is not license to ignore the rules. It is a requirement to know
 what each one is for. Break one deliberately, in the open, with the
 reason stated. Never break one by forgetting it.
+
+## Verification that actually counts
+
+Every change is checked at three widths, 390, 768, and 1280, in BOTH
+themes, before it is called done. Not a spot check. Not one width and an
+assumption about the rest.
+
+Local passing is not evidence the live site works. Check kaspaexplained.com
+after deploying. A fix that exists only on disk has not shipped, and the
+owner has repeatedly been shown defects that were already fixed locally
+and never pushed.
+
+The owner does not find defects. If he finds one, the process failed. He
+reviews judgment calls, not bugs.
+
+## Reference points, expanded
+
+Apple, iOS, and macOS set the bar for restraint and for color used to
+mean something rather than to decorate. Also worth borrowing from:
+Google for information density that stays scannable, Tesla and SpaceX
+for confident sparse pages that let one object carry the screen, Meta
+for interface consistency across surfaces.
+
+The common thread is that none of them explain what the reader can see.
+They show the thing and get out of the way.
+
+## Ten ways to hide something
+
+The owner's framing: "There are probably literally ten different ways to
+hide the information in interesting ways, so that if I need to find it I
+will, but if I don't need to find it I won't, and I can still stay
+engaged with the page."
+
+That is the target. Not one disclosure triangle swallowing a page, and
+not a wall of everything. A reader moves through the page and pulls in
+only what they need, and the pulling is itself interesting.
+
+The site has three components so far: the info affordance, the term
+definition reveal, and the view switch. Three is not ten. Build more when
+material calls for something that does not exist yet, and document each
+one in `design/house-style.md` so the next page can use it.
+
+The failure mode to avoid is uniformity. The same mechanism on every page
+reads as a template. Vary it.
+
+## Shape
+
+A page is a thing a reader moves through, not a document they receive.
+When a page is described as "an awful shape," length is usually the
+symptom and structure is the cause: everything sitting at one level, in
+one column, at one weight, with no sense of what matters most.
+
+Before cutting words, ask what the page's primary content actually is.
+Usually it is one or two things. Everything else is depth. Depth stays,
+one move away, and never in the reader's face on arrival.
+
+## The test
+
+Before anything ships, ask whether Apple, Google, Tesla, or Meta would
+do it. Write it that way, design it that way, keep it that long, hide it
+that way, put that information there, or leave that page stale.
+
+If they would not, it does not ship. That is the whole standard. Every
+other rule in this document is an attempt to describe some part of it,
+and where a rule and this test disagree, this test wins.
+
+Applied honestly it is demanding. None of those companies ship a page
+nobody reads. None of them leave a page stale and still linked. None of
+them put a directory of two hundred links in front of a reader. None of
+them write a heading like "Kaspa claims checker."
+
+## Reference pages are usually not pages
+
+A glossary is not something anyone reads. It is definitions a reader
+needs at the moment they hit an unfamiliar word, which is what the term
+definition reveal is for.
+
+Sources are not something anyone reads either. A source belongs attached
+to the claim it settles, reachable from that claim.
+
+The same question applies to any page whose job is to hold reference
+material: does a reader ever arrive here on purpose? If the honest answer
+is no, the material belongs where it gets used, and the page should not
+exist.
+
+This is not a license to delete the material. It is a requirement to put
+it where someone will actually meet it.

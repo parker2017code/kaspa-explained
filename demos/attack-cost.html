@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Attack Cost Calculator | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="What it would cost to attack each chain's network, for any length of time from a minute to a day, in round dollars, using a live hash rate and price read where one exists.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -260,6 +269,36 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the duration slider, chain
+     picker, rent/buy toggle, and the live cost readout, plus at most one
+     short line. Assumptions, caveats, and the cross-chain rental-price
+     comparison belong only on the full demo. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -281,7 +320,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -314,7 +352,7 @@
     <button type="button" data-mode="buy" aria-pressed="false">Buy it outright</button>
   </div>
 
-  <div class="compare-note" id="compareNote" style="display:none;">
+  <div class="compare-note embed-hide" id="compareNote" style="display:none;">
     <p id="compareNoteText"></p>
   </div>
 
@@ -325,22 +363,24 @@
     <div class="ratio-bar"><div class="fill" id="ratioFill" style="width:0%"></div></div>
   </div>
 
-  <div class="limits">
+  <div class="limits embed-hide">
     <p id="limitsNote"></p>
   </div>
-  <div class="impact-note" id="impactNote" style="display:none;">
+  <div class="impact-note embed-hide" id="impactNote" style="display:none;">
     <p>Buying this much hash power or stake on the open market would push its own price up as you buy it, the way any large purchase does in a market with finite depth. That effect is real and it is not in the figure above: the number shown is a floor, not an estimate of the true cost, and how large that markup would run at this scale is not something this page can source.</p>
   </div>
-  <div class="limits" id="permanencePanel">
+  <div class="limits embed-hide" id="permanencePanel">
     <p id="permanenceNote"></p>
   </div>
 
-  <details id="assumptions">
+  <p class="embed-cta"><a href="/demos/attack-cost">See the full demo, with assumptions and sources</a></p>
+
+  <details class="embed-hide" id="assumptions">
     <summary>Assumptions, exact math, and sources</summary>
     <div id="assumptionsBody"></div>
   </details>
 
-  <p class="demo-footnote">Hash rates and prices update from a live read on load; figures that stay dated are labeled as such above and in the assumptions. Sources are listed above.</p>
+  <p class="demo-footnote embed-hide">Hash rates and prices update from a live read on load; figures that stay dated are labeled as such above and in the assumptions. Sources are listed above.</p>
 </main>
 
 <script>
@@ -897,7 +937,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

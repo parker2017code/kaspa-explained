@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Confirmation Risk Over Time | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Faster blocks mean you see a payment sooner, not that it's final sooner. Watch the risk of reversal fall as you wait.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -179,6 +188,40 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the slider, the tolerance
+     pills, the per-chain readout, and the chart, plus at most one short
+     line. The caveat paragraphs, the model/sources details, and the
+     footnote belong only on the full demo, so they are marked .embed-hide
+     and dropped here, with a link back to the full page in their place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta {
+    margin: 14px 0 0;
+    font-size: .86rem;
+  }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -200,7 +243,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -228,8 +270,8 @@
 
   <ul class="cr-readout" id="crReadout"></ul>
   <p class="result-line" id="crResultLine"></p>
-  <p class="chain-note">A reorg is not paperwork. If the block carrying your payment gets replaced, the attacker can spend the same coins again elsewhere. That double-spend is what this wait protects against.</p>
-  <p class="chain-note">Safe means the attacker has lost the race to out-mine your payment, a chance that falls the longer you wait. Kaspa's separate finality rule blocks any reorg past 432,000 blocks (12 hours), no matter the attacker's share; how the two differ is below.</p>
+  <p class="chain-note embed-hide">A reorg is not paperwork. If the block carrying your payment gets replaced, the attacker can spend the same coins again elsewhere. That double-spend is what this wait protects against.</p>
+  <p class="chain-note embed-hide">Safe means the attacker has lost the race to out-mine your payment, a chance that falls the longer you wait. Kaspa's separate finality rule blocks any reorg past 432,000 blocks (12 hours), no matter the attacker's share; how the two differ is below.</p>
 
   <div class="panel">
     <svg id="crChart" viewBox="0 0 720 340" role="img" aria-labelledby="crChartTitle crChartDesc">
@@ -238,9 +280,11 @@
     </svg>
   </div>
 
-  <p class="chain-note">Three chains, same three this site compares everywhere: Bitcoin and Litecoin as classic single-chain proof of work at different speeds, Kaspa as the fast blockDAG this site explains.</p>
+  <p class="embed-cta"><a href="/demos/confirmation-risk">See the full demo, with the model and sources</a></p>
 
-  <details>
+  <p class="chain-note embed-hide">Three chains, same three this site compares everywhere: Bitcoin and Litecoin as classic single-chain proof of work at different speeds, Kaspa as the fast blockDAG this site explains.</p>
+
+  <details class="embed-hide">
     <summary>The model, and where the Kaspa line is an approximation</summary>
     <p><b>Model.</b> This is the "double-spend race" from Satoshi Nakamoto's Bitcoin whitepaper, section 11 (2008). An attacker holding a share of the network's mining power races to out-produce the blocks already confirming a payment. The whitepaper models that race as a Poisson process and asks: what is the chance the attacker still catches up after z blocks.</p>
     <div class="formula">P(z) = 1 &minus; &sum;<sub>k=0</sub><sup>z</sup> Poisson(k; &lambda;)&middot;(1 &minus; (q/p)<sup>z&minus;k</sup>), &lambda;=z&middot;q/p, q&lt;p</div>
@@ -250,7 +294,7 @@
         <p><b>Is 12 hours arbitrary?</b> It is a chosen constant, not one derived from a security proof the way GHOSTDAG's own k parameter is. In rusty-kaspa's consensus code, <code>FINALITY_DURATION</code> is a plain 43,200-second (12-hour) constant, and the block-count threshold is just that duration times blocks per second: 432,000 blocks at 10 BPS. Compare that to GHOSTDAG's k, which the same codebase computes from a target probability bound through a named function, <code>calculate_ghostdag_k</code>. Finality duration has no equivalent formula behind it in the source. It is a judgment call about how much margin is enough, held fixed in wall-clock time even as Kaspa's blocks per second have changed, and picked to sit well past the point where the curve above has already fallen close to zero for any attacker share worth trying. This site does not dress that up as derived math: it is a number someone chose.</p>
   </details>
 
-  <p class="demo-footnote">Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</p>
+  <p class="demo-footnote embed-hide">Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</p>
 </main>
 
 <script>
@@ -498,6 +542,18 @@
         labelSpots[i].y = labelSpots[i - 1].y + MIN_GAP;
       }
     }
+    // When several chains converge near 0% at the right edge, the stacking
+    // above can push the last label's y past the chart's own bottom edge
+    // (H=340); its text then renders 1px outside the SVG's clip box
+    // (check-render.mjs clipping assertion, 2026-08-23, at every width and
+    // theme it ran). Shift the whole stack up by however far the last one
+    // overshoots, rather than clamping only the last label and reopening a
+    // gap the MIN_GAP loop just closed.
+    var LABEL_BOTTOM_LIMIT = H - 4;
+    var overshoot = labelSpots.length ? labelSpots[labelSpots.length - 1].y - LABEL_BOTTOM_LIMIT : 0;
+    if (overshoot > 0) {
+      labelSpots.forEach(function (spot) { spot.y -= overshoot; });
+    }
     labelSpots.forEach(function (spot) {
       var curveLbl = svgEl('text', {
         class: 'cr-curve-label', x: spot.x, y: spot.y,
@@ -548,7 +604,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>The fee market | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="Load a Kaspa block with real traffic from other chains, heavier transactions, or a faster block rate, and watch what a full block does to fees and to the gap with the subsidy.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -275,6 +284,36 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the traffic/fee/price controls
+     and the block-fill visual, plus at most one short line. The
+     never-happening-yet caveat and the mass/capacity formulas belong only
+     on the full demo. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  :root[data-embedded="true"] .top-row { display: none; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -296,7 +335,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -404,11 +442,13 @@
     </div>
   </div>
 
-  <div class="honesty">
+  <p class="embed-cta"><a href="/demos/fee-market">See the full demo, with the mass and capacity formulas</a></p>
+
+  <div class="honesty embed-hide">
     <p style="margin:0;"><b>None of this is happening yet.</b> Real traffic runs about 0.895 tx/s; every other scenario here is hypothetical. Fees run 12,054&times; below the subsidy; closing that gap takes more throughput, higher fees, price appreciation, or the halving schedule.</p>
   </div>
 
-  <details>
+  <details class="embed-hide">
     <summary>Show the mass and capacity formulas</summary>
     <div class="formula-body">
       <h3>Transaction mass, reused exactly from the mass calculator</h3>
@@ -445,7 +485,7 @@ feerate = fee_sompi / mass_grams</span>
 
   <p class="sources">Offline model, checked against rusty-kaspa source and this repo's data; see <a href="../skeptical-case">the skeptical case</a>.</p>
 
-  <p class="demo-footnote">Independent illustration. Runs entirely in your browser.</p>
+  <p class="demo-footnote embed-hide">Independent illustration. Runs entirely in your browser.</p>
 </main>
 
 <script>
@@ -953,7 +993,6 @@ feerate = fee_sompi / mass_grams</span>
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

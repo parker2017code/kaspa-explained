@@ -75,7 +75,7 @@ Use community portals, media sites, learning libraries, interviews, recaps, and 
 
 ## Site pages
 
-`site-manifest.json`'s `pages` array and `sitemap.xml` are the checked inventory: 25 live, indexable pages as of 2026-08-22. Every other `.html` file in the repository root is a `noindex` redirect stub (meta refresh to one of the 25); this list only covers the 25 live pages, and a filename below with no live-page description means it now redirects rather than holding content.
+`site-manifest.json`'s `pages` array and `sitemap.xml` are the checked inventory: 23 live, indexable pages as of 2026-08-23. Every other `.html` file in the repository root is a `noindex` redirect stub (meta refresh to one of the 23); this list only covers the 23 live pages, and a filename below with no live-page description means it now redirects rather than holding content.
 
 - `index.html` routes readers by audience and knowledge level.
 - `what-is-kaspa.html` answers the highest-intent beginner search directly.
@@ -84,8 +84,6 @@ Use community portals, media sites, learning libraries, interviews, recaps, and 
 - `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
 - `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
 - `argent-explained.html` explains Argent, the actor-based language compiling to Silverscript covenant applications. Added 2026-08-22 as its own live page; it does not redirect.
-- `toccata-status.html` tracks Toccata status and safe wording.
-- `toccata-essay.html` is Parker Schmidt's first-person essay on the Toccata upgrade.
 - `build-on-kaspa.html` routes a builder from an app idea to the three build paths and a status gate before publishing publicly (the old `build-this-now.html` recipes, `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, and the founder/supporter survey and matching-board pages were retired into this single builder path; those URLs now redirect to `build-on-kaspa.html`, `toccata-explained.html`, `why-kaspa-matters.html`, or `about.html`).
 - `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and carries the dated-update changelog (the old `kaspa-status-updates.html` and `kaspa-status-check-may-2026.html` snapshots redirect here).
 - `skeptical-case.html` is the risks and open-questions page.

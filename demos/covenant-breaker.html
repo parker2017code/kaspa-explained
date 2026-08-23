@@ -22,6 +22,15 @@
       // paint, in the same breath as the theme script, or the chrome flashes
       // in and collapses a frame later, which is worse than never hiding it.
       document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+      // A card-grid preview (demos/index.html's ranked list) asks for this
+      // demo in miniature: the visual only, animating if it animates, no
+      // controls a reader can't actually reach at that size. ?preview=1 on
+      // the iframe src flags that, checked pre-paint alongside embedded so
+      // there's no flash of controls before this hides them.
+      try {
+        document.documentElement.dataset.preview =
+          (new URLSearchParams(window.location.search).get("preview") === "1") ? "true" : "false";
+      } catch (e) { document.documentElement.dataset.preview = "false"; }
     })();
   </script>
   <title>Covenant Breaker, attack a Kaspa vault covenant | Kaspa Explained</title>
@@ -51,7 +60,7 @@
   <meta name="twitter:description" content="A covenant locks a spending rule into a coin. Try to get money out of this vault without following every rule, and see why the safest-looking attack is the one that actually works.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -371,6 +380,42 @@
   :root[data-embedded="true"] .skip-link {
     display: none;
   }
+
+  /* An embed is a teaser, not the full page: the attack presets, the entry
+     fields, and the verdict they produce, plus at most one short line of
+     context. The vault-details tab, the rule pseudocode, and the sources
+     paragraph belong only on the full demo, so they are marked .embed-hide
+     and dropped here, and a link back to the full page takes their place. */
+  .embed-cta { display: none; }
+  :root[data-embedded="true"] .embed-hide { display: none !important; }
+  :root[data-embedded="true"] .embed-cta { display: block; }
+
+  /* Card-grid preview mode (?preview=1, see embed-init above): the visual
+     only. Every control a reader can't reach at card size disappears, and
+     the whole page ignores pointer input, since the card grid it sits in
+     is a single click target to the full demo, not sixteen tiny sliders. */
+  :root[data-preview="true"] input,
+  :root[data-preview="true"] select,
+  :root[data-preview="true"] button:not([hidden]),
+  :root[data-preview="true"] .embed-cta,
+  :root[data-preview="true"] label,
+  :root[data-preview="true"] .marks {
+    display: none !important;
+  }
+  :root[data-preview="true"] {
+    pointer-events: none;
+  }
+
+  :root[data-embedded="true"] main { padding-top: 4px; }
+  /* styles.css sets a sitewide body{min-height:100vh}; inside an iframe that
+     floors the measured content height at whatever the iframe's own current
+     height already is, so a teaser can never report shorter than its
+     starting height to the host page's resize script. Neutralize it only
+     when embedded. */
+  :root[data-embedded="true"] body { min-height: 0; }
+  .embed-cta { margin: 14px 0 0; font-size: .86rem; }
+  .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
+  .embed-cta a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -392,7 +437,6 @@
         <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
-      <a class="nav-cta" href="/toccata-status">Toccata status</a>
     </nav>
   </header>
 
@@ -400,14 +444,14 @@
   <button type="button" id="theme-toggle" aria-label="Switch theme">Light</button>
 </div>
 <main id="top" tabindex="-1">
-  <h1>Covenant breaker</h1>
-  <p class="fictional-note">A worked example. Nothing here is on a real blockchain.</p>
+  <h1 class="embed-hide">Covenant breaker</h1>
+  <p class="fictional-note embed-hide">A worked example. Nothing here is on a real blockchain.</p>
   <p class="intro">This vault holds 10,000 KAS behind four rules. Get any of it to an address you control without satisfying all four.</p>
-  <p class="status-line">Status: the cap, destination, and delay below run on Kaspa mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule is written in <a href="/argent-explained">Argent's</a> syntax, still research and not released; only the notation is illustrative, the enforcement it describes is live.</p>
+  <p class="status-line embed-hide">Status: the cap, destination, and delay below run on Kaspa mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule is written in <a href="/argent-explained">Argent's</a> syntax, still research and not released; only the notation is illustrative, the enforcement it describes is live.</p>
 
   <div class="view-switch" role="tablist" aria-label="View">
     <button type="button" class="view-tab active" id="tab-attempt" role="tab" aria-selected="true" aria-controls="view-attempt">Attempt</button>
-    <button type="button" class="view-tab" id="tab-details" role="tab" aria-selected="false" aria-controls="view-details">Vault details &amp; rules</button>
+    <button type="button" class="view-tab embed-hide" id="tab-details" role="tab" aria-selected="false" aria-controls="view-details">Vault details &amp; rules</button>
   </div>
 
   <div id="view-attempt" role="tabpanel" aria-labelledby="tab-attempt">
@@ -477,7 +521,7 @@
     </section>
   </div>
 
-  <div id="view-details" role="tabpanel" aria-labelledby="tab-details" hidden>
+  <div id="view-details" class="embed-hide" role="tabpanel" aria-labelledby="tab-details" hidden>
     <section class="panel">
       <h2>Vault state (made up, for this example)</h2>
       <div class="vault-stats" id="stats"></div>
@@ -494,7 +538,9 @@
     </section>
   </div>
 
-  <details>
+  <p class="embed-cta"><a href="/demos/covenant-breaker">See the full demo, with rules and sources</a></p>
+
+  <details class="embed-hide">
     <summary>Rule definitions and sources</summary>
     <pre class="rule-code"><b>state</b> VaultState {
     byte[32] owner_pk_hash;
@@ -795,7 +841,6 @@
           <span>Verify</span>
           <a href="/status">Status</a>
           <a href="/kaspa-claims-checker">Claims checker</a>
-          <a href="/toccata-status">Toccata status</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>
