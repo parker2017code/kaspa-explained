@@ -107,13 +107,25 @@ supply-split is delisted from the demos index pending a recommendation
 on whether it should exist at all. It failed the owner three times. The
 page still resolves directly. The index says sixteen demos.
 
-Live pricing stays. CoinGecko returns 403 with a CORS block from this
-origin, so pages asserting a live read were showing baked-in figures
-while claiming freshness. The fix is a source that permits browser
-requests, not removing the feature. Candidates being tested: Coinbase,
-Kraken, Binance, CoinCap, and whatever api.kaspa.org exposes. Test with
-a real browser fetch on this origin, never curl, which is how the bug
-shipped.
+Live pricing stays, and is now wired to Kraken's public ticker for BTC,
+LTC, XMR, ETH and SOL, plus api.kaspa.org for Kaspa. Both were tested by
+real browser fetch on this origin, never curl, which is how the original
+bug shipped. Coinbase has no KAS pair, Binance blocks this origin, and
+CoinCap's public tier failed outright. Kraken serves price but not market
+cap, so some figures are a live price against a dated supply ratio and
+the sourcing lines say which half is which.
+
+One correction to the record: the false "read live" claim was blamed on
+broken fallback logic. Forced-failure testing could not reproduce that.
+The fallback was already honest. The real fault was CoinGecko rate
+limiting under bursty traffic and returning errors with no CORS header,
+which a browser reports as a bare CORS block.
+
+supply-split is cut, not just delisted. It works and is correctly
+sourced. It was cut because the subject is a static one-path fact rather
+than a system with parameter space, and kips.html already teaches it in
+prose with better sourcing. The file stays on disk and still resolves so
+no link 404s.
 
 ### Known remaining work
 
