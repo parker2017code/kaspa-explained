@@ -227,7 +227,7 @@
     <h1>The fee market</h1>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
-  <p class="lead">Kaspa's blocks are nearly empty today. Try loading them with real traffic from other chains, heavier transactions, or a faster block rate, and watch what a full block actually does to fees, and to the gap with the subsidy.</p>
+  <p class="lead">Kaspa's blocks are nearly empty today. Load one with real traffic, heavier transactions, or a faster block rate, and watch what a full block does to fees and the subsidy gap.</p>
 
   <div class="layout">
     <div class="panel">
@@ -308,7 +308,7 @@
 
       <div class="block-frame">
         <p class="grid-note">This block, drawn to scale</p>
-        <p class="you-note">Every dot below is one transaction trying to get into this block. The bordered pink square, always first, is <b>yours</b>. Everything else belongs to someone else.</p>
+        <p class="you-note">Every dot is one transaction. The bordered pink square, always first, is <b>yours</b>.</p>
         <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">-</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
         <div class="legend">
@@ -328,8 +328,8 @@
   </div>
 
   <div class="honesty">
-    <p style="margin:0 0 8px;"><b>None of this is happening on Kaspa right now.</b> Measured mainnet traffic runs about 0.895 tx/s, a real 30-day mean that is itself bursty (monthly means from 0.58 to 318.97 over the past year, one peak hour hit 2,229). Every scenario above except "Today, measured" is a hypothetical: what would happen if that much demand showed up, not something the network is currently carrying.</p>
-    <p style="margin:0;">Fee revenue and the block subsidy are two different things paying miners. Right now the subsidy pays roughly 12,054&times; what fees do (see the sources below). Closing that gap needs either far more throughput or a much higher fee per transaction, or price appreciation, or the subsidy shrinking further on its own halving schedule. This demo lets you turn each of those knobs and read the result; it does not predict which one happens.</p>
+    <p style="margin:0 0 8px;"><b>None of this is happening on Kaspa right now.</b> Real mainnet traffic runs about 0.895 tx/s (bursty: monthly means 0.58 to 318.97 over the past year). Every scenario above but "Today, measured" is hypothetical.</p>
+    <p style="margin:0;">Fee revenue and the block subsidy are two different things paying miners: the subsidy pays roughly 12,054&times; what fees do today. Closing that gap needs more throughput, a higher fee, price appreciation, or the subsidy's own halving; this demo lets you turn each knob and read the result.</p>
   </div>
 
   <details>
@@ -367,7 +367,7 @@ feerate = fee_sompi / mass_grams</span>
     </div>
   </details>
 
-  <p class="sources">Offline model, no network requests. Numbers checked against rusty-kaspa source, this repo's own data files, and CLAIMS.yml on 2026-08-22; see <a href="../skeptical-case">the skeptical case</a> for the fee-versus-subsidy argument this demo is built to let you test yourself.</p>
+  <p class="sources">Offline model. Checked against rusty-kaspa source and this repo's data on 2026-08-22; see <a href="../skeptical-case">the skeptical case</a> for the fee-versus-subsidy argument.</p>
 
   <footer>Independent illustration. Runs entirely in your browser.</footer>
 </main>
@@ -837,6 +837,27 @@ feerate = fee_sompi / mass_grams</span>
   });
 
   render();
+})();
+
+// Info-affordance tap toggle (design/house-style.md, "Disclosure
+// components"): CSS alone gives hover/focus; this adds tap-to-open and
+// tap-outside-to-close for touch.
+(function () {
+  document.querySelectorAll(".info-affordance").forEach(function (el) {
+    var trigger = el.querySelector(".info-affordance__trigger");
+    trigger.addEventListener("click", function () {
+      var open = el.classList.toggle("is-open");
+      trigger.setAttribute("aria-expanded", String(open));
+    });
+  });
+  document.addEventListener("click", function (e) {
+    document.querySelectorAll(".info-affordance.is-open").forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove("is-open");
+        el.querySelector(".info-affordance__trigger").setAttribute("aria-expanded", "false");
+      }
+    });
+  });
 })();
 </script>
 </body>
