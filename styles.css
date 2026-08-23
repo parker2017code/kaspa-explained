@@ -8875,3 +8875,60 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   display: block;
 }
 
+
+/* ============================================================
+   LABEL COLOR SYSTEM
+   One mechanism for every label on the site.
+
+   The site had five unrelated label treatments: status-pill,
+   stage, taglabel, binding-tag, and a set of per-page one-offs.
+   A reader could not learn one color language and carry it
+   from page to page, which is the whole point of having one.
+
+   Every label sets a single --status-color and inherits the
+   rest. To add a state, add a modifier with one custom
+   property. Never restyle a label directly.
+
+   Two families, deliberately different in weight:
+   .status-pill  states a claim's maturity. Loud, dotted.
+   .tag          names a category. Quiet, no dot, so a page
+                 full of categories does not shout over the
+                 one status that matters.
+   ============================================================ */
+
+:root {
+  --amber: #a86800;
+  --label-quiet: var(--muted);
+}
+
+:root[data-theme="dark"],
+:root:not([data-theme="light"]) {
+  --amber: #ffd60a;
+}
+
+/* Testnet shared --cyan with target, so the two most
+   confusable states on the site rendered identically. */
+.status-pill.testnet {
+  --status-color: var(--amber);
+}
+
+.tag {
+  --status-color: var(--label-quiet);
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--status-color) 34%, transparent);
+  border-radius: 6px;
+  padding: 2px 8px;
+  color: color-mix(in srgb, var(--status-color) 82%, var(--text));
+  background: color-mix(in srgb, var(--status-color) 10%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
+.tag.learn     { --status-color: var(--cyan); }
+.tag.verify    { --status-color: var(--green); }
+.tag.build     { --status-color: var(--purple-pill, var(--purple)); }
+.tag.tool      { --status-color: var(--amber); }
+.tag.reference { --status-color: var(--label-quiet); }

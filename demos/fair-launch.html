@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fair Launch vs Premine: Supply Distribution Plotted</title>
-<meta name="description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
-<meta name="robots" content="index,follow">
-<meta name="dateModified" content="2026-08-22">
-<link rel="canonical" href="https://kaspaexplained.com/demos/fair-launch">
-<script>
-  (function () {
-    var key = "kaspa-explained-theme";
-    var saved = null;
-    try { saved = localStorage.getItem(key); } catch (e) {}
-    var param = new URLSearchParams(window.location.search).get("theme");
-    var theme = (param === "light" || param === "dark") ? param : saved;
-    document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
-    if (param === "light" || param === "dark") {
-      try { localStorage.setItem(key, param); } catch (e) {}
-    }
-  })();
-</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <script id="embed-init">
+    (function () {
+      // This demo can render standalone or embedded in an iframe elsewhere on
+      // the site (index.html's collision simulator, for one). An embedded
+      // copy must not show its own header, footer, or skip link on top of the
+      // page that's already showing them. This has to run before first
+      // paint, in the same breath as the theme script, or the chrome flashes
+      // in and collapses a frame later, which is worse than never hiding it.
+      document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+    })();
+  </script>
+  <title>Fair Launch vs Premine: Supply Distribution Plotted | Kaspa Explained</title>
+  <meta name="description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/demos/fair-launch">
+  <link rel="icon" href="../kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="../favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Fair Launch vs Premine: Supply Distribution Plotted | Kaspa Explained">
+  <meta property="og:description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaspaexplained.com/demos/fair-launch">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fair Launch vs Premine: Supply Distribution Plotted | Kaspa Explained">
+  <meta name="twitter:description" content="Plot Kaspa's mined-from-zero supply against several other coins' premine and presale allocations.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-22">
+  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
     color-scheme: dark;
@@ -268,7 +300,7 @@
   details h3 { font-size: 15px; color: var(--text); margin: 12px 0 4px; }
 
   code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; color: var(--cyan); }
-  footer.note { font-size: 12.5px; color: var(--faint); margin-top: 20px; }
+  .demo-footnote { font-size: 12.5px; color: var(--faint); margin-top: 20px; }
 
   a:focus-visible,
   button:focus-visible,
@@ -279,10 +311,44 @@
     outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
     outline-offset: 3px;
   }
+
+  /* The site header now supplies the real theme toggle (design/house-style.md); this demo's own toggle button stays in the markup (its click handler still works, redundantly) but is hidden so the page shows exactly one control for it. */
+  #theme-toggle, #themeToggle { display: none; }
+
+  /* Hide this demo's own site chrome when it renders inside another page's
+     iframe (see embed-init above): the parent page already has a header and
+     footer, so a nested copy would double them up. */
+  :root[data-embedded="true"] .site-header,
+  :root[data-embedded="true"] .footer,
+  :root[data-embedded="true"] .skip-link {
+    display: none;
+  }
 </style>
 </head>
 <body>
-<main>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+<main id="top" tabindex="-1">
   <div class="page-head">
     <h1 style="--len:22">Fair launch vs premine</h1>
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -299,8 +365,8 @@
       <label><input type="checkbox" data-chain="cardano" checked><i class="swatch shape-triangle" style="background:var(--purple)"></i>Cardano</label>
       <label><input type="checkbox" data-chain="xrp" checked><i class="swatch shape-diamond" style="background:var(--pink)"></i>XRP</label>
     </div>
-    <p class="why-note">Ethereum and Cardano funded a foundation this way. XRP created its entire supply for one company, no public sale.</p>
-    <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share, at any point on this chart.</p>
+    <p class="why-note">Ethereum and Cardano funded a foundation; XRP had no public sale at all.</p>
+    <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share.</p>
     <svg id="chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest. Solid segments are documented history; dashed segments are modeled projection past each chain's own current age."></svg>
     <p class="chart-caption" id="chartCaption">Solid: documented history. Dashed, past the marker: modeled projection.</p>
     <div class="yearControl">
@@ -332,7 +398,7 @@
   <div class="fair-note launch-history">
     <h3>What a <span class="term-def" tabindex="0" role="button" aria-describedby="premine-def">premine<span class="term-def__panel" id="premine-def" role="tooltip">Coins created and held before launch, before anyone else could mine or buy them.</span></span> buys, and what Kaspa's launch looked like</h3>
     <p>
-      Kaspa never had one: its genesis block carries an empty UTXO set. Founders, company, and foundation combined have held 0% at every point since. DAGLabs, Yonatan Sompolinsky's company, mined an estimated 2.5&ndash;3% of supply on rented hardware after launch, the same way anyone else could. The Polychain-vs-DAGLabs-team split of that figure is not established: no public allocation table exists. Full sourcing below.
+      Kaspa never had one: an empty genesis UTXO set, 0% held by founders, company, or foundation, ever. DAGLabs mined an estimated 2.5&ndash;3% after launch, the same way anyone could. The Polychain-vs-team split is not established. Full sourcing below.
     </p>
   </div>
 
@@ -342,7 +408,7 @@
   </details>
 
   <p class="live-footer" id="liveFooter" aria-live="polite"></p>
-  <footer class="note">Runs entirely in your browser. Part of Kaspa Explained.</footer>
+  <p class="demo-footnote">Runs entirely in your browser.</p>
 </main>
 
 <script>
@@ -637,15 +703,12 @@
     var el = document.getElementById('liveFooter');
     if (!el) return;
     var speed = getDecaySpeed().toFixed(1);
-    var kaspaBit = kaspaChecked
-      ? "Kaspa's founders, company, and foundation have held <b>0%</b> since block one. "
-      : '';
+    var kaspaBit = kaspaChecked ? "Kaspa 0%. " : '';
     if (!maxChain) {
-      el.innerHTML = kaspaBit || "Toggle a chain above to compare it against Kaspa's zero.";
+      el.innerHTML = kaspaBit || "Toggle a chain to compare against Kaspa's zero.";
       return;
     }
-    el.innerHTML = "At year " + yr + ", with the fade modeled at <b>" + speed + "&times;</b>, " +
-      kaspaBit + maxChain.label + "'s founders and company still hold <b>" + pct + "%</b> of supply.";
+    el.innerHTML = "Year " + yr + ", fade " + speed + "&times;: " + kaspaBit + maxChain.label + " " + pct + "%.";
   }
 
   function render() { buildSVG(); updateTable(); updateResultLine(); }
@@ -684,5 +747,44 @@
   window.addEventListener('resize', render);
 })();
 </script>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/demos">Demos</a>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

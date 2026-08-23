@@ -122,17 +122,16 @@
         <p class="lead">Activated at DAA score <strong>474,165,565</strong>: L1 covenants, ZK verification, sequencing commitments.</p>
       </div>
       <div class="status-lane-grid grid-cards">
-        <a href="/toccata-status"><span>Activation</span><strong>The activation record</strong></a>
-        <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong></a>
-        <a href="/kaspa-developments"><span>This month</span><strong>Full developments log</strong></a>
-        <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong></a>
+        <a href="/toccata-status"><span>Activation</span><strong>The activation record</strong><small>DAA score, block hash, and the release tag that shipped it.</small></a>
+        <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong><small>What covenants let a transaction enforce on itself.</small></a>
+        <a href="/kaspa-developments"><span>This month</span><strong>Full developments log</strong><small>Every dated change since Toccata, in one running list.</small></a>
+        <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>The repos and commits every claim on this site traces to.</small></a>
       </div>
     </section>
 
     <section id="demos" class="section" aria-labelledby="demos-title">
       <p class="eyebrow">Try it</p>
       <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
-      <p class="lead">It opens at Kaspa's real rate, where a single chain discards 83.3 percent of the work and the blockDAG discards none. Push the rate to 100 a second and the chain throws away 98 percent.</p>
       <div class="live-demo-frame">
         <iframe id="collision-frame" src="/demos/collision-sim" title="Collision simulator: single chain vs blockDAG" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
@@ -154,16 +153,11 @@
           try {
             var doc = frame.contentDocument;
             if (!doc) return;
-            ['h1', '#theme-toggle', 'p.intro', '.formula'].forEach(function (sel) {
-              var el = doc.querySelector(sel);
-              if (el) {
-                el.style.display = 'none';
-              } else if (window.console && console.warn) {
-                console.warn('Embedded demo hide selector matched nothing: ' + sel);
-              }
-            });
-            var footnote = doc.querySelector('main > p:last-of-type');
-            if (footnote) footnote.style.display = 'none';
+            /* The demo hides its own chrome. It sets data-embedded on its
+               root element before first paint, and its stylesheet keys the
+               header, footer, and skip link off that. This page used to
+               reach in and hide a hardcoded selector list instead, which
+               broke silently the moment the demo's markup changed. */
             var resize = function () {
               /* body.scrollHeight excludes the body's own margins, which clipped
                  the last 25px of the embedded demo. Take the largest honest
@@ -222,69 +216,49 @@
       </div>
       <div class="live-metric-grid grid-cards" aria-label="Live Kaspa metrics">
         <article>
-          <span>Circulating supply
-            <span class="info-affordance" id="supply-info">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="supply-info-panel">
-                <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">More about circulating supply</span>
-              </button>
-              <span class="info-affordance__panel" id="supply-info-panel" role="tooltip">Reported by <code>api.kaspa.org/info/coinsupply</code>.</span>
-            </span>
+          <span>Circulating supply</span>
+          <span class="info-affordance" id="supply-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="supply-info-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">More about circulating supply</span>
+            </button>
+            <span class="info-affordance__panel" id="supply-info-panel" role="tooltip">Reported by <code>api.kaspa.org/info/coinsupply</code>. Genesis is auditable in rusty-kaspa's <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">genesis.rs</a>.</span>
           </span>
           <strong id="live-supply">Loading</strong>
         </article>
         <article>
-          <span>Mined
-            <span class="info-affordance" id="mined-info">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mined-info-panel">
-                <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">More about mined percentage</span>
-              </button>
-              <span class="info-affordance__panel" id="mined-info-panel" role="tooltip">Circulating supply divided by max supply.</span>
-            </span>
+          <span>Mined</span>
+          <span class="info-affordance" id="mined-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mined-info-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">More about mined percentage</span>
+            </button>
+            <span class="info-affordance__panel" id="mined-info-panel" role="tooltip">Circulating supply divided by max supply.</span>
           </span>
           <strong id="live-mined">Loading</strong>
         </article>
         <article>
-          <span>Blocks stored by one node
-            <span class="info-affordance" id="blocks-info">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="blocks-info-panel">
-                <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">More about this figure</span>
-              </button>
-              <span class="info-affordance__panel" id="blocks-info-panel" role="tooltip">Not a network total: the API load-balances across nodes with different pruning states, so this is whichever backend answered.</span>
-            </span>
+          <span>Blocks stored by one node</span>
+          <span class="info-affordance" id="blocks-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="blocks-info-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">More about this figure</span>
+            </button>
+            <span class="info-affordance__panel" id="blocks-info-panel" role="tooltip">Not a network total: the API load-balances across nodes with different pruning states, so this is whichever backend answered.</span>
           </span>
           <strong id="live-blocks">Loading</strong>
         </article>
         <article>
-          <span>DAA score
-            <span class="info-affordance" id="daa-info">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="daa-info-panel">
-                <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">More about DAA score</span>
-              </button>
-              <span class="info-affordance__panel" id="daa-info-panel" role="tooltip">Kaspa's progress marker, roughly analogous to block height.</span>
-            </span>
+          <span>DAA score</span>
+          <span class="info-affordance" id="daa-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="daa-info-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">More about DAA score</span>
+            </button>
+            <span class="info-affordance__panel" id="daa-info-panel" role="tooltip">Kaspa's progress marker, roughly analogous to block height.</span>
           </span>
           <strong id="live-daa">Loading</strong>
         </article>
-      </div>
-      <div class="origin-proof-strip grid-cards">
-        <div>
-          <span>Origin proof
-            <span class="info-affordance" id="origin-info">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="origin-info-panel">
-                <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">More about the origin proof</span>
-              </button>
-              <span class="info-affordance__panel" id="origin-info-panel" role="tooltip">rusty-kaspa's genesis.rs ships an empty genesis UTXO set and a checkpoint DAA score tracing to the Nov. 22, 2021 checkpoint, with scheduled emission from there.</span>
-            </span>
-          </span>
-        </div>
-        <div class="actions">
-          <a class="button primary" href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">Verify in genesis.rs</a>
-        </div>
       </div>
       <p class="live-footnote" id="live-updated">Waiting for live data.</p>
     </section>

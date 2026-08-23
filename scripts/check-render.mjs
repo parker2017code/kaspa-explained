@@ -19,6 +19,24 @@
  *   6. Every in-page href="#..." resolves to an element that exists, and
  *      after navigating to that fragment the target lands in the viewport.
  *
+ *   7. Overlap: no two independent (non-ancestor/descendant) visible
+ *      text-bearing elements have intersecting rendered boxes.
+ *   8. Near-overlap: no two independent text-bearing elements sit closer
+ *      than NEAR_OVERLAP_PX (4px, justified where it is defined in
+ *      collectChecks) without actually overlapping.
+ *   9. Clipping: no text-bearing element's own content overflows its own
+ *      hidden/clip box, and no element's rendered box extends outside a
+ *      hidden/clip ancestor's box.
+ *
+ * Assertions 7-9 respond to the owner's stated complaint (2026-08-23):
+ * "visual elements overlap with text or get close to overlapping, and
+ * spacing is too tight in one place and too loose somewhere else." The
+ * fourth part of that complaint, spacing consistency, is NOT a pass/fail
+ * assertion here on purpose: this run reports the actual distribution of
+ * section-to-section vertical gaps (see printSpacingDistribution) so the
+ * owner can pick a real threshold from real numbers, rather than the gate
+ * failing on day one against a guessed one.
+ *
  * Theme mechanism, read from nav.js and each page's inline #theme-init
  * script rather than assumed: the theme is decided by the localStorage key
  * "kaspa-explained-theme" ("light", or anything else falls back to dark),
@@ -69,10 +87,30 @@
  *     a fragment target that is legitimately hidden at one breakpoint (e.g.
  *     a mobile-only element on a desktop render) still has its existence
  *     checked, just not its landing position, at that render.
+ *   - Assertions 7 and 8 (overlap, near-overlap) exempt an element, or
+ *     anything inside it, marked data-overlap-ok="true" in the page's own
+ *     markup -- for a deliberate overlay, tooltip, modal, sticky header, or
+ *     anything else absolutely positioned on purpose. This is an opt-in the
+ *     page states, not a skip by tag or CSS position, so an accidental
+ *     sticky-header overlap is still caught; only a marked one is exempt.
+ *     Assertion 9 (clipping) has the equivalent data-clip-ok="true" for a
+ *     deliberate ellipsis/truncation pattern. Assertion 9 also treats
+ *     "auto"/"scroll" ancestors as legitimate containment, not a clip (the
+ *     content is reachable by scrolling), and stops looking further up once
+ *     it finds one -- and it never walks as far as <html>/<body>, whose
+ *     overflow-x:hidden here is a page-wide horizontal-scroll guard, the
+ *     same thing assertion 1 already checks directly, not a locally-scoped
+ *     container. Without both of those, this assertion false-positived on
+ *     a horizontally-scrollable code block (reachable via its own scrollbar,
+ *     reported as "clipped" by the far-away body guard instead) and on the
+ *     site's own skip-link (deliberately off-canvas until focus).
  *
  * Advisory-then-blocking, same pattern as check-visible-words.mjs and
  * check-density.sh: env var RENDER_GATE_BLOCKING, default false. Wired into
  * scripts/check-site.sh the same way the visible-words gate is.
+ *
+ * RENDER_GATE_WIDTHS, optional: comma-separated widths, overrides the
+ * default [390, 768, 1280] (used to run a faster reduced matrix).
  *
  * RENDER_GATE_PAGES, optional: comma-separated relative paths, overrides the
  * full sitemap+demos page list. Used to point this gate at a single scratch
@@ -106,7 +144,9 @@ try {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-const WIDTHS = [390, 768, 1280];
+const WIDTHS = process.env.RENDER_GATE_WIDTHS
+  ? process.env.RENDER_GATE_WIDTHS.split(',').map(Number)
+  : [390, 768, 1280];
 const THEMES = ['dark', 'light'];
 const THEME_KEY = 'kaspa-explained-theme';
 
@@ -210,6 +250,18 @@ function collectChecks(width) {
   const SKIP_TAGS_BODY = new Set(['SCRIPT', 'STYLE', 'SVG', 'NAV', 'HEADER', 'FOOTER', 'TEMPLATE', 'NOSCRIPT']);
   const SKIP_TAGS_ALL = new Set(['SCRIPT', 'STYLE', 'TEMPLATE', 'NOSCRIPT']);
 
+  // Assertion 8 threshold: text-bearing elements independent of each other
+  // (not overlapping, per assertion 7) closer than this are "close to
+  // overlapping" in the owner's words. 4px is below the smallest gap the
+  // site's own grids use between distinct cards/components (8px is the
+  // smallest common grid gap in styles.css, 10px the most frequent one);
+  // it is deliberately close to the couple of 2px/4px gaps styles.css uses
+  // for tightly-coupled control-internal spacing (an icon glued to its own
+  // label), which are not independent text-bearing pairs and so are not the
+  // target here. Below 4px between two unrelated text blocks reads as
+  // touching at normal viewing distance.
+  const NEAR_OVERLAP_PX = 4;
+
   function isVisible(el) {
     if (typeof el.checkVisibility === 'function') {
       return el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
@@ -243,6 +295,18 @@ function collectChecks(width) {
       n = n.parentElement;
     }
     return false;
+  }
+
+  // Assertions 7/8 (overlap, near-overlap) exemption: a deliberate overlay,
+  // tooltip, modal, sticky header, or anything else absolutely positioned on
+  // purpose is marked data-overlap-ok="true" in the page's own markup, on the
+  // element or a wrapping ancestor. That is an opt-in the page author states,
+  // not a blanket skip by tag or position -- a sticky header that happens to
+  // sit at position:sticky is not automatically exempt just for being sticky;
+  // it still has to actually be marked, so an accidental sticky-header
+  // overlap is still caught.
+  function exemptFromOverlap(el) {
+    return !!el.closest('[data-overlap-ok="true"]');
   }
 
   function selectorFor(el) {
@@ -346,15 +410,42 @@ function collectChecks(width) {
     }
   }
 
+  // Shared pool for assertion 5 (contrast) and assertions 7-9
+  // (overlap, near-overlap, clipping): every visible, non-chrome-excluded
+  // text-bearing element, one entry per element, captured with its rect at
+  // this render's frame.
+  const textElements = [];
+
   // ---- assertion 5: text contrast ----
   const contrastFails = [];
   {
+    // getComputedStyle(...).color / .backgroundColor does not always come
+    // back as rgb()/rgba(). Any value that went through color-mix() (61
+    // uses in styles.css, including every .status-pill background/color)
+    // serializes as CSS Color 4's color(srgb r g b [/ a]) notation with
+    // 0-1 float channels, not 0-255 integers -- the original comma-only
+    // rgba() regex silently failed to match that, fell back to fully
+    // transparent black for BOTH the text and background color on every
+    // such element, and a transparent-over-white composite reduces to
+    // white-on-white: an exact 1.00:1 ratio that has nothing to do with
+    // the real rendered colors. That false 1.00:1 pattern is what first
+    // surfaced this bug on manual review of the violation list.
     function parseColor(str) {
       if (!str || str === 'transparent') return { r: 0, g: 0, b: 0, a: 0 };
-      const m = str.match(/rgba?\(([^)]+)\)/);
-      if (!m) return { r: 0, g: 0, b: 0, a: 0 };
-      const parts = m[1].split(',').map((s) => parseFloat(s));
-      return { r: parts[0] || 0, g: parts[1] || 0, b: parts[2] || 0, a: parts.length > 3 ? parts[3] : 1 };
+      // rgb()/rgba(), comma or CSS Color 4 space/slash syntax, 0-255 ints
+      let m = str.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)/);
+      if (m) {
+        return { r: +m[1], g: +m[2], b: +m[3], a: m[4] !== undefined ? +m[4] : 1 };
+      }
+      // color(srgb r g b [/ a]), 0-1 float channels -- Chromium's own
+      // serialization of a color-mix() (or other CSS Color 4 function)
+      // result, confirmed by direct inspection of this site's computed
+      // styles, not merely assumed from the spec text.
+      m = str.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)/);
+      if (m) {
+        return { r: +m[1] * 255, g: +m[2] * 255, b: +m[3] * 255, a: m[4] !== undefined ? +m[4] : 1 };
+      }
+      return { r: 0, g: 0, b: 0, a: 0 };
     }
     function compositeOver(top, bottom) {
       const a = top.a + bottom.a * (1 - top.a);
@@ -450,6 +541,179 @@ function collectChecks(width) {
           sample: text.slice(0, 50),
         });
       }
+
+      textElements.push({ el, rect, text });
+    }
+  }
+
+  // Off-canvas elements (rect entirely at negative x/y relative to the
+  // document origin) are excluded from overlap/near-overlap: this is the
+  // site's own "visually hidden until focus" technique (the skip-link uses
+  // transform: translateY(-160%)), a deliberate, well-known accessibility
+  // pattern, not a reader-visible position. Unlike below-the-fold content
+  // (reachable by scrolling, still correctly checked), a negative-origin
+  // element can never appear on screen at the same time as anything else,
+  // so it structurally cannot overlap or crowd another element a reader
+  // actually sees.
+  const overlapCandidates = textElements.filter((t) => t.rect.bottom > 0 && t.rect.right > 0);
+
+  // ---- assertion 7: overlap between independent text-bearing elements ----
+  const overlaps = [];
+  {
+    const EPS = 0.5; // sub-pixel rounding tolerance, not a design threshold
+    for (let i = 0; i < overlapCandidates.length; i++) {
+      const a = overlapCandidates[i];
+      if (exemptFromOverlap(a.el)) continue;
+      for (let j = i + 1; j < overlapCandidates.length; j++) {
+        const b = overlapCandidates[j];
+        if (exemptFromOverlap(b.el)) continue;
+        if (a.el.contains(b.el) || b.el.contains(a.el)) continue; // ancestor/descendant, not independent
+        const ra = a.rect;
+        const rb = b.rect;
+        const intersects =
+          ra.left < rb.right - EPS &&
+          ra.right > rb.left + EPS &&
+          ra.top < rb.bottom - EPS &&
+          ra.bottom > rb.top + EPS;
+        if (intersects) {
+          overlaps.push({
+            selector: selectorFor(a.el),
+            selector2: selectorFor(b.el),
+            sample: a.text.slice(0, 40),
+            sample2: b.text.slice(0, 40),
+          });
+        }
+      }
+    }
+  }
+
+  // ---- assertion 8: near-overlap (independent text within NEAR_OVERLAP_PX) ----
+  const nearOverlaps = [];
+  {
+    for (let i = 0; i < overlapCandidates.length; i++) {
+      const a = overlapCandidates[i];
+      if (exemptFromOverlap(a.el)) continue;
+      for (let j = i + 1; j < overlapCandidates.length; j++) {
+        const b = overlapCandidates[j];
+        if (exemptFromOverlap(b.el)) continue;
+        if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
+        const ra = a.rect;
+        const rb = b.rect;
+        // already-overlapping pairs are assertion 7's job, not this one
+        const overlapsAlready =
+          ra.left < rb.right && ra.right > rb.left && ra.top < rb.bottom && ra.bottom > rb.top;
+        if (overlapsAlready) continue;
+
+        const xGap = ra.left >= rb.right ? ra.left - rb.right : rb.left >= ra.right ? rb.left - ra.right : 0;
+        const yGap = ra.top >= rb.bottom ? ra.top - rb.bottom : rb.top >= ra.bottom ? rb.top - ra.bottom : 0;
+        // true 2D gap between the two boxes: if they overlap on one axis, the
+        // gap is purely the other axis's distance, not the diagonal
+        const xOverlapsAxis = ra.left < rb.right && ra.right > rb.left;
+        const yOverlapsAxis = ra.top < rb.bottom && ra.bottom > rb.top;
+        let gap;
+        if (xOverlapsAxis) gap = yGap;
+        else if (yOverlapsAxis) gap = xGap;
+        else gap = Math.hypot(xGap, yGap);
+
+        if (gap > 0 && gap < NEAR_OVERLAP_PX) {
+          nearOverlaps.push({
+            selector: selectorFor(a.el),
+            selector2: selectorFor(b.el),
+            gap: gap.toFixed(1),
+            sample: a.text.slice(0, 40),
+            sample2: b.text.slice(0, 40),
+          });
+        }
+      }
+    }
+  }
+
+  // ---- assertion 9: clipping (element cut off by its own or an ancestor's overflow:hidden/clip) ----
+  const clips = [];
+  {
+    for (const { el, rect, text } of textElements) {
+      if (el.closest('[data-clip-ok="true"]')) continue;
+
+      // self-clipping: element's own content overflows its own box and that
+      // box actually hides overflow (an ellipsis truncation or a hard clip)
+      const selfCs = getComputedStyle(el);
+      const selfHides = /hidden|clip/.test(selfCs.overflowX) || /hidden|clip/.test(selfCs.overflowY);
+      if (selfHides && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)) {
+        clips.push({
+          selector: selectorFor(el),
+          measured: `content ${el.scrollWidth}x${el.scrollHeight}px clipped to box ${el.clientWidth}x${el.clientHeight}px`,
+          expected: 'content fits within its own box, or overflow is not hidden',
+          sample: text.slice(0, 40),
+        });
+        continue;
+      }
+
+      // ancestor-clipping: walk up per axis (x and y independently, a card
+      // can scroll horizontally and clip vertically, or vice versa). The
+      // FIRST ancestor on each axis that actually contains the element
+      // (overflow other than "visible") decides that axis: "auto"/"scroll"
+      // means the content is still reachable by scrolling and is not a
+      // violation, and also stops the walk on that axis, because a much
+      // more distant ancestor's unrelated overflow:hidden (this site's
+      // global html/body overflow-x:hidden horizontal-scroll guard, in
+      // particular) must not be blamed for content a nearer scroll
+      // container already handles correctly. Only "hidden"/"clip" is an
+      // actual violation.
+      for (const axis of ['x', 'y']) {
+        let n = el.parentElement;
+        while (n) {
+          // html/body themselves are excluded as clipping ancestors: their
+          // overflow-x:hidden here is a page-wide horizontal-scroll guard
+          // (the same thing assertion 1 already checks directly against
+          // document.scrollWidth), not a locally-scoped container someone
+          // deliberately wrapped content in. Without this, every
+          // intentionally off-canvas element (the site's own skip-link,
+          // "visually hidden until focus" via a transform that moves it
+          // above the viewport) reads as "clipped," which is a false
+          // positive for a working, deliberate pattern, not a real defect.
+          if (n === document.body || n === document.documentElement) break;
+          const cs = getComputedStyle(n);
+          const overflowValue = axis === 'x' ? cs.overflowX : cs.overflowY;
+          if (overflowValue === 'visible') {
+            n = n.parentElement;
+            continue;
+          }
+          // this ancestor contains the element on this axis, one way or another
+          if (/hidden|clip/.test(overflowValue)) {
+            const ar = n.getBoundingClientRect();
+            const cut =
+              axis === 'x'
+                ? Math.max(0, ar.left - rect.left, rect.right - ar.right)
+                : Math.max(0, ar.top - rect.top, rect.bottom - ar.bottom);
+            if (cut > 1) {
+              clips.push({
+                selector: selectorFor(el),
+                measured: `cut off by ${Math.round(cut)}px on the ${axis}-axis against ${selectorFor(n)}'s overflow-${axis}:${overflowValue} box`,
+                expected: `fully within the clipping ancestor's box on the ${axis}-axis`,
+                sample: text.slice(0, 40),
+              });
+            }
+          }
+          // auto/scroll: legitimately reachable, not a violation
+          break;
+        }
+      }
+    }
+  }
+
+  // ---- spacing distribution (reporting only, not a pass/fail assertion) ----
+  const spacingGaps = [];
+  {
+    const sectionSelector = 'main#top > .section, main#top > section, main#top > .prose-section, main#top > article, main#top > .home-page, .home-page > .section';
+    const sections = [...new Set(document.querySelectorAll(sectionSelector))]
+      .filter((el) => isVisible(el))
+      .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+      .sort((a, b) => a.rect.top - b.rect.top);
+    for (let i = 1; i < sections.length; i++) {
+      const prev = sections[i - 1];
+      const cur = sections[i];
+      const gap = cur.rect.top - prev.rect.bottom;
+      if (gap >= 0) spacingGaps.push(Math.round(gap));
     }
   }
 
@@ -467,10 +731,46 @@ function collectChecks(width) {
     }
   }
 
-  return { overflow, smallText, smallTargets, contrastFails, anchors };
+  return { overflow, smallText, smallTargets, contrastFails, anchors, overlaps, nearOverlaps, clips, spacingGaps };
 }
 
 // ---- main ----
+
+// Spacing-consistency assertion, reporting only (design decision 2026-08-23:
+// the owner wants the real numbers before picking a threshold, not a gate
+// that fails on day one). Reports the distribution of vertical gaps between
+// top-level sections, pooled across pages and themes and grouped by width,
+// since .section's own rule is a fluid clamp() tied to viewport width, not a
+// fixed token -- the same gap value should recur constantly at a given width
+// if the site's rhythm is actually consistent, and the spread/outliers are
+// exactly what "too tight in one place, too loose somewhere else" looks like
+// in numbers.
+function printSpacingDistribution(samples) {
+  console.log('\nSection-to-section vertical spacing, by width (reporting only, not a pass/fail gate):');
+  const byWidth = new Map();
+  for (const s of samples) {
+    if (!byWidth.has(s.width)) byWidth.set(s.width, []);
+    byWidth.get(s.width).push(s.gap);
+  }
+  for (const width of [...byWidth.keys()].sort((a, b) => a - b)) {
+    const gaps = byWidth.get(width).sort((a, b) => a - b);
+    const n = gaps.length;
+    if (n === 0) continue;
+    const sum = gaps.reduce((a, b) => a + b, 0);
+    const mean = sum / n;
+    const median = n % 2 ? gaps[(n - 1) / 2] : (gaps[n / 2 - 1] + gaps[n / 2]) / 2;
+    const counts = new Map();
+    for (const g of gaps) counts.set(g, (counts.get(g) || 0) + 1);
+    const topValues = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    console.log(
+      `  width=${width}: n=${n} min=${gaps[0]}px max=${gaps[n - 1]}px mean=${mean.toFixed(1)}px median=${median}px`
+    );
+    console.log(
+      `    most common values: ` +
+      topValues.map(([v, c]) => `${v}px (x${c})`).join(', ')
+    );
+  }
+}
 
 async function main() {
   const pages = buildPageList();
@@ -479,6 +779,7 @@ async function main() {
   const browser = await chromium.launch({ channel: 'chrome' });
 
   const violations = []; // { page, width, theme, kind, selector, measured, expected }
+  const spacingSamples = []; // { page, width, theme, gap } -- reporting only, see the distribution summary
   let renders = 0;
 
   for (const rel of pages) {
@@ -507,7 +808,19 @@ async function main() {
         const page = await context.newPage();
         const consoleErrors = [];
         page.on('console', (msg) => {
-          if (msg.type() === 'error') consoleErrors.push(msg.text());
+          if (msg.type() !== 'error') return;
+          // Chromium's "Failed to load resource" console text carries a
+          // status code but not the URL -- the URL only lives in the
+          // message's source location. Fold it into the matched string so
+          // the allowlist (assertion 4) can actually match on URL, the way
+          // the header comment says it does, instead of silently never
+          // matching network-failure messages.
+          const loc = msg.location();
+          const locUrl = loc && loc.url ? loc.url : '';
+          consoleErrors.push(locUrl ? `${msg.text()} [${locUrl}]` : msg.text());
+        });
+        page.on('requestfailed', (req) => {
+          consoleErrors.push(`request failed: ${req.failure()?.errorText || 'unknown'} ${req.url()}`);
         });
         page.on('pageerror', (err) => consoleErrors.push(String(err)));
 
@@ -553,6 +866,34 @@ async function main() {
         for (const v of checks.contrastFails) {
           violations.push({ page: rel, width, theme, kind: 'contrast', ...v });
         }
+        for (const v of checks.overlaps) {
+          violations.push({
+            page: rel,
+            width,
+            theme,
+            kind: 'overlap',
+            selector: `${v.selector} <-> ${v.selector2}`,
+            measured: `"${v.sample}" overlaps "${v.sample2}"`,
+            expected: 'independent text-bearing elements do not intersect',
+          });
+        }
+        for (const v of checks.nearOverlaps) {
+          violations.push({
+            page: rel,
+            width,
+            theme,
+            kind: 'near-overlap',
+            selector: `${v.selector} <-> ${v.selector2}`,
+            measured: `${v.gap}px gap ("${v.sample}" / "${v.sample2}")`,
+            expected: '>= 4px gap (NEAR_OVERLAP_PX)',
+          });
+        }
+        for (const v of checks.clips) {
+          violations.push({ page: rel, width, theme, kind: 'clipping', ...v });
+        }
+        for (const gap of checks.spacingGaps) {
+          spacingSamples.push({ page: rel, width, theme, gap });
+        }
         for (const err of consoleErrors) {
           if (CONSOLE_ALLOWLIST.some((re) => re.test(err))) continue;
           violations.push({
@@ -566,7 +907,17 @@ async function main() {
           });
         }
 
-        // assertion 6, part 2: anchors land in viewport after navigating
+        // assertion 6, part 2: anchors land in viewport after navigating.
+        // styles.css sets `scroll-behavior: smooth` on <html>, so a fragment
+        // jump animates over several hundred ms; force it to `auto` here so
+        // the position read right after setting location.hash is the final
+        // one, not a mid-animation frame (that mismatch was read as a false
+        // "offscreen" violation on every anchor before this override).
+        if (checks.anchors.length > 0) {
+          await page.evaluate(() => {
+            document.documentElement.style.scrollBehavior = 'auto';
+          });
+        }
         for (const a of checks.anchors) {
           if (!a.exists) {
             violations.push({
@@ -588,7 +939,14 @@ async function main() {
           await page.evaluate((id) => {
             location.hash = `#${id}`;
           }, a.id);
-          await page.waitForTimeout(60);
+          // nav.js's own snapToHash (see nav.js, "Same-page anchor pills")
+          // deliberately re-snaps on hashchange, then again two rAF frames
+          // later, then again on a 250ms setTimeout to catch late reflow
+          // (a details block settling, a sticky-header height recompute).
+          // Reading the position before that documented final re-snap fires
+          // is reading a mid-settle frame, not where the anchor actually
+          // lands -- wait past it.
+          await page.waitForTimeout(350);
 
           const landed = await page.evaluate(
             ({ id, w }) => {
@@ -623,6 +981,8 @@ async function main() {
 
   console.log(`Render-matrix check: ${pages.length} page(s), ${renders} render(s) (width x theme combinations).`);
 
+  printSpacingDistribution(spacingSamples);
+
   if (violations.length === 0) {
     console.log('\nRender-matrix check: no violations.');
     return;
@@ -631,12 +991,15 @@ async function main() {
   const severity = {
     load: 0,
     'anchor-missing': 1,
-    contrast: 2,
-    'touch-target': 3,
-    overflow: 4,
-    'anchor-offscreen': 5,
-    'font-size': 6,
-    'console-error': 7,
+    overlap: 2,
+    clipping: 3,
+    contrast: 4,
+    'near-overlap': 5,
+    'touch-target': 6,
+    overflow: 7,
+    'anchor-offscreen': 8,
+    'font-size': 9,
+    'console-error': 10,
   };
 
   const byPage = new Map();

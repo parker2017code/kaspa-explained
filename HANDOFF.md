@@ -160,9 +160,43 @@ count, not an opinion, so it can be checked rather than argued.
    no horizontal scroll, no body text under 16px, no touch target under
    44px, no console errors, no text contrast under 4.5:1 computed
    numerically, and every in-page anchor lands on its target.
-5. Every demo passes a cold read by an agent that built no part of it,
-   with no open defect above cosmetic.
+5. The site survives an adversarial wave, run only after everything else
+   is green, by agents that built none of what they are attacking. Four
+   jobs, and no agent gets its own work:
+
+   - Break it. Drag every control to its limits, both ends and past
+     them. Empty input, absurd input, rapid clicking, double submit,
+     back button mid-interaction, reload mid-state, deep link into a
+     fragment, disable JavaScript, kill the network mid-fetch. Anything
+     that renders a wrong number, a stuck state, or a blank panel is a
+     defect.
+   - Misunderstand it. Read every page as a newcomer who knows no
+     Kaspa vocabulary and read it again as a hostile skeptic looking
+     for a claim to catch out. Record every place the two readers
+     reach different conclusions, and every sentence either one has to
+     read twice. A page that can be honestly misread is a defect even
+     when every sentence is true.
+   - Check it. Every number, date, quotation, and claim against its
+     primary source, not against another page of this site. Every
+     quotation verbatim. Every invented example labeled as invented.
+     Every live figure actually read live, tested by browser fetch on
+     this origin, never curl.
+   - Cross-read it. One concept, one name, one phrasing, everywhere.
+     Two pages teaching the same mechanism in different words is a
+     defect. So is a demo whose voice does not match the guide that
+     links to it.
+
+   Every finding gets fixed and re-checked, by a different agent than
+   the one that found it. Nothing reaches the owner as a known defect.
 6. No `recheck_after` date in `CLAIMS.yml` has passed.
 7. Tree clean, pushed, and the live domain serves the same commit hash.
 
 At green, hand to the owner and stop. He drives, then says what is next.
+
+The handoff is not a list of what was done. It is a short list of what
+he specifically needs to look at, and nothing else: the judgment calls
+only he can make, the places where two defensible choices existed and
+one was taken, and anything cut or kept against the obvious reading. He
+does not review defects. Finding those is the agents' job, and any
+defect that reaches him is a failure of this process, not a request for
+his help.

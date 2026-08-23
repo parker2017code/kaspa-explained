@@ -1,14 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");var p=new URLSearchParams(location.search).get("theme");var i=(p==="light"||p==="dark")?p:t;document.documentElement.dataset.theme=(i==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Collision Simulator, Chain vs BlockDAG</title>
-<meta name="description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
-<meta name="robots" content="index,follow">
-<meta name="dateModified" content="2026-08-22">
-<link rel="canonical" href="https://kaspaexplained.com/demos/collision-sim">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <script id="embed-init">
+    (function () {
+      // This demo can render standalone or embedded in an iframe elsewhere on
+      // the site (index.html's collision simulator, for one). An embedded
+      // copy must not show its own header, footer, or skip link on top of the
+      // page that's already showing them. This has to run before first
+      // paint, in the same breath as the theme script, or the chrome flashes
+      // in and collapses a frame later, which is worse than never hiding it.
+      document.documentElement.dataset.embedded = (window.self !== window.top) ? "true" : "false";
+    })();
+  </script>
+  <title>Collision Simulator, Chain vs BlockDAG | Kaspa Explained</title>
+  <meta name="description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/demos/collision-sim">
+  <link rel="icon" href="../kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="../favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="../favicon.ico" sizes="any">
+  <link rel="icon" href="../favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Collision Simulator, Chain vs BlockDAG | Kaspa Explained">
+  <meta property="og:description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kaspaexplained.com/demos/collision-sim">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Collision Simulator, Chain vs BlockDAG | Kaspa Explained">
+  <meta name="twitter:description" content="Two miners solve blocks seconds apart. Watch a single chain throw one away while a blockDAG keeps both.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-22">
+  <link rel="stylesheet" href="../styles.css?v=20260823-glasspass2">
+  <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
     color-scheme: dark;
@@ -260,9 +304,7 @@
   input[type=range]:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--cyan) 65%, transparent);
     outline-offset: 4px;
-  }
-  footer { font-size: .76rem; color: var(--faint); margin-top: 18px; }
-  .legend {
+  }  .legend {
     display: flex;
     gap: 16px;
     font-size: .78rem;
@@ -306,10 +348,44 @@
     color: var(--muted);
     font-size: .86rem;
   }
+
+  /* The site header now supplies the real theme toggle (design/house-style.md); this demo's own toggle button stays in the markup (its click handler still works, redundantly) but is hidden so the page shows exactly one control for it. */
+  #theme-toggle, #themeToggle { display: none; }
+
+  /* Hide this demo's own site chrome when it renders inside another page's
+     iframe (see embed-init above): the parent page already has a header and
+     footer, so a nested copy would double them up. */
+  :root[data-embedded="true"] .site-header,
+  :root[data-embedded="true"] .footer,
+  :root[data-embedded="true"] .skip-link {
+    display: none;
+  }
 </style>
 </head>
 <body>
-<main>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/kaspa-claims-checker">Check claims</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
+        <a href="/sources">Sources</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+      <a class="nav-cta" href="/toccata-status">Toccata status</a>
+    </nav>
+  </header>
+
+<main id="top" tabindex="-1">
   <div class="top-row">
     <h1>Why blocks collide</h1>
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
@@ -696,5 +772,44 @@
   });
 })();
 </script>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/glossary">Glossary</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/kaspa-claims-checker">Claims checker</a>
+          <a href="/toccata-status">Toccata status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/demos">Demos</a>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

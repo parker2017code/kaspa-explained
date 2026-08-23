@@ -1,12 +1,18 @@
 # Demos
 
-Small, self-contained interactive pages, formerly called "toys." Each is a
-single HTML file with inline CSS and JS: no build step, no shared dependency
-on the site's `styles.css` (each demo copies the CSS custom properties it
-needs, drawn from `design/house-style.md`, so it keeps rendering correctly if
-the main stylesheet changes and still opens from a local `file://` path with
-no server). Open any file directly or serve the repo locally and browse to
-`/demos/<file>.html`.
+Small interactive pages, formerly called "toys." Each is a single HTML file
+with inline CSS and JS for its own controls and visuals: no build step, and
+no dependency on the site's `styles.css` for those parts (each demo copies
+the CSS custom properties it needs, drawn from `design/house-style.md`, so
+its own controls keep rendering correctly if the main stylesheet changes).
+Every demo also loads `../styles.css` and `../nav.js` and carries the site's
+own header, footer, and skip link, so it reads as a page of the site rather
+than a standalone artifact; a reader can navigate away and back without the
+back button. A demo embedded in an iframe elsewhere on the site (the
+homepage's collision simulator, for one) detects that with `window.self !==
+window.top` in a pre-paint script and hides its own header and footer so the
+embedding page's chrome is the only chrome shown. Open any file directly or
+serve the repo locally and browse to `/demos/<file>.html`.
 
 ## attack-cost.html
 

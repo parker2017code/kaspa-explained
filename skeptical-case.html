@@ -119,21 +119,12 @@
     </section>
 
     <section class="section deep-dive-plain">
-      <h2>Proof-of-work's external cost</h2>
-      <p>Proof of work buys its Sybil resistance with real goods: power, ASICs, buildings, cooling, supply chains, time. A miner cannot fake identities to gain a bigger say. More say means more hash power, and hash power costs money every hour it runs.</p>
-      <p>That changes the math on attacks. An attacker needs hardware, power deals, and a bill that runs every day. Money in a wallet is not enough. New KAS goes to miners who already spent those things. Staking sends new supply and votes back to whoever already holds tokens.</p>
-      <p>A node checks the chain no matter who mines it. Mining to your own node lets you help make blocks, and you still carry the same outside risks as any other miner: ASIC supply, cheap power, pool behavior, and regulators.</p>
-      <p class="fit-note">The <a href="/demos/attack-cost">attack cost calculator</a> prices a 51% attack in dollars per hour against current hash rate and hardware cost, next to other chains for scale.</p>
-    </section>
-
-    <section class="section deep-dive-plain">
       <h2>What pays for the hash rate</h2>
-      <p>Kaspa's block reward is 2.31246515 KAS (api.kaspa.org/info/blockreward). At 10 blocks per second that's 864,000 blocks a day, so 1,997,970 KAS of new supply a day. At $0.02934513 per KAS (CoinGecko, fetched live), that's about $58,631 a day paid to miners, funding a network running at roughly 311.5 PH/s (api.kaspa.org/info/hashrate).</p>
-      <p>Fee revenue is a rounding error next to that. Kaspa runs about 77,207 transactions a day at a median fee of $0.000063 (both from this site's own <a href="/chain-comparer">chain data</a>), which is 77,207 &times; $0.000063, about $4.86 a day. Divide the two: $58,631 &divide; $4.86 is roughly 12,054. Fees fund about 0.0083% of what miners are actually paid. The other 99.99% is new supply, not demand.</p>
-      <p>The subsidy is also shrinking on its own schedule. Kaspa's reward steps down every month by a factor of 2<sup>&minus;1/12</sup>, about 5.61%, per rusty-kaspa's <code>coinbase.rs</code> subsidy table. Twelve of those steps compound to exactly half, so holding KAS price flat, the daily payout to miners falls to about $29,315 a year from now and about $3,664 in four years. Fees would still be running at roughly $4.86 a day if nothing else changed, meaning they'd need to grow about 6,000-fold in a year and 750-fold in four just to stay this far behind, not to catch up.</p>
-      <p>What would catching up actually take? Holding today's $0.000063 median fee flat, matching today's $58,631 subsidy from fees alone needs about 10,771 transactions per second, sustained, not peak. That's roughly 12,000 times Kaspa's own measured 0.895 TPS, and higher than any sustained rate in this site's own comparison data, including Solana's 1,175. Holding today's transaction count flat instead, the same match needs a median fee near $0.76, about six times Bitcoin's own $0.1317 median. Neither looks close, and both would have to happen while the subsidy itself keeps shrinking underneath them.</p>
-      <p>None of that is unique to Kaspa. Bitcoin has run this exact deficit, subsidy funding almost all of miner income, for its entire existence, and it is still the most attacked-resistant chain that exists. A security budget paid mostly by new supply is normal for a young network, not a special defect. Price appreciation alone can offset a shrinking subsidy for a long time, and a falling budget does not switch a network off: it lowers the hash rate that stays profitable to run, and the real question is whether what's left still makes an attack uneconomic against the value it's protecting, not whether the subsidy hits zero. What this arithmetic does establish is narrower and still true: today, right now, Kaspa's security is bought almost entirely with inflation, not with people paying to use the chain, and no visible trend closes that gap on fees alone.</p>
-      <p class="fit-note">The <a href="/demos/attack-cost">attack cost calculator</a> prices what it costs to outrun this hash rate for an hour. This section is what pays for the hash rate the attacker would have to beat.</p>
+      <p>Kaspa's block reward is 2.31246515 KAS (api.kaspa.org/info/blockreward): 864,000 blocks a day at 10 blocks per second, 1,997,970 KAS of new supply daily. At $0.02934513 per KAS (CoinGecko, fetched live), that's about $58,631 a day paid to miners, funding a network running at roughly 311.5 PH/s (api.kaspa.org/info/hashrate). Fees are a rounding error next to that: about 77,207 transactions a day at a median $0.000063 (this site's own <a href="/chain-comparer">chain data</a>) comes to $4.86 a day, roughly 1/12,054th of the subsidy, 0.0083%. The other 99.99% is new supply, not demand.</p>
+      <p>The subsidy is also shrinking on its own schedule. Kaspa's reward steps down every month by a factor of 2<sup>&minus;1/12</sup>, about 5.61%, per rusty-kaspa's <code>coinbase.rs</code> subsidy table. Twelve of those steps compound to exactly half, so holding KAS price flat, the daily payout to miners falls to about $29,315 a year from now and about $3,664 in four years. Fees, unchanged, would need to grow about 6,000-fold in a year and 750-fold in four just to stay this far behind, not to catch up.</p>
+      <p>Catching up would take real transaction volume. Holding today's $0.000063 median fee flat, matching today's $58,631 subsidy from fees alone needs about 10,771 transactions per second, sustained, not peak. That's roughly 12,000 times Kaspa's own measured 0.895 TPS, and higher than any sustained rate in this site's own comparison data, including Solana's 1,175. Holding today's transaction count flat instead, the same match needs a median fee near $0.76, about six times Bitcoin's own $0.1317 median. Neither looks close, and both would have to happen while the subsidy itself keeps shrinking underneath them.</p>
+      <p>This isn't unique to Kaspa: Bitcoin has run the same subsidy-funded deficit for its entire existence and remains the hardest chain to attack. But today, right now, Kaspa's security is bought almost entirely with inflation, not with people paying to use the chain, and no visible trend closes that gap on fees alone.</p>
+      <p class="fit-note">The <a href="/demos/attack-cost">attack cost calculator</a> prices what it costs to outrun this hash rate for an hour.</p>
     </section>
 
     <section class="section deep-dive-plain">
@@ -162,7 +153,7 @@
             <tr><td>Toccata tooling stays rough after it turns on.</td><td>Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, with v2.0.1 released after it.
               <details class="cell-detail">
                 <summary>What's left to check</summary>
-                <p>What's left to check: stable releases, docs that work, and builder examples anyone can repeat. TN10/TN12 tests alone are not enough.</p>
+                <p>Stable releases, docs that work, and builder examples anyone can repeat. TN10/TN12 tests alone are not enough.</p>
               </details>
             </td></tr>
             <tr><td>Native apps stay demos with no users.</td><td>Repeat users, real fee demand, wallets, separate indexers, and apps that keep working.</td></tr>
@@ -175,7 +166,7 @@
 
     <section class="section deep-dive-plain">
       <h2>What to watch</h2>
-      <p>Count the separate explorers, APIs, wallets, and node operators. The more there are, the less rides on any one going down or going bad. Watch whether roadmap items turn into apps with repeat users outside the teams that built them. A working demo alone doesn't count. Liquidity, custody support, and fee demand will settle whether the thesis holds, whatever the design does. And watch the words: in a hype cycle, live, testnet, roadmap, and research claims get flattened into one story first.</p>
+      <p>Count the separate explorers, APIs, wallets, and node operators: the more there are, the less rides on any one going down or going bad. Watch whether roadmap items turn into apps with repeat users outside the teams that built them, not just working demos. Liquidity, custody support, and fee demand will settle whether the thesis holds, whatever the design does. And watch the words: in a hype cycle, live, testnet, roadmap, and research claims get flattened into one story first.</p>
       <p>For the price and hash-rate version, read <a href="/kaspa-mining">Kaspa price, hash rate, and the mining cycle</a>.</p>
     </section>
 <!-- related-links:start -->
