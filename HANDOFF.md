@@ -152,8 +152,10 @@ count, not an opinion, so it can be checked rather than argued.
 2. `VISIBLE_WORDS_BLOCKING=true bash scripts/check-site.sh` passes. Every
    page is under the ceiling or carries a listed exemption in
    `scripts/essay-pages.json`. Then the variable's default flips to true.
-3. The glass inventory in `_preview-site/measure.html` prints only
-   sanctioned brand-gradient accents, in both themes.
+3. `scripts/check-glass.mjs` reports only sanctioned brand-gradient
+   accents, in both themes, across every page and every demo. The
+   `_preview-site/measure.html` harness named in CLAUDE.md does not exist
+   in this checkout, which is why the scan has to be a committed script.
 4. Every page and demo renders clean at 390, 768 and 1280 in both themes:
    no horizontal scroll, no body text under 16px, no touch target under
    44px, no console errors, no text contrast under 4.5:1 computed
