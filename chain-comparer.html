@@ -184,8 +184,8 @@
     <section class="section">
       <p class="eyebrow">Tool</p>
       <h1>Which chain fits the job?</h1>
-      <p class="lead">Twenty layer ones on the same fields. Move the dials for what your job needs and the ranking reorders. Kaspa gets no special treatment here, which is the point.</p>
-      <p class="fit-note">Readings are dated, not live. All twenty rows were re-measured against live endpoints on 22 August 2026.</p>
+      <p class="lead">Twenty layer ones, same fields. Move the dials and the ranking reorders. Kaspa gets no special treatment.</p>
+      <p class="fit-note">Dated, not live: re-measured 22 August 2026.</p>
     </section>
 
     <section class="section cc-shell-section">
@@ -198,7 +198,7 @@
               <p class="cc-preset-why" id="ccPresetWhy"></p>
             </div>
             <div class="cc-block">
-              <p class="cc-label">What matters, and how much</p>
+              <p class="cc-label">What matters</p>
               <div id="ccDials"></div>
             </div>
           </div>
@@ -213,7 +213,7 @@
           </div>
 
           <details class="cc-method">
-            <summary>How the score works, and where the numbers come from</summary>
+            <summary>How the score works</summary>
             <ol>
               <li><b>Every dial is a weight, not a filter.</b> Turn one up and it takes a bigger share of the score. Nothing is ever removed from the list for failing a requirement.</li>
               <li><b>Each field is normalized across the chains that report it</b>, then the score is the weighted average of those. The shares shown next to each dial add to 100.</li>
@@ -229,7 +229,7 @@
           <ol class="cc-list" id="ccList"></ol>
           <p class="cc-empty" id="ccEmpty" hidden></p>
           <details class="cc-notes">
-            <summary>How to read these numbers</summary>
+            <summary>How to read this</summary>
             <p>Throughput is shown as what a chain carries now and what it has been seen carrying at peak, because those answer different questions. A quiet chain is not a slow one. <a href="/what-is-kaspa#throughput">Kaspa's own breakdown</a> works through why one number never covers it.</p>
             <p>Field readings are dated, not live. All twenty rows were re-measured against live endpoints on 22 August 2026, and none of them update themselves.</p>
             <p>Check that date against today's before treating any single number as current. Read the whole panel as a snapshot for comparing chains against each other, not as a live feed.</p>
@@ -243,9 +243,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/crypto-from-scratch"><span>Previous</span><strong>What crypto does, and what it&#x27;s worth</strong><p>What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.</p></a>
-        <a href="/model-picker"><span>Next</span><strong>Which model should you use?</strong><p>A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+        <a href="/crypto-from-scratch"><span>Previous</span><strong>What crypto is worth</strong></a>
+        <a href="/model-picker"><span>Next</span><strong>Which model should you use?</strong></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong></a>
       </div>
     </section>
 <!-- related-links:end -->
@@ -313,25 +313,25 @@
   // comparison gets rigged, in either direction.
   var DIALS = [
     { k: 'fast',   t: 'Shows up fast',       f: 'bt',     dir: -1, log: 1,
-      why: 'How long before you see it at all. Inclusion, not settlement.' },
+      info: 'How long before you see it at all. Inclusion, not settlement.' },
     { k: 'settle', t: 'Settles for good',    f: 'fin',    dir: -1, log: 1,
       info: 'How long until the protocol itself refuses to reorg a payment away. Scored only where a chain codes that boundary into consensus; a chain with no such rule is left unscored here, not scored on the 6-confirmation convention it uses by custom instead. Kaspa’s figure is its coded finality boundary, 12 hours, reflecting GHOSTDAG; DAGKnight is still a research proposal and is not scored.' },
     { k: 'cheap',  t: 'Costs little to send', f: 'fee',   dir: -1, log: 1,
       info: 'Median fee per transaction, in dollars. Only 6 of 20 chains here publish a comparable figure, and all six are older, fee-market-driven PoW designs, so turning this up mostly ranks by chain age and design family, not by cost across the field.' },
     { k: 'volume', t: 'Carries real volume', f: 'tps',    dir: 1,  log: 1,
-      why: 'How busy it is now. Demand, not capacity.' },
+      info: 'How busy it is now. Demand, not capacity.' },
     { k: 'progs',  t: 'Runs real programs',  f: '_progs', dir: 1,  log: 0,
-      why: 'Nothing, spend rules on the coin, or a full virtual machine.' },
+      info: 'Nothing, spend rules on the coin, or a full virtual machine.' },
     { k: 'privacy',t: 'Keeps payments private', f: 'priv', dir: 1, log: 0,
-      why: 'Hides who paid whom and how much, by default.' },
+      info: 'Hides who paid whom and how much, by default.' },
     { k: 'spread', t: 'Hard for a few to control', f: 'nak', dir: 1, log: 1,
-      why: 'How many parties must collude to break it.' },
+      info: 'How many parties must collude to break it.' },
     { k: 'node',   t: 'Cheap to run yourself', f: 'disk', dir: -1, log: 1,
-      why: 'Disk space one person needs to verify it.' },
+      info: 'Disk space one person needs to verify it.' },
     { k: 'people', t: 'Has people behind it', f: 'devft', dir: 1,  log: 1,
-      why: 'Developers on it full time. Counts code, not conferences.' },
+      info: 'Developers on it full time. Counts code, not conferences.' },
     { k: 'ready',  t: 'Ready to use today',  f: '_ready', dir: 1,  log: 0,
-      why: 'Wallets that hold it, custody desks, a US spot ETF, CME futures.' },
+      info: 'Wallets that hold it, custody desks, a US spot ETF, CME futures.' },
     { k: 'spend',  t: 'Pays for its own security', f: 'emu', dir: 1, log: 1,
       info: 'New tokens issued per day, priced in dollars. Replaces a hash-power dial that ranked SHA-256, Scrypt, RandomX and kHeavyHash hash rates on one axis as if they converted, which they do not. Only scores the five proof-of-work chains sourced so far; proof-of-stake, BFT, federated and permissioned chains are excluded rather than scored zero, because their issuance was not sourced this pass.' }
   ];
@@ -341,7 +341,7 @@
   // rest reads as a deliberate call rather than an oversight. Weights are in
   // tenths (0.0-4.0), matching the dial's own step size.
   var PRESETS = [
-    { t: 'Paying someone', why: 'A payment cares about arriving fast, staying cheap, and settling for good. It does not care whether the chain runs programs or whether you can afford to run a node yourself, so those sit at zero.', v: {
+    { t: 'Paying someone', why: 'A payment cares about arriving fast, staying cheap, and settling for good, not about running programs or being cheap to run yourself.', v: {
       fast: 3.0, settle: 2.0, cheap: 3.5, volume: 1.0, progs: 0.0,
       privacy: 0.5, spread: 1.0, node: 0.0, people: 0.5, ready: 2.5, spend: 0.0
     } },
@@ -565,17 +565,17 @@
     $('ccCount').textContent = rows.length + ' of ' + M.length + ' scored';
     var why = $('ccWhy');
     var parts = [];
-    if (blocked) parts.push(blocked + ' filtered out by your requirements');
-    if (dropped > 0) parts.push(dropped + ' dropped for not publishing enough of what you asked about');
+    if (blocked) parts.push(blocked + ' filtered out');
+    if (dropped > 0) parts.push(dropped + ' dropped for thin coverage');
     why.textContent = parts.join(', ');
     why.hidden = !parts.length;
 
     var showAll = $('ccShowAll') && $('ccShowAll').getAttribute('aria-pressed') === 'true';
-    var CAP = 5;
+    var CAP = 3;
     var shown = showAll ? rows : rows.slice(0, CAP);
     if ($('ccShowAll')) {
       $('ccShowAll').hidden = rows.length <= CAP;
-      $('ccShowAll').textContent = showAll ? 'Show top 5' : 'Show all ' + rows.length;
+      $('ccShowAll').textContent = showAll ? 'Show top 3' : 'Show all ' + rows.length;
     }
 
     var frag = document.createDocumentFragment();
@@ -586,9 +586,9 @@
       // it, quoting only its 10 s settlement buries the thing it is good at. Both
       // stay in the always-visible line; everything else moves to the per-row
       // detail so the ranked list itself stays inside the page's word budget.
-      if (m.bt !== null && m.bt !== undefined) bits.push(fmtFin(m.bt) + ' to show up');
+      if (m.bt !== null && m.bt !== undefined) bits.push(fmtFin(m.bt) + ' shows up');
       bits.push(m.fin === null || m.fin === undefined
-        ? 'no coded settlement rule' : fmtFin(m.fin) + ' to settle');
+        ? 'no settlement rule' : fmtFin(m.fin) + ' settles');
 
       var detailBits = [];
       if (m.fee !== null && m.fee !== undefined) detailBits.push(fmtFee(m.fee) + ' median fee');
@@ -617,11 +617,11 @@
       li.className = 'cc-row' + (i === 0 ? ' top' : '');
       li.innerHTML =
         '<span class="cc-rank">' + (i + 1) + '</span>' +
-        '<span class="cc-cell"><span class="cc-title"><span class="cc-name">' + m.n + '</span>' +
-        '<span class="cc-tag">' + m.con + '</span></span>' +
+        '<span class="cc-cell"><span class="cc-title"><span class="cc-name">' + m.n + '</span></span>' +
         '<span class="cc-meta">' + bits.join('<span class="sep">·</span>') + '</span>' +
-        (m.weak ? '<span class="cc-weak"><b>Weak on:</b> ' + m.weak + '</span>' : '') +
-        '<details class="cc-row-detail"><summary>More on ' + m.n + '</summary>' +
+        (m.weak ? '<span class="cc-weak"><b>Weak:</b> ' + m.weak + '</span>' : '') +
+        '<details class="cc-row-detail"><summary>More</summary>' +
+        '<span class="cc-tag">' + m.con + '</span>' +
         '<span class="cc-purpose">' + (m.why || '') + '</span>' +
         '<span class="cc-meta">' + detailBits.join('<span class="sep">·</span>') + '</span>' +
         reasoning(r.parts) +

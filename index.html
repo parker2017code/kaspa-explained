@@ -107,7 +107,7 @@
           <a href="/build-on-kaspa"><span>Build</span><strong>Builder status</strong><small>Payments, Toccata, vProgs.</small></a>
           <a href="/sources"><span>Sources</span><strong>Primary documents</strong><small>Releases, KIPs, papers.</small></a>
         </div>
-        <p class="source-inline">New to crypto itself? Start with <a href="/start-here">Start Here</a>.</p>
+        <p class="source-inline">New to crypto? <a href="/start-here">Start Here</a>.</p>
         <details class="deep-dive">
           <summary>What each label means</summary>
           <p>Mainnet: shipped and observable on-chain today. Testnet: built and running, not yet on mainnet. Roadmap: planned, with a stated target. Research: an open design question, not yet a plan. <a href="/kaspa-claims-checker">Check any claim</a> against these four.</p>
@@ -118,28 +118,28 @@
     <section id="toccata-status-preview" class="section status-workbench" aria-labelledby="toccata-status-preview-title">
       <div>
         <p class="eyebrow">What's live now</p>
-        <h2 id="toccata-status-preview-title">Toccata is active, and covenants are climbing</h2>
-        <p class="lead">Toccata activated at DAA score <strong>474,165,565</strong>. Mainnet runs L1 covenants, ZK proof verification, and sequencing commitments.</p>
+        <h2 id="toccata-status-preview-title">Toccata is active</h2>
+        <p class="lead">Activated at DAA score <strong>474,165,565</strong>: L1 covenants, ZK verification, sequencing commitments.</p>
       </div>
       <div class="status-lane-grid grid-cards">
-        <a href="/toccata-status"><span>Activation</span><strong>The activation record</strong><small>Score, release, evidence trail.</small></a>
-        <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong><small>Covenants, ZK checks, lanes.</small></a>
-        <a href="/kaspa-developments"><span>This month</span><strong>Full developments log</strong><small>KCC, KIP, and growth detail.</small></a>
-        <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>Releases, KIPs, testnets.</small></a>
+        <a href="/toccata-status"><span>Activation</span><strong>The activation record</strong></a>
+        <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong></a>
+        <a href="/kaspa-developments"><span>This month</span><strong>Full developments log</strong></a>
+        <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong></a>
       </div>
     </section>
 
     <section id="demos" class="section" aria-labelledby="demos-title">
       <p class="eyebrow">Try it</p>
       <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
-      <p class="lead">Two sliders: block rate, propagation delay. It opens at Kaspa's real rate, where a single chain discards 83.3 percent of the work and the blockDAG discards none. Push the rate to 100 a second and the chain throws away 98 percent.</p>
+      <p class="lead">It opens at Kaspa's real rate, where a single chain discards 83.3 percent of the work and the blockDAG discards none. Push the rate to 100 a second and the chain throws away 98 percent.</p>
       <div class="live-demo-frame">
         <iframe id="collision-frame" src="/demos/collision-sim" title="Collision simulator: single chain vs blockDAG" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
       <div class="grid-cards site-related-grid">
-        <a href="/demos/confirmation-risk"><h3>Confirmation risk</h3><p>Reversal odds fall as blue work stacks up.</p></a>
-        <a href="/demos/emission-schedule"><h3>Emission schedule</h3><p>The block reward shrinks, never a cliff.</p></a>
-        <a href="/demos/mass-calculator"><h3>Mass calculator</h3><p>Which mass dimension actually gets charged.</p></a>
+        <a href="/demos/confirmation-risk"><h3>Confirmation risk</h3></a>
+        <a href="/demos/emission-schedule"><h3>Emission schedule</h3></a>
+        <a href="/demos/mass-calculator"><h3>Mass calculator</h3></a>
       </div>
       <div class="actions">
         <a class="button primary" href="/demos">All 13 demos</a>
@@ -213,7 +213,7 @@
         <div>
           <p class="eyebrow">Live API read</p>
           <h2 id="live-network-title">Current network numbers</h2>
-          <p class="lead">Pulled live from the public API for orientation.</p>
+          <p class="lead">Live from the public API.</p>
         </div>
         <div class="live-status-light" id="live-status-light" aria-live="polite">
           <span aria-hidden="true"></span>
@@ -340,5 +340,22 @@
       </nav>
     </div>
   </footer>
+  <script>
+  document.querySelectorAll('.info-affordance').forEach(function (el) {
+    var trigger = el.querySelector('.info-affordance__trigger');
+    trigger.addEventListener('click', function () {
+      var open = el.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('is-open');
+        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+  </script>
 </body>
 </html>

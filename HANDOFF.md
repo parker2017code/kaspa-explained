@@ -128,3 +128,27 @@ contrast was not computed numerically.
 
 The visible-word check is advisory. Flip `VISIBLE_WORDS_BLOCKING` to
 true once the over-limit list is empty.
+
+## Finish standard
+
+Work stops when all seven are green. Not before, and not after: no
+unprompted improvements past this line. Each item is a command or a
+count, not an opinion, so it can be checked rather than argued.
+
+1. `bash scripts/check-site.sh` ends in "Site checks passed." on a fresh
+   clone, not just in the working tree.
+2. `VISIBLE_WORDS_BLOCKING=true bash scripts/check-site.sh` passes. Every
+   page is under the ceiling or carries a listed exemption in
+   `scripts/essay-pages.json`. Then the variable's default flips to true.
+3. The glass inventory in `_preview-site/measure.html` prints only
+   sanctioned brand-gradient accents, in both themes.
+4. Every page and demo renders clean at 390, 768 and 1280 in both themes:
+   no horizontal scroll, no body text under 16px, no touch target under
+   44px, no console errors, no text contrast under 4.5:1 computed
+   numerically, and every in-page anchor lands on its target.
+5. Every demo passes a cold read by an agent that built no part of it,
+   with no open defect above cosmetic.
+6. No `recheck_after` date in `CLAIMS.yml` has passed.
+7. Tree clean, pushed, and the live domain serves the same commit hash.
+
+At green, hand to the owner and stop. He drives, then says what is next.
