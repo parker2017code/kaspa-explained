@@ -259,7 +259,7 @@
       </div>
 
       <div class="subgroup field">
-        <span class="taglabel">Block rate</span>
+        <span class="taglabel">Block rate<span class="info-affordance" id="bps-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="bps-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="bps-info-panel" role="tooltip">Blocks per second is a consensus parameter: a higher rate needs a larger GHOSTDAG k for the same security margin, not just more throughput.</span></span></span>
         <div class="chipset" role="group" aria-label="Blocks per second" id="bpsChips">
           <button type="button" data-bps="1">1 block/sec</button>
           <button type="button" data-bps="10" aria-pressed="true">10 block/sec, current mainnet</button>
@@ -281,13 +281,12 @@
       </div>
 
       <div class="subgroup field">
-        <span class="taglabel">When</span>
+        <span class="taglabel">When<span class="info-affordance" id="when-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="when-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="when-info-panel" role="tooltip">The block subsidy halves on its own schedule, regardless of traffic.</span></span></span>
         <div class="chipset" role="group" aria-label="Time horizon for the subsidy" id="timeChips">
           <button type="button" data-months="0" aria-pressed="true">Today</button>
           <button type="button" data-months="12">In 1 year</button>
           <button type="button" data-months="48">In 4 years</button>
         </div>
-        <span class="gloss">The block subsidy halves on its own schedule regardless of traffic.</span>
       </div>
 
       <div class="reset-row"><button class="reset-btn" id="resetBtn" type="button">Reset to today</button></div>
@@ -297,8 +296,8 @@
       <h2>What happens</h2>
 
       <div class="stat-row">
-        <div class="stat"><div class="num" id="capacityOut">-</div><div class="cap">plain-payment-equivalent tx fit per block</div></div>
-        <div class="stat"><div class="num" id="capacityTpsOut">-</div><div class="cap">tx/s of room at this shape and rate</div></div>
+        <div class="stat"><div class="num" id="capacityOut">-</div><div class="cap">tx fit per block</div></div>
+        <div class="stat"><div class="num" id="capacityTpsOut">-</div><div class="cap">tx/s of room</div></div>
       </div>
 
       <div class="bar-track"><div class="bar-fill" id="fillBar"></div></div>
@@ -307,8 +306,8 @@
       <p class="payoff" id="blockPayoff">-</p>
 
       <div class="block-frame">
-        <p class="grid-note">This block, drawn to scale</p>
-        <p class="you-note">Every dot is one transaction. The bordered pink square, always first, is <b>yours</b>.</p>
+        <p class="grid-note">This block, to scale</p>
+        <p class="you-note">Every dot is one transaction; the pink square is <b>yours</b>.</p>
         <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">-</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
         <div class="legend">
@@ -320,16 +319,15 @@
       <button class="redraw-btn" id="redrawBtn" type="button">Redraw this block</button>
 
       <div class="stat-row" style="margin-top:20px;">
-        <div class="stat"><div class="num" id="feeRevOut">-</div><div class="cap">fee revenue in this scenario, per day</div></div>
-        <div class="stat"><div class="num" id="subsidyOut">-</div><div class="cap">block subsidy, per day</div></div>
+        <div class="stat"><div class="num" id="feeRevOut">-</div><div class="cap">fees per day</div></div>
+        <div class="stat"><div class="num" id="subsidyOut">-</div><div class="cap">subsidy per day</div></div>
       </div>
       <p class="payoff" id="revenuePayoff">-</p>
     </div>
   </div>
 
   <div class="honesty">
-    <p style="margin:0 0 8px;"><b>None of this is happening on Kaspa right now.</b> Real mainnet traffic runs about 0.895 tx/s (bursty: monthly means 0.58 to 318.97 over the past year). Every scenario above but "Today, measured" is hypothetical.</p>
-    <p style="margin:0;">Fee revenue and the block subsidy are two different things paying miners: the subsidy pays roughly 12,054&times; what fees do today. Closing that gap needs more throughput, a higher fee, price appreciation, or the subsidy's own halving; this demo lets you turn each knob and read the result.</p>
+    <p style="margin:0;"><b>None of this is happening on Kaspa right now.</b> Real traffic runs about 0.895 tx/s; every scenario above but "Today, measured" is hypothetical. The subsidy pays roughly 12,054&times; what fees do: closing that gap needs more throughput, a higher fee, price appreciation, or the halving schedule.</p>
   </div>
 
   <details>
@@ -367,7 +365,7 @@ feerate = fee_sompi / mass_grams</span>
     </div>
   </details>
 
-  <p class="sources">Offline model. Checked against rusty-kaspa source and this repo's data on 2026-08-22; see <a href="../skeptical-case">the skeptical case</a> for the fee-versus-subsidy argument.</p>
+  <p class="sources">Offline model, checked against rusty-kaspa source and this repo's data; see <a href="../skeptical-case">the skeptical case</a>.</p>
 
   <footer>Independent illustration. Runs entirely in your browser.</footer>
 </main>
@@ -646,23 +644,23 @@ feerate = fee_sompi / mass_grams</span>
     var presetKey = state.volumePreset;
     var todayLabel = fmtTps(TODAY_TPS);
     if (presetKey === "today") {
-      els.scenarioNote.innerHTML = "<b>Today, measured.</b> " + todayLabel + ", Kaspa's own real 30-day average. This is the baseline; nothing else here is happening on Kaspa right now.";
+      els.scenarioNote.innerHTML = "<b>Today, measured.</b> " + todayLabel + ", Kaspa's real 30-day average. Nothing else here is happening yet.";
     } else {
       var multVsToday = tps / TODAY_TPS;
       var multLabel = multVsToday >= 10 ? fmtNum(multVsToday, 0) : fmtNum(multVsToday, 1);
       var name = SCENARIO_LABELS[presetKey] || "Custom";
-      els.scenarioNote.innerHTML = "<b>Loaded: " + name + ".</b> Set traffic to " + fmtTps(tps) + ", about " + multLabel + "× today's " + todayLabel + ". This is a hypothetical load, not something Kaspa carries today.";
+      els.scenarioNote.innerHTML = "<b>Loaded: " + name + ".</b> " + fmtTps(tps) + ", about " + multLabel + "× today's " + todayLabel + ". Hypothetical, not current.";
     }
 
     // shape self-explainer: the mass tradeoff, shown live instead of left implicit
     var thisMass = txMassFor(state.shape);
     var plainMass = txMassFor("plain");
     if (state.shape === "plain") {
-      els.shapeNote.innerHTML = "Selected: <b>plain payment</b>, " + fmtNum(thisMass) + " mass each, the lightest shape. Up to " + fmtNum(capacity) + " fit in one block.";
+      els.shapeNote.innerHTML = "<b>Plain payment</b>, " + fmtNum(thisMass) + " mass each, the lightest shape: up to " + fmtNum(capacity) + " fit per block.";
     } else {
       var massRatio = thisMass / plainMass;
       var massRatioLabel = massRatio >= 10 ? fmtNum(massRatio, 0) : fmtNum(massRatio, 1);
-      els.shapeNote.innerHTML = "Selected: <b>" + (state.shape === "covenant" ? "covenant" : "ZK proof") + "</b>, " + fmtNum(thisMass) + " mass each, " + massRatioLabel + "× heavier than a plain payment. That's why only " + fmtNum(capacity) + " fit per block instead of " + fmtNum(capacityFor("plain")) + ".";
+      els.shapeNote.innerHTML = "<b>" + (state.shape === "covenant" ? "Covenant" : "ZK proof") + "</b>, " + fmtNum(thisMass) + " mass each, " + massRatioLabel + "× heavier: only " + fmtNum(capacity) + " fit, not " + fmtNum(capacityFor("plain")) + ".";
     }
 
     var fillPct = Math.min(100, (perBlockDemand / capacity) * 100);
@@ -676,20 +674,20 @@ feerate = fee_sompi / mass_grams</span>
 
     // fee-context sentence: ties the demand slider to the fee slider, at the point of use
     if (!sim.congested) {
-      els.feeContext.innerHTML = "This block isn't full, so any fee gets you in. Raise <b>transactions per second</b> above until it fills, and this slider starts deciding who gets a seat.";
+      els.feeContext.innerHTML = "Not full yet, so any fee gets you in. Raise <b>transactions per second</b> above to fill it.";
     } else {
-      els.feeContext.innerHTML = fmtNum(sim.popCount) + " transactions want " + fmtNum(capacity) + " slots this round. The block is full: this slider is what decides whether yours is one of them.";
+      els.feeContext.innerHTML = fmtNum(sim.popCount) + " transactions want " + fmtNum(capacity) + " slots. Full: this slider decides whether yours is one.";
     }
 
     // block payoff sentence
     var blockMsg;
     if (!sim.congested) {
-      blockMsg = "Every transaction fits in this block, yours included. At " + fmtTps(tps) + " with " + state.bps + " block/sec, Kaspa isn't full.";
+      blockMsg = "Every transaction fits, yours included. At " + fmtTps(tps) + " and " + state.bps + " block/sec, Kaspa isn't full.";
       els.blockPayoff.classList.remove("waiting");
     } else if (sim.selfIncluded) {
       blockMsg = "Your transaction paid <b>" + fmtMult(feeMult) + "</b> and got into this block.";
       if (sim.lowerFeeIncluded > 0) {
-        blockMsg += " So did " + sim.lowerFeeIncluded + " that paid less than you: the mempool samples by weight, it doesn't sort strictly by fee.";
+        blockMsg += " So did " + sim.lowerFeeIncluded + " that paid less: the mempool samples by weight, not a strict fee sort.";
       } else {
         blockMsg += " Nothing that paid less than you got in this round.";
       }
@@ -697,7 +695,7 @@ feerate = fee_sompi / mass_grams</span>
     } else {
       blockMsg = "Your transaction paid <b>" + fmtMult(feeMult) + "</b> and is still waiting.";
       if (sim.higherFeeWaiting > 0) {
-        blockMsg += " " + sim.higherFeeWaiting + " that paid more are waiting too: paying more raises your odds, it doesn't guarantee a slot.";
+        blockMsg += " " + sim.higherFeeWaiting + " that paid more are waiting too: more raises your odds, it doesn't guarantee a slot.";
       } else {
         blockMsg += " Everything that paid more than you got in ahead of it.";
       }
@@ -746,7 +744,7 @@ feerate = fee_sompi / mass_grams</span>
       var ratioLabel = ratio >= 100 ? fmtNum(ratio, 0) : fmtNum(ratio, 1);
       revMsg = "At this volume and fee, Kaspa earns <b>" + fmtUsd(dailyFeeUsd) + "/day</b> in fees, about " + ratioLabel + "× below the <b>" + fmtUsd(subsidyUsd) + "/day</b> subsidy " + timeLabel + ".";
     } else {
-      revMsg = "At this volume and fee, fee revenue of <b>" + fmtUsd(dailyFeeUsd) + "/day</b> matches or beats the <b>" + fmtUsd(subsidyUsd) + "/day</b> subsidy " + timeLabel + ". This is what closing the gap looks like.";
+      revMsg = "At this volume and fee, fee revenue of <b>" + fmtUsd(dailyFeeUsd) + "/day</b> matches or beats the <b>" + fmtUsd(subsidyUsd) + "/day</b> subsidy " + timeLabel + ". closing the gap.";
     }
     els.revenuePayoff.innerHTML = revMsg;
   }

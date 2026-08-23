@@ -90,3 +90,17 @@ burying it.
 Chrome that states the obvious. A line telling the reader which site
 they are on is noise. If removing a sentence costs the reader nothing,
 it was never earning its place.
+
+## Reference points
+
+macOS and iOS set the bar, and they are not the only reference. Google
+gets some things right, Tesla's sites read well, and Meta's products
+have genuinely good interface work in them. Borrow from whichever
+solves the problem in front of you.
+
+What carries across all of them is the same short list: space doing the
+work instead of lines, type carrying hierarchy instead of weight,
+content leading while chrome recedes, immediate physical response to
+input, and one obvious thing to do. A change that improves readability,
+legibility, or how the thing feels under a hand is welcome at any size.
+A change that is merely different is not.
