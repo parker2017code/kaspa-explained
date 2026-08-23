@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass">
+  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -124,7 +124,7 @@
       <p>The two open pull requests both claim adoption evidence the repository itself does not carry: KCC-0021's author says kascov and the wallet KaspaRocket already use its metadata convention, and KCC-0402's author says a reference implementation, k402, has payment-channel transactions live on mainnet. Neither claim is independently confirmed; treat both as the author's word until a merge or an outside source backs them.</p>
       <p>The four-digit repository numbering is canonical; forum shorthand like "KCC20" is not the identifier in the repository, and nothing has been ratified. KCC-0020 is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant. That is normal before acceptance, not acceptance itself.</p>
       <p>A token issued against KCC-0020 today inherits three known defects: a permanent supply-split consequence its co-authors partly defend and partly call a wrong pattern still needing a spec fix, one production deployment that admits partial conformance, and a launchpad already on its fourth incompatible template.</p>
-      <details class="deep-dive">
+      <details class="deep-dive" id="supply-split">
         <summary>The supply-split consequence, defended in part, conceded in part</summary>
         <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser has not withdrawn his original concern, and no spec change has merged.</p>
       </details>
@@ -136,7 +136,6 @@
         <summary>The launchpad already forking its own template four times</summary>
         <p>The standard's own template shape is already fragmenting on mainnet: one launchpad's 74 live tokens span four separate template generations, with no migration path between them, only opt-in burn and reissue, according to a kas-smiths.org post from 0xKnitser on August 15, 2026.</p>
       </details>
-      <p class="fit-note">The <a href="/demos/supply-split">supply split demo</a> lets you issue a token, roll it out unevenly, and watch the supply fracture into groups that can never consolidate again, the unresolved tradeoff behind issue #14 made tangible.</p>
       <details class="deep-dive">
         <summary>A second open gap in the same spec: borrowed receive</summary>
         <p>Shawn described it on the kas-smiths.org forum, July 10, 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs pre-signed, outpoint bound transactions." Borrowing a token into a UTXO before a pre-signed spend lands invalidates the transaction and forces a rebuild, with no signature-level fix. A month later Shawn explained why: "the v1 sighash folds the spent input's own outpoint into the signed message unconditionally," and AnyoneCanPay "only zeroes the other inputs' outpoints, never the signed input's own." Authorization has to move to something the covenant checks against its own state, not the transaction signature; nothing has merged.</p>

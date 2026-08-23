@@ -289,6 +289,13 @@ that boundary, it dramatizes it. No network requests; all figures are static.
 
 ## supply-split.html
 
+Delisted from `demos/index.html` and `site-manifest.json` as of 23 August
+2026: the subject is a static one-path logical fact rather than a system
+with parameter space to explore, and `kips.html` teaches the same fact in
+prose with better sourcing. The file stays on disk and still resolves
+directly, so existing links still resolve. Nothing on the site links to
+it and it does not count toward the site's demo total.
+
 Shows KCC-0020's permanent supply split live: a token's UTXO set as cells
 held by four holders, distinguished by glyph and border pattern, never color
 alone. Issuing, transferring, and consolidating cells work freely until an

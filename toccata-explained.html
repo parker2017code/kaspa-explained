@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-glasspass">
+  <link rel="stylesheet" href="styles.css?v=20260823-glasspass2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -134,7 +134,7 @@
     <section class="section prose-section">
       <p class="eyebrow">Proofs and lanes</p>
       <h2>Proofs move the work off L1, then settle back</h2>
-      <p>One proof can stand for many off-chain app actions. That L1 transaction may weigh more than a simple payment, but it is a settlement or a check, not the computation itself.</p>
+      <p>One proof can stand for many off-chain app actions. That L1 transaction may weigh more than a simple payment. It records a settlement or runs a check; the computation itself happened off chain.</p>
       <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own.</p>
       <p>Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process. The <a href="/demos/zk-boundary">ZK boundary demo</a> builds a claim and shows a proof succeed on a chosen computation, then fail to establish an outside fact with no named anchor.</p>
       <p>KIP-21 answers a separate cost problem. Based apps use Kaspa L1 ordering, and the simple design gets expensive fast: every app would have to prove which L1 transactions were for it and which were not, so at scale proving what isn't yours turns into the real burden. Partitioned sequencing commitments let a prover follow one app lane instead.</p>
@@ -167,8 +167,7 @@
         <summary>The KCC-0020 supply-split dispute, in detail</summary>
         <p>Issuing a token against KCC-0020 today means inheriting a permanent supply-split consequence: its transfer rule requires identical extended-state commitments to consolidate, but only a cell's own holder can authorize a state update to it, so a partial rollout across holders permanently splits the supply.</p>
         <p>Co-authors defend one pattern behind this as intended, a frozen or blacklist flag, but conceded a second pattern, ephemeral state that mutates without affecting fungibility, is a wrong one needing a spec fix. The reporter's concern stands unwithdrawn, and <a href="https://github.com/kaspanet/kccs/issues/14">issue #14</a> remains open with no spec edit.</p>
-        <p>KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). More on both at <a href="/kips">the KIP and KCC page</a>.</p>
-        <p class="fit-note">The <a href="/demos/supply-split">supply split demo</a> lets you issue a token, roll it out unevenly, and watch the supply fracture into groups that can never consolidate again.</p>
+        <p>KaspaCom, the only production KCC20 implementer on record, calls its own deployment "partially aligned, not fully conforming" (<a href="https://github.com/kaspanet/kccs/issues/11">issue #11</a>). Full detail on both, including the launchpad's four-generation template fork, is on <a href="/kips#supply-split">the KIP and KCC page</a>.</p>
       </details>
       <p>The two projects below are the current attempts at closing the rest of the gap.</p>
     </section>
@@ -222,7 +221,7 @@
       <p class="eyebrow">App case</p>
       <h2>Coordination markets, where a rule replaces an operator</h2>
       <p>The assurance-funding row above is a coordination market: it pays out only once enough strangers commit to the same condition. A website can run that loop too, and usually a website is the right answer.</p>
-      <p>The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-coord">covenant<span class="term-def__panel" id="covenant-def-coord" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a promise a server keeps.</span></span> moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
+      <p>The version worth putting on a chain is the one where the people paying in expect the operator to move the threshold after seeing the pledges. A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-coord">covenant<span class="term-def__panel" id="covenant-def-coord" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, so enforcement never rests on a server keeping its word.</span></span> moves the release rule out of the operator's database and into the spend rule, where breaking it means making a transaction consensus throws out.</p>
       <p class="fit-note"><strong>Status: research direction.</strong> Two problems have no shipped answer. A covenant cannot see the outside world, so anything settling on a price or an event needs an oracle whose trust model is spelled out first. And no wallet yet shows a user the condition they are about to sign.</p>
       <p>Which argues for starting narrow: one condition, one payout rule, and a group small enough to name everyone in it. Assurance funding for a single repeat event is a real test with real users at the end.</p>
     </section>
