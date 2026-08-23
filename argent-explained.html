@@ -82,7 +82,7 @@
       <p class="eyebrow">Application layer</p>
       <h1>Argent and Silverscript, explained</h1>
       <p class="lead">Toccata made covenants enforceable. Argent, Michael Sutton's compiler, turns a readable application description into the Silverscript the network already checks.</p>
-      <p class="fit-note"><strong>Status:</strong> unaudited, pre-release. See <a href="/toccata-explained">Toccata explained</a> for the activated protocol surface this builds on.</p>
+      <p class="fit-note"><strong>Status:</strong> unaudited, pre-release.</p>
       <div class="actions">
         <a class="button primary" href="https://github.com/argent-lang/argent">Argent</a>
         <a class="button" href="https://github.com/kaspanet/silverscript">Silverscript</a>
@@ -93,8 +93,7 @@
     <section class="section">
       <p class="eyebrow">The gap it fills</p>
       <h2>A covenant is opcodes. An application is several agreeing.</h2>
-      <p>A covenant by itself is a rule about what the next output has to look like. Hand-auditing a multi-contract application written in raw covenant opcodes is not realistic for most teams.</p>
-      <p>Argent is not officially blessed by the protocol team, but it is the working attempt at that gap. An Argent actor is a covenant object a transaction consumes and recreates; the compiler turns a readable description of that transition into script the network enforces.</p>
+      <p>Hand-auditing a multi-contract application written in raw covenant opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an Argent actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description of that transition into script the network enforces.</p>
     </section>
 
     <section class="section prose-section" data-audience="specialist">
@@ -141,13 +140,15 @@ app Tickets {
       </details>
     </section>
 
-    <section class="section">
+    <section class="section prose-section" data-audience="specialist">
       <p class="eyebrow">What's proven, what isn't</p>
       <h2>Partitioned state works. Shared state is a design direction.</h2>
-      <p>Every example the compiler ships partitions cleanly: one UTXO per ticket, per game, per position. Two never touch the same state, so the parallel work comes free from the data model instead of a scheduler.</p>
-      <p>The hard one is shared mutable state, where many users change a single object at once, such as a pooled market maker or an order book. Those are most of what people mean by DeFi, and no public Argent code implements one.</p>
-      <p>The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
-      <p>Three repositories, and one person writes nearly all of it. Michael Sutton holds 73 of the compiler's 77 commits, and 58 of those landed in July, when the project moved out of his personal namespace into an <code>argent-lang</code> organization.</p>
+      <p>Every example the compiler ships partitions cleanly: one UTXO per ticket, per game, per position. Shared mutable state, where many users change one object at once (a pooled market maker, an order book, most of what people mean by DeFi) has no public Argent implementation yet.</p>
+      <details class="deep-dive">
+        <summary>Open the evidence: the DEX example, SECURITY.md, and who is committing</summary>
+        <p>The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
+        <p>Three repositories, and one person writes nearly all of it. Michael Sutton holds 73 of the compiler's 77 commits, and 58 of those landed in July, when the project moved out of his personal namespace into an <code>argent-lang</code> organization.</p>
+      </details>
     </section>
 
     <section class="section">
@@ -163,34 +164,35 @@ app Tickets {
           </tbody>
         </table>
       </div>
-      <p class="hint" id="argent-stamp">Baseline read on August 22, 2026. This table refreshes from GitHub when the page loads.</p>
+      <p class="hint" id="argent-stamp">Baseline: August 22, 2026. Refreshes live from GitHub.</p>
     </section>
 
     <section class="section prose-section">
       <p class="eyebrow">The README, in full</p>
       <h2>What Argent's own README actually says</h2>
-      <h3>The caution, in the README's own words</h3>
-      <p>Argent's README answers the production question in two halves, and quoting only the first gets it wrong. The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use."</p>
-      <h3>What that caution is actually about</h3>
-      <p>The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned.</p>
-      <p>The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
-      <p>Silverscript, the layer underneath, still labels itself experimental and recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API."</p>
-      <p>Read that as the ecosystem's conservative floor rather than the project's current state, since the same page still links the old repository path. Either way, anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened.</p>
+      <p>The README's caution is real and its list of working pieces is real; quoting only one half gets it wrong. Silverscript, the layer underneath, still calls itself experimental. Either way, anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened.</p>
+      <details class="deep-dive">
+        <summary>Open the README's own words: the caution, what it's actually about, and the Silverscript and Kaspa-docs caveats, quoted in full</summary>
+        <p>Argent's README answers the production question in two halves, and quoting only the first gets it wrong. The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use."</p>
+        <p>The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned.</p>
+        <p>The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
+        <p>Silverscript recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API," which reads as the ecosystem's conservative floor rather than the project's current state, since the same page still links the old repository path.</p>
+      </details>
     </section>
 
     <section class="next-step section">
       <p class="eyebrow">Read the source</p>
       <h2>The underlying material</h2>
-      <p class="source-inline">Primary references: <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/argent-lang/argent-playground">Argent playground</a>, <a href="https://github.com/argent-lang/argent-template">Argent template</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://docs.kaspa.org/toccata/argent">Kaspa docs, Argent chapter</a>, and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>.</p>
+      <p class="source-inline">Primary references: <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/argent-lang/argent-playground">playground</a>, <a href="https://github.com/argent-lang/argent-template">template</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://docs.kaspa.org/toccata/argent">Kaspa docs</a>, and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.</p></a>
-        <a href="/toccata-status"><span>Next</span><strong>Kaspa Toccata status</strong><p>Toccata&#x27;s DAA activation score, the v2.0.1 release, covenant and ZK surfaces, TN10/TN12 evidence, and the checks builders should run next.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>What Toccata added, and what it left out.</p></a>
+        <a href="/toccata-status"><span>Next</span><strong>Kaspa Toccata status</strong><p>Activation score, release, and evidence.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What's live, roadmap, or research right now.</p></a>
       </div>
     </section>
 <!-- related-links:end -->

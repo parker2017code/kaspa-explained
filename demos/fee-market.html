@@ -182,6 +182,43 @@
   @media (prefers-reduced-motion: reduce) {
     .bar-fill { transition: none; }
   }
+
+  /* Info affordance (design/house-style.md, "Disclosure components"): moves
+     a control's one-line explanation off the visible surface until tapped,
+     clicked, or hovered. Copied here rather than linked from styles.css,
+     matching this demo's no-shared-stylesheet convention (see demos/README.md). */
+  .field label { position: relative; }
+  .info-affordance { position: relative; display: inline-flex; vertical-align: middle; margin-left: 4px; }
+  .info-affordance__trigger {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin: -13px -13px -13px -4px; padding: 0;
+    border: none; background: none; color: var(--muted); cursor: pointer; border-radius: 50%;
+  }
+  .info-affordance__trigger:hover { color: var(--cyan); }
+  .info-affordance__glyph {
+    display: flex; align-items: center; justify-content: center; width: 17px; height: 17px;
+    border-radius: 50%; border: 1.5px solid currentColor; font-size: .68rem; font-weight: 700;
+    font-style: normal; line-height: 1;
+  }
+  .info-affordance__panel {
+    position: absolute; z-index: 30; top: calc(100% + 6px); right: 0;
+    transform: translateY(4px); width: max-content; max-width: min(280px, 74vw);
+    padding: 10px 13px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--panel-strong); color: var(--text); font-size: .8rem; font-weight: 400;
+    line-height: 1.45; text-align: left; box-shadow: var(--shadow-card);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .14s ease-out, transform .14s ease-out, visibility .14s;
+  }
+  .info-affordance:hover .info-affordance__panel,
+  .info-affordance:focus-within .info-affordance__panel,
+  .info-affordance.is-open .info-affordance__panel {
+    opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto;
+  }
+  .info-affordance__trigger:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -206,19 +243,18 @@
       <p class="scenario-note" id="scenarioNote" aria-live="polite">-</p>
 
       <div class="field">
-        <label for="tps">Transactions per second <b id="tpsVal">0.9</b></label>
+        <label for="tps">Transactions per second <b id="tpsVal">0.9</b><span class="info-affordance" id="tps-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="tps-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="tps-info-panel" role="tooltip">Slide it yourself, or use a scenario above. Log scale: each notch to the right is roughly 2x more traffic. This is how crowded the block gets, not who gets in.</span></span></label>
         <input type="range" id="tps" min="-1" max="3.7" step="0.01" value="-0.048">
-        <span class="gloss">Slide it yourself, or use a scenario above. Log scale: each notch to the right is roughly 2x more traffic. This is how crowded the block gets, not who gets in.</span>
       </div>
 
       <div class="subgroup field">
-        <span class="taglabel">Transaction shape</span>
+        <span class="taglabel">Transaction shape<span class="info-affordance" id="shape-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="shape-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="shape-info-panel" role="tooltip">A covenant or a proof carries more mass (Kaspa's measure of block space) than a plain payment, so fewer fit per block.</span></span></span>
         <div class="chipset" role="group" aria-label="Transaction shape" id="shapeChips">
           <button type="button" data-shape="plain" aria-pressed="true">Plain payment</button>
           <button type="button" data-shape="covenant">Covenant</button>
           <button type="button" data-shape="proof">ZK proof</button>
         </div>
-        <span class="gloss">A covenant or a proof carries more <b style="color:var(--text)">mass</b> (Kaspa's measure of block space) than a plain payment, so fewer fit per block.</span>
+        
         <p class="shape-note" id="shapeNote">-</p>
       </div>
 
@@ -232,16 +268,16 @@
       </div>
 
       <div class="field spotlight" id="feeField">
-        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b></label>
+        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b><span class="info-affordance" id="fee-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fee-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="fee-info-panel" role="tooltip">Demand decides how crowded the block is. This is the one control that decides whether your transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee today, 22 Aug 2026.</span></span></label>
         <input type="range" id="fee" min="-1" max="3.3" step="0.01" value="0">
-        <span class="gloss">Demand (above) decides how crowded the block is. This is the one control that decides whether <b style="color:var(--text)">your</b> transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee today, 22 Aug 2026 (source: data/l1-chains.json).</span>
+        
         <p class="fee-context" id="feeContext">-</p>
       </div>
 
       <div class="field">
-        <label for="price">KAS price <b id="priceVal">$0.0293</b></label>
+        <label for="price">KAS price <b id="priceVal">$0.0293</b><span class="info-affordance" id="price-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="price-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="price-info-panel" role="tooltip">Real price, CoinGecko, fetched 22 Aug 2026. The subsidy is paid in KAS too, so price scales both dollar figures together and does not close the gap by itself. Only more traffic or a higher fee narrows it.</span></span></label>
         <input type="range" id="price" min="-1" max="1" step="0.01" value="0">
-        <span class="gloss">Today's real price (source: CoinGecko, fetched 22 Aug 2026). The subsidy is paid in KAS too, so moving price scales both dollar figures on the right together: it doesn't close the gap between them by itself. Only more traffic or a higher fee narrows the gap.</span>
+        
       </div>
 
       <div class="subgroup field">

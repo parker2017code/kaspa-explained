@@ -87,6 +87,9 @@
   }
   .compare-note p, .impact-note p { margin: 0; color: var(--text); }
   .compare-note strong, .impact-note strong { color: var(--text); }
+  .inline-detail { background: transparent; box-shadow: none; padding: 6px 0 0; margin-top: 6px; }
+  .inline-detail summary { font-size: .82rem; color: var(--cyan); }
+  .inline-detail p { margin-top: 6px; }
 
   /* primary control: hours of attack */
   .primary-control { margin-bottom: 20px; }
@@ -510,8 +513,8 @@
   // attacker, and what it does not. Static because it does not depend on the
   // chain or hours picked; only the mechanism (rented/bought hash rate vs.
   // bought stake) changes which line applies.
-  var PERMANENCE_POW = 'What an hour of majority hash rate buys: the power to rewrite the most recent blocks (double-spend a payment, censor transactions) for as long as the attack keeps running. What it does not buy: rewriting old, buried history, taking coins out of other people’s wallets, or changing the protocol’s rules. The moment the attacker stops paying for the hash rate, the network goes back to normal.';
-  var PERMANENCE_POS = 'Bought stake does not expire like rented hash power: the tokens stay in the attacker’s wallet after the hour is up, so the ability to disrupt consensus persists until they sell the position back, which is itself a market-moving act.';
+  var PERMANENCE_POW = 'Majority hash rate buys the power to rewrite recent blocks (double-spend a payment, censor transactions) while the attack runs. It does not buy rewriting old, buried history, taking coins from other wallets, or changing the protocol’s rules. Stop paying for the hash rate and the network goes back to normal.';
+  var PERMANENCE_POS = 'Bought stake does not expire like rented hash power: the tokens stay in the attacker’s wallet after the hour is up, so the disruption persists until they sell the position back, itself a market-moving act.';
 
   function compute() {
     var c = CHAINS[state.chain];
@@ -620,7 +623,7 @@
     animateCost(state.lastCost, cost);
     state.lastCost = cost;
     var ratio = (cost / c.valueSecuredUSD) * 100;
-    document.getElementById('ratioNote').innerHTML = 'That is <b>' + fmtPct(ratio) + '</b> of the ' + fmtUSD(c.valueSecuredUSD) + ' the network secures, shown for scale. The dollar figure above is the answer; this ratio is context, not the point.';
+    document.getElementById('ratioNote').innerHTML = 'That is <b>' + fmtPct(ratio) + '</b> of the ' + fmtUSD(c.valueSecuredUSD) + ' the network secures, shown for scale, not the headline number.';
     document.getElementById('ratioFill').style.width = Math.min(100, ratio * 2000) + '%';
     document.getElementById('limitsNote').textContent = limitsNote;
     document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
