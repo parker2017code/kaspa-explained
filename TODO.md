@@ -173,3 +173,52 @@ git worktree rather than the repo root. Verified from the repo root:
 
 Worth keeping as a caution: an agent checking its premises is right to do
 so, and can still be wrong about which file it checked. Confirm the path.
+
+## NEXT SESSION: start here. Eleven defect classes, owner-reported
+
+The owner walked the site after the cb4ccdf deploy and found these. He is
+right about all of them and has raised several more than once. Two are
+measured and confirmed; the rest are his report, unmeasured.
+
+MEASURED AND CONFIRMED:
+1. Status pill text sits 6px ABOVE center, not centered. Measured on
+   parameterless: pill 30px tall, text 13px, offset -6px from center.
+   Affects "Live", "Research", every status pill sitewide. He has raised
+   this multiple times and it was never actually fixed.
+2. The "Back to What is Kaspa" link renders UNDER the fixed nav on every
+   demo, at BOTH 390 and 1280. Link top 24px, nav bottom 61px.
+
+HIS REPORT, NOT YET MEASURED:
+3. The nav itself is not horizontally centered, slightly shifted right.
+4. Space under the nav is inconsistent by page type. Demos have a lot,
+   build/risks/status have less, what-is-kaspa similar to demos. Looks
+   unintentional.
+5. Mobile at 390: controls detach from what they control. On the block
+   simulation the minus and plus separate from the block. He believes
+   this affects every demo. Nothing was tested at mobile.
+6. Term-def reveal panels extend out to the side on what-is-kaspa, on
+   "blue work" and "selected parent". Panels are 260px absolute; not
+   offscreen at 1280, mobile never checked.
+7. A caveat/source line sits crammed against the text above it with a
+   large empty gap below it.
+8. The demos index is still not in importance order. Parameterless is
+   last. He asked for importance ordering more than once.
+9. Numbers are unattributed. "23 weeks under attack at 10 percent
+   attacker share" does not say whether that is GHOSTDAG or DAGKnight.
+10. Labels are unintuitive: "two speeds", "confirmed time", "no visible
+    attack underway". Unclear what the demo does.
+11. No visible feedback that a control did anything when moved.
+
+PLAN AGREED, five agents, not yet launched:
+  1. Chrome fixes in styles.css: pill centering, back link clearance, nav
+     centering, top spacing. One agent so they cannot fight over the file.
+  2. Mobile sweep of all 18 demos at 390, screenshot each, controls must
+     stay with their subject.
+  3. Parameterless rebuild: labels, attribution, caveat spacing, response.
+  4. Demo index ordering by importance, plus caveat spacing rhythm.
+  5. Cold verifier over all 18 afterward, no site knowledge, own browser.
+
+THE METHODOLOGY HE ASKED FOR AND DID NOT GET, now mandatory in every
+brief: every demo verified at 390 AND 1280 in BOTH themes, with a
+screenshot, by an agent that did not build it, before anything deploys.
+His words: "I'm just really disappointed that it wasn't followed."
