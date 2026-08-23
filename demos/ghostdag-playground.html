@@ -167,6 +167,11 @@
   .count-pill{font-size:.75rem; color:var(--faint); background:var(--field-bg); border:1px solid var(--field-line); border-radius:980px; padding:.15rem .55rem;}
   .btn-step{min-width:44px; justify-content:center; font-weight:700;}
   .width-readout{font-size:.82rem; color:var(--muted);}
+  /* The minus button, the count it changes, and the plus button are one
+     control: they must never wrap onto separate lines, or the buttons read
+     as detached from the number they act on. The row around them can still
+     wrap the label and the trailing action buttons. */
+  .width-control{display:inline-flex; flex-wrap:nowrap; align-items:center; gap:.5rem;}
   .mine-caption{font-size:.85rem; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line); border-radius:10px; padding:.6rem .8rem; margin-top:.6rem; min-height:1.2em;}
   .mine-caption:empty{display:none;}
   .staging-note{margin:.5rem 0 0; font-size:.85rem; color:var(--text);}
@@ -347,9 +352,11 @@
 
     <div class="toolbar toolbar-secondary">
       <span>Force a count instead:</span>
-      <button class="btn-quiet btn-step" id="btn-width-minus" type="button" aria-label="Fewer blocks">&minus;</button>
-      <span class="width-readout"><output id="width-out">2</output> blocks</span>
-      <button class="btn-quiet btn-step" id="btn-width-plus" type="button" aria-label="More blocks">+</button>
+      <span class="width-control">
+        <button class="btn-quiet btn-step" id="btn-width-minus" type="button" aria-label="Fewer blocks">&minus;</button>
+        <span class="width-readout"><output id="width-out">2</output> blocks</span>
+        <button class="btn-quiet btn-step" id="btn-width-plus" type="button" aria-label="More blocks">+</button>
+      </span>
       <button class="btn-quiet" id="btn-mine-parallel" type="button">Mine this many</button>
       <button class="btn-quiet" id="btn-reset" type="button">Reset</button>
     </div>

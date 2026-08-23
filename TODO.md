@@ -285,3 +285,62 @@ This is a larger restructure than anything currently running and would
 invalidate the demo-ordering work. Asked him whether to run it after the
 current five agents land or stop them and do the architecture first. No
 answer yet.
+
+## MASTER LIST, written 23 Aug 2026 before compaction
+
+Agent cap raised to 10. Deploy as slots free. Everything below is
+outstanding unless marked done.
+
+### Owner's standing verdict
+"There's something wrong with every page." Treat that as the scope. No
+page is signed off. Every page and every demo needs a real audit against
+the Apple/Google/Tesla/Meta test, not a coverage count.
+
+### Blocking disappointments he has named more than once
+- sources.html is still 3,443 words. He asked for it cut repeatedly. It
+  was restructured as a lookup and never actually shortened. Most of it
+  should be stashed behind disclosure or attached to the claims it
+  settles. Nobody arrives at a bibliography on purpose.
+- about.html still exists at ~1,676 words. An agent argued it earns its
+  place because it carries the KAS conflict disclosure, the corrections
+  process, and the claim-status definitions. That was the agent's call.
+  He believes he asked for it gone. Confirm with him or cut it to those
+  three answers and nothing else.
+- Sentence audits that cut nothing. See the rubber-stamp section above.
+  Any cutting pass states a target reduction first and is judged on it.
+
+### The eleven chrome and demo defects
+See the earlier section. Five agents were launched on them: chrome fixes,
+mobile sweep of all 18 demos, parameterless rebuild, demo ordering, and
+the term-def stacking bug plus theme toggle plus build page tabs.
+
+### Three more found while auditing
+- crypto-from-scratch 2,366 words, start-here 1,674, kaspa-origin-story
+  2,060. All dense. All previously "audited" with zero cuts.
+- Numbers visually overlap in the sources list.
+- The Argent pipeline demo is live and listed, but a reader cannot tell
+  what it does on arrival. It needs a one-line frame.
+
+### Architecture question, unanswered
+Demos should not be their own pages. One page about the concept with the
+demo in it, no separate demo URL, `demos/` as a component library. This
+collapses 18 demo pages plus hosts into 18 topic pages. Larger than
+anything currently running and would invalidate the ordering work. He was
+asked whether to run it after the current five land or stop and restructure
+first, and has not answered.
+
+### What is actually done and live
+Nav at five. Glossary, claims checker, monthly digest, questions page all
+folded into the pages that needed them. Glass gone including the tokens
+that hid it from four audits. Model picker restored after an agent broke
+it. Footer at a third its height with full navigation. Chain comparer's
+fatal script error and its claims-versus-measured table that never
+rendered. Argent pipeline demo. 18 demo cards live and ordered. Node cost
+given a guess-first moment. Noscript everywhere. Eight jargon terms and
+twelve glossary terms defined inline. llms.txt completed.
+
+### Standing rules for every brief
+No git commit, push, reset, stash or checkout by any agent; one committer.
+Never bind port 4187. Verify at 390 and 1280 in both themes with a
+screenshot, by an agent that did not build the thing, before deploy.
+Report measured before and after numbers, never "looks right".

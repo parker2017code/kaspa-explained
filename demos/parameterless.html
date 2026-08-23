@@ -247,6 +247,15 @@
   .embed-cta { margin: 14px 0 0; font-size: .86rem; }
   .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
   .embed-cta a:hover { text-decoration: underline; }
+
+  /* The caveat-and-sources <details> sat flush against the sentence above it
+     (.sub has margin:0) while the collapsed block itself carried 1.5rem of
+     margin below, so the rhythm read as "crammed above, empty below" instead
+     of the caveat line reading as attached to what it qualifies. Give the
+     lead sentence room to breathe from the details block that expands it,
+     and tighten the trailing gap so the details ties to its own panel first. */
+  .caveat-lead { margin: 0 0 .7rem; }
+  .panel.embed-hide details { margin-bottom: .5rem; }
 </style>
 </head>
 <body>
@@ -342,9 +351,9 @@
   <p class="embed-cta"><a href="/demos/parameterless">See the full demo, with the attacker-share widget and every caveat</a></p>
 
   <div class="panel embed-hide">
-    <h2>Two speeds</h2>
+    <h2>DAGKnight's two speeds <span class="status-pill research">Research</span></h2>
     <p style="color:var(--muted); font-size:1rem; margin:0 0 .8rem; max-width:74ch;">
-      Two regimes: fast when calm, slower once an attack shows. Attacker share sets which.
+      DAGKnight's own worst-case formula, not GHOSTDAG and not a live network reading.
     </p>
     <div class="row">
       <div class="field">
@@ -359,13 +368,13 @@
     <div class="side" id="side-optimistic">
       <h3>No visible attack</h3>
       <p class="sub">Every block looks honest right now.</p>
-      <div class="gauge-row"><span>confirm time</span><output id="opt-time-out"></output></div>
+      <div class="gauge-row"><span>predicted wait</span><output id="opt-time-out"></output></div>
       <div class="verdict safe" id="opt-verdict" role="status"></div>
     </div>
     <div class="side" id="side-pessimistic">
       <h3>Attack visibly under way</h3>
       <p class="sub">An attacker is actively forking the DAG.</p>
-      <div class="gauge-row"><span>confirm time</span><output id="pess-time-out"></output></div>
+      <div class="gauge-row"><span>predicted wait</span><output id="pess-time-out"></output></div>
       <p id="pess-toolong" class="over-badge" hidden></p>
       <div class="verdict unsafe" id="pess-verdict" role="status"></div>
     </div>
@@ -375,7 +384,7 @@
 
   <div class="panel embed-hide">
     <h2>What this costs</h2>
-    <p class="sub" style="margin:0;">Not shipped, not parameter-free, efficiency unsolved. Full list below.</p>
+    <p class="sub caveat-lead">Not shipped, not parameter-free, efficiency unsolved.</p>
     <details>
       <summary>Every caveat, with sources</summary>
       <ul class="honest">
