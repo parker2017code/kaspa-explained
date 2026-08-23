@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="Twenty layer ones on the same fields. Move the dials for what your job needs and see which chain fits.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
   <style>
     .cc-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
@@ -184,7 +184,7 @@
       <p class="eyebrow">Tool</p>
       <h1>Which chain fits the job?</h1>
       <p class="lead">Twenty layer ones, same fields. Move the dials and the ranking reorders. Kaspa gets no special treatment.</p>
-      <p class="fit-note">Dated, not live: re-measured 22 August 2026.</p>
+      <p class="fit-note">Dated snapshot, re-measured 22 August 2026.</p>
     </section>
 
     <section class="section cc-shell-section">
@@ -214,12 +214,12 @@
           <details class="cc-method">
             <summary>How the score works</summary>
             <ol>
-              <li><b>Every dial is a weight, not a filter.</b> Turn one up and it takes a bigger share of the score. Nothing is ever removed from the list for failing a requirement.</li>
+              <li><b>Every dial is a weight.</b> Turn one up and it takes a bigger share of the score. It never acts as a filter: nothing is removed from the list for failing a requirement.</li>
               <li><b>Each field is normalized across the chains that report it</b>, then the score is the weighted average of those. The shares shown next to each dial add to 100.</li>
-              <li><b>A chain that never published a field is skipped on that dial</b> rather than scored zero. It is dropped entirely once the fields it does report cover under 70% of what you asked about, and the row says how many dials it stayed quiet on.</li>
+              <li><b>A chain that never published a field is skipped on that dial.</b> It is never scored zero for staying silent. It is dropped entirely once the fields it does report cover under 70% of what you asked about, and the row says how many dials it stayed quiet on.</li>
               <li><b>Throughput is what a chain carries now, next to its highest observed burst</b>, for the reason given above. A headline capacity figure is not a measurement.</li>
               <li><b>Some numbers are not comparable across rows even though they share a column.</b> Nakamoto coefficients use different thresholds for proof of work and proof of stake, developer counts roll up child ecosystems for some chains and not others, and block-producer counts measure different things by design.</li>
-              <li><b>Every row was re-measured on the same day, and the row says which fields were.</b> All twenty were re-measured against live endpoints on 22 August 2026, closing the gap from an earlier pass on 1 August that covered only nine: some readings come from aggregated chain stats, some from timing blocks on the chain's own RPC or mirror node. That pass found real drift rather than rounding: Ethereum's sustained rate ran 18 percent higher than the 1 August reading, Avalanche's ran 62 percent lower, and Internet Computer's came back roughly 3.6x higher on a different metric endpoint than the one the earlier figure likely used. Two fields could not be independently re-derived this pass: Polkadot's throughput stays unscored because the relay chain itself carries almost no user transactions, and TON's throughput carries a same-day correction made earlier rather than a fresh re-derivation. A number nobody re-checked is worth less than one somebody did, so the row tells you which it is.</li>
+              <li><b>Every row was re-measured on the same day, and the row says which fields were.</b> All twenty were re-measured against live endpoints on 22 August 2026, closing the gap from an earlier pass on 1 August that covered only nine: some readings come from aggregated chain stats, some from timing blocks on the chain's own RPC or mirror node. That pass found real drift, not rounding error: Ethereum's sustained rate ran 18 percent higher than the 1 August reading, Avalanche's ran 62 percent lower, and Internet Computer's came back roughly 3.6x higher on a different metric endpoint than the one the earlier figure likely used. Two fields could not be independently re-derived this pass. Polkadot's throughput stays unscored because the relay chain itself carries almost no user transactions. TON's throughput still carries a same-day correction made earlier; it has not been freshly re-derived. A number nobody re-checked is worth less than one somebody did, so the row tells you which it is.</li>
               <li><b>"Shows up fast" and "settles for good" are not the same property wearing two names.</b> Across the 14 chains that carry a coded finality rule, the two barely move together (r=0.05, n=14): a chain that includes a transaction quickly is not reliably the one that finalizes it quickly. Kaspa is the clearest case. A block shows up in 0.1s and the coded finality boundary sits at 12 hours. That figure reflects GHOSTDAG. DAGKnight is a research proposal (KIP-2, Status: Proposed) with no mainnet implementation and would only change this if it ships. Bitcoin, Litecoin, Monero and Bitcoin Cash are left unscored on settlement rather than credited with the 6-confirmation convention, so they no longer inflate this comparison either.</li>
               <li><b>"Pays for its own security" replaced a hash-power dial that ranked Bitcoin's 912.5 EH/s against Kaspa's 0.312 EH/s on one axis.</b> SHA-256, Scrypt, RandomX and kHeavyHash hash rates do not convert to a common unit of work, so that ranking compared five different things as if they were one. Daily issuance in dollars does convert, so the dial now scores that instead: only the five proof-of-work chains here have it sourced (each row shows native units and dollars at spot), and every proof-of-stake, BFT, federated and permissioned chain is left unscored rather than credited with zero. Ethereum is one of those left out on purpose, not by oversight: its net issuance is burn-adjusted under EIP-1559 and moves with fee demand, so there is no single "tokens per day" figure to quote without a netting calculation this pass did not do.</li>
             </ol>

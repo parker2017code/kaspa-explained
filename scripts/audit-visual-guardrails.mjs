@@ -154,70 +154,19 @@ function auditStylesheetCacheKeys() {
 }
 
 function auditSelectivePolish() {
-  const sheenVars = [...css.matchAll(/--glass-sheen:\s*([^;]+);/g)].map((match) => match[1].trim());
-  if (sheenVars.length < 2) fail("styles.css should define dark and light --glass-sheen values");
-
-  for (const value of sheenVars) {
-    if (/^none$/i.test(value)) fail("--glass-sheen should stay subtle and enabled");
-    if (!/linear-gradient\(/i.test(value)) fail("--glass-sheen should use a restrained linear gradient");
+  // RETIRED (2026-08-23, glass/gradient cleanup): this used to REQUIRE a
+  // --glass-sheen gradient token and REQUIRE it stay attached to
+  // .section::before, .quadrant, .fit-note, and friends -- i.e. it treated
+  // the site's glossy sheen as a sanctioned, mandatory design element. That
+  // was itself part of why the owner kept finding glass after four "clean"
+  // audits: the guardrail meant to catch regressions was actively
+  // protecting the thing being complained about. The owner's 2026-08-23
+  // instruction removed the sanctioned-exception status of every gradient
+  // surface, including this one. The token and its consuming rules are
+  // gone from styles.css; this function now guards against it coming back.
+  if (/--glass-(?:surface|edge|sheen|inset|rim):/i.test(css)) {
+    fail("styles.css should not reintroduce --glass-surface/--glass-edge/--glass-sheen/--glass-inset/--glass-rim; the flat token treatment (color-mix background + color-mix border + token text color) replaced it site-wide on 2026-08-23");
   }
-
-  const sheenBlocks = [...css.matchAll(/([^{}]+)::before\s*\{[^{}]*background:\s*var\(--glass-sheen\)[^{}]*\}/g)];
-  const sheenSelectorText = sheenBlocks.map((match) => match[1]).join("\n");
-  const requiredSheenSelectors = [
-    ".section:not(.prose-section)",
-    ".hero-signal-grid a",
-    ".hero-status a",
-    ".status-lane-grid a",
-    ".fit-note",
-    ".verified-note",
-    ".search-card",
-    ".quadrant",
-    ".quad-cell",
-  ];
-
-  for (const selector of requiredSheenSelectors) {
-    if (!sheenSelectorText.includes(selector)) {
-      fail(`styles.css sheen should remain available on ${selector}`);
-    }
-  }
-
-  const broadCardSelectors = [
-    ".quick-grid article",
-    ".timeline article",
-    ".status-grid article",
-    ".insight-grid article",
-    ".claim-grid article",
-    ".summary-grid article",
-    ".reference-grid article",
-    ".verification-steps article",
-    ".build-path-grid article",
-    ".overview-grid article",
-    ".compare-cards article",
-    ".glossary-grid article",
-    ".reality-grid article",
-    ".field-study-grid article",
-    ".path-grid article",
-    ".lane-grid article",
-    ".fit-grid article",
-    ".search-results article",
-    ".source-card",
-  ];
-
-  for (const selector of broadCardSelectors) {
-    if (sheenSelectorText.includes(selector)) {
-      fail(`styles.css should not put the decorative sheen on every card surface: ${selector}`);
-    }
-  }
-
-  const sheenBlock = sheenBlocks[0]?.[0] ?? "";
-  assertOpacityAtMost(sheenBlock, "opacity", 0.14);
-
-  const lightSheenBlock = declarationBlock(
-    /\n:root\[data-theme="light"\]\s+\.section:not\(\.prose-section\)::before,[\s\S]*?\)::before\s*\{([\s\S]*?)\n\}/,
-    "light section sheen override",
-  );
-  assertOpacityAtMost(lightSheenBlock, "opacity", 0.1);
 }
 
 function auditGlowAndContrastDefaults() {

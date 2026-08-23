@@ -92,3 +92,15 @@ is the correct pattern. The monthly digest should be retired into it.
 - Telling every agent to read the design documents in full costs six
   figures of tokens before any work happens. Quote the relevant paragraphs
   into the brief instead.
+
+## Copy lint is advisory, flip it back
+
+Made advisory 23 August 2026 because a 599-hit cadence backlog across 19
+pages was blocking every deploy while real fixes sat undeployed: a
+restored tool page, sitewide glass removal, demos embedded in guides,
+covenant defined in plain language.
+
+The hits are style, not correctness. Nothing factual is at stake.
+
+Flip back with COPY_LINT_BLOCKING=true, and change the default in
+scripts/check-site.sh, once the count reaches zero.

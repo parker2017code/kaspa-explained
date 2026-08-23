@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -97,7 +97,7 @@
         </table>
       </div>
       <p class="hint" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
-      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the DAGKnight upgrade, has been Proposed for years and stays Proposed: internal devnet only, no testnet, no date. Eleven further KIPs sit open as pull requests. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
+      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the <a href="/dagknight">DAGKnight</a> upgrade, has been Proposed for years and stays Proposed: internal devnet only, no testnet, no date. Eleven further KIPs sit open as pull requests. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
       <p class="fit-note">KIP-2 proposes replacing GHOSTDAG's fixed margin with one that adapts to actual network latency. Try it below.</p>
       <div class="live-demo-frame">
         <iframe id="parameterless-frame" src="/demos/parameterless" title="Parameterless consensus demo: GHOSTDAG's fixed margin versus DAGKnight's adjustable one, KIP-2" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
@@ -146,7 +146,7 @@
       <p class="lead">Builder agreements on encoding, not protocol changes: three merged, all still marked draft.</p>
       <p>The KCC repository was created on July 15, 2026. Three specifications have merged into it: KCC-0001, KCC-0002, and KCC-0020. Each one's own document header still reads <code>Status: Draft</code>.</p>
       <p>A merged file in this repo is a checked-in draft, not an adopted standard: the README's own bar for acceptance is a Comments-URI discussion window and consensus among implementers, and none of the three has cleared that.</p>
-      <p class="fit-note">KCC-0001 defines the covenant byte layout these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
+      <p class="fit-note">KCC-0001 defines the byte layout for a <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">covenant<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span>, a rule attached to a coin that these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
       <div class="table-wrap">
         <table class="reality-table" id="kcc-table">
           <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
@@ -165,6 +165,50 @@
       <p>The two open pull requests both claim adoption evidence the repository itself does not carry: KCC-0021's author says kascov and the wallet KaspaRocket already use its metadata convention, and KCC-0402's author says a reference implementation, k402, has payment-channel transactions live on mainnet. Neither claim is independently confirmed; treat both as the author's word until a merge or an outside source backs them.</p>
       <p>The four-digit repository numbering is canonical; forum shorthand like "KCC20" is not the identifier in the repository, and nothing has been ratified. KCC-0020 is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant. That is normal before acceptance, not acceptance itself.</p>
       <p>A token issued against KCC-0020 today inherits three known defects: a permanent supply-split consequence its co-authors partly defend and partly call a wrong pattern still needing a spec fix, one production deployment that admits partial conformance, and a launchpad already on its fourth incompatible template.</p>
+      <details class="deep-dive">
+        <summary>Common question: what happens when a token standard splits supply?</summary>
+        <p>Under KCC-0020, updating some holders' cells and not others while a supply-wide commitment changes splits the token into groups that can never consolidate again, permanently. The spec's own co-authors are on record disagreeing about which uses of that mechanism are intended versus a bug; the full record is below.</p>
+      </details>
+      <div class="live-demo-frame">
+        <iframe id="supply-split-frame" src="/demos/supply-split" title="Supply split demo: update one holder's tokens under KCC-0020 and watch a payment to the other get refused for good" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:520px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('supply-split-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <details class="deep-dive" id="supply-split">
         <summary>The supply-split consequence, defended in part, conceded in part</summary>
         <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser has not withdrawn his original concern, and no spec change has merged.</p>
@@ -196,7 +240,7 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/kaspa-developments"><span>Previous</span><strong>What changed in Kaspa this month</strong><p>What actually changed in Kaspa this month, with the things that did not change named too.</p></a>
+        <a href="/kaspa-mining"><span>Previous</span><strong>Kaspa mining</strong><p>Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.</p></a>
         <a href="/kaspa-claims-checker"><span>Next</span><strong>Kaspa claims checker</strong><p>Common claims about Kaspa, each marked true, partly true, or wrong, with the source.</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>

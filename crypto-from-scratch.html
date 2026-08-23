@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -274,7 +274,47 @@
           </tbody>
         </table>
       </div>
-      <p>A fair launch removes the official allocation table. It does not remove the funding, coordination, early-miner, or liquidity questions that a premine would have paid for.</p>
+      <p>A fair launch removes the official allocation table. It does not remove the funding, coordination, early-miner, or liquidity questions that a premine would have paid for. Kaspa mined its supply from zero; here is that shape next to three chains that started with a premine or a sale.</p>
+      <div class="live-demo-frame">
+        <iframe id="fair-launch-frame" src="/demos/fair-launch" title="Fair launch demo: Kaspa's mined-from-zero supply plotted against Ethereum, Cardano, and XRP's premine and presale allocations" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('fair-launch-frame');
+        if (!frame) return;
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        frame.addEventListener('load', function () {
+          syncFrameTheme();
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
       <p>Users care about payments, <span class="term-def" tabindex="0" role="button" aria-describedby="custody-def">custody<span class="term-def__panel" id="custody-def" role="tooltip">Who actually holds the private keys: you, an exchange, or a custodian, decides who can move the funds.</span></span>, privacy, and fees. Traders watch liquidity, swings, listings, and the story. Miners watch rewards, power price, and difficulty; validators and stakers watch yield, uptime, slashing, and voting weight.</p>
       <details class="deep-dive">
         <summary>What developers, exchanges, and regulators each watch</summary>

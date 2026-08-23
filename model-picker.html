@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-20">
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
   <style>
     .mp-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
@@ -241,9 +241,9 @@
     .mp-pareto-key li { display: flex; align-items: center; gap: .4rem; }
     .mp-pareto-key i { width: 11px; height: 11px; border-radius: 50%; flex: none; }
     .mp-pareto-key .k-front { background: var(--cyan); }
-    .mp-pareto-key .k-partial { background: var(--card-bg); box-shadow: inset 0 0 0 2px var(--cyan); }
-    .mp-pareto-key .k-beat { width: 9px; height: 9px; background: transparent;
-      box-shadow: inset 0 0 0 1.5px var(--faint); }
+    .mp-pareto-key .k-partial { box-sizing: border-box; background: var(--card-bg); border: 2px solid var(--cyan); }
+    .mp-pareto-key .k-beat { box-sizing: border-box; width: 9px; height: 9px; background: transparent;
+      border: 1.5px solid var(--faint); }
     .mp-pareto-foot { font-size: 1rem; color: var(--muted); line-height: 1.55; margin: .5rem 0 0; }
   </style>
 </head>
@@ -385,7 +385,7 @@
           <div class="mp-close" id="mpClose" hidden></div>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <ol class="mp-list" id="mpList"></ol>
-          <details class="mp-prov">
+          <details class="mp-prov" open>
             <summary>Value chart</summary>
             <div class="mp-pareto-head" id="mpParetoHead">
               <b class="mp-pareto-title">What you cannot get cheaper</b>
@@ -394,7 +394,7 @@
             </div>
             <div class="mp-pareto" id="mpPareto"></div>
           </details>
-          <details class="mp-prov">
+          <details class="mp-prov" open>
             <summary>How often each model wins</summary>
             <div class="mp-mc-head" id="mpMcHead">
               <b class="mp-mc-title">4,000 simulated rankings</b>

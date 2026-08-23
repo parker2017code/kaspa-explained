@@ -60,7 +60,7 @@
   <meta name="twitter:description" content="What running a node costs across chains, why some keep everything forever, and why Kaspa's stays near 50 GB no matter how long it has run.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root{
@@ -116,6 +116,15 @@
     border:0; background:var(--card-bg); box-shadow:var(--card-shadow); border-radius:18px; padding:20px; margin-bottom:18px;
   }
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  /* Twenty toggle chips wrapping into 8-10 rows at phone width was most of
+     why this panel alone ran past one screen: "a long scroll of numbers"
+     started before the bars even appeared. A single scrolling row keeps
+     every chip at full size and tap target; the five chains on by default
+     are the ones a reader sees without touching it at all. */
+  @media (max-width: 640px) {
+    .chips{flex-wrap:nowrap; overflow-x:auto; padding-bottom:2px;}
+    .chips .chip{flex:none;}
+  }
   .chip{
     border:0; background:var(--control-bg); color:var(--text);
     border-radius:980px; padding:6px 12px; font-size:.82rem; cursor:pointer;

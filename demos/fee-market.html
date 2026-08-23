@@ -60,7 +60,7 @@
   <meta name="twitter:description" content="Load a Kaspa block with real traffic from other chains, heavier transactions, or a faster block rate, and watch what a full block does to fees and to the gap with the subsidy.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -104,6 +104,18 @@
   .panel h2 { font-size: .9rem; margin: 0 0 14px; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
 
   .chipset { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  /* Below 640px, five preset buttons wrapping cost multiple 44px rows on
+     top of an already-tall controls panel. A single horizontal-scrolling
+     row keeps every chip at full size and tap target; the cost is a
+     sideways swipe instead of vertical space this page cannot spare.
+     The "Advanced" details (shape, block rate, price, timing) does the
+     rest of the work: those four controls still work exactly as before,
+     they just are not forced open above the result the first time a
+     reader lands here. */
+  @media (max-width: 640px) {
+    .chipset { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+    .chipset button { flex: none; }
+  }
   .chipset button {
     min-height: 44px; background: var(--control-bg); border: 0; color: var(--text);
     border-radius: 8px; padding: 0 12px; font-size: .82rem; cursor: pointer;
@@ -363,6 +375,8 @@
         <input type="range" id="tps" min="-1" max="3.7" step="0.01" value="-0.048">
       </div>
 
+      <details class="advanced-controls">
+        <summary>Advanced: shape, block rate, price, timing</summary>
       <div class="subgroup field">
         <span class="taglabel">Transaction shape<span class="info-affordance" id="shape-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="shape-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="shape-info-panel" role="tooltip">A covenant or a proof carries more mass (Kaspa's measure of block space) than a plain payment, so fewer fit per block.</span></span></span>
         <div class="chipset" role="group" aria-label="Transaction shape" id="shapeChips">
@@ -404,6 +418,8 @@
           <button type="button" data-months="48">In 4 years</button>
         </div>
       </div>
+
+      </details>
 
       <div class="reset-row"><button class="reset-btn" id="resetBtn" type="button">Reset to today</button></div>
     </div>

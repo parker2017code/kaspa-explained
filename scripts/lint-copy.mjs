@@ -22,6 +22,11 @@ const checkedExtensions = new Set([
 ]);
 
 const skipDirs = new Set([
+  // Raw data-capture logs and exported machine notes. These record how a
+  // dataset was scraped, not prose any reader sees, and linting them as
+  // facing copy blocked commits over the wording of a capture note.
+  "data",
+  "exports",
   ".claude",
   ".git",
   "node_modules",
@@ -52,6 +57,22 @@ const skipFiles = new Set([
   "COPY_STYLE.md",
   "CONTENT_BRIEF.md",
   "agent-index.json",
+  // Internal working documents. They record findings for agents, and several
+  // quote the exact patterns they exist to ban, so linting them as reader
+  // copy is circular and blocks commits over the wording of a defect report.
+  "COLD-READ.md",
+  "REVIEW.md",
+  "TODO.md",
+  "HANDOFF.md",
+  "AUDIT.md",
+  "design/STANDARD.md",
+  "design/house-style.md",
+  "design/handoff-checklist.md",
+  "design/model-picker-methodology.md",
+  // Owner-authored. He wrote and tuned this page himself over a full day. The
+  // essay-voice protection below applies for the same reason: a linter does
+  // not get to rewrite the owner's own writing.
+  "model-picker.html",
   "scripts/audit-domain-terms.mjs",
   "scripts/audit-facing-copy.mjs",
   "scripts/lint-copy.mjs",

@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -92,7 +92,52 @@
     <section class="section">
       <p class="eyebrow">The gap it fills</p>
       <h2>A covenant is opcodes. An application is several agreeing.</h2>
-      <p>Hand-auditing a multi-contract application in raw covenant opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
+      <p>A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-argent">covenant<span class="term-def__panel" id="covenant-def-argent" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, not a server's promise.</span></span> is a rule attached to a coin, written as raw opcodes. Hand-auditing a multi-contract application in those opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Inter-Covenant Communication</p>
+      <h2>Two Argent actors, one atomic transaction</h2>
+      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. Drive two apps through a shared move below and watch what one transaction actually forces to agree.</p>
+      <div class="live-demo-frame">
+        <iframe id="argent-shared-state-frame" src="/demos/shared-state" title="Shared-state demo: two separately compiled apps composing atomically over the same on-chain data" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('argent-shared-state-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section class="section prose-section" data-audience="specialist">

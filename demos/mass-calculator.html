@@ -60,7 +60,7 @@
   <meta name="twitter:description" content="Pick a transaction shape and see which mass dimension actually gets charged.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -152,6 +152,10 @@
     gap: 8px;
     margin-bottom: 20px;
   }
+  @media (max-width: 640px) {
+    .presets { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+    .presets button { flex: none; }
+  }
   .reset-btn {
     margin-left: 4px;
     min-height: 34px;
@@ -187,7 +191,7 @@
     gap: 20px;
   }
   @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: 1fr; gap: 12px; }
   }
   .panel {
     background: var(--card-bg);
@@ -290,6 +294,7 @@
   .result .label { color: var(--faint); font-size: .82rem; }
   .result .sub { color: var(--muted); font-size: 1.067rem; margin-top: 4px; }
 
+  .advanced-controls { margin-top: 10px; padding: 10px 14px; }
   details {
     margin-top: 24px;
     background: var(--card-bg);
@@ -381,6 +386,15 @@
   }
   .embed-cta a { color: var(--cyan); font-weight: 600; text-decoration: none; }
   .embed-cta a:hover { text-decoration: underline; }
+  /* Tightened at the width where control-to-result is tightest: four
+     sliders plus two result panels stacked left nothing to spare. Nothing
+     here drops below the 44px slider/tap-target height set above; this
+     only trims the margins around them. */
+  @media (max-width: 640px) {
+    .presets { margin-bottom: 8px; }
+    .field { margin-bottom: 8px; }
+    .panel { padding: 12px 16px; }
+  }
 </style>
 </head>
 <body>
@@ -448,17 +462,19 @@
         <input type="range" id="payload" min="0" max="25000" step="50" value="0">
       </div>
 
-      <div class="field">
-        <span style="display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;">Script per input</span>
-        <div class="radios">
-          <label><input type="radio" name="scriptType" value="simple" checked> Simple signature (1 signature check)</label>
-          <label><input type="radio" name="scriptType" value="covenant"> Covenant / compute budget</label>
+      <details class="advanced-controls" id="scriptDetails">
+        <summary>Advanced: script per input</summary>
+        <div class="field">
+          <div class="radios">
+            <label><input type="radio" name="scriptType" value="simple" checked> Simple signature (1 signature check)</label>
+            <label><input type="radio" name="scriptType" value="covenant"> Covenant / compute budget</label>
+          </div>
+          <div class="budget-field field" id="budgetField" hidden>
+            <label for="budget">Compute budget units per input <b id="budgetVal">50</b></label>
+            <input type="range" id="budget" min="1" max="500" step="1" value="50">
+          </div>
         </div>
-        <div class="budget-field field" id="budgetField" hidden>
-          <label for="budget">Compute budget units per input <b id="budgetVal">50</b></label>
-          <input type="range" id="budget" min="1" max="500" step="1" value="50">
-        </div>
-      </div>
+      </details>
     </div>
 
     <div class="panel">
@@ -746,6 +762,11 @@ TPS = tx_per_block × 10 blocks/second</span>
     budgetEl.value = p.budget;
     for (var i = 0; i < scriptRadios.length; i++) scriptRadios[i].checked = (scriptRadios[i].value === p.script);
     budgetField.hidden = p.script !== 'covenant';
+    // Reveal the advanced script-type disclosure when a preset actually
+    // changes it, so a reader sees WHY compute mass jumped instead of just
+    // that it did; it stays collapsed for the presets that leave it alone.
+    var scriptDetails = document.getElementById('scriptDetails');
+    if (scriptDetails) scriptDetails.open = (p.script === 'covenant');
     presetButtons.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.preset === name ? 'true' : 'false'); });
     render();
     applyingPreset = false;

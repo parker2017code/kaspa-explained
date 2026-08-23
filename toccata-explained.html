@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-focusfix">
+  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -127,6 +127,10 @@
         </table>
       </div>
       <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
+      <details class="deep-dive">
+        <summary>Common question: what is a covenant, and can it break?</summary>
+        <p>A covenant is a spend rule the network itself checks on every transaction, not a server's promise. KIP-20 covenant IDs stop the obvious break, a forged lookalike UTXO with no real history, by keeping a stable identity through every valid step. Try to break one yourself below.</p>
+      </details>
       <p class="fit-note">Try the covenant breaker: attack a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and see the exact rule that stops each one.</p>
       <div class="live-demo-frame">
         <iframe id="covenant-breaker-frame" src="/demos/covenant-breaker" title="Covenant breaker demo: attack a vault covenant and see which rule stops each attempt" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
@@ -176,6 +180,10 @@
       <p>KIP-16 adds <code>OpZkPrecompile</code> with initial Groth16 and RISC0-Succinct paths, letting a script check a proof about chosen public inputs. ZK does not prove prices, bridge truth, or real-world events on its own.</p>
       <p>Outside facts need an anchor: a light client, a finality certificate, an oracle, or a challenge process. The ZK boundary demo below builds a claim and shows a proof succeed on a chosen computation, then fail to establish an outside fact with no named anchor.</p>
       <p>KIP-21 answers a separate cost problem. Based apps use Kaspa L1 ordering, and the simple design gets expensive fast: every app would have to prove which L1 transactions were for it and which were not, so at scale proving what isn't yours turns into the real burden. Partitioned sequencing commitments let a prover follow one app lane instead.</p>
+      <details class="deep-dive">
+        <summary>Common question: what can a ZK proof actually prove?</summary>
+        <p>Only a claim about the chosen inputs fed into it, nothing about the outside world on its own. A price, a bridge event, or another chain's state still needs a named anchor: a light client, finality certificate, oracle, or challenge process.</p>
+      </details>
       <div class="live-demo-frame">
         <iframe id="zk-boundary-frame" src="/demos/zk-boundary" title="ZK boundary demo: what a proof can and cannot establish" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
@@ -253,7 +261,7 @@
       <h2>Argent, the layer between a covenant and an app</h2>
       <p>Toccata made covenants enforceable. It did not make them writable. A covenant is opcodes, and writing a multi-contract application in them by hand, then auditing it, is not something most teams will do.</p>
       <p>Argent is Michael Sutton's attempt at filling that gap, and it is not officially blessed. An Argent actor is a covenant object that a transaction consumes and recreates, and the compiler turns a readable description of an application into the Silverscript the network already checks.</p>
-      <p>Argent's own README sets the production gate as an audit: first Silverscript's, then its own. Michael Sutton holds 73 of the compiler's 77 commits, 58 of them in July, when the project moved into an <code>argent-lang</code> organization. No repository carries a tagged release. Silverscript itself still calls its bytecode artifact experimental and recommends it only on testnet-10.</p>
+      <p>Argent's own README sets the production gate as an audit: first <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-toccata">Silverscript<span class="term-def__panel" id="silverscript-def-toccata" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span>'s, then its own. Michael Sutton holds 73 of the compiler's 77 commits, 58 of them in July, when the project moved into an <code>argent-lang</code> organization. No repository carries a tagged release. Silverscript itself still calls its bytecode artifact experimental and recommends it only on testnet-10.</p>
       <p>The language model, a worked covenant example, the README's own words on what already works, and the repository signals are on <a href="/argent-explained">Argent and Silverscript, explained</a>.</p>
     </section>
 
@@ -262,7 +270,7 @@
       <h2>vProgs, and the line Toccata does not cross</h2>
       <p>Two vProgs transactions touching different resources never wait on each other, and a proof lands on Kaspa L1 instead of a replay of every step.</p>
       <p class="fit-note"><strong>Status:</strong> vProgs are prototype and roadmap work. Full vProgs and native Kaspa DeFi are not live on mainnet.</p>
-      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state into separate named resources, built from the read and write list a transaction declares up front.</p>
+      <p>A global account model makes every app action compete for the same shared state, even when the actions have nothing to do with each other. vProgs break that state into separate named resources, built from the read and write list a transaction declares up front. For the underlying reason a UTXO chain and an account chain answer that competition differently in the first place, see <a href="/utxo-vs-accounts">why parallel spends don't collide</a>.</p>
       <p>Each resource acts like its own lane, so only the transactions touching the same one have to settle their order. Hans Moog's vProgs walkthrough does not claim a raw TPS number.</p>
       <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo calls itself an early-development Rust framework for based computation on Kaspa. Its README splits the framework into six layers, from shared types up to a runnable node, and the repo tree carries more, including a ZK side with a RISC Zero backend.</p>
       <div class="table-wrap">
