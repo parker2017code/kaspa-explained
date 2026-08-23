@@ -135,7 +135,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Toccata status</p>
       <h1>Kaspa Toccata status</h1>
-      <p class="lead">Toccata is live on Kaspa mainnet. It activated at DAA score 474,165,565 on June 30, 2026, and brought covenant-style programmability to Kaspa's L1.</p>
+      <p class="lead">Toccata is live on Kaspa mainnet. Activated at DAA score 474,165,565, June 30, 2026.</p>
       <details class="source-more">
         <summary>Release summary, and what's still being checked</summary>
         <p class="fit-note"><strong>Summary:</strong> Rusty Kaspa v2.0.1 is the current upgrade release; v2.0.0 set the activation parameters. Next to check: upgraded-node behavior, wallets, explorers, SDKs, examples, real app use.</p>
@@ -145,7 +145,7 @@
     <section class="section prose-section">
       <p class="eyebrow">Direct answer</p>
       <h2>Does Kaspa have smart contracts?</h2>
-      <p class="lead">Yes, on L1: covenant rules, covenant IDs, ZK proof checks, and sequencing commitments all activated with Toccata. Native DeFi, audited apps, broad wallet support, and full vProgs are separate claims that still need their own evidence. Kaskad- and Igra-style L2 ecosystem activity is real context, but it isn't native Kaspa L1 DeFi.</p>
+      <p class="lead">Yes, on L1: covenant rules, ZK checks, and sequencing commitments. Native DeFi and full vProgs still need their own evidence.</p>
     </section>
 
     <section class="section">
@@ -155,46 +155,52 @@
         <table class="reality-table toccata-status-table">
           <thead><tr><th>Area</th><th>Status</th><th>What it means</th></tr></thead>
           <tbody>
-            <tr><td>Mainnet release</td><td><span class="status-pill live">Released</span></td><td>Rusty Kaspa v2.0.1 published June 15, 2026 as a Toccata maintenance release. v2.0.0 published June 5, 2026 as the Mainnet Toccata Release, carrying the activation parameters listed above.</td></tr>
+            <tr><td>Mainnet release</td><td><span class="status-pill live">Released</span></td><td>
+              v2.0.1, June 15, 2026.
+              <details class="cell-detail">
+                <summary>Release detail</summary>
+                <p>Rusty Kaspa v2.0.1 published June 15, 2026 as a Toccata maintenance release. v2.0.0 published June 5, 2026 as the Mainnet Toccata Release, carrying the activation parameters.</p>
+              </details>
+            </td></tr>
             <tr><td>Mainnet activation</td><td><span class="status-pill live">Activated</span></td><td>
-              Toccata is live: mainnet virtual DAA and block/header counts are past the activation score.
+              Virtual DAA is past the activation score.
               <details class="cell-detail">
                 <summary>What's still to verify</summary>
                 <p>Mainnet REST checks read virtual DAA past the activation score, with block and header counts climbing past it too. Node upgrades and accepted mainnet transactions using the new fields are the next layer to verify.</p>
               </details>
             </td></tr>
             <tr><td>TN10/TN12 testing</td><td><span class="status-pill testnet">Testnet</span></td><td>
-              Both activated ahead of mainnet as developer-flow and opcode testing evidence; neither changes mainnet status.
+              Testing evidence; doesn't change mainnet status.
               <details class="cell-detail">
                 <summary>TN10 and TN12 activation scores</summary>
                 <p>The tn10-toc2 pre-release put Testnet-10 activation at DAA score 467,579,632. tn10-toc3 scheduled final Toccata ZK hardening at DAA score 476,232,000. A July 9 check of the Testnet-10 REST API read virtual DAA 512,574,907, well past both scores. TN12 carried covenant opcode testing separately.</p>
               </details>
             </td></tr>
-            <tr><td>Silverscript</td><td><span class="status-pill target">Targeted</span></td><td>A high-level scripting language and examples for native Kaspa Script work.</td></tr>
+            <tr><td>Silverscript</td><td><span class="status-pill target">Targeted</span></td><td>A scripting language for Kaspa Script.</td></tr>
             <tr><td>Toccata KIPs</td><td><span class="status-pill live">Activation bundle</span></td><td>
-              KIP-16, KIP-17, KIP-20, and KIP-21 all read <code>Status: Active</code>, the activated bundle.
+              KIP-16, 17, 20, 21 all read <code>Active</code>.
               <details class="cell-detail">
                 <summary>When the KIP repo caught up</summary>
                 <p>They moved together in kips commit e4ae2332 on July 15, 2026, two weeks after mainnet activation. Until then they were still scoped to TN10.</p>
               </details>
             </td></tr>
       <tr><td>Argent</td><td><span class="status-pill target">Pre-audit</span></td><td>
-        Compiler and runtime exist; the README's own gate for production is a Silverscript audit, then its own.
+        Compiler and runtime exist; not yet audited.
         <details class="cell-detail">
           <summary>What the README claims</summary>
           <p>Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that turns <code>.ag</code> source into plain Silverscript contracts and portable artifacts consumed by <code>argent-runtime</code>. Its README lists the main pieces as already present: compiler, generated Silverscript, runtime transaction building, multi-actor routing, and closed and open Inter-Covenant Communication. Zero releases, zero tags.</p>
         </details>
       </td></tr>
             <tr><td>ZK SDK</td><td><span class="status-pill target">Tooling</span></td><td>
-              Improves builder ergonomics; production ZK apps still need their own receipts and user flows.
+              Improves builder ergonomics; not production-proven.
               <details class="cell-detail">
                 <summary>What the PR adds</summary>
                 <p>The merged <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">Rusty Kaspa ZK SDK PR</a> adds an <code>R0ScriptBuilder</code> wrapper for RISC Zero proof scripts.</p>
               </details>
             </td></tr>
-            <tr><td>zk verification hooks</td><td><span class="status-pill live">Protocol surface</span></td><td>A script can verify a proof. It still can't anchor external facts on its own.</td></tr>
-            <tr><td>Transaction v1 / KIP-24</td><td><span class="status-pill target">Open PR</span></td><td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> is open for transaction version 1 fields and hashing: compute budgets, covenant bindings, user lanes, and a BLAKE3 payload/rest txid split for ZK and based-executor workflows.</td></tr>
-            <tr><td>Full vProgs composition</td><td><span class="status-pill roadmap">Roadmap</span></td><td><a href="/toccata-explained">Later architecture for richer app-to-app behavior</a>. Toccata's activated surface is narrower than that.</td></tr>
+            <tr><td>zk verification hooks</td><td><span class="status-pill live">Protocol surface</span></td><td>Verifies a proof; can't anchor external facts.</td></tr>
+            <tr><td>Transaction v1 / KIP-24</td><td><span class="status-pill target">Open PR</span></td><td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a>: version 1 fields, open.</td></tr>
+            <tr><td>Full vProgs composition</td><td><span class="status-pill roadmap">Roadmap</span></td><td><a href="/toccata-explained">Later, richer app-to-app behavior</a>.</td></tr>
           </tbody>
         </table>
       </div>
@@ -203,24 +209,29 @@
     <section class="section prose-section">
       <p class="eyebrow">What changes</p>
       <h2>What an L1 script can enforce now</h2>
-      <p>Four new things. A script can require the next output to preserve a rule, carry a consensus-tracked identity through valid continuations, verify a proof about chosen public inputs, and commit to one app's lane of activity instead of the whole DAG.</p>
-      <p>Those are the rules under vaults, escrow paths, asset rules, and standalone based apps. Building the apps is a separate job.</p>
-      <p>None of that makes Kaspa an EVM. There is no account layer, no deployment step, and no shared global state for apps to sit in. <a href="/toccata-explained">Toccata Explained</a> takes the four KIPs one at a time; <a href="/toccata-explained">Covenants, explained</a> covers the spend-rule mechanism on its own.</p>
+      <p>A script can now preserve a rule on the next output, carry a tracked identity, verify a proof, and commit to one app's lane. Not an EVM: no account layer, no deployment step.</p>
+      <details class="deep-dive">
+        <summary>What these rules are for</summary>
+        <p>Those are the rules under vaults, escrow paths, asset rules, and standalone based apps. Building the apps is a separate job. <a href="/toccata-explained">Toccata Explained</a> takes the four KIPs one at a time; <a href="/toccata-explained">Covenants, explained</a> covers the spend-rule mechanism on its own.</p>
+      </details>
     </section>
 
     <section class="section">
       <p class="eyebrow">Operator checklist</p>
       <h2>Who needs to check their path</h2>
-      <p class="lead">This isn't more upgrade work waiting to happen. It's confirming your row already went through. Find it below.</p>
-      <div class="summary-grid grid-cards">
-        <article><span>Ordinary users</span><p>If you hold or send KAS from a normal wallet, there is nothing to do. Node upgrades are for people running infrastructure.</p></article>
-        <article><span>Node operators</span><p>Run Rusty Kaspa v2.0.1 or newer. The node database upgrade only goes one way: the only path back is a resync.</p></article>
-        <article><span>Wallets and submitters</span><p>Use fee estimation, or update fixed-fee code to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor bound only direct RPC submissions. The guide says relayed transactions are rejected under the same rule after activation, so it now binds both paths.</p></article>
-        <article><span>Exchanges and indexers</span><p>Update SDKs or regenerate bindings, then handle transaction version <code>1</code>, <code>storageMass</code>/<code>storage_mass</code>, <code>computeBudget</code>, output covenants, and UTXO <code>covenant_id</code>.</p></article>
-        <article><span>Miners and pools</span><p>Test block templates, job distribution, solved block reconstruction, and <code>SubmitBlock</code> against Testnet-10. A block that strips post-Toccata fields can turn invalid after the activation score.</p></article>
-        <article><span>Pool accounting</span><p>Check <code>GetBlockRewardInfo</code>, and <code>GetSeqCommitLaneProof</code> where lane-proof data matters. Infrastructure detail, but the kind that breaks payouts if skipped.</p></article>
-      </div>
-      <p class="source-inline">Operator references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> and <a href="https://github.com/kaspanet/kaspad/releases/tag/v0.12.23">Go Kaspad v0.12.23</a>.</p>
+      <p class="lead">Ordinary wallet users have nothing to do; infrastructure operators each have a row.</p>
+      <details class="deep-dive">
+        <summary>Find your row: users, node operators, wallets, exchanges, miners, pools</summary>
+        <div class="summary-grid grid-cards">
+          <article><span>Ordinary users</span><p>If you hold or send KAS from a normal wallet, there is nothing to do. Node upgrades are for people running infrastructure.</p></article>
+          <article><span>Node operators</span><p>Run Rusty Kaspa v2.0.1 or newer. The node database upgrade only goes one way: the only path back is a resync.</p></article>
+          <article><span>Wallets and submitters</span><p>Use fee estimation, or update fixed-fee code to <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. Before activation that floor bound only direct RPC submissions. The guide says relayed transactions are rejected under the same rule after activation, so it now binds both paths.</p></article>
+          <article><span>Exchanges and indexers</span><p>Update SDKs or regenerate bindings, then handle transaction version <code>1</code>, <code>storageMass</code>/<code>storage_mass</code>, <code>computeBudget</code>, output covenants, and UTXO <code>covenant_id</code>.</p></article>
+          <article><span>Miners and pools</span><p>Test block templates, job distribution, solved block reconstruction, and <code>SubmitBlock</code> against Testnet-10. A block that strips post-Toccata fields can turn invalid after the activation score.</p></article>
+          <article><span>Pool accounting</span><p>Check <code>GetBlockRewardInfo</code>, and <code>GetSeqCommitLaneProof</code> where lane-proof data matters. Infrastructure detail, but the kind that breaks payouts if skipped.</p></article>
+        </div>
+        <p class="source-inline">Operator references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> and <a href="https://github.com/kaspanet/kaspad/releases/tag/v0.12.23">Go Kaspad v0.12.23</a>.</p>
+      </details>
     </section>
 
     <section class="next-step section">
@@ -230,16 +241,19 @@
         <a class="button primary" href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 release</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation record</a>
       </div>
-      <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://api.kaspa.org/info/blockdag">mainnet REST status</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, <a href="https://api-tn10.kaspa.org/info/blockdag">TN10 REST status</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/README.md">the KIP status index</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/kips/pull/41">KIP-24 PR</a>, <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">ZK SDK PR</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://github.com/argent-lang/argent">Argent</a>.</p>
+      <details class="deep-dive">
+        <summary>Every primary reference on this page</summary>
+        <p class="source-inline">Primary references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://api.kaspa.org/info/blockdag">mainnet REST status</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a>, <a href="https://api-tn10.kaspa.org/info/blockdag">TN10 REST status</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/README.md">the KIP status index</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://github.com/kaspanet/kips/pull/41">KIP-24 PR</a>, <a href="https://github.com/kaspanet/rusty-kaspa/pull/953">ZK SDK PR</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, and <a href="https://github.com/argent-lang/argent">Argent</a>.</p>
+      </details>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/argent-explained"><span>Previous</span><strong>Argent and Silverscript, explained</strong><p>Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says...</p></a>
-        <a href="/toccata-essay"><span>Next</span><strong>Toccata: Kaspa&#x27;s Expressiveness Upgrade</strong><p>Parker Schmidt&#x27;s essay on what the Toccata upgrade is: covenants, proof checking, KIP-21, and mining to your own node.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+        <a href="/argent-explained"><span>Previous</span><strong>Argent and Silverscript, explained</strong><p>The language model and a worked example.</p></a>
+        <a href="/toccata-essay"><span>Next</span><strong>Toccata: Kaspa&#x27;s Expressiveness Upgrade</strong><p>Parker Schmidt&#x27;s essay on the upgrade, in three parts.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Live, targeted, roadmap, and research, checked today.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
