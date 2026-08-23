@@ -90,8 +90,20 @@ if [[ -n "$NODE_BIN" ]]; then
   # fight in styles.css, not a literal token; see the script for the exact
   # rule and its data-heading-link-ok opt-out.
   "$NODE_BIN" scripts/check-heading-link-color.mjs
+  # 300-word visible-surface gate (design/STANDARD.md, "The 300-word
+  # surface", 2026-08-23): no page shows more than 300 visible words,
+  # essays exempted on their own budget via scripts/essay-pages.json.
+  # Rendered-DOM check for the same reason check-heading-link-color.mjs is:
+  # a source-text count can't tell an open <details> from a closed one.
+  # Advisory until the site complies, same pattern as check-density.sh. Twenty
+  # three pages were over the 300-word ceiling the day the rule landed; the
+  # check reports them without blocking so the reduction can ship in pieces.
+  # Flip VISIBLE_WORDS_BLOCKING to true once the list is empty.
+  VISIBLE_WORDS_BLOCKING="${VISIBLE_WORDS_BLOCKING:-false}" \
+    "$NODE_BIN" scripts/check-visible-words.mjs || \
+    [ "${VISIBLE_WORDS_BLOCKING:-false}" != "true" ]
 else
-  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-visible-words" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {

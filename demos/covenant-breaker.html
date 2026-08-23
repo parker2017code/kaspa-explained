@@ -89,14 +89,6 @@
     font-weight: 420;
     line-height: 1.45;
   }
-  p.stakes {
-    color: var(--muted);
-    max-width: 68ch;
-    margin: 0 0 14px;
-    font-size: clamp(1rem, 1.5vw, 1.14rem);
-    font-weight: 420;
-    line-height: 1.5;
-  }
   p.fictional-note {
     display: inline-block;
     color: var(--muted);
@@ -121,6 +113,12 @@
   }
   p.status-line a { color: var(--cyan); }
   a { color: var(--cyan); }
+  .view-switch { display: inline-flex; gap: 4px; background: var(--control-bg); border-radius: 980px; padding: 4px; margin: 4px 0 18px; }
+  .view-tab {
+    min-height: 36px; border: 0; border-radius: 980px; padding: 0 16px;
+    background: transparent; color: var(--muted); font: inherit; font-size: .88rem; font-weight: 500; cursor: pointer;
+  }
+  .view-tab.active { background: var(--card-bg); color: var(--text); box-shadow: var(--shadow); }
   .panel {
     background: var(--card-bg);
     border: 0;
@@ -325,90 +323,98 @@
 </div>
 <main>
   <h1>Covenant breaker</h1>
-  <p class="fictional-note">This is a worked example, not a real vault. The address, the balance, and the 10,000 KAS below are made up; nothing here is on any real blockchain.</p>
-  <p class="intro">A covenant is a rule locked into a coin that controls how it can be spent later. This vault holds 10,000 KAS behind four such rules. Get any of it to an address you control without satisfying all four.</p>
-  <p class="stakes">Four rules stand between you and the balance below. Try to break one directly, or find the way through that never breaks any of them at all.</p>
-  <p class="status-line">Status: the cap, the destination lock, and the delay shown here run on Kaspa mainnet today, using opcodes and covenant identity that activated with the Toccata upgrade (<a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>, both status Active). The rule is written below in Argent's syntax; <a href="/argent-explained">Argent itself</a> is a proposed contract language, still in research, not yet released. Only the notation is illustrative. The enforcement it describes is live.</p>
+  <p class="fictional-note">A worked example. Nothing here is on a real blockchain.</p>
+  <p class="intro">This vault holds 10,000 KAS behind four rules. Get any of it to an address you control without satisfying all four.</p>
+  <p class="status-line">Status: the cap, destination, and delay below run on Kaspa mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule is written in <a href="/argent-explained">Argent's</a> syntax, still research and not released; only the notation is illustrative, the enforcement it describes is live.</p>
 
-  <section class="panel">
-    <h2>Try to get money out of the vault</h2>
-    <p class="panel-lead">Set up an attempt by hand below, or start from one of these.</p>
+  <div class="view-switch" role="tablist" aria-label="View">
+    <button type="button" class="view-tab active" id="tab-attempt" role="tab" aria-selected="true" aria-controls="view-attempt">Attempt</button>
+    <button type="button" class="view-tab" id="tab-details" role="tab" aria-selected="false" aria-controls="view-details">Vault details &amp; rules</button>
+  </div>
 
-    <div class="attack-group">
-      <p class="attack-group-label">Direct attempts, each breaks one rule on purpose</p>
-      <div class="presets" role="group" aria-label="Direct attempts">
-        <button type="button" class="attack" data-preset="drain">Take it all right now</button>
-        <button type="button" class="attack" data-preset="skip">Withdraw before the wait is up</button>
-        <button type="button" class="attack" data-preset="redirect">Send it to my own address</button>
-        <button type="button" class="attack" data-preset="recover-redirect">Trigger recovery, then redirect it</button>
-      </div>
-    </div>
-    <div class="attack-group">
-      <p class="attack-group-label">Break no rule at all</p>
-      <div class="presets" role="group" aria-label="Legal repetition">
-        <button type="button" class="attack repeat" data-preset="patient">Withdraw the max, hour after hour</button>
-      </div>
-    </div>
+  <div id="view-attempt" role="tabpanel" aria-labelledby="tab-attempt">
+    <section class="panel">
+      <h2>Try to get money out of the vault</h2>
+      <p class="panel-lead">Start from one of these, or set up your own attempt.</p>
 
-    <div class="layout">
-      <div>
-        <fieldset>
-          <legend>How you're trying to get it out</legend>
-          <label><input type="radio" name="entry" value="withdraw" checked> Normal withdrawal</label>
-          <label><input type="radio" name="entry" value="recover"> Emergency recovery</label>
-        </fieldset>
-        <div class="field" id="amount-field">
-          <label for="amount">Amount to withdraw (KAS)</label>
-          <input type="number" id="amount" value="500" min="1" step="1">
-        </div>
-        <div class="field">
-          <label for="dest">Where the money goes</label>
-          <select id="dest">
-            <option value="payout">The vault's own payout address</option>
-            <option value="recovery">The vault's own recovery address</option>
-            <option value="attacker">An address you control, not the vault's</option>
-          </select>
-        </div>
-        <div class="field" id="elapsed-field">
-          <label for="elapsed">Time since the vault's last withdrawal (DAA score, Kaspa's block counter)</label>
-          <input type="number" id="elapsed" value="36000" min="0" step="1000">
-          <p class="field-hint" id="elapsed-hint">&asymp; 60 minutes</p>
+      <div class="attack-group">
+        <p class="attack-group-label">Direct attempts, each breaks one rule on purpose</p>
+        <div class="presets" role="group" aria-label="Direct attempts">
+          <button type="button" class="attack" data-preset="drain">Take it all right now</button>
+          <button type="button" class="attack" data-preset="skip">Withdraw before the wait is up</button>
+          <button type="button" class="attack" data-preset="redirect">Send it to my own address</button>
+          <button type="button" class="attack" data-preset="recover-redirect">Trigger recovery, then redirect it</button>
         </div>
       </div>
-      <div>
-        <div class="btn-row" style="margin-top:0">
-          <button type="button" class="primary" id="submit">Try it</button>
-          <button type="button" id="reset">Start over</button>
+      <div class="attack-group">
+        <p class="attack-group-label">Break no rule at all</p>
+        <div class="presets" role="group" aria-label="Legal repetition">
+          <button type="button" class="attack repeat" data-preset="patient">Withdraw the max, hour after hour</button>
         </div>
-        <div id="verdict" aria-live="polite"></div>
       </div>
-    </div>
-  </section>
 
-  <section class="panel">
-    <h2>Vault state (made up, for this example)</h2>
-    <div class="vault-stats" id="stats"></div>
-  </section>
+      <div class="layout">
+        <div>
+          <fieldset>
+            <legend>How you're trying to get it out</legend>
+            <label><input type="radio" name="entry" value="withdraw" checked> Normal withdrawal</label>
+            <label><input type="radio" name="entry" value="recover"> Emergency recovery</label>
+          </fieldset>
+          <div class="field" id="amount-field">
+            <label for="amount">Amount to withdraw (KAS)</label>
+            <input type="number" id="amount" value="500" min="1" step="1">
+          </div>
+          <div class="field">
+            <label for="dest">Where the money goes</label>
+            <select id="dest">
+              <option value="payout">The vault's own payout address</option>
+              <option value="recovery">The vault's own recovery address</option>
+              <option value="attacker">An address you control, not the vault's</option>
+            </select>
+          </div>
+          <div class="field" id="elapsed-field">
+            <label for="elapsed">Time since the vault's last withdrawal (DAA score, Kaspa's block counter)</label>
+            <input type="number" id="elapsed" value="36000" min="0" step="1000">
+            <p class="field-hint" id="elapsed-hint">&asymp; 60 minutes</p>
+          </div>
+        </div>
+        <div>
+          <div class="btn-row" style="margin-top:0">
+            <button type="button" class="primary" id="submit">Try it</button>
+            <button type="button" id="reset">Start over</button>
+          </div>
+          <div id="verdict" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
 
-  <section class="panel">
-    <h2>What the covenant enforces</h2>
-    <ul class="rules-list">
-      <li><b>Who can sign</b><span>A withdrawal needs the owner's signature. Recovery needs the recovery key instead. No other key works.</span></li>
-      <li><b>Where it can go</b><span>A withdrawal may pay only the vault's fixed payout address, at most 500 KAS in this one transaction. Recovery may pay only the fixed recovery address, and always empties the vault.</span></li>
-      <li><b>What comes next</b><span>Every withdrawal must recreate the vault with the same KIP-20 covenant ID and the updated balance and last-spend score. A transaction that doesn't is spending a lookalike, not the vault.</span></li>
-      <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks/second) before it is valid again.</span></li>
-    </ul>
-  </section>
+    <section class="panel" id="ledger-panel" hidden>
+      <h2>Attempts so far</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Attempt</th><th>Amount</th><th>Sent to</th><th>Result</th></tr></thead>
+          <tbody id="ledger-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
 
-  <section class="panel" id="ledger-panel" hidden>
-    <h2>Attempts so far</h2>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>#</th><th>Attempt</th><th>Amount</th><th>Sent to</th><th>Result</th></tr></thead>
-        <tbody id="ledger-body"></tbody>
-      </table>
-    </div>
-  </section>
+  <div id="view-details" role="tabpanel" aria-labelledby="tab-details" hidden>
+    <section class="panel">
+      <h2>Vault state (made up, for this example)</h2>
+      <div class="vault-stats" id="stats"></div>
+    </section>
+
+    <section class="panel">
+      <h2>What the covenant enforces</h2>
+      <ul class="rules-list">
+        <li><b>Who can sign</b><span>A withdrawal needs the owner's signature. Recovery needs the recovery key instead. No other key works.</span></li>
+        <li><b>Where it can go</b><span>A withdrawal may pay only the vault's fixed payout address, at most 500 KAS in this one transaction. Recovery may pay only the fixed recovery address, and always empties the vault.</span></li>
+        <li><b>What comes next</b><span>Every withdrawal must recreate the vault with the same KIP-20 covenant ID and the updated balance and last-spend score. A transaction that doesn't is spending a lookalike, not the vault.</span></li>
+        <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks/second) before it is valid again.</span></li>
+      </ul>
+    </section>
+  </div>
 
   <details>
     <summary>Rule definitions and sources</summary>
@@ -660,6 +666,22 @@
   updateFieldVisibility();
   updateElapsedHint();
   renderStats();
+
+  var tabAttempt = document.getElementById('tab-attempt');
+  var tabDetails = document.getElementById('tab-details');
+  var viewAttempt = document.getElementById('view-attempt');
+  var viewDetails = document.getElementById('view-details');
+  function showView(which) {
+    var isAttempt = which === 'attempt';
+    viewAttempt.hidden = !isAttempt;
+    viewDetails.hidden = isAttempt;
+    tabAttempt.classList.toggle('active', isAttempt);
+    tabDetails.classList.toggle('active', !isAttempt);
+    tabAttempt.setAttribute('aria-selected', String(isAttempt));
+    tabDetails.setAttribute('aria-selected', String(!isAttempt));
+  }
+  tabAttempt.addEventListener('click', function () { showView('attempt'); });
+  tabDetails.addEventListener('click', function () { showView('details'); });
 
   var themeKey = "kaspa-explained-theme";
   var savedTheme = null;

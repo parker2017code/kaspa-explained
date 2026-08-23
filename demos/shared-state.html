@@ -7,7 +7,7 @@
 <title>Race for one slot | Kaspa Explained</title>
 <meta name="description" content="Two writers reach for the same piece of on-chain data at once. See what happens, and why a UTXO chain answers differently than an account-based one.">
 <meta name="robots" content="index,follow">
-<meta name="dateModified" content="2026-08-22">
+<meta name="dateModified" content="2026-08-23">
 <link rel="canonical" href="https://kaspaexplained.com/demos/shared-state">
 <style>
   :root {
@@ -48,7 +48,7 @@
     background: var(--card-bg); border-radius: 18px; padding: 24px 16px; box-shadow: var(--shadow);
     display: flex; flex-direction: column; align-items: center; gap: 18px;
   }
-  .mode-row { display: flex; gap: 8px; }
+  .mode-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
   .mode-btn {
     min-height: 44px; border: 0; border-radius: 980px; padding: 0 16px; background: var(--control-bg);
     color: var(--text); font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
@@ -125,12 +125,12 @@
     background: repeating-linear-gradient(to right, var(--line-bright) 0 6px, transparent 6px 11px);
     opacity: .55; transition: background .25s, opacity .25s;
   }
-  .apps-row.linked .connector {
+  .connector.active {
     background: repeating-linear-gradient(to right, var(--purple) 0 8px, transparent 8px 14px);
     opacity: 1;
   }
-  .apps-row.linked .app-box { border-color: var(--purple); }
-  .apps-row.linked .app-dot { background: var(--purple); }
+  .app-box.active { border-color: var(--purple); }
+  .app-box.active .app-dot { background: var(--purple); }
   details { margin-top: 22px; }
   summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; }
   .quotes-body { margin-top: 12px; font-size: .88rem; color: var(--muted); }
@@ -179,29 +179,29 @@
       <p><strong>Account model.</strong> Ethereum and similar chains track a running balance or contract state instead of one-time coins. Two writers to the very same account do not need to reject one another the same way: both operations can apply, one after the other, in whatever order the network settles on. Nobody's write is thrown out just for arriving second; it just lands after the first one instead of in place of it. That ordering-not-rejection behavior is the account-side half of the same question this page asks.</p>
       <p>This is a simplified model of outpoint contention and of account-style sequencing, not real network timing (mempool propagation, block ordering, gas and fee markets).</p>
       <p><strong>What actually blocks the double-spend.</strong> Nothing stops two conflicting spends from being broadcast in the first place: a wallet can sign and send two transactions against the same coin, and the network does not check for that at broadcast time. What cannot happen is both landing in the accepted state. It is not even a single-block rule: a block cannot hold two of its own transactions spending the same coin, rusty-kaspa's consensus rejects that block outright as invalid. But Kaspa is a DAG, so the real race is usually between two different blocks confirming in parallel, not two transactions in one block. GHOSTDAG orders every block into one sequence first, then each block's transactions are replayed in that order against a running UTXO diff; whichever spend lands earlier in that order is accepted, the other block stays valid and stays in the DAG, but its conflicting transaction fails validation against the state it is checked against and never joins the accepted set. That ordering-after-the-fact is also why two operations touching separate coins cannot be made to depend on each other the way two calls into one shared account can: each spend is checked against a snapshot GHOSTDAG fixes later, not against a promise that the other side will also succeed. Sources: rusty-kaspa's <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block-body double-spend check</a> and the <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">mergeset acceptance loop</a> that orders and replays transactions by GHOSTDAG before applying them to the UTXO diff.</p>
-      <p><strong>Where the panel below fits.</strong> The race above is about two writers hitting one slot inside a single app. Composing several separately built apps into one atomic transaction is a related but different question, and it is possible on Toccata itself: Argent's Inter-Covenant Communication does it, so far only in unaudited offline demos, per its own README. KIP-21's partitioned sequencing lanes (Status: Active) are about scaling that kind of throughput, not about letting apps reach into each other's state. Neither changes the one-slot outcome shown above, and neither is what the panel below is about. Sources: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a>.</p>
+      <p><strong>What Toccata actually put on mainnet for this.</strong> Three of the KIPs Toccata activated are the live primitives the panel below runs on. KIP-17 gives a script introspection opcodes over the transaction spending it: it can read that transaction's own inputs, outputs, and payload, not some other transaction's. KIP-20 adds covenant IDs, a consensus-tracked lineage tag an output can only carry by continuing an existing covenant or genesis-initializing a fresh one, so one covenant's own history can't be forged. KIP-16 adds an opcode that verifies a ZK proof inside a transaction, useful for accepting a claim about computation done elsewhere without replaying it. None of the three lets a script reach out and read a different, unrelated covenant's live state on demand the way a function call reads another contract's storage on an account chain; introspection stays scoped to the one transaction currently being checked.</p>
+      <p><strong>What that permits between two apps, and the block-versus-transaction boundary.</strong> Two separately compiled apps can still compose atomically today, but only by both being spent and recreated inside the very same transaction, built by whoever assembles it: Argent's Inter-Covenant Communication is exactly that pattern, one app's actor authorizing or observing another's in one atomic transaction, and it works because the two apps' state sits in the introspectable inputs and outputs of that one transaction. It has shipped so far only in unaudited offline demos, per Argent's own README; anyone describing an Argent application as running on Kaspa mainnet today is describing something that has not happened. The boundary that matters is the transaction, not the block: sharing a block with other transactions does not link them, the same way two transactions in different blocks are no less composed than two in the same block would be. KIP-21's partitioned sequencing lanes (Status: Active) scale how much of that throughput a block can carry; they do not change what a single transaction can bind together. Sources: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a>.</p>
       <p><strong>vProgs, and its status.</strong> The gap those two don't close: many different users writing to one shared app's state at once (an exchange pool, say), where L1 composition today tends to be exit-style, settling when someone leaves rather than the instant they act. vProgs is a roadmap proposal aimed at that gap, not a shipped feature: its own repository README opens with "This repository is in early development / prototype phase. APIs and architecture may change significantly," and as of this writing it carries zero releases and zero tags. Its own architect, Kaspa core developer Michael Sutton, frames the actual design tradeoff as a choice between "losing synchronous composability or losing sovereignty," and describes one target as "standalone, non-composable sovereign vprogs" settling back to L1 through their own exit path, which is the tradeoff the panel below shows. Sources: <a href="https://github.com/kaspanet/vprogs" target="_blank" rel="noopener">kaspanet/vprogs</a>, <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1" target="_blank" rel="noopener">Michael Sutton's based-apps design notes</a>.</p>
     </div>
   </details>
 
   <div class="apps-panel">
-    <p class="cross-app-lead">The race above is about two writers hitting the very same slot. A separate question: can two different apps reach into each other's state at all?</p>
-    <div class="mode-row" role="group" aria-label="Choose today or the proposed change">
-      <button class="mode-btn" id="modeToday" type="button" aria-pressed="true">Today</button>
-      <button class="mode-btn" id="modeVprogs" type="button" aria-pressed="false">vProgs, proposed</button>
+    <p class="cross-app-lead">The race above is one app, two writers. A different question: can two separately built apps reach each other, and does that composition survive more than one transaction?</p>
+    <div class="mode-row" role="group" aria-label="Choose which app-composition case to see">
+      <button class="mode-btn" id="modeSameTx" type="button" aria-pressed="true">Same transaction</button>
+      <button class="mode-btn" id="modeManyUsers" type="button" aria-pressed="false">Many users</button>
+      <button class="mode-btn" id="modeVprogs" type="button" aria-pressed="false">vProgs</button>
     </div>
-    <p class="apps-status" id="appsStatus">vProgs status: roadmap proposal, not running on mainnet. Its own repository calls itself &ldquo;early development / prototype phase.&rdquo; Zero releases, zero tags, as of this writing.</p>
+    <p class="apps-status" id="appsStatus">Two apps, one transaction: possible today. No production app runs it yet.</p>
     <div class="apps-row" id="appsRow">
-      <div class="app-box"><span class="app-dot"></span>App A</div>
-      <div class="connector"></div>
-      <div class="app-box"><span class="app-dot"></span>App B</div>
-      <div class="connector"></div>
-      <div class="app-box"><span class="app-dot"></span>App C</div>
+      <div class="app-box" id="appA"><span class="app-dot"></span>App A</div>
+      <div class="connector" id="connAB"></div>
+      <div class="app-box" id="appB"><span class="app-dot"></span>App B</div>
+      <div class="connector" id="connBC"></div>
+      <div class="app-box" id="appC"><span class="app-dot"></span>App C</div>
     </div>
-    <p class="caption" id="appsCaption">Each app's state lives behind its own wall. Two different apps' data never touches, even though both sit on the same public chain. Moving value between them today means leaving one (an exit) and entering the other, not one live call across the wall.</p>
+    <p class="caption" id="appsCaption">Argent's Inter-Covenant Communication lets one compiled app's actor authorize or observe another's, inside a single atomic transaction, built on covenant IDs (KIP-20) and the introspection opcodes (KIP-17) Toccata put on mainnet. Both apps' state has to be spent and recreated in that same transaction; nothing calls out to a separately timed message. Argent's own examples of this are unaudited, offline demos, not a deployment anyone can transact against.</p>
   </div>
-
-  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
 </main>
 
 <script>
@@ -325,25 +325,47 @@
 
 (function () {
   "use strict";
-  var todayBtn = document.getElementById("modeToday");
+  var sameTxBtn = document.getElementById("modeSameTx");
+  var manyUsersBtn = document.getElementById("modeManyUsers");
   var vprogsBtn = document.getElementById("modeVprogs");
-  var appsRow = document.getElementById("appsRow");
+  var appsStatus = document.getElementById("appsStatus");
   var appsCaption = document.getElementById("appsCaption");
+  var connAB = document.getElementById("connAB");
+  var connBC = document.getElementById("connBC");
+  var appA = document.getElementById("appA");
+  var appB = document.getElementById("appB");
+  var appC = document.getElementById("appC");
+  var buttons = { "same-tx": sameTxBtn, "many-users": manyUsersBtn, vprogs: vprogsBtn };
 
+  var STATUS = {
+    "same-tx": "Two apps, one transaction: possible today. No production app runs it yet.",
+    "many-users": "Different transactions, same shared object: exit-style today, not a live call.",
+    vprogs: "Proposed. Its own repository carries zero releases and zero tags as of this writing."
+  };
   var CAPTIONS = {
-    today: "Each app's state lives behind its own wall. Two different apps' data never touches, even though both sit on the same public chain. Moving value between them today means leaving one (an exit) and entering the other, not one live call across the wall.",
-    vprogs: "vProgs (proposed, not running on mainnet) aims to let apps reach across that wall directly, without merging into one shared program. Its own author frames the tradeoff plainly: reaching for that live interaction means losing some standalone independence; keeping full independence means giving up the live interaction. That give-and-take, not a free upgrade, is what “sovereignty” means here."
+    "same-tx": "Argent's Inter-Covenant Communication lets one compiled app's actor authorize or observe another's, inside a single atomic transaction, built on covenant IDs (KIP-20) and the introspection opcodes (KIP-17) Toccata put on mainnet. Both apps' state has to be spent and recreated in that same transaction; nothing calls out to a separately timed message. Argent's own examples of this are unaudited, offline demos, not a deployment anyone can transact against.",
+    "many-users": "That trick only reaches as far as one transaction. When many different users touch the very same shared object across many separate transactions, spread over many blocks, the atomic bundling above is gone. Composition between apps is exit-style: you leave one app's state and re-enter the other's, rather than one live call reaching across while both keep running.",
+    vprogs: "vProgs (proposed, not running on mainnet) targets exactly that many-user gap. Its own author frames the tradeoff plainly: reaching for that live, synchronous interaction costs standalone independence; keeping full independence keeps the exit-style pattern above. That give-and-take, not a free upgrade, is what “sovereignty” means here."
   };
 
   function setAppsMode(mode) {
-    todayBtn.setAttribute("aria-pressed", mode === "today" ? "true" : "false");
-    vprogsBtn.setAttribute("aria-pressed", mode === "vprogs" ? "true" : "false");
-    appsRow.className = "apps-row" + (mode === "vprogs" ? " linked" : "");
+    Object.keys(buttons).forEach(function (key) {
+      buttons[key].setAttribute("aria-pressed", key === mode ? "true" : "false");
+    });
+    connAB.className = "connector" + (mode === "same-tx" || mode === "vprogs" ? " active" : "");
+    connBC.className = "connector" + (mode === "vprogs" ? " active" : "");
+    appA.className = "app-box" + (mode === "same-tx" || mode === "vprogs" ? " active" : "");
+    appB.className = "app-box" + (mode === "same-tx" || mode === "vprogs" ? " active" : "");
+    appC.className = "app-box" + (mode === "vprogs" ? " active" : "");
+    appsStatus.textContent = STATUS[mode];
     appsCaption.textContent = CAPTIONS[mode];
   }
 
-  todayBtn.addEventListener("click", function () { setAppsMode("today"); });
+  sameTxBtn.addEventListener("click", function () { setAppsMode("same-tx"); });
+  manyUsersBtn.addEventListener("click", function () { setAppsMode("many-users"); });
   vprogsBtn.addEventListener("click", function () { setAppsMode("vprogs"); });
+
+  setAppsMode("same-tx");
 })();
 </script>
 </body>

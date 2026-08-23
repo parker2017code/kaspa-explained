@@ -136,14 +136,6 @@
   .tolerance-bar-fill.btc { background: var(--purple); width: 100%; }
   .tolerance-bar-fill.kas { background: var(--green); width: 1.83%; }
 
-  /* parallel-blocks illustration */
-  .dag-row { display: flex; justify-content: center; gap: 10px; margin: 4px 0 14px; flex-wrap: wrap; }
-  .dag-block {
-    width: 40px; height: 40px; border-radius: 10px; background: var(--bg-2); border: 2px solid var(--line-bright);
-    display: flex; align-items: center; justify-content: center; font-size: .72rem; color: var(--muted); font-family: var(--mono-font);
-  }
-  .dag-block.merged { border-color: var(--green); background: color-mix(in srgb, var(--green) 12%, var(--bg-2)); color: var(--text); }
-
   details { margin-top: 4px; }
   summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 8px 0; list-style: none; }
   summary::-webkit-details-marker { display: none; }
@@ -174,11 +166,11 @@
     <h1>DAA score and block time</h1>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
-  <p class="lead">Kaspa's clock counts blocks, not seconds, and it counts them at two different speeds since Crescendo split it. Convert any DAA score back to genesis, then try to fake a block's timestamp and watch the network catch the lie.</p>
+  <p class="lead">Kaspa's clock counts blocks, not seconds, at two different speeds since Crescendo. Convert a score to a real date, then watch the network stop a miner from lying about time to cheat the difficulty.</p>
 
   <div class="stage">
     <p class="eyebrow">1. Read a DAA score</p>
-    <p class="intro">A <b>DAA score</b> is Kaspa's own counter: it goes up by roughly one for every block the network accepts, not by one every second. It also doesn't go up at a constant speed. Before <b>Crescendo</b> (5 May 2025), Kaspa produced about 1 block a second. After, it produces 10. Converting a score from either side of that boundary at the other side's rate would land you badly wrong, so this converter switches rates at Crescendo, marked below.</p>
+    <p class="intro">A <b>DAA score</b> rises by about one per accepted block, not once a second: 1 block a second before <b>Crescendo</b> (5 May 2025), 10 after. This converter switches rate exactly at that boundary, marked below.</p>
 
     <div class="slider-wrap">
       <input type="range" id="dateSlider" min="-500" max="500" step="1" value="0" aria-label="Date, in days from Toccata's mainnet activation">
@@ -194,7 +186,7 @@
 
     <p class="payoff-main" id="daaPayoffMain"></p>
     <p class="payoff-sub" id="daaPayoffSub"></p>
-    <p class="caveat">Two real anchor points fix this: Kaspa's genesis block (exact) and Toccata's mainnet activation (exact, DAA score 474,165,565). Rates in between are interpolated from those, not assumed. Measured between Crescendo and Toccata, the network ran 421 days at 0.06% off the 10-per-second target. Dates after Toccata assume that target keeps holding, so they're an estimate, not a fact to cite as exact.</p>
+    <p class="caveat">Two exact points anchor this: genesis and Toccata's activation. Rates between them come from real elapsed time, not the bare protocol target. Dates after Toccata are an estimate assuming today's rate holds.</p>
 
     <div class="presets">
       <button class="preset-btn" id="presetGenesis" type="button">Jump to genesis</button>
@@ -205,9 +197,8 @@
   </div>
 
   <div class="stage">
-    <p class="eyebrow">2. Try to lie about when a block happened</p>
-    <p class="intro">A block's timestamp is a number whoever mined it typed in. Nothing stops them writing a false one, so the network doesn't trust it: it checks the number against a rule before accepting the block. Try to write a false timestamp below and watch the rule catch it.</p>
-    <p class="intro">The rule: a block's timestamp must land after the <b>past median time</b>, the middle value of its last 11 ancestor timestamps, and it can't sit more than 132 seconds ahead of the checking node's own clock.</p>
+    <p class="eyebrow">2. Catch a lying timestamp</p>
+    <p class="intro">A miner who backdates a block can make it look like blocks are arriving slower than they are, and cheapen mining by lowering the difficulty. So every timestamp is checked: it must land after the <b>middle time of the block's last 11 ancestors</b>, and can't sit more than 132 seconds ahead of the checking node's clock.</p>
 
     <div class="slider-wrap">
       <input type="range" id="tsSlider" min="-300" max="500" step="1" value="60" aria-label="Candidate block timestamp, in seconds from the past median time">
@@ -230,32 +221,18 @@
   </div>
 
   <div class="stage">
-    <p class="eyebrow">3. Bitcoin has the same problem</p>
-    <p class="intro">Bitcoin has no trusted clock either, and it catches a lying miner almost the same way Kaspa does: a block's time must land after the median of its previous 11 blocks, and can't run more than 2 hours ahead of a node's own clock. Kaspa uses that identical 11-block median. What's different is how much slack the future check allows.</p>
+    <p class="eyebrow">3. Bitcoin checks time almost the same way</p>
+    <p class="intro">Bitcoin uses the same 11-block median floor, but allows a timestamp up to 2 hours ahead of now. Kaspa allows only 132 seconds: it expects a new block every tenth of a second, not every 10 minutes.</p>
     <div class="tolerance-row" aria-hidden="true">
       <div class="tolerance-item">
-        <div class="tolerance-label"><span>Bitcoin, future allowance</span><b>2 hours (7,200s)</b></div>
+        <div class="tolerance-label"><span>Bitcoin, how far ahead a timestamp can be</span><b>2 hours (7,200s)</b></div>
         <div class="tolerance-bar-bg"><div class="tolerance-bar-fill btc"></div></div>
       </div>
       <div class="tolerance-item">
-        <div class="tolerance-label"><span>Kaspa, future allowance</span><b>132 seconds</b></div>
+        <div class="tolerance-label"><span>Kaspa, how far ahead a timestamp can be</span><b>132 seconds</b></div>
         <div class="tolerance-bar-bg"><div class="tolerance-bar-fill kas"></div></div>
       </div>
     </div>
-    <p class="intro" style="margin-bottom:0;">Bitcoin can afford 2 hours of slack because it expects a block roughly every 10 minutes. Kaspa expects one roughly every tenth of a second, so the same kind of rule needs a far tighter leash.</p>
-  </div>
-
-  <div class="stage">
-    <p class="eyebrow">4. Why a DAG needs its own median</p>
-    <p class="intro">Bitcoin's 11 ancestors are a straight line: block 100 always follows block 99. On Kaspa's DAG, many blocks are mined in parallel and merge together, so there's no single line of 11 to walk, only a sampled window across the blocks the network has already folded in.</p>
-    <div class="dag-row" aria-hidden="true">
-      <div class="dag-block merged">A</div>
-      <div class="dag-block merged">B</div>
-      <div class="dag-block merged">C</div>
-      <div class="dag-block">D</div>
-      <div class="dag-block">E</div>
-    </div>
-    <p class="intro" style="margin-bottom:0;">A, B, and C arrived at nearly the same moment from different miners. All three raise the DAA score together, and all three can count toward the median. None of them is "block 100" on its own.</p>
   </div>
 
   <details>
@@ -273,6 +250,9 @@
       <h3>Timestamp rules used above</h3>
       <p>Past median time: a block's timestamp must be strictly greater than the median of the 11 values closest to the center of a sampled window of its ancestors' timestamps. Source: <code>consensus/src/processes/past_median_time.rs</code>, constant <code>AVERAGE_FRAME_SIZE = 11</code>, implementing <a href="https://github.com/kaspanet/kips/blob/master/kip-0004.md" target="_blank" rel="noopener">KIP-0004, Sparse Difficulty Windows</a>. A timestamp at or before that median fails with <code>RuleError::TimeTooOld</code>, checked in <code>consensus/src/pipeline/header_processor/post_pow_validation.rs</code>.</p>
       <p>Future bound: a header is rejected if its timestamp is more than 132 seconds ahead of the validating node's own clock, failing with <code>RuleError::TimeTooFarIntoTheFuture</code>. Source: <code>consensus/src/pipeline/header_processor/pre_ghostdag_validation.rs</code> (<code>max_block_time = unix_now() + timestamp_deviation_tolerance * 1000</code>), constant defined as <code>TIMESTAMP_DEVIATION_TOLERANCE = 132</code> in <code>consensus/core/src/config/constants.rs</code>.</p>
+
+      <h3>Why the median is sampled, not walked</h3>
+      <p>Bitcoin's 11 ancestors form a straight line: block 100 always follows block 99. Kaspa's DAG lets many blocks get mined in parallel and then merge together, so there's no single line of 11 to walk. Instead the median comes from a sampled window across the blocks the network has already folded in, defined by KIP-0004 above. Blocks that arrive at nearly the same moment from different miners can all raise the DAA score together and all count toward that window; none of them is "block 100" on its own.</p>
 
       <h3>Bitcoin's rule, checked against its own source</h3>
       <p>Bitcoin Core rejects a block whose time is at or before <code>GetMedianTimePast()</code>, the median of the 11 preceding blocks (<code>nMedianTimeSpan = 11</code>), with the reject reason <code>time-too-old</code>. It also rejects a block timestamped more than <code>MAX_FUTURE_BLOCK_TIME</code> (2 hours, 7,200 seconds) ahead of the node's own clock, with reject reason <code>time-too-new</code>. Source: <a href="https://github.com/bitcoin/bitcoin" target="_blank" rel="noopener">bitcoin/bitcoin</a>, <code>src/chain.h</code> (<code>nMedianTimeSpan</code>, <code>MAX_FUTURE_BLOCK_TIME</code>) and <code>src/validation.cpp</code> (the two checks, near <code>CheckBlockHeader</code>/<code>ContextualCheckBlockHeader</code>). Same shape as Kaspa's rule, a strict median-of-11 floor plus a future ceiling; the ceiling is roughly 55 times looser on Bitcoin because Bitcoin expects a block roughly every 10 minutes, not every tenth of a second.</p>
@@ -304,8 +284,6 @@
       <p style="margin-top:2px;">This demo models the rules above; it does not read a live node. A DAA score from a real explorer or node is always the authority, not this page.</p>
     </div>
   </details>
-
-  <footer>Runs entirely in your browser. Part of Kaspa Explained.</footer>
 </main>
 
 <script>

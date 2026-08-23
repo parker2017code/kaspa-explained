@@ -68,3 +68,25 @@ has to trust anything else on the site.
 A demo that flatters Kaspa is worth less than one that does not, because the
 reader can tell the difference and the argument only survives if the numbers
 were allowed to fall where they fell.
+
+## The 300-word surface
+
+No page shows more than 300 visible words. Not a target, a ceiling.
+
+Longer content is fine and often necessary. It does not sit on the
+surface. Move it behind a mechanism, and vary the mechanism: an info
+affordance at the point of use, a disclosure whose summary line says
+what is inside, a tooltip on a term, a secondary view the reader
+switches to, a panel that appears only once the reader has done the
+thing it explains. Reaching for the same collapsible on every page is
+the failure this rule exists to prevent, not the fix.
+
+Two errors to avoid, both already committed on this site once:
+
+Hiding the primary content. If what the reader came for is behind a
+click, the disclosure is inverted. Cut long primary content instead of
+burying it.
+
+Chrome that states the obvious. A line telling the reader which site
+they are on is noise. If removing a sentence costs the reader nothing,
+it was never earning its place.

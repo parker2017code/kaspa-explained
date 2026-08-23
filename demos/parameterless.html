@@ -141,7 +141,7 @@
   details table{border-collapse:collapse; font-size:.8rem; margin:.6rem 0;}
   details td, details th{border-bottom:1px solid var(--line); padding:.25rem .5rem; text-align:right;}
   details th{color:var(--faint); font-weight:600;}
-  details code{background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; padding:.05rem .3rem; font-size:.85em;}
+  details code{background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; padding:.05rem .3rem; font-size:.85em; overflow-wrap:anywhere;}
   details ul{padding-left:1.1rem;}
   .backlink{font-size:.85rem;}
   .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
@@ -219,10 +219,45 @@
   <p class="payoff-line" id="payoff-line" role="status"></p>
 
   <div class="panel">
+    <h2>Two speeds, not one</h2>
+    <p style="color:var(--muted); font-size:1rem; margin:0 0 .8rem; max-width:74ch;">
+      One number above hides two regimes. The paper gives a fast confirmation time when the
+      network looks calm, and a much slower worst-case bound once an attack is visible. Add
+      the attacker's share of mining power to see both, at a fixed 1% error tolerance (ε = 0.01).
+    </p>
+    <div class="row">
+      <div class="field">
+        <label for="alpha-slider">Attacker's share of network mining power</label>
+        <input type="range" id="alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="alpha-out">
+        <span class="valline" id="alpha-out">10%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="side" id="side-optimistic">
+      <h3>No visible attack</h3>
+      <p class="sub">Every block looks honest right now. The paper's optimistic case.</p>
+      <div class="gauge-row"><span>about how long until this confirms</span><output id="opt-time-out"></output></div>
+      <div class="verdict safe" id="opt-verdict" role="status"></div>
+    </div>
+    <div class="side" id="side-pessimistic">
+      <h3>Attack visibly under way</h3>
+      <p class="sub">An attacker is actively forking the DAG. The paper's pessimistic case.</p>
+      <div class="gauge-row"><span>about how long until this confirms</span><output id="pess-time-out"></output></div>
+      <p id="pess-toolong" class="over-badge" hidden></p>
+      <div class="verdict unsafe" id="pess-verdict" role="status"></div>
+    </div>
+  </div>
+
+  <p class="payoff-line" id="regime-payoff-line" role="status"></p>
+
+  <div class="panel">
     <h2>What this costs, honestly</h2>
     <ul class="honest">
       <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
       <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
+      <li><strong>A visible attack does not slow down every payment.</strong> As long as a transaction has no visible conflicting spend, its ordering is commutative with recent transactions, so it can still confirm on the optimistic timeline above even while the pessimistic case is playing out elsewhere in the DAG (§4, footnote 14).</li>
       <li><strong>Efficiency is unsolved.</strong> KIP-2 itself lists the current DAGKnight pseudocode as "highly inefficient" and its rewrite as unfinished work, a stated reason this is still research four years on.</li>
       <li><strong>The 32 blocks/sec ceiling on the slider above belongs to GHOSTDAG, not to DAGKnight.</strong> rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32 blocks/sec; the fallback arm past that reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22). GHOSTDAG needs a k chosen in advance for a given rate, so running it past 32 needs a developer to compute a new k and hard-fork the network; nothing today defines one there. DAGKnight's whole premise, per <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, is removing that a priori k, so it has no table to run out of, which is why this slider lets it keep going. That range is shown to demonstrate the gap, not to assert a target: KIP-2 lists the optimal block rate as open research with no number recommended, and the widely repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</li>
       <li><strong>No published cost figure exists, but the efficiency work is real and some of it now sits on kaspanet's own branch, not just a side fork.</strong> Contributor coderofstuff (40 commits to kaspanet/rusty-kaspa) develops the UMC-voting redesign on personal fork branches first, then merges it directly into kaspanet/rusty-kaspa's own <code>dagknight</code> branch: the <code>dk-umc-proposed</code> branch merged in on August 14, 2026, identical commit and all. Their explanatory write-up naming the bottleneck behind KIP-2's "highly inefficient" (the paper's recursive UMC-voting algorithm at O(n squared) worst case, with an O(n times K) amortized replacement proposed) still lives only on an unofficial personal wiki, not kaspanet's own docs. It is real, named engineering inside the project's own repository, still unmerged to master and not reviewed or adopted as the shipped algorithm. Details below.</li>
@@ -262,6 +297,54 @@
       2·D. That is a different, gentler quantity than the paper's own worst-case bound above, and this page
       does not claim to reproduce the paper's exact confirmation-time formula from Section 4, only this
       simplified conversion, labeled as such.</p>
+      <p><strong>The "Two speeds, not one" widget above uses the paper's actual confirmation-time
+      formulas, not the simplified k/λ conversion above.</strong> Verified directly against §1.5.2 and
+      §4, which restate the same two bounds in both step-count and second form. Optimistic (no visible
+      attack), in seconds: O((ln(1/ε)/λ + D)/(1−2α) + D²λ). Pessimistic (visible attack), in seconds:
+      O((1/λ)·(exp(c·D·λ/(1−2α)) + ln(1/ε)/(1−2α))), the same bound quoted above. Both D and λ
+      reuse this page's own D and block-rate sliders, since D is exactly this paper's client-set bound on
+      recent latency; ε is fixed at 0.01 (1% error tolerance, stated on the widget) rather than exposed as a
+      fourth slider, and a new attacker-share slider supplies α. The paper leaves the pessimistic case's
+      constant c unspecified; the widget sets c = 1 as an illustrative placeholder, not a value the paper
+      states, which is why that side is a rough shape, not a precise prediction. Because exp() grows so
+      fast, the pessimistic side is computed in log space (the same technique the k(D, λ) search above uses)
+      and falls back to a plain "too long" state, matching this site's <a href="confirmation-risk.html">confirmation-risk
+      demo</a>, once the wait would pass 100 years rather than printing a number of seconds longer than
+      that has any everyday meaning.</p>
+      <p><strong>Table 1, transcribed.</strong> The paper directly compares four ordering rules' asymptotic
+      convergence time, in blocks (multiply by λ⁻¹ for seconds, per the paper's own note under the table).
+      D<sub>max</sub> is an a priori worst-case latency bound fixed in advance; D<sub>t</sub> is a bound on
+      the current, recent latency.</p>
+      <div class="table-wrap" style="overflow-x:auto;">
+      <table>
+        <tr><th style="text-align:left;">Protocol</th><th>Visible attack</th><th>No visible attack</th></tr>
+        <tr><td style="text-align:left;">Nakamoto Consensus</td>
+          <td>O((ln(1/ε) + D<sub>t</sub>λ) / max{0, (1−α)/(1+D<sub>t</sub>λ) − α})</td>
+          <td>same, asymptotically</td></tr>
+        <tr><td style="text-align:left;">PHANTOM</td>
+          <td>O(exp(c₁·D<sub>max</sub>λ/(1−2α)) + ln(1/ε)/(1−2α))</td>
+          <td>O((ln(1/ε) + D<sub>max</sub>λ)/(1−2α))</td></tr>
+        <tr><td style="text-align:left;">SPECTRE</td>
+          <td>does not converge</td>
+          <td>O((ln(1/ε) + D<sub>t</sub>λ)/(1−2α))</td></tr>
+        <tr><td style="text-align:left;">KNIGHT</td>
+          <td>O(exp(c₂·D<sub>t</sub>λ/(1−2α)) + ln(1/ε)/(1−2α))</td>
+          <td>O((ln(1/ε) + D<sub>t</sub>λ)/(1−2α) + (D<sub>t</sub>λ)²)</td></tr>
+      </table>
+      </div>
+      <ul>
+        <li>SPECTRE converges slightly faster than KNIGHT when no attack is visible, the same expression
+        minus KNIGHT's extra (D<sub>t</sub>λ)² term, but SPECTRE does not guarantee convergence once an
+        attack is visible: it solves only "weak liveness," securing payments whose ordering among honest
+        users is commutative, not the general consensus problem KNIGHT solves (§1.5.2, citing [19]).</li>
+        <li>Nakamoto Consensus's tolerable attacker share shrinks toward zero as D·λ grows: the table's own
+        denominator, max{0, (1−α)/(1+D<sub>t</sub>λ) − α}, heads to zero as D<sub>t</sub>λ
+        increases, which §3.1-3.2 calls "not scalable, since its security threshold deteriorates as the
+        block creation rate λ grows."</li>
+        <li>PHANTOM converges only in terms of D<sub>max</sub>, a worst-case latency chosen in advance,
+        rather than the current D<sub>t</sub> that KNIGHT and SPECTRE track (§4: PHANTOM "converges in
+        terms of D<sub>max</sub> = D only").</li>
+      </ul>
       <p><strong>What "DAGKnight" shows here is a simplified, labeled model</strong>, not the paper's
       algorithm. It reuses the same k(D, λ) formula and simply lets the operating point track the
       actual-latency slider instead of holding it fixed, a fair reading of the paper's qualitative
@@ -401,6 +484,75 @@
     return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
   }
 
+  // Two-regime confirmation-time widget (DAG KNIGHT paper, section 1.5.2 and section 4).
+  // Optimistic (no visible attack), seconds: (ln(1/epsilon)/lambda + D)/(1-2*alpha) + D^2*lambda.
+  // Pessimistic (visible attack), seconds: (1/lambda) * (exp(c*D*lambda/(1-2*alpha)) + ln(1/epsilon)/(1-2*alpha)).
+  // Both verified directly against the paper's PDF, not transcribed secondhand.
+  var alphaSlider = document.getElementById("alpha-slider");
+  var alphaOut = document.getElementById("alpha-out");
+  var optTimeOut = document.getElementById("opt-time-out");
+  var optVerdict = document.getElementById("opt-verdict");
+  var pessTimeOut = document.getElementById("pess-time-out");
+  var pessToolong = document.getElementById("pess-toolong");
+  var pessVerdict = document.getElementById("pess-verdict");
+  var regimePayoffLine = document.getElementById("regime-payoff-line");
+
+  var EPSILON = 0.01;               // fixed error tolerance (1%), stated on the widget rather than a fourth slider
+  var LN_INV_EPS = Math.log(1 / EPSILON);
+  // The paper leaves this constant unspecified ("exp(c*D*lambda/(1-2*alpha))"); c = 1 here is an
+  // illustrative placeholder, not a value the paper states, so the pessimistic side shows a shape,
+  // not a precise prediction. See the model note below for the honesty caveat.
+  var PESS_C = 1;
+  var TOO_LONG_SECONDS = 100 * 365.25 * 86400; // ~100 years: the fallback threshold, same idea as confirmation-risk.html's "too long" state
+  var LN_TOO_LONG = Math.log(TOO_LONG_SECONDS);
+
+  function fmtSecondsHuman(s){
+    if (s < 1) return Math.round(s * 1000) + " ms";
+    if (s < 60) return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
+    if (s < 3600) return Math.round(s / 60) + " min";
+    if (s < 86400) return Math.round(s / 3600) + " h";
+    if (s < 604800) return Math.round(s / 86400) + " d";
+    if (s < 31557600) return Math.round(s / 604800) + " wk";
+    return Math.round(s / 31557600) + " yr";
+  }
+
+  function renderRegimes(BPS, D){
+    var alpha = parseFloat(alphaSlider.value) / 100;
+    alphaOut.textContent = alphaSlider.value + "%";
+    var denom = 1 - 2 * alpha; // > 0 since the slider stops at 49%
+
+    var optSeconds = (LN_INV_EPS / BPS + D) / denom + D * D * BPS;
+    optTimeOut.textContent = fmtSecondsHuman(optSeconds);
+    optVerdict.textContent = "This is the number the widget above already approximates: no cap to exceed here, just a wait.";
+
+    // Computed in log space, the same technique the k(D, lambda) search above uses, because
+    // exp(c*D*lambda/(1-2*alpha)) overflows a double long before it stops being a real answer.
+    var expArg = PESS_C * D * BPS / denom;
+    var lnEpsTerm = LN_INV_EPS / denom;
+    var lnSum = expArg > 40 ? expArg : Math.log(Math.exp(expArg) + lnEpsTerm);
+    var lnPessSeconds = lnSum - Math.log(BPS);
+
+    var pessTooLong = lnPessSeconds > LN_TOO_LONG;
+    var pessSeconds = pessTooLong ? null : Math.exp(lnPessSeconds);
+
+    if (pessTooLong){
+      pessTimeOut.textContent = "too long";
+      pessToolong.hidden = false;
+      pessToolong.textContent = "would take an impractically long wait: the exponential term in the paper's own worst-case bound has taken over.";
+      pessVerdict.textContent = "Not a number worth printing. The paper calls this bound \"far from tight\" and built from an unrealistically strong attacker, but it still grows without bound as attacker share and delay rise.";
+    } else {
+      pessTimeOut.textContent = fmtSecondsHuman(pessSeconds);
+      pessToolong.hidden = true;
+      pessVerdict.textContent = "The paper's own worst-case bound for a visible attack at this block rate, delay, and attacker share.";
+    }
+
+    if (pessTooLong){
+      regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: past any wait worth naming.";
+    } else {
+      regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: " + fmtSecondsHuman(pessSeconds) + ".";
+    }
+  }
+
   function makeStrip(el, count, colorClassFn){
     el.innerHTML = "";
     for (var i = 0; i < count; i++){
@@ -522,6 +674,10 @@
     var live = document.getElementById("live-region");
     live.textContent = beyondTable ? "The fixed-margin side has no defined value past 32 blocks per second." :
       (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
+
+    // DAGKnight has no table ceiling, so the two-regime formulas below use the real, unclamped
+    // block rate and D, unlike configuredK above which is frozen at GHOSTDAG's bps=32 limit.
+    renderRegimes(BPS, D);
   }
 
   function clearScenarioState(){
@@ -531,6 +687,7 @@
   bpsSlider.addEventListener("input", render);
   dSlider.addEventListener("input", function(){ clearScenarioState(); render(); });
   lSlider.addEventListener("input", function(){ clearScenarioState(); render(); });
+  alphaSlider.addEventListener("input", render);
 
   Array.prototype.forEach.call(document.querySelectorAll(".scenario-btns button"), function(btn){
     btn.addEventListener("click", function(){

@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>myharness</title>
+<style>
+body{margin:0;background:#333;}
+.frame-wrap{display:inline-block;vertical-align:top;border:2px solid red;margin:4px;}
+iframe{display:block;border:0;}
+</style>
+</head>
+<body>
+<div class="frame-wrap"><iframe id="f390" width="390" height="900" src="about:blank"></iframe></div>
+<div class="frame-wrap"><iframe id="f768" width="768" height="900" src="about:blank"></iframe></div>
+<div class="frame-wrap"><iframe id="f1280" width="1280" height="900" src="about:blank"></iframe></div>
+<script>
+function load(page){
+  const bust = Date.now();
+  document.getElementById('f390').src = '/' + page + '?bust=' + bust;
+  document.getElementById('f768').src = '/' + page + '?bust=' + bust;
+  document.getElementById('f1280').src = '/' + page + '?bust=' + bust;
+}
+window.load = load;
+</script>
+</body></html>
