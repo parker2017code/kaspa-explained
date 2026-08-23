@@ -150,35 +150,34 @@
 <body>
 <main>
   <div class="topbar">
-    <p class="eyebrow">Interactive · <a class="backlink" href="/what-is-kaspa">Back to What is Kaspa</a></p>
+    <p class="eyebrow"><a class="backlink" href="/what-is-kaspa">Back to What is Kaspa</a></p>
     <button type="button" id="theme-toggle" aria-label="Switch theme">Light</button>
   </div>
   <h1>Parameterless consensus</h1>
 
   <p class="lede">
-    Kaspa fixes a safety margin in advance for how much disagreement among blocks still looks honest.
-    Push the block rate and latency below and watch a fixed margin strain while an adjustable one keeps up.
+    Kaspa fixes a margin in advance. Push the sliders: a fixed margin strains while an adjustable one keeps up.
   </p>
 
   <div class="panel">
     <div class="row bps-block">
       <div class="field">
-        <label for="bps-slider">Block rate: how many blocks the network creates per second</label>
+        <label for="bps-slider">Block rate (blocks/sec)</label>
         <input type="range" class="primary" id="bps-slider" min="1" max="100" step="1" value="10" aria-describedby="bps-out bps-hint">
         <span class="valline" id="bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
-        <span class="valline" id="bps-hint" style="color:var(--faint);">rusty-kaspa's own k-table for GHOSTDAG stops at 32 blocks/sec; push past it to see why that ceiling belongs to GHOSTDAG, not to DAGKnight.</span>
+        <span class="valline" id="bps-hint" style="color:var(--faint);">rusty-kaspa's table stops at 32 blocks/sec; past that, the ceiling is GHOSTDAG's, not DAGKnight's.</span>
       </div>
     </div>
     <div class="row">
       <div class="field">
-        <label for="d-slider">Assumed worst-case latency: the value GHOSTDAG is fixed to plan for (calls it D)</label>
+        <label for="d-slider">Assumed worst-case latency (D)</label>
         <input type="range" id="d-slider" min="0.5" max="15" step="0.5" value="5" aria-describedby="d-out">
         <span class="valline" id="d-out">D = 5.0 s &rarr; configured margin (k) = 124</span>
       </div>
     </div>
     <div class="row" style="margin-top:.8rem;">
       <div class="field">
-        <label id="l-label" for="l-slider">Actual network latency right now</label>
+        <label id="l-label" for="l-slider">Actual latency</label>
         <input type="range" id="l-slider" min="0.5" max="20" step="0.5" value="2" aria-labelledby="l-label" aria-describedby="l-out">
         <span class="valline" id="l-out">2.0 s (margin (k) this actually needs: 55)</span>
       </div>
@@ -194,24 +193,24 @@
   <div class="cmp">
     <div class="side" id="side-fixed">
       <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
-      <p class="sub">Mainnet reads this margin from a table computed once, for one block rate. It cannot move when latency changes, and the table itself has no entry past 32 blocks/sec.</p>
-      <div class="gauge-row"><span>configured margin (k): mainnet's table value for this block rate</span><output id="fixed-k-out">124</output></div>
+      <p class="sub">Mainnet reads this margin from a table computed once. No entry exists past 32 blocks/sec.</p>
+      <div class="gauge-row"><span>configured margin (k)</span><output id="fixed-k-out">124</output></div>
       <div class="gauge"><div class="fill" id="fixed-fill" style="width:100%; background:var(--cyan);"></div><div class="cap" id="fixed-cap"></div></div>
       <p id="fixed-tableend" class="over-badge" hidden></p>
-      <div class="gauge-row"><span>margin size this latency actually needs</span><output id="fixed-req-out">31</output></div>
+      <div class="gauge-row"><span>margin size needed</span><output id="fixed-req-out">31</output></div>
       <p id="fixed-over" class="over-badge" hidden></p>
       <div class="blockstrip" id="fixed-strip" aria-hidden="true"></div>
-      <div class="gauge-row"><span>about how long that wait takes</span><output id="fixed-time-out">12.4 s</output></div>
+      <div class="gauge-row"><span>wait time</span><output id="fixed-time-out">12.4 s</output></div>
       <div class="verdict safe" id="fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
     </div>
     <div class="side" id="side-adaptive">
       <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
-      <p class="sub">No table to run out of. The paper's design computes this margin from whatever latency is actually happening, at any block rate, because it was never chosen in advance.</p>
-      <div class="gauge-row"><span>effective margin (k) right now (same scale as the gauge at left)</span><output id="adapt-k-out">55</output></div>
+      <p class="sub">No table to run out of: margin tracks whatever latency is actually happening.</p>
+      <div class="gauge-row"><span>effective margin (k) right now</span><output id="adapt-k-out">55</output></div>
       <div class="gauge"><div class="fill" id="adapt-fill" style="width:44%; background:var(--green);"></div></div>
-      <div class="gauge-row"><span>cost: wider merge sets to walk before finalizing</span><output id="adapt-cost-out">moderate</output></div>
+      <div class="gauge-row"><span>cost: wider merge sets</span><output id="adapt-cost-out">moderate</output></div>
       <div class="blockstrip" id="adapt-strip" aria-hidden="true"></div>
-      <div class="gauge-row"><span>about how long that wait takes</span><output id="adapt-time-out">5.5 s</output></div>
+      <div class="gauge-row"><span>wait time</span><output id="adapt-time-out">5.5 s</output></div>
       <div class="verdict adaptive" id="adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
     </div>
   </div>
@@ -219,15 +218,13 @@
   <p class="payoff-line" id="payoff-line" role="status"></p>
 
   <div class="panel">
-    <h2>Two speeds, not one</h2>
+    <h2>Two speeds</h2>
     <p style="color:var(--muted); font-size:1rem; margin:0 0 .8rem; max-width:74ch;">
-      One number above hides two regimes. The paper gives a fast confirmation time when the
-      network looks calm, and a much slower worst-case bound once an attack is visible. Add
-      the attacker's share of mining power to see both, at a fixed 1% error tolerance (ε = 0.01).
+      Two regimes: fast when calm, slower once an attack is visible. Attacker share reveals both, at ε = 0.01.
     </p>
     <div class="row">
       <div class="field">
-        <label for="alpha-slider">Attacker's share of network mining power</label>
+        <label for="alpha-slider">Attacker's mining share</label>
         <input type="range" id="alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="alpha-out">
         <span class="valline" id="alpha-out">10%</span>
       </div>
@@ -237,14 +234,14 @@
   <div class="cmp">
     <div class="side" id="side-optimistic">
       <h3>No visible attack</h3>
-      <p class="sub">Every block looks honest right now. The paper's optimistic case.</p>
-      <div class="gauge-row"><span>about how long until this confirms</span><output id="opt-time-out"></output></div>
+      <p class="sub">Every block looks honest right now.</p>
+      <div class="gauge-row"><span>confirm time</span><output id="opt-time-out"></output></div>
       <div class="verdict safe" id="opt-verdict" role="status"></div>
     </div>
     <div class="side" id="side-pessimistic">
       <h3>Attack visibly under way</h3>
-      <p class="sub">An attacker is actively forking the DAG. The paper's pessimistic case.</p>
-      <div class="gauge-row"><span>about how long until this confirms</span><output id="pess-time-out"></output></div>
+      <p class="sub">An attacker is actively forking the DAG.</p>
+      <div class="gauge-row"><span>confirm time</span><output id="pess-time-out"></output></div>
       <p id="pess-toolong" class="over-badge" hidden></p>
       <div class="verdict unsafe" id="pess-verdict" role="status"></div>
     </div>
@@ -253,15 +250,19 @@
   <p class="payoff-line" id="regime-payoff-line" role="status"></p>
 
   <div class="panel">
-    <h2>What this costs, honestly</h2>
-    <ul class="honest">
-      <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
-      <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
-      <li><strong>A visible attack does not slow down every payment.</strong> As long as a transaction has no visible conflicting spend, its ordering is commutative with recent transactions, so it can still confirm on the optimistic timeline above even while the pessimistic case is playing out elsewhere in the DAG (§4, footnote 14).</li>
-      <li><strong>Efficiency is unsolved.</strong> KIP-2 itself lists the current DAGKnight pseudocode as "highly inefficient" and its rewrite as unfinished work, a stated reason this is still research four years on.</li>
-      <li><strong>The 32 blocks/sec ceiling on the slider above belongs to GHOSTDAG, not to DAGKnight.</strong> rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32 blocks/sec; the fallback arm past that reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22). GHOSTDAG needs a k chosen in advance for a given rate, so running it past 32 needs a developer to compute a new k and hard-fork the network; nothing today defines one there. DAGKnight's whole premise, per <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, is removing that a priori k, so it has no table to run out of, which is why this slider lets it keep going. That range is shown to demonstrate the gap, not to assert a target: KIP-2 lists the optimal block rate as open research with no number recommended, and the widely repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</li>
-      <li><strong>No published cost figure exists, but the efficiency work is real and some of it now sits on kaspanet's own branch, not just a side fork.</strong> Contributor coderofstuff (40 commits to kaspanet/rusty-kaspa) develops the UMC-voting redesign on personal fork branches first, then merges it directly into kaspanet/rusty-kaspa's own <code>dagknight</code> branch: the <code>dk-umc-proposed</code> branch merged in on August 14, 2026, identical commit and all. Their explanatory write-up naming the bottleneck behind KIP-2's "highly inefficient" (the paper's recursive UMC-voting algorithm at O(n squared) worst case, with an O(n times K) amortized replacement proposed) still lives only on an unofficial personal wiki, not kaspanet's own docs. It is real, named engineering inside the project's own repository, still unmerged to master and not reviewed or adopted as the shipped algorithm. Details below.</li>
-    </ul>
+    <h2>What this costs</h2>
+    <p class="sub" style="margin:0;">Not shipped, not parameter-free, efficiency unsolved. Full list below.</p>
+    <details>
+      <summary>Every caveat, with sources</summary>
+      <ul class="honest">
+        <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
+        <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
+        <li><strong>A visible attack does not slow down every payment.</strong> As long as a transaction has no visible conflicting spend, its ordering is commutative with recent transactions, so it can still confirm on the optimistic timeline above even while the pessimistic case is playing out elsewhere in the DAG (§4, footnote 14).</li>
+        <li><strong>Efficiency is unsolved.</strong> KIP-2 itself lists the current DAGKnight pseudocode as "highly inefficient" and its rewrite as unfinished work, a stated reason this is still research four years on.</li>
+        <li><strong>The 32 blocks/sec ceiling on the slider above belongs to GHOSTDAG, not to DAGKnight.</strong> rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32 blocks/sec; the fallback arm past that reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22). GHOSTDAG needs a k chosen in advance for a given rate, so running it past 32 needs a developer to compute a new k and hard-fork the network; nothing today defines one there. DAGKnight's whole premise, per <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, is removing that a priori k, so it has no table to run out of, which is why this slider lets it keep going. That range is shown to demonstrate the gap, not to assert a target: KIP-2 lists the optimal block rate as open research with no number recommended, and the widely repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</li>
+        <li><strong>No published cost figure exists, but the efficiency work is real and some of it now sits on kaspanet's own branch, not just a side fork.</strong> Contributor coderofstuff (40 commits to kaspanet/rusty-kaspa) develops the UMC-voting redesign on personal fork branches first, then merges it directly into kaspanet/rusty-kaspa's own <code>dagknight</code> branch: the <code>dk-umc-proposed</code> branch merged in on August 14, 2026, identical commit and all. Their explanatory write-up naming the bottleneck behind KIP-2's "highly inefficient" (the paper's recursive UMC-voting algorithm at O(n squared) worst case, with an O(n times K) amortized replacement proposed) still lives only on an unofficial personal wiki, not kaspanet's own docs. It is real, named engineering inside the project's own repository, still unmerged to master and not reviewed or adopted as the shipped algorithm. Details below.</li>
+      </ul>
+    </details>
   </div>
 
   <details>
@@ -528,7 +529,7 @@
 
     var optSeconds = (LN_INV_EPS / BPS + D) / denom + D * D * BPS;
     optTimeOut.textContent = fmtSecondsHuman(optSeconds);
-    optVerdict.textContent = "This is the number the widget above already approximates: no cap to exceed here, just a wait.";
+    optVerdict.textContent = "No cap to exceed here, just a wait.";
 
     // Computed in log space, the same technique the k(D, lambda) search above uses, because
     // exp(c*D*lambda/(1-2*alpha)) overflows a double long before it stops being a real answer.
@@ -543,12 +544,12 @@
     if (pessTooLong){
       pessTimeOut.textContent = "too long";
       pessToolong.hidden = false;
-      pessToolong.textContent = "would take an impractically long wait: the exponential term in the paper's own worst-case bound has taken over.";
-      pessVerdict.textContent = "Not a number worth printing. The paper calls this bound \"far from tight\" and built from an unrealistically strong attacker, but it still grows without bound as attacker share and delay rise.";
+      pessToolong.textContent = "an impractically long wait: the exponential term has taken over.";
+      pessVerdict.textContent = "Not worth printing: the paper calls this bound \"far from tight.\"";
     } else {
       pessTimeOut.textContent = fmtSecondsHuman(pessSeconds);
       pessToolong.hidden = true;
-      pessVerdict.textContent = "The paper's own worst-case bound for a visible attack at this block rate, delay, and attacker share.";
+      pessVerdict.textContent = "The paper's worst-case bound for a visible attack, at this rate and share.";
     }
 
     if (pessTooLong){
@@ -603,7 +604,7 @@
 
     if (beyondTable){
       fixedTableEnd.hidden = false;
-      fixedTableEnd.textContent = "No k exists past 32 bps: the table stops there and rusty-kaspa's code panics. Shown frozen at bps=32's value.";
+      fixedTableEnd.textContent = "No k past 32 bps: the table stops there. Frozen at bps=32's value.";
     } else {
       fixedTableEnd.hidden = true;
     }
@@ -611,7 +612,7 @@
     if (over && !beyondTable){
       var factor = (requiredK / configuredK);
       fixedOver.hidden = false;
-      fixedOver.textContent = "needs " + factor.toFixed(1) + "\u00d7 the configured margin";
+      fixedOver.textContent = factor.toFixed(1) + "\u00d7 over margin";
     } else {
       fixedOver.hidden = true;
     }
@@ -633,16 +634,13 @@
 
     if (beyondTable){
       fixedVerdict.className = "verdict unsafe";
-      fixedVerdict.textContent = "Undefined. rusty-kaspa's k-table has no entry past 32 blocks/sec; the compiled code panics rather than pick a number. " +
-        "Running GHOSTDAG here at all needs someone to compute a new k and hard-fork first, which is exactly the a-priori choice DAGKnight is designed to remove.";
+      fixedVerdict.textContent = "Undefined past 32 bps: the table stops there. Running here needs a new k, hard-forked in, the exact a-priori choice DAGKnight removes.";
     } else if (over){
       fixedVerdict.className = "verdict unsafe";
-      fixedVerdict.textContent = "Cap exceeded. Actual latency (" + L.toFixed(1) + " s) needs a margin (k) of " + requiredK +
-        ", but the network is fixed at " + configuredK + ". Honest blocks that disagree this much now look like an attack.";
+      fixedVerdict.textContent = "Cap exceeded: needs k=" + requiredK + ", fixed at " + configuredK + ".";
     } else {
       fixedVerdict.className = "verdict safe";
-      fixedVerdict.textContent = "Within the cap. Actual latency needs a margin (k) of " + requiredK + "; the fixed margin of " +
-        configuredK + " covers it with room to spare.";
+      fixedVerdict.textContent = "Within the cap: latency needs k=" + requiredK + "; the fixed " + configuredK + " covers it.";
     }
 
     // Adaptive (DAGKnight-style, simulated) side: its margin always equals whatever is
@@ -651,29 +649,21 @@
     adaptKOut.textContent = requiredK;
     adaptFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
     var costLabel = requiredK < 40 ? "low" : requiredK < 150 ? "moderate" : requiredK < 600 ? "high" : "extreme";
-    adaptCostOut.textContent = costLabel + " (confirmations take longer while latency is high)";
+    adaptCostOut.textContent = costLabel;
 
     makeStrip(adaptStrip, stripCount, function(){ return "ok"; });
 
     var adaptTime = requiredK / BPS;
     adaptTimeOut.textContent = fmtSeconds(adaptTime);
 
-    adaptVerdict.textContent = "No fixed cap and no table to run out of. Its margin (k) is " + requiredK + " right now, whatever the moment's " +
-      "worst-case latency requires, and it relaxes again once conditions calm, never retuned by a person. " +
-      "(Simulated relationship; see the model note below.)";
+    adaptVerdict.textContent = "No cap: k=" + requiredK + " right now, tracking latency, relaxing once calm.";
 
     if (beyondTable){
-      payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG has nothing to run on: rusty-kaspa's own k-table stops at 32 and the code panics past it. " +
-        "DAGKnight's design has no table to run out of, so nothing stops it here: it would need a margin of " + requiredK + " blocks, computed the same way as always. " +
-        "That gap is the entire claim in \u201cparameterless,\u201d not a marketing figure for how fast either one runs today.";
+      payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG has no table entry left. DAGKnight has no table to run out of: it would just need k=" + requiredK + ". That gap is the whole \u201cparameterless\u201d claim.";
     } else if (over){
-      payoffLine.textContent = "At " + BPS + " blocks/sec, honest blocks this far apart now read as an attack to GHOSTDAG, " +
-        "because it was fixed to assume " + D.toFixed(1) + " s of delay and reality just asked for more; DAGKnight would " +
-        "simply widen to " + requiredK + " and keep going.";
+      payoffLine.textContent = "At " + BPS + " blocks/sec, honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay. DAGKnight would just widen to k=" + requiredK + " and keep going.";
     } else {
-      payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG is carrying a fixed " + configuredK + "-block margin " +
-        "to cover " + D.toFixed(1) + " s of possible delay, no matter what the network is actually doing right now; " +
-        "raise the block rate and that fixed margin only grows, whether or not it's needed.";
+      payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG carries a fixed " + configuredK + "-block margin, needed or not.";
     }
 
     var live = document.getElementById("live-region");

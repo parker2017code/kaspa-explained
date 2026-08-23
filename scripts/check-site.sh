@@ -102,8 +102,31 @@ if [[ -n "$NODE_BIN" ]]; then
   VISIBLE_WORDS_BLOCKING="${VISIBLE_WORDS_BLOCKING:-false}" \
     "$NODE_BIN" scripts/check-visible-words.mjs || \
     [ "${VISIBLE_WORDS_BLOCKING:-false}" != "true" ]
+  # Per-section prose gate for long-form/reference pages (design/STANDARD.md,
+  # "The 300-word surface", decision recorded in HANDOFF.md 2026-08-23): the
+  # whole-page 300-word ceiling above fits a demo, the homepage, or a routing
+  # page. It does not fit a long-form guide or a reference page, where the
+  # 300-word cap applies per unbroken run of prose between structural breaks
+  # instead of to the whole page. Pages get this rule only if they are listed
+  # in scripts/essay-pages.json's per_section_pages, and check-visible-words.mjs
+  # already skips those same pages so the two gates never grade the same page
+  # twice. Same VISIBLE_WORDS_BLOCKING switch: advisory until the site's
+  # per-section pages comply, then flips with the whole-page gate above.
+  VISIBLE_WORDS_BLOCKING="${VISIBLE_WORDS_BLOCKING:-false}" \
+    "$NODE_BIN" scripts/check-visible-sections.mjs || \
+    [ "${VISIBLE_WORDS_BLOCKING:-false}" != "true" ]
+  # Render-matrix gate (HANDOFF.md "Finish standard" item 4, 2026-08-23):
+  # every sitemap page plus every demos/ file, at 390/768/1280 in both
+  # themes, checked for horizontal overflow, sub-16px body text, sub-44px
+  # touch targets, console errors, numeric WCAG contrast, and in-page anchor
+  # resolution. Advisory until the real violation list is empty, same
+  # pattern as check-visible-words.mjs. Flip RENDER_GATE_BLOCKING to true
+  # once it is.
+  RENDER_GATE_BLOCKING="${RENDER_GATE_BLOCKING:-false}" \
+    "$NODE_BIN" scripts/check-render.mjs || \
+    [ "${RENDER_GATE_BLOCKING:-false}" != "true" ]
 else
-  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-visible-words" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-visible-words, check-visible-sections, check-render" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {

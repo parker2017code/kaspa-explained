@@ -288,34 +288,39 @@
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
   <p class="lead">
-    Every chain started with a rule for who'd hold the first coins, set at block
-    zero. Drag the year marker to see who held what, then and now. What matters
-    isn't the starting point: it's how long that grip lasts.
+    Every chain set a rule for who'd hold the first coins, at block zero. Drag the year marker to see who held what. What matters is how long the grip lasts.
   </p>
 
   <div class="panel">
-    <h3>Share of supply held by founders, company, or foundation (not yet public)</h3>
+    <h3>Founders, company, or foundation share</h3>
     <div class="legend" role="group" aria-label="Toggle chains">
       <label><input type="checkbox" data-chain="kaspa" checked><i class="swatch shape-circle" style="background:var(--green)"></i>Kaspa</label>
       <label><input type="checkbox" data-chain="ethereum" checked><i class="swatch shape-square" style="background:var(--cyan)"></i>Ethereum</label>
       <label><input type="checkbox" data-chain="cardano" checked><i class="swatch shape-triangle" style="background:var(--purple)"></i>Cardano</label>
       <label><input type="checkbox" data-chain="xrp" checked><i class="swatch shape-diamond" style="background:var(--pink)"></i>XRP</label>
     </div>
-    <p class="why-note">Ethereum and Cardano funded a foundation this way. XRP created its entire supply for one company and its founders, with no public sale at genesis.</p>
-    <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share of its supply, at any point on this chart. Everyone else's line starts above zero because Kaspa's line never leaves it.</p>
+    <p class="why-note">Ethereum and Cardano funded a foundation this way. XRP created its entire supply for one company, no public sale.</p>
+    <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share, at any point on this chart.</p>
     <svg id="chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest. Solid segments are documented history; dashed segments are modeled projection past each chain's own current age."></svg>
-    <p class="chart-caption" id="chartCaption">Solid: documented history. Dashed, past the marker: modeled projection. Each line turns dashed at its own chain's current age, since Ethereum, Cardano, and XRP are years older than Kaspa.</p>
+    <p class="chart-caption" id="chartCaption">Solid: documented history. Dashed, past the marker: modeled projection.</p>
     <div class="yearControl">
       <label for="yearSlider">Year since genesis <b id="yearVal">0</b></label>
       <input type="range" id="yearSlider" min="0" max="14" step="1" value="0">
     </div>
     <div class="yearControl">
-      <label for="decaySlider">How fast that founder/company share fades (modeled, not measured) <b id="decayVal">1.0&times;</b> <button id="decayReset" type="button" class="resetBtn">Reset</button></label>
+      <label for="decaySlider">Fade speed (modeled, not measured)
+        <span class="info-affordance" id="decay-info">
+          <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="decay-info-panel">
+            <i class="info-affordance__glyph" aria-hidden="true">i</i>
+            <span class="sr-only">More about fade speed</span>
+          </button>
+          <span class="info-affordance__panel" id="decay-info-panel" role="tooltip">Models how fast a founder's or company's share shrinks toward today's figure, mostly through selling and spending. 1.0&times; anchors that to each chain's current estimate. Kaspa has no such share to fade.</span>
+        </span>
+        <b id="decayVal">1.0&times;</b> <button id="decayReset" type="button" class="resetBtn">Reset</button></label>
       <input type="range" id="decaySlider" min="0.2" max="5" step="0.1" value="1">
-      <p class="controlNote">Models how fast a founder's or company's share shrinks toward today's smaller figure, mostly through selling and spending. 1.0&times; anchors that to each chain's current estimate. Kaspa has no such share to fade.</p>
     </div>
     <p class="result-line" id="resultLine" aria-live="polite"></p>
-    <p class="dagLabsNote">This chart tracks founders, company, and foundation shares only. DAGLabs itself mined an estimated 2.5&ndash;3% of supply after launch, the same way anyone with hardware could: full story below.</p>
+    <p class="dagLabsNote">Tracks founders, company, and foundation shares only. DAGLabs itself mined an estimated 2.5&ndash;3% of supply after launch, the same way anyone with hardware could: full story below.</p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
@@ -325,30 +330,14 @@
   </div>
 
   <div class="fair-note launch-history">
-    <h3>What a premine buys, and what Kaspa's launch actually looked like</h3>
+    <h3>What a <span class="term-def" tabindex="0" role="button" aria-describedby="premine-def">premine<span class="term-def__panel" id="premine-def" role="tooltip">Coins created and held before launch, before anyone else could mine or buy them.</span></span> buys, and what Kaspa's launch looked like</h3>
     <p>
-      A premine isn't automatically dishonest: Ethereum's and Cardano's
-      allocations were disclosed, not hidden. What it buys is a founding
-      team's outsized influence, held tokens or not. Kaspa never had one:
-      its genesis block carries an empty UTXO set, confirmed directly in
-      rusty-kaspa's source. DAGLabs, Yonatan Sompolinsky's company, raised
-      about $8 million (mainly Polychain, plus Accomplice and Genesis
-      Mining) to fund GHOSTDAG development and an ASIC mining-hardware plan
-      that fell through before mainnet. After launch, DAGLabs mined on
-      rented cloud hardware for about five months, the same way anyone
-      else could: an estimated 2.5&ndash;3% of total supply, under roughly
-      850 million KAS, before its funds ran out.
-    </p>
-    <p>
-      <span class="gap">Not established:</span> how that 2.5&ndash;3% splits
-      between Polychain specifically and DAGLabs' own team. No public
-      allocation table exists; the only account is a wiki page summarizing
-      Discord messages from people involved, not an official disclosure.
+      Kaspa never had one: its genesis block carries an empty UTXO set. Founders, company, and foundation combined have held 0% at every point since. DAGLabs, Yonatan Sompolinsky's company, mined an estimated 2.5&ndash;3% of supply on rented hardware after launch, the same way anyone else could. The Polychain-vs-DAGLabs-team split of that figure is not established: no public allocation table exists. Full sourcing below.
     </p>
   </div>
 
   <details id="assumptions">
-    <summary>Assumptions and sources</summary>
+    <summary>Full launch history, assumptions, and sources</summary>
     <div id="assumptionsBody"></div>
   </details>
 
@@ -379,25 +368,25 @@
       label: 'Kaspa', color: 'var(--green)', shape: 'circle', dash: null, ageNow: 5,
       insider0: 0, insiderNow: 0, tau: Infinity,
       genesisNote: 'Verified directly from source: rusty-kaspa\'s consensus/core/src/config/genesis.rs ships an empty genesis UTXO set. Mainnet genesis block timestamp 1637609671037 ms (23 Nov 2021), checkpoint DAA score 1312860. No founder, company, or foundation allocation, ever. Separately, DAGLabs (funded mainly by Polychain, plus Accomplice and Genesis Mining, $8M total) mined an estimated 2.5–3% of supply, under roughly 850M KAS, in the five months after mainnet, on the same open terms as any other miner: see the launch-history panel below and the Kaspa Wiki prehistory page.',
-      statusFn: function(){ return 'No allocation, ever. All supply is emitted to miners under a published schedule.'; }
+      statusFn: function(){ return 'No allocation, ever: emitted to miners.'; }
     },
     ethereum: {
       label: 'Ethereum', color: 'var(--cyan)', shape: 'square', dash: '7 3', ageNow: 11,
       insider0: 16.7, insiderNow: 1.5, tau: 4.56,
       genesisNote: 'Verified: 2014 crowdsale raised 60,102,216 ETH from public buyers; genesis supply totaled ~72M ETH, with 12M (16.7%) split evenly between founders/early contributors and the Ethereum Foundation (Coindesk "Sale of the Century", Ethereum genesis block records).',
-      statusFn: function(y){ return y === 0 ? 'Founders + Foundation hold 16.7% at genesis; public ICO buyers hold the rest.' : 'Estimated: founder holdings widely dispersed/sold; Foundation treasury itself is now a small fraction of a much larger circulating supply. Concentration fell mainly through selling and spending, not protocol dilution.'; }
+      statusFn: function(y){ return y === 0 ? 'Founders + Foundation hold 16.7% at genesis.' : 'Estimated: dispersed mainly through selling and spending, not dilution.'; }
     },
     cardano: {
       label: 'Cardano', color: 'var(--purple)', shape: 'triangle', dash: '2 3', ageNow: 9,
       insider0: 11.52, insiderNow: 9, tau: 36.6,
       genesisNote: 'Sourced, not independently re-verified this session: cardano.org/genesis lists IOHK 5.50%, Emurgo 4.60%, Cardano Foundation 1.42% (11.52% combined) of the 45B ADA max supply; public ICO sale 57.62%; remaining 30.86% held as a protocol reserve earmarked for future staking rewards, not insider-controlled in the same sense.',
-      statusFn: function(y){ return y === 0 ? 'IOHK + Emurgo + Foundation hold 11.52% directly; a further 30.86% reserve is earmarked for future stakers, not counted here as insider.' : 'Estimated: entity holdings decline slowly; Cardano\'s three founding entities have been more consistent holders than most, though the exact current figure is not independently re-verified here.'; }
+      statusFn: function(y){ return y === 0 ? 'IOHK + Emurgo + Foundation hold 11.52% directly.' : 'Estimated: entity holdings decline slowly.'; }
     },
     xrp: {
       label: 'XRP', color: 'var(--pink)', shape: 'diamond', dash: '7 2 1 2', ageNow: 14,
       insider0: 100, insiderNow: 58, tau: 25.7,
       genesisNote: 'Sourced, not independently re-verified this session: 100B XRP created at 2012 genesis, with 80B allocated to Ripple Labs (the company) and 20B to founders (Chris Larsen, Jed McCaleb, Arthur Britto). No public sale existed at genesis; XRP first reached outside holders through gifts and later sales.',
-      statusFn: function(y){ return y === 0 ? '100% created for the company and its founders; zero held by the public at genesis.' : 'Estimated: Ripple has sold and gifted large amounts since 2012 (reports cite roughly 58.5B XRP sold by executives alone since inception), but combined company + executive holdings are still estimated at over half of supply.'; }
+      statusFn: function(y){ return y === 0 ? '100% created for the company and founders; zero public.' : 'Estimated: Ripple has sold and gifted large amounts since 2012, still over half of supply.'; }
     }
   };
 

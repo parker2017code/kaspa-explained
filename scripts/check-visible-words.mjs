@@ -58,6 +58,15 @@ const essayLimits = new Map(
   essayEntries.map((e) => [e.file, e.extended_word_limit ? ESSAY_LIMIT_EXTENDED : ESSAY_LIMIT_NORMAL])
 );
 
+// Long-form and reference pages (design/STANDARD.md, "The 300-word surface",
+// decision recorded in HANDOFF.md 2026-08-23): held to a per-section rule
+// instead of this whole-page ceiling. scripts/check-visible-sections.mjs
+// checks them (no unbroken prose run over 300 words between structural
+// breaks); this script skips them entirely rather than also enforcing the
+// whole-page total, so the two gates cannot disagree about the same page.
+const essayModule = JSON.parse(readFileSync(path.join(ROOT, 'scripts/essay-pages.json')));
+const sectionPages = new Set((essayModule.per_section_pages || []).map((e) => e.file));
+
 const demoFiles = readdirSync(path.join(ROOT, 'demos'))
   .filter((f) => f.endsWith('.html'))
   .map((f) => `demos/${f}`)
@@ -127,6 +136,7 @@ const results = [];
 const failures = [];
 
 for (const rel of pages) {
+  if (sectionPages.has(rel)) continue; // checked instead by check-visible-sections.mjs
   const url = pathToFileURL(path.join(ROOT, rel)).href;
   try {
     await page.goto(url, { waitUntil: 'load', timeout: 20000 });
@@ -153,7 +163,9 @@ results.sort((a, b) => b.words - a.words);
 
 console.log(`Visible-word surface check: ${results.length} page(s) rendered and measured.`);
 console.log(`${essayLimits.size} essay page(s) exempt from the 300-word surface, on their own budget ` +
-  `(see scripts/essay-pages.json). Everyone else: ${SURFACE_LIMIT} visible words, hard limit.\n`);
+  `(see scripts/essay-pages.json). ${sectionPages.size} long-form/reference page(s) held to the ` +
+  `per-section rule instead (see scripts/check-visible-sections.mjs). Everyone else: ${SURFACE_LIMIT} ` +
+  `visible words, hard limit.\n`);
 
 console.log('All pages, worst first:');
 for (const r of results) {
