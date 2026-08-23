@@ -1,10 +1,21 @@
 #!/usr/bin/env bash
-# Run the publish gate against exactly what is staged, not the working tree.
+# Run the publish gate against the tree being committed, not the working tree.
 #
-# Every CI failure in this repo has had the same cause: the gate passed locally
-# at some point, then a file changed, or agent-index.json was regenerated after
-# staging, and the committed state was never the state that passed. The owner
-# finds out by email. This makes that impossible.
+# Every recorded CI failure in this repo has had the same shape (see commit
+# d25d0e6). A commit staged some files and left others modified-but-unstaged
+# on disk, normal here since several agents edit this repo at once. The old
+# hook regenerated sitemap.xml/agent-index.json from the WORKING TREE, ran
+# the gate against the WORKING TREE, and only then staged the two generated
+# files. The gate read content that was never committed, passed, and the
+# commit landed with a tree CI could not reproduce: CI checks out only what
+# was committed, regenerates from that, and gets a different result. The
+# local gate could not structurally catch this, no matter how carefully it
+# was written, because it was reading the wrong tree.
+#
+# Fix: materialize the staged tree (git checkout-index of the INDEX, not the
+# worktree) into an isolated temp directory, then generate and run the whole
+# gate there. What passes here is what CI will see, because it is the same
+# bytes CI will check out.
 #
 # Skip with: git commit --no-verify   (for a genuine emergency only)
 set -euo pipefail
@@ -12,21 +23,51 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
-# Generated files must match what the staged sources produce.
-python3 scripts/build-sitemap.py >/dev/null 2>&1 || true
-python3 scripts/build-agent-index.py >/dev/null 2>&1 || true
-if ! git diff --quiet -- sitemap.xml agent-index.json 2>/dev/null; then
-  git add sitemap.xml agent-index.json
-  echo "pre-commit: regenerated sitemap.xml and agent-index.json, added to this commit"
+stage_dir="$(mktemp -d "${TMPDIR:-/tmp}/kaspa-precommit-stage.XXXXXX")"
+# Scratch copies live OUTSIDE the staged tree. Writing them inside it made the
+# gate lint the hook's own temp files as if they were site content.
+scratch_dir="$(mktemp -d "${TMPDIR:-/tmp}/kaspa-precommit-scratch.XXXXXX")"
+cleanup() { rm -rf "$stage_dir" "$scratch_dir"; }
+trap cleanup EXIT
+
+# Materialize exactly what is staged right now (the index), not whatever is
+# sitting in the working tree.
+git checkout-index --prefix="$stage_dir/" -a
+
+# Regenerate the derived files from the staged tree, in the staged tree, so
+# path-relative reads (site-manifest.json, public HTML) see staged content.
+if ! gen_out="$(cd "$stage_dir" && python3 scripts/build-sitemap.py 2>&1)"; then
+  echo "$gen_out" >&2
+  echo "pre-commit: BLOCKED. scripts/build-sitemap.py failed against the staged tree." >&2
+  exit 1
+fi
+if ! gen_out="$(cd "$stage_dir" && python3 scripts/build-agent-index.py 2>&1)"; then
+  echo "$gen_out" >&2
+  echo "pre-commit: BLOCKED. scripts/build-agent-index.py failed against the staged tree." >&2
+  exit 1
 fi
 
-echo "pre-commit: running the publish gate..."
-if ! out="$(bash scripts/check-site.sh 2>&1)"; then
+# If the regenerated output differs from what is currently staged, update
+# both the working tree and the index so the commit carries generated output
+# that matches the staged sources, not whatever generated file happens to be
+# on disk.
+for f in sitemap.xml agent-index.json; do
+  staged_copy="$scratch_dir/staged-$f"
+  git show ":$f" >"$staged_copy" 2>/dev/null || : >"$staged_copy"
+  if ! cmp -s "$staged_copy" "$stage_dir/$f"; then
+    cp "$stage_dir/$f" "$repo_root/$f"
+    git add "$f"
+    echo "pre-commit: regenerated $f from the staged tree, added to this commit"
+  fi
+done
+
+echo "pre-commit: running the publish gate against the staged tree..."
+if ! out="$(cd "$stage_dir" && bash scripts/check-site.sh 2>&1)"; then
   echo "$out" | tail -25 >&2
   echo "" >&2
-  echo "pre-commit: BLOCKED. The gate fails, so CI would fail and mail the owner." >&2
+  echo "pre-commit: BLOCKED. The gate fails against the staged tree, so CI would fail and mail the owner." >&2
   echo "Fix it, or use --no-verify if you truly mean to commit a broken tree." >&2
   exit 1
 fi
 
-echo "pre-commit: gate passed."
+echo "pre-commit: gate passed against the staged tree."
