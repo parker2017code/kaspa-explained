@@ -344,3 +344,22 @@ No git commit, push, reset, stash or checkout by any agent; one committer.
 Never bind port 4187. Verify at 390 and 1280 in both themes with a
 screenshot, by an agent that did not build the thing, before deploy.
 Report measured before and after numbers, never "looks right".
+
+## Targets set, and the sequencing decision
+
+Coordinator's judgment, 23 Aug, since the owner asked for it to be set
+rather than debated:
+
+  crypto-from-scratch  2,366 -> under 900
+  kaspa-origin-story   2,060 -> under 900
+  start-here           1,674 -> under 600
+  sources              3,443 -> under 700, all 188 URLs kept
+
+Each agent is judged on the number and told to report a miss plainly
+rather than claiming completion. This exists because the previous pass
+reported near-total KEEP verdicts and changed nothing.
+
+Sequencing: cut first, restructure second. Collapsing demo pages into
+topic pages is cleaner on pages that are already short, and stopping
+seven agents mid-work would repeat the resets that destroyed work three
+times today.
