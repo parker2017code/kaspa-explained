@@ -648,7 +648,11 @@
   function fmtSecondsHuman(s){
     if (s < 1) return Math.round(s * 1000) + " ms";
     if (s < 60) return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
-    if (s < 3600) return Math.round(s / 60) + " min";
+    // One decimal minute, not a rounded whole one: the optimistic side's
+    // formula moves only slightly across most of the attacker-share slider
+    // (see renderRegimes), and a whole-minute readout hid that motion,
+    // making the control look unresponsive even though it was working.
+    if (s < 3600) return (s / 60).toFixed(1) + " min";
     if (s < 86400) return Math.round(s / 3600) + " h";
     if (s < 604800) return Math.round(s / 86400) + " d";
     if (s < 31557600) return Math.round(s / 604800) + " wk";
@@ -677,7 +681,12 @@
     if (pessTooLong){
       pessTimeOut.textContent = "too long";
       pessToolong.hidden = false;
-      pessToolong.textContent = "an impractically long wait: the exponential term has taken over.";
+      // Confirms the slider was heard even though the category doesn't
+      // change: at this D and block rate, every attacker share on this
+      // slider lands past the "too long" cutoff, so the number itself
+      // can't move. Naming the share back proves the input registered
+      // instead of leaving the control looking dead.
+      pessToolong.textContent = "still an impractically long wait at " + alphaSlider.value + "% attacker share: the exponential term has already taken over.";
       pessVerdict.textContent = "Not worth printing: the paper calls this bound \"far from tight.\"";
     } else {
       pessTimeOut.textContent = fmtSecondsHuman(pessSeconds);

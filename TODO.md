@@ -363,3 +363,19 @@ Sequencing: cut first, restructure second. Collapsing demo pages into
 topic pages is cleaner on pages that are already short, and stopping
 seven agents mid-work would repeat the resets that destroyed work three
 times today.
+
+## Owner audit, second pass, 23 Aug
+
+DESIGN RULE, now in STANDARD.md: default collapsed. Every section closed
+unless it must be seen. Demos too. Let the reader choose.
+
+Pages he judged:
+- kips.html: "otherwise this page looks okay." Wants the KIP list
+  compactable, grouped, maybe 1 to 5, 5 to 10.
+- kaspa-mining.html: "way too long, needs to be compressible."
+- why-kaspa-matters.html, the design case: "already way too long."
+- toccata-explained.html: "also very long."
+- skeptical-case.html: "seems reasonable." No action.
+
+CI is failing again. He has raised this several times. Fix the cause, not
+the run.

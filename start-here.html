@@ -77,88 +77,19 @@
     <section id="records" class="section">
       <p class="eyebrow">The starting problem</p>
       <h2>Why owning something digital is hard</h2>
-      <div class="fit-grid grid-cards">
-        <article class="section">
-          <h3>Cash has a location</h3>
-          <p>Hand someone a banknote and you no longer hold it. One note cannot sit in two pockets at once, so scarcity comes free with the paper.</p>
-        </article>
-        <article class="section">
-          <h3>Files copy for nothing</h3>
-          <p>Copy a file, edit a row in a database, screenshot a picture. Nothing stops you. Scarcity does not survive the jump to bits, so digital money has to build it back out of rules.</p>
-        </article>
-      </div>
-      <p>Most systems solve that by naming an operator who runs the database and decides which changes count. One authority fixing mistakes and pushing upgrades is the cheaper design, right up to the day you need something the operator will not give you.</p>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead><tr><th>Who runs the record</th><th>What it gives you</th><th>What it can cost</th></tr></thead>
-          <tbody>
-            <tr><td>Bank or payment app</td><td>Customer support, reversals, fraud handling, legal recourse.</td><td>Account freezes, censorship, operating hours, jurisdiction limits, counterparty risk.</td></tr>
-            <tr><td>Exchange or platform</td><td>Fast internal balances and an easy sign-up.</td><td>Custody risk, hidden liabilities, withdrawal risk, policy changes.</td></tr>
-            <tr><td>Public crypto network</td><td>Rules that any participant can check alone.</td><td>More moving parts, mistakes nobody can undo, public data, slower coordination.</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <p>A banknote cannot sit in two pockets at once, so scarcity comes free with the paper. A file copies for nothing, so digital money has to build scarcity back out of rules. Most systems do that by naming an operator: a bank or an exchange that runs the database and can freeze, reverse, or gate what you hold. A public crypto network replaces that operator with rules any participant can check alone.</p>
+      <details class="deep-dive">
+        <summary>What each option actually trades away</summary>
+        <p>A bank or payment app gives support, reversals, and fraud handling, and costs you account freezes, operating hours, and jurisdiction limits. An exchange gives fast internal balances and an easy sign-up, and costs you custody risk and withdrawal risk. A public network gives rules nobody can bend for you personally, and costs you more moving parts and mistakes nobody can undo.</p>
+      </details>
       <p class="fit-note"><strong>Summary:</strong> coins never move anywhere. A valid transaction changes an accepted record, and that record is the whole asset.</p>
     </section>
 
     <section id="keys" class="section">
       <p class="eyebrow">Proof without a login desk</p>
       <h2>Keys take over from the account</h2>
-      <p>No operator means no password reset and no support desk, so math stands in for both. A transaction is a signed instruction that a stranger's node can check alone: spend this value, create that value, pay this fee. A block batches those instructions against the history behind it, and a node takes the whole batch or none of it.</p>
-      <div class="reference-grid grid-cards">
-        <article>
-          <h3>Private key</h3>
-          <p>The secret behind spending authority. Steal one and the network cannot tell the thief from the owner, because there is no ID check behind the math.</p>
-        </article>
-        <article>
-          <h3>Public key or address</h3>
-          <p>Anyone can confirm that a signature is valid without ever seeing the secret that made it.</p>
-        </article>
-        <article>
-          <h3>Signature</h3>
-          <p>Proof that the key holder approved this exact transaction. It does the job a username, a password, and an account admin would do on a normal platform.</p>
-        </article>
-        <article>
-          <h3>Hash</h3>
-          <p>A fingerprint for data. Change one byte of the input and the fingerprint changes completely, which is how each block commits to the history behind it and how tampering becomes visible.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="consensus" class="section">
-      <p class="eyebrow">Agreement</p>
-      <h2>A record only counts if strangers agree on it</h2>
-      <p>Show Bob one ledger and Carol another and the same coin has just been spent twice.</p>
-      <p>Thousands of independent computers see network messages land in different orders, and they still have to end up on one shared history. Consensus is the set of rules that gets them there.</p>
-      <p>What those rules have to stop is a short list, and every design choice below traces back to it.</p>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead><tr><th>Attack</th><th>Plain meaning</th><th>Why users care</th></tr></thead>
-          <tbody>
-            <tr><td>Theft</td><td>Spend value without the rightful key holder's consent.</td><td>Ownership is meaningless if signatures can be forged or keys are stolen.</td></tr>
-            <tr><td>Double-spend</td><td>Try to spend the same value in two conflicting ways.</td><td>Recipients need to know which payment counts.</td></tr>
-            <tr><td>Rewrite</td><td>Replace accepted history with a different history.</td><td>Settlement needs confidence that old payments stay settled.</td></tr>
-            <tr><td>Censorship</td><td>Keep valid transactions out of history.</td><td>Open access fails if one control point can cheaply block users.</td></tr>
-            <tr><td>Hidden inflation</td><td>Create value outside the rules.</td><td>Supply rules work only if users can reject bad supply themselves.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="incentives" class="section">
-      <p class="eyebrow">Mining, staking, tokens</p>
-      <h2>Agreement has to cost something</h2>
-      <div class="fit-grid grid-cards">
-        <article class="section">
-          <h3>Proof of Work</h3>
-          <p>Fake history gets priced out with a cost from outside the system: hardware, power, time. Miners propose blocks and get paid only if that work sticks in accepted history. The bill is energy use, ASICs, mining pools, and steady pressure toward industrial scale, and Kaspa pays it.</p>
-        </article>
-        <article class="section">
-          <h3>Proof of Stake</h3>
-          <p>Collateral does the same job from inside. Validators post the native asset and can lose it for bad behavior the protocol can prove, which trades the power bill for wealth concentration, delegation, and staking providers with real say over who validates. Ethereum, Solana, and most newer networks run some version of it.</p>
-        </article>
-      </div>
-      <p>Either way the network needs an internal unit of value: the thing the ledger tracks, the fee asset that keeps spam costly, the reward that pays for security, and the way people get in and out with no issuer approving each participant. Speed, privacy, security, node cost, and decentralization all pull against each other here; <a href="/why-kaspa-matters">how Kaspa compares</a> lays it out choice by choice.</p>
+      <p>No operator means no password reset, so math stands in for both. A private key is the secret that authorizes a spend; a signature proves the key holder approved this exact transaction, the job a username and password do elsewhere. A hash is a fingerprint for data: change one byte and it changes completely, which is how a block commits to the history behind it. A block batches signed transactions against that history, and a node takes the whole batch or none of it.</p>
+      <p>Getting there also takes agreement: thousands of independent computers see messages land in different orders and still have to settle on one shared history, ruling out theft, double-spends, and rewritten history along the way. Then it takes a cost, or fake history is free to fake. <a href="/why-kaspa-matters">How Kaspa compares</a> lays out Proof of Work against Proof of Stake choice by choice; Kaspa pays the Proof of Work bill.</p>
       <p class="fit-note"><strong>Simple check:</strong> most tokens do not need to exist. Ask what this one does that BTC, ETH, USDC, or a plain database does not already do.</p>
     </section>
 
@@ -175,32 +106,7 @@
           <p>Closer to cash notes than to a table. Alice spends a 10-coin output, Bob receives a 3-coin output, Alice receives a 7-coin change output, and the old 10-coin note is gone for good.</p>
         </article>
       </div>
-      <p>Kaspa uses the UTXO model, same as Bitcoin. That one choice shapes how a node checks a transaction, how much work can run side by side, and what shape later programmability can take. <a href="/utxo-vs-accounts">Why parallel spends don't collide</a> puts that side by side with the account model, in two demos.</p>
-      <div class="concept-diagram" role="img" aria-label="UTXO transaction spends one old output and creates recipient and change outputs">
-        <svg viewBox="0 0 760 230" aria-hidden="true">
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7"></polygon>
-            </marker>
-          </defs>
-          <rect class="diagram-box spent" x="32" y="70" width="150" height="90" rx="10"></rect>
-          <text class="diagram-title" x="107" y="106">Old UTXO</text>
-          <text class="diagram-text" x="107" y="132">10 KAS</text>
-          <path class="diagram-arrow" d="M190 115 H300"></path>
-          <rect class="diagram-box tx" x="308" y="58" width="144" height="114" rx="10"></rect>
-          <text class="diagram-title" x="380" y="105">Signed</text>
-          <text class="diagram-title" x="380" y="130">transaction</text>
-          <path class="diagram-arrow" d="M460 95 H575"></path>
-          <path class="diagram-arrow" d="M460 138 H575"></path>
-          <rect class="diagram-box live" x="585" y="50" width="140" height="70" rx="10"></rect>
-          <text class="diagram-title" x="655" y="82">Bob gets</text>
-          <text class="diagram-text" x="655" y="104">3 KAS</text>
-          <rect class="diagram-box live" x="585" y="136" width="140" height="70" rx="10"></rect>
-          <text class="diagram-title" x="655" y="168">Alice change</text>
-          <text class="diagram-text" x="655" y="190">7 KAS</text>
-        </svg>
-        <p><strong>How to read it:</strong> the old output is consumed once. New outputs carry the next spendable state.</p>
-      </div>
+      <p>Kaspa uses the UTXO model, same as Bitcoin. That one choice shapes how a node checks a transaction, how much work can run side by side, and what shape later programmability can take. Spend the wallet below and watch a UTXO get consumed once, whole, and replaced by new outputs.</p>
 
       <div class="live-demo-frame">
         <iframe id="utxo-vs-accounts-frame" src="/demos/utxo-vs-accounts" title="Interactive comparison of the UTXO model and the account balance model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>

@@ -264,3 +264,26 @@ the material is true or well written. It is whether anyone meets it.
 often than most pages, by models answering questions about Kaspa. They go
 stale the same way and they are held to the same bar. Update them in the
 same pass as the pages they describe, never afterward.
+
+## Default collapsed. Let people be adults.
+
+The owner's rule, and it inverts the default: "Every section, unless it
+has to be seen, should basically allow people to be adults and choose the
+things that they want to see. Demo, information, etcetera."
+
+So a section opens closed unless a reader must see it to understand the
+page at all. That includes demos. A demo inside a page can be expandable;
+a reader who wants to play with it opens it, and a reader who does not
+scrolls past a line instead of a screenful.
+
+This is not the same as hiding content to hit a word count, which is
+banned. The difference is who decides. Collapsing to game a number moves
+words away from a reader who wanted them. Collapsing by default hands the
+reader the choice and makes the page scannable.
+
+What must stay open: the page's answer, the one sentence a reader came
+for, and anything that makes the rest incomprehensible if missed.
+
+What closes by default: methodology, sources, caveats, worked examples,
+command blocks, reference tables, and demos on pages where the demo is
+supporting evidence rather than the point.
