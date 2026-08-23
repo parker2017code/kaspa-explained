@@ -928,7 +928,7 @@
       var cls = sep >= 15 ? 'sep-real' : sep >= 8 ? 'sep-weak' : 'sep-tied';
       var cov = dialCoverage(d);
       var covNote = cov < M.length
-        ? ' <b class="sep-tied">' + cov + ' of ' + M.length + ' models measured</b>' : '';
+        ? ' <b class="sep-tied">' + cov + '/' + M.length + ' measured</b>' : '';
       var totW = Object.keys(d.w).reduce(function (a, k) { return a + d.w[k]; }, 0);
       // What the dial is actually configured to weigh, the same number the
       // "Which benchmarks, and why" panel below states per benchmark. This
@@ -969,10 +969,11 @@
       var prov = '<details class="mp-prov"><summary>Which benchmarks, and why</summary>' +
         '<div class="mp-prov-body"><p>' + d.why + '</p>' +
         '<p><b>Why it opens at this weight.</b> ' + (WHYW[d.k] || '') + '</p>' +
+        '<p class="mp-mix-full">' + mixNote + '</p>' +
         '<ul class="mp-bm">' + provRows + '</ul></div></details>';
       l.innerHTML = '<span>' + d.t + '</span><output id="out-' + d.k + '">off</output>' +
         '<em class="mp-why-dial">' +
-        '<b class="' + cls + '">' + sepLabel(sep) + '</b>' + covNote + mixNote + '</em>' + prov +
+        '<b class="' + cls + '">' + sepLabel(sep) + '</b>' + covNote + '</em>' + prov +
         '<input type="range" id="dial-' + d.k + '" min="0" max="10" step="1" value="' + (DEFAULTS[d.k] || 0) + '">';
       dw.appendChild(l);
       state[d.k] = DEFAULTS[d.k] || 0;
@@ -1374,7 +1375,7 @@
         + '<span class="mp-mc-pct">' + (r.pct >= 10 ? Math.round(r.pct) : r.pct.toFixed(1)) + '%</span></li>';
     }).join('');
     host.innerHTML = '<p class="mp-mc-verdict">' + verdict + '</p><ol class="mp-mc-list">' + bars + '</ol>'
-      + '<p class="mp-mc-foot">Four thousand rankings, each figure redrawn from its own '
+      + '<details class="mp-mc-foot"><summary>How the 4,000 runs work, and why a lower row can win more often</summary><p>Four thousand rankings, each figure redrawn from its own '
       + 'error. Where a board publishes no interval, 1.5 points is assumed, which is the '
       + 'weakest input here. A figure a model never published is stood in for by the '
       + 'median of the field and drawn with the spread of the field, the same '
@@ -1384,7 +1385,7 @@
       + 'with the list, which ranks best estimates. This asks who would come first '
       + 'if every measurement were taken again, so a model whose figures carry '
       + 'wide intervals reaches past the leader more often than one two points '
-      + 'ahead of it with tight ones.</p>';
+      + 'ahead of it with tight ones.</p></details>';
   }
 
   // Runs itself whenever the question changes. Making it a button implied the
@@ -2266,10 +2267,10 @@
     var closeHost = $('mpClose');
     if (closeHost) { closeHost.hidden = true; closeHost.innerHTML = ''; }
     var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
-    var CAP = 15;
+    var CAP = 8;
     var shown = showAll ? rows : rows.slice(0, CAP);
     $('mpShowAll').hidden = rows.length <= CAP;
-    $('mpShowAll').textContent = showAll ? 'Show top 15' : 'Show all ' + rows.length;
+    $('mpShowAll').textContent = showAll ? 'Show top 8' : 'Show all ' + rows.length;
     $('mpCount').textContent = shown.length < rows.length
       // "qualify" is left over from when this page had hard filters. Nothing is
       // filtered now except open weights: models drop out only when they have
@@ -2346,30 +2347,21 @@
       li.className = 'mp-row' + (i === 0 ? ' top' : '');
       var meta = [m.lab];
       if (m.cost !== null) meta.push('$' + m.cost.toFixed(2) + '/task');
-      if (m.ttft !== null) meta.push((+m.ttft.toFixed(2)) + 's to start');
       if (m.tps) meta.push(Math.round(m.tps) + ' tok/s');
-      if (m.ctx) meta.push(fmtCtxVal(m.ctx));
-      if (m.open) meta.push('open weights');
+      if (m.open) meta.push('open');
       var nsrc = sourcesFor(m);
-      meta.push(nsrc === SOURCE_COUNT
-        ? (SOURCE_COUNT === 2 ? 'both leaderboards' : 'all ' + COUNT_WORD[SOURCE_COUNT] + ' leaderboards')
-        : COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards') + ' of ' + COUNT_WORD[SOURCE_COUNT]);
+      var notes = [nsrc === SOURCE_COUNT
+        ? 'Measured on all ' + COUNT_WORD[SOURCE_COUNT] + ' leaderboards.'
+        : 'Measured on ' + COUNT_WORD[nsrc] + (nsrc === 1 ? ' leaderboard' : ' leaderboards')
+          + ' of ' + COUNT_WORD[SOURCE_COUNT] + '.'];
       var gaps = unscored(m);
-      var notes = [];
       if (gaps.length) {
-        notes.push('No published figure anywhere for ' + gaps.join(', ')
-          + ', so its score covers ' + Math.round(r.cov * 100)
-          + ' percent of what you asked for.');
+        notes.push(Math.round(r.cov * 100) + '% covered; no figure for ' + gaps.join(', ') + '.');
       }
       if (r.est > 0.005) {
-        notes.push(Math.round(r.est * 100) + ' percent of this score is estimated rather '
-          + 'than read off a board.');
+        notes.push(Math.round(r.est * 100) + '% estimated.');
       }
-      // The effort setting is deliberately absent from every row. All of them
-      // are quoted at the same one, which is the whole point of the page, and
-      // repeating it twenty-one times buries that instead of making it. It is
-      // stated once above the list and once in the method notes.
-      var gapNote = notes.length ? '<span class="mp-gap">' + notes.join(' ') + '</span>' : '';
+      var gapNote = '<details class="mp-gap"><summary>Coverage</summary><p>' + notes.join(' ') + '</p></details>';
       var pct = Math.round(r.s);
       li.innerHTML =
         '<span class="mp-rank">' + (i + 1) + '</span>' +

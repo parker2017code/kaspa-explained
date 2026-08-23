@@ -210,10 +210,10 @@ claims:
       including later cross-app atomic composition. They are not a mature live app ecosystem. The public
       vprogs repo README opens with "This repository is in early development / prototype phase. APIs and
       architecture may change significantly," and the workspace carries core, storage, state, scheduling,
-      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 14, 2026: no
-      change since the August 7 check. Still 19 commits landed in July 2026, the last on July 28 adding a
-      program-agnostic daemon engine and a vprun CLI. Nothing has landed since, now over two weeks, and
-      there are still zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
+      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 23, 2026: no
+      change since the August 14 check, or the August 7 one before it. Still 19 commits landed in July 2026, the last on July 28 adding a
+      program-agnostic daemon engine and a vprun CLI. Nothing has landed since; the branch has gone over
+      three and a half weeks with no commits, and there are still zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
       examples/tn10-flow describes itself as "a proof-of-concept that runs the L2 flow against a remote
       testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
       against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
@@ -241,17 +241,23 @@ claims:
       apart from what is still being built (launch and bootstrap tooling, package and dependency tooling,
       diagnostics and typechecking, generated app-specific builder APIs, hardening and negative-test
       coverage). What remains is the audit path: Silverscript's audit, then Argent's own. The
-      compiler itself already exists and is not what's missing. Checked August 14, 2026: no change to the
-      README text since the August 7 check, and the repo has gone quiet since its last commit on August 2.
+      compiler itself already exists and is not what's missing. Checked August 23, 2026: the README's
+      Project status text is unchanged, but the repo is not quiet. It went quiet after its August 2 commit
+      for two weeks, then resumed: the latest push is August 17, 2026, "Sync Argent with latest Silverscript
+      master (#46)," bringing the compiler's generated output in line with Silverscript's own August
+      changes. This corrects an earlier version of this claim, which read the repo as having gone quiet
+      since August 2; that was true as of the check that wrote it but is no longer current.
       The project has its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP
-      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, 77
-      commits with 58 of them in July and one on August 2 hardening entry arguments against route-state
-      override, still the latest push), argent-playground (created July 9, multi-actor and DEX demos, still
-      latest July 29), and argent-template (created July 24, still latest July 29). Sutton has 73 of
-      argent's 77 commits; a19q3, Manyfestation, and WolfieOC hold the other four. Zero releases and zero
+      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, now 78
+      commits, up from 77 on August 14 with the August 17 sync commit; the per-author breakdown was not
+      rerun at the new count, but Sutton held 73 of the prior 77, with a19q3, Manyfestation, and WolfieOC
+      holding the other four), argent-playground (created July 9, multi-actor and DEX demos, last checked
+      latest July 29), and argent-template (created July 24, last checked latest July 29; both playground
+      and template repos were not rechecked for new pushes this pass). Zero releases and zero
       tags on every repo. The audit gate is independently visible upstream: kaspanet/silverscript also has
-      zero releases and zero tags, and stayed active through the check window (a security policy added
-      August 11, compilation hardening August 10, entrypoint-argument and bounded-loop work August 10), so
+      zero releases and zero tags, and stayed active through the check window: still "Experimental," still
+      recommending testnet-10-only use ahead of a first stable v1, with commits as recent as August 20,
+      2026 ("feat(compiler): template hash function is blake3"), so
       the release Argent waits on still has not happened. The template's Scope section says it "does not
       connect to a Kaspa network, manage a wallet, or submit transactions," and its VS Code extension for
       .ag files is linked out of the Argent checkout rather than shipped by the template. An
@@ -352,7 +358,7 @@ claims:
       - Almost nobody is using them in production yet
   dagknight:
     status: research
-    recheck_after: 2026-08-31
+    recheck_after: 2026-09-06
     summary: >
       DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG.
       The parameterless descriptor belongs to the DAGKnight paper itself, "The DAG KNIGHT Protocol: A
@@ -361,13 +367,25 @@ claims:
       fixed anticone bound. kaspa.org's marketing pages are not a source for this repo (see AGENTS.md);
       checked August 1, 2026, kaspa.org/lore did not even use the word parameterless. KIP-2 (raw file,
       Status: Proposed) matches the paper: no a priori hardcoded k, wallets should incorporate k into a
-      local confirmation policy. The rusty-kaspa dagknight branch is prototype evidence and has been
-      dormant since March 22, 2026. Activation needs release and network confirmation.
+      local confirmation policy; the KIP index table on kaspanet/kips, checked August 23, 2026, still lists
+      KIP-2 as the only Proposed entry with every other tracked KIP either Active, Draft, Implemented, or
+      Rejected. The rusty-kaspa dagknight branch is prototype evidence, not dormant: checked August 23,
+      2026, the branch was updated as recently as August 14, 2026, when a "dk-umc-proposed" branch merged
+      in "[DK::UMC] Promote proposed to actual umc implementation," on top of August 13 commits ("[DK::UMC]
+      Move baseline checks behind feature flag," "[DK::CZM] Atomic operations when filling zone data,"
+      "[DK] Remove unnecessary locks in protocol level") and a run of Universal Merge Consensus and
+      conflict-zone work through late July. This corrects an earlier version of this claim, which had
+      the branch dormant since a March 22, 2026 commit; that was true as of the check that wrote it but
+      is no longer current. Activation still needs a merged KIP and release/network confirmation: current
+      mainnet behavior remains GHOSTDAG, and no rusty-kaspa release ships DAGKnight.
     source: https://eprint.iacr.org/2022/1494
     supporting_source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - DAGKnight is live
       - Kaspa has instant finality
+      - the dagknight branch has been dormant since March
+      - the dagknight branch has not moved since March 22
+      - the dagknight branch has not been touched since March 22
   one_hundred_bps_partition_resilience:
     status: research
     recheck_after: 2026-09-07
@@ -430,7 +448,11 @@ claims:
       only in a PR title, an open (unmerged) proposal, a merged checked-in draft, an accepted
       standard, and an activated protocol rule enforced by consensus. Nothing tracked below has
       reached the last two states. Confirmed August 22, 2026 via api.github.com/repos/kaspanet/kccs:
-      created_at 2026-07-15T12:21:31Z, pushed_at 2026-08-20T23:18:28Z. The repo has been pushed to
+      created_at 2026-07-15T12:21:31Z, pushed_at 2026-08-20T23:18:28Z. Rechecked August 23, 2026
+      directly against the issue pages (API rate-limited this pass): the repo took further pushes
+      after that timestamp, an issue #11 close event August 22, 2026 and an issue #14 comment
+      August 23, 2026, so pushed_at is later than 2026-08-20T23:18:28Z even though the exact new
+      value was not re-pulled. The repo has been pushed to
       since creation; "not pushed to since July 15" is no longer true. Three KCC files are merged
       on main: kcc-0001.md (covenant definition and ABI), kcc-0002.md (authority schemes), and
       kcc-0020.md (fungible token covenant spec). Fetched raw from GitHub August 22, 2026, all
@@ -456,11 +478,12 @@ claims:
       numbering (four digits, KCC-0020) is canonical; forum shorthand like "KCC20" is not. The
       convention is already showing up in code ahead of acceptance: the Argent compiler ships an
       examples/icc/kcc20_asset.ag asset covenant. Community claims of KCC20 mainnet wallet
-      transfers remain unverified. Read directly in the browser August 22, 2026, including the
-      full comment thread fetched from api.github.com/repos/kaspanet/kccs/issues/14/comments:
+      transfers remain unverified. Read directly in the browser August 23, 2026, including the
+      full comment thread on the issue page itself:
       KCC-0020 carries a permanent-supply-split consequence its co-authors partly defend and
       partly concede is a spec defect. Issue #14 (github.com/kaspanet/kccs/issues/14), opened
-      August 21, 2026 by Knitser, still Open with 3 comments, shows the spec's transfer
+      August 21, 2026 by Knitser, still Open, now with 4 comments (was 3 as of the August 22
+      check), shows the spec's transfer
       consolidation rule (Section 2) and its extended-state update entrypoint (Section 4)
       contradict each other: each holder's own UTXO can only be updated with that holder's
       authorization, so no single party, including the issuer, can move every cell to a new
@@ -478,15 +501,30 @@ claims:
       either be defined in the standard or implemented in a non state storage." That is a co-author
       concession that a distinct pattern is a spec defect, not a resolution of Knitser's original
       report: Knitser never replied to accept or withdraw his concern, and no spec change has
-      merged. The site's own framing of this issue must reflect all four parts: the pattern
-      defended as intended, the pattern conceded as wrong and needing a fix, the reporter's
-      unwithdrawn concern, and the issue's open status. Separately, issue #11
+      merged. A fourth comment landed August 23, 2026 from ShawnPearce, agreeing with the
+      fungibility framing but flagging a new problem with the fix path Sutton and Manyfestation
+      floated (moving receipt-like data into the transaction payload instead of state): the payload
+      is committed unconditionally by the v1 sighash, outside every sighash-type branch, so it is
+      signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed
+      receive a borrower who builds and signs the transaction controls the payload the owner's cell
+      gets recreated with, meaning the borrower would be the one writing the "owner's" receipt data.
+      ShawnPearce did not call the idea dead, only under-specified in the same way the extended-state
+      pattern was. The site's own framing of this issue must reflect all five parts: the pattern
+      defended as intended, the pattern conceded as wrong and needing a fix, the payload alternative's
+      own new caveat, the reporter's unwithdrawn concern, and the issue's open status. Separately, issue #11
       (github.com/kaspanet/kccs/issues/11), opened July 26, 2026 by marciano147 writing for
-      KaspaCom, still Open with 1 comment, records KaspaCom's own position on its deployed
-      KCC20V2: "The existing KCC20V2 artifact should be described as partially aligned, not fully
-      conforming" with KCC-0001, 0002, 0020, and 0021. That is the only production implementer of
+      KaspaCom, was Closed (stateReason COMPLETED) by marciano147 on August 22, 2026, after
+      Knitser commented August 15, 2026 that KCC-0021's metadata layer is deliberately
+      behavior-independent, binds only to the covenant genesis payload and the covenant ID, and so
+      any covenant token, KCC20V2 included, can adopt it at deploy time without byte-for-byte
+      KCC-0020 conformance; tokens already deployed without a genesis payload can still be carried
+      through a signed-list tier the latest PR #6 revision describes. The issue's closure does not
+      retract KaspaCom's original position, which remains on record in the issue body: "The
+      existing KCC20V2 artifact should be described as partially aligned, not fully
+      conforming" with KCC-0001, 0002, 0020, and 0021. That is still the only production implementer of
       a KCC token standard on record disclaiming full conformance to it, in the implementer's own
-      words. And kas-smiths.org topic 8 post 56 by 0xKnitser, August 15, 2026
+      words; the closure reflects that KaspaCom's specific questions were answered, not that the
+      conformance gap was closed. And kas-smiths.org topic 8 post 56 by 0xKnitser, August 15, 2026
       (kas-smiths.org/t/fungible-token-covenant-specification-kcc20/8/56), documents that one
       mainnet launchpad's 74 live tokens already span four separate template generations with no
       migration path between them, only opt-in burn and reissue. KCC-0020 carries a second open
@@ -531,6 +569,9 @@ claims:
       - KCC-0020's borrowed-receive griefing has a signature-level fix
       - AnyoneCanPay protects a pre-signed transaction from borrowed receive
       - KCC-0021 is a merged metadata standard
+      - issue #11 is still open
+      - moving receipt-like data into the transaction payload has no downsides
+      - the payload alternative for KCC-0020 extended state is a clean fix
 
   covenant_tooling_and_support:
     status: builder_guardrail
