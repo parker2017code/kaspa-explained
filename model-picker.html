@@ -270,7 +270,7 @@
     <section class="section">
       <p class="eyebrow">Tool</p>
       <h1>Which model should you use?</h1>
-      <p class="lead">Move the dials for what your work actually needs. Every model is rescored as you move them, against the same benchmark numbers, and the ranking reorders live.</p>
+      <p class="lead">Move the dials for what your work needs. Every model is rescored live, against the same benchmark numbers.</p>
     </section>
 
     <section class="section">
@@ -288,7 +288,14 @@
 
           <div class="mp-block">
             <p class="mp-label">Where it runs</p>
-            <label class="mp-check"><input type="checkbox" id="mpOpen"> <span>Open weights only<em>Models you can download and run on your own hardware, with no API call leaving the building.</em></span></label>
+            <label class="mp-check"><input type="checkbox" id="mpOpen"> <span>Open weights only</span></label>
+            <span class="info-affordance" id="open-weights-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="open-weights-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What "open weights" means</span>
+              </button>
+              <span class="info-affordance__panel" id="open-weights-panel" role="tooltip">Models you can download and run on your own hardware, with no API call leaving the building.</span>
+            </span>
           </div>
 
           <div class="mp-block">
@@ -376,21 +383,27 @@
             <p class="hint">Every dial, and the figures it is built from.</p>
             <div class="table-wrap"><table class="mp-map"><tbody id="mpMap"></tbody></table></div>
           </details>
-          <div class="mp-pareto-head" id="mpParetoHead">
-            <b class="mp-pareto-title">What you cannot get cheaper</b>
-            <span class="mp-pareto-why">A model sits on the line when nothing here beats it on both score and price at once. Move a dial and the line moves.</span>
-            <button type="button" class="mp-reset mp-names" id="mpParetoNames" aria-pressed="false">Name every model</button>
-          </div>
-          <div class="mp-pareto" id="mpPareto"></div>
           <p class="mp-scale" id="mpScale"></p>
           <div class="mp-close" id="mpClose" hidden></div>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
-          <div class="mp-mc-head" id="mpMcHead">
-            <b class="mp-mc-title">How often each model comes first</b>
-            <span class="mp-mc-why">The ranking below is one draw. This is the distribution it came from.</span>
-          </div>
-          <div id="mpMonte"></div>
           <ol class="mp-list" id="mpList"></ol>
+          <details class="mp-prov">
+            <summary>Open the value chart: what you cannot get cheaper</summary>
+            <div class="mp-pareto-head" id="mpParetoHead">
+              <b class="mp-pareto-title">What you cannot get cheaper</b>
+              <span class="mp-pareto-why">A model sits on the line when nothing here beats it on both score and price at once. Move a dial and the line moves.</span>
+              <button type="button" class="mp-reset mp-names" id="mpParetoNames" aria-pressed="false">Name every model</button>
+            </div>
+            <div class="mp-pareto" id="mpPareto"></div>
+          </details>
+          <details class="mp-prov">
+            <summary>Open the distribution: how often each model comes first</summary>
+            <div class="mp-mc-head" id="mpMcHead">
+              <b class="mp-mc-title">How often each model comes first</b>
+              <span class="mp-mc-why">The ranking above is one draw. This is the distribution it came from.</span>
+            </div>
+            <div id="mpMonte"></div>
+          </details>
           <p class="mp-empty" id="mpEmpty" hidden>Pick a job above, or turn up a dial. Nothing is scored until something matters.</p>
         </div>
       </div>
@@ -896,9 +909,9 @@
   }
 
   function sepLabel(v) {
-    return v >= 15 ? 'separates the leaders'
-         : v >= 8  ? 'barely separates the leaders'
-                   : 'cannot separate the leaders';
+    return v >= 15 ? 'separates leaders'
+         : v >= 8  ? 'barely separates'
+                   : 'cannot separate';
   }
 
   var state = {}, els = {};
@@ -1207,14 +1220,14 @@
     });
     out.sort(function (a, b) { return b.z - a.z; });
     if (out.length < 2) return '';
-    var strong = [], mid = [], weak = [];
+    var strong = [], weak = [];
     out.forEach(function (p) {
-      (p.z >= 0.5 ? strong : p.z <= -0.5 ? weak : mid).push(p.t);
+      if (p.z >= 0.5) strong.push(p.t); else if (p.z <= -0.5) weak.push(p.t);
     });
     var bits = [];
-    if (strong.length) bits.push('<b>Leans on</b> ' + strong.join(', '));
-    if (mid.length) bits.push('<b>Holds up on</b> ' + mid.join(', '));
-    if (weak.length) bits.push('<b>Loses on</b> ' + weak.join(', '));
+    if (strong.length) bits.push('<b>Leans on</b> ' + strong.slice(0, 2).join(', '));
+    if (weak.length) bits.push('<b>Loses on</b> ' + weak.slice(0, 2).join(', '));
+    if (!bits.length) return '';
     return '<span class="mp-drivers">' + bits.join('. ') + '.</span>';
   }
 
@@ -2251,12 +2264,10 @@
     if (scaleEl) {
       var spanPts = topScore - lowScore;
       scaleEl.innerHTML = rows.length < 2
-        ? 'One model scored, so there is nothing to place it against.'
-        : '<b>100</b> would be first place on every figure, <b>0</b> last place on all of '
-          + 'them, against every model ever measured on those boards, never only the '
-          + '21 here. This field runs <b>' + lowScore.toFixed(0) + '</b> to <b>'
-          + topScore.toFixed(0) + '</b>. Under each score is how far behind the top that '
-          + 'model is, and anything inside about <b>'
+        ? 'One model scored.'
+        : '<b>100</b> is first place on every figure ever measured, <b>0</b> last. This field runs <b>'
+          + lowScore.toFixed(0) + '</b> to <b>' + topScore.toFixed(0)
+          + '</b>; anything inside about <b>'
           + (topScore > 0 ? Math.max(1, Math.round(500 / topScore)) : 5)
           + '%</b> is a tie.';
     }
@@ -2267,10 +2278,10 @@
     var closeHost = $('mpClose');
     if (closeHost) { closeHost.hidden = true; closeHost.innerHTML = ''; }
     var showAll = $('mpShowAll').getAttribute('aria-pressed') === 'true';
-    var CAP = 8;
+    var CAP = 5;
     var shown = showAll ? rows : rows.slice(0, CAP);
     $('mpShowAll').hidden = rows.length <= CAP;
-    $('mpShowAll').textContent = showAll ? 'Show top 8' : 'Show all ' + rows.length;
+    $('mpShowAll').textContent = showAll ? 'Show top 5' : 'Show all ' + rows.length;
     $('mpCount').textContent = shown.length < rows.length
       // "qualify" is left over from when this page had hard filters. Nothing is
       // filtered now except open weights: models drop out only when they have
@@ -2347,7 +2358,6 @@
       li.className = 'mp-row' + (i === 0 ? ' top' : '');
       var meta = [m.lab];
       if (m.cost !== null) meta.push('$' + m.cost.toFixed(2) + '/task');
-      if (m.tps) meta.push(Math.round(m.tps) + ' tok/s');
       if (m.open) meta.push('open');
       var nsrc = sourcesFor(m);
       var notes = [nsrc === SOURCE_COUNT
@@ -2384,6 +2394,23 @@
   // general frontier weighting instead, and the dials already hold them.
   render();
 })();
+  </script>
+  <script>
+  document.querySelectorAll('.info-affordance').forEach(function (el) {
+    var trigger = el.querySelector('.info-affordance__trigger');
+    trigger.addEventListener('click', function () {
+      var open = el.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('is-open');
+        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
   </script>
 </body>
 </html>
