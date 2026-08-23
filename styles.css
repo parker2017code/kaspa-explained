@@ -8594,3 +8594,258 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 :is(h1, h2, h3, h4, h5, h6) a:hover {
   text-decoration: underline;
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Disclosure components (design/STANDARD.md, "The 300-word surface",
+   2026-08-23): three separate ways to move content off the visible surface,
+   documented in full at design/house-style.md under "Disclosure
+   components." Reach for whichever fits the content, not the same one on
+   every page -- an info bubble for a short aside at the point of use, a
+   term reveal for one jargon word, a view switch for two competing framings
+   of the same content. Every trigger below is a real 44x44 hit target, is
+   keyboard-reachable with the site's standard focus-visible ring, works in
+   both themes off the existing token set, and collapses its own transition
+   under prefers-reduced-motion (the site-wide reduced-motion block above
+   already zeroes these, this section adds no separate override).
+   ========================================================================== */
+
+/* --- 1. Info affordance ---------------------------------------------------
+   A small round (i) trigger next to a control or line of text. Tap or click
+   toggles it (JS adds/removes .is-open on the wrapper); hovering or
+   focusing it on a device with a real pointer opens it too, so a mouse user
+   never has to click for a one-line aside. No JS: it still opens on hover
+   and on keyboard focus, just not on tap. See design/house-style.md for the
+   markup shape and the toggle script. */
+.info-affordance {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.info-affordance__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -12px -8px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.info-affordance__trigger:hover {
+  color: var(--cyan);
+}
+
+.info-affordance__glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: .72rem;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1;
+}
+
+.info-affordance__panel {
+  position: absolute;
+  z-index: 30;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  width: max-content;
+  max-width: min(280px, 74vw);
+  padding: 10px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  color: var(--text);
+  font-size: .86rem;
+  line-height: 1.45;
+  text-align: left;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .14s ease-out, transform .14s ease-out, visibility .14s;
+}
+
+:root[data-theme="light"] .info-affordance__panel {
+  box-shadow: 0 10px 28px rgba(30, 27, 20, .14);
+}
+
+.info-affordance:hover .info-affordance__panel,
+.info-affordance:focus-within .info-affordance__panel,
+.info-affordance.is-open .info-affordance__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.info-affordance__trigger:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+  outline-offset: 3px;
+}
+
+/* --- 2. Term-level definition reveal ---------------------------------------
+   One jargon word inside a sentence, underlined with dots, that reveals its
+   plain-language meaning on tap, click, hover, or focus without leaving the
+   sentence. The visible text stays inline and untouched; the tap target
+   extends beyond the glyph box via an invisible absolutely-positioned
+   pseudo-element so short words still clear 44x44, without adding padding
+   that would shove the surrounding line apart. Keep terms like this spaced
+   out in a paragraph -- two adjacent definitions close together can overlap
+   hit areas. */
+.term-def {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted var(--muted);
+  color: inherit;
+  cursor: help;
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+}
+
+.term-def::after {
+  content: "";
+  position: absolute;
+  inset: -14px -8px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.term-def__panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  width: max-content;
+  max-width: min(260px, 74vw);
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-strong);
+  color: var(--text);
+  font-size: .84rem;
+  line-height: 1.4;
+  font-weight: 400;
+  text-align: left;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .14s ease-out, transform .14s ease-out, visibility .14s;
+}
+
+:root[data-theme="light"] .term-def__panel {
+  box-shadow: 0 10px 28px rgba(30, 27, 20, .14);
+}
+
+.term-def:hover .term-def__panel,
+.term-def:focus .term-def__panel,
+.term-def.is-open .term-def__panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.term-def:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* --- 3. Secondary-view switch -----------------------------------------------
+   A small segmented control that swaps a panel rather than expanding one:
+   "Simple / Detailed," "Chart / Table," two competing framings of the same
+   content where only one belongs on the surface at a time. Pure CSS, no JS:
+   radio inputs drive which panel shows via the checked sibling. Each
+   instance needs its own unique `name` so multiple switches on one page
+   don't fight each other. */
+.view-switch {
+  display: block;
+}
+
+.view-switch__tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: var(--control-bg);
+  margin-bottom: 14px;
+}
+
+.view-switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.view-switch__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font-size: .89rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .14s ease-out, color .14s ease-out;
+}
+
+.view-switch__input:checked + .view-switch__tab {
+  background: var(--panel-strong);
+  color: var(--text);
+}
+
+.view-switch__input:focus-visible + .view-switch__tab {
+  outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+  outline-offset: 2px;
+}
+
+.view-switch__panels {
+  display: block;
+}
+
+.view-switch__panel {
+  display: none;
+}
+
+/* Panel N shows when tab-input N is checked, matched by position (1st
+   input pairs with the 1st panel, and so on) so no per-instance CSS or
+   id-matching attribute is needed -- just keep each switch's inputs and
+   panels in the same order. Covers up to four views, which is already more
+   than a segmented control should hold. */
+.view-switch__input:nth-of-type(1):checked ~ .view-switch__panels .view-switch__panel:nth-of-type(1),
+.view-switch__input:nth-of-type(2):checked ~ .view-switch__panels .view-switch__panel:nth-of-type(2),
+.view-switch__input:nth-of-type(3):checked ~ .view-switch__panels .view-switch__panel:nth-of-type(3),
+.view-switch__input:nth-of-type(4):checked ~ .view-switch__panels .view-switch__panel:nth-of-type(4) {
+  display: block;
+}
+

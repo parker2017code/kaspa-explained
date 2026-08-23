@@ -216,7 +216,7 @@
     <h1>What an attack would cost</h1>
     <button class="theme-toggle" type="button" id="themeToggle" aria-label="Switch theme">Light</button>
   </div>
-  <p class="intro">Taking over a network takes real money: renting or buying enough computing power to outrun everyone else. Pick a chain and how long the attack runs, from a minute to a day, to see the bill.</p>
+  <p class="intro">Taking over a network costs real money: renting or buying enough computing power to outrun everyone else. Pick a chain and a duration to see the bill.</p>
   <p class="live-status" id="liveStatus">Reading live hash rates and prices&hellip;</p>
 
   <div class="primary-control" id="hoursControl">
@@ -233,7 +233,7 @@
     <button type="button" data-chain="ethereum" aria-pressed="false">Ethereum</button>
     <button type="button" data-chain="solana" aria-pressed="false">Solana</button>
   </div>
-  <p class="chain-groups">Four proof-of-work chains, from Bitcoin's scale down to Kaspa's, plus two proof-of-stake chains, so the same dollar math covers both kinds of attack.</p>
+  <p class="chain-groups">Four proof-of-work chains and two proof-of-stake chains, priced the same way.</p>
 
   <div class="mode-toggle" id="modeToggle" role="group" aria-label="How the attacker gets the power">
     <button type="button" data-mode="rent" aria-pressed="true">Rent the power</button>
@@ -557,7 +557,7 @@
     var algoRatio = ltcPerEH / btcPerEH;
     var sizeRatio = btc.hashrateEH / ltc.hashrateEH;
     document.getElementById('compareNoteText').innerHTML =
-      'Litecoin\'s network is about <b>' + Math.round(sizeRatio).toLocaleString('en-US') + 'x smaller</b> than Bitcoin\'s, so why does renting 51% of it cost only about a tenth as much, not a tiny fraction? Because Scrypt (Litecoin\'s algorithm) rents for about <b>' + Math.round(algoRatio).toLocaleString('en-US') + 'x more per equivalent EH/s</b> than SHA-256 (Bitcoin\'s) does, on different hardware in a thinner rental market. Litecoin\'s network-size advantage and Scrypt\'s per-unit rental premium partly cancel, leaving Litecoin cheaper overall but nowhere near as cheap as its network size alone would suggest. A GH/s of Scrypt and a TH/s of SHA-256 are not the same currency of work; comparing dollar cost, not raw hash rate, is the only fair comparison across algorithms.';
+      'Litecoin\'s network is about <b>' + Math.round(sizeRatio).toLocaleString('en-US') + 'x smaller</b> than Bitcoin\'s, yet renting 51% of it costs only about a tenth as much, not a tiny fraction of that. Scrypt (Litecoin\'s algorithm) rents for about <b>' + Math.round(algoRatio).toLocaleString('en-US') + 'x more per equivalent EH/s</b> than SHA-256 (Bitcoin\'s) does, so the two gaps mostly cancel. <details class="inline-detail"><summary>Why network size alone doesn\'t set the price</summary><p>Litecoin\'s network-size advantage and Scrypt\'s per-unit rental premium partly cancel, leaving Litecoin cheaper overall but nowhere near as cheap as its network size alone would suggest. A GH/s of Scrypt and a TH/s of SHA-256 are not the same currency of work; comparing dollar cost, not raw hash rate, is the only fair comparison across algorithms.</p></details>';
   }
 
   function computePow(c) {

@@ -547,9 +547,17 @@
 
         // The switch is explained right where it happens, not left to a legend: each
         // chain turns dashed at its OWN current age, so the label carries that age.
+        // Placed above the point by default; flipped below only when the point sits
+        // too close to the top of the plot for the label to fit above it without
+        // being clipped. Keyed off geometry, not the chain's name, so any chain
+        // whose switch point lands near an edge gets the same treatment: a fixed
+        // per-chain flip previously pushed Ethereum's label below its point, which
+        // for Ethereum's low switch-point value landed it on top of the "Y12" x-axis
+        // tick label instead.
+        var labelAbove = todayY - 8;
         var lbl = document.createElementNS(ns, 'text');
         lbl.setAttribute('x', Math.min(todayX + 7, W - padR - 2));
-        lbl.setAttribute('y', key === 'ethereum' ? todayY + 13 : todayY - 8);
+        lbl.setAttribute('y', labelAbove < padT + 10 ? todayY + 13 : labelAbove);
         lbl.setAttribute('text-anchor', todayX + 7 > W - padR - 2 ? 'end' : 'start');
         lbl.setAttribute('fill', chain.color);
         lbl.setAttribute('class', 'switch-label');

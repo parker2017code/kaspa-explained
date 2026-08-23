@@ -176,6 +176,109 @@ list (`Source` / `Establishes` / `Does not establish`).
 source inline, in one component, so the date can't quietly rot into a later
 edit without visibly breaking the sentence it lives in.
 
+### Disclosure components (the 300-word surface)
+
+`design/STANDARD.md`, "The 300-word surface," caps every page at 300 visible
+words and names `<details>` as one mechanism among several, not the default
+answer for every page. Three more live at the end of `styles.css`, after the
+heading-as-link block. Reach for whichever fits the content; using the same
+one everywhere is the failure the rule exists to prevent. `scripts/check-
+visible-words.mjs` enforces the ceiling by rendering each page and reading
+computed visibility, so anything genuinely hidden behind one of these (closed
+by default) does not count against the budget; anything left open does.
+
+**Info affordance** (`.info-affordance`) — a small round `(i)` next to a
+control or a line of text, for a short aside at the exact point a reader
+would want it: what a slider's unit means, why a default was chosen, a
+one-sentence caveat. Opens on hover or keyboard focus with no JS at all;
+add a tap-to-toggle script for touch devices, which is the one part CSS
+can't do alone:
+
+```html
+<span class="info-affordance" id="rate-info">
+  <button class="info-affordance__trigger" type="button"
+          aria-expanded="false" aria-describedby="rate-info-panel">
+    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+    <span class="sr-only">More about block rate</span>
+  </button>
+  <span class="info-affordance__panel" id="rate-info-panel" role="tooltip">
+    Kaspa runs at 10 blocks a second today. Bitcoin runs at roughly one
+    every 10 minutes.
+  </span>
+</span>
+```
+
+```js
+document.querySelectorAll('.info-affordance').forEach((el) => {
+  const trigger = el.querySelector('.info-affordance__trigger');
+  trigger.addEventListener('click', () => {
+    const open = el.classList.toggle('is-open');
+    trigger.setAttribute('aria-expanded', String(open));
+  });
+});
+document.addEventListener('click', (e) => {
+  document.querySelectorAll('.info-affordance.is-open').forEach((el) => {
+    if (!el.contains(e.target)) {
+      el.classList.remove('is-open');
+      el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+```
+
+Use it for: one sentence of context tied to one control or one number. Not
+for: anything a reader needs to complete the page's primary task, or more
+than two or three sentences (reach for the view switch instead, so the extra
+text gets room to breathe rather than living in a cramped floating box).
+
+**Term-level definition reveal** (`.term-def`) — wraps one jargon word inline
+in running prose; hover, focus, or tap reveals its plain-language meaning
+without leaving the sentence:
+
+```html
+<p>Every block references its <span class="term-def" tabindex="0"
+   role="button" aria-describedby="anticone-def">anticone<span
+   class="term-def__panel" id="anticone-def" role="tooltip">The blocks a
+   given block couldn't have known about yet when it was mined.</span></span>,
+   not just its parent.</p>
+```
+
+Opens on hover/focus with no JS. Add the same tap-toggle pattern as the info
+affordance (target `.term-def` instead of `.info-affordance__trigger`) if the
+page needs touch support and the term sits somewhere a reader is likely to be
+on a phone. Use it for exactly one word or short phrase the reader has
+already been introduced to once on the page (STANDARD.md's "define once,
+then use it" rule still applies; a term reveal only reminds, and the
+definition still needs a home elsewhere on the page). Keep instances spaced out in a paragraph: two
+`.term-def` spans sitting close together can overlap each other's tap area.
+
+**Secondary-view switch** (`.view-switch`) — a segmented control that swaps
+one panel for another rather than expanding a panel below the fold. Use it
+when a page has two competing framings of the same content and only one
+belongs on the surface at a time: a simple readout versus the full formula,
+a chart versus its data table. Pure CSS, no JS; panels are matched to tabs by
+position, so keep each switch's inputs and panels in the same order:
+
+```html
+<div class="view-switch">
+  <input class="view-switch__input" type="radio" name="mass-view" id="mass-simple" checked>
+  <input class="view-switch__input" type="radio" name="mass-view" id="mass-detail">
+  <div class="view-switch__tabs" role="radiogroup" aria-label="View">
+    <label class="view-switch__tab" for="mass-simple">Simple</label>
+    <label class="view-switch__tab" for="mass-detail">Formula</label>
+  </div>
+  <div class="view-switch__panels">
+    <div class="view-switch__panel">Compute is the binding dimension.</div>
+    <div class="view-switch__panel">mass = max(compute, storage, transient)</div>
+  </div>
+</div>
+```
+
+Give every switch on a page its own `name` so two switches don't fight each
+other. Not for: more than three or four views (a control that wide stops
+reading as a single choice), or anything that should stay visible
+side-by-side for comparison — that's two panels in the layout, not a switch.
+
 ## Light and dark
 
 Every color is a token; nothing is hardcoded. The dark and light values above
