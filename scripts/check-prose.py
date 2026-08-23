@@ -98,6 +98,14 @@ SKIP_FILES = {
     "PROSE_STANDARD.md", "COPY_STYLE.md", "AGENTS.md", "CLAUDE.md",
     "MAINTENANCE.md", "CONTENT_BRIEF.md", "README.md", "CLAIMS.yml",
     "PLAN-REDESIGN.md", "PLAN-2026-08-22.md", "RESEARCH-2026-08-22.md",
+    # Internal working documents: findings, decisions, and red-team reports.
+    # Several quote the exact patterns they exist to report, so linting them
+    # as reader-facing copy is circular and blocks commits over the wording
+    # of a defect report.
+    "COLD-READ.md", "REVIEW.md", "TODO.md", "HANDOFF.md", "AUDIT.md",
+    "BREAK.md", "FACTS.md", "CROSS-READ.md", "CONTRIBUTING.md",
+    "CLI_FROM_ZERO.md", "PROGRESS.md", "STANDARD.md", "house-style.md",
+    "handoff-checklist.md", "model-picker-methodology.md",
 }
 
 

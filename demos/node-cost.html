@@ -60,7 +60,7 @@
   <meta name="twitter:description" content="What running a node costs across chains, why some keep everything forever, and why Kaspa's stays near 50 GB no matter how long it has run.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-cssprune1">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root{
@@ -116,6 +116,16 @@
     border:0; background:var(--card-bg); box-shadow:var(--card-shadow); border-radius:18px; padding:20px; margin-bottom:18px;
   }
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .guess-row{display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 4px;}
+  #guessChart{width:100%; height:auto; margin-top:12px; display:block;}
+  #guessChart .guess-line{fill:none; stroke-width:3; stroke-linecap:round;}
+  #guessChart .guess-line.kaspa{stroke:var(--green);}
+  #guessChart .guess-line.other{stroke:var(--amber);}
+  #guessChart text{font-size:9px; fill:var(--faint); font-family:var(--body-font);}
+  #guessChart .guess-line{transition:stroke-dashoffset 1.1s ease-out;}
+  @media (prefers-reduced-motion: reduce){
+    #guessChart .guess-line{transition:none;}
+  }
   /* Twenty toggle chips wrapping into 8-10 rows at phone width was most of
      why this panel alone ran past one screen: "a long scroll of numbers"
      started before the bars even appeared. A single scrolling row keeps
@@ -133,6 +143,8 @@
   }
   .chip[aria-pressed="true"]{background:var(--green); color:var(--ink); font-weight:600;}
   .chip:hover{background:var(--control-hover);}
+  .chip:disabled{opacity:.5; cursor:default;}
+  .chip:disabled:hover{background:var(--control-bg);}
   .zoom-row{display:flex; align-items:center; gap:10px; margin:2px 0 14px;}
   .zoom-btn{
     border:0; background:var(--control-bg); color:var(--text); border-radius:980px; padding:0 14px;
@@ -288,6 +300,7 @@
 
 </head>
 <body>
+  <noscript><p style="margin:0;padding:10px 16px;background:#fff3cd;color:#664d03;font:14px/1.4 -apple-system,sans-serif;text-align:center">This is an interactive demo. Enable JavaScript to use it.</p></noscript>
   <a class="skip-link" href="#top">Skip to content</a>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
@@ -299,11 +312,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -329,11 +340,18 @@
 
   <p class="embed-cta"><a href="/demos/node-cost">See the full demo, with the pruning math and sources</a></p>
 
-  <div class="panel embed-hide">
-    <h2>Without pruning?</h2>
-    <p class="prose">No, it would already be bigger, and it would keep growing forever.</p>
-    <p class="payoff" id="growthPayoff">A node that never pruned would already hold at least 76 GB of coinbase transactions alone since genesis. The pruned node running today: 50 GB.</p>
-    <p class="scale-note">A floor estimate from real protocol constants. Full arithmetic below.</p>
+  <div class="panel embed-hide" id="guessPanel">
+    <h2>Guess before you look</h2>
+    <p class="prose">Run this same node five more years. Does the line stay flat, or climb like every other chain's?</p>
+    <div class="guess-row">
+      <button type="button" class="chip" id="guessFlat">Stays flat</button>
+      <button type="button" class="chip" id="guessGrows">Climbs</button>
+    </div>
+    <div id="guessResult" hidden>
+      <svg id="guessChart" viewBox="0 0 320 130" role="img" aria-label="Storage over five more years: Kaspa's pruned node holds flat, an unpruned chain keeps climbing"></svg>
+      <p class="payoff" id="guessVerdict"></p>
+      <p class="scale-note">Kaspa's line is the measured pruning bound: 50 GB regardless of runtime. The rising line is a stylized trend, not a five-year forecast for any one chain.</p>
+    </div>
   </div>
 
   <div class="panel embed-hide">
@@ -402,7 +420,7 @@
     </div>
   </details>
 
-  <p class="demo-footnote embed-hide">Related: <a href="/kaspa-mining">Kaspa mining</a>, <a href="/glossary#pruning">pruning glossary</a>.</p>
+  <p class="demo-footnote embed-hide">Related: <a href="/kaspa-mining">Kaspa mining</a>, <span class="term-def" tabindex="0" role="button" aria-describedby="pruning-def-nodecost">pruning<span class="term-def__panel" id="pruning-def-nodecost" role="tooltip">Discarding old block data nodes no longer need.</span></span>.</p>
 </div>
 </main>
 
@@ -549,6 +567,40 @@
     renderWindow(h);
   });
 
+  function runGuess(guessedFlat){
+    var flatBtn = document.getElementById('guessFlat');
+    var growBtn = document.getElementById('guessGrows');
+    flatBtn.disabled = true;
+    growBtn.disabled = true;
+    var resultEl = document.getElementById('guessResult');
+    resultEl.hidden = false;
+    var chart = document.getElementById('guessChart');
+    chart.innerHTML =
+      '<line x1="30" y1="115" x2="300" y2="115" stroke="var(--field-line)" stroke-width="1"></line>' +
+      '<path class="guess-line kaspa" d="M30,90 L300,90" pathLength="100"></path>' +
+      '<path class="guess-line other" d="M30,110 C 140,105 220,55 300,15" pathLength="100"></path>' +
+      '<text x="30" y="128">now</text>' +
+      '<text x="300" y="128" text-anchor="end">+5 years</text>' +
+      '<text x="235" y="86" fill="var(--green)">Kaspa: near 50 GB</text>' +
+      '<text x="150" y="45" fill="var(--amber)">unpruned chain</text>';
+    var paths = chart.querySelectorAll('.guess-line');
+    paths.forEach(function(p){
+      p.style.strokeDasharray = '100';
+      p.style.strokeDashoffset = '100';
+    });
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        paths.forEach(function(p){ p.style.strokeDashoffset = '0'; });
+      });
+    });
+    var verdict = document.getElementById('guessVerdict');
+    verdict.textContent = guessedFlat
+      ? 'Right: it stays flat. Kaspa prunes past the boundary above, so the line holds near 50 GB no matter how long the node has run.'
+      : "It actually stays flat. Kaspa prunes past the boundary above, so the line holds near 50 GB no matter how long the node has run.";
+  }
+  document.getElementById('guessFlat').addEventListener('click', function(){ runGuess(true); });
+  document.getElementById('guessGrows').addEventListener('click', function(){ runGuess(false); });
+
   renderChips();
   renderBars();
   renderHistoryNotes();
@@ -566,12 +618,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

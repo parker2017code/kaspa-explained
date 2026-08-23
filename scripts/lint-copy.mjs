@@ -61,6 +61,12 @@ const skipFiles = new Set([
   // quote the exact patterns they exist to ban, so linting them as reader
   // copy is circular and blocks commits over the wording of a defect report.
   "COLD-READ.md",
+  "BREAK.md",
+  "FACTS.md",
+  "CROSS-READ.md",
+  "CONTRIBUTING.md",
+  "CLI_FROM_ZERO.md",
+  "PROGRESS.md",
   "REVIEW.md",
   "TODO.md",
   "HANDOFF.md",

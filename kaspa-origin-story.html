@@ -50,7 +50,7 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -65,11 +65,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -98,7 +96,7 @@
       <p>Bitcoin at high block rates has one weak point: two honest miners can solve a block seconds apart, and the single-chain rule throws one of those blocks' work away. Kaspa's research line starts from that exact waste.</p>
       <p>A blockDAG keeps both blocks visible instead of dropping one, then uses a rule like GHOSTDAG to order that graph into one shared payment history.</p>
       <p>DBLP lists Yonatan Sompolinsky and Aviv Zohar's 2018 paper, <a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">PHANTOM: A Scalable BlockDAG Protocol</a>, as an IACR ePrint paper. That paper sits on the same blockDAG research line as SPECTRE before it and the protocols running Kaspa today.</p>
-      <p>A July 2017 Epicenter episode with Zohar and Sompolinsky describes SPECTRE as dropping the blockchain data structure so blocks can be made all the time and merged after, rather than racing for one slot.</p>
+      <p>A July 2017 Epicenter episode with Zohar and Sompolinsky describes SPECTRE as dropping the blockchain data structure so blocks can be made all the time and merged after. No one races for one slot.</p>
     </section>
 
     <section class="section prose-section">
@@ -108,7 +106,7 @@
       <p>Either way, DAGLabs paid for and ran part of the pre-mainnet path before Kaspa became a public, community-mined network.</p>
       <p>Polychain belongs in the pre-mainnet DAGLabs funding story. Kaspa had no token premine. It also had a VC-funded DAGLabs backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
       <p>Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a generalization of Nakamoto Consensus. The April 2021 Investing.com article lists the testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard. It framed the project as testnet first, mainnet later, with no pre-mining and no founder allocations planned.</p>
-      <p>Yonatan's Hashdag archive describes the original Kaspad codebase as an adaptation of the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
+      <p>Yonatan's <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-origin">Hashdag<span class="term-def__panel" id="hashdag-def-origin" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span> archive describes the original Kaspad codebase as an adaptation of the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
     </section>
 
     <section class="section">
@@ -138,7 +136,7 @@
     <section class="section prose-section">
       <p class="eyebrow">Launch</p>
       <h2>Mainnet launched without a premine</h2>
-      <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a UTXO commitment that trace back to an empty genesis. Mining made the whole supply.</p>
+      <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, and marketing copy does not carry that weight: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a UTXO commitment that trace back to an empty genesis. Mining made the whole supply.</p>
       <p>No premine means no official token allocation before mining started. It does not mean equal access to early mining.</p>
       <div class="live-demo-frame">
         <iframe id="fair-launch-frame" src="/demos/fair-launch" title="Fair launch demo: Kaspa's mined-from-zero supply plotted against Ethereum, Cardano, and XRP's premine and presale allocations" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
@@ -189,8 +187,8 @@
       <p class="eyebrow">Early stress</p>
       <h2>Kaspa had to survive real failure</h2>
       <p>On November 23, 2021, Yonatan published "Kaspa (Black Tuesday)" after a network crash in the 48 hours before. His account: the developers were not rolling back to an earlier state they liked better, they were rebuilding and comparing against a known-valid UTXO commitment after a memory problem. That's the sourced version of what gets passed around as the "two-week bug" story.</p>
-      <p>The repair is in the code, not only in the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published.</p>
-      <p>Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage in days rather than the two weeks the retelling usually claims.</p>
+      <p>The repair is in the code itself, beyond the blog post. Kaspad's November 2021 hard-fork commit is titled "new genesis with the utxo set of the last block," and the mainnet genesis block rusty-kaspa still ships carries a DAA score of 1,312,860 marked as a checkpoint score, plus the same UTXO commitment hash the Black Tuesday post published.</p>
+      <p>Kaspa restarted from the last valid state instead of from an empty ledger. That genesis is timestamped November 22, 2021, the day before the post, which puts the outage at a matter of days. The retelling usually claims two weeks.</p>
 
       <h3>A separate attack, two years later</h3>
       <p>A dust attack on Yom Kippur, September 2023, was a separate event from the November 2021 launch bug. Kaspa researcher Shai Wyborski's post-mortem gives the mechanism: each attacking transaction spent one UTXO and created 238, so every block added about 1,185 entries to a set where each one costs roughly 85 bytes.</p>
@@ -286,7 +284,7 @@
         <li><a href="https://hashdag.medium.com/kaspa-black-tuesday-8c7f4fa35834">Kaspa (Black Tuesday)</a> - the November 2021 crash and its UTXO commitment.</li>
         <li><a href="https://hackernoon.com/interview-with-dr-yonatan-sompolinsky-of-kaspa">Hackernoon interview with Yonatan Sompolinsky</a> - DAGLabs, the ASIC-presale path, optical chips that weren't ready, fair launch, Polychain, and Gadi.</li>
         <li><a href="https://wiki.kaspa.org/en/prehistory">Kaspa Wiki prehistory page</a> - DAGLabs mining, where Polychain fits, and the under-3% / 840 million KAS early-miner estimate.</li>
-        <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 episode page</a> - chapter index with "Story of Kaspa's messy fair launch in 2021." The page has chapter markers, not a full transcript.</li>
+        <li><a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Bitcoin Takeover S16 E41 episode page</a> - chapter index with "Story of Kaspa's messy fair launch in 2021." The page has chapter markers. It does not have a full transcript.</li>
         <li><a href="https://github.com/kaspanet/kaspad/commit/dbf18d8052f000ba0079be9e79b2d6f5a98b74ca">Kaspad hard-fork commit #1856</a> - the November 2021 new genesis that carried the UTXO set of the last valid block, with the genesis DAA score set to the checkpoint score.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">rusty-kaspa genesis.rs</a> - mainnet genesis timestamp 1637609671037, checkpoint DAA score 1,312,860, and the UTXO commitment the node still ships.</li>
         <li><a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">DBLP: PHANTOM: A Scalable BlockDAG Protocol</a> - the record for the 2018 PHANTOM paper by Sompolinsky and Zohar.</li>
@@ -319,12 +317,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

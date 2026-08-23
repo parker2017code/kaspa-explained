@@ -81,19 +81,7 @@ elif [[ -x "$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/
 fi
 
 if [[ -n "$NODE_BIN" ]]; then
-  # Copy lint is ADVISORY as of 23 August 2026, following the same
-  # advisory-then-blocking pattern the density gate uses.
-  #
-  # Why: a backlog of 599 cadence hits accumulated across 19 pages and was
-  # blocking every deploy, while the defects it reports are style, not
-  # correctness. Real fixes, including a restored tool page, sitewide glass
-  # removal, and demos embedded in guides, sat undeployed behind it.
-  #
-  # FLIP BACK TO BLOCKING once the backlog reaches zero. Set
-  # COPY_LINT_BLOCKING=true to enforce it now.
-  COPY_LINT_BLOCKING="${COPY_LINT_BLOCKING:-false}" \
-    "$NODE_BIN" scripts/lint-copy.mjs || \
-    [ "${COPY_LINT_BLOCKING:-false}" != "true" ]
+  "$NODE_BIN" scripts/lint-copy.mjs
   "$NODE_BIN" scripts/audit-domain-terms.mjs
   "$NODE_BIN" scripts/audit-content-flow.mjs
   "$NODE_BIN" scripts/audit-visual-guardrails.mjs

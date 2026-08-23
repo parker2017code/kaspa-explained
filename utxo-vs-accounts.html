@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <title>Why Parallel Spends Don't Collide | Kaspa Explained</title>
+  <meta name="description" content="Two demos: spend a UTXO wallet, then compose two apps together. Why a coin never has to queue behind another spender the way an account balance does.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/utxo-vs-accounts">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="Why Parallel Spends Don't Collide | Kaspa Explained">
+  <meta property="og:description" content="Two demos: spend a UTXO wallet, then compose two apps together. Why a coin never has to queue behind another spender the way an account balance does.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/utxo-vs-accounts">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why Parallel Spends Don't Collide | Kaspa Explained">
+  <meta name="twitter:description" content="Two demos: spend a UTXO wallet, then compose two apps together. Why a coin never has to queue behind another spender the way an account balance does.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta name="dateModified" content="2026-08-23">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
+  <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Demos</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1">
+    <section class="section">
+      <p class="eyebrow">Two models, side by side</p>
+      <h1>Why parallel spends don't collide</h1>
+      <p class="lead">An account balance is one slot two spenders can fight over. A UTXO coin isn't. Two demos below show what that difference does: first to a wallet, then to two apps trying to act together.</p>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Try it: the collision</p>
+      <h2>Who wins the same slot</h2>
+      <p>Send two spenders after the same account balance, two different coins, or the same coin twice. Only the same-coin case hard-conflicts: the first spend wins outright and the second is rejected, not queued. The account case just lets both writes land, one after the other. The full demo also lets you spend, combine, and split the wallet itself.</p>
+      <div class="live-demo-frame">
+        <iframe id="utxo-frame" src="/demos/utxo-vs-accounts" title="UTXO collision demo: two spenders reach for the same account balance, different coins, or the same coin" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Try it: race for one slot</p>
+      <h2>Race for the exact same data</h2>
+      <p>Narrow the same question to one specific value two writers both want right now. Run the race on Kaspa's UTXO model, then switch to an account model and watch both writers land instead of one getting rejected. The full demo goes further: two separately built apps composing inside a single transaction.</p>
+      <div class="live-demo-frame">
+        <iframe id="shared-frame" src="/demos/shared-state" title="Race demo: two writers reach for the same slot on a UTXO model versus an account model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Go deeper</p>
+      <h2>Read the sources</h2>
+      <p>Both demos above link to their full versions, with the reasons and sources behind every claim, and how GHOSTDAG orders a real collision.</p>
+      <div class="actions">
+        <a class="button primary" href="/demos/utxo-vs-accounts">Full UTXO demo</a>
+        <a class="button" href="/demos/shared-state">Full composition demo</a>
+        <a class="button" href="/start-here">Start Here</a>
+        <a class="button" href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">rusty-kaspa source</a>
+      </div>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Keep reading</p>
+      <h2 id="related-links-title">Next pages</h2>
+      <div class="site-related-grid">
+        <a href="/sources"><span>Previous</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
+        <a href="/about"><span>Next</span><strong>About Kaspa Explained</strong><p>Who writes this site, how claims get checked, and what it will not cover.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+      </div>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <script>
+  (function () {
+    var frames = [
+      document.getElementById('utxo-frame'),
+      document.getElementById('shared-frame')
+    ];
+    frames.forEach(function (frame) {
+      if (!frame) return;
+      var syncFrameTheme = function () {
+        try {
+          var doc = frame.contentDocument;
+          if (doc && doc.documentElement) {
+            doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+          }
+        } catch (e) {}
+      };
+      frame.addEventListener('load', function () {
+        syncFrameTheme();
+        try {
+          var doc = frame.contentDocument;
+          if (!doc) return;
+          /* The demo hides its own chrome. It sets data-embedded on its
+             root element before first paint, and its stylesheet keys the
+             header, footer, and skip link off that; this page never
+             reaches in to hide anything itself. */
+          var resize = function () {
+            /* body.scrollHeight excludes the body's own margins, which clips
+               the last pixels of the embedded demo. Take the largest honest
+               measure and add the margins back. */
+            var cs = doc.defaultView.getComputedStyle(doc.body);
+            var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+            frame.style.height = Math.ceil(Math.max(
+              doc.body.scrollHeight + margins,
+              doc.documentElement.scrollHeight,
+              doc.body.getBoundingClientRect().height + margins
+            )) + 'px';
+          };
+          resize();
+          window.addEventListener('resize', resize);
+          if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+        } catch (e) {}
+      });
+      new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+      });
+    });
+  })();
+  </script>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/demos">Demos</a>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+          <a href="/about">About</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

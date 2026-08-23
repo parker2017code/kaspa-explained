@@ -14,7 +14,7 @@
     })();
   </script>
   <title>Demos: things to drive, not just read | Kaspa Explained</title>
-  <meta name="description" content="Sixteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta name="description" content="Eighteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/demos/">
   <link rel="icon" href="../kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -27,7 +27,7 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="Demos: things to drive, not just read | Kaspa Explained">
-  <meta property="og:description" content="Sixteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta property="og:description" content="Eighteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaspaexplained.com/demos/">
   <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
@@ -37,10 +37,10 @@
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Demos: things to drive, not just read | Kaspa Explained">
-  <meta name="twitter:description" content="Sixteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
+  <meta name="twitter:description" content="Eighteen interactive demos of Kaspa and crypto mechanics. Drive each one yourself.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-cssprune1">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
   <style>
     /* Each card was <article><h2><a>title</a></h2><p>description</p></article>:
@@ -65,13 +65,33 @@
       border-radius: 18px;
       background: var(--field-bg, #221f1c);
       margin-bottom: 10px;
+      container-type: inline-size;
     }
+    /* A card box stretched to 100% width/height forces the iframe's own
+       viewport down to the card's pixel size (as little as 228x142): the
+       demo reflows at that width, which sounds right, but its real
+       content height (400-1200px+ depending on the demo) still overflows
+       that 142px-tall box and gets clipped to whatever renders first,
+       almost always just the nav bar. That is the same peephole crop the
+       original bug report described, just arrived at from the other
+       direction. Instead the iframe renders at a fixed 900px desktop
+       width (matching the widest demo layout) and its own measured
+       content height, then the whole thing scales down uniformly to
+       "contain" inside the card: --fit is the smaller of the width-fit
+       and height-fit ratios, computed per demo by the script below once
+       its real height is known, so every demo shows in full, letterboxed
+       on its short axis, never cropped on its long one. cqw ties the
+       scale to this card's own live width across the 1-4 column
+       breakpoints the grid switches between. */
     .card-preview iframe {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      top: 0;
+      left: 0;
+      width: 900px;
+      height: 720px;
       border: 0;
+      transform-origin: top left;
+      transform: scale(calc(100cqw / 900px * var(--fit, 1)));
       pointer-events: none;
     }
 
@@ -120,6 +140,7 @@
   </style>
 </head>
 <body>
+  <noscript><p style="margin:0;padding:10px 16px;background:#fff3cd;color:#664d03;font:14px/1.4 -apple-system,sans-serif;text-align:center">This is an interactive demo. Enable JavaScript to use it.</p></noscript>
   <a class="skip-link" href="#top">Skip to content</a>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
@@ -131,11 +152,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -145,7 +164,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Demos</p>
       <h1>Things to drive, not just read</h1>
-      <p class="lead">Sixteen demos to push on instead of read. Each states its own model and sources.</p>
+      <p class="lead">Eighteen demos to push on instead of read. Each states its own model and sources.</p>
     </section>
 
     <section class="section" aria-labelledby="top-demo-title">
@@ -197,96 +216,247 @@
     <section class="section">
       <div class="quick-grid">
         <article>
-          <a class="card-link" href="/demos/ghostdag-playground">
-            <div class="card-preview"><iframe src="/demos/ghostdag-playground?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:19">GHOSTDAG playground</h2>
-          </a>
-        </article>
-        <article>
           <a class="card-link" href="/demos/confirmation-risk">
-            <div class="card-preview"><iframe src="/demos/confirmation-risk?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <div class="card-preview"><iframe data-src="/demos/confirmation-risk?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:17">Fast is not final</h2>
           </a>
         </article>
         <article>
-          <a class="card-link" href="/demos/utxo-vs-accounts">
-            <div class="card-preview"><iframe src="/demos/utxo-vs-accounts?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:17">Coins or balances</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/fee-market">
-            <div class="card-preview"><iframe src="/demos/fee-market?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:14">The fee market</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/mass-calculator">
-            <div class="card-preview"><iframe src="/demos/mass-calculator?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:16">Kaspa's real TPS</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/dag-time">
-            <div class="card-preview"><iframe src="/demos/dag-time?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:24">DAA score and block time</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/fair-launch">
-            <div class="card-preview"><iframe src="/demos/fair-launch?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:22">Fair launch vs premine</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/attack-cost">
-            <div class="card-preview"><iframe src="/demos/attack-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:20">Cost of a 51% attack</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/covenant-breaker">
-            <div class="card-preview"><iframe src="/demos/covenant-breaker?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:16">Covenant breaker</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/zk-boundary">
-            <div class="card-preview"><iframe src="/demos/zk-boundary?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:15">The ZK boundary</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/emission-schedule">
-            <div class="card-preview"><iframe src="/demos/emission-schedule?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:17">Emission schedule</h2>
-          </a>
-        </article>
-        <article>
-          <a class="card-link" href="/demos/node-cost">
-            <div class="card-preview"><iframe src="/demos/node-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
-            <h2 style="--len:17">What a node costs</h2>
-          </a>
-        </article>
-        <article>
           <a class="card-link" href="/demos/live-network">
-            <div class="card-preview"><iframe src="/demos/live-network?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <div class="card-preview"><iframe data-src="/demos/live-network?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2>The network, live</h2>
           </a>
         </article>
         <article>
+          <a class="card-link" href="/demos/node-cost">
+            <div class="card-preview"><iframe data-src="/demos/node-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:17">What a node costs</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/fee-market">
+            <div class="card-preview"><iframe data-src="/demos/fee-market?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:14">The fee market</h2>
+          </a>
+        </article>
+        <article>
           <a class="card-link" href="/demos/shared-state">
-            <div class="card-preview"><iframe src="/demos/shared-state?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <div class="card-preview"><iframe data-src="/demos/shared-state?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:20">The shared-state gap</h2>
           </a>
         </article>
         <article>
+          <a class="card-link" href="/demos/emission-schedule">
+            <div class="card-preview"><iframe data-src="/demos/emission-schedule?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:17">Emission schedule</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/mass-calculator">
+            <div class="card-preview"><iframe data-src="/demos/mass-calculator?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:16">Kaspa's real TPS</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/utxo-vs-accounts">
+            <div class="card-preview"><iframe data-src="/demos/utxo-vs-accounts?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:17">Coins or balances</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/dag-time">
+            <div class="card-preview"><iframe data-src="/demos/dag-time?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:24">DAA score and block time</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/ghostdag-playground">
+            <div class="card-preview"><iframe data-src="/demos/ghostdag-playground?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:19">GHOSTDAG playground</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/zk-boundary">
+            <div class="card-preview"><iframe data-src="/demos/zk-boundary?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:15">The ZK boundary</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/fair-launch">
+            <div class="card-preview"><iframe data-src="/demos/fair-launch?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:22">Fair launch vs premine</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/covenant-breaker">
+            <div class="card-preview"><iframe data-src="/demos/covenant-breaker?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:16">Covenant breaker</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/argent-pipeline">
+            <div class="card-preview"><iframe data-src="/demos/argent-pipeline?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:19">One line, three layers</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/attack-cost">
+            <div class="card-preview"><iframe data-src="/demos/attack-cost?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2 style="--len:20">Cost of a 51% attack</h2>
+          </a>
+        </article>
+        <article>
+          <a class="card-link" href="/demos/supply-split">
+            <div class="card-preview"><iframe data-src="/demos/supply-split?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <h2>When one token becomes two</h2>
+          </a>
+        </article>
+        <article>
           <a class="card-link" href="/demos/parameterless">
-            <div class="card-preview"><iframe src="/demos/parameterless?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
+            <div class="card-preview"><iframe data-src="/demos/parameterless?preview=1" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe></div>
             <h2 style="--len:23">Parameterless consensus</h2>
           </a>
         </article>
       </div>
+
+      <script>
+      (function () {
+        // Same-origin theme sync into every card preview iframe, the same
+        // mechanism the live embed above and every PREVIEW embed on the
+        // site already use: a card iframe carries no ?theme= of its own,
+        // so it opens in whatever theme its own localStorage last saw,
+        // which can silently disagree with this page's theme until synced.
+        var cards = Array.prototype.slice.call(document.querySelectorAll('.card-preview iframe'));
+        function syncCardThemes() {
+          cards.forEach(function (f) {
+            try {
+              var doc = f.contentDocument;
+              if (doc && doc.documentElement) {
+                doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+              }
+            } catch (e) {}
+          });
+        }
+        // Fit each card's demo to the card instead of cropping it (see the
+        // .card-preview iframe comment above). The 900px iframe width is
+        // fixed in CSS; a card's rendered height is always that same
+        // 900px times 10/16 (the box's own aspect-ratio), so a card's
+        // height-fit ratio reduces to one constant, 562.5, divided by
+        // this demo's actual content height. --fit is whichever ratio is
+        // smaller, so the demo always shows in full: letterboxed on the
+        // short axis, never cut off on the long one.
+        function fitCard(f) {
+          try {
+            var doc = f.contentDocument;
+            if (!doc || !doc.body) return;
+            // Neither body.scrollHeight nor documentElement.scrollHeight is
+            // trustworthy here: styles.css sets a sitewide
+            // body{min-height:100vh}, and only some demo files carry the
+            // per-file override that resets it under data-embedded; on the
+            // rest, body's own scrollHeight silently floors at whatever
+            // height this function set the iframe to last time, not the
+            // demo's real content height. Measuring the actual bottom edge
+            // of body's own children sidesteps both min-height paths.
+            var natH = 0;
+            for (var i = 0; i < doc.body.children.length; i++) {
+              var b = doc.body.children[i].getBoundingClientRect().bottom;
+              if (b > natH) natH = b;
+            }
+            if (!natH) natH = doc.body.scrollHeight;
+            if (!natH) return;
+            f.style.height = natH + 'px';
+            f.style.setProperty('--fit', Math.min(1, 562.5 / natH));
+          } catch (e) {}
+        }
+        cards.forEach(function (f) {
+          f.addEventListener('load', function () {
+            syncCardThemes();
+            fitCard(f);
+            try {
+              var doc = f.contentDocument;
+              if (doc && doc.body && window.ResizeObserver) {
+                new ResizeObserver(function () { fitCard(f); }).observe(doc.body);
+              }
+            } catch (e) {}
+          });
+        });
+        new MutationObserver(syncCardThemes).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+
+        // Real-viewport lazy load, not the browser's loading="lazy" guess
+        // (measured 2026-08-23): every card's src attribute used to be set
+        // in the HTML, so as soon as a handful of cards drifted inside
+        // Chrome's own lazy-load lookahead distance they all requested at
+        // once. Sixteen concurrent frames each pulled styles.css and nav.js
+        // fresh, before any single one finished long enough to populate the
+        // cache the rest could have shared: 18 duplicate 127KB styles.css
+        // fetches, 2.3MB of the page's measured 3.2MB, was that stampede,
+        // not 16 different files. Loading through a small queue instead
+        // lets one card's shared assets land in cache before the next
+        // starts. Scrolling a card back out unloads its iframe (src
+        // removed, not just hidden): that tears down the whole browsing
+        // context, so a demo with a running timer or poll loop, like
+        // live-network's or attack-cost's, stops computing and stops
+        // calling out to the network the moment it is not on screen, and
+        // starts again, from a cache warm on every shared asset, when it
+        // comes back.
+        if ('IntersectionObserver' in window) {
+          var LOAD_CONCURRENCY = 3;
+          var loadQueue = [];
+          var loadingCount = 0;
+          var pump = function () {
+            while (loadingCount < LOAD_CONCURRENCY && loadQueue.length) {
+              var f = loadQueue.shift();
+              var src = f.dataset.src;
+              if (!src) continue;
+              delete f.dataset.src;
+              loadingCount++;
+              f.addEventListener('load', function onLoad() {
+                f.removeEventListener('load', onLoad);
+                loadingCount--;
+                pump();
+              });
+              f.src = src;
+            }
+          };
+          var enqueue = function (f) {
+            if (loadQueue.indexOf(f) === -1) loadQueue.push(f);
+            pump();
+          };
+          var unload = function (f) {
+            var current = f.getAttribute('src');
+            if (current) {
+              f.dataset.src = current;
+              f.removeAttribute('src');
+            }
+          };
+          var cardObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              var f = entry.target;
+              if (entry.isIntersecting) {
+                enqueue(f);
+                return;
+              }
+              var pending = loadQueue.indexOf(f);
+              if (pending !== -1) loadQueue.splice(pending, 1);
+              if (f.dataset.src === undefined) unload(f);
+            });
+          }, { rootMargin: '600px 0px' });
+          cards.forEach(function (f) { cardObserver.observe(f); });
+        } else {
+          // No IntersectionObserver: fall back to loading every card up
+          // front rather than showing an empty box.
+          cards.forEach(function (f) {
+            if (f.dataset.src) {
+              f.src = f.dataset.src;
+              delete f.dataset.src;
+            }
+          });
+        }
+      })();
+      </script>
     </section>
   </main>
 
@@ -300,12 +470,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

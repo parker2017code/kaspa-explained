@@ -60,7 +60,7 @@
   <meta name="twitter:description" content="Drive a wallet of coins through consuming several at once, combining small ones into one, splitting one into two payments, and getting change. Then send two spenders at the same balance or coin and watch which queues, which stays parallel, and which hard-conflicts.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-23">
-  <link rel="stylesheet" href="../styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="../styles.css?v=20260823-cssprune1">
   <script defer src="../nav.js?v=20260822-anchor-accordion-fix3"></script>
 <style>
   :root {
@@ -230,9 +230,11 @@
     display: none;
   }
 
-  /* Embedded teaser: show only the balance/coin panels and the move buttons,
-     plus one line of context and a link to the full page. The host page
-     supplies its own heading, so this demo's own title row hides too. */
+  /* Embedded teaser: show only the collision test, the moment worth
+     watching, plus a link to the full page. The coin-mechanics wallet
+     panel above it is the full demo's opening act, not the teaser; the
+     host page supplies its own heading, so this demo's own title row and
+     lead hide too. */
   .embed-cta { display: none; }
   :root[data-embedded="true"] .embed-hide { display: none !important; }
   :root[data-embedded="true"] .embed-cta { display: block; }
@@ -262,6 +264,7 @@
 
 </head>
 <body>
+  <noscript><p style="margin:0;padding:10px 16px;background:#fff3cd;color:#664d03;font:14px/1.4 -apple-system,sans-serif;text-align:center">This is an interactive demo. Enable JavaScript to use it.</p></noscript>
   <a class="skip-link" href="#top">Skip to content</a>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
@@ -273,11 +276,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -288,10 +289,10 @@
     <h1>Two ways to hold money</h1>
     <button id="theme-toggle" type="button" aria-label="Switch theme">Light</button>
   </div>
-  <p class="lead">Ethereum tracks one running balance per account. Kaspa wallets hold separate coins. Pick a move below and watch coins get consumed, combined, split, or turned into change.</p>
+  <p class="lead embed-hide">Ethereum tracks one running balance per account. Kaspa wallets hold separate coins. Pick a move below and watch coins get consumed, combined, split, or turned into change.</p>
 
   <div class="stage">
-    <div class="panels">
+    <div class="panels embed-hide">
       <div class="panel acct">
         <span class="panel-label"><span class="dot"></span>Account model (Ethereum-style)</span>
         <p class="panel-gloss">One number. A payment lowers it.</p>
@@ -308,35 +309,35 @@
       </div>
     </div>
 
-    <p class="moves-head">Choose what the wallet does next</p>
-    <div class="segmented" role="group" aria-label="Choose a move for the UTXO wallet to make">
+    <p class="moves-head embed-hide">Choose what the wallet does next</p>
+    <div class="segmented embed-hide" role="group" aria-label="Choose a move for the UTXO wallet to make">
       <button class="seg-btn" id="moveLittle" type="button" aria-pressed="false">Pay a little<span class="model-tag">usually returns change</span></button>
       <button class="seg-btn" id="moveLot" type="button" aria-pressed="false">Pay a lot<span class="model-tag">needs several coins at once</span></button>
       <button class="seg-btn" id="moveCombine" type="button" aria-pressed="false">Combine coins<span class="model-tag">merge two into one</span></button>
       <button class="seg-btn" id="moveSplit" type="button" aria-pressed="false">Split in two<span class="model-tag">pay two people at once</span></button>
     </div>
-    <div class="action-row">
+    <div class="action-row embed-hide">
       <button class="reset-btn" id="resetBtn" type="button">Reset</button>
     </div>
-    <p class="caption" id="caption">Both sides hold 1,240 KAS. The account is one number. The wallet is four coins: 500, 300, 250, and 190 KAS. Pick a move above.</p>
+    <p class="caption embed-hide" id="caption">Both sides hold 1,240 KAS. The account is one number. The wallet is four coins: 500, 300, 250, and 190 KAS. Pick a move above.</p>
 
     <p class="model-tradeoff embed-hide">Shared mutable state is what the account model is built for: two calls into one balance just need sequencing, which is why general-purpose contracts landed there first. A coin carries no shared slot to sequence, which is why UTXO validation parallelizes and a block rate like Kaspa's is possible without inventing account locks. What Kaspa does instead of an account VM to push past that is below.</p>
 
     <hr class="divider embed-hide">
 
-    <p class="scenario-head embed-hide">Now two spenders move at the same instant</p>
-    <p class="scenario-sub embed-hide">Choose which situation to put them in. Each choice tests a different kind of collision, before you run it.</p>
-    <div class="segmented embed-hide" role="group" aria-label="Choose which collision to test">
+    <p class="scenario-head">Now two spenders move at the same instant</p>
+    <p class="scenario-sub">Choose which situation to put them in. Each choice tests a different kind of collision, before you run it.</p>
+    <div class="segmented" role="group" aria-label="Choose which collision to test">
       <button class="seg-btn" id="segAccount" type="button" aria-pressed="false">Same account balance<span class="model-tag">tests: account model</span></button>
       <button class="seg-btn" id="segDiffCoin" type="button" aria-pressed="false">Two different coins<span class="model-tag">tests: UTXO model</span></button>
       <button class="seg-btn" id="segSameCoin" type="button" aria-pressed="false">The same coin twice<span class="model-tag">tests: UTXO model</span></button>
     </div>
-    <span class="model-badge embed-hide" id="modelBadge">Choose a test above</span>
-    <div class="actors embed-hide" id="actorsStage" aria-hidden="false">
+    <span class="model-badge" id="modelBadge">Choose a test above</span>
+    <div class="actors" id="actorsStage" aria-hidden="false">
       <div class="actor" id="actorA"><div class="avatar">A</div><span>Spender A</span></div>
       <div class="actor" id="actorB"><div class="avatar">B</div><span>Spender B</span></div>
     </div>
-    <p class="caption embed-hide" id="scenarioCaption">Pick a test above to run it.</p>
+    <p class="caption" id="scenarioCaption">Pick a test above to run it.</p>
   </div>
 
   <p class="embed-cta"><a href="/demos/utxo-vs-accounts">See the full demo, with sources</a></p>
@@ -372,11 +373,11 @@
           <dt>Establishes</dt>
           <dd>Covenants work by script-level introspection opcodes that read fields of the spending transaction (amounts, script public keys, input/output counts) and constrain how a coin can be spent. This is the mechanism, not a general callable virtual machine.</dd>
           <dt>Does not establish</dt>
-          <dd>Broad wallet support for constructing covenant transactions, or that native DeFi or vProgs-level app throughput are live today; this site's <a href="/kaspa-developments">developments tracker</a> keeps those separately labeled.</dd>
+          <dd>Broad wallet support for constructing covenant transactions, or that native DeFi or vProgs-level app throughput are live today; this site's <a href="/status#claim-fact-check">claim fact-check</a> keeps those separately labeled.</dd>
         </dl>
       </div>
       <ul class="source-list">
-        <li>UTXO vs. account model status: <a href="https://github.com/kaspanet/rusty-kaspa" target="_blank" rel="noopener">kaspanet/rusty-kaspa</a> (see this site's <a href="/kaspa-claims-checker">claims checker</a>, entry <code>utxo</code>).</li>
+        <li>UTXO vs. account model status: <a href="https://github.com/kaspanet/rusty-kaspa" target="_blank" rel="noopener">kaspanet/rusty-kaspa</a> (see this site's <a href="/status#claim-fact-check">claim fact-check</a>, entry <code>utxo</code>).</li>
         <li>First-spend-wins conflict rule: this site's <a href="/what-is-kaspa">what-is-kaspa</a> page, sourced to <a href="https://research.kas.pa/" target="_blank" rel="noopener">Kaspa Research</a> (GHOSTDAG ordering).</li>
         <li>Toccata activation (covenants, covenant IDs, ZK proof checks, DAA score 474,165,565): <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0" target="_blank" rel="noopener">rusty-kaspa v2.0.0 release</a>.</li>
         <li>ZK verifier opcode: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16, OpZkPrecompile</a>, Status: Active.</li>
@@ -702,12 +703,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

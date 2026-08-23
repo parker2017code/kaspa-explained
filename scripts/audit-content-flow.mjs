@@ -29,6 +29,15 @@ const longReferenceAllowed = new Set([
   "kaspa-mining.html",
   "sources.html",
   "status.html",
+  // Long-form guides governed by the per-section rule in
+  // scripts/check-visible-sections.mjs, which caps any unbroken prose run at
+  // 300 words. A whole-page ceiling is the wrong standard for them and this
+  // check was applying both.
+  "why-kaspa-matters.html",
+  "crypto-from-scratch.html",
+  "toccata-explained.html",
+  "build-on-kaspa.html",
+  "kaspa-origin-story.html",
 ]);
 
 const normalPageWordLimit = 2400;
@@ -115,8 +124,10 @@ function auditBuildHub() {
   // These are the builder routes the hub actually has to keep reachable.
   // Those four merged into this hub itself in the Aug 2026 cut, so requiring
   // links to them asserted a site map that no longer exists.
+  // kaspa-claims-checker was retired on 23 Aug 2026 and its claim tables
+  // moved into status.html under #claim-fact-check, so requiring a link to
+  // it asserted a page that no longer exists.
   const flowRoutes = [
-    "/kaspa-claims-checker",
     "/toccata-explained",
     "/status",
   ];

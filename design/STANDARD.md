@@ -224,3 +224,43 @@ exist.
 
 This is not a license to delete the material. It is a requirement to put
 it where someone will actually meet it.
+
+## Every page carries a demo
+
+Not a nice-to-have. If a page has no demo, either an existing one belongs
+on it or a new one gets built. The owner: "Every single page should have
+at least one demo on it. If an existing demo doesn't fit, you should make
+one and let me know. There are interesting demos to be made here for all."
+
+The exceptions are the pages that already ARE interactive: the chain
+comparer and the model picker.
+
+His own reads on where the gaps are:
+- argent-explained: how does Argent compile to Silverscript, and
+  Silverscript to Kaspa script? How do the three relate? "Definitely
+  worth it." That page is currently prose about a compiler with nothing
+  to watch.
+- crypto-from-scratch: existing demos may fit, or build simpler ones that
+  are fun to use.
+- kaspa-origin-story and why-kaspa-matters: existing demos fit.
+- kaspa-mining: probably needs a new one.
+- kips: closer to reference than demo material.
+
+A demo earns its place by showing a thing happen. A page that only tells
+the reader something happened is the weaker version of itself.
+
+## If nobody reads it, delete it
+
+The owner, plainly: "People aren't going to read a word or a sentence or
+a page or use it. It should get eliminated, period."
+
+That applies at every scale. A word nobody needs, a sentence nobody
+finishes, a page nobody arrives at on purpose. The test is not whether
+the material is true or well written. It is whether anyone meets it.
+
+## The machine-facing files count too
+
+`llms.txt`, `agent-index.json`, and the markdown documents are read more
+often than most pages, by models answering questions about Kaspa. They go
+stale the same way and they are held to the same bar. Update them in the
+same pass as the pages they describe, never afterward.

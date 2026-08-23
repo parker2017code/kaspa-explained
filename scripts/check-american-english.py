@@ -96,8 +96,7 @@ PAIRS = {
     # misc
     "grey": "gray", "greyed": "grayed",
     "programme": "program", "programmes": "programs",
-    "catalogue": "catalog", "catalogues": "catalogs",
-    "dialogue": "dialog", "analogue": "analog",
+    "catalogue": "catalog", "catalogues": "catalogs", "analogue": "analog",
     "cheque": "check", "cheques": "checks",
     "storey": "story", "storeys": "stories",
     "sceptical": "skeptical", "scepticism": "skepticism", "sceptic": "skeptic",

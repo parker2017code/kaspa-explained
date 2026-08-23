@@ -6,7 +6,11 @@ import sys
 
 
 MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
-PAGES = MANIFEST["pages"]
+# Pages a reader would never intend to visit are excluded from search. A 404
+# and the search page itself are destinations nobody searches for, and this
+# check previously required them to be listed, which is how they got there.
+_EXCLUDED = set(MANIFEST.get("searchExcludedPages", []))
+PAGES = [p for p in MANIFEST["pages"] if p not in _EXCLUDED]
 
 
 class SearchParser(HTMLParser):

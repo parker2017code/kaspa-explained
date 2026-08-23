@@ -93,14 +93,83 @@ is the correct pattern. The monthly digest should be retired into it.
   figures of tokens before any work happens. Quote the relevant paragraphs
   into the brief instead.
 
-## Copy lint is advisory, flip it back
+## Copy lint: reverted to blocking, same day
 
-Made advisory 23 August 2026 because a 599-hit cadence backlog across 19
-pages was blocking every deploy while real fixes sat undeployed: a
-restored tool page, sitewide glass removal, demos embedded in guides,
-covenant defined in plain language.
+Briefly made advisory on 23 August 2026 on a wrong diagnosis. The real
+blocker was a source-ban violation in a corrupted file, not the cadence
+backlog, and most of those rules were already advisory. The backlog was
+113 hits in page copy, not the 571 first reported, which had counted
+worktrees and design docs.
 
-The hits are style, not correctness. Nothing factual is at stake.
+Cleared and reverted to blocking the same day.
 
-Flip back with COPY_LINT_BLOCKING=true, and change the default in
-scripts/check-site.sh, once the count reaches zero.
+## Demos hide their best part when embedded
+
+`demos/shared-state.html` marks its race-track section `embed-hide`, so
+every embed of it shows the app-composition panel instead of the
+head-to-head race. `demos/utxo-vs-accounts.html` does the same with its
+collision test.
+
+Both hide the exact thing that makes them worth watching, on every page
+that embeds them, which is now several. Pages have been written to
+describe what actually renders, which is honest but backwards: the demo
+should show its payoff, and the page should not have to work around it.
+
+Fix the demos so the embedded view leads with the moment worth watching.
+
+## Next: one information-architecture decision
+
+The owner asked all of this in one breath, and it is one decision, not
+five separate ones. Run it with authority to fold and delete, not to
+come back with a list.
+
+His questions, verbatim in substance:
+- Is there anything on `about` that actually needs to stay, or is it
+  there because an about page is standard?
+- Why is the glossary important?
+- Why is `sources` still there? The page is awful. Why is it in the nav?
+- Have the nav and footer ever been audited for whether those links are
+  all important?
+- "Kaspa claims checker" is worth throwing up. Can that be folded into
+  other pages, without saying it in a cringy way?
+- What can be folded into each other, what is unnecessary, what is
+  cringy, what is bad?
+
+Note: glossary, kaspa-developments, and common-questions were retired
+earlier today and an agent's `git reset` restored all three. Any retirement
+has to be committed immediately, not left in the working tree.
+
+The bar: no page a reader would never arrive at on purpose, and no nav or
+footer link that does not earn its slot.
+
+## Performance, measured
+
+Localhost figures, so a floor rather than real-world:
+
+  homepage       174ms   13 requests    341 KB
+  demos index   1024ms   77 requests   3200 KB
+  model-picker    73ms    7 requests    311 KB
+  kaspa-mining    86ms    7 requests    209 KB   (18 images)
+
+Every page is fine except the demos index, which loads 17 live demo
+iframes, each pulling a full page and its scripts. They are lazy-loaded,
+so the weight arrives on scroll rather than upfront, but it is still
+seventeen full pages behind one index.
+
+Not yet checked: whether the 18 images on kaspa-mining are sized and
+compressed for the web, real-world load on a phone over mobile data,
+render-blocking resources, and whether styles.css at roughly 9,000 lines
+is worth splitting.
+
+The large assets on disk are all under `_preview-site/`, which is
+gitignored scratch from an unrelated project and never shipped.
+
+## Stylesheet: still 9,105 lines
+
+An agent reported it at 5,892 and refused to cut against what it called a
+stale brief. It was measuring a different file, almost certainly inside a
+git worktree rather than the repo root. Verified from the repo root:
+9,105 lines. The target of under 6,000 stands.
+
+Worth keeping as a caution: an agent checking its premises is right to do
+so, and can still be wrong about which file it checked. Confirm the path.

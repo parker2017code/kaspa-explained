@@ -73,7 +73,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -88,11 +88,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -103,7 +101,7 @@
       <h1>Kaspa's design case</h1>
       <div class="answer-block">
         <p class="eyebrow">Answer</p>
-        <p>Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet is that Bitcoin-style <a href="/glossary#proof-of-work">Proof-of-Work</a> security and censorship resistance can run closer to real time without giving up either one.</p>
+        <p>Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet is that Bitcoin-style <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-wkm">Proof-of-Work<span class="term-def__panel" id="pow-def-wkm" role="tooltip">Miners spend real computation to propose blocks.</span></span> security and censorship resistance can run closer to real time without giving up either one.</p>
       </div>
     </section>
 
@@ -130,7 +128,7 @@
                 <p>Covenant rules run in consensus today. Wallets and developer tooling have not caught up yet, so builder evidence is what to watch next. See Programmability, below, for what builders get today.</p>
               </details>
             </td></tr>
-            <tr><td>Group commitments</td><td>Base Real-Time Decentralization (RTD) today. RTD-derived attestations, oracles, and TangVM come later.</td><td>Base idea live; app systems still future work</td></tr>
+            <tr><td>Group commitments</td><td>Base Real-Time Decentralization (RTD) today. RTD-derived attestations, oracles, and <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-wkm">TangVM<span class="term-def__panel" id="tangvm-def-wkm" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span> come later.</td><td>Base idea live; app systems still future work</td></tr>
           </tbody>
         </table>
       </div>
@@ -145,7 +143,7 @@
       <div class="reference-grid grid-cards">
         <article>
           <h3>Hard money: Bitcoin</h3>
-          <p>A block every ten minutes is the price of settlement money that holds still. Kaspa keeps the Proof of Work and the fixed supply, then swaps the single chain for a <a href="/glossary#blockdag">blockDAG</a> that keeps the blocks other PoW chains discard as orphans.</p>
+          <p>A block every ten minutes is the price of settlement money that holds still. Kaspa keeps the Proof of Work and the fixed supply, then swaps the single chain for a <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wkm">blockDAG<span class="term-def__panel" id="blockdag-def-wkm" role="tooltip">A graph where multiple honest blocks exist in parallel instead of a single forced line.</span></span> that keeps the blocks other PoW chains discard as orphans.</p>
         </article>
         <article>
           <h3>Contract depth: Ethereum</h3>
@@ -221,7 +219,7 @@
       <h2>Kaspa focuses on latency</h2>
       <p>Bitcoin proved strangers can agree on scarce digital money with nobody in charge. It pays for that with a slow block interval, picked partly because network lag has to stay small next to block production. Every Nakamoto-style system carries that tradeoff by design.</p>
       <p>Kaspa comes out of the research line asking whether mining work that a single chain throws away as a collision can count toward consensus instead.</p>
-      <p>The goal has a name. <a href="/glossary#rtd">RTD</a>, Real-Time Decentralization, is Hashdag's term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack.</p>
+      <p>The goal has a name. <span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-wkm">RTD<span class="term-def__panel" id="rtd-def-wkm" role="tooltip">Hashdag's framing: Bitcoin-style PoW security operating in real time.</span></span>, Real-Time Decentralization, is <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-wkm">Hashdag<span class="term-def__panel" id="hashdag-def-wkm" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span>'s term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack.</p>
       <p>Blue work is what makes it measurable, letting nodes compare total work across a graph instead of a single chain.</p>
       <div class="concept-diagram dag-concept" role="img" aria-label="Parallel blocks reference earlier blocks and are ordered by GHOSTDAG">
         <svg viewBox="0 0 760 260" aria-hidden="true">
@@ -244,7 +242,7 @@
       </div>
       <p>Storage-mass pricing charges a transaction for the UTXO footprint it leaves behind for good, on top of its raw size.</p>
       <p>Pruning and bounded anticones cap what a node has to hold and how far the parallel edges can spread, which is what lets an ordinary machine keep up with a fast proof-of-work DAG.</p>
-      <p>Hashdag points that speed at shared commitments, not price charts. The simplest version is Kickstarter-like funding, where money moves only if enough people commit and a public rule holds the threshold instead of a company that can wave it away.</p>
+      <p>Hashdag points that speed at shared commitments instead of price charts. The simplest version is Kickstarter-like funding, where money moves only if enough people commit and a public rule holds the threshold instead of a company that can wave it away.</p>
     </section>
 
     <section class="section prose-section">
@@ -308,7 +306,7 @@
 
     <section id="kaspa-apps" class="section">
       <h2>Programmability, by status</h2>
-      <p>Kaspa's app-layer path runs through Toccata, spend rules, asset rules, Silverscript, ZK proof checks, sequencing commitments, and vProgs groundwork. Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 outlook explains why the original May 5 target moved.</p>
+      <p>Kaspa's app-layer path runs through <span class="term-def" tabindex="0" role="button" aria-describedby="toccata-def-wkm">Toccata<span class="term-def__panel" id="toccata-def-wkm" role="tooltip">The mainnet upgrade activated 30 June 2026 that let a coin carry enforceable spending rules, called covenants, instead of just moving from one address to another.</span></span>, spend rules, asset rules, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-wkm">Silverscript<span class="term-def__panel" id="silverscript-def-wkm" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span>, ZK proof checks, sequencing commitments, and vProgs groundwork. Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, roughly June 30, 2026 at 16:15 UTC. <span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-wkm">Michael Sutton<span class="term-def__panel" id="sutton-def-wkm" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s April 2026 outlook explains why the original May 5 target moved.</p>
       <p>The mechanism is that money can carry a rule forward. Transaction introspection, covenant IDs, sequencing commitments, and proof checks do that work in consensus itself, so a covenant-style app runs as a controlled UTXO state machine, never a global account VM.</p>
       <p>Apps prove the richer logic around it. vProgs are a Kaspa-native verifiable-program design with their own proving and settlement assumptions, so calling them rollups brings in the wrong ones.</p>
       <p>Builders get three things today and should say which one the product needs.</p>
@@ -391,12 +389,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

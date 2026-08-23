@@ -51,7 +51,7 @@
     "about": ["Kaspa", "Toccata", "Covenants", "ZK proofs", "KIP-21", "vProgs"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -66,11 +66,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -234,7 +232,7 @@
         <table class="reality-table">
           <thead><tr><th>Piece</th><th>What it does</th><th>Where it is</th></tr></thead>
           <tbody>
-            <tr><td>A language</td><td>Covenant scripts are compiler output. SilverScript produces them.</td><td><span class="status-pill target">Experimental</span> Took a breaking change on July 12, after mainnet activation.</td></tr>
+            <tr><td>A language</td><td>Covenant scripts are compiler output. Silverscript produces them.</td><td><span class="status-pill target">Experimental</span> Took a breaking change on July 12, after mainnet activation.</td></tr>
             <tr><td>A framework</td><td>Real apps are several covenants that have to agree. <a href="https://github.com/argent-lang/argent">Argent</a> is the attempt.</td><td><span class="status-pill target">Unaudited</span> Its README names an audit as the gate. 58 commits in July, no tagged release, last breaking change July 24.</td></tr>
             <tr><td>Shared conventions</td><td>If your token and my wallet disagree about byte layout, neither works. <a href="https://github.com/kaspanet/kccs">KCCs</a> settle that.</td><td><span class="status-pill target">Draft</span> Process opened July 15. KCC-0001, KCC-0002, KCC-0020 merged August 20, still Draft. KCC-0021, KCC-0402 open; a bulk set closed unmerged three times.</td></tr>
             <tr><td>An index</td><td>Showing someone their tokens means finding every UTXO carrying a covenant ID.</td><td><span class="status-pill not-live">Missing</span> No <code>getUtxosByCovenantId</code> RPC. Called planned on the forum. No code.</td></tr>
@@ -286,9 +284,9 @@
       </div>
       <p class="hint" id="vprogs-stamp">Baseline read on August 22, 2026, unchanged. This table refreshes from the repository when the page loads.</p>
       <p>An active repo is evidence of work, not of readiness. The line between this and Toccata is narrower than usually drawn: joining separately compiled covenant apps into one all-or-nothing transaction works on Toccata itself, through Argent's Inter-Covenant Communication, so far only in unaudited offline demos. What vProgs add is the shared mutable state case, which has not reached testnet.</p>
-      <p>The model fits products with many users hitting one app, or a proof too big for a covenant spend to carry, which describes few Kaspa apps today.</p>
+      <p>The model fits products with many users hitting one app, or a proof too big for a covenant spend to carry, which describes few Kaspa apps today. Run the demo below to see the collision every shared-state design, Argent's included, has to answer one way or another: what happens when two writers reach for the same slot on a UTXO chain versus an account chain.</p>
       <div class="live-demo-frame">
-        <iframe id="shared-state-frame" src="/demos/shared-state" title="Shared-state demo: what Toccata's atomic composition already covers, and where vProgs would extend it" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+        <iframe id="shared-state-frame" src="/demos/shared-state" title="Race demo: two writers reach for the same slot on a UTXO model versus an account model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
       <script>
       (function () {
@@ -352,7 +350,7 @@
     <section class="next-step section">
       <p class="eyebrow">Read the spec</p>
       <h2>The underlying material</h2>
-      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/kaspanet/silverscript">SilverScript</a>, <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a>, <a href="https://kas-smiths.org">Kas Smiths</a>, and <a href="https://kascov.io">kascov</a>.</p>
+      <p class="source-inline">Protocol and release references: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">Rusty Kaspa v2.0.0</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://github.com/kaspanet/vprogs">vProgs</a>, <a href="https://github.com/argent-lang/argent">Argent</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://github.com/kaspanet/kccs">kaspanet/kccs</a>, <a href="https://kas-smiths.org">Kas Smiths</a>, and <a href="https://kascov.io">kascov</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
@@ -402,12 +400,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

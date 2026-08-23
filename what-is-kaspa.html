@@ -68,7 +68,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -83,11 +83,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -144,15 +142,15 @@
         </article>
         <article>
           <span>Coloring</span>
-          <p>The k cap below decides color. Blocks that stay inside it join the <a href="/glossary#blue-red">blue set</a>; the rest are marked red and keep their place, their parents, and their transactions.</p>
+          <p>The k cap below decides color. Blocks that stay inside it join the <span class="term-def" tabindex="0" role="button" aria-describedby="blue-red-def-wik">blue set<span class="term-def__panel" id="blue-red-def-wik" role="tooltip">GHOSTDAG marks well-connected blocks blue and less-compatible ones red, for ordering and security accounting.</span></span>; the rest are marked red and keep their place, their parents, and their transactions.</p>
         </article>
         <article>
           <span>Spine</span>
-          <p>Each block picks the parent carrying the most <a href="/glossary#blue-work">blue work</a> as its <a href="/glossary#selected-parent">selected parent</a>. Chain those picks together and you get the closest thing Kaspa has to Bitcoin's longest chain.</p>
+          <p>Each block picks the parent carrying the most <span class="term-def" tabindex="0" role="button" aria-describedby="blue-work-def-wik">blue work<span class="term-def__panel" id="blue-work-def-wik" role="tooltip">Accumulated proof-of-work weight carried by blue blocks. It's how Kaspa compares competing DAG histories.</span></span> as its <span class="term-def" tabindex="0" role="button" aria-describedby="selected-parent-def-wik">selected parent<span class="term-def__panel" id="selected-parent-def-wik" role="tooltip">The parent block that defines the main ordering path through the DAG. Not the same thing as Bitcoin's longest chain.</span></span>. Chain those picks together and you get the closest thing Kaspa has to Bitcoin's longest chain.</p>
         </article>
         <article>
           <span>One order</span>
-          <p>Walk that spine from genesis to the current tip, absorbing each <a href="/glossary#mergeset">mergeset</a> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
+          <p>Walk that spine from genesis to the current tip, absorbing each <span class="term-def" tabindex="0" role="button" aria-describedby="mergeset-def-wik">mergeset<span class="term-def__panel" id="mergeset-def-wik" role="tooltip">The set of past blocks a new block pulls into view: how parallel work gets folded into the ordering.</span></span> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
         </article>
       </div>
       <p class="fit-note">Add blocks by hand below and watch blue and red resolve live.</p>
@@ -196,7 +194,7 @@
         });
       })();
       </script>
-      <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <a href="/glossary#anticone">anticone</a>: the blocks that came neither before it nor after it.</p>
+      <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <span class="term-def" tabindex="0" role="button" aria-describedby="anticone-def-wik">anticone<span class="term-def__panel" id="anticone-def-wik" role="tooltip">Blocks that sit in neither a block's past nor its future. Nodes need an anticone rule to order these consistently.</span></span>: the blocks that came neither before it nor after it.</p>
       <p>A single chain has no way to rank an anticone, which is why it discards one side of it. GHOSTDAG ranks it instead, using one behavioral difference between honest miners and hidden ones.</p>
       <p>An honest miner publishes a block the second it is found. A miner building a secret history does the opposite.</p>
       <details class="deep-dive">
@@ -262,14 +260,14 @@
         <summary>What actually sets a safe wait, and how finality depth differs</summary>
         <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
         <p>Three things set the honest wait: the value at stake, current hash rate and its spread, and whether the payment can be undone outside the protocol (a shipping hold tolerates a thinner wait than handing over a good nobody can claw back). Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
-        <p><a href="/glossary#finality-depth">Finality depth</a> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
+        <p><span class="term-def" tabindex="0" role="button" aria-describedby="finality-depth-def-wik">Finality depth<span class="term-def__panel" id="finality-depth-def-wik" role="tooltip">The threshold past which old history counts as settled.</span></span> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
       </details>
     </section>
 
     <section id="throughput" class="section">
       <p class="eyebrow">Throughput</p>
       <h2>Ask "TPS of what?"</h2>
-      <p class="fit-note"><strong>Status checked August 22, 2026:</strong> Kaspa mainnet runs the Crescendo-era 10 BPS network. Toccata went live at DAA 474,165,565 and changed proof and covenant capacity. Plain payment TPS tracks the 10 BPS network and transaction mix.</p>
+      <p class="fit-note"><strong>Status checked August 22, 2026:</strong> Kaspa mainnet runs the <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-wik">Crescendo<span class="term-def__panel" id="crescendo-def-wik" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span>-era 10 BPS network. <span class="term-def" tabindex="0" role="button" aria-describedby="toccata-def-wik">Toccata<span class="term-def__panel" id="toccata-def-wik" role="tooltip">The mainnet upgrade activated 30 June 2026 that let a coin carry enforceable spending rules, called covenants, instead of just moving from one address to another.</span></span> went live at DAA 474,165,565 and changed proof and covenant capacity. Plain payment TPS tracks the 10 BPS network and transaction mix.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -345,7 +343,7 @@
           </table>
         </div>
         <p>vProgs remain roadmap architecture. Toccata ships the parts vProg-style systems need without shipping vProgs. KIP-21 stops every prover from having to follow the whole DAG for every app: its partitioned commitment design targets O(activity) proving, so a prover for one app lane tracks only that lane.</p>
-<p>Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at 10 BPS is a worst-case 500 user-lane updates per second, and user transaction throughput still needs its own transaction-shape math on top. The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. Michael Sutton's <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into Silverscript, with an audit as the gate its README sets before real use.</p>
+<p>Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at 10 BPS is a worst-case 500 user-lane updates per second, and user transaction throughput still needs its own transaction-shape math on top. The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. <span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-wik">Michael Sutton<span class="term-def__panel" id="sutton-def-wik" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-wik">Silverscript<span class="term-def__panel" id="silverscript-def-wik" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span>, with an audit as the gate its README sets before real use.</p>
       </details>
     </section>
 
@@ -365,13 +363,13 @@
           </tbody>
         </table>
       </div>
-      <p class="fit-note">Anything not listed here goes through the <a href="/kaspa-claims-checker">claims checker</a>, which sorts a claim into live, testnet, targeted, roadmap, research, wrong, unsupported, or out of scope.</p>
+      <p class="fit-note">Anything not listed here goes through the <a href="/status#claim-fact-check">claim fact-check</a>, which sorts a claim into live, testnet, targeted, roadmap, research, wrong, unsupported, or out of scope.</p>
     </section>
 
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work. Below is a live read of Kaspa's own public API, not a simulation.</p>
+      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work. Below is a live read of Kaspa's own public API. It is not a simulation.</p>
       <div class="live-demo-frame">
         <iframe id="live-network-frame" src="/demos/live-network" title="Live read of Kaspa's public API: blocks arriving in real time" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
@@ -452,12 +450,10 @@
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

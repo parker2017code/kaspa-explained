@@ -124,6 +124,18 @@ async function main() {
         await page.setViewportSize({ width, height: 1000 });
         try {
           await page.goto(baseUrl + '/' + file + '?theme=' + theme, { waitUntil: 'load', timeout: 20000 });
+          // Freeze CSS transitions/animations before capture. Without this,
+          // load-time reveal transitions (opacity/transform fades, brand-mark
+          // shimmer, etc.) get sampled mid-flight and produce a different
+          // computed-style hash on every run even with byte-identical CSS and
+          // HTML, which makes the empty-diff proof this script exists for
+          // impossible to satisfy. This override only affects the measurement
+          // page, never ships, and settles every element to its rest state so
+          // the comparison reflects actual rule changes, not capture timing.
+          await page.addStyleTag({
+            content: '*, *::before, *::after { transition: none !important; animation: none !important; }',
+          });
+          await page.evaluate(() => document.fonts && document.fonts.ready);
           await page.waitForTimeout(150);
         } catch (e) {
           snapshot[key] = { error: e.message };

@@ -39,19 +39,19 @@
   <meta name="twitter:title" content="Argent and Silverscript, Explained | Kaspa Explained">
   <meta name="twitter:description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-22">
+  <meta name="dateModified" content="2026-08-23">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Argent and Silverscript, Explained",
     "url": "https://kaspaexplained.com/argent-explained",
-    "dateModified": "2026-08-22",
+    "dateModified": "2026-08-23",
     "description": "Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.",
     "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -66,11 +66,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -98,9 +96,9 @@
     <section class="section">
       <p class="eyebrow">Inter-Covenant Communication</p>
       <h2>Two Argent actors, one atomic transaction</h2>
-      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. Drive two apps through a shared move below and watch what one transaction actually forces to agree.</p>
+      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. Watch the underlying race below, then open the full demo to drive two Argent actors through a shared move.</p>
       <div class="live-demo-frame">
-        <iframe id="argent-shared-state-frame" src="/demos/shared-state" title="Shared-state demo: two separately compiled apps composing atomically over the same on-chain data" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+        <iframe id="argent-shared-state-frame" src="/demos/shared-state" title="Race demo: two writers reach for the same slot on a UTXO model versus an account model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
       </div>
       <script>
       (function () {
@@ -184,6 +182,54 @@ app Tickets {
       </details>
     </section>
 
+    <section class="section">
+      <p class="eyebrow">Try it: down the stack</p>
+      <h2>Watch the Ticket example move from Argent to Kaspa Script</h2>
+      <p>Pick one of the three lines from the <code>transfer</code> entry above and follow it down. Two of the three turn out to be plain Silverscript, unchanged. The third, <code>become</code>, is the one line Argent actually invents, and the demo says exactly where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
+      <div class="live-demo-frame">
+        <iframe id="argent-pipeline-frame" src="/demos/argent-pipeline" title="Pipeline demo: a line from Argent's Ticket example followed through Silverscript to Kaspa Script" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="/demos/argent-pipeline">Full pipeline demo</a>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('argent-pipeline-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            var resize = function () {
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            syncFrameTheme();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
+    </section>
+
     <section class="section prose-section" data-audience="specialist">
       <p class="eyebrow">What's proven, what isn't</p>
       <h2>Partitioned state works. Shared state is a design direction.</h2>
@@ -234,9 +280,9 @@ app Tickets {
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>What it added.</p></a>
-        <a href="/status"><span>Next</span><strong>Kaspa status</strong><p>Activation evidence.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>Live, roadmap, research.</p></a>
+        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.</p></a>
+        <a href="/build-on-kaspa"><span>Next</span><strong>Build Kaspa apps</strong><p>Three ways to build on Kaspa, and how to work out which one your idea needs.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
@@ -272,12 +318,10 @@ app Tickets {
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>

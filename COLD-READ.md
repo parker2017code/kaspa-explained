@@ -1,265 +1,92 @@
 # Cold read: kaspaexplained.com
 
-First-time-visitor pass. Local copy served at localhost:4196. Chrome, desktop
-(1280) and mobile (375, close enough to 390), light and dark. Read as someone
-who has never seen Kaspa, GHOSTDAG, a UTXO, or a covenant before, flagging
-every place prior training knowledge would have silently filled a gap the
-page left open. Coverage is partial given the size of the site (100+ HTML
-files, 16 demos): homepage, Start Here, What Is Kaspa, Status, Glossary,
-Demos index, the Confirmation Risk demo, and the Claims Checker. Everything
-else in the nav (Toccata, Origin, Mining, Build on Kaspa, Compare Chains,
-Compare AI Models, About, Sources, KIPs, Skeptical Case, and 14 of the 16
-demos) was not opened. Say so plainly rather than implying full coverage.
+First-time-visitor pass, served locally on port 4210, own Chromium instance (`channel: 'chrome'`), 45 surfaces reached by clicking from the homepage (crawl started at `/`, followed only links found in the rendered DOM). Checked at 1280 and 390, light and dark. Today is August 23, 2026.
 
-## The five worst moments
+I do not use crypto/Kaspa background to fill gaps. If a page reads clearly to me only because I already knew the concept, I say so.
 
-1. **The homepage's own headline sentence gatekeeps instead of welcomes.**
-   The first thing anyone reads, in the hero, above the fold: "The
-   proof-of-work network where miners don't race for one slot. They work in
-   parallel, and GHOSTDAG orders every honest block into one history the
-   whole network agrees on." GHOSTDAG is a hyperlink, which helps, but the
-   sentence itself treats the term as already known. This is the single most
-   prominent claim on the entire site and it spends its first ten seconds
-   asking for trust instead of earning it.
+## The ten worst moments
 
-2. **The Glossary is broken: it silently redirects to a different page.**
-   Navigating to `/glossary.html` or `/glossary` does not load a glossary.
-   `location.href` after the navigation reads `/what-is-kaspa`, and the page
-   content is the What Is Kaspa article, not a term list. Confirmed twice,
-   from a fresh reload each time. The Glossary is exactly where a reader
-   goes after hitting an unexplained term like "covenant" or "mergeset," and
-   it does not work. For a site whose whole pitch is precision, this is close
-   to disqualifying.
+1. **`/demos/ghostdag-playground`, on load, no scrolling.** The site's own top-ranked demo ("Ranked by how much each one matters, most first") opens with a breadcrumb reading "...ERACTIVE · BACK TO WHAT IS KASPA" and the page's own H1 "GHOSTDAG playground" rendering directly underneath the fixed site header, overlapping it. Both are legible only in fragments. This is the literal first thing a visitor who follows the site's own recommendation sees. Confirmed live, not a screenshot-stitching artifact (checked at natural viewport size, not full-page).
+2. **`/kips`, clicking "DAGKnight."** The KIP/KCC tracker has a link with visible text "DAGKnight" pointing to an internal path `/dagknight`, which 404s to "Page Not Found." A visitor curious about the one research item everyone asks about hits a dead page.
+3. **`/chain-comparer`, after expanding "Show all 17" and "What each chain claims" and scrolling.** A second full header (logo, nav, "Light" button) renders stacked on top of the page content at a specific scroll depth, overlapping row data: "Polkadot" bleeds into "Live now / Risks / Build / Demos," and "Group to run yourself" is cut off behind the duplicate bar. Confirmed by manual scroll, not full-page capture.
+4. **`/status`, the whole page.** Full-page screenshot measures roughly 11,400px tall at 1280 wide, around 15 screens of stacked tables, legends, and FAQ with no visible jump nav until you're already deep in it. This is reached from the second nav item ("Live now"). I would not have read past the fourth table on a first visit.
+5. **`/status`, table row "SUTTON'S NUMBERS, AND THE CLAIM THAT OVERSHOOTS THEM."** A person's surname, capitalized, dropped into a data table with zero introduction anywhere on the page or on any page a visitor would have seen first. Who Sutton is only surfaces on a completely different page (`/sources`), buried in a paragraph about a Discourse forum: "core developer Michael Sutton." A first-time reader hitting the status table has no idea who this is.
+6. **`/what-is-kaspa`, the page literally labeled "BEGINNER ANSWER."** Within a few paragraphs it uses "blue set," "blue work," "selected parent," "mergeset," "anticone," "Crescendo-era," and "Silverscript" is used elsewhere on the same info architecture without ever being defined on this page. This is supposed to be the on-ramp; it reads like a protocol spec.
+7. **`/demos/argent-pipeline` ("One line, three layers"), the demo's own punchline.** The premise is watching one line of code go from Argent source to Silverscript to Kaspa Script. The third and most interesting layer is labeled "not published" and described only in prose ("The .sil build's JSON artifact records the result as a byte array, not as readable opcode text"). The demo sets up a payoff it does not deliver — the compiled bytecode itself is never shown.
+8. **`/model-picker` ("Compare AI models").** A full LLM cost/quality comparison tool (Claude Opus 5, GPT-5.6, Gemini 3.1, and so on) sits in the primary demo list and in the homepage's "TRY IT" section. Nothing on the page itself explains what this has to do with Kaspa. I read the whole page looking for the connection and never found one stated in view.
+9. **`/chain-comparer`, default view.** The site's own comparison tool, under default weights ("Paying someone"), does not show Kaspa in the top 3 — you have to click "Show all 17" to find it at rank 12 of 17, score 46, with its own callout reading "0.9 TPS measured, 40 developers, no custody, no ETF, and no major wallet" and "100 ms shows up · 12.0 h settles." This is defensible editorially (the site says "Kaspa gets no special treatment") but it means the coin the site exists to explain is invisible in its own flagship comparison tool unless you dig.
+10. **`/build-on-kaspa`, immediately after the nav click.** "Build" in the main nav goes straight into `docker pull kaspanet/rusty-kaspad:latest`, `cargo run --release --bin kaspad`, and curl commands with `x-api-key` headers, with no fork in the road for "I don't know what a node is yet." A non-developer clicking the fourth nav item lands in a terminal.
 
-3. **The page literally labeled "BEGINNER ANSWER" fails its own label in
-   its first two sentences.** What Is Kaspa opens: "Kaspa is a live
-   proof-of-work blockDAG network. It keeps Bitcoin-style mining and UTXO
-   ownership, and GHOSTDAG orders parallel blocks into one payment history."
-   Three unexplained terms (blockDAG, UTXO, GHOSTDAG) in the very sentence
-   tagged as the beginner-safe answer. A beginner reading only this sentence
-   learns nothing they didn't already have to bring with them.
+## Page by page, in the order I met them
 
-4. **The homepage's own "Live now" card leads to the most jargon-dense page
-   on the site.** Status is one of six featured homepage cards, worded as
-   an entry point ("Mainnet facts, dated checks"). It contains, without a
-   single word of explanation anywhere on the page: "Silverscript," "TangVM,"
-   "Hashdag," "RTD framing," and "parameterless consensus." A reader who
-   trusted the homepage's framing and clicked the second card on the page
-   lands in what reads like an internal engineering changelog.
+**`/` (home).** Ten seconds: I know this is a Kaspa explainer with an editorial, not-hype stance ("Independent Kaspa explainer... Not investment advice"). What makes me want to leave: the tagline itself uses GHOSTDAG unexplained ("GHOSTDAG orders every honest block into one history the whole network agrees on"), and immediately below it "Toccata is active / Activated at DAA score 474,165,565: L1 covenants, ZK verification, sequencing commitments" stacks four unexplained terms in one line, above the fold, before I've read a single defined term. Nav is five items (What is Kaspa / Live now / Risks / Build / Demos) plus a theme toggle — clean. The inline collision-sim widget ("Watch a blockDAG keep what a chain would drop") is a nice touch and renders fine on mobile. Live API numbers at the bottom (circulating supply, mined %, blocks stored, DAA score) with "i" info affordances is a good pattern I wish the rest of the site used. I know where to go next (Start Here is offered) and would click it.
 
-5. **The homepage's "Check claims" card leads to a wall of bare proposal
-   codes.** The Claims Checker is pitched as clarity ("Most bad Kaspa claims
-   blend testnet work, roadmap design, and live mainnet behavior into one
-   sentence. The table below pulls them apart.") Its own rows then read:
-   "TN10 Toccata test," "TN12 proves mainnet covenants," "KCC-0020 is a
-   ratified fungible-token standard," "KCC-0021 and KCC-0402 are adopted
-   standards." None of TN10, TN12, KCC-0020, KCC-0021, or KCC-0402 is ever
-   expanded or glossed on this page. The page promises to resolve
-   confusion and instead adds a new alphabet of undefined codes.
+**`/what-is-kaspa`.** See worst-moment #6. Read twice: "The security parameter k caps how many blue blocks may sit in any blue block's anticone, derived from block rate and expected network delay" — this sentence uses three terms (blue blocks, anticone, k) in a row, two of which were only just introduced a paragraph earlier and one of which (anticone) is defined in the same breath it's used, which is backwards. The GHOSTDAG interactive coloring section is genuinely good once you slow down for it, but it demands slowing down. Terms used before explained here: "Crescendo-era" (never defined on this page), "vProgs" (link only, no gloss), "covenant IDs" (used in the live-vs-next table, defined only by clicking through to Toccata Explained).
 
-## Page by page
+**`/status`.** See worst moments #4 and #5. This is a reference page pretending to be a status page you'd read start to finish. The FAQ at the bottom ("Is DAGKnight live? Is Toccata live?") is genuinely the clearest writing on the page and probably deserves to be much higher up.
 
-### Homepage (/)
-- 10-second test: fails for a true newcomer. The hero sentence leans on
-  GHOSTDAG immediately (see worst moment #1). Below the fold the page
-  recovers a little: six labeled cards (What is Kaspa, Live now, Check
-  claims, Risks, Build, Sources) give a legible menu, and "New to crypto?
-  Start Here" is a genuine, well-placed escape hatch.
-- Sentences read twice: "GHOSTDAG orders every honest block into one
-  history the whole network agrees on," reread trying to figure out
-  whether "honest" is doing technical work here or is just flavor text.
-  It's never resolved on this page.
-- Terms used before explained: GHOSTDAG, blockDAG (in "PoW, blockDAG,
-  GHOSTDAG, KAS."), covenants ("Toccata is active... L1 covenants"), ZK
-  verification, sequencing commitments, UTXO ("UTXO expressiveness" card),
-  DAA score (used in "Activated at DAA score 474,165,565" before the info
-  tooltip further down even exists).
-- The DAA score info-icon tooltip explains DAA score using "block height,"
-  itself never explained anywhere on this page: one undefined term
-  defining another.
-- The live-data block (circulating supply, mined %, blocks stored by one
-  node, DAA score) is a nice touch: it's honestly labeled "best-effort"
-  and dated. Genuinely interesting: it feels like a live instrument, not
-  marketing copy.
-- The "single chain throws away 83% of blocks" demo teaser is the most
-  visually effective thing on the page: a number plus a live animated
-  scatter of kept/discarded dots. This is the one moment on the homepage
-  that would pull a reader forward out of curiosity rather than duty.
-- Visual bug: in light theme (confirmed at both 375 and 1280 width), the
-  "INDEPENDENT EXPLAINER" eyebrow label has a colored background pill that
-  covers only the word "INDEPENDENT," leaving "EXPLAINER" as plain text
-  right next to it on the same line. Reads as a broken two-tone label. Not
-  present in dark theme, where both words are plain teal text.
-- Theme default: the site opens in dark mode regardless of the OS-level
-  light preference passed to the browser. Not necessarily wrong, but worth
-  knowing it doesn't respect `prefers-color-scheme`.
-- Does the next step read clearly? Yes: the card grid is legible and the
-  "Start Here" CTA is well placed for someone lost.
+**`/skeptical-case`.** The best-written page I read. Seven risks in plain sentences ("Block rewards decline over time. Unless fees and demand replace that revenue, miner income falls and so does the cost of attacking the network"), each with a collapsible "what would settle it." No jargon dump, no wasted words. This is the page I'd actually forward to a skeptical friend. Ends with a working "price the security budget" demo teaser.
 
-### Start Here (/start-here.html)
-- The best-explained page of the ones visited. It defines private key,
-  public key, signature, hash, account model, and UTXO model each in one
-  short paragraph, bottom-up, before using them. This is the one page that
-  behaves like it was written for a stranger.
-- Still: GHOSTDAG is named ("order them with GHOSTDAG") without mechanism,
-  deferred to the next page by design, but the page doesn't say so, so a
-  reader doesn't know whether to expect an explanation here or not.
-- New unexplained terms introduced without gloss: pruning-oriented nodes,
-  Crescendo-era network (proper noun, no definition), DAGKnight (proper
-  noun, no definition), RTD-derived app systems (RTD never expanded here),
-  premine (used, never defined even briefly).
-- Long and text-dense: a wall of paragraphs with headers as the only
-  visual break until the UTXO diagram appears roughly two-thirds down. A
-  first-time reader would likely stop well before that diagram.
-- 10-second test: fails as an entry point on its own (too much text, no
-  visual anchor near the top) but succeeds as a "next step" once a reader
-  has already committed via the homepage CTA.
+**`/build-on-kaspa`.** See worst moment #10. Once past the shell commands, "What to build" is a reasonable menu, but the page never signals up front that it's a developer reference, not a builder's pitch deck — the nav label "Build" undersells how technical this gets in the first screen.
 
-### What Is Kaspa? (/what-is-kaspa.html)
-- Opens badly (worst moment #3). Recovers partially: the "Parents / Coloring
-  / Spine / One order" breakdown of GHOSTDAG is a genuine, structured
-  attempt at mechanism, and it does define anticone, mergeset, blue work,
-  selected parent, and k cap in place, each with a one-line gloss. This is
-  the site doing the hard thing correctly, in contrast to most other pages.
-- But the density is extreme: multiple new terms per sentence, sustained
-  for several screens. A first-time reader would need to re-read most of
-  the "ordering rule" section, possibly more than once.
-- Terms still dropped with zero gloss on this page: premine, orphan rate,
-  "light client, finality certificate, reporter set, oracle, or challenge
-  process" (five jargon terms in one clause, none explained), Silverscript
-  is not here but covenant IDs and vProgs are used without definition.
-- The interactive "add blocks by hand" GHOSTDAG coloring demo and the
-  confirmation-curve widget are present (confirmed via page text: "Advance
-  time," "Force a count instead," "Mine this many," "Reset," plus two
-  collapsed "Advanced" disclosures). No clean screenshot of the canvas
-  itself came through: the Browser pane's screenshot capture repeatedly
-  returned solid black at this scroll position, on a freshly reloaded page,
-  with no corresponding DOM element or console error at that point
-  (checked via `elementsFromPoint`, which returned normal text nodes, and
-  console, which was empty). That reads as an artifact of a heavily
-  shared/contended browser session rather than a real page defect, but it
-  means this specific demo did not get driven, which the task requires.
-  Flagging the gap rather than guessing at what it looks like.
-- "TPS of what?" section is a good instinct (payment TPS vs. covenant TPS
-  vs. ZK/settlement TPS vs. app-level throughput, kept as four separate
-  rows) but ZK is never once spelled out as zero-knowledge anywhere on this
-  page or the homepage.
-- "LIVE VS NEXT" true/false table is the clearest writing on the page:
-  short, concrete, mostly jargon-free per row. This is a model for what the
-  rest of the site could read like.
+**`/demos` (hub).** Ten seconds: "Seventeen demos to push on instead of read" is a clear pitch. One line I read twice: it says "Seventeen demos" and lists sixteen. Not a big deal, but a first-time visitor who counts will notice the mismatch.
 
-### Status (/status.html)
-- This is the homepage's second-billed card ("Live now") and the densest
-  page visited (worst moment #4). "Silverscript," "TangVM," "Hashdag,"
-  "netsplit-resilient," and "parameterless consensus" all appear with no
-  definition, several only once, in passing, inside a status table meant to
-  be scannable.
-- "Base RTD framing... Real-time decentralization is Hashdag's name for
-  Kaspa's core trade" explains RTD but not Hashdag: is it a person, a
-  project, a website? The only clue is the source link `hashd.ag/raw`,
-  which is not itself explanatory.
-- The misconceptions section ("Common Misconceptions") is well written and
-  genuinely useful: short claim/correction pairs in plain English. Good
-  contrast with the table above it.
-- 10-second test: fails. This does not read like a page for someone new to
-  the network; it reads like release notes for someone already fluent in
-  Kaspa's internal vocabulary.
+**`/sources`.** A wall of repo links, branch names, and PR references. This is a reference page, fine for that purpose, but it's the only place that ever explains who "Sutton" and "Hashdag" are (Michael Sutton, core developer; hashd.ag, a blog), and a visitor who met those names on `/status` would never think to look here for the gloss.
 
-### Demos index (/demos/)
-- Sparse: a ranked list of 16 demo titles with almost no supporting text.
-  Titles like "The shared-state gap" and "Parameterless consensus" give a
-  first-time visitor no idea what they'll see before clicking. This page
-  could use one line per demo the way the homepage cards do.
+**`/start-here`.** Did not read in full; scanned. Positioned as the actual beginner path per its own framing and the homepage's pointer to it. Reasonable structure.
 
-### Confirmation Risk demo (/demos/confirmation-risk.html)
-- The best-designed thing checked on the site. Comparing three real chains
-  side by side (Bitcoin, Litecoin, Kaspa) against one slider (attacker
-  strength) makes the payoff immediately legible without requiring the
-  reader to already understand GHOSTDAG: drag right, watch Kaspa's "safe"
-  time barely move while Bitcoin's balloons. Confirmed the slider is
-  functional (dragged it, the attacker-percentage number and the safe-time
-  read jumped live).
-  This is a demo worth showing someone; it demonstrates the point
-  ("waiting matters more than a block-count") without requiring jargon
-  first.
-- Minor: "reorg" is used and only loosely glossed ("If the block carrying
-  your payment gets replaced..."); acceptable but still an assumed term.
-- Could not screenshot the numeric result table after scrolling: same
-  black-screenshot pattern seen on What Is Kaspa, most likely the shared
-  browser pane rather than the page.
+**`/toccata-explained`.** "What Toccata turned on" leads with six cards labeled KIP-17, KIP-20, KIP-16, KIP-21, vProgs, Based apps — card titles are bare KIP numbers with no gloss of what a KIP even is on this page (that's on `/status`, a different page). Console shows three `403` errors from `api.github.com` (rate-limited, unauthenticated) — a live commit/release count widget on this page silently fails to load; a visitor sees whatever the unstyled failure state is, never told the data didn't come through.
 
-### Kaspa Claims Checker (/kaspa-claims-checker.html)
-- Good concept, bad execution for a first-timer (worst moment #5). Rows are
-  grouped sensibly (Core protocol / Toccata and smart contracts / Tokenomics
-  and standards / Roadmap and app layer) but several rows are unreadable
-  without prior knowledge: "TN10 Toccata test means mainnet activation,"
-  "TN12 proves mainnet covenants," "KCC-0020 is a ratified fungible-token
-  standard," "KCC-0021 and KCC-0402 are adopted standards already running in
-  production." None of TN10, TN12, or the KCC numbers is expanded anywhere
-  on the page.
-- The status labels themselves (LIVE, TESTNET ONLY, WRONG, MISLEADING,
-  ROADMAP, RESEARCH, NOT YET) are a genuinely good idea: a real taxonomy a
-  reader could learn once and reuse, but the page never states the
-  taxonomy up front before using it row by row.
+**`/demos/confirmation-risk`.** Clean, no header bug. "How long until a payment is safe" with a mining-power slider and a Bitcoin/Litecoin/Kaspa comparison ("Kaspa becomes safe: 400 ms" vs "Bitcoin: 40 min") is intuitive without needing prior knowledge — good demo.
 
-## Every term the site uses without ever explaining it
+**`/demos/emission-schedule`, `/demos/mass-calculator`.** Not deeply tested for interaction; text-scanned. No console errors.
 
-(Across the pages actually visited: homepage, Start Here, What Is Kaspa,
-Status, Demos index, Confirmation Risk, Claims Checker. A term counts here
-if it appeared unglossed on at least one of these pages, even if some other
-unvisited page might define it.)
+**`/chain-comparer`.** See worst moments #3 and #9. The claims-vs-measured table (previously broken per the brief) now renders correctly with real numbers and no console errors — that fix holds. The header-overlap bug is new territory, not the same bug that was fixed.
 
-- GHOSTDAG (named repeatedly, mechanism only partly explained on What Is
-  Kaspa, and even there assumes DAG/graph fluency)
-- blockDAG (used before it's ever defined; eventually glossed mid-page on
-  What Is Kaspa, after several prior uses)
-- DAA score (tooltip defines it using "block height," which is itself never
-  defined)
-- block height
-- Toccata (never plainly defined as "the name of a specific hard fork /
-  protocol upgrade" anywhere visited, used as if the reader already knows)
-- covenant / covenants (used repeatedly, never defined in plain language;
-  "UTXO expressiveness... what covenants let a transaction enforce on
-  itself" is circular, not a definition)
-- ZK verification / ZK proof (never once spelled out as zero-knowledge)
-- sequencing commitments
-- vProgs (recurring proper noun, never defined)
-- mass / "block-mass limits" / "mass dimension" (overloaded technical term,
-  never given a plain-language definition despite a whole demo, "Mass
-  calculator," being built around it)
-- Silverscript
-- TangVM
-- Hashdag / hashd.ag (unclear if person, project, or site)
-- RTD framing (RTD itself is glossed as "real-time decentralization," but
-  only once, in passing, inside a dense status-table cell)
-- netsplit-resilient
-- parameterless consensus (used as a demo title with no on-page gloss;
-  loosely explained elsewhere as "adapts instead of being tuned by hand")
-- premine (assumed known throughout; "no premine" appears with no
-  definition of what a premine is)
-- orphan rate
-- KIP / KIPs (never expanded: "Kaspa Improvement Proposal" is never spelled
-  out on any page visited)
-- KCC (never expanded; bare codes like KCC-0020, KCC-0021, KCC-0402 used as
-  if self-explanatory)
-- TN10, TN12 (bare testnet codenames)
-- DAGKnight (named as a research project multiple times, loosely glossed
-  once as "a parameterless consensus direction," itself jargon)
-- light client, finality certificate, reporter set, challenge process
-  (five-term jargon list dropped in one clause on What Is Kaspa, none
-  individually explained)
-- Crescendo (era name used repeatedly as if known: "Crescendo-era network")
-- selected parent, blue work, anticone, mergeset, k cap: worth noting these
-  ARE explained, in place, on What Is Kaspa. Listed here only to contrast
-  with the much longer list above of terms that get the same jargon
-  treatment with no such effort.
+**`/model-picker`.** See worst moment #8. Genuinely well-built as a standalone tool (a value-frontier scatter plot, a 4,000-simulation win-rate bar), just orphaned from the site's stated subject.
 
-## Not covered
+**`/crypto-from-scratch`, `/why-kaspa-matters`, `/kaspa-mining`, `/kips`.** Skimmed. `/kips` carries worst-moment #2 (the dead DAGKnight link) and is otherwise a straightforward status tracker.
 
-Toccata Explained, Kaspa Origin Story, Mining Kaspa, Build on Kaspa, KIPs
-and KCCs, Compare Chains, Compare AI Models, About, Sources, Skeptical
-Case, Risks, and 14 of the 16 demos (only Confirmation Risk was driven; the
-GHOSTDAG playground on What Is Kaspa was located but not successfully
-screenshotted/driven). A full pass would need another session focused on
-those, plus a second look at the two black-screenshot spots to confirm
-they're tooling artifacts and not real rendering bugs.
+**`/search`.** Says "Type a concept, an audience, or a status" but the results panel underneath just reads "Showing all pages" — I never saw it actually filter anything in a static read of the page; this may be JS-driven and untested live by me here, worth a follow-up interaction pass.
+
+**`/about`.** Clear editorial policy, plain language, no jargon. Good page. Links to "The Instrument, by Moose," a 279-page third-party PDF hosted on the site with no stated relevance beyond "guest work" — legitimate curiosity but a strange thing to find on a Kaspa protocol explainer, and it's disclaimed clearly enough ("Not part of this site's checked claim set") that I don't count it as a problem, just a surprise.
+
+**`/demos/collision-sim`, `/kaspa-origin-story`, `/demos/parameterless`, `/demos/shared-state`, `/demos/attack-cost`, `/demos/fair-launch`.** Text-scanned, no console errors, no visible breakage.
+
+**`/argent-explained`.** Console shows GitHub API `403`s here too (same rate-limit pattern as `/toccata-explained`).
+
+**`/demos/ghostdag-playground`.** See worst moment #1. Once past the header collision, the demo itself works: an "Advance time" button, a live-updating DAG graph, and a "Linear order" strip that highlights blocks as counted or locked out. Understandable without prior GHOSTDAG knowledge if you can get past the garbled header first.
+
+**`/demos/utxo-vs-accounts`, `/demos/argent-pipeline`, `/demos/dag-time`, `/demos/fee-market`, `/demos/covenant-breaker`, `/demos/zk-boundary`, `/demos/node-cost`, `/demos/live-network`.** All render with no console errors. `/demos/covenant-breaker` is a strong demo: "This vault holds 10,000 KAS behind four rules. Get any of it to an address you control without satisfying all four" is a clear, game-like framing that needs no prior knowledge. `/demos/argent-pipeline` is the letdown described in worst moment #7.
+
+**`/utxo-vs-accounts`.** Clean top of page, no header overlap, clear framing ("An account balance is one slot two spenders can fight over. A UTXO coin isn't").
+
+**`/the-instrument`.** A one-screen pointer to the 279-page PDF mentioned above. Reachable only via `/about` or `/search`, not the main nav — fine for a curio, matches its low-priority placement.
+
+**`/404`.** Reached both directly and via the dead `/dagknight` link. Reasonable fallback copy ("That page isn't in the guide. Use search, status, sources, or the beginner path").
+
+## Redirect stubs (per the brief: glossary, claims checker, monthly digest)
+
+`/glossary` redirects to `/what-is-kaspa`; `/kaspa-claims-checker` redirects to `/status`. Both work and neither is linked from anywhere I crawled — no dangling internal links point at the old URLs, so this looks cleanly done. Could not find a monthly-digest URL at all (`/digest`, `/monthly-digest`, `/kaspa-monthly-digest` all 404); if it's meant to be a live redirect stub it isn't reachable under any guessable path.
+
+## Terms used before being explained (or never explained)
+
+- **GHOSTDAG** — used in the homepage hero line before any definition exists on that page.
+- **Sutton** — used bare on `/status`; the full name and role appear only on `/sources`.
+- **Hashdag** — used as a proper noun/source name on `/status` ("Hashdag's name for Kaspa's core trade"); never explained as a person's blog/handle on that page.
+- **Crescendo-era** — used repeatedly across `/what-is-kaspa`, `/status`, `/build-on-kaspa`; never defined on any of the pages that use it in my reading.
+- **Silverscript** — named on `/what-is-kaspa` and `/status` as something Toccata shipped; not explained until `/argent-explained` or `/toccata-explained`, pages a reader isn't guaranteed to have visited first.
+- **anticone, mergeset, blue set, blue work, selected parent** — introduced in rapid succession on the page labeled for beginners (`/what-is-kaspa`), each defined in the same sentence it's first used, sometimes using another undefined term to do it.
+- **vProgs** — used as a bare term on the homepage and `/what-is-kaspa` with only a link, no inline gloss, despite being central to multiple pages' "what's not live yet" framing.
+- **KIP / KCC** — used as bare numbers ("KIP-17," "KCC-0020") on `/toccata-explained` and `/build-on-kaspa` before their one clear definition, which lives on `/status`.
+- **DAA score** — used without inline explanation on the homepage hero stat block (mitigated by an "i" info icon there) but bare again later on `/status` and `/what-is-kaspa`.
+- **TN10 / TN12** — used constantly on `/sources` and `/build-on-kaspa` as if self-evident (testnet generation numbers); never spelled out as "Testnet-10" / "Testnet-12" on first use in my reading.
+- **kas-smiths.org, kaspa.social, KASmedia** — three separate community sites named on `/sources` with light explanation there, but never mentioned or connected to anywhere else, so if you meet them on `/status` first you get nothing.
+
+## Interaction notes
+
+No demo I tested threw a console error. The claims-vs-measured table on `/chain-comparer` (previously broken per the brief) now renders with real data. The header-overlap bugs on `/demos/ghostdag-playground` and `/chain-comparer` are new findings, confirmed live (not screenshot-stitching artifacts), reproducible on a fresh, uncontended browser tab.
+
+## What I did not get to
+
+`/kaspa-mining`, `/kaspa-origin-story`, `/why-kaspa-matters`, `/crypto-from-scratch`, and most of the remaining demo pages were text-read and checked for console errors but not interacted with live (sliders dragged, buttons clicked through every state). `/search`'s actual filtering behavior was not exercised live. Mobile (390) was spot-checked on the homepage only; dark/light was spot-checked on the homepage only. A second pass focused on mobile layout across the demo pages and a full interaction pass on every slider/button would be the natural next step.

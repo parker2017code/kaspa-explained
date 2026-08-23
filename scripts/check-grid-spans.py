@@ -55,7 +55,12 @@ def main() -> int:
     containers = set()
     spans = set()
     for m in re.finditer(
-        r"\.grid-cards:has\(> :nth-child\((\d+)\):last-child\)(\s*>\s*\*)?\s*\{([^}]*)\}", css
+        # A span rule may target the children as `> *` or as an nth-last-child
+        # range. Both place every card; only the first was recognized, so a
+        # working 4-card rule read as missing and blocked commits.
+        r"\.grid-cards:has\(> :nth-child\((\d+)\):last-child\)"
+        r"(\s*>\s*(?:\*|:nth-last-child\([^)]*\)))?\s*\{([^}]*)\}",
+        css,
     ):
         count, is_child, body = int(m.group(1)), bool(m.group(2)), m.group(3)
         if not is_child and "grid-template-columns" in body:

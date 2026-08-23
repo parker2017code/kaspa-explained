@@ -69,7 +69,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-deglossify2">
+  <link rel="stylesheet" href="styles.css?v=20260823-cssprune1">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -84,11 +84,9 @@
       <div id="primary-links" class="nav-links">
         <a href="/what-is-kaspa">What is Kaspa</a>
         <a href="/status">Live now</a>
-        <a href="/kaspa-claims-checker">Check claims</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
         <a href="/demos">Demos</a>
-        <a href="/sources">Sources</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -148,13 +146,65 @@
         </table>
       </div>
       <p>Start a based app as deterministic replay of accepted transactions, and add ZK only once proofs, privacy, or bridge logic become the product edge.</p>
-      <p>A fungible token means building against KCC-0020, a draft standard. Its supply-split consequence is permanent: co-authors defend one pattern and call another a wrong pattern still needing a spec fix. One production implementer already admits only partial conformance to it. Full detail on <a href="/kips">the KIP and KCC page</a>.</p>
-      <p>A covenant can only inspect the transaction spending it, not the wider chain: no shared-state read.</p>
+      <p>A fungible token means building against <span class="term-def" tabindex="0" role="button" aria-describedby="kcc-def-buildon">KCC-0020<span class="term-def__panel" id="kcc-def-buildon" role="tooltip">A Kaspa Call for Conventions: an agreement between wallets and apps on a shared format, like a token standard. It is not a consensus change; a KIP is.</span></span>, a draft standard. Its supply-split consequence is permanent: co-authors defend one pattern and call another a wrong pattern still needing a spec fix. One production implementer already admits only partial conformance to it. Full detail on <a href="/kips">the KIP and KCC page</a>.</p>
+      <p>A covenant can only inspect the transaction spending it. It has no shared-state read into the wider chain.</p>
       <details class="deep-dive">
         <summary>Why there's no shared-state read, and who's already hit it</summary>
         <p>Reading shared on-chain state, a price, a pool balance, consumes it in the same breath. Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB.</p>
         <p>A builder raised the gap in the Kaspa Core R&amp;D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no KIP yet says whether the fix belongs at L1 or in a future vProg.</p>
       </details>
+    </section>
+
+    <section id="covenant-breaker-demo" class="section" aria-labelledby="covenant-breaker-demo-title">
+      <p class="eyebrow">Try it</p>
+      <h2 id="covenant-breaker-demo-title">Attack a covenant vault</h2>
+      <p>Before writing spend-rule code, see what a covenant actually blocks. Try to move money out of this vault without following its rule.</p>
+      <div class="live-demo-frame">
+        <iframe id="covenant-breaker-frame" src="/demos/covenant-breaker" title="Covenant breaker: try to get money out of a Kaspa vault without following its spend rule" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      </div>
+      <script>
+      (function () {
+        var frame = document.getElementById('covenant-breaker-frame');
+        if (!frame) return;
+        frame.addEventListener('load', function () {
+          try {
+            var doc = frame.contentDocument;
+            if (!doc) return;
+            /* The demo hides its own chrome. It sets data-embedded on its
+               root element before first paint, and its stylesheet keys the
+               header, footer, and skip link off that. This page never
+               reaches in to hide anything itself. */
+            var resize = function () {
+              /* body.scrollHeight excludes the body's own margins, which clips
+                 the last pixels of the embedded demo. Take the largest honest
+                 measure and add the margins back. */
+              var cs = doc.defaultView.getComputedStyle(doc.body);
+              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+              frame.style.height = Math.ceil(Math.max(
+                doc.body.scrollHeight + margins,
+                doc.documentElement.scrollHeight,
+                doc.body.getBoundingClientRect().height + margins
+              )) + 'px';
+            };
+            resize();
+            window.addEventListener('resize', resize);
+            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
+          } catch (e) {}
+        });
+        var syncFrameTheme = function () {
+          try {
+            var doc = frame.contentDocument;
+            if (doc && doc.documentElement) {
+              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+            }
+          } catch (e) {}
+        };
+        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+      })();
+      </script>
     </section>
 
     <section id="build" class="section">
@@ -169,7 +219,7 @@
         <article><h3>Proof pages</h3><p>One page carrying user action, txid, source, status label, and current blocker.</p></article>
         <article><h3>Activity dashboards</h3><p>Payments, mining, and spam pulled apart, so one raw count stops passing for a signal.</p></article>
       </div>
-      <p>Six more open up once a spend rule does the work. The hard part is the gap between a good UI and a rule the network enforces: address generation, a synced node, Silverscript compilation, and explorer-visible outputs all have to work first.</p>
+      <p>Six more open up once a spend rule does the work. The hard part is the gap between a good UI and a rule the network enforces: address generation, a synced node, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-buildon">Silverscript<span class="term-def__panel" id="silverscript-def-buildon" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span> compilation, and explorer-visible outputs all have to work first.</p>
       <div class="reference-grid grid-cards">
         <article><h3>Vault policies</h3><p>Spend caps, delayed withdrawal, and a recovery key, enforced by the spend script itself.</p></article>
         <article><h3>Assurance funding</h3><p>Funds release only once enough backers commit by the deadline. Miss it and refunds fire on their own.</p></article>
@@ -193,13 +243,13 @@
         <article><span>User-visible result</span><p>What a wallet user, builder, or node runner can see right now.</p></article>
         <article><span>Remaining blocker</span><p>Whatever stands between this and a wider public claim, named plainly.</p></article>
       </div>
-      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on TN10 or TN12 and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored.</p>
-      <p>Merged code proves the code exists, not that the network runs it, and mixing those lanes in a public post turns a testnet demo into a mainnet rumor.</p>
+      <p>Live means code merged and switched on at mainnet. Testnet-only means accepted transactions on <span class="term-def" tabindex="0" role="button" aria-describedby="tn10-def-buildon">TN10<span class="term-def__panel" id="tn10-def-buildon" role="tooltip">A Kaspa test network used to trial protocol changes, including Toccata, ahead of mainnet activation.</span></span> or <span class="term-def" tabindex="0" role="button" aria-describedby="tn12-def-buildon">TN12<span class="term-def__panel" id="tn12-def-buildon" role="tooltip">A separate Kaspa test network used to trial covenant and script changes ahead of mainnet.</span></span> and nothing past that. Targeted means booked for a near-term release, roadmap means signed off with no date, and research means still being explored.</p>
+      <p>Merged code proves the code exists. It does not prove the network runs it, and mixing those two claims in a public post turns a testnet demo into a mainnet rumor.</p>
       <details class="source-more" data-audience="specialist">
         <summary>Advanced state-transition proof note</summary>
         <p>State-transition proof models follow one pattern: selected-parent root plus current root plus leaf write witnesses. That keeps validation local to the single transition. Clients never have to maintain the whole incremental SMT.</p>
       </details>
-      <p class="source-inline">Protocol status traces to code, releases, and primary sources in <a href="/sources">Sources</a>. To place a specific public claim in one lane, use the <a href="/kaspa-claims-checker">claims checker</a>.</p>
+      <p class="source-inline">Protocol status traces to code, releases, and primary sources in <a href="/sources">Sources</a>. To place a specific public claim in one lane, use the <a href="/status#claim-fact-check">claim fact-check</a>.</p>
     </section>
 
     <section id="verify" class="section">
@@ -247,7 +297,7 @@ npm run check:all
 npm run check:tn12</code></pre>
         <p>Fund only the printed <code>kaspatest:</code> addresses, from a faucet that serves testnet-12. Every Kaspa testnet shares that prefix, so tKAS from a Testnet-10 faucet lands on a network TN12 never sees. Anything run with <code>--submit</code> broadcasts for real.</p>
         <h3>Hosted API checks</h3>
-        <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks, not as a protocol source.</p>
+        <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks. It is not a protocol source.</p>
         <div class="api-command-grid grid-cards" aria-label="Kaspa Developer Platform command examples">
           <article class="api-command-card">
             <span class="command-method command-method-post">POST</span>
@@ -283,7 +333,7 @@ npm run check:tn12</code></pre>
 amount: "31112708372"</code></pre>
           </article>
         </div>
-        <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so SilverScript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
+        <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so Silverscript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
       </div>
     </section>
 
@@ -349,7 +399,7 @@ amount: "31112708372"</code></pre>
                 <span class="sr-only">What compute grams means</span>
               </button>
               <span class="info-affordance__panel" id="compute-grams-panel" role="tooltip">Compute grams price the script work a covenant runs on spend, on top of raw transaction bytes. A sompi is 1/100,000,000 of one KAS.</span>
-            </span>. That's a mempool policy number, not a consensus rule.</p></article>
+            </span>. That's a mempool policy number. It is not a consensus rule.</p></article>
         <article><span>APIs</span><p>New integrations need <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> wherever those fields apply.</p></article>
         <article><span>Indexers</span><p>No <code>getUtxosByCovenantId</code> RPC exists on mainnet or testnet-10. Every covenant project ships its own indexer; a concrete design has sat unanswered since August 4, 2026.</p></article>
         <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, and fee estimation against Testnet-10, then against mainnet. The two won't match on every edge case.</p></article>
@@ -360,7 +410,7 @@ amount: "31112708372"</code></pre>
     <section class="section prose-section">
       <p class="eyebrow">Order of work</p>
       <h2>Build wallets and payments first</h2>
-      <p>Small covenant-shaped products come next, and based-app paths only once the product needs shared state. A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider, not one hosted API.</p>
+      <p>Small covenant-shaped products come next, and based-app paths only once the product needs shared state. A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider. One hosted API is not enough.</p>
       <p>If a user hands off an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. A validity proof big enough to be worth submitting trades block size against the standard-fee floor that keeps spam costly.</p>
     </section>
 
@@ -372,7 +422,7 @@ amount: "31112708372"</code></pre>
         <li><a href="https://progdoc.izio.fr/overview.html">Izio's programmability overview</a> lays out the same decision tree in more depth: <a href="https://progdoc.izio.fr/state-programs.html">covenants</a>, <a href="https://progdoc.izio.fr/app-vprogs.html">based apps</a>, <a href="https://progdoc.izio.fr/verified-actions.html">inline ZK</a>, and <a href="https://progdoc.izio.fr/full-vprogs.html">full vProgs</a>.</li>
         <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> define the JavaScript SDK request shape.</li>
         <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a>, and the <a href="https://tn12.kaspa.stream/">TN12 explorer</a>, all separate from the <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> activation evidence.</li>
-        <li><a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">Michael Sutton's vProgs masterclass</a> on app-to-app composition and prover incentives, alongside the <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo.</li>
+        <li><span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-buildon">Michael Sutton<span class="term-def__panel" id="sutton-def-buildon" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">vProgs masterclass</a> on app-to-app composition and prover incentives, alongside the <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo.</li>
         <li><a href="/status">Kaspa Explained status</a> and the <a href="/sources">source hierarchy</a> hold the live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>
@@ -381,7 +431,7 @@ amount: "31112708372"</code></pre>
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-essay"><span>Previous</span><strong>Toccata: Kaspa&#x27;s Expressiveness Upgrade</strong><p>Parker Schmidt&#x27;s essay on what the Toccata upgrade is: covenants, proof checking, KIP-21, and mining to your own node.</p></a>
+        <a href="/argent-explained"><span>Previous</span><strong>Argent and Silverscript, explained</strong><p>Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says...</p></a>
         <a href="/status"><span>Next</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
         <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
       </div>
@@ -399,12 +449,10 @@ amount: "31112708372"</code></pre>
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
-          <a href="/glossary">Glossary</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
           <a href="/status">Status</a>
-          <a href="/kaspa-claims-checker">Claims checker</a>
           <a href="/skeptical-case">Skeptical case</a>
           <a href="/sources">Sources</a>
         </div>
