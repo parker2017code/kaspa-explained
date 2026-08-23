@@ -104,3 +104,36 @@ content leading while chrome recedes, immediate physical response to
 input, and one obvious thing to do. A change that improves readability,
 legibility, or how the thing feels under a hand is welcome at any size.
 A change that is merely different is not.
+
+## How every sentence gets written
+
+Write about Kaspa the way Apple writes about a chip, Google writes about
+a model, or Tesla writes about a drivetrain. Confident, plain, specific.
+The reader is smart and busy. Nothing is being sold to them, and nothing
+is being hedged at them either.
+
+Every word is accounted for. If a word can come out and the sentence
+still says the same thing, it comes out. If a sentence can come out and
+the section still teaches the same thing, it comes out.
+
+Eliminate weird. Weird is anything that makes a reader stop and reread:
+a clause that unpacks backward, a term nobody defined, chrome that
+states the obvious, a caption arguing with the thing it captions, two
+pages describing the same mechanism in different words. If a sentence
+would sound strange read aloud to a smart stranger, it is wrong.
+
+Consistency is part of the voice. One name per concept across the whole
+site. One phrasing for a fact that appears twice. A reader who moves
+from a demo to a guide should not feel handed to a different writer.
+
+### On the rules in this document
+
+A rule here exists to make the page good. When a rule and a good page
+disagree, the page wins and the rule gets fixed. The 300-word ceiling
+became a per-section rule on guides for exactly this reason: applied
+literally it would have buried a mining guide behind a disclosure
+triangle, which is the failure the ceiling was written to prevent.
+
+This is not license to ignore the rules. It is a requirement to know
+what each one is for. Break one deliberately, in the open, with the
+reason stated. Never break one by forgetting it.
