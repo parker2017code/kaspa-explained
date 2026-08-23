@@ -13,7 +13,12 @@
     var key = "kaspa-explained-theme";
     var saved = null;
     try { saved = localStorage.getItem(key); } catch (e) {}
-    document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+    var param = new URLSearchParams(window.location.search).get("theme");
+    var theme = (param === "light" || param === "dark") ? param : saved;
+    document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    if (param === "light" || param === "dark") {
+      try { localStorage.setItem(key, param); } catch (e) {}
+    }
   })();
 </script>
 <style>

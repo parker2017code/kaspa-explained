@@ -124,6 +124,9 @@
     .cc-check em { display: block; font-style: normal; font-size: .78rem; color: var(--muted); line-height: 1.45; margin-top: 3px; }
     .cc-results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
     .cc-results-head .cc-label { margin: 0; }
+    .cc-head-actions { display: flex; gap: 14px; align-items: baseline; }
+    .cc-row-detail { margin-top: 4px; }
+    .cc-row-detail summary { font-size: .8rem; color: var(--cyan); cursor: pointer; }
     .cc-reset { font: inherit; font-size: .85rem; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
     .cc-reset:hover { color: var(--text); }
     .cc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
@@ -203,7 +206,10 @@
         <div class="cc-results">
           <div class="cc-results-head">
             <p class="cc-label" id="ccCount">Ranking</p>
-            <button type="button" class="cc-reset" id="ccReset">Reset</button>
+            <span class="cc-head-actions">
+              <button type="button" class="cc-reset" id="ccShowAll" aria-pressed="false">Show all</button>
+              <button type="button" class="cc-reset" id="ccReset">Reset</button>
+            </span>
           </div>
 
           <details class="cc-method">
@@ -472,6 +478,14 @@
       DIALS.forEach(function (d) { state[d.k] = 0; els[d.k].value = 0; });
       clearPreset(); render();
     });
+    if ($('ccShowAll')) {
+      $('ccShowAll').addEventListener('click', function () {
+        var btn = $('ccShowAll');
+        var open = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', String(open));
+        render();
+      });
+    }
     buildGap();
   }
 
@@ -556,37 +570,49 @@
     why.textContent = parts.join(', ');
     why.hidden = !parts.length;
 
+    var showAll = $('ccShowAll') && $('ccShowAll').getAttribute('aria-pressed') === 'true';
+    var CAP = 5;
+    var shown = showAll ? rows : rows.slice(0, CAP);
+    if ($('ccShowAll')) {
+      $('ccShowAll').hidden = rows.length <= CAP;
+      $('ccShowAll').textContent = showAll ? 'Show top 5' : 'Show all ' + rows.length;
+    }
+
     var frag = document.createDocumentFragment();
-    rows.forEach(function (r, i) {
+    shown.forEach(function (r, i) {
       var m = r.m, bits = [];
       // Inclusion and settlement side by side, always. Showing only one of them
       // is how this comparison gets rigged: quoting Kaspa's 0.1 s block flatters
-      // it, quoting only its 10 s settlement buries the thing it is good at.
+      // it, quoting only its 10 s settlement buries the thing it is good at. Both
+      // stay in the always-visible line; everything else moves to the per-row
+      // detail so the ranked list itself stays inside the page's word budget.
       if (m.bt !== null && m.bt !== undefined) bits.push(fmtFin(m.bt) + ' to show up');
       bits.push(m.fin === null || m.fin === undefined
-        ? 'publishes no settlement time' : fmtFin(m.fin) + ' to settle');
-      if (m.fee !== null && m.fee !== undefined) bits.push(fmtFee(m.fee) + ' median fee');
+        ? 'no coded settlement rule' : fmtFin(m.fin) + ' to settle');
+
+      var detailBits = [];
+      if (m.fee !== null && m.fee !== undefined) detailBits.push(fmtFee(m.fee) + ' median fee');
       if (m.tps !== null) {
-        bits.push(m.peak
+        detailBits.push(m.peak
           ? fmtTps(m.tps) + ' tx/s now, ' + fmtTps(m.peak) + ' at its peak'
           : fmtTps(m.tps) + ' tx/s');
       }
       if (m.emu !== null && m.emu !== undefined) {
-        bits.push(Math.round(m.emn).toLocaleString() + ' ' + TICKER[m.n] + '/day issued, ' + fmtUsd(m.emu) + ' at spot');
+        detailBits.push(Math.round(m.emn).toLocaleString() + ' ' + TICKER[m.n] + '/day issued, ' + fmtUsd(m.emu) + ' at spot');
       } else {
-        bits.push('daily issuance not sourced');
+        detailBits.push('daily issuance not sourced');
       }
-      if (m.disk !== null) bits.push(fmtDisk(m.disk) + ' node');
-      bits.push(PROGS_T[m.sc]);
-      bits.push(SEC_T[m.sec]);
+      if (m.disk !== null) detailBits.push(fmtDisk(m.disk) + ' node');
+      detailBits.push(PROGS_T[m.sc]);
+      detailBits.push(SEC_T[m.sec]);
       if (m.dev !== null && m.dev !== undefined) {
-        bits.push(m.devft !== null && m.devft !== undefined
+        detailBits.push(m.devft !== null && m.devft !== undefined
           ? m.dev + ' devs, ' + m.devft + ' full time' : m.dev + ' devs');
-      } else { bits.push('developer count not published'); }
-      bits.push(m.stew === 'none' ? 'no foundation' : m.stew);
-      if (r.missing.length) bits.push('quiet on ' + r.missing.length + ' of your dials');
-      // A figure somebody re-checked today is worth more than one nobody did.
-      if (m.meas && m.meas.length) bits.push('re-measured 1 Aug');
+      } else { detailBits.push('developer count not published'); }
+      detailBits.push(m.stew === 'none' ? 'no foundation' : m.stew);
+      if (r.missing.length) detailBits.push('quiet on ' + r.missing.length + ' of your dials');
+      if (m.meas && m.meas.length) detailBits.push('re-measured 22 Aug 2026');
+
       var li = document.createElement('li');
       li.className = 'cc-row' + (i === 0 ? ' top' : '');
       li.innerHTML =
@@ -594,9 +620,12 @@
         '<span class="cc-cell"><span class="cc-title"><span class="cc-name">' + m.n + '</span>' +
         '<span class="cc-tag">' + m.con + '</span></span>' +
         '<span class="cc-meta">' + bits.join('<span class="sep">·</span>') + '</span>' +
-        (m.why ? '<span class="cc-purpose">' + m.why + '</span>' : '') +
-        reasoning(r.parts) +
         (m.weak ? '<span class="cc-weak"><b>Weak on:</b> ' + m.weak + '</span>' : '') +
+        '<details class="cc-row-detail"><summary>More on ' + m.n + '</summary>' +
+        '<span class="cc-purpose">' + (m.why || '') + '</span>' +
+        '<span class="cc-meta">' + detailBits.join('<span class="sep">·</span>') + '</span>' +
+        reasoning(r.parts) +
+        '</details>' +
         '<span class="cc-bar"><i style="width:' + Math.max(Math.round(r.s), 2) + '%"></i></span></span>' +
         '<span class="cc-score">' + r.s.toFixed(0) + '</span>';
       frag.appendChild(li);

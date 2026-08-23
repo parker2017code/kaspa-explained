@@ -81,3 +81,50 @@ check fail before you trust it passing.
 - The same disclosure mechanism on every page. Vary it.
 - Demos that are mechanically correct and demonstrate nothing legible.
 - Being asked to catch bugs himself. Finding them is the agents' job.
+
+## State at 23 August 2026, mid-session
+
+Live and deploying continuously from `main`. Every commit runs the gate
+via a pre-commit hook, and the gate must end in "Site checks passed."
+
+Agents in flight, each owning disjoint files so they cannot collide:
+attack-cost plus the supply-split judgment call; the four tool pages
+(argent-explained, model-picker, kaspa-claims-checker, chain-comparer);
+six long-form guides; six reference pages; four demos with touch and
+text defects; seven short pages under the ceiling; and the glass scan on
+styles.css.
+
+### Decisions taken this session
+
+The 300-word ceiling is hard for demos, the homepage and routing pages.
+On long-form guides and reference surfaces it becomes a per-section rule
+instead: no run of prose exceeds roughly 300 words without structure
+breaking it up. Applying the cap literally to a 3,287-word mining guide
+would hide ninety percent of it, which is the inverted disclosure the
+same standard bans.
+
+supply-split is delisted from the demos index pending a recommendation
+on whether it should exist at all. It failed the owner three times. The
+page still resolves directly. The index says sixteen demos.
+
+Live pricing stays. CoinGecko returns 403 with a CORS block from this
+origin, so pages asserting a live read were showing baked-in figures
+while claiming freshness. The fix is a source that permits browser
+requests, not removing the feature. Candidates being tested: Coinbase,
+Kraken, Binance, CoinCap, and whatever api.kaspa.org exposes. Test with
+a real browser fetch on this origin, never curl, which is how the bug
+shipped.
+
+### Known remaining work
+
+Dead CSS cleanup: 34 classes and one id confirmed unused, plus 227
+selectors defined in both the legacy region and the Apple layer where
+the legacy one still supplies layout. Queued behind the glass scan,
+because the scan establishes which rules actually render.
+
+Verification gaps from the last full sweep: 768px was only spot checked,
+light theme was only spot checked, anchor scrolling was not tested, and
+contrast was not computed numerically.
+
+The visible-word check is advisory. Flip `VISIBLE_WORDS_BLOCKING` to
+true once the over-limit list is empty.

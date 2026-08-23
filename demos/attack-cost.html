@@ -334,11 +334,12 @@
       rentUnit: 'TH',
       rentPerUnitPerHour: 0.00042,
       valueSecuredUSD: 1.53e12,
+      datedPriceUSD: 77055,
       hwPricePerTH: 20, hwEffJPerTH: 15, elecPerKWh: 0.06,
       hwSource: 'Bitmain Antminer S21 Pro: 234 TH/s, 3,510 W (15 J/TH), street price around $20/TH (asicminervalue.com, miningnow.com, dated Aug 22, 2026; no live feed for ASIC street prices is fetched here).',
       hashSource: 'Network hash rate reads live from mempool.space\'s public mining API (mempool.space/api/v1/mining/hashrate/3d, CORS-enabled, no key required). Dated fallback if that read fails: about 900 EH/s, Aug 22, 2026 (CoinWarz, Hashrate Index, minerstat).',
       rentSource: 'NiceHash SHA-256 payrate, converted at roughly $95k to $100k per BTC (NiceHash payrate history, dated Aug 22, 2026). NiceHash\'s public API does not send CORS headers (checked directly), so a static page cannot read it live; this stays a dated figure.',
-      valueNote: 'Market capitalization reads live from CoinGecko\'s /coins/markets endpoint (CORS-enabled). Dated fallback if that read fails: roughly $77k times 19.9M circulating BTC, Aug 22, 2026, matching chain-comparer.html\'s snapshot.',
+      valueNote: 'Price reads live from Kraken\'s public ticker (api.kraken.com/0/public/Ticker, CORS-enabled, no key required); market capitalization is that live price times a dated circulating supply, so the price component updates live even though the supply component does not. Dated fallback if that read fails: roughly $77,055 times 19.9M circulating BTC, Aug 22, 2026 (data/l1-chains.json\'s CoinGecko snapshot, matching chain-comparer.html). CoinGecko\'s market-cap endpoint was tried first and dropped: it returns intermittent 403s with no CORS header on the error response from this origin, which a static page cannot recover from.',
       noRent: false
     },
     litecoin: {
@@ -347,6 +348,8 @@
       rentUnit: 'GH',
       rentPerUnitPerHour: 0.53 / 24,
       valueSecuredUSD: 6.5e9,
+      datedPriceUSD: 51.78,
+      valueNote: 'Price reads live from Kraken\'s public ticker (api.kraken.com/0/public/Ticker, CORS-enabled, no key required); market capitalization is that live price times a dated circulating supply, so the price component updates live even though the supply component does not. Dated fallback if that read fails: about $6.5 billion, Aug 22, 2026, matching chain-comparer.html\'s snapshot.',
       noBuyNote: 'Buying enough Scrypt ASIC hardware to match 51% of Litecoin outright is not priced here: this page has no verified, current street price for hydro-cooled Scrypt miners at that scale, and guessing one would be the same kind of invented number this page already removed once for market impact. Renting (shown here) reaches the same 51% figure without that gap.',
       hashSource: 'Network hash rate reads live from litecoinspace.org\'s public mining API (same API shape as mempool.space, CORS-enabled, no key required). Dated fallback if that read fails: about 2.48 PH/s on Scrypt, Aug 22, 2026, matching data/l1-chains.json\'s hashrate_ehs.',
       rentSource: 'About $0.53 per GH/s per day. Scrypt has a real rental market (NiceHash lists it directly, no cross-algorithm substitution needed), but NiceHash does not publish a plain dollar rate and its public API sends no CORS headers, so this figure is derived rather than read live: solved from minerstat\'s published NiceHash Scrypt profitability table for 4 listed ASIC models (hashrate, power draw, daily USD profit, e.g. Bitmain Antminer L11 Hyd 2U at 35 GH/s / 5,775 W / $4.82 a day), for the implied per-GH/s rental rate and the electricity price minerstat assumed. All 4 devices agreed on the same rate within rounding, which is why it is treated as sourced rather than guessed (minerstat.com/coin/NH-Scrypt/profitability, checked Aug 22, 2026). This is a derived, dated estimate, not a directly quoted or live price, and how much of Litecoin\'s hash rate is actually listed for rent at once is not verified here.'
@@ -357,6 +360,8 @@
       cpuHashPerBoxHs: 19600,
       cpuRentPerBoxPerHour: 0.1744,
       valueSecuredUSD: 2.9e9,
+      datedPriceUSD: 426.74,
+      valueNote: 'Price reads live from Kraken\'s public ticker (api.kraken.com/0/public/Ticker, CORS-enabled, no key required); market capitalization is that live price times a dated circulating supply, so the price component updates live even though the supply component does not. Dated fallback if that read fails: about $2.9 billion, Aug 22, 2026, matching chain-comparer.html\'s snapshot.',
       noBuyNote: 'RandomX is deliberately ASIC-resistant, so there is no ASIC hardware market to buy into. Renting CPU capacity (shown here) is how this much hash power is acquired at all; "buying" would mean buying and racking commodity CPUs yourself, which is not priced separately from the equivalent rented server capacity above.',
       hashSource: 'Network hash rate is about 5.7 GH/s on RandomX, dated Aug 22, 2026 (CoinWarz; matches data/l1-chains.json\'s hashrate_ehs). No CORS-enabled public API for Monero\'s live hash rate was found for this page (moneroblocks.info redirects, localmonero.co\'s block explorer API sends no Access-Control-Allow-Origin header, xmrchain.net did not resolve when checked), so this stays a dated figure rather than a guessed live one.',
       rentSource: 'RandomX is deliberately CPU-only and ASIC-resistant, so this prices commodity CPU rental instead of a hash-power marketplace. A dedicated 16-core AMD Ryzen 9 7950X3D benchmarks 14,800 to 24,400 hashes per second on real submitted runs (xmrig.com/benchmark, checked Aug 2026); about 19,600 H/s, the midpoint, is used here. Hetzner rents that same CPU on a dedicated server (its AX102, 128 GB RAM) for €109 a month, about $0.17 an hour at today’s EUR/USD rate (hetzner.com, checked Aug 22, 2026), an ordinary hosting price, not a mining-specific deal or a live feed. A shared vCPU on a big public cloud would do much worse here: RandomX leans on a large per-thread cache that a shared vCPU does not get exclusively, so a dedicated-core host is the fair comparison.'
@@ -368,7 +373,7 @@
       hwPricePerTH: 20, hwEffJPerTH: 283, elecPerKWh: 0.06,
       hwSource: 'IceRiver KS5L: 12 TH/s at 3,400 W (about 283 J/TH); around $20/TH used as a mid-market estimate, the least certain figure here (hashrate.no, asicminervalue.com, dated Aug 22, 2026; no live feed for ASIC street prices is fetched here).',
       hashSource: 'Network hash rate reads live from api.kaspa.org/info/hashrate, the same public API this site\'s live-kaspa.js already uses elsewhere. Dated fallback if that read fails: around 300 to 330 PH/s in mid-August 2026, after a decline earlier in the year (Kaspalytics, 2Miners, minerstat).',
-      valueNote: 'Market capitalization reads live from CoinGecko\'s /coins/markets endpoint (CORS-enabled). Dated fallback if that read fails: about 27.65 billion circulating KAS (CLAIMS.yml l1_status_snapshot_2026_08_20, api.kaspa.org) times roughly $0.029, Aug 22, 2026.',
+      valueNote: 'Market capitalization reads live from api.kaspa.org/info/marketcap, the same public API this page already uses for hash rate (CORS-enabled, no key required). Dated fallback if that read fails: about 27.65 billion circulating KAS (CLAIMS.yml l1_status_snapshot_2026_08_20, api.kaspa.org) times roughly $0.029, Aug 22, 2026.',
       noRent: true,
       noRentNote: 'Not priceable because there is no verified rental market at attack scale, not because KAS itself is hard to buy: NiceHash lists kHeavyHash, but nowhere near the order-book depth to rent 51% of Kaspa\'s network is confirmed, so this page will not substitute a guessed number for it.'
     },
@@ -376,15 +381,15 @@
       name: 'Ethereum', security: 'pos',
       priceUSD: 2450, circulatingSupply: 120.7e6,
       valueSecuredUSD: 2450 * 120.7e6,
-      priceSource: 'Price and circulating supply read live from CoinGecko\'s /coins/markets endpoint. Dated fallback if that read fails: ETH around $2,450, Aug 22, 2026 (CoinGecko, CoinDesk).',
-      supplySource: 'Dated fallback circulating supply: around 120.7M ETH, Aug 22, 2026.'
+      priceSource: 'Price reads live from Kraken\'s public ticker (api.kraken.com/0/public/Ticker, CORS-enabled, no key required). Dated fallback if that read fails: ETH around $2,450, Aug 22, 2026 (CoinGecko, CoinDesk).',
+      supplySource: 'No CORS-reachable live source for circulating supply was found for this page; always shown as a dated figure: around 120.7M ETH, Aug 22, 2026.'
     },
     solana: {
       name: 'Solana', security: 'pos',
       priceUSD: 89, circulatingSupply: 540e6,
       valueSecuredUSD: 89 * 540e6,
-      priceSource: 'Price and circulating supply read live from CoinGecko\'s /coins/markets endpoint. Dated fallback if that read fails: SOL around $89, Aug 22, 2026 (CoinDesk, Bitget).',
-      supplySource: 'Dated fallback circulating supply: around 540M SOL, Aug 22, 2026.'
+      priceSource: 'Price reads live from Kraken\'s public ticker (api.kraken.com/0/public/Ticker, CORS-enabled, no key required). Dated fallback if that read fails: SOL around $89, Aug 22, 2026 (CoinDesk, Bitget).',
+      supplySource: 'No CORS-reachable live source for circulating supply was found for this page; always shown as a dated figure: around 540M SOL, Aug 22, 2026.'
     }
   };
 
@@ -662,7 +667,7 @@
       : '<p>Fixed assumptions on this page: attacker matches 51% of network hash rate, at a $0.06/kWh electricity rate in buy mode. How long the attack runs is the one control on the main surface; drag it to see the cost of a longer or shorter attack, from about a minute to a day.</p>';
     document.getElementById('assumptionsBody').innerHTML = '<ul>' + lines.join('') + '</ul>' + fixedNote +
       '<p>A successful attack destroys the value of whatever was used to mount it: rented hash power keeps its resale value elsewhere, but bought ASICs mostly do not, and staked capital used to attack a proof-of-stake chain is typically slashed or becomes worthless. The cost shown is a lower bound, not a total cost.</p>' +
-      '<p>Hash rate (Bitcoin, Litecoin, Kaspa) and market value (all six chains) read live on load from public, CORS-enabled APIs: mempool.space, litecoinspace.org, api.kaspa.org, and CoinGecko. Rental rates, hardware prices, and Monero\'s hash rate have no live source reachable from a static page (checked directly; reasons are in each source line above) and stay dated to August 22, 2026.</p>';
+      '<p>Hash rate (Bitcoin, Litecoin, Kaspa) and price (all six chains) read live on load from public, CORS-enabled APIs: mempool.space, litecoinspace.org, api.kaspa.org, and Kraken\'s public ticker. For Bitcoin, Litecoin, and Monero, only price is live; each is combined with a fixed, dated circulating supply to show market value, so that figure is part live and part dated (see each chain\'s own source line). Rental rates, hardware prices, and Monero\'s hash rate have no live source reachable from a static page (checked directly; reasons are in each source line above) and stay dated to August 22, 2026.</p>';
   }
 
   // Live data. See the CHAINS comment above for what each flag means. A
@@ -720,34 +725,73 @@
 
     CHAINS.monero._liveHash = false; // no CORS-reachable source; see hashSource above.
 
-    var prices = fetchWithTimeout('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,kaspa,litecoin,monero,ethereum,solana', 6000).then(function (rows) {
-      if (!Array.isArray(rows) || !rows.length) throw new Error('bad payload');
-      var byId = {};
-      rows.forEach(function (r) { byId[r.id] = r; });
-      ['bitcoin', 'kaspa', 'litecoin', 'monero', 'ethereum', 'solana'].forEach(function (key) {
-        var row = byId[key];
-        var c = CHAINS[key];
-        if (!row) { c._liveValue = false; if (c.security === 'pos') { c._livePrice = false; c._liveSupply = false; } return; }
-        if (isFinite(row.market_cap) && row.market_cap > 0) { c.valueSecuredUSD = row.market_cap; c._liveValue = true; }
-        else { c._liveValue = false; }
-        if (c.security === 'pos') {
-          if (isFinite(row.current_price) && row.current_price > 0) { c.priceUSD = row.current_price; c._livePrice = true; }
-          else { c._livePrice = false; }
-          if (isFinite(row.circulating_supply) && row.circulating_supply > 0) { c.circulatingSupply = row.circulating_supply; c._liveSupply = true; }
-          else { c._liveSupply = false; }
-        }
+    // Price. CoinGecko's /coins/markets endpoint was the original source for
+    // every chain's price and market cap in one call, but it returns
+    // intermittent 403s under real traffic with no Access-Control-Allow-Origin
+    // header on the error response, which a browser reports as a plain CORS
+    // failure a static page cannot recover from or distinguish from "down".
+    // Two CORS-reachable public sources replace it, confirmed with an actual
+    // browser fetch from this origin (not curl, which does not reproduce
+    // browser CORS): Kraken's ticker for the five non-KAS chains, and
+    // api.kaspa.org (already used above for hash rate) for Kaspa directly.
+    // Kraken gives price only, not market cap, so for the three proof-of-work
+    // chains market cap becomes live price times a fixed, dated circulating
+    // supply (see each chain's valueNote): the volatile component updates
+    // live, the slow-moving one stays dated and is labeled as such.
+    function krakenPrice(pair) {
+      return fetchWithTimeout('https://api.kraken.com/0/public/Ticker?pair=' + pair, 6000).then(function (d) {
+        if (!d || !d.result) throw new Error('bad payload');
+        var key = Object.keys(d.result)[0];
+        var row = key && d.result[key];
+        var price = row && Number(row.c && row.c[0]);
+        if (!(isFinite(price) && price > 0)) throw new Error('bad payload');
+        return price;
       });
-      okCount++;
-    }).catch(function () {
-      Object.keys(CHAINS).forEach(function (key) {
-        var c = CHAINS[key];
-        c._liveValue = false;
-        if (c.security === 'pos') { c._livePrice = false; c._liveSupply = false; }
-      });
-      failCount++;
-    });
+    }
 
-    return Promise.all([kaspaHash, btcHash, ltcHash, prices]).then(function () {
+    var krakenBtc = krakenPrice('XBTUSD').then(function (price) {
+      CHAINS.bitcoin.valueSecuredUSD = CHAINS.bitcoin.valueSecuredUSD / CHAINS.bitcoin.datedPriceUSD * price;
+      CHAINS.bitcoin._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.bitcoin._liveValue = false; failCount++; });
+
+    var krakenLtc = krakenPrice('LTCUSD').then(function (price) {
+      CHAINS.litecoin.valueSecuredUSD = CHAINS.litecoin.valueSecuredUSD / CHAINS.litecoin.datedPriceUSD * price;
+      CHAINS.litecoin._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.litecoin._liveValue = false; failCount++; });
+
+    var krakenXmr = krakenPrice('XMRUSD').then(function (price) {
+      CHAINS.monero.valueSecuredUSD = CHAINS.monero.valueSecuredUSD / CHAINS.monero.datedPriceUSD * price;
+      CHAINS.monero._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.monero._liveValue = false; failCount++; });
+
+    var krakenEth = krakenPrice('ETHUSD').then(function (price) {
+      CHAINS.ethereum.priceUSD = price;
+      CHAINS.ethereum.valueSecuredUSD = price * CHAINS.ethereum.circulatingSupply;
+      CHAINS.ethereum._livePrice = true;
+      CHAINS.ethereum._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.ethereum._livePrice = false; CHAINS.ethereum._liveValue = false; failCount++; });
+
+    var krakenSol = krakenPrice('SOLUSD').then(function (price) {
+      CHAINS.solana.priceUSD = price;
+      CHAINS.solana.valueSecuredUSD = price * CHAINS.solana.circulatingSupply;
+      CHAINS.solana._livePrice = true;
+      CHAINS.solana._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.solana._livePrice = false; CHAINS.solana._liveValue = false; failCount++; });
+
+    var kaspaValue = fetchWithTimeout('https://api.kaspa.org/info/marketcap', 6000).then(function (d) {
+      var mc = Number(d && d.marketcap);
+      if (!(isFinite(mc) && mc > 0)) throw new Error('bad payload');
+      CHAINS.kaspa.valueSecuredUSD = mc;
+      CHAINS.kaspa._liveValue = true;
+      okCount++;
+    }).catch(function () { CHAINS.kaspa._liveValue = false; failCount++; });
+
+    return Promise.all([kaspaHash, btcHash, ltcHash, krakenBtc, krakenLtc, krakenXmr, krakenEth, krakenSol, kaspaValue]).then(function () {
       if (failCount === 0) {
         setLiveStatus('ok', 'Hash rates and market values read live just now.');
       } else if (okCount > 0) {
