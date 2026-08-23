@@ -8,7 +8,6 @@ const failures = [];
 
 const generalStatusNoteAllowed = new Set([
   "status.html",
-  "toccata-status.html",
   "kaspa-claims-checker.html",
   "claims-reference.html",
   "kaspa-status-check-may-2026.html",
@@ -127,8 +126,14 @@ function auditBuildHub() {
   // kaspa-claims-checker was retired on 23 Aug 2026 and its claim tables
   // moved into status.html under #claim-fact-check, so requiring a link to
   // it asserted a page that no longer exists.
+  // toccata-explained was retired on 23 Aug 2026. Toccata activated on
+  // mainnet on 30 June 2026, so a page named after the upgrade was a page
+  // organized around a release. Its covenant material moved to
+  // what-is-kaspa.html#covenants and its builder material and ZK demo to
+  // this page, so requiring a link to it asserted a page that no longer
+  // exists. The route it stood for is still checked, at its new address.
   const flowRoutes = [
-    "/toccata-explained",
+    "/what-is-kaspa#covenants",
     "/status",
   ];
 

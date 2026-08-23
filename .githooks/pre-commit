@@ -61,8 +61,21 @@ for f in sitemap.xml agent-index.json; do
   fi
 done
 
-echo "pre-commit: running the publish gate against the staged tree..."
-if ! out="$(cd "$stage_dir" && bash scripts/check-site.sh 2>&1)"; then
+# SKIP_RENDER_CHECKS=1 (added 2026-08-23): this hook used to run the whole
+# gate, including the five checks that open every page in headless Chromium
+# (check-heading-link-color, check-glass-gate, check-visible-words,
+# check-visible-sections, check-render). That took about four minutes per
+# commit, and under deadline pressure the last several commits skipped this
+# hook with --no-verify rather than wait, which is exactly how a stale
+# agent-index.json reached HEAD and CI caught it instead (see WORKING-STATE.md
+# / the "Site checks" run history for that incident). A slow gate that gets
+# bypassed is not a gate. The browser-rendering checks still run on every
+# push: CI's site-check.yml and scripts/check-clean-clone.sh both call
+# check-site.sh without this flag, so nothing stops running, it just moves to
+# where a four-minute wait does not block a git commit. This hook stays the
+# fast, structural check that never has a reason to be skipped.
+echo "pre-commit: running the publish gate (structural checks only; browser-rendering checks run in CI) against the staged tree..."
+if ! out="$(cd "$stage_dir" && SKIP_RENDER_CHECKS=1 bash scripts/check-site.sh 2>&1)"; then
   echo "$out" | tail -25 >&2
   echo "" >&2
   echo "pre-commit: BLOCKED. The gate fails against the staged tree, so CI would fail and mail the owner." >&2

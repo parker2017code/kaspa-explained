@@ -46,8 +46,10 @@ canonical_re = re.compile(r'<link rel="canonical" href="([^"]+)">')
 stubs = {}
 errors = []
 
-for path in sorted(Path(".").glob("*.html")):
-    name = path.name
+candidate_paths = sorted(Path(".").glob("*.html")) + sorted(Path("demos").glob("*.html"))
+
+for path in candidate_paths:
+    name = path.as_posix()
     if name in live_pages:
         continue
     text = path.read_text(encoding="utf-8")
@@ -77,6 +79,28 @@ def target_file_for(path):
     return "index.html" if path == "/" else path.lstrip("/") + ".html"
 
 
+def split_fragment(path):
+    # A redirect target may point at an anchor on the destination page
+    # (e.g. "/kaspa-mining#attack-cost"). The fragment identifies an element
+    # id on that page, not a file, so it must be stripped before resolving
+    # the target to a file on disk or checking sitemap membership.
+    if "#" in path:
+        base, fragment = path.split("#", 1)
+        return base, fragment
+    return path, None
+
+
+anchor_id_re_cache = {}
+
+
+def anchor_exists(target_file, anchor):
+    if target_file not in anchor_id_re_cache:
+        anchor_id_re_cache[target_file] = set(
+            re.findall(r'\bid="([^"]+)"', Path(target_file).read_text(encoding="utf-8"))
+        )
+    return anchor in anchor_id_re_cache[target_file]
+
+
 own_path = {name: page_to_path(name) for name in stubs}
 
 for name, (refresh_target, canonical_path) in stubs.items():
@@ -86,11 +110,13 @@ for name, (refresh_target, canonical_path) in stubs.items():
         )
         continue
 
-    if refresh_target == own_path[name]:
+    target_path, anchor = split_fragment(refresh_target)
+
+    if target_path == own_path[name]:
         errors.append(f"{name} redirects to itself ({refresh_target})")
         continue
 
-    target_file = target_file_for(refresh_target)
+    target_file = target_file_for(target_path)
     if not Path(target_file).exists():
         errors.append(f"{name} redirects to {refresh_target}, which does not exist ({target_file})")
         continue
@@ -101,9 +127,15 @@ for name, (refresh_target, canonical_path) in stubs.items():
         )
         continue
 
-    if refresh_target not in live_paths:
+    if target_path not in live_paths:
         errors.append(
             f"{name} redirects to {refresh_target}, which is not a live page in sitemap.xml"
+        )
+        continue
+
+    if anchor and not anchor_exists(target_file, anchor):
+        errors.append(
+            f"{name} redirects to {refresh_target}, but {target_file} has no element with id=\"{anchor}\""
         )
         continue
 
@@ -121,7 +153,7 @@ for start in stubs:
             errors.append(f"{start} is part of a redirect cycle: {cycle}")
             break
         chain.append(current)
-        current = target_file_for(stubs[current][0])
+        current = target_file_for(split_fragment(stubs[current][0])[0])
     else:
         resolved.update(chain)
 

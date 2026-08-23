@@ -69,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -99,7 +99,7 @@
       <p class="lead">Toccata activated at DAA 474,165,565. Spend limits, escrow paths, asset rules, and proof checks are now in L1 script, readable before funds move.</p>
       <details class="source-more">
         <summary>Status, and where to check a product claim before pitching it</summary>
-        <p class="fit-note"><strong>Status:</strong> read <a href="/toccata-explained">Toccata Explained</a> for how covenants, proof checks, and activity lanes work.</p>
+        <p class="fit-note"><strong>Status:</strong> read <a href="/what-is-kaspa#covenants">how covenants work</a> for the plain-language version of what activated, and <a href="#covenant-breaker-demo">try breaking one</a> below.</p>
         <p class="fit-note"><strong>Before pitching:</strong> run product claims through <a href="/status">Status</a>, and adoption risk through <a href="/skeptical-case">Risks</a>.</p>
       </details>
       <div class="actions">
@@ -131,7 +131,7 @@
           <thead><tr><th>What the app needs</th><th>Route</th><th>Why that one</th></tr></thead>
           <tbody>
             <tr><td>Payment, receipt, balance, withdrawal, or support evidence</td><td><a href="/status">Live network work</a></td><td>Current wallets, APIs, and accepted-transaction checks already handle this.</td></tr>
-            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="/toccata-explained">Toccata covenants</a></td><td>
+            <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="#covenant-breaker-demo">Toccata covenants</a></td><td>
               A bounded spend rule is simpler to build and audit than a full app runtime.
               <details class="cell-detail">
                 <summary>When to split into more than one covenant</summary>
@@ -141,7 +141,7 @@
             <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td>Based app or replay path</td><td>The app proves or replays its own state without needing cross-app atomicity.</td></tr>
             <tr><td>Each action needs its own proof, privacy check, or custom validity rule</td><td>Inline ZK</td><td>It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
             <tr><td>The claim depends on another chain, an oracle, a price, or a real-world event</td><td>Name the anchor first</td><td>Source root, finality certificate, oracle, or challenge process. Pick one before writing proof code.</td></tr>
-            <tr><td>Many users mutate the same app state at once</td><td><a href="/toccata-explained">Future full vProgs</a></td><td>Build the narrow app first. Argent's Inter-Covenant Communication already shows separate covenant apps acting as one, so far only in unaudited offline demos.</td></tr>
+            <tr><td>Many users mutate the same app state at once</td><td><a href="/status#status-snapshot">Future full vProgs</a></td><td>Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span> already shows separate covenant apps acting as one, so far only in unaudited offline demos.</td></tr>
           </tbody>
         </table>
       </div>
@@ -159,52 +159,758 @@
       <p class="eyebrow">Try it</p>
       <h2 id="covenant-breaker-demo-title">Attack a covenant vault</h2>
       <p>Before writing spend-rule code, see what a covenant actually blocks. Try to move money out of this vault without following its rule.</p>
-      <div class="live-demo-frame">
-        <iframe id="covenant-breaker-frame" src="/demos/covenant-breaker" title="Covenant breaker: try to get money out of a Kaspa vault without following its spend rule" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Demo</span>
+          <h3>Covenant breaker: try to break the vault</h3>
+          <span class="guide-detail-preview">Four rules, five attack presets, and the one that actually works.</span>
+        </summary>
+        <div class="guide-detail-body">
+      <div class="cvb-demo" id="covenant-breaker-widget">
+        <p class="cvb-fictional-note">A worked example. Nothing here is on a real blockchain.</p>
+        <p class="cvb-intro">This vault holds 10,000 KAS behind four rules. Get any of it to an address you control without satisfying all four.</p>
+        <p class="cvb-status-line">Status: the cap, destination, and delay below run on Kaspa mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule is written in <a href="/argent-explained">Argent's</a> syntax, still research and not released; only the notation is illustrative, the enforcement it describes is live.</p>
+
+        <div class="cvb-view-switch" role="tablist" aria-label="View">
+          <button type="button" class="cvb-view-tab active" id="cvb-tab-attempt" role="tab" aria-selected="true" aria-controls="cvb-view-attempt">Attempt</button>
+          <button type="button" class="cvb-view-tab" id="cvb-tab-details" role="tab" aria-selected="false" aria-controls="cvb-view-details">Vault details &amp; rules</button>
+        </div>
+
+        <div id="cvb-view-attempt" role="tabpanel" aria-labelledby="cvb-tab-attempt">
+          <section class="cvb-panel">
+            <h4>Try to get money out of the vault</h4>
+            <p class="cvb-panel-lead">Start from one of these, or set up your own attempt.</p>
+
+            <div class="cvb-attack-group">
+              <p class="cvb-attack-group-label">Direct attempts, each breaks one rule on purpose</p>
+              <div class="cvb-presets" role="group" aria-label="Direct attempts">
+                <button type="button" class="cvb-attack" data-preset="drain">Take it all right now</button>
+                <button type="button" class="cvb-attack" data-preset="skip">Withdraw before the wait is up</button>
+                <button type="button" class="cvb-attack" data-preset="redirect">Send it to my own address</button>
+                <button type="button" class="cvb-attack" data-preset="recover-redirect">Trigger recovery, then redirect it</button>
+              </div>
+            </div>
+            <div class="cvb-attack-group">
+              <p class="cvb-attack-group-label">Break no rule at all</p>
+              <div class="cvb-presets" role="group" aria-label="Legal repetition">
+                <button type="button" class="cvb-attack repeat" data-preset="patient">Withdraw the max, hour after hour</button>
+              </div>
+            </div>
+
+            <div class="cvb-layout">
+              <div>
+                <fieldset>
+                  <legend>How you're trying to get it out</legend>
+                  <label><input type="radio" name="cvb-entry" value="withdraw" checked> Normal withdrawal</label>
+                  <label><input type="radio" name="cvb-entry" value="recover"> Emergency recovery</label>
+                </fieldset>
+                <div class="cvb-field" id="cvb-amount-field">
+                  <label for="cvb-amount">Amount to withdraw (KAS)</label>
+                  <input type="number" id="cvb-amount" value="500" min="1" step="1">
+                </div>
+                <div class="cvb-field">
+                  <label for="cvb-dest">Where the money goes</label>
+                  <select id="cvb-dest">
+                    <option value="payout">The vault's own payout address</option>
+                    <option value="recovery">The vault's own recovery address</option>
+                    <option value="attacker">An address you control, not the vault's</option>
+                  </select>
+                </div>
+                <div class="cvb-field" id="cvb-elapsed-field">
+                  <label for="cvb-elapsed">Time since the vault's last withdrawal (DAA score, Kaspa's block counter)</label>
+                  <input type="number" id="cvb-elapsed" value="36000" min="0" step="1000">
+                  <p class="cvb-field-hint" id="cvb-elapsed-hint">&asymp; 60 minutes</p>
+                </div>
+              </div>
+              <div>
+                <div class="cvb-btn-row" style="margin-top:0">
+                  <button type="button" class="cvb-primary" id="cvb-submit">Try it</button>
+                  <button type="button" id="cvb-reset">Start over</button>
+                </div>
+                <div id="cvb-verdict" aria-live="polite"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="cvb-panel" id="cvb-ledger-panel" hidden>
+            <h4>Attempts so far</h4>
+            <div class="cvb-table-wrap">
+              <table>
+                <thead><tr><th>#</th><th>Attempt</th><th>Amount</th><th>Sent to</th><th>Result</th></tr></thead>
+                <tbody id="cvb-ledger-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div id="cvb-view-details" role="tabpanel" aria-labelledby="cvb-tab-details" hidden>
+          <section class="cvb-panel">
+            <h4>Vault state (made up, for this example)</h4>
+            <div class="cvb-vault-stats" id="cvb-stats"></div>
+          </section>
+
+          <section class="cvb-panel">
+            <h4>What the covenant enforces</h4>
+            <ul class="cvb-rules-list">
+              <li><b>Who can sign</b><span>A withdrawal needs the owner's signature. Recovery needs the recovery key instead. No other key works.</span></li>
+              <li><b>Where it can go</b><span>A withdrawal may pay only the vault's fixed payout address, at most 500 KAS in this one transaction. Recovery may pay only the fixed recovery address, and always empties the vault.</span></li>
+              <li><b>What comes next</b><span>Every withdrawal must recreate the vault with the same KIP-20 covenant ID and the updated balance and last-spend score. A transaction that doesn't is spending a lookalike, not the vault.</span></li>
+              <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks/second) before it is valid again.</span></li>
+            </ul>
+          </section>
+        </div>
+
+        <details class="cvb-rule-details">
+          <summary>Rule definitions and sources</summary>
+          <pre class="cvb-rule-code"><b>state</b> VaultState {
+    byte[32] owner_pk_hash;
+    byte[32] recovery_pk_hash;
+    byte[32] payout_spk_hash;
+    byte[32] recovery_spk_hash;
+    int balance;
+    int last_spend_daa;
+}
+
+<b>actor</b> Vault <b>owns</b> VaultState {
+
+    <b>entry</b> withdraw(int amount, sig owner_sig, pubkey owner_pk)
+        <b>emits</b> next: Vault
+    {
+        require(blake2b(owner_pk) == owner_pk_hash);
+        require(checkSig(owner_sig, owner_pk));
+
+        <i>// where it can go: fixed cap, fixed destination</i>
+        require(amount &lt;= 500 &amp;&amp; amount &lt;= balance);
+        require(tx.outputSpkHash(0) == payout_spk_hash);
+        require(tx.outputAmount(0) == amount);
+
+        <i>// how soon again: time since this covenant's own last spend</i>
+        require(tx.inputDaaScore(self) - last_spend_daa &gt;= 36000);
+
+        <i>// what comes next: same KIP-20 covenant id, updated state</i>
+        VaultState new_state = {
+            owner_pk_hash: owner_pk_hash,
+            recovery_pk_hash: recovery_pk_hash,
+            payout_spk_hash: payout_spk_hash,
+            recovery_spk_hash: recovery_spk_hash,
+            balance: balance - amount,
+            last_spend_daa: tx.inputDaaScore(self),
+        };
+        <b>become</b> next &lt;- Vault(new_state);
+    }
+
+    <b>entry</b> recover(sig recovery_sig, pubkey recovery_pk) {
+        require(blake2b(recovery_pk) == recovery_pk_hash);
+        require(checkSig(recovery_sig, recovery_pk));
+
+        <i>// no cap, no delay: recovery ignores both</i>
+        <i>// but the destination is still fixed, and the vault ends</i>
+        require(tx.outputSpkHash(0) == recovery_spk_hash);
+        require(tx.outputAmount(0) == balance);
+        <i>// no `become`: this covenant's lineage ends here</i>
+    }
+}</pre>
+          <p class="cvb-sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research and not yet released; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's actual status. Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>. Both KIP-17 and its continuation-identity companion, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, are live on Kaspa mainnet as of the Toccata upgrade: a spend either carries the same <code>covenant_id</code> as the UTXO it consumes, or proves a fresh one through the genesis hash, so a forged lookalike UTXO cannot claim an existing covenant's identity.</p>
+        </details>
       </div>
+        </div>
+      </details>
+      <style>
+        .cvb-demo {
+          --cvb-bg-2: #1c1a17; --cvb-card-bg: #322f2a;
+          --cvb-line: #4a453d; --cvb-text: #f8f5ef; --cvb-muted: #b6b0a7; --cvb-faint: #9d988c;
+          --cvb-green: #66d1c1; --cvb-cyan: #2997ff; --cvb-purple: #bf5af2; --cvb-pink: #ff9f0a;
+          --cvb-ink: #06201b; --cvb-control-bg: #2c2c2e; --cvb-control-hover: #3a3a3c;
+          --cvb-field-bg: #221f1c; --cvb-field-line: #4a453d;
+          --cvb-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+          max-width: 900px; margin: 0 auto; color: var(--cvb-text);
+          font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        :root[data-theme="light"] .cvb-demo {
+          --cvb-bg-2: #f3f0ea; --cvb-card-bg: #fbfaf6;
+          --cvb-line: #d8d4cb; --cvb-text: #211e1a; --cvb-muted: #646057; --cvb-faint: #757066;
+          --cvb-green: #0e7c6b; --cvb-cyan: #0071e3; --cvb-purple: #6e56cf; --cvb-pink: #b25000;
+          --cvb-ink: #ffffff; --cvb-control-bg: #e8e8ed; --cvb-control-hover: #dededf;
+          --cvb-field-bg: #ffffff; --cvb-field-line: #d2d2d7;
+          --cvb-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+        }
+        .cvb-demo h4 { font-size: .85rem; margin: 0 0 10px; color: var(--cvb-faint); text-transform: uppercase; letter-spacing: .04em; }
+        .cvb-demo p.cvb-intro { color: var(--cvb-text); max-width: 68ch; margin: 0 0 8px; font-size: clamp(1.1rem, 1.7vw, 1.3rem); font-weight: 420; line-height: 1.45; }
+        .cvb-demo p.cvb-fictional-note {
+          display: inline-block; color: var(--cvb-muted); background: var(--cvb-field-bg); max-width: 68ch;
+          margin: 0 0 14px; font-size: 1rem; font-weight: 600; line-height: 1.5; padding: 6px 12px; border-radius: 980px;
+        }
+        .cvb-demo p.cvb-status-line {
+          color: var(--cvb-faint); max-width: 68ch; margin: 0 0 22px; font-size: 1rem; line-height: 1.55;
+          padding: 10px 14px; background: var(--cvb-field-bg); border-radius: 10px;
+        }
+        .cvb-demo p.cvb-status-line a, .cvb-demo a { color: var(--cvb-cyan); }
+        .cvb-demo .cvb-view-switch { display: inline-flex; gap: 4px; background: var(--cvb-control-bg); border-radius: 980px; padding: 4px; margin: 4px 0 18px; }
+        .cvb-demo .cvb-view-tab {
+          min-height: 44px; border: 0; border-radius: 980px; padding: 0 16px;
+          background: transparent; color: var(--cvb-muted); font: inherit; font-size: .88rem; font-weight: 500; cursor: pointer;
+        }
+        .cvb-demo .cvb-view-tab.active { background: var(--cvb-card-bg); color: var(--cvb-text); box-shadow: var(--cvb-shadow); }
+        .cvb-demo .cvb-panel {
+          background: var(--cvb-card-bg); border: 0; border-radius: 18px; box-shadow: var(--cvb-shadow); padding: 16px; margin-bottom: 16px;
+        }
+        .cvb-demo .cvb-panel-lead { font-size: 1rem; color: var(--cvb-muted); margin: -4px 0 14px; max-width: 60ch; }
+        .cvb-demo .cvb-vault-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        .cvb-demo .cvb-stat { background: var(--cvb-field-bg); border: 1px solid var(--cvb-field-line); border-radius: 8px; padding: 10px 12px; }
+        .cvb-demo .cvb-stat span { display: block; font-size: .74rem; color: var(--cvb-faint); margin-bottom: 3px; }
+        .cvb-demo .cvb-stat b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+        .cvb-demo .cvb-stat.dead b { color: var(--cvb-pink); }
+        .cvb-demo .cvb-rules-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+        .cvb-demo .cvb-rules-list li {
+          display: flex; gap: 8px; align-items: baseline; background: var(--cvb-field-bg); border: 1px solid var(--cvb-field-line);
+          border-radius: 8px; padding: 8px 10px; font-size: 1rem;
+        }
+        .cvb-demo .cvb-rules-list b {
+          flex: 0 0 auto; font-size: .72rem; color: var(--cvb-green); background: color-mix(in srgb, var(--cvb-green) 12%, transparent);
+          border: 0; border-radius: 980px; padding: 2px 9px; text-transform: uppercase; letter-spacing: .03em;
+        }
+        .cvb-demo .cvb-rules-list span { color: var(--cvb-muted); }
+        .cvb-demo .cvb-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 700px) { .cvb-demo .cvb-layout { grid-template-columns: 1fr; } }
+        .cvb-demo .cvb-field { margin-bottom: 12px; }
+        .cvb-demo .cvb-field:last-child { margin-bottom: 0; }
+        .cvb-demo .cvb-field label { display: block; font-size: .84rem; color: var(--cvb-muted); margin-bottom: 4px; }
+        .cvb-demo .cvb-field-hint { margin: 4px 0 0; font-size: .78rem; color: var(--cvb-faint); }
+        .cvb-demo .cvb-field input[type=number], .cvb-demo .cvb-field select {
+          width: 100%; min-height: 44px; background: var(--cvb-field-bg); border: 1px solid var(--cvb-field-line);
+          color: var(--cvb-text); border-radius: 8px; padding: 7px 10px; font: inherit; box-sizing: border-box;
+        }
+        .cvb-demo fieldset { border: 1px solid var(--cvb-field-line); border-radius: 8px; padding: 8px 10px; margin: 0 0 12px; }
+        .cvb-demo fieldset legend { font-size: .84rem; color: var(--cvb-muted); padding: 0 4px; }
+        .cvb-demo fieldset label { display: inline-flex; align-items: center; gap: 5px; margin-right: 14px; min-height: 44px; font-size: .88rem; }
+        .cvb-demo .cvb-attack-group { margin-bottom: 14px; }
+        .cvb-demo .cvb-attack-group-label { font-size: .76rem; color: var(--cvb-faint); text-transform: uppercase; letter-spacing: .04em; margin: 0 0 8px; }
+        .cvb-demo .cvb-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .cvb-demo button {
+          font: inherit; cursor: pointer; border-radius: 8px; border: 0; background: var(--cvb-control-bg); color: var(--cvb-text);
+          padding: 10px 14px; min-height: 44px; display: inline-flex; align-items: center;
+        }
+        .cvb-demo button:hover { background: var(--cvb-control-hover); }
+        .cvb-demo button.cvb-primary { background: var(--cvb-green); color: var(--cvb-ink); font-weight: 600; }
+        .cvb-demo button.cvb-primary:hover { background: color-mix(in srgb, var(--cvb-green) 85%, black); }
+        .cvb-demo button.cvb-attack { background: color-mix(in srgb, var(--cvb-pink) 16%, var(--cvb-control-bg)); }
+        .cvb-demo button.cvb-attack.repeat { background: color-mix(in srgb, var(--cvb-purple) 20%, var(--cvb-control-bg)); font-weight: 600; }
+        .cvb-demo button:disabled { opacity: .45; cursor: not-allowed; }
+        .cvb-demo .cvb-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .cvb-demo .cvb-presets button { font-size: .86rem; min-height: 44px; line-height: 1.25; }
+        .cvb-demo #cvb-verdict { min-height: 20px; }
+        .cvb-demo .cvb-verdict-box { border-radius: 14px; padding: 12px 14px; border: 0; font-size: 1rem; }
+        .cvb-demo .cvb-verdict-box.pass { background: color-mix(in srgb, var(--cvb-green) 12%, transparent); }
+        .cvb-demo .cvb-verdict-box.fail { background: color-mix(in srgb, var(--cvb-pink) 12%, transparent); }
+        .cvb-demo .cvb-verdict-box strong { display: block; margin-bottom: 3px; }
+        .cvb-demo .cvb-verdict-box .cvb-rule-ref { display: block; margin-top: 6px; font-size: .78rem; color: var(--cvb-faint); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+        .cvb-demo .cvb-table-wrap { overflow-x: auto; background: var(--cvb-card-bg); border-radius: 18px; box-shadow: var(--cvb-shadow); }
+        .cvb-demo table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+        .cvb-demo th, .cvb-demo td { text-align: left; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--cvb-line) 55%, transparent); white-space: nowrap; }
+        .cvb-demo th { color: var(--cvb-faint); font-weight: 500; font-size: 12px; letter-spacing: .05em; border-bottom: 1px solid var(--cvb-line); }
+        .cvb-demo tr.fail-row td { color: var(--cvb-pink); }
+        .cvb-demo tr.pass-row td.result { color: var(--cvb-green); }
+        .cvb-demo .cvb-rule-details { background: var(--cvb-field-bg); border: 0; border-radius: 14px; padding: 10px 14px; }
+        .cvb-demo .cvb-rule-details summary { cursor: pointer; font-weight: 600; color: var(--cvb-text); list-style: none; }
+        .cvb-demo .cvb-rule-details summary::-webkit-details-marker { display: none; }
+        .cvb-demo .cvb-rule-details summary::before { content: "\25b8 "; color: var(--cvb-faint); }
+        .cvb-demo .cvb-rule-details[open] summary::before { content: "\25be "; }
+        .cvb-demo .cvb-rule-code { margin: 12px 0 0; font-size: .82rem; line-height: 1.5; color: var(--cvb-muted); background: var(--cvb-bg-2); border-radius: 8px; padding: 12px; overflow-x: auto; }
+        .cvb-demo .cvb-rule-code b { color: var(--cvb-pink); font-weight: 600; }
+        .cvb-demo .cvb-rule-code i { color: var(--cvb-faint); font-style: normal; }
+        .cvb-demo .cvb-sources { margin-top: 12px; font-size: 1rem; color: var(--cvb-muted); }
+        .cvb-demo .cvb-sources a { display: inline-block; margin-right: 10px; }
+        @media (prefers-reduced-motion: no-preference) {
+          .cvb-demo .cvb-verdict-box, .cvb-demo .cvb-stat { transition: background-color .2s ease, border-color .2s ease; }
+        }
+        .cvb-demo a:focus-visible, .cvb-demo button:focus-visible, .cvb-demo input:focus-visible,
+        .cvb-demo select:focus-visible, .cvb-demo summary:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--cvb-cyan) 28%, transparent);
+          outline-offset: 3px;
+        }
+      </style>
       <script>
       (function () {
-        var frame = document.getElementById('covenant-breaker-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            /* The demo hides its own chrome. It sets data-embedded on its
-               root element before first paint, and its stylesheet keys the
-               header, footer, and skip link off that. This page never
-               reaches in to hide anything itself. */
-            var resize = function () {
-              /* body.scrollHeight excludes the body's own margins, which clips
-                 the last pixels of the embedded demo. Take the largest honest
-                 measure and add the margins back. */
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+        var CAP = 500;
+        var DELAY = 36000;
+        var START_BALANCE = 10000;
+
+        var vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+        var txCount = 0;
+
+        var statsEl = document.getElementById('cvb-stats');
+        var verdictEl = document.getElementById('cvb-verdict');
+        var ledgerPanel = document.getElementById('cvb-ledger-panel');
+        var ledgerBody = document.getElementById('cvb-ledger-body');
+
+        var amountInput = document.getElementById('cvb-amount');
+        var destSelect = document.getElementById('cvb-dest');
+        var elapsedInput = document.getElementById('cvb-elapsed');
+        var elapsedHint = document.getElementById('cvb-elapsed-hint');
+        var amountField = document.getElementById('cvb-amount-field');
+        var elapsedField = document.getElementById('cvb-elapsed-field');
+        if (!statsEl || !verdictEl || !amountInput) return;
+
+        function daaToMinutes(daa) {
+          return Math.round(daa / 10 / 60);
+        }
+        function updateElapsedHint() {
+          var v = Math.max(0, parseInt(elapsedInput.value, 10) || 0);
+          elapsedHint.textContent = '≈ ' + daaToMinutes(v) + ' minutes';
+        }
+        elapsedInput.addEventListener('input', updateElapsedHint);
+
+        function entryValue() {
+          return document.querySelector('input[name=cvb-entry]:checked').value;
+        }
+
+        function renderStats() {
+          var deadClass = vault.ended ? ' dead' : '';
+          statsEl.innerHTML =
+            '<div class="cvb-stat' + deadClass + '"><span>Balance</span><b>' + vault.balance.toLocaleString() + ' KAS</b></div>' +
+            '<div class="cvb-stat"><span>Per-tx cap</span><b>' + CAP + ' KAS</b></div>' +
+            '<div class="cvb-stat"><span>Required delay</span><b>~' + daaToMinutes(DELAY) + ' min</b></div>' +
+            '<div class="cvb-stat"><span>Last spend, ago</span><b>~' + daaToMinutes(vault.lastSpendDaa) + ' min mark</b></div>' +
+            '<div class="cvb-stat"><span>Status</span><b>' + (vault.ended ? 'Ended (recovered)' : 'Live') + '</b></div>';
+        }
+
+        function updateFieldVisibility() {
+          var isRecover = entryValue() === 'recover';
+          amountField.style.display = isRecover ? 'none' : '';
+          elapsedField.style.display = isRecover ? 'none' : '';
+          if (isRecover) destSelect.value = 'recovery';
+        }
+
+        function pathLabel(entry) {
+          return entry === 'recover' ? 'Emergency recovery' : 'Normal withdrawal';
+        }
+
+        function logTx(entry, amount, destLbl, ok, category) {
+          txCount++;
+          var row = document.createElement('tr');
+          row.className = ok ? 'pass-row' : 'fail-row';
+          row.innerHTML = '<td>' + txCount + '</td><td>' + pathLabel(entry) + '</td><td>' + amount + '</td><td>' + destLbl + '</td>' +
+            '<td class="result">' + (ok ? 'sent through' : 'blocked: ' + category) + '</td>';
+          ledgerBody.appendChild(row);
+          ledgerPanel.hidden = false;
+        }
+
+        function destLabel(v) {
+          return v === 'payout' ? 'payout address' : v === 'recovery' ? 'recovery address' : 'address you control';
+        }
+
+        function evaluate(entry, amount, dest, elapsed) {
+          if (vault.ended) {
+            return { ok: false, category: 'what comes next', sentence: 'Blocked: the vault ended when recovery ran. There is nothing left to spend from.', ref: 'no `become`' };
+          }
+          if (entry === 'recover') {
+            if (dest !== 'recovery') {
+              return { ok: false, category: 'where it can go', sentence: 'Blocked: recovery can only ever pay the vault’s own recovery address, no matter whose key signs it.', ref: 'require(tx.outputSpkHash(0) == recovery_spk_hash)' };
             }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
+            return { ok: true, category: null, sentence: 'Sent: the full balance reached the recovery address. The vault is gone for good, on purpose.', ref: 'no `become`: lineage ends here', terminal: true };
+          }
+          if (amount > CAP) {
+            return { ok: false, category: 'where it can go', sentence: 'Blocked: a single withdrawal can move at most 500 KAS, and this one asks for more.', ref: 'require(amount &lt;= 500)' };
+          }
+          if (amount > vault.balance) {
+            return { ok: false, category: 'where it can go', sentence: 'Blocked: the vault doesn’t have this much left to give.', ref: 'require(amount &lt;= balance)' };
+          }
+          if (dest !== 'payout') {
+            return { ok: false, category: 'where it can go', sentence: 'Blocked: a normal withdrawal can only pay the vault’s one payout address, never anywhere else.', ref: 'require(tx.outputSpkHash(0) == payout_spk_hash)' };
+          }
+          if (elapsed < DELAY) {
+            var mins = Math.round(elapsed / 10 / 60);
+            return { ok: false, category: 'how soon again', sentence: 'Blocked: only ' + mins + ' of the required 60 minutes have passed since the last withdrawal.', ref: 'require(tx.inputDaaScore(self) - last_spend_daa &gt;= 36000)' };
+          }
+          return { ok: true, category: null, sentence: 'Sent: ' + amount + ' KAS reached the payout address, and the vault re-forms with the lower balance.', ref: 'same covenant ID, new balance, new clock' };
+        }
+
+        function apply(entry, amount, dest, elapsed) {
+          var result = evaluate(entry, amount, dest, elapsed);
+          logTx(entry, entry === 'recover' ? vault.balance : amount, destLabel(dest), result.ok, result.category);
+          if (result.ok) {
+            if (entry === 'recover') {
+              vault.balance = 0;
+              vault.ended = true;
+            } else {
+              vault.balance -= amount;
+              vault.currentDaa += elapsed;
+              vault.lastSpendDaa = vault.currentDaa;
+            }
+          }
+          renderStats();
+          return result;
+        }
+
+        function showVerdict(result) {
+          var box = document.createElement('div');
+          box.className = 'cvb-verdict-box ' + (result.ok ? 'pass' : 'fail');
+          box.innerHTML = '<strong>' + result.sentence + '</strong>' + (result.ref ? '<span class="cvb-rule-ref">' + result.ref + '</span>' : '');
+          verdictEl.innerHTML = '';
+          verdictEl.appendChild(box);
+        }
+
+        document.getElementById('cvb-submit').addEventListener('click', function () {
+          var entry = entryValue();
+          var amount = Math.max(0, parseInt(amountInput.value, 10) || 0);
+          var dest = destSelect.value;
+          var elapsed = Math.max(0, parseInt(elapsedInput.value, 10) || 0);
+          var result = apply(entry, amount, dest, elapsed);
+          showVerdict(result);
         });
+
+        document.getElementById('cvb-reset').addEventListener('click', function () {
+          vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+          txCount = 0;
+          ledgerBody.innerHTML = '';
+          ledgerPanel.hidden = true;
+          verdictEl.innerHTML = '';
+          renderStats();
+        });
+
+        document.querySelectorAll('input[name=cvb-entry]').forEach(function (r) {
+          r.addEventListener('change', updateFieldVisibility);
+        });
+
+        document.querySelectorAll('#covenant-breaker-widget [data-preset]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var preset = btn.getAttribute('data-preset');
+            if (preset === 'patient') {
+              runPatientAttack();
+              return;
+            }
+            var isRecoverPreset = preset === 'recover-redirect';
+            document.querySelector('input[name=cvb-entry][value=' + (isRecoverPreset ? 'recover' : 'withdraw') + ']').checked = true;
+            updateFieldVisibility();
+            if (preset === 'drain') {
+              amountInput.value = vault.balance || START_BALANCE;
+              destSelect.value = 'payout';
+              elapsedInput.value = DELAY;
+            } else if (preset === 'skip') {
+              amountInput.value = CAP;
+              destSelect.value = 'payout';
+              elapsedInput.value = 0;
+            } else if (preset === 'redirect') {
+              amountInput.value = CAP;
+              destSelect.value = 'attacker';
+              elapsedInput.value = DELAY;
+            } else if (isRecoverPreset) {
+              destSelect.value = 'attacker';
+            }
+            updateElapsedHint();
+            document.getElementById('cvb-submit').click();
+          });
+        });
+
+        function runPatientAttack() {
+          document.querySelector('input[name=cvb-entry][value=withdraw]').checked = true;
+          updateFieldVisibility();
+          destSelect.value = 'payout';
+          var guard = 0;
+          while (vault.balance > 0 && !vault.ended && guard < 200) {
+            var amount = Math.min(CAP, vault.balance);
+            apply('withdraw', amount, 'payout', DELAY);
+            guard++;
+          }
+          var totalHours = Math.round((vault.currentDaa / 10 / 3600) * 10) / 10;
+          var box = document.createElement('div');
+          box.className = 'cvb-verdict-box pass';
+          box.innerHTML = '<strong>' + guard + ' withdrawals, spaced an hour apart, emptied the vault in about ' + totalHours + ' hours, and every single one obeyed the cap, the destination, and the delay.</strong>' +
+            'The rules bound one transaction at a time. Nothing in the covenant counts a running total or limits how many times withdraw() gets called, so they never bounded the vault itself, and it was gone before the end of the day.';
+          verdictEl.innerHTML = '';
+          verdictEl.appendChild(box);
+        }
+
+        updateFieldVisibility();
+        updateElapsedHint();
+        renderStats();
+
+        var tabAttempt = document.getElementById('cvb-tab-attempt');
+        var tabDetails = document.getElementById('cvb-tab-details');
+        var viewAttempt = document.getElementById('cvb-view-attempt');
+        var viewDetails = document.getElementById('cvb-view-details');
+        function showView(which) {
+          var isAttempt = which === 'attempt';
+          viewAttempt.hidden = !isAttempt;
+          viewDetails.hidden = isAttempt;
+          tabAttempt.classList.toggle('active', isAttempt);
+          tabDetails.classList.toggle('active', !isAttempt);
+          tabAttempt.setAttribute('aria-selected', String(isAttempt));
+          tabDetails.setAttribute('aria-selected', String(!isAttempt));
+        }
+        tabAttempt.addEventListener('click', function () { showView('attempt'); });
+        tabDetails.addEventListener('click', function () { showView('details'); });
       })();
       </script>
+    </section>
+
+    <section id="covenant-adoption" class="section">
+      <p class="eyebrow">Evidence</p>
+      <h2>How much of this is actually running</h2>
+      <p>A third-party indexer counts thousands of covenants created on mainnet, hundreds still active. Numbers and use-case status below.</p>
+      <details class="deep-dive">
+        <summary>Covenant counts, and use cases by status</summary>
+        <p>A third-party indexer, <a href="https://kascov.io">kascov</a>, counted 28,107 covenants ever created on mainnet by August 22, 2026, with 517 still active holding about 1,750,093 KAS across roughly 86 real markets. Testnet-10 holds far more activity, about 80,507 active covenants, the gap expected between a place builders test freely and the network real value actually sits on.</p>
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Vault</td><td>Withdrawal delay, recovery key, spend cap, or escape path.</td><td><span class="status-pill live">Live</span></td></tr>
+              <tr><td>Escrow</td><td>Release, refund, timeout, or dispute transition.</td><td><span class="status-pill live">Live</span></td></tr>
+              <tr><td>Assurance funding</td><td>Payout only after enough matching commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
+              <tr><td>Controlled assets</td><td>Transfer rules, controller input, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
+              <tr><td>ZK proof checks</td><td>A claim about chosen public inputs.</td><td><span class="status-pill live">Live</span></td></tr>
+              <tr><td>Cross-app composition</td><td>Several app states succeed or fail together in one transaction.</td><td><span class="status-pill research">Demos only</span></td></tr>
+              <tr><td>Shared mutable state</td><td>Many users mutating one app state at once.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fit-note">The rule for assurance funding runs live today. A shipped coordination-market product does not: that's still a research direction, and a covenant can't see an outside price or event without a named oracle.</p>
+        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
+      </details>
+    </section>
+
+    <section id="zk-boundary-demo" class="section" aria-labelledby="zk-boundary-demo-title">
+      <p class="eyebrow">Try it</p>
+      <h2 id="zk-boundary-demo-title">What a proof can and can't verify</h2>
+      <p>KIP-16's proof check confirms a proof is valid. It says nothing about where its inputs came from, and that gap is where a real integration goes wrong.</p>
+      <details class="guide-detail">
+        <summary>
+          <span class="eyebrow">Demo</span>
+          <h3>Build a claim, then watch it pass or fail</h3>
+          <span class="guide-detail-preview">A proof succeeds on a chosen computation, then fails to establish an outside fact with no named anchor.</span>
+        </summary>
+        <div class="guide-detail-body">
+      <div class="live-demo-frame">
+        <div class="zkb-demo" id="zk-boundary-demo-widget">
+          <div class="zkb-segmented" role="group" aria-label="What to prove" id="zkb-segmented">
+            <button type="button" data-claim="secret" aria-pressed="true">A secret number</button>
+            <button type="button" data-claim="price" aria-pressed="false">Today's real BTC price</button>
+            <button type="button" data-claim="oracle" aria-pressed="false">Price + an oracle</button>
+          </div>
+          <p class="zkb-claim-text" id="zkb-claimText"></p>
+          <div class="zkb-steps" id="zkb-steps"></div>
+          <button class="zkb-action-btn" id="zkb-runBtn" type="button">Generate proof</button>
+          <p class="zkb-caption" id="zkb-caption"></p>
+          <div class="zkb-consequence" id="zkb-consequence" aria-live="polite">
+            <div class="zkb-cmp-row">
+              <div class="zkb-cmp-col">
+                <p class="zkb-cmp-label">Ask a centralized server</p>
+                <p class="zkb-cmp-text" id="zkb-serverText"></p>
+              </div>
+              <div class="zkb-cmp-col">
+                <p class="zkb-cmp-label">Check the proof yourself</p>
+                <p class="zkb-cmp-text" id="zkb-proofText"></p>
+              </div>
+            </div>
+            <p class="zkb-payoff" id="zkb-payoff"></p>
+          </div>
+          <details>
+            <summary>Why this happens, and how it maps to Kaspa</summary>
+            <div class="zkb-quotes-body">
+              <p>Kaspa's Toccata hard fork added <code>OpZkPrecompile</code> (KIP-16, Status: Active), an opcode that checks a proof against a chosen proof system, initially Groth16 and RISC0-Succinct. The opcode confirms a proof verifies against a given verifying key and public inputs. It says nothing about where those public inputs came from.</p>
+              <p>Proving "I know a secret number" is exactly that kind of self-contained check: everything the proof needs is already in its own inputs. Proving "the real price of BTC right now" asks the proof to vouch for a fact about the outside world, something no arithmetic check can do by itself. That gap needs an external anchor instead, such as a light client, a finality certificate, or a reporter set with something to lose.</p>
+              <p>The reason this beats asking a server for the same yes/no answer: a server's answer is only as good as your trust in that server, and checking it means either taking its word or getting access to whatever private data it based the answer on. A verified proof is checked against Kaspa's own public ledger, by anyone, using only the verifying key and the public inputs already on that ledger. Nothing about the app's private internal state has to be exposed for the check to work. One public ledger, many apps, and each app's own state stays its own.</p>
+              <p>So how does a real fact from outside the chain, a price, a bridge event, a sports score, ever get into a proof's public inputs? Someone has to attest to it: sign a statement saying "this is the value," and hand the app that signature instead of the raw fact. The proof can then check the signature the same way it checks any other public input. That's an oracle. It's not a cryptographic trick that removes the trust problem, it's a trust decision: pick a signer, and believe them.</p>
+              <p>Kaspa's L1 does not ship an oracle system. KIP-16 (Status: Active) added the verifier opcode, wired to Groth16 and RISC0-Succinct. What an app builds on top, which oracle to trust, how many signers to require, what happens when they disagree, is an application-level choice, not something the protocol decides for you. Whether that arrangement is trustworthy is a question about the signer, never a question the on-chain math can answer.</p>
+              <p>Kaspa's 10 blocks per second means a signed attestation can land on-chain and start accumulating proof-of-work in about a second, instead of waiting on a slower chain's block time. That's a real property: it shortens how long an app has to sit on stale data before acting on it. It does not touch who you're trusting. A faster chain gets you a wrong price faster, exactly as easily as a right one.</p>
+              <p>Sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16, OpZkPrecompile</a>, <a href="https://docs.kaspa.org/programmability" target="_blank" rel="noopener">docs.kaspa.org/programmability</a>. No proof is actually computed here; this toy names what a proof would and would not cover, and no network requests are made.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+      <style>
+        .zkb-demo {
+          --zkb-bg: #100e0c; --zkb-bg-2: #1c1a17; --zkb-card-bg: #322f2a;
+          --zkb-text: #f8f5ef; --zkb-muted: #b6b0a7; --zkb-faint: #9d988c;
+          --zkb-green: #66d1c1; --zkb-cyan: #2997ff; --zkb-red: #ff6961; --zkb-ink: #06201b;
+          --zkb-control-bg: #2c2c2e; --zkb-control-hover: #3a3a3c;
+          --zkb-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+          --zkb-brand-gradient: linear-gradient(135deg, var(--zkb-green), color-mix(in srgb, var(--zkb-green) 55%, white));
+          background: var(--zkb-card-bg); color: var(--zkb-text); border-radius: 18px; padding: 22px 16px;
+          max-width: 640px; margin: 0 auto; font-size: 17px; line-height: 1.5;
+        }
+        :root[data-theme="light"] .zkb-demo {
+          --zkb-bg: #fbfaf6; --zkb-bg-2: #f3f0ea; --zkb-card-bg: #fbfaf6;
+          --zkb-text: #211e1a; --zkb-muted: #646057; --zkb-faint: #757066;
+          --zkb-green: #0e7c6b; --zkb-cyan: #0071e3; --zkb-red: #c0342a; --zkb-ink: #ffffff;
+          --zkb-control-bg: #e8e8ed; --zkb-control-hover: #dededf;
+          --zkb-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+          --zkb-brand-gradient: linear-gradient(135deg, var(--zkb-green), color-mix(in srgb, var(--zkb-green) 65%, black));
+        }
+        .zkb-demo .zkb-segmented { display: flex; flex-wrap: wrap; justify-content: center; background: var(--zkb-bg-2); border-radius: 22px; padding: 4px; gap: 4px; max-width: 100%; margin: 0 0 18px; }
+        .zkb-demo .zkb-segmented button {
+          border: 0; background: transparent; color: var(--zkb-muted); font: inherit; font-size: .86rem; font-weight: 600;
+          padding: 9px 14px; min-height: 44px; border-radius: 980px; cursor: pointer; transition: background .25s, color .25s;
+          white-space: nowrap; flex: 0 0 auto;
+        }
+        @media (max-width: 400px) {
+          .zkb-demo .zkb-segmented button { font-size: .8rem; padding: 9px 12px; }
+        }
+        .zkb-demo .zkb-segmented button[aria-pressed="true"] { background: var(--zkb-control-bg); color: var(--zkb-text); }
+        .zkb-demo .zkb-claim-text { font-size: 1.02rem; text-align: center; max-width: 40ch; color: var(--zkb-text); min-height: 48px; margin: 0 auto 18px; }
+        .zkb-demo .zkb-steps { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 380px; margin: 0 auto 18px; }
+        .zkb-demo .zkb-step {
+          display: flex; align-items: center; gap: 10px; background: var(--zkb-bg-2); border-radius: 14px; padding: 10px 14px;
+          font-size: 1rem; color: var(--zkb-faint); opacity: .5; transition: opacity .3s, background .3s;
+        }
+        .zkb-demo .zkb-step.active { opacity: 1; }
+        .zkb-demo .zkb-step.pass { background: color-mix(in srgb, var(--zkb-green) 14%, var(--zkb-bg-2)); color: var(--zkb-text); }
+        .zkb-demo .zkb-step.fail { background: color-mix(in srgb, var(--zkb-red) 14%, var(--zkb-bg-2)); color: var(--zkb-text); }
+        .zkb-demo .zkb-step .zkb-mark { width: 22px; height: 22px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; background: var(--zkb-control-bg); color: var(--zkb-faint); transition: background .3s, color .3s, transform .3s; }
+        .zkb-demo .zkb-step.pass .zkb-mark { background: var(--zkb-green); color: var(--zkb-ink); transform: scale(1.1); }
+        .zkb-demo .zkb-step.fail .zkb-mark { background: var(--zkb-red); color: var(--zkb-ink); transform: scale(1.1); }
+        @media (prefers-reduced-motion: reduce) { .zkb-demo .zkb-step, .zkb-demo .zkb-step .zkb-mark { transition: none; } }
+        .zkb-demo .zkb-action-btn {
+          display: block; margin: 0 auto;
+          min-height: 48px; border: 0; border-radius: 980px; padding: 12px 28px; font: inherit; font-size: 1rem;
+          font-weight: 650; cursor: pointer; background: var(--zkb-brand-gradient); color: var(--zkb-ink);
+        }
+        .zkb-demo .zkb-action-btn:hover { filter: brightness(1.05); }
+        .zkb-demo .zkb-action-btn:disabled { opacity: .5; cursor: default; filter: none; }
+        .zkb-demo .zkb-caption { min-height: 44px; font-size: 1rem; color: var(--zkb-muted); text-align: center; max-width: 42ch; margin: 12px auto 0; }
+        .zkb-demo .zkb-caption b { color: var(--zkb-text); }
+        .zkb-demo .zkb-caption.fail-msg b { color: var(--zkb-red); }
+        .zkb-demo .zkb-caption.pass-msg b { color: var(--zkb-green); }
+        .zkb-demo .zkb-consequence { width: 100%; max-width: 460px; max-height: 0; overflow: hidden; opacity: 0; margin: 0 auto; transition: max-height .45s ease, opacity .4s ease; }
+        .zkb-demo .zkb-consequence.shown { max-height: 320px; opacity: 1; margin-top: 14px; }
+        @media (prefers-reduced-motion: reduce) { .zkb-demo .zkb-consequence { transition: none; } }
+        .zkb-demo .zkb-cmp-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .zkb-demo .zkb-cmp-col { flex: 1 1 160px; background: var(--zkb-bg-2); border-radius: 14px; padding: 12px 14px; }
+        .zkb-demo .zkb-cmp-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--zkb-faint); margin: 0 0 6px; font-weight: 700; }
+        .zkb-demo .zkb-cmp-text { font-size: 1rem; line-height: 1.4; color: var(--zkb-text); margin: 0; }
+        .zkb-demo .zkb-payoff { margin: 14px 0 0; font-size: 1rem; font-weight: 650; text-align: center; color: var(--zkb-text); line-height: 1.4; }
+        .zkb-demo details { margin-top: 22px; }
+        .zkb-demo details summary { cursor: pointer; font-size: .88rem; color: var(--zkb-muted); padding: 4px 0; }
+        .zkb-demo .zkb-quotes-body { margin-top: 12px; font-size: 1rem; color: var(--zkb-muted); }
+        .zkb-demo .zkb-quotes-body p { margin: 0 0 10px; }
+        .zkb-demo .zkb-quotes-body a { color: var(--zkb-faint); }
+        .zkb-demo a:focus-visible, .zkb-demo button:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--zkb-cyan) 28%, transparent);
+          outline-offset: 3px;
+        }
+      </style>
+      <script>
+      (function () {
+        "use strict";
+        var CLAIMS = {
+          secret: {
+            text: '"I know a number that, doubled, equals 84."',
+            steps: [
+              { label: "Input received", result: "pass" },
+              { label: "Math checked against the input", result: "pass" },
+              { label: "That's the whole claim, nothing else to check", result: "pass" }
+            ],
+            final: 'pass',
+            caption: '<b>Proof accepted.</b> Everything the claim needed was already inside the proof’s own inputs. There is nothing left outside the math to doubt.',
+            server: 'A server could say yes, this is true, too. All you would have is its word for it.',
+            proof: 'Anyone checks this proof against Kaspa’s public ledger themselves, no server, no asking, no exposing the secret number itself.',
+            payoff: 'Same public ledger for everyone, but the app never had to show anyone its secret number to prove the claim.'
+          },
+          price: {
+            text: '"BTC’s real market price right now is $61,240."',
+            steps: [
+              { label: "Input received", result: "pass" },
+              { label: "Math checked against the input", result: "pass" },
+              { label: "Is that number actually true right now?", result: "fail" }
+            ],
+            final: 'fail',
+            caption: '<b>Refused at the last step.</b> The proof correctly checked its own arithmetic. It has no way to check whether $61,240 is the real, current price. That needs an outside anchor, a proof over inputs no one verified is a proof over the wrong thing.',
+            server: 'A price feed actually could tell you BTC’s real price right now, if you trust that feed.',
+            proof: 'This proof can only check its own math. It has no way to see the outside world, trusted or not.',
+            payoff: 'The point isn’t that proofs beat servers at everything. A proof only replaces trust for a claim entirely inside its own inputs, like the secret number above, not for a fact about the world outside them.'
+          },
+          oracle: {
+            text: '"An oracle signed: BTC’s real price right now is $61,240."',
+            steps: [
+              { label: "Input received", result: "pass" },
+              { label: "Signature checked against the oracle’s public key", result: "pass" },
+              { label: "Is that number actually true right now?", result: "fail" }
+            ],
+            final: 'fail',
+            caption: '<b>Refused again, on the same step.</b> The proof now checks something real: that this specific oracle signed this specific number. It still cannot check whether $61,240 is the real price. A lying or mistaken oracle produces the exact same passing signature check.',
+            server: 'Trust the oracle’s report directly, the same way you’d trust any price feed. Wrong or not, the proof can’t tell you.',
+            proof: 'Verify only that this key signed this number. Whether the number is true is on the oracle, not the math.',
+            payoff: 'An oracle turns an unprovable fact into a provable signature, and that’s genuinely useful. But the trust question didn’t go away, it moved from "is this true" to "do I trust whoever signed it."'
+          }
+        };
+
+        var current = "secret";
+        var claimText = document.getElementById("zkb-claimText");
+        var stepsEl = document.getElementById("zkb-steps");
+        var runBtn = document.getElementById("zkb-runBtn");
+        var caption = document.getElementById("zkb-caption");
+        var segmented = document.getElementById("zkb-segmented");
+        var consequence = document.getElementById("zkb-consequence");
+        var serverText = document.getElementById("zkb-serverText");
+        var proofText = document.getElementById("zkb-proofText");
+        var payoff = document.getElementById("zkb-payoff");
+        var busy = false;
+        if (!claimText || !stepsEl || !runBtn) return;
+
+        function renderIdle() {
+          var c = CLAIMS[current];
+          claimText.textContent = c.text;
+          stepsEl.innerHTML = "";
+          c.steps.forEach(function (st) {
+            var el = document.createElement("div");
+            el.className = "zkb-step";
+            el.innerHTML = '<span class="zkb-mark">&middot;</span><span>' + st.label + "</span>";
+            stepsEl.appendChild(el);
+          });
+          caption.className = "zkb-caption";
+          caption.textContent = "Click to run the proof.";
+          runBtn.disabled = false;
+          runBtn.textContent = "Generate proof";
+          consequence.classList.remove("shown");
+        }
+
+        function run() {
+          if (busy) return;
+          busy = true;
+          runBtn.disabled = true;
+          var c = CLAIMS[current];
+          var stepEls = stepsEl.children;
+          var i = 0;
+          function next() {
+            if (i >= stepEls.length) {
+              caption.className = "zkb-caption " + (c.final === "pass" ? "pass-msg" : "fail-msg");
+              caption.innerHTML = c.caption;
+              serverText.textContent = c.server;
+              proofText.textContent = c.proof;
+              payoff.textContent = c.payoff;
+              consequence.classList.add("shown");
+              runBtn.disabled = false;
+              busy = false;
+              return;
+            }
+            var st = c.steps[i];
+            var el = stepEls[i];
+            el.className = "zkb-step active " + st.result;
+            el.querySelector(".zkb-mark").textContent = st.result === "pass" ? "✓" : "✕";
+            i++;
+            setTimeout(next, 420);
+          }
+          next();
+        }
+
+        segmented.addEventListener("click", function (e) {
+          var btn = e.target.closest("button[data-claim]");
+          if (!btn || busy) return;
+          current = btn.getAttribute("data-claim");
+          Array.prototype.forEach.call(segmented.children, function (b) {
+            b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+          });
+          renderIdle();
+        });
+
+        runBtn.addEventListener("click", run);
+
+        renderIdle();
+      })();
+      </script>
+        </div>
+      </details>
     </section>
 
     <section id="build" class="section">
@@ -257,10 +963,20 @@
       <h2>Run the checks yourself</h2>
       <p>A wallet screen shows a balance and asks to be believed. A node, an RPC call, or a second explorer either agrees or doesn't. Climb the ladder when the situation calls for it: an explorer read, then a second API, then self-custody wallet software, then a node answering from chain state. A normal payment doesn't need every rung.</p>
       <p class="fit-note">Mainnet commands change with releases. Check the source links before touching real funds.</p>
-      <div data-audience="specialist">
-        <h3>Run a Rusty Kaspa node</h3>
-        <p>Docker for the container route, Rust and Cargo for the source route. A node verifies chain state. It does not create or protect wallet keys.</p>
-        <pre><code>docker pull kaspanet/rusty-kaspad:latest
+      <div class="view-switch">
+        <input class="view-switch__input" type="radio" name="verify-route" id="verify-node" checked>
+        <input class="view-switch__input" type="radio" name="verify-route" id="verify-testnet">
+        <input class="view-switch__input" type="radio" name="verify-route" id="verify-api">
+        <div class="view-switch__tabs" role="radiogroup" aria-label="Verification route">
+          <label class="view-switch__tab" for="verify-node">Run a node</label>
+          <label class="view-switch__tab" for="verify-testnet">TN12 testnet</label>
+          <label class="view-switch__tab" for="verify-api">Hosted API</label>
+        </div>
+        <div class="view-switch__panels">
+          <div class="view-switch__panel" data-audience="specialist">
+            <h3>Run a Rusty Kaspa node</h3>
+            <p>Docker for the container route, Rust and Cargo for the source route. A node verifies chain state. It does not create or protect wallet keys.</p>
+            <pre><code>docker pull kaspanet/rusty-kaspad:latest
 mkdir -p ~/kaspa-data
 docker run -d --name kaspa-node --restart unless-stopped \
   -v ~/kaspa-data:/app/data \
@@ -269,71 +985,77 @@ docker run -d --name kaspa-node --restart unless-stopped \
 
 docker ps
 docker logs --tail=80 kaspa-node</code></pre>
-        <p>Source build, then the same node with UTXO indexing:</p>
-        <pre><code>git clone https://github.com/kaspanet/rusty-kaspa
+            <p>Source build, then the same node with UTXO indexing:</p>
+            <pre><code>git clone https://github.com/kaspanet/rusty-kaspa
 cd rusty-kaspa
 cargo run --release --bin kaspad
 
 cargo run --release --bin kaspad -- --utxoindex</code></pre>
-        <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed state. A node that hasn't finished syncing answers confidently and wrongly, so wait for sync.</p>
-        <h3>Open the terminal wallet and RPC path</h3>
-        <p>The terminal RPC and wallet runtime, from a checkout:</p>
-        <pre><code>cd cli
+            <p>Use <code>--utxoindex</code> when wallet or UTXO queries need indexed state. A node that hasn't finished syncing answers confidently and wrongly, so wait for sync.</p>
+            <h3>Open the terminal wallet and RPC path</h3>
+            <p>The terminal RPC and wallet runtime, from a checkout:</p>
+            <pre><code>cd cli
 cargo run --release</code></pre>
-        <p>For every transaction read the address, amount, fee, and network before signing. Send a tiny amount first, then confirm the accepted txid through an independent source.</p>
-        <h3>Enable a JSON WebSocket RPC endpoint</h3>
-        <p>wRPC is off by default. It opens a WebSocket SDKs can query for node state, so bind it carefully on public machines:</p>
-        <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
-        <h3>Practice on testnet, then in the TN12 lab</h3>
-        <pre><code>cargo run --release --bin kaspad -- --testnet
+            <p>For every transaction read the address, amount, fee, and network before signing. Send a tiny amount first, then confirm the accepted txid through an independent source.</p>
+            <h3>Enable a JSON WebSocket RPC endpoint</h3>
+            <p>wRPC is off by default. It opens a WebSocket SDKs can query for node state, so bind it carefully on public machines:</p>
+            <pre><code>cargo run --release --bin kaspad -- --utxoindex --rpclisten-json=default</code></pre>
+          </div>
+          <div class="view-switch__panel" data-audience="specialist">
+            <h3>Practice on testnet, then in the TN12 lab</h3>
+            <pre><code>cargo run --release --bin kaspad -- --testnet
 
 cargo run --release --bin kaspad -- --testnet --netsuffix=10 --utxoindex</code></pre>
-        <p>Check the current netsuffix, release, and flags against active docs first. The TN10 examples are Crescendo-era context; the Rusty Kaspa <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a> pre-releases, plus the <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> endpoint, are the Testnet-10 Toccata activation evidence.</p>
-        <p>TN12 is where covenant and replay experiments get tested before mainnet. The <a href="https://github.com/parker2017code/tn12-covenant-vault-demo">lab repo</a> ships a <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/results.html">results explorer</a> and a <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/playground.html">playground</a>:</p>
-        <pre><code>git clone https://github.com/parker2017code/tn12-covenant-vault-demo
+            <p>Check the current netsuffix, release, and flags against active docs first. The TN10 examples are Crescendo-era context; the Rusty Kaspa <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a> pre-releases, plus the <a href="https://api-tn10.kaspa.org/info/blockdag">Testnet-10 REST status</a> endpoint, are the Testnet-10 Toccata activation evidence.</p>
+            <p>TN12 is where covenant and replay experiments get tested before mainnet. The <a href="https://github.com/parker2017code/tn12-covenant-vault-demo">lab repo</a> ships a <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/results.html">results explorer</a> and a <a href="https://parker2017code.github.io/tn12-covenant-vault-demo/playground.html">playground</a>:</p>
+            <pre><code>git clone https://github.com/parker2017code/tn12-covenant-vault-demo
 cd tn12-covenant-vault-demo
 npm ci
 npm run check:all
 npm run check:tn12</code></pre>
-        <p>Fund only the printed <code>kaspatest:</code> addresses, from a faucet that serves testnet-12. Every Kaspa testnet shares that prefix, so tKAS from a Testnet-10 faucet lands on a network TN12 never sees. Anything run with <code>--submit</code> broadcasts for real.</p>
-        <h3>Hosted API checks</h3>
-        <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks. It is not a protocol source.</p>
-        <div class="api-command-grid grid-cards" aria-label="Kaspa Developer Platform command examples">
-          <article class="api-command-card">
-            <span class="command-method command-method-post">POST</span>
-            <h3>Transaction acceptance</h3>
-            <p>Batch-check txids for acceptance, block hash, and confirmation count.</p>
-            <pre><code>curl --request POST \
+            <p>Fund only the printed <code>kaspatest:</code> addresses, from a faucet that serves testnet-12. Every Kaspa testnet shares that prefix, so tKAS from a Testnet-10 faucet lands on a network TN12 never sees. Anything run with <code>--submit</code> broadcasts for real.</p>
+          </div>
+          <div class="view-switch__panel" data-audience="specialist">
+            <h3>Hosted API checks</h3>
+            <p>The <a href="https://docs.kas.fyi/">Kaspa Developer Platform</a> is a hosted API for chain data, transaction checks, and a node RPC proxy. It works for prototypes, dashboards, and second-source checks. It is not a protocol source.</p>
+            <div class="api-command-grid grid-cards" aria-label="Kaspa Developer Platform command examples">
+              <article class="api-command-card">
+                <span class="command-method command-method-post">POST</span>
+                <h3>Transaction acceptance</h3>
+                <p>Batch-check txids for acceptance, block hash, and confirmation count.</p>
+                <pre><code>curl --request POST \
   --url https://api.kas.fyi/v1/transactions/acceptance \
   --header 'Content-Type: application/json' \
   --header 'x-api-key: &lt;api-key&gt;' \
   --data '{"transactionIds":["&lt;txid&gt;"]}'</code></pre>
-          </article>
-          <article class="api-command-card">
-            <span class="command-method">GET</span>
-            <h3>DAA-score blocks</h3>
-            <p>Read a bounded DAA-score range. KDP caps each request at 100 scores.</p>
-            <pre><code>curl --request GET \
+              </article>
+              <article class="api-command-card">
+                <span class="command-method">GET</span>
+                <h3>DAA-score blocks</h3>
+                <p>Read a bounded DAA-score range. KDP caps each request at 100 scores.</p>
+                <pre><code>curl --request GET \
   --url https://api.kas.fyi/v1/blocks/daa-score/{daa_score_start}/{daa_score_end} \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
-          </article>
-          <article class="api-command-card">
-            <span class="command-method">GET</span>
-            <h3>Address history</h3>
-            <p>Large histories need cursor pagination. Cache results, or the requests pile up fast.</p>
-            <pre><code>curl --request GET \
+              </article>
+              <article class="api-command-card">
+                <span class="command-method">GET</span>
+                <h3>Address history</h3>
+                <p>Large histories need cursor pagination. Cache results, or the requests pile up fast.</p>
+                <pre><code>curl --request GET \
   --url 'https://api.kas.fyi/v1/addresses/&lt;address&gt;/transactions?limit=100' \
   --header 'x-api-key: &lt;api-key&gt;'</code></pre>
-          </article>
-          <article class="api-command-card api-command-card-note">
-            <span class="command-method command-method-note">DATA</span>
-            <h3>API data rules</h3>
-            <p>Amounts arrive as sompi strings. The key goes in <code>x-api-key</code>, and a 429 means back off.</p>
-            <pre><code>1 KAS = 100000000 SOMPI
+              </article>
+              <article class="api-command-card api-command-card-note">
+                <span class="command-method command-method-note">DATA</span>
+                <h3>API data rules</h3>
+                <p>Amounts arrive as sompi strings. The key goes in <code>x-api-key</code>, and a 429 means back off.</p>
+                <pre><code>1 KAS = 100000000 SOMPI
 amount: "31112708372"</code></pre>
-          </article>
+              </article>
+            </div>
+            <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so Silverscript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
+          </div>
         </div>
-        <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so Silverscript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
       </div>
     </section>
 
@@ -441,7 +1163,10 @@ amount: "31112708372"</code></pre>
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -459,7 +1184,7 @@ amount: "31112708372"</code></pre>
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -469,7 +1194,6 @@ amount: "31112708372"</code></pre>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

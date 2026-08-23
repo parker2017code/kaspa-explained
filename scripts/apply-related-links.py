@@ -80,7 +80,7 @@ def related_for(page):
     for label, fallback in (
         ("Status", "status.html"),
         ("Sources", "sources.html"),
-        ("Claims", "kaspa-claims-checker.html"),
+        ("Claims", "skeptical-case.html"),
     ):
         if fallback != page and fallback not in [candidate for _, candidate in picks]:
             picks.append((label, fallback))

@@ -48,3 +48,21 @@ The bar for this site is macOS and iOS. Not "modern," not "clean," Apple
 specifically. Read design/STANDARD.md before writing any markup or CSS, and
 design/handoff-checklist.md before reporting anything as done. Both govern
 every page and every demo. Correct but unusable is a failure here.
+
+## How to actually switch themes when verifying
+
+Agents keep verifying "both themes" by forcing `prefers-color-scheme`
+through the viewport or an emulation flag. This site does not read that
+media query. It reads a `data-theme` attribute on the root element,
+persisted in `localStorage` under `kaspa-explained-theme`, and it is
+dark by default. Forcing the media query changes nothing and produces a
+report claiming two themes were checked when one was.
+
+Set it directly, then confirm it took:
+
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('kaspa-explained-theme', 'light');
+    getComputedStyle(document.body).backgroundColor;
+
+The computed background must actually differ between the two runs. If it
+does not, the theme did not switch and the check did not happen.

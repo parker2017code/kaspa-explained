@@ -40,8 +40,215 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
+  <style>
+  /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
+     and demos/supply-split.html). Every custom property and selector is scoped under
+     its own container class so nothing leaks onto the rest of the page or the other
+     demo; nothing here touches body, html, :root, or a bare element selector. */
+  .kip-parameterless-demo{
+    color-scheme:dark;
+    --bg:#100e0c; --bg-2:#1c1a17; --panel:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
+    --line:#4a453d; --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --green-rgb:102,209,193;
+    --cyan:#2997ff; --cyan-rgb:41,151,255;
+    --purple:#bf5af2; --purple-rgb:191,90,242;
+    --pink:#ff9f0a; --pink-rgb:255,159,10;
+    --ink:#06201b; --accent-soft:rgba(102,209,193,.12);
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --field-bg:#221f1c; --field-line:#4a453d;
+    --card-shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono-font:ui-monospace,Menlo,Consolas,monospace;
+    font-family:var(--body-font); font-size:17px; line-height:1.6; color:var(--text);
+  }
+  :root[data-theme="light"] .kip-parameterless-demo{
+    color-scheme:light;
+    --bg:#fbfaf6; --bg-2:#f3f0ea; --panel:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
+    --line:#d8d4cb; --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --green-rgb:14,124,107;
+    --cyan:#0071e3; --cyan-rgb:0,113,227;
+    --purple:#6e56cf; --purple-rgb:110,86,207;
+    --pink:#b25000; --pink-rgb:178,80,0;
+    --ink:#ffffff; --accent-soft:rgba(14,124,107,.1);
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --field-bg:#ffffff; --field-line:#d2d2d7;
+    --card-shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  .kip-parameterless-demo a{ color:var(--cyan); }
+  .kip-parameterless-demo h3{ font-size:18px; font-weight:650; letter-spacing:-.008em; color:var(--text); margin:0 0 .15rem; }
+  .kip-parameterless-demo p.lede{ color:var(--muted); font-size:clamp(1.05rem,1.6vw,1.19rem); font-weight:420; line-height:1.45; max-width:74ch; margin:0 0 1.1rem; }
+  .kip-parameterless-demo code{ font-family:var(--mono-font); }
+  .kip-parameterless-demo .status-pill{ display:inline-block; font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; border-radius:980px; padding:.1rem .5rem; margin-left:.35rem; vertical-align:1px; }
+  .kip-parameterless-demo .status-pill.live{ --status-color: var(--green); }
+  .kip-parameterless-demo .status-pill.research{ --status-color: var(--pink); }
+  .kip-parameterless-demo .panel{ background:var(--panel); border:0; border-radius:18px; padding:1rem 1.1rem; margin-bottom:1rem; box-shadow:var(--card-shadow); }
+  .kip-parameterless-demo .row{ display:flex; flex-wrap:wrap; gap:1rem; align-items:flex-end; }
+  .kip-parameterless-demo .field{ display:flex; flex-direction:column; gap:.3rem; min-width:220px; flex:1; }
+  .kip-parameterless-demo .field label{ font-size:.8rem; color:var(--muted); }
+  .kip-parameterless-demo .field .valline{ font-size:1rem; color:var(--text); font-variant-numeric:tabular-nums; }
+  .kip-parameterless-demo input[type=range]{
+    accent-color:var(--cyan); width:100%; height:44px; margin:0; padding:0;
+    background:transparent; -webkit-appearance:none; appearance:none; display:block;
+  }
+  .kip-parameterless-demo input[type=range]::-webkit-slider-runnable-track{ height:4px; border-radius:2px; background:var(--field-line); }
+  .kip-parameterless-demo input[type=range]::-moz-range-track{ height:4px; border-radius:2px; background:var(--field-line); }
+  .kip-parameterless-demo input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--cyan);
+    margin-top:-9px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .kip-parameterless-demo input[type=range]::-moz-range-thumb{
+    width:22px; height:22px; border-radius:50%; background:var(--cyan); border:0; cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .kip-parameterless-demo input[type=range].primary::-webkit-slider-thumb{ width:26px; height:26px; margin-top:-11px; }
+  .kip-parameterless-demo input[type=range].primary::-moz-range-thumb{ width:26px; height:26px; }
+  .kip-parameterless-demo input[type=range].primary::-webkit-slider-runnable-track{ height:6px; }
+  .kip-parameterless-demo input[type=range].primary::-moz-range-track{ height:6px; }
+  .kip-parameterless-demo .scenario-btns{ display:flex; flex-wrap:wrap; gap:.5rem; }
+  .kip-parameterless-demo button.btn{ font:inherit; font-size:.85rem; color:var(--text); background:var(--control-bg); border:0; border-radius:8px; min-height:44px; padding:.5rem .8rem; cursor:pointer; }
+  .kip-parameterless-demo button.btn:hover{ background:var(--control-hover); }
+  .kip-parameterless-demo button.btn[aria-pressed="true"]{ background:color-mix(in srgb, var(--pink) 18%, var(--control-bg)); color:var(--pink); }
+  .kip-parameterless-demo a:focus-visible,
+  .kip-parameterless-demo button:focus-visible,
+  .kip-parameterless-demo input:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+  .kip-parameterless-demo .cmp{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px){ .kip-parameterless-demo .cmp{ grid-template-columns:1fr; } }
+  .kip-parameterless-demo .side{ border:0; border-radius:18px; padding:.85rem; background:var(--card-bg); box-shadow:var(--card-shadow); }
+  .kip-parameterless-demo .side h3{ margin:0 0 .15rem; display:flex; align-items:center; gap:.4rem; }
+  .kip-parameterless-demo .side .sub{ font-size:1rem; color:var(--faint); margin:0 0 .6rem; }
+  .kip-parameterless-demo .gauge-row{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; column-gap:.5rem; font-size:.78rem; color:var(--muted); margin-bottom:.25rem; }
+  .kip-parameterless-demo .gauge-row output{ white-space:nowrap; }
+  .kip-parameterless-demo .gauge{ position:relative; height:14px; border-radius:980px; background:var(--field-bg); border:1px solid var(--field-line); overflow:visible; margin-top:1.1rem; margin-bottom:.35rem; }
+  .kip-parameterless-demo .gauge .fill{ position:absolute; inset:0 auto 0 0; border-radius:980px; background:var(--cyan); overflow:hidden; }
+  .kip-parameterless-demo .gauge .cap{ position:absolute; top:-4px; bottom:-4px; width:3px; background:var(--text); border-radius:2px; }
+  .kip-parameterless-demo .gauge .cap::after{ content:"cap"; position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:.62rem; color:var(--faint); white-space:nowrap; }
+  .kip-parameterless-demo .over-badge{ display:inline-block; margin-bottom:.6rem; font-size:1rem; font-weight:700; color:var(--pink); background:rgba(var(--pink-rgb),.14); border-radius:18px; padding:.4rem .7rem; line-height:1.35; }
+  .kip-parameterless-demo .over-badge[hidden]{ display:none; }
+  .kip-parameterless-demo .bps-block{ margin-bottom:1.1rem; padding-bottom:.9rem; border-bottom:1px solid var(--line); }
+  .kip-parameterless-demo .bps-block label{ font-size:.95rem; color:var(--text); font-weight:650; }
+  .kip-parameterless-demo .bps-block .valline{ font-size:1rem; font-weight:700; color:var(--cyan); }
+  .kip-parameterless-demo .payoff-line{ font-size:1.05rem; font-weight:650; text-align:center; color:var(--text); margin:1rem 0 0; line-height:1.45; }
+  @media (prefers-reduced-motion: no-preference){
+    .kip-parameterless-demo .gauge .fill{ transition:width .4s ease, background-color .4s ease; }
+    .kip-parameterless-demo .block{ transition:background-color .25s ease, border-color .25s ease; }
+  }
+  .kip-parameterless-demo .blockstrip{ display:flex; gap:5px; flex-wrap:wrap; margin:.4rem 0 .6rem; }
+  .kip-parameterless-demo .block{ width:20px; height:20px; border-radius:8px; border:1px solid var(--field-line); background:var(--field-bg); display:flex; align-items:center; justify-content:center; font-size:.6rem; color:var(--faint); }
+  .kip-parameterless-demo .block.ok{ background:color-mix(in srgb, var(--cyan) 28%, var(--field-bg)); border-color:var(--cyan); color:var(--cyan); }
+  .kip-parameterless-demo .block.over{ background:color-mix(in srgb, var(--pink) 32%, var(--field-bg)); border-color:var(--pink); color:var(--pink); }
+  .kip-parameterless-demo .verdict{ font-size:1rem; border-left:3px solid var(--cyan); border-radius:0 8px 8px 0; padding:.5rem .6rem; margin-top:.2rem; background:rgba(var(--cyan-rgb),.06); color:var(--text); }
+  .kip-parameterless-demo .verdict.safe{ border-left-color:var(--green); background:rgba(var(--green-rgb),.1); color:var(--green); }
+  .kip-parameterless-demo .verdict.unsafe{ border-left-color:var(--pink); background:rgba(var(--pink-rgb),.1); color:var(--pink); }
+  .kip-parameterless-demo .verdict.adaptive{ border-left-color:var(--cyan); background:rgba(var(--cyan-rgb),.08); color:var(--cyan); }
+  .kip-parameterless-demo ul.honest{ margin:.3rem 0 0; padding-left:1.1rem; font-size:1rem; color:var(--muted); }
+  .kip-parameterless-demo ul.honest li{ margin-bottom:.5rem; }
+  .kip-parameterless-demo ul.honest strong{ color:var(--text); }
+  .kip-parameterless-demo details{ background:var(--card-bg); border:0; border-radius:14px; padding:.7rem 1rem; margin-bottom:1.5rem; box-shadow:var(--card-shadow); }
+  .kip-parameterless-demo details summary{ cursor:pointer; list-style:none; font-size:.9rem; font-weight:700; color:var(--cyan); }
+  .kip-parameterless-demo details summary::-webkit-details-marker{ display:none; }
+  .kip-parameterless-demo details summary::before{ content:"+"; font-weight:800; margin-right:.4em; }
+  .kip-parameterless-demo details[open] summary::before{ content:"\2212"; }
+  .kip-parameterless-demo details[open] summary{ margin-bottom:.6rem; }
+  .kip-parameterless-demo details .model-body{ font-size:1rem; color:var(--muted); }
+  .kip-parameterless-demo details table{ border-collapse:collapse; font-size:.8rem; margin:.6rem 0; }
+  .kip-parameterless-demo details td, .kip-parameterless-demo details th{ border-bottom:1px solid var(--line); padding:.25rem .5rem; text-align:right; }
+  .kip-parameterless-demo details th{ color:var(--faint); font-weight:600; }
+  .kip-parameterless-demo details code{ background:var(--field-bg); border:1px solid var(--field-line); border-radius:8px; padding:.05rem .3rem; font-size:.85em; overflow-wrap:anywhere; }
+  .kip-parameterless-demo details ul{ padding-left:1.1rem; }
+  .kip-parameterless-demo .caveat-lead{ margin:0 0 .7rem; }
+  .kip-parameterless-demo .panel details{ margin-bottom:.5rem; }
+
+  .kip-supply-split-demo{
+    color-scheme:dark;
+    --bg:#100e0c; --bg-2:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
+    --line:#4a453d; --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --cyan:#2997ff; --purple:#bf5af2; --pink:#ff9f0a;
+    --red:#ff6961; --ink:#06201b;
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+    font-family:var(--body-font); font-size:15px; line-height:1.5; color:var(--text);
+  }
+  :root[data-theme="light"] .kip-supply-split-demo{
+    color-scheme:light;
+    --bg:#fbfaf6; --bg-2:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
+    --line:#d8d4cb; --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --cyan:#0071e3; --purple:#6e56cf; --pink:#b25000;
+    --red:#c0342a; --ink:#ffffff;
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  .kip-supply-split-demo .lead{ font-size:1.02rem; color:var(--muted); margin:0 0 22px; max-width:60ch; }
+  .kip-supply-split-demo .stage{
+    background:var(--card-bg); border-radius:18px; padding:24px 16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+  }
+  .kip-supply-split-demo .scene{ display:flex; align-items:center; justify-content:center; gap:14px; width:100%; flex-wrap:wrap; }
+  .kip-supply-split-demo .wallet{ display:flex; flex-direction:column; align-items:center; gap:8px; min-width:128px; }
+  .kip-supply-split-demo .wallet-label{ font-size:.84rem; font-weight:650; color:var(--text); }
+  .kip-supply-split-demo .coin-row{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:132px; min-height:40px; }
+  .kip-supply-split-demo .coin{
+    width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:.95rem; background:var(--bg-2); border:2px solid var(--line); flex:none;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .4s, background .4s;
+  }
+  .kip-supply-split-demo .coin.flagged{ border-color:var(--cyan); background:color-mix(in srgb, var(--cyan) 16%, var(--bg-2)); }
+  .kip-supply-split-demo .coin.sending{ animation:sup-attempt .6s cubic-bezier(.2,.8,.2,1); }
+  @keyframes sup-attempt{
+    0%{ transform:translateX(0) scale(1); }
+    45%{ transform:translateX(48px) scale(1.12); border-color:var(--red); }
+    72%{ transform:translateX(48px) scale(1.12); border-color:var(--red); }
+    100%{ transform:translateX(0) scale(1); border-color:var(--red); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .kip-supply-split-demo .coin{ transition:none; }
+    .kip-supply-split-demo .coin.sending{ animation:none; border-color:var(--red); }
+  }
+  .kip-supply-split-demo .link-glyph{ font-size:1.9rem; font-weight:300; color:var(--faint); min-width:40px; text-align:center; transition:color .4s, transform .3s; line-height:1; }
+  .kip-supply-split-demo .link-glyph.blocked{ color:var(--red); }
+  .kip-supply-split-demo .supply-line{ font-size:.84rem; color:var(--muted); text-align:center; }
+  .kip-supply-split-demo .supply-line b{ color:var(--text); }
+  .kip-supply-split-demo .action-btn{
+    min-height:48px; border:0; border-radius:980px; padding:12px 28px; font:inherit; font-size:1rem;
+    font-weight:650; cursor:pointer; background:var(--brand-gradient); color:var(--ink);
+  }
+  .kip-supply-split-demo .action-btn:hover{ filter:brightness(1.05); }
+  .kip-supply-split-demo .action-btn:disabled{ opacity:.5; cursor:default; filter:none; }
+  .kip-supply-split-demo .controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .kip-supply-split-demo .reset-btn{
+    min-height:44px; min-width:44px; border:0; background:none; color:var(--faint);
+    font:inherit; font-size:.88rem; font-weight:500; cursor:pointer; padding:0 10px; border-radius:980px;
+  }
+  .kip-supply-split-demo .reset-btn:hover{ color:var(--text); background:var(--control-bg); }
+  .kip-supply-split-demo .caption{ min-height:44px; font-size:.92rem; color:var(--muted); text-align:center; max-width:44ch; }
+  .kip-supply-split-demo .caption b{ color:var(--text); }
+  .kip-supply-split-demo .caption.refuse-msg b{ color:var(--red); }
+  .kip-supply-split-demo .consequence{ font-size:.88rem; color:var(--muted); text-align:center; max-width:48ch; margin:4px auto 0; }
+  .kip-supply-split-demo details{ margin-top:22px; }
+  .kip-supply-split-demo summary{ cursor:pointer; font-size:.88rem; color:var(--muted); padding:4px 0; }
+  .kip-supply-split-demo .quotes-body{ margin-top:12px; }
+  .kip-supply-split-demo blockquote{ margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid var(--cyan); font-size:.88rem; line-height:1.5; }
+  .kip-supply-split-demo cite{ display:block; font-style:normal; font-size:.76rem; color:var(--faint); margin-top:4px; }
+  .kip-supply-split-demo cite a{ color:var(--faint); }
+  .kip-supply-split-demo .note{ font-size:.78rem; color:var(--faint); margin-top:10px; }
+  .kip-supply-split-demo a:focus-visible,
+  .kip-supply-split-demo button:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+  .kip-supply-split-demo .fictional-note{ font-size:.82rem; color:var(--faint); margin:-4px 0 18px; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -70,72 +277,541 @@
     <section class="section">
       <p class="eyebrow">Protocol</p>
       <h2 id="kip">Kaspa Improvement Proposals</h2>
-      <p class="lead">Status words come from the index table in the KIP repository, read live below.</p>
+      <p class="lead">Status words come from the index table in the KIP repository, read live below. 15 proposals total, 11 marked Active, grouped below by number so the list is scannable instead of one long scroll.</p>
       <p>Implemented means it is running. Active means merged and adopted as the specification. Proposed and Draft mean the argument is still open. Rejected means it was considered and turned down.</p>
-      <div class="table-wrap">
-        <table class="reality-table" id="kip-table">
-          <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
-          <tbody id="kip-body">
-            <tr><td>1</td><td>Rewriting the full node in Rust</td><td>Consensus, Node</td><td>Implemented</td></tr>
-            <tr><td>2</td><td>Upgrade consensus to follow DAGKNIGHT</td><td>Consensus, API/RPC</td><td>Proposed</td></tr>
-            <tr><td>3</td><td>Block sampling for efficient DAA with high BPS</td><td>Consensus</td><td>Rejected</td></tr>
-            <tr><td>4</td><td>Sparse difficulty windows</td><td>Consensus</td><td>Active</td></tr>
-            <tr><td>5</td><td>Message signing</td><td>Applications</td><td>Active</td></tr>
-            <tr><td>6</td><td>Proof of Chain Membership</td><td>Consensus, Applications</td><td>Draft</td></tr>
-            <tr><td>9</td><td>Extended mass formula for mitigating state bloat</td><td>Consensus, Mempool, P2P</td><td>Active</td></tr>
-            <tr><td>10</td><td>New transaction opcodes for enhanced script functionality</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-            <tr><td>13</td><td>Transient storage handling</td><td>Consensus</td><td>Active</td></tr>
-            <tr><td>14</td><td>The <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-kips">Crescendo<span class="term-def__panel" id="crescendo-def-kips" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span> hardfork</td><td>Consensus</td><td>Active</td></tr>
-            <tr><td>15</td><td>Canonical transaction ordering and sequencing commitments</td><td>Consensus</td><td>Active</td></tr>
-            <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-            <tr><td>17</td><td>Covenants and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-            <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-            <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
-          </tbody>
-        </table>
+      <div id="kip-groups">
+        <details class="deep-dive">
+          <summary>KIP 1&ndash;6, the foundational batch (2 of 6 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Rewriting the full node in Rust</td><td>Consensus, Node</td><td>Implemented</td></tr>
+                <tr><td>2</td><td>Upgrade consensus to follow DAGKNIGHT</td><td>Consensus, API/RPC</td><td>Proposed</td></tr>
+                <tr><td>3</td><td>Block sampling for efficient DAA with high BPS</td><td>Consensus</td><td>Rejected</td></tr>
+                <tr><td>4</td><td>Sparse difficulty windows</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>5</td><td>Message signing</td><td>Applications</td><td>Active</td></tr>
+                <tr><td>6</td><td>Proof of Chain Membership</td><td>Consensus, Applications</td><td>Draft</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary>KIP 9&ndash;15, consensus and script-engine expansion (5 of 5 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>9</td><td>Extended mass formula for mitigating state bloat</td><td>Consensus, Mempool, P2P</td><td>Active</td></tr>
+                <tr><td>10</td><td>New transaction opcodes for enhanced script functionality</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>13</td><td>Transient storage handling</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>14</td><td>The <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-kips">Crescendo<span class="term-def__panel" id="crescendo-def-kips" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span> hardfork</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>15</td><td>Canonical transaction ordering and sequencing commitments</td><td>Consensus</td><td>Active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary>KIP 16&ndash;21, the Toccata batch (4 of 4 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>17</td><td>Covenants and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
       </div>
       <p class="hint" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
       <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the <a href="/demos/parameterless">DAGKnight</a> upgrade, has been Proposed for years and stays Proposed: internal devnet only, no testnet, no date. Eleven further KIPs sit open as pull requests. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
       <p class="fit-note">KIP-2 proposes replacing GHOSTDAG's fixed margin with one that adapts to actual network latency. Try it below.</p>
-      <div class="live-demo-frame">
-        <iframe id="parameterless-frame" src="/demos/parameterless" title="Parameterless consensus demo: GHOSTDAG's fixed margin versus DAGKnight's adjustable one, KIP-2" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('parameterless-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+      <details class="deep-dive" id="parameterless-demo">
+        <summary>Try it: fixed margin (GHOSTDAG) versus adjustable margin (DAGKnight, KIP-2)</summary>
+        <div class="kip-parameterless-demo">
+          <p class="lede">Kaspa fixes a margin in advance. Push the sliders: a fixed margin strains while an adjustable one keeps up.</p>
+
+          <div class="panel">
+            <div class="row bps-block">
+              <div class="field">
+                <label for="par-bps-slider">Block rate (blocks/sec)</label>
+                <input type="range" class="primary" id="par-bps-slider" min="1" max="100" step="1" value="10" aria-describedby="par-bps-out par-bps-hint">
+                <span class="valline" id="par-bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
+                <span class="valline" id="par-bps-hint" style="color:var(--faint);">rusty-kaspa's table stops at 32 blocks/sec; past that, the ceiling is GHOSTDAG's, not DAGKnight's.</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="par-d-slider">Assumed worst-case latency (D)</label>
+                <input type="range" id="par-d-slider" min="0.5" max="15" step="0.5" value="5" aria-describedby="par-d-out">
+                <span class="valline" id="par-d-out">D = 5.0 s &rarr; configured margin (k) = 124</span>
+              </div>
+            </div>
+            <div class="row" style="margin-top:.8rem;">
+              <div class="field">
+                <label id="par-l-label" for="par-l-slider">Actual latency</label>
+                <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="2" aria-labelledby="par-l-label" aria-describedby="par-l-out">
+                <span class="valline" id="par-l-out">2.0 s (margin (k) this actually needs: 55)</span>
+              </div>
+            </div>
+            <div class="scenario-btns" role="group" aria-label="Latency scenario presets" style="margin-top:.7rem;">
+              <button class="btn" type="button" data-l="0.5">Healthy (0.5 s)</button>
+              <button class="btn" type="button" data-l="2">Typical (2 s)</button>
+              <button class="btn" type="button" data-l="5">Congested (5 s)</button>
+              <button class="btn" type="button" data-l="12">Adversarial spike (12 s)</button>
+            </div>
+          </div>
+
+          <div class="cmp">
+            <div class="side" id="par-side-fixed">
+              <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
+              <p class="sub">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks/sec.</p>
+              <div class="gauge-row"><span>configured margin (k)</span><output id="par-fixed-k-out">124</output></div>
+              <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:100%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap"></div></div>
+              <p id="par-fixed-tableend" class="over-badge" hidden></p>
+              <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">31</output></div>
+              <p id="par-fixed-over" class="over-badge" hidden></p>
+              <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
+              <div class="gauge-row"><span>wait time</span><output id="par-fixed-time-out">12.4 s</output></div>
+              <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
+            </div>
+            <div class="side" id="par-side-adaptive">
+              <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
+              <p class="sub">No table to run out of: margin tracks the latency actually happening.</p>
+              <div class="gauge-row"><span>effective margin (k) right now</span><output id="par-adapt-k-out">55</output></div>
+              <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:44%; background:var(--green);"></div></div>
+              <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">moderate</output></div>
+              <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
+              <div class="gauge-row"><span>wait time</span><output id="par-adapt-time-out">5.5 s</output></div>
+              <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
+            </div>
+          </div>
+
+          <p class="payoff-line" id="par-payoff-line" role="status"></p>
+
+          <div class="panel">
+            <h3>DAGKnight's two speeds <span class="status-pill research">Research</span></h3>
+            <p style="color:var(--muted); font-size:1rem; margin:0 0 .8rem; max-width:74ch;">
+              DAGKnight's own worst-case formula, not GHOSTDAG and not a live network reading.
+            </p>
+            <div class="row">
+              <div class="field">
+                <label for="par-alpha-slider">Attacker's mining share</label>
+                <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out">
+                <span class="valline" id="par-alpha-out">10%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmp">
+            <div class="side" id="par-side-optimistic">
+              <h3>No visible attack</h3>
+              <p class="sub">Every block looks honest right now.</p>
+              <div class="gauge-row"><span>predicted wait</span><output id="par-opt-time-out"></output></div>
+              <div class="verdict safe" id="par-opt-verdict" role="status"></div>
+            </div>
+            <div class="side" id="par-side-pessimistic">
+              <h3>Attack visibly under way</h3>
+              <p class="sub">An attacker is actively forking the DAG.</p>
+              <div class="gauge-row"><span>predicted wait</span><output id="par-pess-time-out"></output></div>
+              <p id="par-pess-toolong" class="over-badge" hidden></p>
+              <div class="verdict unsafe" id="par-pess-verdict" role="status"></div>
+            </div>
+          </div>
+
+          <p class="payoff-line" id="par-regime-payoff-line" role="status"></p>
+
+          <div class="panel">
+            <h3>What this costs</h3>
+            <p class="sub caveat-lead">Not shipped, not parameter-free, efficiency unsolved.</p>
+            <details>
+              <summary>Every caveat, with sources</summary>
+              <ul class="honest">
+                <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
+                <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
+                <li><strong>A visible attack does not slow down every payment.</strong> As long as a transaction has no visible conflicting spend, its ordering is commutative with recent transactions, so it can still confirm on the optimistic timeline above even while the pessimistic case is playing out elsewhere in the DAG (§4, footnote 14).</li>
+                <li><strong>Efficiency is unsolved.</strong> KIP-2 itself lists the current DAGKnight pseudocode as "highly inefficient" and its rewrite as unfinished work, a stated reason this is still research four years on.</li>
+                <li><strong>The 32 blocks/sec ceiling on the slider above belongs to GHOSTDAG, not to DAGKnight.</strong> rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32 blocks/sec; the fallback arm past that reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22). GHOSTDAG needs a k chosen in advance for a given rate, so running it past 32 needs a developer to compute a new k and hard-fork the network; nothing today defines one there. DAGKnight's whole premise, per <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, is removing that a priori k, so it has no table to run out of, which is why this slider lets it keep going. That range is shown to demonstrate the gap, not to assert a target: KIP-2 lists the optimal block rate as open research with no number recommended, and the widely repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</li>
+                <li><strong>No published cost figure exists, but the efficiency work is real and some of it now sits on kaspanet's own branch, not just a side fork.</strong> Contributor coderofstuff (40 commits to kaspanet/rusty-kaspa) develops the UMC-voting redesign on personal fork branches first, then merges it directly into kaspanet/rusty-kaspa's own <code>dagknight</code> branch: the <code>dk-umc-proposed</code> branch merged in on August 14, 2026, identical commit and all. Their explanatory write-up naming the bottleneck behind KIP-2's "highly inefficient" (the paper's recursive UMC-voting algorithm at O(n squared) worst case, with an O(n times K) amortized replacement proposed) still lives only on an unofficial personal wiki, not kaspanet's own docs. It is real, named engineering inside the project's own repository, still unmerged to master and not reviewed or adopted as the shipped algorithm. Details below.</li>
+              </ul>
+            </details>
+          </div>
+
+          <details>
+            <summary>Model, formula, and citations</summary>
+            <div class="model-body">
+              <p>GHOSTDAG's k comes from rusty-kaspa's own derivation, reproduced exactly for this page:
+              <code>k = min k̂ such that P(anticone &gt; k̂) &lt; δ</code>, computed from <code>x = 2·D·λ</code>
+              (D = assumed max delay in seconds, λ = blocks/second) via a Poisson-tail sum, with mainnet's
+              constants <code>NETWORK_DELAY_BOUND = 5s</code> and <code>GHOSTDAG_TAIL_DELTA = 0.01</code>
+              (<code>consensus/core/src/config/{constants,bps}.rs</code>). At λ = 10 blocks/s, D = 5 s gives
+              k = 124, matching the compiled table in <code>bps.rs</code> exactly (verified: 1 bps → 18,
+              2 → 31, 5 → 67, 10 → 124). This page's block-rate slider moves λ directly through that same
+              formula; the D and actual-latency sliders move the two delay terms.</p>
+              <table>
+                <tr><th>bps</th><td>1</td><td>2</td><td>5</td><td>10</td></tr>
+                <tr><th>k (D = 5 s)</th><td>18</td><td>31</td><td>67</td><td>124</td></tr>
+              </table>
+              <p><strong>Does raising the block rate under GHOSTDAG lengthen confirmation? Checked against the
+              DAG KNIGHT paper directly, not assumed.</strong> Verified, direct quote (§1.2): "many blocks are
+              created in parallel, blocks suffer from larger anticones, and transactions take longer to confirm.
+              This scenario represents either a slow down in the network, or a system intentionally parameterized
+              with a high block rate, e.g., λ = 10 blocks per second," the same section adding "Kaspa's convergence
+              time remains in the order of tens of seconds even when its latency is way below 10 seconds." Also
+              verified, mechanically, from the k(D, λ) formula above and this repo's own bps.rs table: holding D
+              fixed at 5 s, the required margin k climbs from 18 blocks at 1 bps to 553 blocks at 50 bps, a direct,
+              exact consequence of x = 2·D·λ growing with λ. Also verified, direct quote (§1.5.2): the paper's own
+              pessimistic (under-attack) confirmation-time bound is
+              O((1/λ)·(exp(c·D·λ/(1−2α)) + ln(1/ε)/(1−2α))), which grows without bound as λ rises, for fixed D and
+              attacker share α, because the exponential term outpaces the 1/λ in front of it.
+              One number stays <strong>inferred, not asserted by the paper</strong>: dividing that required k by λ
+              (an average-case "expected wait for k blocks at this rate," which is what the "about how long that
+              wait takes" readouts above use) actually falls as λ rises in this simplified model, converging toward
+              2·D. That is a different, gentler quantity than the paper's own worst-case bound above, and this page
+              does not claim to reproduce the paper's exact confirmation-time formula from Section 4, only this
+              simplified conversion, labeled as such.</p>
+              <p><strong>The "Two speeds, not one" widget above uses the paper's actual confirmation-time
+              formulas, not the simplified k/λ conversion above.</strong> Verified directly against §1.5.2 and
+              §4, which restate the same two bounds in both step-count and second form. Optimistic (no visible
+              attack), in seconds: O((ln(1/ε)/λ + D)/(1−2α) + D²λ). Pessimistic (visible attack), in seconds:
+              O((1/λ)·(exp(c·D·λ/(1−2α)) + ln(1/ε)/(1−2α))), the same bound quoted above. Both D and λ
+              reuse this page's own D and block-rate sliders, since D is exactly this paper's client-set bound on
+              recent latency; ε is fixed at 0.01 (1% error tolerance, stated on the widget) rather than exposed as a
+              fourth slider, and a new attacker-share slider supplies α. The paper leaves the pessimistic case's
+              constant c unspecified; the widget sets c = 1 as an illustrative placeholder, not a value the paper
+              states, which is why that side is a rough shape, not a precise prediction. Because exp() grows so
+              fast, the pessimistic side is computed in log space (the same technique the k(D, λ) search above uses)
+              and falls back to a plain "too long" state, matching this site's <a href="/demos/confirmation-risk">confirmation-risk
+              demo</a>, once the wait would pass 100 years rather than printing a number of seconds longer than
+              that has any everyday meaning.</p>
+              <p><strong>Table 1, transcribed.</strong> The paper directly compares four ordering rules' asymptotic
+              convergence time, in blocks (multiply by λ⁻¹ for seconds, per the paper's own note under the table).
+              D<sub>max</sub> is an a priori worst-case latency bound fixed in advance; D<sub>t</sub> is a bound on
+              the current, recent latency.</p>
+              <div class="table-wrap" style="overflow-x:auto;">
+              <table>
+                <tr><th style="text-align:left;">Protocol</th><th>Visible attack</th><th>No visible attack</th></tr>
+                <tr><td style="text-align:left;">Nakamoto Consensus</td>
+                  <td>O((ln(1/ε) + D<sub>t</sub>λ) / max{0, (1−α)/(1+D<sub>t</sub>λ) − α})</td>
+                  <td>same, asymptotically</td></tr>
+                <tr><td style="text-align:left;">PHANTOM</td>
+                  <td>O(exp(c₁·D<sub>max</sub>λ/(1−2α)) + ln(1/ε)/(1−2α))</td>
+                  <td>O((ln(1/ε) + D<sub>max</sub>λ)/(1−2α))</td></tr>
+                <tr><td style="text-align:left;">SPECTRE</td>
+                  <td>does not converge</td>
+                  <td>O((ln(1/ε) + D<sub>t</sub>λ)/(1−2α))</td></tr>
+                <tr><td style="text-align:left;">KNIGHT</td>
+                  <td>O(exp(c₂·D<sub>t</sub>λ/(1−2α)) + ln(1/ε)/(1−2α))</td>
+                  <td>O((ln(1/ε) + D<sub>t</sub>λ)/(1−2α) + (D<sub>t</sub>λ)²)</td></tr>
+              </table>
+              </div>
+              <ul>
+                <li>SPECTRE converges slightly faster than KNIGHT when no attack is visible, the same expression
+                minus KNIGHT's extra (D<sub>t</sub>λ)² term, but SPECTRE does not guarantee convergence once an
+                attack is visible: it solves only "weak liveness," securing payments whose ordering among honest
+                users is commutative, not the general consensus problem KNIGHT solves (§1.5.2, citing [19]).</li>
+                <li>Nakamoto Consensus's tolerable attacker share shrinks toward zero as D·λ grows: the table's own
+                denominator, max{0, (1−α)/(1+D<sub>t</sub>λ) − α}, heads to zero as D<sub>t</sub>λ
+                increases, which §3.1-3.2 calls "not scalable, since its security threshold deteriorates as the
+                block creation rate λ grows."</li>
+                <li>PHANTOM converges only in terms of D<sub>max</sub>, a worst-case latency chosen in advance,
+                rather than the current D<sub>t</sub> that KNIGHT and SPECTRE track (§4: PHANTOM "converges in
+                terms of D<sub>max</sub> = D only").</li>
+              </ul>
+              <p><strong>What "DAGKnight" shows here is a simplified, labeled model</strong>, not the paper's
+              algorithm. It reuses the same k(D, λ) formula and simply lets the operating point track the
+              actual-latency slider instead of holding it fixed, a fair reading of the paper's qualitative
+              Figure 4 (parameterized protocols hold a flat, hardcoded confirmation bound and can fail past it;
+              parameterless ones track the current latency bound and stay safe, only slower), but not a
+              simulation of DAGKnight's real k-cluster selection or of its actual confirmation-time formula.
+              The paper's own worked example (Figure 3, at λ = 3.75 bps, adversary share α = 0.2, confidence
+              ε = 0.05) reports D = 2 s → k = 4, confirmation ≈ 12 s; D = 1 s → k = 1, confirmation ≈ 6 s;
+              D = 0.1 s → k = 0, confirmation ≈ 1.2 s. Those three points depend on α and ε, which this page
+              does not expose, so they are cited here rather than wired into the sliders.</p>
+              <p><strong>Where the efficiency question is actually being worked: kaspanet's own branch, plus one contributor's personal fork and wiki.</strong>
+              kaspanet/rusty-kaspa's own <code>dagknight</code> branch is active: latest commit
+              <a href="https://github.com/kaspanet/rusty-kaspa/commit/956c82fd764d6f412d715a4b0706e6c34e12a49c">"Merge branch 'dk-umc-proposed' into dagknight"</a>,
+              August 14, 2026, preceded by a run of <code>[DK::UMC]</code> and <code>[DK::CZM]</code> commits from
+              August 12 to 14, 2026 (verified against the GitHub API commit log, checked 2026-08-22). Both
+              coderofstuff (40 commits to the official repo) and freshair18 (9 commits) are credited
+              contributors there, not outside parties. Separately,
+              <a href="https://github.com/coderofstuff/rusty-kaspa">coderofstuff/rusty-kaspa</a> is a personal
+              fork carrying branches <code>dagknight</code> (last commit Jul 26, 2026), <code>dkoder</code>,
+              <code>dk-shortcut</code>, <code>dk-umc-proposed</code> (last commit Aug 14, 2026, the same commit
+              that merged into kaspanet's branch), and <code>dk-with-tcp</code> (last commit Aug 20, 2026). Its
+              companion <a href="https://github.com/coderofstuff/dk-wiki">dk-wiki</a>, unofficial and separate
+              from kaspanet's own docs, states in
+              <a href="https://github.com/coderofstuff/dk-wiki/blob/main/08-umc-voting.md">08-umc-voting.md</a>
+              (last edited Jul 24, 2026): "the paper's recursive algorithm as written still has worst-case
+              O(n²) complexity, because in the worst case every block's vote must be computed and the
+              recursion tree can be quadratic," and "If UMC voting is O(n²), the total rank search becomes
+              O(n² &times; max_k), which is expensive." It proposes an incremental replacement it puts at
+              "O(n &times; K) amortized." A related page, <a href="https://github.com/coderofstuff/dk-wiki/blob/main/06-rank.md">06-rank.md</a>
+              (last edited Jul 31, 2026), describes a separate change that "reduces the number of
+              k-coloring + UMC voting calls from O(max_k) to O(log(max_k))." A commit titled
+              "[DK::bench] Add benchmarks for tie breaking" (<code>73e3079</code>, May 28, 2026) adds a real
+              criterion benchmark harness and fixture data testing tie-breaking at k = 4, 9, 16, 25, 36, and 53,
+              but no measured output is committed anywhere: it is unrun benchmarking infrastructure, not a
+              published number. The code itself has landed on kaspanet's own experimental branch; the analysis
+              explaining why it matters has not. None of it is peer-reviewed, merged to master, or adopted as
+              Kaspa's shipped algorithm.</p>
+              <p>Sources: Sompolinsky &amp; Sutton, <a href="https://eprint.iacr.org/2022/1494">"The DAG KNIGHT Protocol: A Parameterless Generalization of Nakamoto Consensus,"</a>
+              IACR ePrint 2022/1494 (esp. §1.2, §1.3, §1.4, §1.5.2, Theorem 14, Figures 3 to 4), last revised Feb 24,
+              2023 (<a href="https://eprint.iacr.org/archive/versions/2022/1494">version history</a>) &middot;
+              <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, Status: Proposed,
+              no technical revision since Nov 30, 2022, only a metadata commit in Jul 2025 &middot;
+              rusty-kaspa <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/bps.rs">bps.rs</a>,
+              <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params.rs</a>,
+              <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/constants.rs">constants.rs</a>
+              (checked 2026-08-22) &middot; kaspanet/rusty-kaspa
+              <a href="https://api.github.com/repos/kaspanet/rusty-kaspa/commits?sha=dagknight">dagknight branch commit log</a>
+              (checked 2026-08-22, via GitHub API) &middot; unofficial: <a href="https://github.com/coderofstuff/rusty-kaspa/tree/dagknight">coderofstuff/rusty-kaspa</a>
+              and <a href="https://github.com/coderofstuff/dk-wiki">dk-wiki</a> (checked 2026-08-22) &middot;
+              this site's <a href="/what-is-kaspa#ghostdag">What is Kaspa</a> and
+              <a href="/status">Status</a>.</p>
+            </div>
+          </details>
+
+          <p class="sr-only" aria-live="polite" id="par-live-region"></p>
+        </div>
+        <script>
+        (function(){
+          "use strict";
+
+          function ghostdagK(x, delta){
+            var kHat = 0, sigma = 0;
+            var logTerm = -x;
+            var guard = 0;
+            while (true){
+              sigma += Math.exp(logTerm);
+              if (1 - sigma < delta || guard > 20000) return kHat;
+              kHat += 1;
+              logTerm += Math.log(x) - Math.log(kHat);
+              guard++;
             }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+          }
+
+          var DELTA = 0.01;    // GHOSTDAG_TAIL_DELTA
+          var BPS_TABLE_MAX = 32;   // rusty-kaspa's Bps<BPS>::ghostdag_k() match arms stop here; the fallback arm panics above it
+          var BPS_SLIDER_MAX = 100; // exploratory range on this slider only; not a confirmed network target, see honesty note above
+          var L_SLIDER_MAX = 20;
+          var SHARED_SCALE = ghostdagK(2 * L_SLIDER_MAX * BPS_SLIDER_MAX, DELTA) * 1.05;
+
+          var bpsSlider = document.getElementById("par-bps-slider");
+          var dSlider = document.getElementById("par-d-slider");
+          var lSlider = document.getElementById("par-l-slider");
+          var bpsOut = document.getElementById("par-bps-out");
+          var dOut = document.getElementById("par-d-out");
+          var lOut = document.getElementById("par-l-out");
+
+          var fixedKOut = document.getElementById("par-fixed-k-out");
+          var fixedReqOut = document.getElementById("par-fixed-req-out");
+          var fixedFill = document.getElementById("par-fixed-fill");
+          var fixedCap = document.getElementById("par-fixed-cap");
+          var fixedTableEnd = document.getElementById("par-fixed-tableend");
+          var fixedOver = document.getElementById("par-fixed-over");
+          var fixedStrip = document.getElementById("par-fixed-strip");
+          var fixedTimeOut = document.getElementById("par-fixed-time-out");
+          var fixedVerdict = document.getElementById("par-fixed-verdict");
+
+          var adaptKOut = document.getElementById("par-adapt-k-out");
+          var adaptCostOut = document.getElementById("par-adapt-cost-out");
+          var adaptFill = document.getElementById("par-adapt-fill");
+          var adaptStrip = document.getElementById("par-adapt-strip");
+          var adaptTimeOut = document.getElementById("par-adapt-time-out");
+          var adaptVerdict = document.getElementById("par-adapt-verdict");
+          var payoffLine = document.getElementById("par-payoff-line");
+
+          function fmtSeconds(s){
+            return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
+          }
+
+          var alphaSlider = document.getElementById("par-alpha-slider");
+          var alphaOut = document.getElementById("par-alpha-out");
+          var optTimeOut = document.getElementById("par-opt-time-out");
+          var optVerdict = document.getElementById("par-opt-verdict");
+          var pessTimeOut = document.getElementById("par-pess-time-out");
+          var pessToolong = document.getElementById("par-pess-toolong");
+          var pessVerdict = document.getElementById("par-pess-verdict");
+          var regimePayoffLine = document.getElementById("par-regime-payoff-line");
+
+          var EPSILON = 0.01;
+          var LN_INV_EPS = Math.log(1 / EPSILON);
+          var PESS_C = 1;
+          var TOO_LONG_SECONDS = 100 * 365.25 * 86400;
+          var LN_TOO_LONG = Math.log(TOO_LONG_SECONDS);
+
+          function fmtSecondsHuman(s){
+            if (s < 1) return Math.round(s * 1000) + " ms";
+            if (s < 60) return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
+            if (s < 3600) return (s / 60).toFixed(1) + " min";
+            if (s < 86400) return Math.round(s / 3600) + " h";
+            if (s < 604800) return Math.round(s / 86400) + " d";
+            if (s < 31557600) return Math.round(s / 604800) + " wk";
+            return Math.round(s / 31557600) + " yr";
+          }
+
+          function renderRegimes(BPS, D){
+            var alpha = parseFloat(alphaSlider.value) / 100;
+            alphaOut.textContent = alphaSlider.value + "%";
+            var denom = 1 - 2 * alpha;
+
+            var optSeconds = (LN_INV_EPS / BPS + D) / denom + D * D * BPS;
+            optTimeOut.textContent = fmtSecondsHuman(optSeconds);
+            optVerdict.textContent = "No cap to exceed here, just a wait.";
+
+            var expArg = PESS_C * D * BPS / denom;
+            var lnEpsTerm = LN_INV_EPS / denom;
+            var lnSum = expArg > 40 ? expArg : Math.log(Math.exp(expArg) + lnEpsTerm);
+            var lnPessSeconds = lnSum - Math.log(BPS);
+
+            var pessTooLong = lnPessSeconds > LN_TOO_LONG;
+            var pessSeconds = pessTooLong ? null : Math.exp(lnPessSeconds);
+
+            if (pessTooLong){
+              pessTimeOut.textContent = "too long";
+              pessToolong.hidden = false;
+              pessToolong.textContent = "still an impractically long wait at " + alphaSlider.value + "% attacker share: the exponential term has already taken over.";
+              pessVerdict.textContent = "Not worth printing: the paper calls this bound \"far from tight.\"";
+            } else {
+              pessTimeOut.textContent = fmtSecondsHuman(pessSeconds);
+              pessToolong.hidden = true;
+              pessVerdict.textContent = "The paper's worst-case bound for a visible attack, at this rate and share.";
+            }
+
+            if (pessTooLong){
+              regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: past any wait worth naming.";
+            } else {
+              regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: " + fmtSecondsHuman(pessSeconds) + ".";
+            }
+          }
+
+          function makeStrip(el, count, colorClassFn){
+            el.innerHTML = "";
+            for (var i = 0; i < count; i++){
+              var b = document.createElement("span");
+              b.className = "block " + colorClassFn(i);
+              el.appendChild(b);
+            }
+          }
+
+          function render(){
+            var BPS = parseFloat(bpsSlider.value);
+            var D = parseFloat(dSlider.value);
+            var L = parseFloat(lSlider.value);
+
+            var beyondTable = BPS > BPS_TABLE_MAX;
+            var tableBps = Math.min(BPS, BPS_TABLE_MAX);
+            var configuredK = ghostdagK(2 * D * tableBps, DELTA);
+            var requiredK = ghostdagK(2 * L * BPS, DELTA);
+
+            bpsOut.textContent = BPS + " block" + (BPS === 1 ? "" : "s") + "/sec" +
+              (BPS === 10 ? " (Kaspa mainnet's Crescendo-era rate)" : "") +
+              (beyondTable ? ", past GHOSTDAG's 32 bps table" : "");
+            dOut.textContent = "D = " + D.toFixed(1) + " s → configured margin (k) = " + configuredK +
+              (beyondTable ? " (frozen, bps=32)" : "");
+            lOut.textContent = L.toFixed(1) + " s (margin (k) this actually needs: " + requiredK + ")";
+
+            fixedKOut.textContent = configuredK;
+            fixedReqOut.textContent = requiredK;
+            var over = requiredK > configuredK;
+            var capPct = Math.min(96, (configuredK / SHARED_SCALE) * 100);
+            fixedCap.style.left = capPct + "%";
+            fixedFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
+            fixedFill.style.background = over ? "var(--pink)" : "var(--cyan)";
+
+            if (beyondTable){
+              fixedTableEnd.hidden = false;
+              fixedTableEnd.textContent = "No k past 32 bps: the table stops there. Frozen at bps=32's value.";
+            } else {
+              fixedTableEnd.hidden = true;
+            }
+
+            if (over && !beyondTable){
+              var factor = (requiredK / configuredK);
+              fixedOver.hidden = false;
+              fixedOver.textContent = factor.toFixed(1) + "× over margin";
+            } else {
+              fixedOver.hidden = true;
+            }
+
+            var stripCount = 10;
+            makeStrip(fixedStrip, stripCount, function(i){
+              var jitter = ((i * 37) % 11) - 5;
+              var sample = Math.max(0, requiredK + jitter);
+              return sample > configuredK ? "over" : "ok";
+            });
+
+            if (beyondTable){
+              fixedTimeOut.textContent = "–";
+            } else {
+              var fixedTime = configuredK / BPS;
+              fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
+            }
+
+            if (beyondTable){
+              fixedVerdict.className = "verdict unsafe";
+              fixedVerdict.textContent = "Undefined past 32 bps: the table stops there. Running here needs a new k, hard-forked in, the exact a-priori choice DAGKnight removes.";
+            } else if (over){
+              fixedVerdict.className = "verdict unsafe";
+              fixedVerdict.textContent = "Cap exceeded: needs k=" + requiredK + ", fixed at " + configuredK + ".";
+            } else {
+              fixedVerdict.className = "verdict safe";
+              fixedVerdict.textContent = "Within the cap: latency needs k=" + requiredK + "; the fixed " + configuredK + " covers it.";
+            }
+
+            adaptKOut.textContent = requiredK;
+            adaptFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
+            var costLabel = requiredK < 40 ? "low" : requiredK < 150 ? "moderate" : requiredK < 600 ? "high" : "extreme";
+            adaptCostOut.textContent = costLabel;
+
+            makeStrip(adaptStrip, stripCount, function(){ return "ok"; });
+
+            var adaptTime = requiredK / BPS;
+            adaptTimeOut.textContent = fmtSeconds(adaptTime);
+
+            adaptVerdict.textContent = "No cap: k=" + requiredK + " right now, tracking latency, relaxing once calm.";
+
+            if (beyondTable){
+              payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG has no table entry left. DAGKnight has no table to run out of: it would just need k=" + requiredK + ". That gap is the whole “parameterless” claim.";
+            } else if (over){
+              payoffLine.textContent = "At " + BPS + " blocks/sec, honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay. DAGKnight would just widen to k=" + requiredK + " and keep going.";
+            } else {
+              payoffLine.textContent = "At " + BPS + " blocks/sec, GHOSTDAG carries a fixed " + configuredK + "-block margin, needed or not.";
+            }
+
+            var live = document.getElementById("par-live-region");
+            live.textContent = beyondTable ? "The fixed-margin side has no defined value past 32 blocks per second." :
+              (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
+
+            renderRegimes(BPS, D);
+          }
+
+          function clearScenarioState(){
+            Array.prototype.forEach.call(document.querySelectorAll("#parameterless-demo .scenario-btns button"), function(b){ b.setAttribute("aria-pressed", "false"); });
+          }
+
+          bpsSlider.addEventListener("input", render);
+          dSlider.addEventListener("input", function(){ clearScenarioState(); render(); });
+          lSlider.addEventListener("input", function(){ clearScenarioState(); render(); });
+          alphaSlider.addEventListener("input", render);
+
+          Array.prototype.forEach.call(document.querySelectorAll("#parameterless-demo .scenario-btns button"), function(btn){
+            btn.addEventListener("click", function(){
+              lSlider.value = btn.getAttribute("data-l");
+              Array.prototype.forEach.call(document.querySelectorAll("#parameterless-demo .scenario-btns button"), function(b){ b.setAttribute("aria-pressed", "false"); });
+              btn.setAttribute("aria-pressed", "true");
+              render();
+            });
+          });
+
+          render();
+        })();
+        </script>
+      </details>
     </section>
 
     <section class="section">
@@ -145,19 +821,44 @@
       <p>The KCC repository was created on July 15, 2026. Three specifications have merged into it: KCC-0001, KCC-0002, and KCC-0020. Each one's own document header still reads <code>Status: Draft</code>.</p>
       <p>A merged file in this repo is a checked-in draft, not an adopted standard: the README's own bar for acceptance is a Comments-URI discussion window and consensus among implementers, and none of the three has cleared that.</p>
       <p class="fit-note">KCC-0001 defines the byte layout for a <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">covenant<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span>, a rule attached to a coin that these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
-      <div class="table-wrap">
-        <table class="reality-table" id="kcc-table">
-          <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
-          <tbody id="kcc-body">
-            <tr><td>KCC-0001 covenant definition, concepts, byte layout and ABI</td><td>2026-07-15</td><td>Merged, Status: Draft</td></tr>
-            <tr><td>KCC-0002 authority schemes for program ABIs</td><td>2026-07-20</td><td>Merged, Status: Draft</td></tr>
-            <tr><td>KCC-0020 fungible token covenant specification</td><td>2026-07-15</td><td>Merged, Status: Draft</td></tr>
-            <tr><td>KCC-0402 covenant payment channels</td><td>2026-07-19</td><td>Open pull request</td></tr>
-            <tr><td>KCC-0021 covenant token metadata specification</td><td>2026-07-23</td><td>Open pull request</td></tr>
-            <tr><td>KCC-0008 through KCC-0024 multi-token, token, and commerce standards</td><td>2026-07-25</td><td>Closed, not merged (three attempts)</td></tr>
-            <tr><td>KCC-0025 license agreement</td><td>2026-07-28</td><td>Closed, not merged</td></tr>
-          </tbody>
-        </table>
+      <div id="kcc-groups">
+        <details class="deep-dive">
+          <summary>Merged, Status: Draft (3)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>KCC-0001 covenant definition, concepts, byte layout and ABI</td><td>2026-07-15</td><td>Merged, Status: Draft</td></tr>
+                <tr><td>KCC-0002 authority schemes for program ABIs</td><td>2026-07-20</td><td>Merged, Status: Draft</td></tr>
+                <tr><td>KCC-0020 fungible token covenant specification</td><td>2026-07-15</td><td>Merged, Status: Draft</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary id="kcc-open-summary">Open pull requests (2)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
+              <tbody id="kcc-body">
+                <tr><td>KCC-0402 covenant payment channels</td><td>2026-07-19</td><td>Open pull request</td></tr>
+                <tr><td>KCC-0021 covenant token metadata specification</td><td>2026-07-23</td><td>Open pull request</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary>Closed, not merged (2)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>KCC-0008 through KCC-0024 multi-token, token, and commerce standards</td><td>2026-07-25</td><td>Closed, not merged (three attempts)</td></tr>
+                <tr><td>KCC-0025 license agreement</td><td>2026-07-28</td><td>Closed, not merged</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
       </div>
       <p class="hint" id="kcc-stamp">Baseline read from the KCC repository on August 22, 2026. This table refreshes from the repository when the page loads; the live fetch below only lists currently open pull requests, so the three merged drafts and the closed proposals stay as this baseline describes them.</p>
       <p>The two open pull requests both claim adoption evidence the repository itself does not carry: KCC-0021's author says kascov and the wallet KaspaRocket already use its metadata convention, and KCC-0402's author says a reference implementation, k402, has payment-channel transactions live on mainnet. Neither claim is independently confirmed; treat both as the author's word until a merge or an outside source backs them.</p>
@@ -167,46 +868,129 @@
         <summary>Common question: what happens when a token standard splits supply?</summary>
         <p>Under KCC-0020, updating some holders' cells and not others while a supply-wide commitment changes splits the token into groups that can never consolidate again, permanently. The spec's own co-authors are on record disagreeing about which uses of that mechanism are intended versus a bug; the full record is below.</p>
       </details>
-      <div class="live-demo-frame">
-        <iframe id="supply-split-frame" src="/demos/supply-split" title="Supply split demo: update one holder's tokens under KCC-0020 and watch a payment to the other get refused for good" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:520px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('supply-split-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+      <details class="deep-dive" id="supply-split-demo">
+        <summary>Try it: update one holder's tokens and watch a payment to the other get refused for good</summary>
+        <div class="kip-supply-split-demo">
+          <p class="lead">You and Sam hold the same token. Right now any coin of yours equals any coin of Sam's. Update just one of you, and that stops being true, for good.</p>
+          <p class="fictional-note">A made-up token, used as an example. The standard is real; this token is not.</p>
+
+          <div class="stage">
+            <div class="scene">
+              <div class="wallet">
+                <div class="wallet-label">You</div>
+                <div class="coin-row" id="sup-rowYou"></div>
+              </div>
+              <div class="link-glyph" id="sup-linkGlyph" aria-hidden="true">&#8644;</div>
+              <div class="wallet">
+                <div class="wallet-label">Sam</div>
+                <div class="coin-row" id="sup-rowSam"></div>
+              </div>
+            </div>
+            <p class="supply-line" id="sup-supplyLine">9 coins. <b>One shared supply.</b></p>
+            <div class="controls">
+              <button class="action-btn" id="sup-actionBtn" type="button">Update Sam's coins</button>
+              <button class="reset-btn" id="sup-resetBtn" type="button">Reset</button>
+            </div>
+            <p class="caption" id="sup-caption">Either of you could pay the other any amount. A coin is a coin.</p>
+          </div>
+
+          <p class="consequence">A price, a balance, an exchange listing: anything that assumed one supply of this token now has to track two.</p>
+
+          <details>
+            <summary>What the spec's own authors said about this</summary>
+            <div class="quotes-body">
+              <p class="note">This demo is a simplified stand-in for KCC-0020, a draft Kaspa token rule that lets an issuer update the state of some holders and not others. Issue #14, opened by Knitser on kaspanet/kccs, August 21, 2026, reports that this same mechanism permanently splits a token's supply once triggered. Two KCC-0020 co-authors replied. This is not a universal bug: one pattern below is defended as intended, a different one is conceded as a wrong pattern the standard does not yet handle. The reporter never withdrew his concern, and the issue is still open.</p>
+              <blockquote>
+                &ldquo;My view is that the combination of extended state, alongside token-specific entry points, allows for various use cases which are not only write-once, nor only for a singleton token. The standard transfer function, though, is meant to transfer fungible tokens, hence, it assumes that inputs and outputs state (excluding ownership and amount) must be identical (or else could not be treated as fungible)&rdquo;
+                <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+              </blockquote>
+              <blockquote>
+                &ldquo;I can relate bcs example extensions that come to mind indeed illustrate this. for instance a <code>frozen</code> bool indicator which can be used by stable coin issuer for black listing, indeed renders the token as temporarily non fungible.&rdquo;
+                <cite>Michael Sutton, KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+              </blockquote>
+              <blockquote>
+                &ldquo;I had one conceptual exception, but I think it means it's a wrong pattern. The example would be some contract using the ext state for storing receipt-like information&hellip; It mutates all the time but isn't part of the state that matters. I guess this pattern only makes sense if it was well defined as part of the std, and not as an opaque virtual state&rdquo;
+                <cite>Michael Sutton, KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+              </blockquote>
+              <blockquote>
+                &ldquo;I agree that kind of pattern should either be defined in the standard or implemented in a non state storage (maybe the payload, as you once suggested).&rdquo;
+                <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
+              </blockquote>
+              <p class="note">KCC-0020 (Fungible Token Covenant Specification), authors Sivan Helfer, Michael Sutton, and Romain Billot, Status: Draft as of August 21, 2026. No spec change has merged as of this writing. Source: <a href="https://github.com/kaspanet/kccs/blob/main/kcc-0020.md" target="_blank" rel="noopener">github.com/kaspanet/kccs/blob/main/kcc-0020.md</a>.</p>
+            </div>
+          </details>
+        </div>
+        <script>
+        (function () {
+          "use strict";
+          var YOU_COUNT = 4, SAM_COUNT = 5, TOTAL = YOU_COUNT + SAM_COUNT;
+          var COIN_GLYPH = "●";
+          var step; // start -> updated -> refused
+          var rowYou = document.getElementById("sup-rowYou");
+          var rowSam = document.getElementById("sup-rowSam");
+          var linkGlyph = document.getElementById("sup-linkGlyph");
+          var supplyLine = document.getElementById("sup-supplyLine");
+          var btn = document.getElementById("sup-actionBtn");
+          var resetBtn = document.getElementById("sup-resetBtn");
+          var caption = document.getElementById("sup-caption");
+
+          function buildRow(container, count, flagged) {
+            container.innerHTML = "";
+            for (var i = 0; i < count; i++) {
+              var el = document.createElement("div");
+              el.className = "coin" + (flagged ? " flagged" : "");
+              el.textContent = COIN_GLYPH;
+              el.setAttribute("role", "img");
+              el.setAttribute("aria-label", (flagged ? "updated coin" : "coin"));
+              container.appendChild(el);
             }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+          }
+
+          function updateSam() {
+            buildRow(rowSam, SAM_COUNT, true);
+            supplyLine.innerHTML = TOTAL + " coins. <b>Two kinds of coin now.</b>";
+            caption.className = "caption";
+            caption.innerHTML = "Sam's coins now carry extra state yours don't. KCC-0020 lets an issuer update some holders and skip everyone else.";
+            btn.textContent = "Pay Sam 2 coins";
+            step = "updated";
+          }
+
+          function paySam() {
+            var coins = rowYou.querySelectorAll(".coin");
+            for (var i = 0; i < 2 && i < coins.length; i++) {
+              coins[i].classList.add("sending");
+            }
+            linkGlyph.textContent = "⊘";
+            linkGlyph.classList.add("blocked");
+            caption.className = "caption refuse-msg";
+            caption.innerHTML = "<b>Refused.</b> Your coins and Sam's just became two separate, permanently unmergeable supplies of the same named token, because KCC-0020 let an issuer update Sam's holders without updating yours.";
+            btn.disabled = true;
+            step = "refused";
+          }
+
+          function resetDemo() {
+            buildRow(rowYou, YOU_COUNT, false);
+            buildRow(rowSam, SAM_COUNT, false);
+            linkGlyph.textContent = "⇄";
+            linkGlyph.classList.remove("blocked");
+            supplyLine.innerHTML = TOTAL + " coins. <b>One shared supply.</b>";
+            caption.className = "caption";
+            caption.innerHTML = "Either of you could pay the other any amount. A coin is a coin.";
+            btn.disabled = false;
+            btn.textContent = "Update Sam's coins";
+            step = "start";
+          }
+
+          btn.addEventListener("click", function () {
+            if (step === "start") { updateSam(); }
+            else if (step === "updated") { paySam(); }
+          });
+          resetBtn.addEventListener("click", resetDemo);
+
+          resetDemo();
+        })();
+        </script>
+      </details>
       <details class="deep-dive" id="supply-split">
         <summary>The supply-split consequence, defended in part, conceded in part</summary>
         <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser has not withdrawn his original concern, and no spec change has merged.</p>
@@ -231,7 +1015,7 @@
       <p class="eyebrow">How this page stays honest</p>
       <h2>Where these numbers come from</h2>
       <p>Both tables above are written into the page as a baseline, verified by hand on the date stamped under each one. When the page loads it asks the two repositories for their current state and replaces the baseline if anything moved. If GitHub is unreachable or rate-limits the request, the baseline stays and the stamp says so; nothing here is generated from memory.</p>
-      <p>A status word here is evidence of where a document sits in a process, never that something works. For what is actually running, use the <a href="/status">live status page</a>; for activated versus usable, see <a href="/toccata-explained">what still has to be built</a>.</p>
+      <p>A status word here is evidence of where a document sits in a process, never that something works. For what is actually running, use the <a href="/status">live status page</a>; for activated versus usable, see <a href="/status#product-claims">what still has to be built</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
@@ -239,7 +1023,7 @@
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
         <a href="/kaspa-mining"><span>Previous</span><strong>Kaspa mining</strong><p>Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.</p></a>
-        <a href="/status#claim-fact-check"><span>Next</span><strong>Is that Kaspa claim true?</strong><p>Common claims about Kaspa, each marked true, partly true, or wrong, with the source.</p></a>
+        <a href="/sources"><span>Next</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
     </section>
@@ -248,19 +1032,40 @@
 
   <script>
   (function () {
-    var pill = function (s) { return s; };
+    // KIP numbers cluster naturally around three batches (1-6 foundational,
+    // 9-15 consensus/script-engine expansion, 16+ the Toccata batch). These
+    // thresholds bucket both the hand-verified baseline above and whatever
+    // the live fetch returns, so a newly merged KIP just lands in the 16+
+    // group until a future pass re-splits it, rather than breaking the page.
+    var kipBucket = function (n) { return n < 7 ? 0 : (n < 16 ? 1 : 2); };
+    var kipGroupNames = ['the foundational batch', 'consensus and script-engine expansion', 'the Toccata batch'];
+
     fetch('https://raw.githubusercontent.com/kaspanet/kips/master/README.md', { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('kips ' + r.status); return r.text(); })
       .then(function (md) {
         var rows = [];
         md.split('\n').forEach(function (line) {
           var m = line.match(/^\|\s*\[(\d+)\]\([^)]*\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|/);
-          if (m) rows.push({ n: m[1], layer: m[2].trim(), title: m[3].trim(), status: m[5].trim() });
+          if (m) rows.push({ n: parseInt(m[1], 10), layer: m[2].trim(), title: m[3].trim(), status: m[5].trim() });
         });
         if (!rows.length) return;
-        var body = document.getElementById('kip-body');
-        body.innerHTML = rows.map(function (r) {
-          return '<tr><td>' + r.n + '</td><td>' + r.title + '</td><td>' + r.layer + '</td><td>' + pill(r.status) + '</td></tr>';
+        rows.sort(function (a, b) { return a.n - b.n; });
+        var groups = [[], [], []];
+        rows.forEach(function (r) { groups[kipBucket(r.n)].push(r); });
+        var container = document.getElementById('kip-groups');
+        container.innerHTML = groups.map(function (g, i) {
+          if (!g.length) return '';
+          var active = g.filter(function (r) { return r.status === 'Active'; }).length;
+          var lo = g[0].n, hi = g[g.length - 1].n;
+          var label = 'KIP ' + lo + (hi > lo ? '–' + hi : '') + ', ' + kipGroupNames[i] +
+            ' (' + active + ' of ' + g.length + ' active)';
+          var rowsHtml = g.map(function (r) {
+            return '<tr><td>' + r.n + '</td><td>' + r.title + '</td><td>' + r.layer + '</td><td>' + r.status + '</td></tr>';
+          }).join('');
+          return '<details class="deep-dive"><summary>' + label + '</summary>' +
+            '<div class="table-wrap"><table class="reality-table">' +
+            '<thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>' +
+            '<tbody>' + rowsHtml + '</tbody></table></div></details>';
         }).join('');
         document.getElementById('kip-stamp').textContent =
           'Read live from the KIP repository just now. ' + rows.length + ' proposals indexed.';
@@ -276,6 +1081,7 @@
           var t = String(p.title).replace(/[<>&]/g, '');
           return '<tr><td>' + t + '</td><td>' + p.created_at.slice(0, 10) + '</td><td>Open pull request</td></tr>';
         }).join('');
+        document.getElementById('kcc-open-summary').textContent = 'Open pull requests (' + prs.length + ')';
         document.getElementById('kcc-stamp').textContent =
           'Read live from the KCC repository just now. ' + prs.length + ' open, none merged as a specification.';
       })
@@ -286,7 +1092,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -304,7 +1113,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -314,7 +1123,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

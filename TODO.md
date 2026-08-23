@@ -379,3 +379,138 @@ Pages he judged:
 
 CI is failing again. He has raised this several times. Fix the cause, not
 the run.
+
+## toccata-status.html came back from the dead
+
+Recorded here because it is the third time a retirement has been undone
+by a concurrent `git reset` and nobody noticed until an audit found it.
+
+TODO's own page table says: "DONE. Deleted, folded into status.html, stub
+redirects to /status." It is not a stub. It is a 20KB `index,follow` page
+with no `http-equiv=refresh`, missing from `site-manifest.json` and from
+`sitemap.xml`, so it is invisible to the site's own gates and to the
+sitemap while remaining crawlable.
+
+What is actually duplicated: `status.html` carries the activation record
+and the DAA score. `toccata-status.html` carries the same plus more
+detail on v2.0.0 against v2.0.1.
+
+What makes this non-trivial to retire, and why it was not done inline:
+- `index.html` links to it, so it is reachable and not strictly orphaned.
+- `scripts/audit-content-flow.mjs` and `scripts/check-label-colors.py`
+  both reference it by name. Retiring it without updating them breaks the
+  gate, which is how a wrong rule blocks a right change on this repo.
+- `scripts/apply-related-links.py`'s fallback list still references
+  `kaspa-claims-checker.html`, itself retired, so running that script
+  errors. Adding toccata-status to the manifest would cascade into a
+  regeneration that hits pages other agents hold.
+
+Decide: fold the v2.0.0 against v2.0.1 detail into `status.html` and make
+this a stub, or keep it and put it in the manifest and sitemap so it stops
+being invisible to the gates. The one thing that cannot stand is the
+current state, which is a live indexed page the site's own tooling does
+not know exists.
+
+Related, found in the same audit: `CONTENT_BRIEF.md` claimed 25 live
+pages against an actual 20, and described five retired stubs as live
+separate pages. It is embedded verbatim into `agent-index.json`, so every
+agent reading the index was being told the site had pages it does not.
+Fixed.
+
+## Retire toccata-explained, and lead with what is not built yet
+
+Owner's decision, 23 Aug: "get rid of toccata explained, it's all a part
+of kas. Put more emphasis on future stuff re DK, vProgs etc."
+
+The reasoning is the same one that retired `toccata-status`. Toccata
+activated on mainnet on 30 June 2026 at DAA 474,165,565. A page named
+after an upgrade is a page organized around a release, and a release
+stops being a subject the moment it ships. Covenants are just how Kaspa
+works now, and they belong in the pages about how Kaspa works.
+
+Where the material goes, to be settled by the retirement pass:
+- Covenants, in plain language, into `what-is-kaspa.html`.
+- The builder-facing covenant material into `build-on-kaspa.html`, which
+  already absorbs the covenant-breaker demo.
+- The zk-boundary demo needs a new home. It was going to land on
+  toccata-explained. Decide between `what-is-kaspa.html` and a
+  forward-looking surface.
+
+The second half of the instruction is the more interesting one. The site
+currently gives most of its weight to what shipped and treats what has
+not shipped as a footnote. He wants that inverted: DAGKnight and vProgs
+are the live questions, and they are what a reader who already knows
+Kaspa is here to find out about.
+
+Facts that must stay exactly right when this is written:
+- DAGKnight is KIP-2, Status: Proposed. Not on mainnet.
+- vProgs have not reached testnet. Argent's Inter-Covenant Communication
+  covers the joined-transaction case on Toccata today, in unaudited
+  offline demos only. What vProgs add is shared mutable state.
+- Nothing ships on this site until a merged KIP and a release tag. A page
+  about what is coming is exactly where that rule gets broken, so every
+  forward-looking claim carries its status label and its primary source.
+
+Sequencing note: this was decided while eight agents were mid-flight,
+including one inlining a demo into the page now being retired. That agent
+was told to drop the file and leave its edits in place rather than revert
+them, since a revert is how work has been destroyed four times today.
+
+## ICC is used bare and defined nowhere
+
+`Inter-Covenant Communication` appears on argent-explained (4 times),
+status (3), build-on-kaspa (1), and toccata-explained (1). `status.html`
+uses the bare acronym `ICC` twice with no expansion anywhere on the page.
+No term-definition reveal is wired for it on any page.
+
+This is the same class as the eight terms found earlier: Crescendo,
+TangVM, Hashdag, RTD, netsplit-resilient, TN10, TN12, the KCC codes. The
+site's own rule is that jargon appears with its meaning in the same
+label, or does not appear.
+
+The definition, checked: separately compiled covenant apps joined into
+one all-or-nothing transaction, so either every part lands or none does.
+It works on Toccata today, in unaudited offline demos only. What vProgs
+would add on top is shared mutable state, which ICC does not provide.
+
+Do this as ONE pass across every page rather than per page, because the
+rule that matters here is one phrasing for one concept everywhere, and
+four agents writing four definitions is how that gets broken. Every page
+listed above is currently held by another agent, so it queues.
+
+Caught because the coordinator used the acronym to the owner without
+expanding it, and he asked what it meant. If it fails in conversation it
+fails on the page.
+
+## Jargon still used bare, found while wiring ICC
+
+ICC is now defined once, in identical wording, on argent-explained,
+status, and build-on-kaspa. The same sweep found a much larger list that
+was never caught because nobody had grepped for it:
+
+  KIP    135 occurrences, never expanded anywhere on the site
+  UTXO   undefined, including on the page named after it
+  bps    core to the whole pitch, never expanded
+  ZK     moderate
+  ASIC   moderate
+  BFT    moderate
+  RPC    builder pages only
+  DEX    builder pages only
+
+By the site's own rule this is a defect class, not a nicety: jargon
+appears with its meaning in the same label, or it does not appear. KIP
+and UTXO are the two that matter most, because a reader meets both in the
+first minute and neither is guessable.
+
+Do it as ONE pass, not one agent per page. The rule that breaks under
+parallel work is one phrasing per concept, and four agents produce four
+definitions. Write each definition once and reuse the exact text.
+
+`design/patterns.html` also carries bare ICC twice, quoted verbatim from
+status.html. It is an internal noindex page, so it is lower priority, but
+it is the same defect.
+
+Note on why this was missed for so long: every one of these reads as
+ordinary vocabulary to anyone who already knows the subject. That is
+exactly the population writing and reviewing the site, which is why a
+cold reader with no Kaspa knowledge has to be the one who checks.

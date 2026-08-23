@@ -63,8 +63,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -175,53 +175,7 @@
     <section id="attack-cost-demo" class="section" aria-labelledby="attack-cost-demo-title">
       <p class="eyebrow">Try it</p>
       <h2 id="attack-cost-demo-title">Price the security budget yourself</h2>
-      <p>The security-budget risk above turns on one number: what it costs to outrun Kaspa's hash rate. Set the attack window and see it priced live.</p>
-      <div class="live-demo-frame">
-        <iframe id="attack-cost-frame" src="/demos/attack-cost" title="Attack cost calculator: what it costs to outrun a chain's hash rate for a given time window" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('attack-cost-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            /* The demo hides its own chrome. It sets data-embedded on its
-               root element before first paint, and its stylesheet keys the
-               header, footer, and skip link off that. This page never
-               reaches in to hide anything itself. */
-            var resize = function () {
-              /* body.scrollHeight excludes the body's own margins, which clips
-                 the last pixels of the embedded demo. Take the largest honest
-                 measure and add the margins back. */
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      <p>The security-budget risk above turns on one number: what it costs to outrun Kaspa's hash rate. <a href="/kaspa-mining#attack-cost">Run the attack-cost calculator on the mining page</a> and set your own time window to see that cost priced live.</p>
     </section>
 
     <section class="section deep-dive-plain">
@@ -244,7 +198,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -262,7 +219,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -272,7 +229,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

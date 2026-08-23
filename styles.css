@@ -35,6 +35,15 @@
   --brand-glow: 0 0 1px rgba(var(--green-rgb), .4), 0 8px 30px rgba(var(--green-rgb), .22), 0 2px 40px rgba(var(--cyan-rgb), .14);
   --glow-spot: radial-gradient(circle, rgba(var(--green-rgb), .5), rgba(var(--cyan-rgb), .18) 46%, transparent 72%);
   --site-header-clearance: 156px;
+  /* Sitewide guardrail fix (2026-08-23, defect 4): the gap between the
+     fixed header's bottom edge and a page's first content used to be
+     28px on .fit-page/.reality-page/.why-page/.sources-page/.knowledge-page/
+     .status-page/.glossary-page, but 34-48px (a clamp) on every other page
+     type (home, overview, search, mining-cycle, and any bare <main>), so
+     the same header produced a visibly different gap depending on which
+     class a page happened to carry. main's padding-top now reads this one
+     token everywhere instead of branching by page-type class. */
+  --content-top-gap: 28px;
   --page-bg:
     radial-gradient(ellipse 900px 560px at 12% -8%, rgba(var(--green-rgb), .16), transparent 60%),
     radial-gradient(ellipse 760px 620px at 96% 4%, rgba(var(--cyan-rgb), .13), transparent 62%),
@@ -91,6 +100,18 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Defect 3: the fixed .site-header sizes itself at width:100%, which a
+     fixed-position element resolves against the full layout viewport
+     (window.innerWidth) in Chrome, not the narrower visible content area
+     (document.documentElement.clientWidth) a page with a real, space-
+     reserving scrollbar actually has. The nav then centers itself inside
+     that header with margin:auto, landing dead-center on a width that is
+     wider, on the right, than what the reader can see, so the nav reads
+     as shifted right by half the scrollbar's width. Reserving the gutter
+     unconditionally makes clientWidth equal innerWidth on every page,
+     scrolling or not, so the two widths agree and the centering math
+     matches what renders.  */
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1666,16 +1687,6 @@ li,
 .glossary-grid > *,
 .dag-visual > * {
   min-width: 0;
-}
-
-.fit-page,
-.reality-page,
-.why-page,
-.sources-page,
-.knowledge-page,
-.status-page,
-.glossary-page {
-  padding-top: 28px;
 }
 
 .fit-hero,
@@ -5482,9 +5493,17 @@ body::before {
   gap: 10px;
 }
 
+/* display/align-items marked !important (defect 1): the text was never
+   actually mis-centered by this sitewide rule, which already flex-centers
+   it. demos/parameterless.html carries its own inline <style> .status-pill
+   rule (display:inline-block, no flex) that shadows this by source order,
+   so its pill text sat on the inline-block text line's natural leading
+   instead of being centered, ~6px high at a 30px pill height. Forcing
+   flex centering back on wins without touching the demo's markup or its
+   own color/size choices for the pill. */
 .status-pill {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex !important;
+  align-items: center !important;
   min-height: 30px;
   padding: 5px 10px;
   line-height: 1.25;
@@ -5883,9 +5902,13 @@ body::before {
   }
 }
 
-/* Final interaction/layout guardrails. */
+/* Final interaction/layout guardrails. Marked !important because demo pages
+   under demos/ carry their own inline <style> block with a `body{padding:0
+   0 4rem}` shorthand (loaded after this stylesheet, so it would otherwise
+   win by source order) that zeroed this out and left demo content, notably
+   the "Back to ..." link, rendering under the fixed header (defect 2). */
 body {
-  padding-top: var(--site-header-clearance, 132px);
+  padding-top: var(--site-header-clearance, 132px) !important;
   overflow-x: hidden;
 }
 
@@ -5893,8 +5916,14 @@ body {
   z-index: 1200;
 }
 
+/* One token drives every page's header-to-content gap (defect 4). Marked
+   !important because demo pages under demos/ carry their own inline
+   <style> block with a `main{padding:1.5rem 1rem 0;...}` shorthand that
+   would otherwise win by source order and leave demo content flush
+   against (or under) the fixed header; !important on this single
+   longhand keeps demos on the same token without touching their markup. */
 main {
-  padding-top: clamp(34px, 4vw, 48px);
+  padding-top: var(--content-top-gap) !important;
 }
 
 main > :first-child {
@@ -6670,6 +6699,11 @@ body::after {
   font-weight: 500;
   box-shadow: none;
 }
+/* superseded below in the APPLE DESIGN LAYER (defect 2, 2026-08-23): this
+   32px min-height only reached most pages; demos/index.html carried a
+   page-scoped >=521px override to the 44px touch target this site holds
+   itself to elsewhere (mobile nav, .info-affordance__trigger). Fixed at
+   the cascade tail instead of here so it wins by source order. */
 
 .nav-menu-button,
 :root[data-theme="light"] .nav-menu-button {
@@ -9103,3 +9137,291 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 .tag.measured   { --status-color: var(--green); }
 .tag.projected  { --status-color: var(--purple-pill, var(--purple)); }
 .tag.red-block  { --status-color: var(--red); }
+
+/* Caveat and source lines belong to the text above them, not the block
+   below. The adjacency rules above (.table-wrap + p and friends) were
+   written for body paragraphs and caught these by equal specificity,
+   pushing a source line away from what it annotates and leaving it
+   crammed against the next section. Same specificity, later in source. */
+p.source-inline,
+p.live-footnote {
+  margin-top: 12px;
+}
+
+/* Separation below only when something actually follows. As the last
+   child the line inherits the section's own padding, and adding to it
+   is the dead space this rule exists to avoid. */
+p.source-inline:not(:last-child),
+p.live-footnote:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+/* ============================================================
+   Defect fixes, 2026-08-23
+   ============================================================ */
+
+/* Defect 1: term-def / info-affordance panels trapped behind siblings.
+   Lines ~5382-5389 give `position: relative; z-index: 1` to every direct
+   child of .hero-copy, .hero-visual, .section:not(.prose-section),
+   .orientation-grid a, .hero-signal-grid a, and .route-grid
+   .route-card-link. That promotion is real and load-bearing: each of
+   those containers paints a decorative sheen via its own ::before/::after
+   (position: absolute; inset: 0; no z-index), and without the
+   promotion the sheen would paint over the container's own content
+   (an absolutely-positioned z-index:auto box outranks in-flow static
+   content in paint order). Confirmed by reading lines 5368-5389: the
+   ::before/::after rule and the child-promotion rule share the exact
+   same selector list, back to back. It is not earning its keep as a
+   BLANKET rule once two children both sit at the same z-index: 1,
+   because ties then resolve by DOM order, and a .term-def__panel or
+   .info-affordance__panel (z-index: 30) inside the earlier sibling is
+   scoped to that sibling's own stacking context, so its 30 can never
+   outrank the next sibling's 1. Raising the panel's own z-index cannot
+   fix this; the panel is trapped inside a context that is already
+   capped at 1 from outside.
+
+   Fix: keep the blanket promotion (it still protects every child from
+   the sheen), and additionally promote the SPECIFIC child that
+   currently contains an open panel, using :has() (already used
+   elsewhere in this file, e.g. .grid-cards:has(), .section:has()) to
+   detect open/hovered/focused term-def and info-affordance instances.
+   That child jumps above z-index: 1, which is enough to clear every
+   sibling still sitting at the base promotion. */
+.hero-copy > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
+.hero-visual > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
+.section:not(.prose-section) > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
+.orientation-grid a > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
+.hero-signal-grid a > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
+.route-grid .route-card-link > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open) {
+  z-index: 30;
+}
+
+/* Defect 2: theme toggle height differs by page. The legacy-region rule
+   at .theme-toggle (min-height: 32px, see the note left there) only
+   reaches pages with no page-scoped override; demos/index.html patched
+   itself up to the 44px touch target this site already uses for the
+   mobile nav (.theme-toggle in the <=520px media query) and for
+   .info-affordance__trigger. Raising here, at the end of the cascade,
+   makes 44px the one height everywhere and lets the demos/index.html
+   page-scoped override come out. */
+.theme-toggle {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Defect 3, 2026-08-23: sources.html's ordered .source-list (line ~2478)
+   sets padding-left: 22px for its numeral markers. The list runs to 31
+   items; at the list's 17px font, "1." through "9." measure ~9-11px and
+   fit, but two-digit markers like "22." and "31." measure up to ~24.5px
+   (measured with canvas measureText() against the list's actual computed
+   font, widest marker "31." at 24.45px), so the 22px gutter clips them by
+   about 2.5px and the digits touch the item text. Widened to give the
+   widest marker real headroom instead of a fraction of a pixel. */
+.source-list {
+  padding-left: 34px;
+}
+
+/* ============================================================
+   Panel reveal defects, second pass (2026-08-23)
+
+   The owner reported term-def/info-affordance reveal panels running out
+   to the side on what-is-kaspa ("blue work", "selected parent") and
+   rendering underneath the block below them. A rendered audit (every
+   page and demo, every panel force-opened one at a time, transitions
+   disabled, elementFromPoint sampled at several points per panel, at
+   390 and 1280, both themes) found three distinct mechanisms, only one
+   of which (the z-index:1-trapped-in-a-context-capped-at-1 problem
+   above) had already been fixed. This section covers the other two,
+   plus one more of the same stacking family the first pass didn't
+   reach.
+   ============================================================ */
+
+/* Defect A: 860 clipped instances at baseline. Mechanism: the "Liquid
+   glass / Material visual layer" block (search that comment) gives
+   `overflow: hidden` to `.section:not(.prose-section)` and ~50 card/tile
+   selectors, so the panel -- which is bigger than its own trigger and
+   deliberately escapes the trigger's box -- gets cropped by whichever of
+   those ancestors it sits inside. `.summary-grid article` (the owner's
+   example) is one; the audit also found `.section` itself as the single
+   biggest contributor, plus `.source-more`, `.fit-note`, and `.hero-copy`.
+
+   `.section` and the 18 other selectors below that also carry a
+   decorative ::before/::after sheen (find that block: the one with
+   `inset: 0` and a linear-gradient) genuinely need SOME clipping, or the
+   sheen's own square corners poke past the container's rounded ones.
+   Fix: give the sheen its own `border-radius: inherit` so it clips
+   itself to match, then the container no longer needs `overflow: hidden`
+   at all. For the remaining containers (no sheen), overflow was not
+   earning anything and is just removed.
+
+   `.demo-workspace`/`.demo-status-card` are deliberately left out even
+   though they're part of the same legacy selector groups: they carry
+   their own separate, purpose-built `overflow: hidden` elsewhere (min-height
+   diagram frames) that this pass has no evidence needs to change, and no
+   clipped panel in the audit was ever inside one.
+
+   `.table-wrap` is a different case: its `overflow-x: auto` is load-bearing
+   in the width band where the table is genuinely wider than its
+   container (lets it scroll sideways instead of breaking the page), so
+   it stays there. Setting only `overflow-x` implicitly turns
+   `overflow-y` into `auto` too (per spec, when one axis is non-visible
+   the other stops being `visible`, and this holds even if `overflow-y:
+   visible` is set explicitly afterward on the same element -- tried
+   that, computed `overflow-y` still read back `auto`), and auto clips a
+   panel vertically exactly like hidden does. Measured on status.html at
+   1280px, none of its tables are actually wider than their wrapper at
+   that width (table 1112px inside a 1144px wrapper), so the scroll
+   behavior is already inert there; `overflow: visible` above the width
+   where any real table on this site needs to scroll costs nothing and
+   removes the clip. */
+.hero-copy::after,
+.hero-visual::before,
+.section:not(.prose-section)::before,
+.orientation-grid a::before,
+.hero-signal-grid a::before,
+.hero-status a::before,
+.status-lane-grid a::before,
+.fit-note::before,
+.verified-note::before,
+.freshness-panel div::before,
+.source-more::before,
+.ai-ask-controls::before,
+.ai-prompt-card::before,
+.survey-output::before,
+.route-grid .route-card-link::before,
+.search-card::before,
+.source-tier::before,
+.quadrant::before,
+.quad-cell::before {
+  border-radius: inherit;
+}
+
+.hero-copy,
+.hero-visual,
+.section:not(.prose-section),
+.orientation-grid a,
+.hero-signal-grid a,
+.hero-status a,
+.quick-grid article,
+.timeline article,
+.status-grid article,
+.insight-grid article,
+.claim-grid article,
+.summary-grid article,
+.reference-grid article,
+.status-lane-grid a,
+.verification-steps article,
+.build-path-grid article,
+.api-command-stack article,
+.api-command-card,
+.builder-console article,
+.builder-ledger article,
+.fit-note,
+.verified-note,
+.freshness-panel div,
+.source-tier-grid article,
+.source-more,
+.link-grid a,
+.method-strip article,
+.overview-grid article,
+.compare-cards article,
+.glossary-grid article,
+.ai-ask-controls,
+.ai-prompt-card,
+.pitch-input-card,
+.pitch-output-card,
+.survey-form,
+.survey-output,
+.reality-grid article,
+.field-study-grid article,
+.path-grid article,
+.route-grid article,
+.route-grid .route-card-link,
+.lane-grid article,
+.fit-grid article,
+.search-card,
+.search-results article,
+.source-card,
+.source-tier,
+.one-screen-grid article,
+.must-read-grid article,
+.insight-groups article,
+.use-source-grid article,
+.check-grid label,
+.learning-steps li,
+.quadrant,
+.quad-cell {
+  overflow: visible;
+}
+
+@media (min-width: 1000px) {
+  .table-wrap {
+    overflow: visible;
+  }
+}
+
+/* Defect B: 550 panels overflowing the viewport at baseline (390 and,
+   to a smaller degree, 1280). Mechanism: both panels are absolutely
+   positioned and centered on their trigger (`left: 50%` plus
+   `transform: translateX(-50%)`), and the trigger's containing block is
+   its own small inline box, not the viewport, so nothing in that
+   centering math can see how close the trigger sits to a screen edge. A
+   trigger near either edge gets a panel that runs off-screen the other
+   way once you subtract half the panel's own width. Genuinely fixing
+   this per-trigger (flip to the open side, or clamp against the real
+   viewport edge) needs either JS or a unique per-instance CSS anchor
+   name (`anchor-name`/`position-anchor`); this component has neither
+   and picking up either is a markup change, out of scope for a
+   styles.css-only pass. Tested and confirmed: a shared `anchor-name`
+   across every `.term-def` does not disambiguate per instance, it
+   resolves to a single element for the whole page.
+
+   What IS achievable from styles.css alone: the audit measured the
+   worst real overflow on this site today at 66px (term-def, 390),
+   28px (term-def, 1280), and 74px (info-affordance, 390, uniform
+   across every instance found). Narrowing the panel enough that half
+   its width can never exceed the smallest real trigger-to-edge margin
+   closes every case the audit found, without shrinking the panel at
+   all on wide screens where the room already exists. `min()` against a
+   steeper vw fraction does this in one declaration, no media query:
+   at 390px the vw term wins and narrows the panel; at 1280px the fixed
+   cap wins and the panel stays comfortable. This is a fix bounded by
+   what the audit actually measured on this site's real pages, not a
+   proof for arbitrary future content -- rerun the audit if a new
+   term-def lands somewhere unusually close to an edge. */
+.term-def__panel {
+  max-width: min(200px, 32vw);
+}
+
+.info-affordance__panel {
+  max-width: min(220px, 32vw);
+}
+
+/* Defect C: 32 remaining stacking failures at baseline, a different
+   shape from the ancestor-trap the block above this one already fixes.
+   `.term-def`/`.info-affordance` are `position: relative` with
+   `z-index: auto`; the panel inside carries its own `z-index: 30`, but
+   that 30 only orders content inside the WRAPPER's own stacking context
+   (the info-affordance wrapper also has `transform`, which creates one
+   regardless of z-index). Outside that wrapper, in whatever stacking
+   context contains it, the wrapper itself is still z-index:auto, so it
+   loses to any sibling that carries an explicit z-index -- including a
+   sibling as low as 1. The existing `:has()` fix above promotes a
+   specific named ancestor (`.section`, `.hero-copy`, and four others);
+   that only reaches a panel when the trapped wrapper's parent chain
+   passes through one of those six. It does not reach every shape: the
+   audit's remaining 32 failures are two open term-defs sitting close
+   enough that the later one's plain z-index:auto box paints over the
+   earlier one's still-open panel, or a link doing the same. Rather than
+   add more named ancestors, promote the wrapper itself when it's the
+   one showing a panel: that clears the trap regardless of which
+   ancestor happens to sit in between, including shapes the ancestor
+   list doesn't name. */
+.term-def:hover,
+.term-def:focus-within,
+.term-def.is-open,
+.info-affordance:hover,
+.info-affordance:focus-within,
+.info-affordance.is-open {
+  z-index: 30;
+}

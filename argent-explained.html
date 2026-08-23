@@ -51,8 +51,108 @@
     "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
+  <style>
+  /* Scoped styles for the inlined argent-pipeline demo (formerly demos/argent-pipeline.html).
+     Every custom property and selector below is scoped under .argent-pipeline-demo so it cannot
+     leak onto the rest of this page; nothing here touches body, html, :root, or a bare element. */
+  .argent-pipeline-demo{
+    color-scheme:dark;
+    --bg:#100e0c; --bg-2:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
+    --line:#4a453d; --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --cyan:#2997ff; --purple:#bf5af2; --pink:#ff9f0a;
+    --red:#ff6961; --ink:#06201b;
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --code-bg:#1a1815;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --display-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono-font:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
+    font-family:var(--body-font);
+  }
+  :root[data-theme="light"] .argent-pipeline-demo{
+    color-scheme:light;
+    --bg:#fbfaf6; --bg-2:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
+    --line:#d8d4cb; --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --cyan:#0071e3; --purple:#6e56cf; --pink:#b25000;
+    --red:#c0342a; --ink:#ffffff;
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --code-bg:#f0ede5;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
+  }
+  .argent-pipeline-demo .stage{
+    background:var(--card-bg); border-radius:18px; padding:16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:stretch; gap:10px;
+  }
+  .argent-pipeline-demo .step-row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .argent-pipeline-demo .step-btn{
+    min-height:44px; border:0; border-radius:980px; padding:0 14px; background:var(--control-bg);
+    color:var(--text); font:inherit; font-size:.8rem; font-weight:600; cursor:pointer;
+  }
+  .argent-pipeline-demo .step-btn[aria-pressed="true"]{ background:var(--green); color:var(--ink); }
+  .argent-pipeline-demo .step-btn:hover{ background:var(--control-hover); }
+  .argent-pipeline-demo .step-btn[aria-pressed="true"]:hover{ filter:brightness(1.05); }
+  .argent-pipeline-demo .pipeline{ display:flex; flex-direction:column; gap:0; }
+  .argent-pipeline-demo .layer{
+    background:var(--panel-strong); border:1px solid var(--line); border-radius:14px;
+    padding:9px 14px; opacity:0; transform:translateY(6px);
+    animation:ap-layer-in .38s ease-out forwards;
+  }
+  .argent-pipeline-demo .layer + .arrow-down{ animation:ap-layer-in .38s ease-out forwards; opacity:0; }
+  @keyframes ap-layer-in{ to{ opacity:1; transform:translateY(0); } }
+  .argent-pipeline-demo .layer-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+  .argent-pipeline-demo .layer-name{ font-size:.74rem; font-weight:700; letter-spacing:.03em; color:var(--faint); text-transform:uppercase; }
+  .argent-pipeline-demo .layer-tag{ font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:980px; }
+  .argent-pipeline-demo .layer-tag.same{ background:color-mix(in srgb, var(--green) 22%, transparent); color:var(--green); }
+  .argent-pipeline-demo .layer-tag.new{ background:color-mix(in srgb, var(--pink) 22%, transparent); color:var(--pink); }
+  .argent-pipeline-demo .layer-tag.unpub{ background:color-mix(in srgb, var(--faint) 22%, transparent); color:var(--faint); }
+  .argent-pipeline-demo .layer-code{
+    display:block; background:var(--code-bg); border-radius:10px; padding:10px 12px;
+    font-family:var(--mono-font); font-size:.82rem; line-height:1.45; color:var(--text);
+    overflow-x:auto; white-space:pre; margin:0 0 6px;
+  }
+  .argent-pipeline-demo .layer-note{ font-size:.82rem; color:var(--muted); margin:0; }
+  /* A dashed border draws this connector instead of a repeating gradient.
+     The gradient was only ever painting dashes, and the glass gate bans
+     gradients outright because sheen is the thing it exists to catch. */
+  .argent-pipeline-demo .arrow-down{
+    align-self:center; width:0; height:12px; margin:0;
+    border-left:2px dashed var(--line-bright);
+    position:relative;
+  }
+  .argent-pipeline-demo .arrow-down.flow{ border-left-color:var(--purple); }
+  .argent-pipeline-demo .arrow-down::after{
+    content:""; position:absolute; left:50%; bottom:-3px; transform:translateX(-50%);
+    border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--line-bright);
+  }
+  .argent-pipeline-demo .arrow-down.flow::after{ border-top-color:var(--purple); }
+  @media (prefers-reduced-motion: reduce){
+    .argent-pipeline-demo .layer, .argent-pipeline-demo .arrow-down{ animation:none; opacity:1; transform:none; }
+  }
+  .argent-pipeline-demo .caption{ font-size:.9rem; color:var(--muted); text-align:center; max-width:56ch; margin:0 auto; min-height:0; }
+  .argent-pipeline-demo .caption b{ color:var(--text); }
+  .argent-pipeline-demo .source-line{ font-size:.78rem; color:var(--faint); text-align:center; margin:10px 0 0; }
+  .argent-pipeline-demo .source-line a{ color:var(--faint); }
+  .argent-pipeline-demo details{ margin-top:20px; }
+  .argent-pipeline-demo summary{ cursor:pointer; font-size:.88rem; color:var(--muted); padding:4px 0; }
+  .argent-pipeline-demo .quotes-body{ margin-top:12px; font-size:.88rem; color:var(--muted); }
+  .argent-pipeline-demo .quotes-body p{ margin:0 0 10px; }
+  .argent-pipeline-demo .quotes-body a{ color:var(--faint); }
+  .argent-pipeline-demo .quotes-body pre{
+    background:var(--code-bg); border-radius:10px; padding:10px 12px; overflow-x:auto;
+    font-family:var(--mono-font); font-size:.78rem; line-height:1.45; color:var(--text);
+  }
+  .argent-pipeline-demo a:focus-visible,
+  .argent-pipeline-demo button:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -83,7 +183,7 @@
       <div class="actions">
         <a class="button primary" href="https://github.com/argent-lang/argent">Argent</a>
         <a class="button" href="https://github.com/kaspanet/silverscript">Silverscript</a>
-        <a class="button" href="/toccata-explained">Toccata explained</a>
+        <a class="button" href="/what-is-kaspa#covenants">Covenants explained</a>
       </div>
     </section>
 
@@ -96,46 +196,7 @@
     <section class="section">
       <p class="eyebrow">Inter-Covenant Communication</p>
       <h2>Two Argent actors, one atomic transaction</h2>
-      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. Watch the underlying race below, then open the full demo to drive two Argent actors through a shared move.</p>
-      <div class="live-demo-frame">
-        <iframe id="argent-shared-state-frame" src="/demos/shared-state" title="Race demo: two writers reach for the same slot on a UTXO model versus an account model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('argent-shared-state-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      <p>Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span> lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. <a href="/utxo-vs-accounts#shared-state">Watch the underlying race on the UTXO-vs-accounts page</a>, where two writers reach for the same slot, to see the collision ICC exists to keep two Argent actors out of.</p>
     </section>
 
     <section class="section prose-section" data-audience="specialist">
@@ -182,50 +243,151 @@ app Tickets {
       </details>
     </section>
 
-    <section class="section">
+    <section class="section" id="argent-pipeline">
       <p class="eyebrow">Try it: down the stack</p>
       <h2>Watch the Ticket example move from Argent to Kaspa Script</h2>
       <p>Pick one of the three lines from the <code>transfer</code> entry above and follow it down. Two of the three turn out to be plain Silverscript, unchanged. The third, <code>become</code>, is the one line Argent actually invents, and the demo says exactly where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
-      <div class="live-demo-frame">
-        <iframe id="argent-pipeline-frame" src="/demos/argent-pipeline" title="Pipeline demo: a line from Argent's Ticket example followed through Silverscript to Kaspa Script" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <div class="actions">
-        <a class="button primary" href="/demos/argent-pipeline">Full pipeline demo</a>
+      <div class="argent-pipeline-demo">
+        <div class="stage">
+          <div class="step-row" role="group" aria-label="Pick a line from the Ticket example">
+            <button class="step-btn" id="ap-stepOwnership" type="button" aria-pressed="true">Ownership check</button>
+            <button class="step-btn" id="ap-stepSignature" type="button" aria-pressed="false">Signature check</button>
+            <button class="step-btn" id="ap-stepBecome" type="button" aria-pressed="false">Next coin</button>
+          </div>
+
+          <div class="pipeline">
+            <div class="layer" id="ap-layerArgent">
+              <div class="layer-head">
+                <span class="layer-name">Argent &middot; .ag</span>
+                <span class="layer-tag" id="ap-argentTag"></span>
+              </div>
+              <code class="layer-code" id="ap-argentCode"></code>
+            </div>
+            <div class="arrow-down" id="ap-arrow1"></div>
+            <div class="layer" id="ap-layerSil">
+              <div class="layer-head">
+                <span class="layer-name">Silverscript &middot; .sil</span>
+                <span class="layer-tag" id="ap-silTag"></span>
+              </div>
+              <code class="layer-code" id="ap-silCode"></code>
+              <p class="layer-note" id="ap-silNote"></p>
+            </div>
+            <div class="arrow-down" id="ap-arrow2"></div>
+            <div class="layer" id="ap-layerKaspa">
+              <div class="layer-head">
+                <span class="layer-name">Kaspa Script</span>
+                <span class="layer-tag unpub">not published</span>
+              </div>
+              <p class="layer-note" id="ap-kaspaNote"></p>
+            </div>
+          </div>
+
+          <p class="caption" id="ap-caption"></p>
+        </div>
+
+        <p class="source-line">Real source, quoted as written: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a> README, <a href="https://github.com/kaspanet/silverscript/blob/master/docs/TUTORIAL.md" target="_blank" rel="noopener">Silverscript's tutorial</a>.</p>
+
+        <details>
+          <summary>What's real here, and what's illustrative</summary>
+          <div class="quotes-body">
+            <p>The Argent lines are quoted from the Ticket <code>transfer</code> entry above and in Argent's own README. Argent, Silverscript, and Kaspa Script all use <code>require</code>, and <code>blake2b</code> and <code>checkSig</code> are Silverscript builtins, documented in its tutorial with the identical call shape Argent uses. That is the real relationship for those two lines: Argent inherits Silverscript's expressions rather than reinventing them.</p>
+            <p>The <code>become</code> line is different. Argent's README says <code>become</code> routes "lower to output validation," and that an exact continuation into the same actor "can use cheaper script-public-key checks." Silverscript's own tutorial documents the named builtin for that job:</p>
+            <pre>validateOutputState(int outputIndex, object newState)</pre>
+            <p>used to "validate continuation into the same contract template." The Silverscript line shown for that step names this real, documented builtin and shapes it around the Ticket example's own fields. It is not a copy of Argent's actual generated <code>.sil</code> output for this contract, which neither repository publishes.</p>
+            <p>Past Silverscript, compilation reaches Kaspa Script: <code>silverc</code>'s own docs describe its compiled JSON output as carrying a <code>bytecode</code> field, "the compiled bytecode (as an array of bytes)." No file in either repository shows that array disassembled into opcode names for a real example, so this demo doesn't invent one. Argent's own README states the project "is still under active development and is not yet release-ready," waiting on Silverscript's audit, then its own.</p>
+          </div>
+        </details>
       </div>
       <script>
       (function () {
-        var frame = document.getElementById('argent-pipeline-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
+        "use strict";
+
+        var STEPS = {
+          ownership: {
+            btn: "ap-stepOwnership",
+            argentCode: "require(blake2b(owner_pk) == owner);",
+            argentTag: { text: "same as Silverscript", cls: "same" },
+            silCode: "require(blake2b(owner_pk) == owner);",
+            silTag: { text: "unchanged", cls: "same" },
+            silNote: "blake2b is a Silverscript builtin. Argent's require line calls it directly and the compiler passes it through.",
+            kaspaNote: "Silverscript compiles the hash and the equality check to Kaspa Script opcodes. The .sil build's JSON artifact records the result as a byte array, not as readable opcode text.",
+            caption: "Two of the Ticket entry's three lines are just Silverscript. Argent did not need to reinvent hashing or comparisons."
+          },
+          signature: {
+            btn: "ap-stepSignature",
+            argentCode: "require(checkSig(owner_sig, owner_pk));",
+            argentTag: { text: "same as Silverscript", cls: "same" },
+            silCode: "require(checkSig(owner_sig, owner_pk));",
+            silTag: { text: "unchanged", cls: "same" },
+            silNote: "checkSig is also a Silverscript builtin, verifying a signature against a public key. Same pass-through as the line above.",
+            kaspaNote: "Compiles to a signature-check opcode. Same boundary as the ownership check: recorded as bytes in the artifact, not published as opcode text.",
+            caption: "Nothing Argent-specific in this line either. It reads like ordinary Silverscript because it is ordinary Silverscript."
+          },
+          become: {
+            btn: "ap-stepBecome",
+            argentCode: "become next <- Ticket(new_state);",
+            argentTag: { text: "Argent-specific", cls: "new" },
+            silCode: "validateOutputState(0, State { owner: next_owner, units: units });",
+            silTag: { text: "illustrative", cls: "new" },
+            silNote: "validateOutputState is Silverscript's real, documented builtin for a same-template continuation. This line names it; it is not Argent's actual generated output, which isn't published.",
+            kaspaNote: "Compiles further into opcodes that also carry the encoded state bytes and template check Argent's README describes as mechanical work it takes off a developer's hands.",
+            caption: "become is the one line here that is actually Argent's own idea, not borrowed Silverscript."
+          }
         };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
+
+        var order = ["ownership", "signature", "become"];
+        var argentCodeEl = document.getElementById("ap-argentCode");
+        var argentTagEl = document.getElementById("ap-argentTag");
+        var silCodeEl = document.getElementById("ap-silCode");
+        var silTagEl = document.getElementById("ap-silTag");
+        var silNoteEl = document.getElementById("ap-silNote");
+        var kaspaNoteEl = document.getElementById("ap-kaspaNote");
+        var captionEl = document.getElementById("ap-caption");
+        var layerArgent = document.getElementById("ap-layerArgent");
+        var layerSil = document.getElementById("ap-layerSil");
+        var layerKaspa = document.getElementById("ap-layerKaspa");
+        var arrow1 = document.getElementById("ap-arrow1");
+        var arrow2 = document.getElementById("ap-arrow2");
+
+        function replay(el) {
+          el.style.animation = "none";
+          // eslint-disable-next-line no-unused-expressions
+          el.offsetHeight;
+          el.style.animation = "";
+        }
+
+        function setStep(id) {
+          var s = STEPS[id];
+          order.forEach(function (k) {
+            document.getElementById(STEPS[k].btn).setAttribute("aria-pressed", k === id ? "true" : "false");
+          });
+
+          argentCodeEl.textContent = s.argentCode;
+          argentTagEl.textContent = s.argentTag.text;
+          argentTagEl.className = "layer-tag " + s.argentTag.cls;
+          silCodeEl.textContent = s.silCode;
+          silTagEl.textContent = s.silTag.text;
+          silTagEl.className = "layer-tag " + s.silTag.cls;
+          silNoteEl.textContent = s.silNote;
+          kaspaNoteEl.textContent = s.kaspaNote;
+          captionEl.innerHTML = s.caption;
+
+          [layerArgent, arrow1, layerSil, arrow2, layerKaspa].forEach(function (el, i) {
+            setTimeout(function () { replay(el); }, i * 70);
+          });
+          arrow1.classList.add("flow");
+          arrow2.classList.add("flow");
+          setTimeout(function () {
+            arrow1.classList.remove("flow");
+            arrow2.classList.remove("flow");
+          }, 900);
+        }
+
+        order.forEach(function (k) {
+          document.getElementById(STEPS[k].btn).addEventListener("click", function () { setStep(k); });
         });
+
+        setStep("ownership");
       })();
       </script>
     </section>
@@ -280,7 +442,7 @@ app Tickets {
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/toccata-explained"><span>Previous</span><strong>Kaspa Toccata explained</strong><p>Toccata is live on Kaspa. Here is what it added, in plain terms, and what it deliberately left out.</p></a>
+        <a href="/kaspa-origin-story"><span>Previous</span><strong>Kaspa&#x27;s fair launch was the path left after the other paths failed</strong><p>How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.</p></a>
         <a href="/build-on-kaspa"><span>Next</span><strong>Build Kaspa apps</strong><p>Three ways to build on Kaspa, and how to work out which one your idea needs.</p></a>
         <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
       </div>
@@ -310,7 +472,10 @@ app Tickets {
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -328,7 +493,7 @@ app Tickets {
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -338,7 +503,6 @@ app Tickets {
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

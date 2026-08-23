@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="Search the Kaspa Explained page map by topic, audience, status, and source type.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -123,17 +123,12 @@
           <h3><a href="/kaspa-origin-story">Kaspa Origin Story</a></h3>
           <p>A launch that was mostly leftover.</p>
         </article>
-        <article data-search="toccata explained expressiveness upgrade covenants covenant ids kip 17 kip 20 kip 16 kip 21 zk proof checks sequencing lanes based apps vprogs evm rust stratum bridge">
-          <span>Toccata</span>
-          <h3><a href="/toccata-explained">Toccata Explained</a></h3>
-          <p>Covenants, ZK checks, sequencing lanes.</p>
-        </article>
         <article data-search="argent silverscript explained michael sutton compiler covenant actor state entry become inter covenant communication readme audit unaudited testnet-10 language model worked example">
           <span>Reference</span>
           <h3><a href="/argent-explained">Argent and Silverscript, Explained</a></h3>
           <p>Language model and worked example.</p>
         </article>
-        <article data-search="build on kaspa app ideas builder guide fintech toccata covenants evidence">
+        <article data-search="build on kaspa app ideas builder guide fintech toccata explained expressiveness upgrade covenants covenant ids kip 17 kip 20 kip 16 kip 21 zk proof checks sequencing lanes based apps vprogs evm rust stratum bridge evidence">
           <span>Builders</span>
           <h3><a href="/build-on-kaspa">Build on Kaspa</a></h3>
           <p>Payments first, Toccata rules after.</p>
@@ -143,7 +138,7 @@
           <h3><a href="/status">Kaspa Status</a></h3>
           <p>Live now, and still coming.</p>
         </article>
-        <article data-search="skeptical case objections risks node pressure security budget liquidity mining concentration developer mindshare ecosystem fragility overclaims roadmap execution native defi toccata vprogs">
+        <article data-search="skeptical case objections risks scam rug pull ponzi is kaspa legit node pressure security budget liquidity mining concentration developer mindshare ecosystem fragility overclaims roadmap execution native defi toccata vprogs">
           <span>Skeptical case</span>
           <h3><a href="/skeptical-case">Risks and Open Questions</a></h3>
           <p>What would break each claim.</p>
@@ -168,11 +163,6 @@
           <h3><a href="/utxo-vs-accounts">Why parallel spends don't collide</a></h3>
           <p>Spend a UTXO wallet, then compose two apps.</p>
         </article>
-        <article data-search="about editorial policy independence corrections source first claims status discipline">
-          <span>Policy</span>
-          <h3><a href="/about">About</a></h3>
-          <p>What runs, what's claimed, what's proven.</p>
-        </article>
         <article data-search="the instrument moose book pdf value theory proof of work proof of stake joule floor thermodynamics ratchet monetary systems guest essay themooseisloos5">
           <span>Guest work</span>
           <h3><a href="/the-instrument">The Instrument, by Moose</a></h3>
@@ -196,7 +186,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -214,7 +207,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -224,7 +217,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>
@@ -273,14 +265,25 @@
       return [normalized, ...expanded.map(normalize)].filter(Boolean);
     }
 
-    // Rank matches so a title/summary hit always outranks a body-text-only hit.
-    // Tier 2: the term appears in the page's own title, card blurb, or curated
-    // keyword list (the data this page shows before any background fetch runs).
+    // Rank matches so a title hit always outranks a page that only mentions
+    // the term in passing, and a title/summary hit always outranks a
+    // body-text-only hit.
+    // Tier 3: the term appears in the page's own displayed title (the h3),
+    // so the page is what the query is actually about, not just a page that
+    // happens to reference it once. This keeps a page like "Mining Kaspa"
+    // ahead of a page that only mentions mining in one keyword.
+    // Tier 2: the term appears in the page's card blurb or curated keyword
+    // list (the data this page shows before any background fetch runs).
     // Tier 1: the term appears only in the fetched body text, and only counts
     // if the literal (normalized) query string is present there, no alias
     // expansion, so a rare term can't be diluted by a loosely related synonym.
     // Tier 0: no match, hidden.
     function matchScore(item, terms, normalizedQuery) {
+      const titleHaystack = normalize(item.querySelector('h3')?.textContent || '');
+      const titlePhrase = normalizedQuery && titleHaystack.includes(normalizedQuery);
+      const titleMatch = titlePhrase || terms.every((term) => candidatesFor(term).some((candidate) => titleHaystack.includes(candidate)));
+      if (titleMatch) return 3;
+
       const metaHaystack = normalize(item.textContent + ' ' + item.dataset.search);
       const metaPhrase = normalizedQuery && metaHaystack.includes(normalizedQuery);
       const metaMatch = metaPhrase || terms.every((term) => candidatesFor(term).some((candidate) => metaHaystack.includes(candidate)));

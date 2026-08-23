@@ -84,6 +84,20 @@
   // any reflow that still lands after the jump (a details block settling
   // its final height, for instance) so the pill always ends on the real
   // target regardless of what shifted around it.
+  //
+  // The instant part depends on the literal string "instant", not "auto".
+  // Per the CSSOM View spec, ScrollOptions.behavior: "auto" means "use the
+  // computed scroll-behavior of the scrolling box," and html has
+  // scroll-behavior: smooth set further down in this stylesheet. So
+  // "auto" here was quietly asking for the same multi-frame animated
+  // scroll this function exists to avoid, and every scheduled re-snap
+  // (the two rAFs, the 250ms timeout) restarted that animation from
+  // wherever it had gotten to. On a page that reflows or runs a script at
+  // load (an inlined demo drawing its own UI, images still arriving), a
+  // restart can land before the prior animation ever painted a frame,
+  // and the scroll never visibly starts. "instant" is a distinct value
+  // from "auto" in the same spec and always jumps synchronously,
+  // regardless of the CSS scroll-behavior value.
   const snapToId = (id) => {
     const target = document.getElementById(id);
     if (!target) return null;
@@ -91,7 +105,7 @@
       getComputedStyle(document.documentElement).getPropertyValue("--site-header-clearance")
     ) || 132;
     const targetTop = Math.max(target.getBoundingClientRect().top + window.scrollY - clearance, 0);
-    window.scrollTo({ top: targetTop, behavior: "auto" });
+    window.scrollTo({ top: targetTop, behavior: "instant" });
     return target;
   };
 

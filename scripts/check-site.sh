@@ -85,6 +85,20 @@ if [[ -n "$NODE_BIN" ]]; then
   "$NODE_BIN" scripts/audit-domain-terms.mjs
   "$NODE_BIN" scripts/audit-content-flow.mjs
   "$NODE_BIN" scripts/audit-visual-guardrails.mjs
+
+  # Browser-rendering checks (2026-08-23): everything below this line opens
+  # every page in headless Chromium, which is the ~4-minute cost that made
+  # the pre-commit hook slow enough that commits started landing with
+  # --no-verify, deliberately, under deadline pressure. CI (site-check.yml)
+  # and scripts/check-clean-clone.sh are where a broken tree must still be
+  # caught, so they always run this block. The pre-commit hook sets
+  # SKIP_RENDER_CHECKS=1 and gets the fast, structural half of this gate on
+  # every commit instead of an all-or-nothing choice between four minutes
+  # and no check at all. See .githooks/pre-commit for the other half of this
+  # split.
+  if [[ "${SKIP_RENDER_CHECKS:-0}" == "1" ]]; then
+    echo "SKIPPED (SKIP_RENDER_CHECKS=1, pre-commit only): check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render" >&2
+  else
   # Heading-as-link color gate (2026-08-22): card/section titles that happen
   # to be links rendered in inline-link blue instead of heading color, twice.
   # A grep can't catch it reliably because the real failure is a specificity
@@ -138,6 +152,7 @@ if [[ -n "$NODE_BIN" ]]; then
   RENDER_GATE_BLOCKING="${RENDER_GATE_BLOCKING:-false}" \
     "$NODE_BIN" scripts/check-render.mjs || \
     [ "${RENDER_GATE_BLOCKING:-false}" != "true" ]
+  fi
 else
   echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render" >&2
 fi
@@ -293,7 +308,11 @@ done
 for page in "${expected_pages[@]}"; do
   grep -q "/status" "$page" || { echo "$page missing status nav/link" >&2; exit 1; }
   grep -q "/sources" "$page" || { echo "$page missing sources nav/link" >&2; exit 1; }
-  grep -q "/about" "$page" || { echo "$page missing about nav/link" >&2; exit 1; }
+  # about.html was retired to a redirect stub on 23 Aug 2026. Its whole
+  # substance was one line, that the maintainer may hold KAS, which now
+  # appears in the footer of every page instead. Requiring a link to it
+  # asserted a page that no longer exists. /status and /sources are still
+  # real destinations and are still checked above.
 done
 
 check_anchor() {

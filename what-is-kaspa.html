@@ -68,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -118,7 +118,7 @@
       </div>
     </section>
 
-    <section class="section prose-section">
+    <section id="collision-sim" class="section prose-section">
       <p class="eyebrow">The core move</p>
       <h2>Parallel blocks are the whole design</h2>
       <p>A block takes time to reach the rest of the world. When blocks outrun that propagation, miners build on stale information and produce competing blocks that a single chain can only keep one of.</p>
@@ -127,7 +127,550 @@
         <p>Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions are rare too. It works, and it is why a Bitcoin payment settles at the pace it does.</p>
       </details>
       <p>Kaspa takes the other road instead: keep the fast blocks and fix the ordering. A block references every tip its miner could see, so two blocks found a moment apart both land in the record as parents of whatever gets mined next.</p>
-      <p>The word blockDAG names that shape. <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. The <a href="/demos/collision-sim">collision simulator</a> shows two near-simultaneous blocks both surviving in the record.</p>
+      <p>The word blockDAG names that shape. <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. The collision simulator below shows two near-simultaneous blocks both surviving in the record.</p>
+      <style>
+        #collision-demo{
+          --bg:#100e0c;
+          --card-bg:#322f2a;
+          --line-bright:#746e60;
+          --text:#f8f5ef;
+          --muted:#b6b0a7;
+          --faint:#9d988c;
+          --cyan:#2997ff;
+          --green:#66d1c1;
+          --pink:#ff9f0a;
+          --control-bg:#2c2c2e;
+          --control-hover:#3a3a3c;
+          --field-bg:#221f1c;
+          --field-line:#4a453d;
+          --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+          color:var(--text); font:15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        :root[data-theme="light"] #collision-demo{
+          --bg:#fbfaf6;
+          --card-bg:#fbfaf6;
+          --line-bright:#bcb6a8;
+          --text:#211e1a;
+          --muted:#646057;
+          --faint:#757066;
+          --cyan:#0071e3;
+          --green:#0e7c6b;
+          --pink:#b25000;
+          --control-bg:#e8e8ed;
+          --control-hover:#dededf;
+          --field-bg:#ffffff;
+          --field-line:#d2d2d7;
+          --card-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+        }
+        #collision-demo *{box-sizing:border-box;}
+      
+        #collision-demo .primary-control { margin-bottom: 6px; }
+        #collision-demo .primary-control label {
+          display: block;
+          font-size: .82rem;
+          color: var(--faint);
+          margin-bottom: 6px;
+        }
+        #collision-demo .primary-control .big-readout {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text);
+          font-variant-numeric: tabular-nums;
+        }
+        #collision-demo input[type=range] {
+          width: 100%;
+          height: 44px;
+          margin: 0;
+          padding: 0;
+          background: transparent;
+          accent-color: var(--green);
+          -webkit-appearance: none;
+          appearance: none;
+        }
+        #collision-demo input[type=range]::-webkit-slider-runnable-track {
+          height: 4px;
+          border-radius: 2px;
+          background: var(--field-line);
+        }
+        #collision-demo input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: var(--green);
+          margin-top: -9px;
+          cursor: pointer;
+        }
+        #collision-demo input[type=range]::-moz-range-track {
+          height: 4px;
+          border-radius: 2px;
+          background: var(--field-line);
+        }
+        #collision-demo input[type=range]::-moz-range-thumb {
+          width: 22px;
+          height: 22px;
+          border: 0;
+          border-radius: 50%;
+          background: var(--green);
+          cursor: pointer;
+        }
+        #collision-demo .marks {
+          position: relative;
+          height: 1.4em;
+          font-size: .7rem;
+          color: var(--faint);
+          margin-top: 2px;
+        }
+        #collision-demo .marks span { position: absolute; top: 0; white-space: nowrap; }
+        #collision-demo .marks span:first-child { left: 0; }
+        #collision-demo .marks span:last-child { right: 0; }
+        @media (max-width: 480px) {
+          #collision-demo .marks {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            height: auto;
+          }
+          #collision-demo .marks span { position: static; transform: none !important; }
+        }
+        #collision-demo .honesty-note {
+          font-size: .76rem;
+          color: var(--faint);
+          margin: 6px 0 20px;
+        }
+        #collision-demo .honesty-note code {
+          font-family: ui-monospace, Menlo, Consolas, monospace;
+          font-size: .95em;
+        }
+      
+        #collision-demo .secondary-control {
+          margin: 0 0 22px;
+          opacity: .82;
+        }
+        #collision-demo .secondary-control label {
+          display: flex;
+          justify-content: space-between;
+          font-size: .78rem;
+          color: var(--faint);
+          margin-bottom: 4px;
+        }
+        #collision-demo .secondary-control label b { color: var(--muted); font-weight: 600; }
+        #collision-demo .secondary-control input[type=range] { height: 44px; }
+      
+        #collision-demo .panel {
+          background: var(--card-bg);
+          border-radius: 18px;
+          box-shadow: var(--card-shadow);
+          padding: 12px 14px 14px;
+          margin-bottom: 14px;
+        }
+        #collision-demo .panel h2 {
+          font-size: .95rem;
+          font-weight: 650;
+          letter-spacing: -.006em;
+          margin: 0 0 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        #collision-demo .panel h2 .stat {
+          font-weight: 400;
+          font-size: .82rem;
+          color: var(--muted);
+          font-variant-numeric: tabular-nums;
+        }
+        #collision-demo .panel h2 .stat b { color: var(--pink); }
+        #collision-demo .panel.dag h2 .stat b { color: var(--green); }
+        #collision-demo canvas {
+          display: block;
+          width: 100%;
+          height: 130px;
+          border-radius: 8px;
+          background: var(--field-bg);
+        }
+        #collision-demo button#cs-step {
+          min-height: 34px;
+          background: var(--control-bg);
+          border: 0;
+          color: var(--text);
+          border-radius: 8px;
+          padding: 0 16px;
+          font-size: .9rem;
+          cursor: pointer;
+        }
+        #collision-demo button#cs-step:hover { background: var(--control-hover); }
+        #collision-demo a:focus-visible,
+        #collision-demo button:focus-visible,
+        #collision-demo input:focus-visible,
+        #collision-demo textarea:focus-visible,
+        #collision-demo select:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+          outline-offset: 3px;
+        }
+        #collision-demo input[type=range]:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--cyan) 65%, transparent);
+          outline-offset: 4px;
+        }
+        #collision-demo .legend {
+          display: flex;
+          gap: 16px;
+          font-size: .78rem;
+          color: var(--faint);
+          margin-top: 4px;
+        }
+        #collision-demo .legend i {
+          display: inline-block;
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          margin-right: 4px;
+        }
+        #collision-demo .result-line {
+          font-size: 1rem;
+          margin: 18px 0;
+        }
+        #collision-demo .result-line b { color: var(--text); }
+      
+        #collision-demo details {
+          background: var(--card-bg);
+          border-radius: 14px;
+          padding: 10px 14px;
+          margin-top: 8px;
+          box-shadow: var(--card-shadow);
+        }
+        #collision-demo summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--cyan); list-style: none; }
+        #collision-demo summary::-webkit-details-marker { display: none; }
+        #collision-demo summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+        #collision-demo details[open] summary::before { content: "\2212"; }
+        #collision-demo details p { color: var(--muted); font-size: .86rem; line-height: 1.6; }
+        #collision-demo details a { color: var(--cyan); }
+        #collision-demo details b { color: var(--text); }
+        #collision-demo .formula {
+          font-family: ui-monospace, Menlo, Consolas, monospace;
+          background: var(--field-bg);
+          border: 1px solid var(--field-line);
+          border-radius: 8px;
+          padding: 10px 14px;
+          margin: 10px 0;
+          color: var(--muted);
+          font-size: .86rem;
+        }
+      </style>
+      
+      <div id="collision-demo">
+        <div class="primary-control">
+          <label for="cs-rate">How fast blocks are found: <span class="big-readout" id="cs-rateVal"></span></label>
+          <input type="range" id="cs-rate" value="791" min="0" max="1000" step="1" aria-label="Block rate">
+          <div class="marks"><span>Bitcoin, 1 every 10 min</span><span style="left:79.1%; transform:translateX(-50%)">Kaspa, 10 a second</span><span>100 a second</span></div>
+        </div>
+        <p class="honesty-note" id="cs-honestyNote"></p>
+      
+        <div class="secondary-control">
+          <label for="cs-delay">How long a block takes to reach other miners <b id="cs-delayVal"></b></label>
+          <input type="range" id="cs-delay" value="500" min="0" max="1000" step="1" aria-label="Propagation delay">
+        </div>
+        <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists to cite, so 500 ms is a representative estimate, the midpoint of this slider's own range, not a measured figure; real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
+      
+        <p class="result-line" id="cs-resultLine"></p>
+      
+        <div class="panel">
+          <h2>Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></h2>
+          <canvas id="cs-chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
+          <div class="legend"><span><i style="background:var(--green)"></i>kept</span><span><i style="background:var(--pink)"></i>thrown away</span></div>
+        </div>
+      
+        <div class="panel dag">
+          <h2>BlockDAG <span class="stat">every block kept</span></h2>
+          <canvas id="cs-dagCanvas" role="img" aria-label="BlockDAG of the same recent blocks, all kept and ordered by parent references instead of being discarded."></canvas>
+          <div class="legend"><span><i style="background:var(--green)"></i>every block kept, ordered by parents</span></div>
+        </div>
+      
+        <button id="cs-step" hidden>Step one block</button>
+      
+        <details>
+          <summary>How this works, and the sources</summary>
+          <p>Blocks arrive at random, like raindrops: a Poisson process with rate &lambda;. A block collides with the one before it if the next block is found before the first one finishes spreading across the network, which takes time d. That gives a plain formula for how often a given block collides with at least one other:</p>
+          <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
+          <p>That collision probability is not the number this page leads with. Once a single chain keeps a block, it will not accept anything that arrives before that block finishes propagating, so a run of colliding blocks only ever keeps the first and discards the rest, the same way a non-paralyzable dead-time counter drops any event landing inside its recovery window without extending that window. Working through that identity gives a lower share than p:</p>
+          <div class="formula">discarded share = &lambda;d &divide; (1 + &lambda;d) &nbsp;&nbsp; kept share = 1 &divide; (1 + &lambda;d)</div>
+          <p><b>Inferred</b> from the dead-time-counter identity above, matching this simulator's own discard rule rather than quoted from a source. At Kaspa's defaults, &lambda;d = 5, so p works out to about 99% while the discarded share is about 83%, which is the figure the running tally above converges toward.</p>
+          <p>A single chain can only keep one block per collision, so the loser's work is wasted. A blockDAG references every block a miner could see when it started working, so both survive and get ordered instead of discarded.</p>
+          <p><b>Where this comes from.</b> Block creation as a Poisson process of rate &lambda;, and network propagation delay as the thing that causes concurrent blocks, are exactly the model in Sompolinsky, Wyborski and Zohar's PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>): "Block creation follows a Poisson process with parameter &lambda;," bounded by a network delay diameter D. <b>Verified</b> against that primary source. The paper's own math goes further than this demo: it bounds how many blocks can be created within a delay window (the anticone size k, used to tune GHOSTDAG itself), via a Poisson-tail formula in D&middot;&lambda;. This page's p = 1 &minus; e<sup>&minus;&lambda;d</sup> is the simpler building block underneath that: the chance at least one more block arrives before the first one finishes propagating, which is standard Poisson-process math (P(0 arrivals in time d) = e<sup>&minus;&lambda;d</sup>) and matches the same collision mechanism used in the Bitcoin fork-rate literature (Decker &amp; Wattenhofer, <i>Information Propagation in the Bitcoin Network</i>, IEEE P2P 2013). <b>Inferred</b> from that Poisson identity rather than quoted directly from either paper. This demo simplifies further by testing only whether a block collides with the immediately preceding one, not the full multi-block anticone GHOSTDAG actually resolves; it is a simplification of the source math, not the source math itself.</p>
+          <p>Playback speed scales with the rate instead of landing every setting at the same pace: a real Bitcoin block, on average one every 10 minutes, plays back roughly every 6 seconds here, about a hundredth of real time, so the wait still feels slow rather than reading as a label. Kaspa's real rate, ten a second, plays back close to real time, because a 100ms block is already watchable as itself. The collision math above always uses the real rate and delay, not the playback speed; only what you see on screen is sped up or slowed down for legibility.</p>
+          <p>Respects reduced-motion: turns into a manual step button instead of continuous animation.</p>
+        </details>
+      </div>
+      
+      <script>
+      (function(){
+        const RATE_LOG_MIN = Math.log10(1/600), RATE_LOG_MAX = Math.log10(100);
+        const DELAY_LOG_MIN = Math.log10(0.05), DELAY_LOG_MAX = Math.log10(5);
+        const rateInput = document.getElementById('cs-rate');
+        const delayInput = document.getElementById('cs-delay');
+        const rateVal = document.getElementById('cs-rateVal');
+        const delayVal = document.getElementById('cs-delayVal');
+        const chainCanvas = document.getElementById('cs-chainCanvas');
+        const dagCanvas = document.getElementById('cs-dagCanvas');
+        const chainCtx = chainCanvas.getContext('2d');
+        const dagCtx = dagCanvas.getContext('2d');
+        const stepBtn = document.getElementById('cs-step');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+        function lambda() {
+          const t = rateInput.value / 1000;
+          return Math.pow(10, RATE_LOG_MIN + t * (RATE_LOG_MAX - RATE_LOG_MIN));
+        }
+        function delay() {
+          const t = delayInput.value / 1000;
+          return Math.pow(10, DELAY_LOG_MIN + t * (DELAY_LOG_MAX - DELAY_LOG_MIN));
+        }
+        function fmtRate(r) {
+          if (r < 1) return '1 every ' + humanDuration(1 / r);
+          return r.toFixed(r < 10 ? 1 : 0) + ' a second';
+        }
+        function fmtDelay(d) {
+          if (d < 1) return Math.round(d * 1000) + ' ms';
+          return d.toFixed(1) + ' s';
+        }
+        function humanDuration(seconds) {
+          if (seconds < 1) return Math.max(1, Math.round(seconds * 1000)) + ' ms';
+          if (seconds < 60) return (seconds < 10 ? seconds.toFixed(1) : Math.round(seconds)) + ' seconds';
+          if (seconds < 3600) return Math.round(seconds / 60) + ' minutes';
+          return (seconds / 3600).toFixed(1) + ' hours';
+        }
+      
+        function meanIntervalReal() { return 1 / lambda(); }
+      
+        const T_KASPA = (Math.log10(10) - RATE_LOG_MIN) / (RATE_LOG_MAX - RATE_LOG_MIN);
+        const PB_LOG_AT_BITCOIN = Math.log10(6);
+        const PB_LOG_AT_KASPA = Math.log10(0.1);
+        const PB_SLOPE = (PB_LOG_AT_KASPA - PB_LOG_AT_BITCOIN) / T_KASPA;
+        function playbackInterval() {
+          const t = rateInput.value / 1000;
+          return Math.pow(10, PB_LOG_AT_BITCOIN + PB_SLOPE * t);
+        }
+      
+        const N = 20;
+        let virtualClock = 0;
+        let total = 0, discarded = 0;
+        let chainTip = { id: 0, tSeen: 0 };
+        let dagTips = [{ id: 0, tSeen: 0 }];
+        let chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: 0 }];
+        let dagBlocks = [{ id: 0, miner: 0, parents: [], born: 0 }];
+        let autoTimer = null;
+        let rafId = null;
+      
+        function nextInterArrivalReal() { return -Math.log(Math.random()) * meanIntervalReal(); }
+      
+        function resetSim() {
+          virtualClock = 0; total = 0; discarded = 0;
+          chainTip = { id: 0, tSeen: 0 };
+          dagTips = [{ id: 0, tSeen: 0 }];
+          chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: performance.now() }];
+          dagBlocks = [{ id: 0, miner: 0, parents: [], born: performance.now() }];
+        }
+      
+        function generateEvent() {
+          const L = lambda(), D = delay();
+          virtualClock += (-Math.log(Math.random()) / L);
+          const tMake = virtualClock;
+          const tSeen = tMake + D;
+          const miner = Math.floor(Math.random() * 4);
+          const id = ++total;
+          const now = performance.now();
+      
+          const orphaned = tMake < chainTip.tSeen;
+          if (orphaned) discarded++;
+          else chainTip = { id, tSeen };
+          chainBlocks.push({ id, miner, orphaned, born: now });
+          if (chainBlocks.length > N) chainBlocks.shift();
+      
+          let visible = dagTips.filter(t => t.tSeen <= tMake);
+          if (visible.length === 0) visible = dagTips.slice();
+          const parentIds = visible.map(t => t.id);
+          dagTips = dagTips.filter(t => parentIds.indexOf(t.id) === -1);
+          dagTips.push({ id, tSeen });
+          dagBlocks.push({ id, miner, parents: parentIds, born: now });
+          if (dagBlocks.length > N) dagBlocks.shift();
+      
+          updateStats();
+        }
+      
+        function updateStats() {
+          const kept = total - discarded;
+          const observedDiscardPct = total > 0 ? (discarded / total * 100) : 0;
+          const ld = lambda() * delay();
+          const predictedDiscardPct = (ld / (1 + ld)) * 100;
+          document.getElementById('cs-chainStat').textContent =
+            'so far: ' + kept + ' kept, ' + discarded + ' thrown away (' + observedDiscardPct.toFixed(0) + '% discarded)';
+          document.getElementById('cs-resultLine').innerHTML =
+            'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of the blocks it makes here. The blockDAG keeps all of it.' +
+            '<span> The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>';
+        }
+      
+        function fitCanvas(c) {
+          const dpr = window.devicePixelRatio || 1;
+          const w = c.clientWidth, h = c.clientHeight;
+          if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
+            c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+          }
+          const ctx = c.getContext('2d');
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          return { w, h };
+        }
+      
+        function laneY(h, miner) { return 20 + miner * (h - 40) / 3; }
+        function slotX(w, i, len) {
+          const margin = 22;
+          if (len <= 1) return w - margin;
+          return margin + i * (w - 2 * margin) / (N - 1);
+        }
+      
+        function popScale(ageMs) {
+          if (reducedMotion) return 1;
+          const t = Math.min(1, ageMs / 260);
+          const eased = 1 - Math.pow(1 - t, 3);
+          return 0.4 + eased * 0.6 + (t < 1 ? Math.sin(t * Math.PI) * 0.15 : 0);
+        }
+      
+        function render() {
+          const now = performance.now();
+          const cs = fitCanvas(chainCanvas);
+          chainCtx.clearRect(0, 0, cs.w, cs.h);
+          const style = getComputedStyle(document.getElementById('collision-demo'));
+          const green = style.getPropertyValue('--green').trim();
+          const pink = style.getPropertyValue('--pink').trim();
+          const line = style.getPropertyValue('--line-bright').trim();
+      
+          chainCtx.strokeStyle = line;
+          chainCtx.lineWidth = 1.5;
+          let prevX = null, prevY = null;
+          chainBlocks.forEach((b, i) => {
+            const x = slotX(cs.w, i, chainBlocks.length);
+            const y = laneY(cs.h, b.miner);
+            if (!b.orphaned && prevX !== null) {
+              chainCtx.beginPath();
+              chainCtx.moveTo(prevX, prevY);
+              chainCtx.lineTo(x, y);
+              chainCtx.stroke();
+            }
+            if (!b.orphaned) { prevX = x; prevY = y; }
+          });
+          chainBlocks.forEach((b, i) => {
+            const x = slotX(cs.w, i, chainBlocks.length);
+            const y = laneY(cs.h, b.miner);
+            const scale = popScale(now - b.born);
+            chainCtx.globalAlpha = b.orphaned ? 0.45 : 1;
+            chainCtx.fillStyle = b.orphaned ? pink : green;
+            chainCtx.beginPath();
+            chainCtx.arc(x, y, (b.orphaned ? 5 : 6) * scale, 0, Math.PI * 2);
+            chainCtx.fill();
+            chainCtx.globalAlpha = 1;
+          });
+      
+          const ds = fitCanvas(dagCanvas);
+          dagCtx.clearRect(0, 0, ds.w, ds.h);
+          const idIndex = {};
+          dagBlocks.forEach((b, i) => { idIndex[b.id] = i; });
+          dagCtx.strokeStyle = line;
+          dagCtx.lineWidth = 1.2;
+          dagBlocks.forEach((b, i) => {
+            const x = slotX(ds.w, i, dagBlocks.length);
+            const y = laneY(ds.h, b.miner);
+            b.parents.forEach(pid => {
+              const pi = idIndex[pid];
+              if (pi === undefined) return;
+              const pb = dagBlocks[pi];
+              const px = slotX(ds.w, pi, dagBlocks.length);
+              const py = laneY(ds.h, pb.miner);
+              dagCtx.beginPath();
+              dagCtx.moveTo(px, py);
+              dagCtx.lineTo(x, y);
+              dagCtx.stroke();
+            });
+          });
+          dagBlocks.forEach((b, i) => {
+            const x = slotX(ds.w, i, dagBlocks.length);
+            const y = laneY(ds.h, b.miner);
+            const scale = popScale(now - b.born);
+            dagCtx.fillStyle = green;
+            dagCtx.beginPath();
+            dagCtx.arc(x, y, 6 * scale, 0, Math.PI * 2);
+            dagCtx.fill();
+          });
+      
+          const stillAnimating = chainBlocks.some(b => now - b.born < 260) || dagBlocks.some(b => now - b.born < 260);
+          if (!reducedMotion && stillAnimating) {
+            rafId = requestAnimationFrame(render);
+          } else {
+            rafId = null;
+          }
+        }
+      
+        function requestRender() {
+          if (rafId === null) rafId = requestAnimationFrame(render);
+        }
+      
+        function scheduleNext() {
+          if (reducedMotion) return;
+          const waitMs = playbackInterval() * 1000;
+          autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
+        }
+      
+        function fmtShown(s) {
+          if (s < 1) return Math.round(s * 1000) + ' ms';
+          return s.toFixed(1) + ' s';
+        }
+      
+        function updateHonesty() {
+          const real = meanIntervalReal();
+          const shown = playbackInterval();
+          const note = document.getElementById('cs-honestyNote');
+          if (shown < real * 0.85) {
+            const n = Math.round(real / shown);
+            note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+              ' in reality. You are watching it at about 1/' + n +
+              ' of real time here, one every ' + fmtShown(shown) + '.';
+          } else if (shown > real * 1.15) {
+            const x = shown / real;
+            note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+              ' in reality. It plays back about ' + x.toFixed(x < 10 ? 1 : 0) +
+              '× slower here, one every ' + fmtShown(shown) + ', so each one is easy to see.';
+          } else {
+            note.textContent = 'A block at this pace arrives every ' + humanDuration(real) +
+              ' in reality, close to what you are watching here.';
+          }
+        }
+      
+        function onSliderChange() {
+          rateVal.textContent = fmtRate(lambda());
+          delayVal.textContent = fmtDelay(delay());
+          updateHonesty();
+          if (autoTimer) clearTimeout(autoTimer);
+          resetSim();
+          updateStats();
+          requestRender();
+          if (!reducedMotion) scheduleNext();
+        }
+      
+        rateInput.addEventListener('input', onSliderChange);
+        delayInput.addEventListener('input', onSliderChange);
+        window.addEventListener('resize', requestRender);
+      
+        rateInput.value = Math.round(T_KASPA * 1000);
+        delayInput.value = 500;
+        onSliderChange();
+      
+        if (reducedMotion) {
+          stepBtn.hidden = false;
+          stepBtn.addEventListener('click', function () { generateEvent(); render(); });
+        }
+      })();
+      </script>
+      
       <p>What you feel is inclusion speed. Mainnet produces ten blocks per second, so a broadcast transaction usually appears inside a block in about a second. Inclusion is not settlement: appearing in a block and being safe from reversal are separate events, and the gap between them is what <a href="#finality">confirmations</a> measure.</p>
       <p>The rest of Kaspa is deliberately unadventurous. Supply is capped and released on a fixed emission schedule with no premine, and application rules built on top inherit that base without changing it.</p>
     </section>
@@ -154,46 +697,911 @@
         </article>
       </div>
       <p class="fit-note">Add blocks by hand below and watch blue and red resolve live.</p>
-      <div class="live-demo-frame">
-        <iframe id="ghostdag-playground-frame" src="/demos/ghostdag-playground" title="GHOSTDAG playground: add blocks by hand and watch blue and red resolve" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+<style>
+  #ghostdag-demo{
+    color-scheme: dark;
+    --bg:#100e0c; --bg-2:#1c1a17; --panel:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
+    --line:#4a453d; --line-bright:#746e60;
+    --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    --green:#66d1c1; --green-rgb:102,209,193; --cyan:#2997ff; --cyan-rgb:41,151,255;
+    --purple:#bf5af2; --pink:#ff9f0a; --pink-rgb:255,159,10; --ink:#06201b;
+    --accent-soft:rgba(102,209,193,.12);
+    --control-bg:#2c2c2e; --control-hover:#3a3a3c;
+    --field-bg:#221f1c; --field-line:#4a453d;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --display-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text); font-family:var(--body-font); line-height:1.5;
+  }
+  :root[data-theme="light"] #ghostdag-demo{
+    color-scheme: light;
+    --bg:#fbfaf6; --bg-2:#f3f0ea; --panel:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
+    --line:#d8d4cb; --line-bright:#bcb6a8;
+    --text:#211e1a; --muted:#646057; --faint:#757066;
+    --green:#0e7c6b; --green-rgb:14,124,107; --cyan:#0071e3; --cyan-rgb:0,113,227;
+    --purple:#6e56cf; --pink:#b25000; --pink-rgb:178,80,0; --ink:#ffffff;
+    --accent-soft:rgba(14,124,107,.1);
+    --control-bg:#e8e8ed; --control-hover:#dededf;
+    --field-bg:#ffffff; --field-line:#d2d2d7;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  #ghostdag-demo *{box-sizing:border-box;}
+  #ghostdag-demo a{color:var(--cyan);}
+  #ghostdag-demo .demo-main{max-width:960px; margin:0 auto;}
+  #ghostdag-demo .panel{
+    background:var(--card-bg); border:0; border-radius:18px;
+    padding:1rem; margin-bottom:1rem; box-shadow:var(--shadow-card);
+  }
+  #ghostdag-demo .toolbar{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center;}
+  #ghostdag-demo .toolbar fieldset{border:0; background:var(--control-bg); border-radius:8px; padding:.4rem .6rem; margin:0; display:flex; gap:.5rem; align-items:center;}
+  #ghostdag-demo .toolbar legend{font-size:.7rem; color:var(--faint); padding:0 .3rem;}
+  #ghostdag-demo button.btn{
+    font:inherit; font-size:.85rem; color:var(--text); background:var(--control-bg);
+    border:0; border-radius:8px; padding:.5rem .8rem; cursor:pointer;
+    min-height:44px; display:inline-flex; align-items:center;
+  }
+  #ghostdag-demo button.btn:hover{background:var(--control-hover);}
+
+  #ghostdag-demo .primary-caption{margin:0 0 .6rem; font-size:.95rem; color:var(--text); font-weight:600;}
+  #ghostdag-demo .toolbar-primary{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center;}
+  #ghostdag-demo .toolbar-primary button.btn{background:var(--accent-soft); color:var(--green); font-weight:600;}
+  #ghostdag-demo .toolbar-primary button.btn:hover{background:color-mix(in srgb, var(--green) 20%, transparent);}
+  #ghostdag-demo .toolbar-primary button.btn:disabled{background:var(--control-bg); color:var(--text); opacity:.4;}
+  #ghostdag-demo .toolbar-secondary{
+    display:flex; flex-wrap:wrap; gap:.5rem .8rem; align-items:center; margin-top:.8rem;
+    padding-top:.8rem; border-top:1px solid var(--line); font-size:.82rem; color:var(--faint);
+  }
+  #ghostdag-demo button.btn-quiet{
+    font:inherit; font-size:.8rem; color:var(--muted); background:transparent;
+    border:0; padding:.3rem .5rem; cursor:pointer; text-decoration:underline; text-underline-offset:2px;
+    min-height:44px; display:inline-flex; align-items:center;
+  }
+  #ghostdag-demo button.btn-quiet:hover{color:var(--text);}
+  #ghostdag-demo details.advanced{margin-top:.8rem; padding-top:.7rem; border-top:1px solid var(--line);}
+  #ghostdag-demo details.advanced summary{font-size:.82rem; color:var(--faint); cursor:pointer;}
+  #ghostdag-demo details.advanced .detail-copy{font-size:.82rem; color:var(--muted); margin:.5rem 0;}
+  #ghostdag-demo a:focus-visible,
+  #ghostdag-demo button:focus-visible,
+  #ghostdag-demo input:focus-visible,
+  #ghostdag-demo textarea:focus-visible,
+  #ghostdag-demo select:focus-visible,
+  #ghostdag-demo .node:focus-visible{
+    outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset:3px;
+  }
+  #ghostdag-demo button.btn[aria-pressed="true"]{background:var(--accent-soft); color:var(--pink);}
+  #ghostdag-demo button.btn:disabled{opacity:.4; cursor:not-allowed;}
+  #ghostdag-demo label.klabel{font-size:.85rem; display:flex; gap:.5rem; align-items:center; color:var(--muted);}
+  #ghostdag-demo input[type=range]{
+    accent-color:var(--cyan); width:120px; height:44px; margin:0; padding:0;
+    background:transparent; -webkit-appearance:none; appearance:none; vertical-align:middle;
+  }
+  #ghostdag-demo input[type=range]::-webkit-slider-runnable-track{height:4px; border-radius:2px; background:var(--line);}
+  #ghostdag-demo input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; margin-top:-7px;
+    border-radius:50%; background:var(--cyan); cursor:pointer;
+  }
+  #ghostdag-demo input[type=range]::-moz-range-track{height:4px; border-radius:2px; background:var(--line);}
+  #ghostdag-demo input[type=range]::-moz-range-thumb{width:18px; height:18px; border:0; border-radius:50%; background:var(--cyan); cursor:pointer;}
+  #ghostdag-demo .count-pill{font-size:.75rem; color:var(--faint); background:var(--field-bg); border:1px solid var(--field-line); border-radius:980px; padding:.15rem .55rem;}
+  #ghostdag-demo .btn-step{min-width:44px; justify-content:center; font-weight:700;}
+  #ghostdag-demo .width-readout{font-size:.82rem; color:var(--muted);}
+  #ghostdag-demo .width-control{display:inline-flex; flex-wrap:nowrap; align-items:center; gap:.5rem;}
+  #ghostdag-demo .mine-caption{font-size:.85rem; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line); border-radius:10px; padding:.6rem .8rem; margin-top:.6rem; min-height:1.2em;}
+  #ghostdag-demo .mine-caption:empty{display:none;}
+  #ghostdag-demo .staging-note{margin:.5rem 0 0; font-size:.85rem; color:var(--text);}
+
+  #ghostdag-demo .stage-wrap{position:relative; overflow-x:auto; overflow-y:hidden; border:0; border-radius:14px; background:var(--bg-2);}
+  #ghostdag-demo .stage-wrap.has-overflow{box-shadow:inset -24px 0 16px -16px rgba(0,0,0,.45);}
+  #ghostdag-demo .stage-wrap.has-overflow.at-end{box-shadow:inset 24px 0 16px -16px rgba(0,0,0,.45);}
+  #ghostdag-demo .stage-wrap.has-overflow.at-middle{box-shadow:inset -24px 0 16px -16px rgba(0,0,0,.45), inset 24px 0 16px -16px rgba(0,0,0,.45);}
+  #ghostdag-demo .scroll-hint{
+    position:sticky; top:8px; float:right; margin:8px; z-index:2;
+    font-size:.72rem; color:var(--faint); background:var(--panel-strong);
+    border:1px solid var(--line); border-radius:980px; padding:.25rem .65rem;
+    pointer-events:none; white-space:nowrap;
+  }
+  #ghostdag-demo .stage{position:relative; min-height:280px;}
+  #ghostdag-demo .stage svg.edges{position:absolute; inset:0; pointer-events:none;}
+  #ghostdag-demo .stage svg.edges line{stroke:var(--line-bright); stroke-width:1.5;}
+  #ghostdag-demo .stage svg.edges line.spine{stroke:var(--green); stroke-width:3;}
+
+  #ghostdag-demo .node{
+    position:absolute; width:52px; height:52px; display:flex; align-items:center; justify-content:center;
+    font-size:.8rem; font-weight:700; cursor:pointer; border:2px solid transparent; user-select:none;
+    transform:translate(-50%,-50%); background:var(--panel-strong); color:var(--text);
+  }
+  @media (prefers-reduced-motion: no-preference){
+    #ghostdag-demo .node{transition:left .35s ease, top .35s ease, background .25s ease, border-color .25s ease, opacity .25s ease;}
+    #ghostdag-demo line{transition:opacity .25s ease;}
+  }
+  #ghostdag-demo .node.blue{border-radius:50%; background:color-mix(in srgb, var(--cyan) 30%, var(--panel-strong)); border-color:var(--cyan); color:var(--cyan);}
+  #ghostdag-demo .node.red{
+    border-radius:8px; transform:translate(-50%,-50%) rotate(45deg);
+    background:color-mix(in srgb, var(--pink) 30%, var(--panel-strong)); border-color:var(--pink); color:var(--pink);
+  }
+  #ghostdag-demo .node.red .node-label{transform:rotate(-45deg); display:block;}
+  #ghostdag-demo .node.onspine{box-shadow:0 0 0 3px color-mix(in srgb, var(--green) 55%, transparent);}
+  #ghostdag-demo .node.hidden-block{
+    border-radius:8px; border:2px dashed var(--faint); background:transparent; color:var(--faint); opacity:.75;
+  }
+  #ghostdag-demo .node.hl-self{outline:3px solid var(--text); outline-offset:2px;}
+  #ghostdag-demo .node.hl-past{box-shadow:0 0 0 4px color-mix(in srgb, var(--cyan) 65%, transparent);}
+  #ghostdag-demo .node.hl-future{box-shadow:0 0 0 4px color-mix(in srgb, var(--pink) 65%, transparent);}
+  #ghostdag-demo .node.hl-anticone{box-shadow:0 0 0 4px color-mix(in srgb, var(--purple) 75%, transparent); }
+  #ghostdag-demo .stage.has-focus .node.hl-dim{opacity:.28;}
+  #ghostdag-demo .stage.has-focus line.hl-dim{opacity:.15;}
+
+  #ghostdag-demo .legend{display:flex; flex-wrap:wrap; gap:1rem; font-size:.78rem; color:var(--muted); margin-top:.75rem;}
+  #ghostdag-demo .legend span.swatch{display:inline-block; width:12px; height:12px; margin-right:.35rem; vertical-align:-1px;}
+  #ghostdag-demo .legend .sw-blue{border-radius:50%; background:var(--cyan);}
+  #ghostdag-demo .legend .sw-red{background:var(--pink); transform:rotate(45deg);}
+  #ghostdag-demo .hover-hint{font-size:.78rem; color:var(--faint); margin:.4rem 0 0;}
+  #ghostdag-demo .focus-caption{
+    font-size:.85rem; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line);
+    border-radius:10px; padding:.6rem .8rem; margin-top:.6rem; min-height:1.2em;
+  }
+  #ghostdag-demo .focus-caption:empty{display:none;}
+  #ghostdag-demo .virtual-toggle-row{margin-top:.75rem; padding-top:.6rem; border-top:1px dashed var(--line);}
+  #ghostdag-demo .virtual-caption{
+    font-size:.85rem; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line);
+    border-radius:10px; padding:.6rem .8rem; margin-top:.6rem;
+  }
+  #ghostdag-demo .node.virtual{
+    border-radius:8px; border:2px dashed var(--purple); background:transparent; color:var(--purple);
+  }
+  #ghostdag-demo .stage svg.edges line.virtual-edge{stroke:var(--faint); stroke-dasharray:3 3;}
+  #ghostdag-demo .stage svg.edges line.virtual-sink-edge{stroke:var(--purple); stroke-width:2.5; stroke-dasharray:none;}
+  #ghostdag-demo .node.sink-tip{box-shadow:0 0 0 4px color-mix(in srgb, var(--purple) 55%, transparent);}
+
+  #ghostdag-demo .verdict-box{border-radius:14px; padding:.9rem 1rem; margin-top:1rem; font-size:.92rem;}
+  #ghostdag-demo .verdict-box.fail{background:color-mix(in srgb, var(--pink) 12%, transparent);}
+  #ghostdag-demo .verdict-box.pass{background:color-mix(in srgb, var(--green) 12%, transparent);}
+  #ghostdag-demo .verdict-box strong{display:block; margin-bottom:.25rem;}
+
+  #ghostdag-demo .staging{margin-top:.75rem; padding-top:.75rem; border-top:1px dashed var(--line); font-size:.85rem; color:var(--muted);}
+  #ghostdag-demo .staging .chain{display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.4rem;}
+  #ghostdag-demo .staging .chain span{border:1px dashed var(--faint); border-radius:8px; padding:.15rem .5rem; font-size:.75rem;}
+
+  #ghostdag-demo ol.order-list{display:flex; flex-wrap:wrap; gap:.4rem; list-style:none; margin:0; padding:0;}
+  #ghostdag-demo ol.order-list li{
+    display:flex; align-items:center; gap:.35rem; font-size:.8rem; background:var(--field-bg);
+    border:1px solid var(--field-line); border-radius:8px; padding:.3rem .55rem;
+  }
+  #ghostdag-demo ol.order-list li .mk{width:10px; height:10px; display:inline-block;}
+  #ghostdag-demo ol.order-list li.o-blue .mk{border-radius:50%; background:var(--cyan);}
+  #ghostdag-demo ol.order-list li.o-red .mk{background:var(--pink); transform:rotate(45deg);}
+  #ghostdag-demo ol.order-list li.o-spine{border-color:var(--green);}
+
+  #ghostdag-demo h2{font-family:var(--display-font); font-size:1.15rem; margin:1.5rem 0 .5rem;}
+  #ghostdag-demo h2:first-child{margin-top:0;}
+  #ghostdag-demo .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  #ghostdag-demo details.panel{background:var(--card-bg); border-radius:18px; box-shadow:var(--shadow-card); padding:1rem; margin-bottom:1rem;}
+  #ghostdag-demo details.panel summary{cursor:pointer; font-weight:600;}
+</style>
+
+<div id="ghostdag-demo">
+<div class="demo-main">
+  <p class="fit-note" style="margin:0 0 1rem;">
+    Miners don't take turns. Independent miners publish blocks whenever they find them, so more than
+    one can arrive at once. Advance time and watch how many arrive together: most count, but pile up
+    too many side by side and the extras get locked out.
+  </p>
+
+  <div class="panel">
+    <p class="primary-caption">Blocks arrive in parallel. How many, at once, varies every round.</p>
+    <div class="toolbar toolbar-primary">
+      <button class="btn" id="gp-btn-advance" type="button">Advance time</button>
+    </div>
+    <p class="mine-caption" id="gp-mine-caption" aria-live="polite"></p>
+
+    <div class="toolbar toolbar-secondary">
+      <span>Force a count instead:</span>
+      <span class="width-control">
+        <button class="btn-quiet btn-step" id="gp-btn-width-minus" type="button" aria-label="Fewer blocks">&minus;</button>
+        <span class="width-readout"><output id="gp-width-out">2</output> blocks</span>
+        <button class="btn-quiet btn-step" id="gp-btn-width-plus" type="button" aria-label="More blocks">+</button>
+      </span>
+      <button class="btn-quiet" id="gp-btn-mine-parallel" type="button">Mine this many</button>
+      <button class="btn-quiet" id="gp-btn-reset" type="button">Reset</button>
+    </div>
+
+    <details class="advanced">
+      <summary>Advanced: hide blocks, then release them</summary>
+      <p class="detail-copy">
+        Publish nothing for a while and mine on your own, then bring your blocks back. The rest of the
+        network doesn't wait for you. See what happens when it already moved on without you.
+      </p>
+      <div class="toolbar toolbar-primary">
+        <button class="btn" id="gp-btn-hidden-toggle" type="button" aria-pressed="false">Hide blocks</button>
+        <button class="btn" id="gp-btn-mine-secret" type="button" disabled>Mine a secret block</button>
+        <button class="btn" id="gp-btn-release" type="button" disabled>Release <span class="count-pill" id="gp-hidden-count">0</span></button>
       </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('ghostdag-playground-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      <div class="staging" id="gp-staging" hidden>
+        <strong>Your blocks are hidden.</strong> No one else can see or build on them yet.
+        The rest of the network is not waiting: it keeps mining and publishing while you stay hidden.
+        <div class="chain" id="gp-staging-chain"></div>
+        <p class="staging-note" id="gp-staging-honest-note" hidden></p>
+      </div>
+    </details>
+
+    <details class="advanced">
+      <summary>Advanced: how forgiving the network is</summary>
+      <p class="detail-copy">
+        Every block can have some other blocks beside it that it never saw. This caps how many of those
+        are still allowed to count. Lower it, and blocks get locked out sooner. Raise it, and more blocks
+        keep counting even when a lot of them arrive at once.
+      </p>
+      <label class="klabel">k = <output id="gp-k-out">3</output>
+        <input type="range" id="gp-k-slider" min="0" max="8" value="3" step="1" aria-label="k, how many unrelated blocks a block can have beside it and still count">
+      </label>
+    </details>
+  </div>
+
+  <div class="panel">
+    <h2>The DAG</h2>
+    <div class="stage-wrap" id="gp-stage-wrap">
+      <span class="scroll-hint" id="gp-scroll-hint" hidden>Scroll to see more &rarr;</span>
+      <div class="stage" id="gp-stage">
+        <svg class="edges" id="gp-edge-svg" aria-hidden="true"></svg>
+      </div>
+    </div>
+    <div class="legend">
+      <div><span class="swatch sw-blue"></span>counted in the order</div>
+      <div><span class="swatch sw-red"></span>locked out</div>
+    </div>
+    <p class="hover-hint">Hover or tap any block to see why.</p>
+    <p class="focus-caption" id="gp-focus-caption" aria-live="polite"></p>
+    <div class="verdict-box" id="gp-verdict" hidden></div>
+    <div class="virtual-toggle-row">
+      <button class="btn-quiet" id="gp-btn-toggle-virtual" type="button" aria-pressed="false">Show what the network sees right now</button>
+    </div>
+    <p class="virtual-caption" id="gp-virtual-caption" aria-live="polite" hidden></p>
+  </div>
+
+  <div class="panel">
+    <h2>Linear order</h2>
+    <p style="color:var(--muted); font-size:.85rem; margin-top:0;">The one ordering every node agrees on: walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</p>
+    <ol class="order-list" id="gp-order-list" aria-live="polite"></ol>
+  </div>
+
+  <details class="panel">
+    <summary style="cursor:pointer; font-weight:600;">How the colors get decided</summary>
+    <p style="color:var(--muted); font-size:.85rem;">
+      Every block names the tips its miner could see when it was made; those references are the whole
+      data structure. A block's past is everything behind it, its future is everything built on top of it,
+      and its anticone is everyone else: blocks that neither saw it nor were seen by it. Each block also
+      picks the parent with the most accumulated work as its selected parent, chaining block to block into
+      a main chain. A block counts (blue) if the number of already-counted blocks in its anticone stays under
+      the cap, k. Over the cap, it's locked out (red) instead.
+    </p>
+    <p style="color:var(--muted); font-size:.85rem;">
+      The DAG has no single "now": blocks keep arriving in parallel, with no one moment everyone agrees on.
+      Kaspa's answer is the virtual block, a conceptual block that is never mined and never sent to anyone;
+      it exists only on each node's own machine, standing in for everything that node has seen. Its parents, the
+      virtual parents, are simply that node's current tips. Among those tips, the one with the most
+      already-counted blocks behind it becomes the virtual selected parent, better known as the sink, the
+      same rule an ordinary block uses to pick its own selected parent, just applied one level up, to the
+      view itself rather than to a mined block.
+    </p>
+  </details>
+</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var blocks = {};      // id -> {id, parents:[ids], hidden:bool}
+  var nextId = 0;
+  var k = 3;
+  var hiddenMode = false;
+  var hiddenQueue = [];       // ids of secret blocks, creation order
+  var hiddenBranchParents = []; // tips captured when going hidden
+  var focusedId = null;
+  var pinnedId = null;
+
+  var lastAncestors = {}, lastDescendants = {}, lastPubIds = [];
+  var lastVirtualDiag = {};
+  var lastReleasedIds = null;
+
+  var mineWidth = 2;
+  var MINE_WIDTH_MIN = 1, MINE_WIDTH_MAX = 10;
+  var lastMinedIds = null;
+  var honestMinedThisSession = 0;
+
+  var ARRIVAL_MEAN = 2;
+
+  function poissonSample(mean){
+    var L = Math.exp(-mean), count = 0, p = 1;
+    do { count++; p *= Math.random(); } while (p > L);
+    return count - 1;
+  }
+
+  var showVirtual = false;
+
+  function addBlock(parents, hidden){
+    var id = nextId++;
+    blocks[id] = {id: id, parents: parents.slice(), hidden: !!hidden};
+    return id;
+  }
+
+  function publishedTips(){
+    var pub = Object.keys(blocks).map(Number).filter(function(id){ return !blocks[id].hidden; });
+    var hasChild = {};
+    pub.forEach(function(id){
+      blocks[id].parents.forEach(function(p){ if (!blocks[p].hidden) hasChild[p] = true; });
+    });
+    return pub.filter(function(id){ return !hasChild[id]; });
+  }
+
+  function seed(){
+    blocks = {}; nextId = 0; hiddenQueue = []; hiddenBranchParents = []; hiddenMode = false;
+    focusedId = null; pinnedId = null;
+    var g = addBlock([], false);
+    var a = addBlock([g], false);
+    var b = addBlock([g], false);
+    var m = addBlock([a, b], false);
+    addBlock([m], false);
+  }
+
+  function computeGhostdagState(parentIds, state, getAncestors, anticoneWithin, diag){
+    if (parentIds.length === 0){
+      return {selectedParent: null, blueSet: new Set(), blueScore: 1, mergeSetBlue: new Set(), mergeSetRed: new Set()};
+    }
+    var sp = parentIds[0];
+    parentIds.forEach(function(p){
+      var sBest = state[sp], sP = state[p];
+      if (sP.blueScore > sBest.blueScore || (sP.blueScore === sBest.blueScore && p < sp)) sp = p;
+    });
+    var spState = state[sp];
+    var ctx = new Set();
+    parentIds.forEach(function(p){
+      ctx.add(p);
+      getAncestors(p).forEach(function(a){ ctx.add(a); });
+    });
+    var spPast = new Set([sp]);
+    getAncestors(sp).forEach(function(a){ spPast.add(a); });
+    var mergeSetIds = Array.from(ctx).filter(function(x){ return !spPast.has(x); });
+    mergeSetIds.sort(function(x, y){ return x - y; });
+
+    var accepted = new Set(spState.blueSet); accepted.add(sp);
+    var mergeSetBlue = new Set(), mergeSetRed = new Set();
+    mergeSetIds.forEach(function(c){
+      var antiC = anticoneWithin(c, ctx);
+      var interAccepted = Array.from(antiC).filter(function(x){ return accepted.has(x); });
+      var ok = interAccepted.length <= k;
+      if (ok){
+        for (var i = 0; i < interAccepted.length; i++){
+          var x = interAccepted[i];
+          var antiX = anticoneWithin(x, ctx);
+          var newCount = Array.from(antiX).filter(function(y){ return accepted.has(y) || y === c; }).length;
+          if (newCount > k){ ok = false; break; }
+        }
+      }
+      if (diag) diag[c] = {anticoneAcceptedCount: interAccepted.length, ok: ok};
+      if (ok){ accepted.add(c); mergeSetBlue.add(c); } else { mergeSetRed.add(c); }
+    });
+
+    return {
+      selectedParent: sp,
+      blueSet: accepted,
+      blueScore: spState.blueScore + mergeSetBlue.size + 1,
+      mergeSetBlue: mergeSetBlue,
+      mergeSetRed: mergeSetRed
+    };
+  }
+
+  function recomputeAll(){
+    var pub = Object.keys(blocks).map(Number).filter(function(id){ return !blocks[id].hidden; }).sort(function(a,b){ return a-b; });
+    var pubSet = new Set(pub);
+    var childOf = {}; pub.forEach(function(id){ childOf[id] = []; });
+    pub.forEach(function(id){
+      blocks[id].parents.forEach(function(p){ if (pubSet.has(p)) childOf[p].push(id); });
+    });
+
+    var ancestorsOf = {};
+    function getAncestors(id){
+      if (ancestorsOf[id]) return ancestorsOf[id];
+      var set = new Set();
+      blocks[id].parents.forEach(function(p){
+        if (!pubSet.has(p)) return;
+        set.add(p);
+        getAncestors(p).forEach(function(a){ set.add(a); });
+      });
+      ancestorsOf[id] = set;
+      return set;
+    }
+    pub.forEach(getAncestors);
+
+    var descendantsOf = {};
+    function getDescendants(id){
+      if (descendantsOf[id]) return descendantsOf[id];
+      var set = new Set();
+      (childOf[id] || []).forEach(function(c){
+        set.add(c);
+        getDescendants(c).forEach(function(d){ set.add(d); });
+      });
+      descendantsOf[id] = set;
+      return set;
+    }
+    pub.slice().sort(function(a,b){ return b-a; }).forEach(getDescendants);
+
+    function anticoneWithin(id, ctxSet){
+      var anc = getAncestors(id), desc = getDescendants(id);
+      var out = new Set();
+      ctxSet.forEach(function(x){
+        if (x === id || anc.has(x) || desc.has(x)) return;
+        out.add(x);
+      });
+      return out;
+    }
+
+    var state = {};
+    pub.forEach(function(id){
+      var parentIds = blocks[id].parents.filter(function(p){ return pubSet.has(p); });
+      state[id] = computeGhostdagState(parentIds, state, getAncestors, anticoneWithin);
+    });
+
+    var tips = publishedTips();
+    var virtualDiag = {};
+    var virtual = computeGhostdagState(tips, state, getAncestors, anticoneWithin, virtualDiag);
+    lastVirtualDiag = virtualDiag;
+
+    var blueFinal = virtual.blueSet;
+    pub.forEach(function(id){
+      blocks[id].color = blueFinal.has(id) ? "blue" : "red";
+      blocks[id].spSelected = state[id].selectedParent;
+    });
+
+    var spine = [];
+    var cur = virtual.selectedParent;
+    while (cur !== null && cur !== undefined){ spine.push(cur); cur = state[cur].selectedParent; }
+    spine.reverse();
+    var spineSet = new Set(spine);
+    pub.forEach(function(id){ blocks[id].onSpine = spineSet.has(id); });
+
+    var order = [];
+    spine.forEach(function(id){
+      Array.from(state[id].mergeSetBlue).sort(function(a,b){return a-b;}).forEach(function(x){ order.push({id:x, spine:false}); });
+      order.push({id: id, spine: true});
+      Array.from(state[id].mergeSetRed).sort(function(a,b){return a-b;}).forEach(function(x){ order.push({id:x, spine:false}); });
+    });
+    Array.from(virtual.mergeSetBlue).sort(function(a,b){return a-b;}).forEach(function(x){ order.push({id:x, spine:false}); });
+    Array.from(virtual.mergeSetRed).sort(function(a,b){return a-b;}).forEach(function(x){ order.push({id:x, spine:false}); });
+
+    lastAncestors = ancestorsOf; lastDescendants = descendantsOf; lastPubIds = pub;
+
+    return {pub: pub, order: order, childOf: childOf};
+  }
+
+  var COLW = 96, ROWH = 68, PAD = 40;
+
+  function layout(pub, childOf){
+    var gen = {}, lane = {};
+    var laneCounts = {};
+    pub.forEach(function(id){
+      var g = 0;
+      blocks[id].parents.forEach(function(p){
+        if (gen[p] !== undefined) g = Math.max(g, gen[p] + 1);
+      });
+      gen[id] = g;
+      var l = laneCounts[g] || 0;
+      lane[id] = l;
+      laneCounts[g] = l + 1;
+    });
+    var maxGen = 0, maxLane = 0;
+    pub.forEach(function(id){ maxGen = Math.max(maxGen, gen[id]); maxLane = Math.max(maxLane, laneCounts[gen[id]] - 1); });
+    return {gen: gen, lane: lane, maxGen: maxGen, laneCounts: laneCounts};
+  }
+
+  function computeVirtualInfo(){
+    var tips = publishedTips();
+    if (!tips.length) return null;
+    function score(id){
+      var s = (blocks[id].color === "blue") ? 1 : 0;
+      var anc = lastAncestors[id] || new Set();
+      anc.forEach(function(a){ if (blocks[a].color === "blue") s++; });
+      return s;
+    }
+    var sink = tips[0], sinkScore = score(tips[0]);
+    for (var i = 1; i < tips.length; i++){
+      var s = score(tips[i]);
+      if (s > sinkScore || (s === sinkScore && tips[i] > sink)){ sink = tips[i]; sinkScore = s; }
+    }
+    return {tips: tips, sink: sink};
+  }
+
+  function updateVirtualCaption(info){
+    var cap = document.getElementById("gp-virtual-caption");
+    if (!showVirtual || !info){ cap.hidden = true; return; }
+    cap.hidden = false;
+    if (info.tips.length === 1){
+      cap.textContent = "Only one tip right now, so the network's live view (the virtual block) simply builds on Block " +
+        info.tips[0] + ". Nothing to choose between yet.";
+    } else {
+      cap.textContent = info.tips.length + " tips out there right now. The network's live view (the virtual block) " +
+        "points to all of them, but treats Block " + info.sink + " as its base (called the sink), chosen the same " +
+        "way any block picks its own base: whichever tip has the most already-counted blocks behind it.";
+    }
+  }
+
+  function render(){
+    k = parseInt(document.getElementById("gp-k-slider").value, 10);
+    document.getElementById("gp-k-out").textContent = k;
+
+    var result = recomputeAll();
+    var pub = result.pub;
+    var lay = layout(pub, result.childOf);
+    var virtualInfo = showVirtual ? computeVirtualInfo() : null;
+
+    var stage = document.getElementById("gp-stage");
+    var svg = document.getElementById("gp-edge-svg");
+    Array.from(stage.querySelectorAll(".node")).forEach(function(n){ n.remove(); });
+    svg.innerHTML = "";
+
+    var maxRows = 1;
+    Object.keys(lay.laneCounts).forEach(function(g){ maxRows = Math.max(maxRows, lay.laneCounts[g]); });
+    var width = (lay.maxGen + 1) * COLW + PAD * 2;
+    if (virtualInfo) width += COLW;
+    var height = maxRows * ROWH + PAD * 2;
+    stage.style.width = width + "px";
+    stage.style.height = height + "px";
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+    svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+
+    function pos(id){
+      return {
+        x: PAD + lay.gen[id] * COLW + COLW / 2,
+        y: PAD + lay.lane[id] * ROWH + ROWH / 2
+      };
+    }
+
+    pub.forEach(function(id){
+      var p2 = pos(id);
+      blocks[id].parents.forEach(function(p){
+        if (blocks[p].hidden) return;
+        var p1 = pos(p);
+        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", p1.x); line.setAttribute("y1", p1.y);
+        line.setAttribute("x2", p2.x); line.setAttribute("y2", p2.y);
+        line.dataset.a = p; line.dataset.b = id;
+        line.setAttribute("class", (blocks[id].spSelected === p) ? "spine" : "");
+        svg.appendChild(line);
+      });
+    });
+
+    pub.forEach(function(id){
+      var b = blocks[id];
+      var p = pos(id);
+      var el = document.createElement("div");
+      el.className = "node " + b.color + (b.onSpine ? " onspine" : "");
+      el.style.left = p.x + "px";
+      el.style.top = p.y + "px";
+      el.tabIndex = 0;
+      el.setAttribute("role", "button");
+      el.dataset.id = id;
+      el.setAttribute("aria-label", "Block " + id + ", " + (b.color === "blue" ? "counts" : "locked out") + (b.onSpine ? ", on the main chain" : "") + ". Select to see how it relates to other blocks.");
+      var label = document.createElement("span");
+      label.className = "node-label";
+      label.textContent = String(id);
+      el.appendChild(label);
+      el.addEventListener("mouseenter", function(){ setFocus(id); });
+      el.addEventListener("mouseleave", function(){ if (pinnedId === null) clearFocus(); });
+      el.addEventListener("focus", function(){ setFocus(id); });
+      el.addEventListener("blur", function(){ if (pinnedId === null) clearFocus(); });
+      el.addEventListener("click", function(){
+        pinnedId = (pinnedId === id) ? null : id;
+        if (pinnedId === null) clearFocus(); else setFocus(id);
+      });
+      el.addEventListener("keydown", function(ev){
+        if (ev.key === "Enter" || ev.key === " "){
+          ev.preventDefault();
+          pinnedId = (pinnedId === id) ? null : id;
+          if (pinnedId === null) clearFocus(); else setFocus(id);
+        } else if (ev.key === "Escape"){
+          pinnedId = null; clearFocus();
+        }
+      });
+      stage.appendChild(el);
+    });
+
+    if (virtualInfo){
+      var vx = PAD + (lay.maxGen + 1) * COLW + COLW / 2;
+      var vy = height / 2;
+      virtualInfo.tips.forEach(function(tipId){
+        var p1 = pos(tipId);
+        var vline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        vline.setAttribute("x1", p1.x); vline.setAttribute("y1", p1.y);
+        vline.setAttribute("x2", vx); vline.setAttribute("y2", vy);
+        vline.setAttribute("class", tipId === virtualInfo.sink ? "virtual-sink-edge" : "virtual-edge");
+        svg.appendChild(vline);
+      });
+      var vEl = document.createElement("div");
+      vEl.className = "node virtual";
+      vEl.style.left = vx + "px";
+      vEl.style.top = vy + "px";
+      vEl.setAttribute("role", "img");
+      vEl.setAttribute("aria-label", "The virtual block: the network's live view, pointing to every tip out there right now.");
+      var vLabel = document.createElement("span");
+      vLabel.className = "node-label";
+      vLabel.textContent = "now";
+      vEl.appendChild(vLabel);
+      stage.appendChild(vEl);
+      var sinkNode = stage.querySelector('.node[data-id="' + virtualInfo.sink + '"]');
+      if (sinkNode) sinkNode.classList.add("sink-tip");
+    }
+
+    renderOrderList(result.order);
+    renderStaging();
+    updateVerdict();
+    updateMineCaption();
+    updateVirtualCaption(virtualInfo);
+    if (focusedId !== null && blocks[focusedId] && !blocks[focusedId].hidden) setFocus(focusedId); else clearFocus();
+    updateScrollAffordance();
+  }
+
+  function updateVerdict(){
+    var box = document.getElementById("gp-verdict");
+    if (!lastReleasedIds || !lastReleasedIds.length){ box.hidden = true; return; }
+    var ids = lastReleasedIds.filter(function(id){ return blocks[id] && !blocks[id].hidden; });
+    if (!ids.length){ box.hidden = true; return; }
+    var reds = ids.filter(function(id){ return blocks[id].color === "red"; });
+    var pool = reds.length ? reds : ids;
+    var worstId = pool[0], worstCount = -1;
+    pool.forEach(function(id){
+      var d = lastVirtualDiag[id];
+      var c = d ? d.anticoneAcceptedCount : 0;
+      if (c > worstCount){ worstCount = c; worstId = id; }
+    });
+    var d = lastVirtualDiag[worstId];
+    var count = d ? d.anticoneAcceptedCount : 0;
+    box.hidden = false;
+    if (blocks[worstId].color === "red"){
+      box.className = "verdict-box fail";
+      box.innerHTML = "<strong>Hiding blocks didn't work.</strong> Block " + worstId + " came back with " + count +
+        " already-counted blocks beside it that it never saw, over the cap of k = " + k + ". It's locked out for good. " +
+        "A miner who hides blocks loses: the blocks nobody could reference arrive with too many unrelated blocks beside them.";
+    } else {
+      box.className = "verdict-box pass";
+      box.innerHTML = "<strong>These ones made it in.</strong> Block " + worstId + " came back with only " + count +
+        " already-counted blocks beside it, still under the cap of k = " + k + ". Lower k, or hide longer, to see hidden blocks get locked out instead.";
+    }
+  }
+
+  function updateMineCaption(){
+    var cap = document.getElementById("gp-mine-caption");
+    if (!lastMinedIds || !lastMinedIds.length){ cap.textContent = ""; return; }
+    var ids = lastMinedIds.filter(function(id){ return blocks[id] && !blocks[id].hidden; });
+    if (!ids.length){ cap.textContent = ""; return; }
+    var n = ids.length;
+    if (n === 1){
+      cap.textContent = "One block arrived. Nothing beside it, so it always counts.";
+      return;
+    }
+    var reds = ids.filter(function(id){ return blocks[id].color === "red"; });
+    if (reds.length){
+      cap.textContent = n + " blocks arrived at once, " + (n - 1) + " beside each of them. " +
+        "That is over the cap of k = " + k + ", so " + reds.length + " of them got locked out.";
+    } else {
+      cap.textContent = n + " blocks arrived at once, " + (n - 1) + " beside each of them. " +
+        "That is still within the cap of k = " + k + ", so all " + n + " of them count.";
+    }
+  }
+
+  function updateScrollAffordance(){
+    var wrap = document.getElementById("gp-stage-wrap");
+    var hint = document.getElementById("gp-scroll-hint");
+    var overflowing = wrap.scrollWidth > wrap.clientWidth + 1;
+    wrap.classList.toggle("has-overflow", overflowing);
+    if (!overflowing){
+      wrap.classList.remove("at-end", "at-middle");
+      hint.hidden = true;
+      return;
+    }
+    var atStart = wrap.scrollLeft <= 1;
+    var atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 1;
+    wrap.classList.toggle("at-end", atEnd && !atStart);
+    wrap.classList.toggle("at-middle", !atStart && !atEnd);
+    hint.hidden = !atStart;
+  }
+
+  document.getElementById("gp-stage-wrap").addEventListener("scroll", updateScrollAffordance);
+  window.addEventListener("resize", updateScrollAffordance);
+
+  function setFocus(id){
+    focusedId = id;
+    var stage = document.getElementById("gp-stage");
+    stage.classList.add("has-focus");
+    var past = lastAncestors[id] || new Set();
+    var future = lastDescendants[id] || new Set();
+    Array.from(stage.querySelectorAll(".node")).forEach(function(el){
+      var nid = Number(el.dataset.id);
+      el.classList.remove("hl-self", "hl-past", "hl-future", "hl-anticone", "hl-dim");
+      if (nid === id) el.classList.add("hl-self");
+      else if (past.has(nid)) el.classList.add("hl-past");
+      else if (future.has(nid)) el.classList.add("hl-future");
+      else el.classList.add("hl-anticone");
+    });
+    Array.from(stage.querySelectorAll("line")).forEach(function(line){
+      var a = Number(line.dataset.a), b = Number(line.dataset.b);
+      var touches = (a === id || b === id);
+      var related = touches || past.has(a) || past.has(b) || future.has(a) || future.has(b);
+      if (related) line.classList.remove("hl-dim"); else line.classList.add("hl-dim");
+    });
+    updateFocusCaption(id, past, future);
+  }
+
+  function clearFocus(){
+    focusedId = null;
+    var stage = document.getElementById("gp-stage");
+    stage.classList.remove("has-focus");
+    Array.from(stage.querySelectorAll(".node")).forEach(function(el){
+      el.classList.remove("hl-self", "hl-past", "hl-future", "hl-anticone", "hl-dim");
+    });
+    Array.from(stage.querySelectorAll("line")).forEach(function(l){ l.classList.remove("hl-dim"); });
+    document.getElementById("gp-focus-caption").textContent = "";
+  }
+
+  function updateFocusCaption(id, past, future){
+    var cap = document.getElementById("gp-focus-caption");
+    var b = blocks[id];
+    var pub = lastPubIds;
+    var neverSaw = Math.max(0, pub.length - 1 - past.size - future.size);
+    var d = lastVirtualDiag[id];
+    var name = "Block " + id;
+    var text;
+    if (b.onSpine || !d){
+      text = name + ": on the main chain, so it always counts.";
+    } else if (b.color === "blue"){
+      text = name + ": never saw " + neverSaw + " other block" + (neverSaw === 1 ? "" : "s") +
+        ". Of those, " + d.anticoneAcceptedCount + " already counted, within the cap of k = " + k + ". It counts.";
+    } else {
+      text = name + ": never saw " + neverSaw + " other block" + (neverSaw === 1 ? "" : "s") +
+        ". Of those, " + d.anticoneAcceptedCount + " already counted, over the cap of k = " + k + ". Locked out.";
+    }
+    cap.textContent = text;
+  }
+
+  function renderOrderList(order){
+    var ol = document.getElementById("gp-order-list");
+    ol.innerHTML = "";
+    order.forEach(function(entry){
+      var b = blocks[entry.id];
+      var li = document.createElement("li");
+      li.className = "o-" + b.color + (b.onSpine ? " o-spine" : "");
+      var mk = document.createElement("span"); mk.className = "mk";
+      li.appendChild(mk);
+      var txt = document.createElement("span"); txt.textContent = "Block " + entry.id;
+      li.appendChild(txt);
+      ol.appendChild(li);
+    });
+  }
+
+  function renderStaging(){
+    var wrap = document.getElementById("gp-staging");
+    var chain = document.getElementById("gp-staging-chain");
+    var note = document.getElementById("gp-staging-honest-note");
+    document.getElementById("gp-hidden-count").textContent = hiddenQueue.length;
+    if (!hiddenMode && hiddenQueue.length === 0){ wrap.hidden = true; return; }
+    wrap.hidden = false;
+    chain.innerHTML = "";
+    hiddenQueue.forEach(function(id){
+      var span = document.createElement("span");
+      span.textContent = "secret block " + id;
+      chain.appendChild(span);
+    });
+    if (honestMinedThisSession > 0){
+      note.hidden = false;
+      note.textContent = "While you mined in secret, the honest network published " + honestMinedThisSession +
+        " more block" + (honestMinedThisSession === 1 ? "" : "s") + " without waiting for you.";
+    } else {
+      note.hidden = true;
+      note.textContent = "";
+    }
+  }
+
+  function updateWidthOut(){ document.getElementById("gp-width-out").textContent = mineWidth; }
+
+  document.getElementById("gp-btn-width-minus").addEventListener("click", function(){
+    mineWidth = Math.max(MINE_WIDTH_MIN, mineWidth - 1);
+    updateWidthOut();
+  });
+  document.getElementById("gp-btn-width-plus").addEventListener("click", function(){
+    mineWidth = Math.min(MINE_WIDTH_MAX, mineWidth + 1);
+    updateWidthOut();
+  });
+
+  document.getElementById("gp-btn-mine-parallel").addEventListener("click", function(){
+    var tips = publishedTips();
+    var minedIds = [];
+    for (var i = 0; i < mineWidth; i++){ minedIds.push(addBlock(tips, false)); }
+    lastMinedIds = minedIds;
+    render();
+  });
+
+  document.getElementById("gp-btn-advance").addEventListener("click", function(){
+    var tips = publishedTips();
+    var n = Math.max(1, poissonSample(ARRIVAL_MEAN));
+    var minedIds = [];
+    for (var i = 0; i < n; i++){ minedIds.push(addBlock(tips, false)); }
+    lastMinedIds = minedIds;
+    render();
+  });
+
+  document.getElementById("gp-btn-hidden-toggle").addEventListener("click", function(ev){
+    hiddenMode = !hiddenMode;
+    ev.target.setAttribute("aria-pressed", hiddenMode ? "true" : "false");
+    ev.target.textContent = hiddenMode ? "Stop hiding" : "Hide blocks";
+    document.getElementById("gp-btn-mine-secret").disabled = !hiddenMode;
+    document.getElementById("gp-btn-release").disabled = !(hiddenQueue.length > 0);
+    if (hiddenMode){ hiddenBranchParents = publishedTips(); lastReleasedIds = null; honestMinedThisSession = 0; }
+    render();
+  });
+
+  function mineHonestBlocks(n){
+    for (var i = 0; i < n; i++){
+      var tips = publishedTips();
+      addBlock(tips, false);
+    }
+    honestMinedThisSession += n;
+  }
+
+  document.getElementById("gp-btn-mine-secret").addEventListener("click", function(){
+    var parents = hiddenQueue.length ? [hiddenQueue[hiddenQueue.length - 1]] : hiddenBranchParents;
+    var id = addBlock(parents, true);
+    hiddenQueue.push(id);
+    var kNow = parseInt(document.getElementById("gp-k-slider").value, 10);
+    mineHonestBlocks(kNow + 2);
+    document.getElementById("gp-btn-release").disabled = false;
+    render();
+  });
+
+  document.getElementById("gp-btn-release").addEventListener("click", function(){
+    lastReleasedIds = hiddenQueue.slice();
+    hiddenQueue.forEach(function(id){ blocks[id].hidden = false; });
+    hiddenQueue = [];
+    hiddenMode = false;
+    honestMinedThisSession = 0;
+    var toggle = document.getElementById("gp-btn-hidden-toggle");
+    toggle.setAttribute("aria-pressed", "false");
+    toggle.textContent = "Hide blocks";
+    document.getElementById("gp-btn-mine-secret").disabled = true;
+    document.getElementById("gp-btn-release").disabled = true;
+    render();
+  });
+
+  document.getElementById("gp-k-slider").addEventListener("input", render);
+
+  document.getElementById("gp-btn-toggle-virtual").addEventListener("click", function(ev){
+    showVirtual = !showVirtual;
+    ev.target.setAttribute("aria-pressed", showVirtual ? "true" : "false");
+    ev.target.textContent = showVirtual ? "Hide the network's live view" : "Show what the network sees right now";
+    render();
+  });
+
+  document.getElementById("gp-btn-reset").addEventListener("click", function(){
+    seed();
+    lastReleasedIds = null;
+    lastMinedIds = null;
+    honestMinedThisSession = 0;
+    mineWidth = 2;
+    updateWidthOut();
+    document.getElementById("gp-k-slider").value = 3;
+    var toggle = document.getElementById("gp-btn-hidden-toggle");
+    toggle.setAttribute("aria-pressed", "false");
+    toggle.textContent = "Hide blocks";
+    document.getElementById("gp-btn-mine-secret").disabled = true;
+    document.getElementById("gp-btn-release").disabled = true;
+    render();
+  });
+
+  seed();
+  render();
+})();
+</script>
+
       <p>The cap is the part worth slowing down for. Follow a block's parent links back and you get its past; follow them forward and you get its future. What is left over is its <span class="term-def" tabindex="0" role="button" aria-describedby="anticone-def-wik">anticone<span class="term-def__panel" id="anticone-def-wik" role="tooltip">Blocks that sit in neither a block's past nor its future. Nodes need an anticone rule to order these consistently.</span></span>: the blocks that came neither before it nor after it.</p>
       <p>A single chain has no way to rank an anticone, which is why it discards one side of it. GHOSTDAG ranks it instead, using one behavioral difference between honest miners and hidden ones.</p>
       <p>An honest miner publishes a block the second it is found. A miner building a secret history does the opposite.</p>
@@ -215,52 +1623,16 @@
         <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
         <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
-      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. Drag the slider below to see the curve.</p>
-      <div class="live-demo-frame">
-        <iframe id="confirmation-risk-frame" src="/demos/confirmation-risk" title="Confirmation risk over time: chance of reversal against how long you wait" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('confirmation-risk-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. The <a href="/demos/confirmation-risk">confirmation risk demo</a> plots that curve: drag its slider and watch reversal odds fall as wait time rises.</p>
       <details class="deep-dive">
         <summary>What actually sets a safe wait, and how finality depth differs</summary>
         <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
         <p>Three things set the honest wait: the value at stake, current hash rate and its spread, and whether the payment can be undone outside the protocol (a shipping hold tolerates a thinner wait than handing over a good nobody can claw back). Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
         <p><span class="term-def" tabindex="0" role="button" aria-describedby="finality-depth-def-wik">Finality depth<span class="term-def__panel" id="finality-depth-def-wik" role="tooltip">The threshold past which old history counts as settled.</span></span> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
+        <details class="cell-detail">
+          <summary>Does pruning make Kaspa private?</summary>
+          <p>No. Pruning and missing explorer history are not privacy guarantees. UTXO state remains the consensus object, and a broadcast transaction can still be observed or archived by others before a node prunes it.</p>
+        </details>
       </details>
     </section>
 
@@ -281,54 +1653,599 @@
           </tbody>
         </table>
       </div>
-      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process. Build a transaction below and see which mass dimension actually gets charged.</p>
-      <div class="live-demo-frame">
-        <iframe id="mass-calculator-frame" src="/demos/mass-calculator" title="Mass calculator: which mass dimension a transaction shape gets charged" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
+      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process.</p>
+      <details id="mass-calculator">
+        <summary>Build a transaction and see which mass dimension gets charged</summary>
+<style>
+  #masscalc-demo {
+    --bg: #100e0c;
+    --bg-2: #1c1a17;
+    --panel: #1c1a17;
+    --panel-strong: #221f1c;
+    --card-bg: #322f2a;
+    --line: #4a453d;
+    --line-bright: #746e60;
+    --text: #f8f5ef;
+    --muted: #b6b0a7;
+    --faint: #9d988c;
+    --green: #66d1c1;
+    --cyan: #2997ff;
+    --purple: #bf5af2;
+    --pink: #ff9f0a;
+    --ink: #06201b;
+    --accent-soft: rgba(102, 209, 193, .12);
+    --control-bg: #2c2c2e;
+    --control-hover: #3a3a3c;
+    --field-bg: #221f1c;
+    --field-line: #4a453d;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  :root[data-theme="light"] #masscalc-demo {
+    --bg: #fbfaf6;
+    --bg-2: #f3f0ea;
+    --panel: #f3f0ea;
+    --panel-strong: #fbfaf6;
+    --card-bg: #fbfaf6;
+    --line: #d8d4cb;
+    --line-bright: #bcb6a8;
+    --text: #211e1a;
+    --muted: #646057;
+    --faint: #757066;
+    --green: #0e7c6b;
+    --cyan: #0071e3;
+    --purple: #6e56cf;
+    --pink: #b25000;
+    --ink: #ffffff;
+    --accent-soft: rgba(14, 124, 107, .1);
+    --control-bg: #e8e8ed;
+    --control-hover: #dededf;
+    --field-bg: #ffffff;
+    --field-line: #d2d2d7;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  #masscalc-demo * { box-sizing: border-box; }
+  #masscalc-demo p.intro { color: var(--muted); max-width: 68ch; margin: 0 0 18px; font-size: 1.067rem; }
+  #masscalc-demo .presets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) {
+    #masscalc-demo .presets { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+    #masscalc-demo .presets button { flex: none; }
+  }
+  #masscalc-demo .reset-btn {
+    margin-left: 4px;
+    min-height: 34px;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 0 10px;
+    font-size: .85rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+  #masscalc-demo .reset-btn:hover { color: var(--text); }
+  #masscalc-demo .presets button {
+    min-height: 44px;
+    background: var(--control-bg);
+    border: 0;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: .85rem;
+    cursor: pointer;
+  }
+  #masscalc-demo .presets button:hover { background: var(--control-hover); }
+  #masscalc-demo .presets button[aria-pressed="true"] {
+    background: var(--accent-soft);
+    color: var(--green);
+  }
+  #masscalc-demo .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 700px) {
+    #masscalc-demo .layout { grid-template-columns: 1fr; gap: 12px; }
+  }
+  #masscalc-demo .panel {
+    background: var(--card-bg);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 16px;
+  }
+  #masscalc-demo .panel h3 {
+    font-size: .95rem;
+    margin: 0 0 14px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  #masscalc-demo .field { margin-bottom: 14px; }
+  #masscalc-demo .field:last-child { margin-bottom: 0; }
+  #masscalc-demo .field label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  #masscalc-demo .field label b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  #masscalc-demo .field input[type=range] { width: 100%; height: 44px; accent-color: var(--green); }
+  #masscalc-demo .field input[type=number] {
+    width: 100%;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+  }
+  #masscalc-demo .radios {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  #masscalc-demo .radios label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 44px;
+    font-size: .85rem;
+    color: var(--text);
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  #masscalc-demo .radios input { accent-color: var(--green); }
+  #masscalc-demo .budget-field { margin-top: 10px; }
+  #masscalc-demo .budget-field[hidden] { display: none; }
+
+  #masscalc-demo .bar-row { margin-bottom: 16px; }
+  #masscalc-demo .bar-row:last-of-type { margin-bottom: 10px; }
+  #masscalc-demo .bar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: .85rem;
+    margin-bottom: 5px;
+  }
+  #masscalc-demo .bar-head .name { color: var(--text); font-weight: 600; }
+  #masscalc-demo .bar-head .nums { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .8rem; }
+  #masscalc-demo .bar-track {
+    position: relative;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    overflow: hidden;
+  }
+  #masscalc-demo .bar-fill {
+    height: 100%;
+    border-radius: 8px 0 0 8px;
+    background: var(--green);
+    transition: width .15s ease;
+  }
+  #masscalc-demo .bar-row.binding .bar-fill { background: var(--pink); }
+  #masscalc-demo .bar-row.binding .bar-head .name { color: var(--pink); }
+  #masscalc-demo .binding-tag { font-weight: 400; color: var(--pink); }
+  #masscalc-demo .binding-tag[hidden] { display: none; }
+
+  #masscalc-demo .result {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  #masscalc-demo .result .big {
+    font-size: 1.7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--cyan);
+  }
+  #masscalc-demo .result .label { color: var(--faint); font-size: .82rem; }
+  #masscalc-demo .result .sub { color: var(--muted); font-size: 1.067rem; margin-top: 4px; }
+
+  #masscalc-demo .advanced-controls { margin-top: 10px; padding: 10px 14px; }
+  #masscalc-demo details {
+    margin-top: 24px;
+    background: var(--card-bg);
+    border: 0;
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+  }
+  #masscalc-demo details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    list-style: none;
+  }
+  #masscalc-demo details summary::-webkit-details-marker { display: none; }
+  #masscalc-demo details summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+  #masscalc-demo details[open] summary::before { content: "\2212"; }
+  #masscalc-demo details .formula-body { margin-top: 12px; color: var(--muted); font-size: 1.067rem; }
+  #masscalc-demo details .formula-body h4 { font-size: .85rem; color: var(--faint); margin: 16px 0 4px; text-transform: uppercase; letter-spacing: .03em; }
+  #masscalc-demo details .formula-body h4:first-child { margin-top: 0; }
+  #masscalc-demo code, #masscalc-demo .code-block {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: .85rem;
+  }
+  #masscalc-demo .code-block {
+    display: block;
+    background: var(--field-bg);
+    border: 1px solid var(--field-line);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 4px 0 8px;
+    color: var(--muted);
+    white-space: pre-wrap;
+  }
+  #masscalc-demo .sources { color: var(--faint); font-size: .78rem; margin-top: 24px; }
+  #masscalc-demo .sources a { color: var(--faint); }
+  #masscalc-demo a:focus-visible,
+  #masscalc-demo button:focus-visible,
+  #masscalc-demo input:focus-visible,
+  #masscalc-demo textarea:focus-visible,
+  #masscalc-demo select:focus-visible,
+  #masscalc-demo summary:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+  @media (max-width: 640px) {
+    #masscalc-demo .presets { margin-bottom: 8px; }
+    #masscalc-demo .field { margin-bottom: 8px; }
+    #masscalc-demo .panel { padding: 12px 16px; }
+  }
+</style>
+
+<div id="masscalc-demo">
+  <p class="intro">
+    Kaspa doesn't charge by byte count alone. Every transaction is measured on three limits,
+    compute, storage, and transient (proof data), and charged by whichever is largest, never
+    the sum. Build one below and see which limit binds.
+  </p>
+
+  <div class="presets" role="group" aria-label="Transaction presets">
+    <button type="button" data-preset="plain" aria-pressed="true">Plain 1-in 1-out payment</button>
+    <button type="button" data-preset="change">1-in 2-out with change</button>
+    <button type="button" data-preset="covenant">Covenant transaction</button>
+    <button type="button" data-preset="proof">ZK proof transaction</button>
+    <button type="button" class="reset-btn" id="mc-resetBtn">Reset</button>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h3>Build the transaction</h3>
+
+      <div class="field">
+        <label for="mc-inputs">Inputs <b id="mc-inputsVal">1</b></label>
+        <input type="range" id="mc-inputs" min="1" max="10" step="1" value="1">
       </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('mass-calculator-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+
+      <div class="field">
+        <label for="mc-outputs">Outputs <b id="mc-outputsVal">1</b></label>
+        <input type="range" id="mc-outputs" min="1" max="10" step="1" value="1">
+      </div>
+
+      <div class="field">
+        <label for="mc-amount">Amount per output (KAS) <b id="mc-amountVal">1,000</b></label>
+        <input type="range" id="mc-amount" min="0" max="6" step="0.02" value="3">
+      </div>
+
+      <div class="field">
+        <label for="mc-payload">Payload / proof bytes <b id="mc-payloadVal">0</b></label>
+        <input type="range" id="mc-payload" min="0" max="25000" step="50" value="0">
+      </div>
+
+      <details class="advanced-controls" id="mc-scriptDetails">
+        <summary>Advanced: script per input</summary>
+        <div class="field">
+          <div class="radios">
+            <label><input type="radio" name="mc-scriptType" value="simple" checked> Simple signature (1 signature check)</label>
+            <label><input type="radio" name="mc-scriptType" value="covenant"> Covenant / compute budget</label>
+          </div>
+          <div class="budget-field field" id="mc-budgetField" hidden>
+            <label for="mc-budget">Compute budget units per input <b id="mc-budgetVal">50</b></label>
+            <input type="range" id="mc-budget" min="1" max="500" step="1" value="50">
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="panel">
+      <h3>Mass, per block limit</h3>
+
+      <div class="bar-row" id="mc-computeRow">
+        <div class="bar-head">
+          <span class="name">Compute mass <span class="binding-tag" id="mc-computeTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="mc-computeMass">0</span> / 500,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="mc-computeFill" role="meter" aria-label="Compute mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="bar-row" id="mc-storageRow">
+        <div class="bar-head">
+          <span class="name">Storage mass <span class="binding-tag" id="mc-storageTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="mc-storageMass">0</span> / 500,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="mc-storageFill" role="meter" aria-label="Storage mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="bar-row" id="mc-transientRow">
+        <div class="bar-head">
+          <span class="name">Transient mass <span class="binding-tag" id="mc-transientTag" hidden>&middot; binding</span></span>
+          <span class="nums"><span id="mc-transientMass">0</span> / 1,000,000</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" id="mc-transientFill" role="meter" aria-label="Transient mass against its 1,000,000 block limit" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0"></div>
+        </div>
+      </div>
+
+      <div class="result">
+        <div><span class="big" id="mc-tpsOut">0</span> <span class="label">TPS at 10 blocks/second</span></div>
+        <div class="sub"><span id="mc-tpbOut">0</span> transactions of this shape fit per block, on the dimension that binds.</div>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show the mass formulas</summary>
+    <div class="formula-body">
+      <h4>Transaction size</h4>
+      <span class="code-block">size = 94 (fixed header: version, in/out counts, locktime,
+subnetwork id, gas, payload hash, payload length)
+     + payload_bytes
+     + inputs × (118 fixed bytes: outpoint 36, sig-script length field 8,
+                 signature script ~66, sequence 8; +2 if covenant/v1)
+     + outputs × (52 fixed bytes (value 8, version 2, script-length field 8,
+                 P2PK-style script 34)
+                 + 34 per output, if that output carries a covenant id)</span>
+
+      <h4>Compute mass</h4>
+      <span class="code-block">compute_mass = size × mass_per_tx_byte (1)
+             + Σ(2 + output_script_len) × mass_per_script_pub_key_byte (10)
+             + script_mass
+
+script_mass = inputs × 1 sigop × GRAMS_PER_SIGOP_COUNT_UNIT (1000)      [simple]
+            = inputs × compute_budget_units × GRAMS_PER_COMPUTE_BUDGET_UNIT (100)  [covenant]</span>
+
+      <h4>Transient mass</h4>
+      <span class="code-block">transient_mass = size × TRANSIENT_BYTE_TO_MASS_FACTOR (4)</span>
+
+      <h4>Storage mass (KIP-0009)</h4>
+      <span class="code-block">C = STORAGE_MASS_PARAMETER (1,000,000,000,000)
+utxo_plurality(output) = ceil((63 + script_bytes + 32 if covenant else 0) / 100)
+     A P2PK-style output (script 34) has plurality 1. A covenant-carrying
+     output (63 + 34 + 32 = 129 bytes) crosses the 100-byte unit and has
+     plurality 2, which squares its weight below.
+storage_mass = max(0, outputs × plurality² × C / out_amount_sompi
+                    − inputs × C / in_amount_sompi)
+in_amount_sompi assumes no fee: total out value split evenly across inputs.</span>
+
+      <h4>Which dimension binds</h4>
+      <span class="code-block">Compute and storage share a 500,000 block-mass limit; transient's
+limit is 1,000,000, so it is normalized to the same scale before
+comparison: transient_norm = transient_mass × 500,000/1,000,000.
+tx_mass = max(compute_mass, storage_mass, transient_norm)
+tx_per_block = floor(500,000 / tx_mass)
+TPS = tx_per_block × 10 blocks/second</span>
+
+      <p style="margin-top:10px;">
+        This models a standard Schnorr P2PK-style input/output shape and assumes value is
+        conserved with no fee. Real network TPS is lower once relay policy, fee markets, and
+        mempool behavior are added on top of this pure mass ceiling.
+      </p>
+    </div>
+  </details>
+
+  <p class="sources">
+    Formulas verified against
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
+    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">core constants</a>.
+    Offline calculator, no network requests.
+  </p>
+</div>
+
+<script>
+(function(){
+  var MASS_PER_TX_BYTE = 1;
+  var MASS_PER_SCRIPT_PUBKEY_BYTE = 10;
+  var GRAMS_PER_SIGOP_COUNT_UNIT = 1000;
+  var GRAMS_PER_COMPUTE_BUDGET_UNIT = 100;
+  var TRANSIENT_BYTE_TO_MASS_FACTOR = 4;
+  var STORAGE_MASS_PARAMETER = 1e12;
+  var SOMPI_PER_KASPA = 1e8;
+  var HEADER_BYTES = 94;
+  var INPUT_FIXED_BYTES = 118;
+  var OUTPUT_FIXED_BYTES = 52;
+  var SCRIPT_PUBKEY_BYTES = 36;
+  var COVENANT_EXTRA_BYTES = 34;
+  var COMPUTE_BUDGET_FIELD_BYTES = 2;
+  var UTXO_CONST_STORAGE = 63;
+  var UTXO_UNIT_SIZE = 100;
+  var COVENANT_ID_BYTES = 32;
+  var BLOCK_COMPUTE_LIMIT = 500000;
+  var BLOCK_STORAGE_LIMIT = 500000;
+  var BLOCK_TRANSIENT_LIMIT = 1000000;
+  var BLOCKS_PER_SECOND = 10;
+
+  var inputsEl = document.getElementById('mc-inputs');
+  var outputsEl = document.getElementById('mc-outputs');
+  var amountEl = document.getElementById('mc-amount');
+  var payloadEl = document.getElementById('mc-payload');
+  var budgetEl = document.getElementById('mc-budget');
+  var budgetField = document.getElementById('mc-budgetField');
+  var scriptRadios = document.getElementsByName('mc-scriptType');
+  var presetButtons = document.querySelectorAll('#masscalc-demo .presets button[data-preset]');
+
+  function amountKAS() {
+    return Math.pow(10, parseFloat(amountEl.value));
+  }
+
+  function currentScriptType() {
+    for (var i = 0; i < scriptRadios.length; i++) if (scriptRadios[i].checked) return scriptRadios[i].value;
+    return 'simple';
+  }
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  function compute() {
+    var inputs = parseInt(inputsEl.value, 10);
+    var outputs = parseInt(outputsEl.value, 10);
+    var outAmountKas = amountKAS();
+    var payloadBytes = parseInt(payloadEl.value, 10);
+    var scriptType = currentScriptType();
+    var budgetUnits = parseInt(budgetEl.value, 10);
+    var isCovenant = scriptType === 'covenant';
+
+    var size = HEADER_BYTES + payloadBytes
+      + inputs * (INPUT_FIXED_BYTES + (isCovenant ? COMPUTE_BUDGET_FIELD_BYTES : 0))
+      + outputs * (OUTPUT_FIXED_BYTES + (isCovenant ? COVENANT_EXTRA_BYTES : 0));
+
+    var computeMassForSize = size * MASS_PER_TX_BYTE;
+    var scriptPubKeyMass = outputs * SCRIPT_PUBKEY_BYTES * MASS_PER_SCRIPT_PUBKEY_BYTE;
+    var scriptMass = isCovenant
+      ? inputs * budgetUnits * GRAMS_PER_COMPUTE_BUDGET_UNIT
+      : inputs * 1 * GRAMS_PER_SIGOP_COUNT_UNIT;
+
+    var computeMass = computeMassForSize + scriptPubKeyMass + scriptMass;
+    var transientMass = size * TRANSIENT_BYTE_TO_MASS_FACTOR;
+
+    var outScriptLen = OUTPUT_FIXED_BYTES - 8 - 2 - 8;
+    var outPlurality = Math.ceil((UTXO_CONST_STORAGE + outScriptLen + (isCovenant ? COVENANT_ID_BYTES : 0)) / UTXO_UNIT_SIZE);
+    var outAmountSompi = outAmountKas * SOMPI_PER_KASPA;
+    var totalOutSompi = outputs * outAmountSompi;
+    var inAmountSompi = Math.max(totalOutSompi / inputs, 1);
+    var harmonicOuts = outputs * outPlurality * outPlurality * (STORAGE_MASS_PARAMETER / outAmountSompi);
+    var linearIns = inputs * (STORAGE_MASS_PARAMETER / inAmountSompi);
+    var storageMass = Math.max(0, harmonicOuts - linearIns);
+
+    var transientNormalized = transientMass * (BLOCK_COMPUTE_LIMIT / BLOCK_TRANSIENT_LIMIT);
+    var txMass = Math.max(computeMass, storageMass, transientNormalized);
+
+    var binding = 'compute';
+    if (storageMass === txMass && storageMass > computeMass) binding = 'storage';
+    if (transientNormalized === txMass && transientNormalized > computeMass && transientNormalized >= storageMass) binding = 'transient';
+
+    var txPerBlock = Math.floor(BLOCK_COMPUTE_LIMIT / txMass);
+    var tps = txPerBlock * BLOCKS_PER_SECOND;
+
+    return { computeMass: computeMass, storageMass: storageMass, transientMass: transientMass,
+             txMass: txMass, binding: binding, txPerBlock: txPerBlock, tps: tps, outPlurality: outPlurality };
+  }
+
+  function render() {
+    var r = compute();
+
+    document.getElementById('mc-computeMass').textContent = fmt(r.computeMass);
+    document.getElementById('mc-storageMass').textContent = fmt(r.storageMass);
+    document.getElementById('mc-transientMass').textContent = fmt(r.transientMass);
+
+    setBar('mc-computeFill', r.computeMass, BLOCK_COMPUTE_LIMIT);
+    setBar('mc-storageFill', r.storageMass, BLOCK_STORAGE_LIMIT);
+    setBar('mc-transientFill', r.transientMass, BLOCK_TRANSIENT_LIMIT);
+
+    document.getElementById('mc-computeRow').classList.toggle('binding', r.binding === 'compute');
+    document.getElementById('mc-storageRow').classList.toggle('binding', r.binding === 'storage');
+    document.getElementById('mc-transientRow').classList.toggle('binding', r.binding === 'transient');
+    document.getElementById('mc-computeTag').hidden = r.binding !== 'compute';
+    document.getElementById('mc-storageTag').hidden = r.binding !== 'storage';
+    document.getElementById('mc-transientTag').hidden = r.binding !== 'transient';
+
+    document.getElementById('mc-tpsOut').textContent = fmt(r.tps);
+    document.getElementById('mc-tpbOut').textContent = fmt(r.txPerBlock);
+
+    document.getElementById('mc-inputsVal').textContent = inputsEl.value;
+    document.getElementById('mc-outputsVal').textContent = outputsEl.value;
+    document.getElementById('mc-amountVal').textContent = fmt(amountKAS());
+    document.getElementById('mc-payloadVal').textContent = fmt(parseInt(payloadEl.value, 10));
+    document.getElementById('mc-budgetVal').textContent = budgetEl.value;
+  }
+
+  function setBar(id, value, limit) {
+    var el = document.getElementById(id);
+    var pct = Math.min(100, (value / limit) * 100);
+    el.style.width = pct + '%';
+    el.setAttribute('aria-valuenow', Math.round(value));
+  }
+
+  function onScriptTypeChange() {
+    budgetField.hidden = currentScriptType() !== 'covenant';
+    render();
+  }
+
+  var applyingPreset = false;
+  function clearPresetState() {
+    if (applyingPreset) return;
+    presetButtons.forEach(function(b) { b.setAttribute('aria-pressed', 'false'); });
+  }
+
+  [inputsEl, outputsEl, amountEl, payloadEl, budgetEl].forEach(function(el) {
+    el.addEventListener('input', function() { clearPresetState(); render(); });
+  });
+  for (var i = 0; i < scriptRadios.length; i++) scriptRadios[i].addEventListener('change', function() { clearPresetState(); onScriptTypeChange(); });
+
+  var presets = {
+    plain:    { inputs: 1, outputs: 1, amount: 3,    payload: 0,    script: 'simple',   budget: 50 },
+    change:   { inputs: 1, outputs: 2, amount: 2.7,  payload: 0,    script: 'simple',   budget: 50 },
+    covenant: { inputs: 1, outputs: 1, amount: 3,    payload: 0,    script: 'covenant', budget: 50 },
+    proof:    { inputs: 1, outputs: 1, amount: 3,    payload: 8000, script: 'simple',   budget: 50 }
+  };
+
+  function applyPreset(name) {
+    var p = presets[name];
+    if (!p) return;
+    applyingPreset = true;
+    inputsEl.value = p.inputs;
+    outputsEl.value = p.outputs;
+    amountEl.value = p.amount;
+    payloadEl.value = p.payload;
+    budgetEl.value = p.budget;
+    for (var i = 0; i < scriptRadios.length; i++) scriptRadios[i].checked = (scriptRadios[i].value === p.script);
+    budgetField.hidden = p.script !== 'covenant';
+    var scriptDetails = document.getElementById('mc-scriptDetails');
+    if (scriptDetails) scriptDetails.open = (p.script === 'covenant');
+    presetButtons.forEach(function(b) { b.setAttribute('aria-pressed', b.dataset.preset === name ? 'true' : 'false'); });
+    render();
+    applyingPreset = false;
+  }
+
+  presetButtons.forEach(function(b) {
+    b.addEventListener('click', function() { applyPreset(b.dataset.preset); });
+  });
+
+  document.getElementById('mc-resetBtn').addEventListener('click', function() { applyPreset('plain'); });
+
+  applyPreset('plain');
+})();
+</script>
+
+      </details>
       <details class="deep-dive" data-audience="specialist">
         <summary>Where the payment numbers come from</summary>
         <p>Kaspa mainnet makes ten blocks per second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in.</p>
 <p>A signed plain P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's careful math; add a change output and a 1-input, 2-output payment runs closer to 2.0k mass. Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block, the mid-2k to low-3k TPS lane at 10 BPS. Leaner shapes and rounding push the top end to the often-quoted 3.4k TPS. Benchmarks built on fake minimum-size transactions score higher than that, and what they measure is a lab ceiling.</p>
         <p>A raw count of transactions per block hides the real limit, which is mass. The implementation measures three dimensions: compute mass from serialized bytes, script-public-key bytes, and signature-operation or compute-budget work; transient byte mass; and storage mass. Each is normalized against its own block limit, and a transaction is charged whichever of the three is largest, never their sum.</p>
 <p>Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
-        <p><a href="/toccata-explained">Toccata</a> leaves the payment limit alone. Transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000, and the Toccata guide ties that rise to fitting STARK-sized proofs. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee. It is mostly an upgrade to what L1 transactions can say and check.</p>
+        <p><a href="#covenants">Toccata</a> leaves the payment limit alone. Transient mass rises from 500,000 to 1,000,000 at activation, while the compute and storage reference limit holds at 500,000, and the Toccata guide ties that rise to fitting STARK-sized proofs. Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee. It is mostly an upgrade to what L1 transactions can say and check.</p>
         <div class="table-wrap">
           <table class="reality-table">
             <thead>
@@ -344,6 +2261,25 @@
         </div>
         <p>vProgs remain roadmap architecture. Toccata ships the parts vProg-style systems need without shipping vProgs. KIP-21 stops every prover from having to follow the whole DAG for every app: its partitioned commitment design targets O(activity) proving, so a prover for one app lane tracks only that lane.</p>
 <p>Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at 10 BPS is a worst-case 500 user-lane updates per second, and user transaction throughput still needs its own transaction-shape math on top. The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. <span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-wik">Michael Sutton<span class="term-def__panel" id="sutton-def-wik" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-wik">Silverscript<span class="term-def__panel" id="silverscript-def-wik" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span>, with an audit as the gate its README sets before real use.</p>
+      </details>
+    </section>
+
+    <section id="covenants" class="section">
+      <p class="eyebrow">Covenants</p>
+      <h2>A coin that can carry its own rule</h2>
+      <p>Since Toccata activated at DAA score 474,165,565, a Kaspa coin can carry a rule about how it's allowed to move next, checked by the network the same way it checks a signature: a vault can require a delay and a recovery key, an escrow a release or a refund.</p>
+      <details class="deep-dive">
+        <summary>What Toccata turned on, KIP by KIP</summary>
+        <div class="summary-grid grid-cards">
+          <article><span>KIP-17</span><p>A UTXO can read the transaction spending it and require a matching next output: vaults, escrow, spend caps, refunds.</p></article>
+          <article><span>KIP-20</span><p>Covenant IDs give covenant state a lineage consensus tracks, blocking fake lookalikes.</p></article>
+          <article><span>KIP-16</span><p>A script checks a proof from a chosen proof system, initially Groth16 and RISC0-Succinct, instead of L1 running every app step itself.</p></article>
+          <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane instead of almost the whole DAG.</p></article>
+          <article><span>vProgs</span><p>Not part of what activated. Full vProgs, for shared app state many users mutate at once, are still roadmap architecture. See <a href="/status#status-snapshot">status</a>.</p></article>
+          <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering and settle proofs back to it, with no separate sequencer.</p></article>
+        </div>
+        <p>No virtual machine, no accounts, no global shared state. App logic lives in bounded UTXO steps or proofs. A live demo that tries to break a covenant vault is on <a href="/build-on-kaspa#covenant-breaker-demo">build on Kaspa</a>.</p>
+        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>.</p>
       </details>
     </section>
 
@@ -369,47 +2305,453 @@
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work. Below is a live read of Kaspa's own public API. It is not a simulation.</p>
-      <div class="live-demo-frame">
-        <iframe id="live-network-frame" src="/demos/live-network" title="Live read of Kaspa's public API: blocks arriving in real time" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('live-network-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            syncFrameTheme();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
+      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work.</p>
+      <details id="live-network">
+        <summary>Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
+<style>
+  #livenet-demo {
+    --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
+    --line: #4a453d; --line-bright: #746e60;
+    --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
+    --green: #66d1c1; --cyan: #2997ff; --purple: #bf5af2; --pink: #ff9f0a;
+    --red: #ff6961; --ink: #06201b;
+    --control-bg: #2c2c2e; --control-hover: #3a3a3c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+    --mono-font: ui-monospace, Menlo, Consolas, monospace;
+    color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px; line-height: 1.5;
+  }
+  :root[data-theme="light"] #livenet-demo {
+    --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
+    --line: #d8d4cb; --line-bright: #bcb6a8;
+    --text: #211e1a; --muted: #646057; --faint: #757066;
+    --green: #0e7c6b; --cyan: #0071e3; --purple: #6e56cf; --pink: #b25000;
+    --red: #c0342a; --ink: #ffffff;
+    --control-bg: #e8e8ed; --control-hover: #dededf;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+  }
+  #livenet-demo * { box-sizing: border-box; }
+
+  #livenet-demo .status-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: .82rem; color: var(--faint); }
+  #livenet-demo .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; }
+  #livenet-demo .status-dot[data-state="ok"] { background: var(--green); }
+  #livenet-demo .status-dot[data-state="error"] { background: var(--red); }
+  #livenet-demo .status-dot[data-state="paused"] { background: var(--pink); }
+  #livenet-demo .status-row strong { color: var(--text); font-weight: 600; }
+
+  #livenet-demo .fail-banner { display: none; background: color-mix(in srgb, var(--red) 12%, var(--card-bg)); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; font-size: .9rem; }
+  #livenet-demo .fail-banner.show { display: block; }
+  #livenet-demo .fail-banner b { color: var(--red); }
+
+  #livenet-demo .stage { background: var(--card-bg); border-radius: 18px; padding: 18px 16px; box-shadow: var(--shadow); }
+
+  #livenet-demo .parallel-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+  #livenet-demo .parallel-count { font-size: 2.1rem; font-weight: 700; letter-spacing: -.01em; }
+  #livenet-demo .parallel-label { font-size: .86rem; color: var(--muted); max-width: 40ch; }
+  #livenet-demo .tip-dots { display: flex; gap: 5px; margin: 8px 0 16px; flex-wrap: wrap; }
+  #livenet-demo .tip-dot { width: 14px; height: 14px; border-radius: 4px; background: var(--cyan); opacity: .85; }
+  @media (prefers-reduced-motion: no-preference) {
+    #livenet-demo .tip-dot.fresh { animation: ln-tipPop .5s cubic-bezier(.2,.8,.2,1); }
+  }
+  @keyframes ln-tipPop { 0% { transform: scale(1.5); opacity: .3; } 100% { transform: scale(1); opacity: .85; } }
+  #livenet-demo .sample-line { font-size: .84rem; color: var(--muted); margin: 0 0 16px; max-width: 52ch; }
+  #livenet-demo .sample-line strong { color: var(--text); font-weight: 650; }
+
+  #livenet-demo .feed-wrap { border-top: 1px solid var(--line); padding-top: 14px; }
+  #livenet-demo .feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+  #livenet-demo .block-card { display: flex; align-items: center; gap: 10px; background: var(--bg-2); border-radius: 8px; padding: 10px 12px; }
+  #livenet-demo .block-card.is-empty { opacity: .82; }
+  @media (prefers-reduced-motion: no-preference) {
+    #livenet-demo .block-card.just-arrived { animation: ln-cardIn .4s cubic-bezier(.2,.8,.2,1); }
+  }
+  @keyframes ln-cardIn { 0% { transform: translateY(-8px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+  #livenet-demo .meter { flex: none; display: flex; gap: 2px; align-items: center; width: 66px; }
+  #livenet-demo .meter i { width: 8px; height: 16px; border-radius: 2px; background: var(--line-bright); flex: none; }
+  #livenet-demo .meter i.filled { background: var(--green); }
+  #livenet-demo .block-main { flex: 1 1 auto; min-width: 0; }
+  #livenet-demo .block-top { display: flex; align-items: center; gap: 8px; font-size: .84rem; }
+  #livenet-demo .block-top .content-word { font-weight: 650; }
+  #livenet-demo .content-word.empty-word { color: var(--faint); }
+  #livenet-demo .content-word.has-tx { color: var(--green); }
+  #livenet-demo .block-time { color: var(--faint); font-size: .74rem; margin-left: auto; flex: none; }
+  #livenet-demo .block-sub { font-size: .74rem; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  #livenet-demo .block-sub code { font-family: var(--mono-font); }
+  #livenet-demo .tag-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  #livenet-demo .tag { display: inline-flex; align-items: center; gap: 3px; font-size: .7rem; font-weight: 650; padding: 2px 8px; border-radius: 999px; }
+  #livenet-demo .tag.covenant { --status-color:var(--purple); }
+  #livenet-demo .tag.app { --status-color:var(--cyan); }
+  /* .tag.red-block needs no local rule: styles.css already sets
+     --status-color: var(--red) for it sitewide. */
+  #livenet-demo .feed-empty { font-size: .86rem; color: var(--faint); padding: 20px 4px; text-align: center; }
+
+  #livenet-demo .controls-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  #livenet-demo .pause-btn { min-height: 44px; border: 0; border-radius: 980px; padding: 0 20px; font: inherit; font-size: .92rem; font-weight: 650; cursor: pointer; background: var(--control-bg); color: var(--text); }
+  #livenet-demo .pause-btn:hover { background: var(--control-hover); }
+  #livenet-demo .poll-note { font-size: .76rem; color: var(--faint); }
+
+  #livenet-demo .stat-tile { display: flex; flex-direction: column; gap: 4px; background: var(--panel-strong); border-radius: 14px; padding: 14px 16px; margin-top: 14px; }
+  #livenet-demo .stat-tile .stat-num { font-size: 1.5rem; font-weight: 700; }
+  #livenet-demo .stat-tile .stat-label { font-size: .8rem; color: var(--muted); }
+  #livenet-demo .stat-tile .stat-compare { font-size: .74rem; color: var(--faint); margin-top: 4px; }
+
+  #livenet-demo .payoff { font-size: 1.02rem; font-weight: 500; margin: 20px 0 0; padding: 14px 16px; border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--green) 8%, transparent); }
+
+  #livenet-demo .deep-body { margin-top: 10px; font-size: .88rem; color: var(--muted); }
+  #livenet-demo .deep-body h3 { font-size: .92rem; color: var(--text); margin: 16px 0 6px; }
+  #livenet-demo .deep-body h3:first-child { margin-top: 0; }
+  #livenet-demo .deep-body p { margin: 0 0 10px; }
+  #livenet-demo .deep-body code { font-family: var(--mono-font); font-size: .84em; background: var(--bg-2); padding: 1px 5px; border-radius: 4px; }
+  #livenet-demo .deep-body ul { margin: 0 0 10px; padding-left: 20px; }
+  #livenet-demo .deep-body li { margin-bottom: 4px; }
+  #livenet-demo .evidence-note { border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--cyan) 6%, transparent); padding: 10px 14px; margin: 10px 0; font-size: .84rem; }
+  #livenet-demo .demo-footnote { font-size: .76rem; color: var(--faint); margin-top: 18px; }
+
+  #livenet-demo a:focus-visible, #livenet-demo button:focus-visible, #livenet-demo input:focus-visible, #livenet-demo select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+    outline-offset: 3px;
+  }
+  #livenet-demo details { margin-top: 22px; }
+  #livenet-demo details summary { cursor: pointer; font-size: .88rem; color: var(--muted); padding: 4px 0; list-style: none; }
+  #livenet-demo details summary::-webkit-details-marker { display: none; }
+  #livenet-demo details summary:before { content: "+ "; color: var(--green); font-weight: 700; }
+  #livenet-demo details[open] summary:before { content: "\2212 "; }
+</style>
+
+<div id="livenet-demo">
+  <p style="color:var(--muted); margin:0 0 14px;">Real blocks, read live from Kaspa's own public API. Kaspa makes about 10 a second; this checks in every 9 seconds and shows what it actually fetched, not a simulation of the rest. If the API can't be reached, it says so instead of faking it.</p>
+
+  <div class="fail-banner" id="ln-failBanner" role="status"><b>Can't reach the public network right now.</b> <span id="ln-failDetail">Retrying every 9 seconds. The explanation below still applies; nothing on this page is invented while it waits.</span></div>
+
+  <div class="stage">
+    <div class="parallel-row">
+      <span class="parallel-count" id="ln-tipCount">&ndash;</span>
+      <span class="parallel-label" id="ln-tipLabel">blocks racing for the same spot right now. Kaspa doesn't make them wait in line.</span>
+    </div>
+    <div class="tip-dots" id="ln-tipDots" aria-hidden="true"></div>
+
+    <p class="sample-line" id="ln-sampleLine">Measuring the network's real pace&hellip;</p>
+
+    <div class="feed-wrap">
+      <div class="feed" id="ln-feed"><p class="feed-empty" id="ln-feedEmpty">Reading the first blocks&hellip;</p></div>
+    </div>
+
+    <div class="controls-row">
+      <button class="pause-btn" id="ln-pauseBtn" type="button">Pause</button>
+      <span class="poll-note" id="ln-statusLine">Checking every 9 seconds.</span>
+    </div>
+
+    <div class="stat-tile">
+      <span class="stat-num" id="ln-sessionPct">&ndash;</span>
+      <span class="stat-label" id="ln-sessionLabel">of the blocks this page has watched this session carried nothing but the miner's own reward.</span>
+      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 89.5% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+    </div>
+  </div>
+
+  <p class="payoff" id="ln-payoff">Kaspa targets 10 new blocks every second. Most of what you're watching arrive is a block holding exactly one transaction: the miner paying itself.</p>
+
+  <details>
+    <summary>What this page shows, what it can't, and why</summary>
+    <div class="deep-body">
+      <h3>Blocks, in parallel</h3>
+      <p>Kaspa doesn't pick one miner's block and discard the rest the way a single-chain network does. Several blocks can be valid at once; GHOSTDAG later orders and merges them instead of throwing them away. The count at the top of this page is <code>tipHashes</code> from a live read of <code>api.kaspa.org/info/blockdag</code>: the number of block tips the network is holding open right now. Each new tip is then fetched individually from <code>api.kaspa.org/blocks/{blockId}</code>.</p>
+
+      <h3>Who mined it</h3>
+      <p>Each block card names the payout address and the self-reported miner tag from the block's own coinbase data (the API's <code>extra.minerAddress</code> and <code>extra.minerInfo</code> fields). Neither is a verified identity: a pool can rotate payout addresses, and the tag is a plain string the miner chose to write, not something the network checks. This site's own data notes 32 distinct coinbase payout addresses over a short sample as "block producers," explicitly flagging that rotation would inflate that count. Treat every miner label here the same way.</p>
+
+      <h3>Blue and red</h3>
+      <p>A block tagged <span class="tag red-block">red</span> below was real and mined honestly, but arrived too late in its local ordering to be counted in the ledger's accepted history; a "blue" block was. That is GHOSTDAG's actual job: keep the block, decide whether it counts.</p>
+
+      <h3>What's inside: mostly nothing yet</h3>
+      <p>A block with only its own coinbase transaction and zero spends is marked <span class="content-word empty-word">Empty</span>. Most blocks arrive that way today. That is not this page failing to find activity: it is Kaspa's actual current usage. The same figure appears sitewide: about 0.9 transactions per second sustained, and 89.5% of the raw transaction count is the one-per-block coinbase payout, not economic activity (<code>data/l1-chains.json</code>, cross-checked against live API reads).</p>
+
+      <h3>Covenants</h3>
+      <p>When a transaction output carries a network-verified <code>covenantId</code>, this page shows a <span class="tag covenant">covenant</span> tag. That field comes straight from the API's own parsed transaction data, not a guess: Toccata-era Kaspa enforces covenants and covenant IDs in consensus, and the site's own August 2026 reads found roughly 28,000 ever created and about 500 still active. They are uncommon in the ordinary block feed; expect long stretches with none.</p>
+
+      <h3>App attribution: only where it's really written down</h3>
+      <p>Kaspa has no protocol-level field that names an app. What this page can honestly show is narrower: some transactions carry a plain-text tag at the front of their payload, such as <code>ciph_msg:1:comm:&hellip;</code>, which identifies the on-chain messaging protocol some Kaspa apps use to write encrypted messages into transactions. When a payload starts with a tag like that, this page shows an <span class="tag app">app: ciph_msg</span> pill and nothing more: it is reading a literal string the transaction's own sender chose to include, not inferring anything. Any other payload here is unlabeled binary; guessing what wrote it would be exactly the kind of fabricated attribution this page exists not to do, so it stays unlabeled.</p>
+
+      <h3>A ZK opcode call is not shown</h3>
+      <p>Kaspa's script system supports a ZK verifier opcode, but the public REST API returns transaction scripts as opaque hex, not as decoded opcodes. Detecting one would mean disassembling script bytes client-side and matching a specific opcode value, which this page does not attempt. If that byte-level check turns out to be cheap and reliable, it's a reasonable thing to add later; today it isn't shown, rather than shown as a guess.</p>
+
+      <h3>What a full block explorer has that this page doesn't</h3>
+      <p>Explorers like Kaspa.stream run their own indexer against a database, which lets them show things a single API read cannot: a miner leaderboard built by clustering many blocks' payout addresses over time, top-address balances, and historical charts. Every one of those requires storing and aggregating history somewhere; a static page calling the public API on each visit has no database to build that from, and re-deriving it client-side on every load would mean hammering the API far past anything reasonable. This page only shows what one API read, right now, actually contains.</p>
+
+      <h3>Why this only shows a handful of blocks per check</h3>
+      <p>api.kaspa.org sits behind a Cloudflare edge cache with <code>max-age=8</code>: two requests inside that window get the identical cached response, so checking faster than every 8 seconds would not surface a single extra block, only waste requests. This page checks every 9 seconds. But Kaspa itself is producing roughly 10 blocks a second, so each check's <code>tipHashes</code> array (the network's current open tip set, typically 5 to 9 hashes) is a small sample of everything that actually happened since the last check, not the full count. The line above the block feed states both numbers plainly: how many blocks the network produced in that window against how many this page could fetch and show. The blocks-per-second figure next to it is not looked up anywhere; it is computed live from the change in <code>blockCount</code> between this page's own polls.</p>
+
+      <p class="evidence-note">Endpoints used: <code>api.kaspa.org/info/blockdag</code> (tip hashes and <code>blockCount</code>, polled every 9 seconds; the API's own cache doesn't refresh faster than about 8 seconds, confirmed live 2026-08-22) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, header + transactions + color, capped at 16 per check; observed tip-set width stayed at 5-9 across dozens of live samples, and no per-IP rate limit is documented or was observed). Source for the API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22. Covenant and block-producer caveats: this site's own <code>CLAIMS.yml</code>.</p>
+    </div>
+  </details>
+
+  <p class="demo-footnote">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var POLL_MS = 9000;
+  var MAX_CARDS = 18;
+  var MAX_NEW_PER_CYCLE = 16;
+  var COINBASE_SUBNET = "0100000000000000000000000000000000000000";
+
+  var feedEl = document.getElementById("ln-feed");
+  var tipCountEl = document.getElementById("ln-tipCount");
+  var tipDotsEl = document.getElementById("ln-tipDots");
+  var sampleLineEl = document.getElementById("ln-sampleLine");
+  var statusLineEl = document.getElementById("ln-statusLine");
+  var failBanner = document.getElementById("ln-failBanner");
+  var pauseBtn = document.getElementById("ln-pauseBtn");
+  var sessionPctEl = document.getElementById("ln-sessionPct");
+  var payoffEl = document.getElementById("ln-payoff");
+
+  var seenHashes = {};
+  var cards = [];
+  var stats = { blocksSeen: 0, coinbaseOnly: 0 };
+  var paused = false;
+  var timer = null;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var prevBlockCount = null;
+  var prevPollAt = null;
+  var rateSamples = [];
+
+  function measuredBps() {
+    if (!rateSamples.length) return null;
+    var blocks = 0, seconds = 0;
+    rateSamples.forEach(function (s) { blocks += s.blocks; seconds += s.seconds; });
+    return seconds > 0 ? blocks / seconds : null;
+  }
+
+  function fetchWithTimeout(url, timeoutMs) {
+    var controller = new AbortController();
+    var t = setTimeout(function () { controller.abort(); }, timeoutMs || 6000);
+    return fetch(url, { cache: "no-store", signal: controller.signal }).finally(function () { clearTimeout(t); });
+  }
+
+  function hexToAscii(hex, maxBytes) {
+    if (!hex) return "";
+    var n = Math.min(hex.length, (maxBytes || 20) * 2);
+    var out = "";
+    for (var i = 0; i + 1 < n; i += 2) {
+      var code = parseInt(hex.substr(i, 2), 16);
+      if (isNaN(code)) return out;
+      out += String.fromCharCode(code);
+    }
+    return out;
+  }
+
+  function shortHash(h) { return h ? h.slice(0, 10) + "…" : ""; }
+  function shortAddr(a) {
+    if (!a) return "unknown";
+    var body = a.replace(/^kaspa:/, "");
+    return "kaspa:" + body.slice(0, 6) + "…" + body.slice(-4);
+  }
+
+  function classifyBlock(blockJson, hash) {
+    var header = blockJson.header || {};
+    var verbose = blockJson.verboseData || {};
+    var extra = blockJson.extra || {};
+    var txs = blockJson.transactions || [];
+    var spendTxs = txs.filter(function (t) { return t.subnetworkId !== COINBASE_SUBNET; });
+    var isEmpty = spendTxs.length === 0;
+
+    var hasCovenant = false;
+    var appTag = null;
+    txs.forEach(function (t) {
+      (t.outputs || []).forEach(function (o) {
+        if (o.covenant && o.covenant.covenantId) hasCovenant = true;
+      });
+      if (!appTag && t.payload) {
+        var ascii = hexToAscii(t.payload, 24);
+        var m = /^([a-zA-Z0-9_]{2,16}):/.exec(ascii);
+        if (m && ascii.indexOf("ciph_msg:") === 0) appTag = "ciph_msg";
+      }
+    });
+
+    return {
+      hash: hash,
+      timestamp: Number(header.timestamp) || Date.now(),
+      txCount: txs.length,
+      spendCount: spendTxs.length,
+      isEmpty: isEmpty,
+      minerAddress: extra.minerAddress || "",
+      minerInfo: extra.minerInfo || "",
+      color: verbose.color || extra.color || null,
+      hasCovenant: hasCovenant,
+      appTag: appTag
+    };
+  }
+
+  function relTime(ms) {
+    var s = Math.max(0, Math.round((Date.now() - ms) / 1000));
+    if (s < 5) return "just now";
+    if (s < 60) return s + "s ago";
+    return Math.round(s / 60) + "m ago";
+  }
+
+  function renderMeter(card) {
+    var filled = card.isEmpty ? 1 : Math.min(4, 1 + card.spendCount);
+    var out = "";
+    for (var i = 0; i < 4; i++) out += '<i class="' + (i < filled ? "filled" : "") + '"></i>';
+    return out;
+  }
+
+  function renderCard(card, isNew) {
+    var el = document.createElement("div");
+    el.className = "block-card" + (card.isEmpty ? " is-empty" : "") + (isNew && !reduceMotion ? " just-arrived" : "");
+    var contentWord = card.isEmpty
+      ? '<span class="content-word empty-word">Empty block</span>'
+      : '<span class="content-word has-tx">' + card.spendCount + ' real transfer' + (card.spendCount === 1 ? "" : "s") + '</span>';
+    var tags = "";
+    if (card.color === "red") tags += '<span class="tag red-block">red, not counted</span>';
+    if (card.hasCovenant) tags += '<span class="tag covenant">covenant</span>';
+    if (card.appTag) tags += '<span class="tag app">app: ' + card.appTag + '</span>';
+
+    el.innerHTML =
+      '<div class="meter" aria-hidden="true">' + renderMeter(card) + '</div>' +
+      '<div class="block-main">' +
+        '<div class="block-top">' + contentWord + '<span class="block-time">' + relTime(card.timestamp) + '</span></div>' +
+        '<div class="block-sub" data-clip-ok="true" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
+        (tags ? '<div class="tag-row">' + tags + '</div>' : "") +
+      '</div>';
+    return el;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderFeed() {
+    feedEl.innerHTML = "";
+    if (!cards.length) {
+      var p = document.createElement("p");
+      p.className = "feed-empty";
+      p.textContent = "Reading the first blocks…";
+      feedEl.appendChild(p);
+      return;
+    }
+    cards.forEach(function (c, i) { feedEl.appendChild(renderCard(c, i === 0 && c._fresh)); });
+  }
+
+  function updatePayoff() {
+    var pct = stats.blocksSeen ? Math.round((stats.coinbaseOnly / stats.blocksSeen) * 100) : null;
+    if (pct === null) return;
+    payoffEl.textContent = "Kaspa targets 10 new blocks every second. Of the " + stats.blocksSeen + " this page has actually watched arrive this session, " + pct + "% held nothing but the miner paying itself. That is what you are looking at.";
+  }
+
+  function updateSessionStat() {
+    if (!stats.blocksSeen) { sessionPctEl.textContent = "–"; return; }
+    var pct = Math.round((stats.coinbaseOnly / stats.blocksSeen) * 100);
+    sessionPctEl.textContent = pct + "%  (" + stats.blocksSeen + " seen)";
+    updatePayoff();
+  }
+
+  function setStatus(state, text) {
+    statusLineEl.textContent = text;
+    failBanner.classList.toggle("show", state === "error");
+  }
+
+  function renderTipDots(n) {
+    tipDotsEl.innerHTML = "";
+    var count = Math.min(n, 24);
+    for (var i = 0; i < count; i++) {
+      var d = document.createElement("span");
+      d.className = "tip-dot fresh";
+      tipDotsEl.appendChild(d);
+    }
+  }
+
+  function updateSampleLine(networkNew, fetchedCount) {
+    var bps = measuredBps();
+    var bpsText = bps ? bps.toFixed(1) : "–";
+    if (networkNew === null) {
+      sampleLineEl.innerHTML = "Measuring the network's real pace&hellip;";
+      return;
+    }
+    if (networkNew <= 0) {
+      sampleLineEl.innerHTML = "Same snapshot as last check: api.kaspa.org's own cache only turns over every 8&ndash;9 seconds.";
+      return;
+    }
+    sampleLineEl.innerHTML = "<strong>" + fetchedCount + " of ~" + networkNew + "</strong> blocks made since the last check are shown below. Kaspa runs about <strong>" + bpsText + "/sec</strong>, measured live: the gap is this page's limit, not the network.";
+  }
+
+  function tick() {
+    if (paused || document.hidden) return;
+    fetchWithTimeout("https://api.kaspa.org/info/blockdag", 6000)
+      .then(function (r) { if (!r.ok) throw new Error("bad status " + r.status); return r.json(); })
+      .then(function (dag) {
+        var tips = dag.tipHashes || [];
+        tipCountEl.textContent = tips.length;
+        renderTipDots(tips.length);
+        setStatus("ok", "Live, checking every 9 seconds. Last checked " + new Date().toLocaleTimeString());
+
+        var blockCount = Number(dag.blockCount);
+        var now = Date.now();
+        var networkNew = null;
+        if (prevBlockCount !== null && !isNaN(blockCount)) {
+          networkNew = blockCount - prevBlockCount;
+          var elapsedS = (now - prevPollAt) / 1000;
+          if (networkNew > 0 && elapsedS > 0.5) {
+            rateSamples.push({ blocks: networkNew, seconds: elapsedS });
+            if (rateSamples.length > 4) rateSamples.shift();
+          }
+        }
+        prevBlockCount = isNaN(blockCount) ? prevBlockCount : blockCount;
+        prevPollAt = now;
+
+        var fresh = tips.filter(function (h) { return !seenHashes[h]; }).slice(0, MAX_NEW_PER_CYCLE);
+        fresh.forEach(function (h) { seenHashes[h] = true; });
+        updateSampleLine(networkNew, fresh.length);
+        if (!fresh.length) return;
+
+        return Promise.all(fresh.map(function (h) {
+          return fetchWithTimeout("https://api.kaspa.org/blocks/" + h + "?includeTransactions=true&includeColor=true", 6000)
+            .then(function (r) { if (!r.ok) throw new Error("block fetch failed"); return r.json(); })
+            .then(function (blk) { return classifyBlock(blk, h); })
+            .catch(function () { return null; });
+        })).then(function (results) {
+          results.filter(Boolean).forEach(function (card) {
+            card._fresh = true;
+            cards.unshift(card);
+            stats.blocksSeen++;
+            if (card.isEmpty) stats.coinbaseOnly++;
+          });
+          if (cards.length > MAX_CARDS) cards.length = MAX_CARDS;
+          renderFeed();
+          updateSessionStat();
         });
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      })
+      .catch(function () {
+        setStatus("error", "Can't reach the public API right now. Retrying every 9 seconds.");
+      });
+  }
+
+  pauseBtn.addEventListener("click", function () {
+    paused = !paused;
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+    if (paused) {
+      setStatus("paused", "Paused. Showing the last blocks read.");
+    } else {
+      tick();
+    }
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && !paused) tick();
+  });
+
+  tick();
+  timer = setInterval(tick, POLL_MS);
+
+  window.addEventListener("pagehide", function () {
+    if (timer) clearInterval(timer);
+  });
+})();
+</script>
+
+      </details>
       <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
@@ -442,7 +2784,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -460,7 +2805,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -470,7 +2815,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

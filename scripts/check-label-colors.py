@@ -45,7 +45,13 @@ LABEL_RULE_RE = re.compile(
 DIRECT_COLOR_PROP_RE = re.compile(
     r"(?<!--status-color)\b(background(?:-color)?|(?<!border-)color|border(?:-color)?)\s*:",
 )
-RAW_STATUS_COLOR_RE = re.compile(r"--status-color\s*:\s*(?!var\()")
+# Capture the declared value and test it, rather than using a negative
+# lookahead after \s*. That form backtracks: \s* matches empty, the
+# lookahead then sees the leading space instead of "var(", and every
+# correctly written declaration reports a violation. That false positive
+# pushed at least one agent into writing "--status-color:var(...)" with no
+# space purely to appease the checker.
+RAW_STATUS_COLOR_RE = re.compile(r"--status-color\s*:\s*([^;}]+)")
 
 
 def find_html_files():
@@ -66,7 +72,12 @@ def scan_file(path):
         for rule_match in LABEL_RULE_RE.finditer(style_block):
             body = rule_match.group(1)
             selector = style_block[: rule_match.start()].rsplit("\n", 1)[-1].strip() or rule_match.group(0)[:60]
-            if RAW_STATUS_COLOR_RE.search(body):
+            raw_hits = [
+                m.group(1).strip()
+                for m in RAW_STATUS_COLOR_RE.finditer(body)
+                if not m.group(1).strip().startswith("var(")
+            ]
+            if raw_hits:
                 violations.append(
                     f"  --status-color set to a raw value instead of var(--token): {rule_match.group(0)[:120].strip()}"
                 )

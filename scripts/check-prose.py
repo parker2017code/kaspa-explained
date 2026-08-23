@@ -97,7 +97,7 @@ def _ignored(path):
 SKIP_FILES = {
     "PROSE_STANDARD.md", "COPY_STYLE.md", "AGENTS.md", "CLAUDE.md",
     "MAINTENANCE.md", "CONTENT_BRIEF.md", "README.md", "CLAIMS.yml",
-    "PLAN-REDESIGN.md", "PLAN-2026-08-22.md", "RESEARCH-2026-08-22.md",
+    "PLAN-REDESIGN.md", "PLAN-2026-08-22.md", "PLAN-DEMO-MERGE.md", "RESEARCH-2026-08-22.md",
     # Internal working documents: findings, decisions, and red-team reports.
     # Several quote the exact patterns they exist to report, so linting them
     # as reader-facing copy is circular and blocks commits over the wording
@@ -112,6 +112,27 @@ SKIP_FILES = {
 def visible_text(path):
     raw = open(path, encoding="utf-8", errors="ignore").read()
     if path.endswith(".html"):
+        raw = re.sub(r"<(script|style|code|pre)\b.*?</\1>", " ", raw, flags=re.S | re.I)
+        raw = re.sub(r"<head\b.*?</head>", " ", raw, flags=re.S | re.I)
+        raw = re.sub(r"<[^>]+>", " ", raw)
+        raw = html.unescape(raw)
+    return re.sub(r"[ \t]+", " ", raw)
+
+
+def strip_quoted(path):
+    # SITE_VOICE checks for the site's own first person. A <blockquote> is
+    # someone else's attributed words (a spec co-author, a forum post), always
+    # paired with a <cite>, and never the site talking about itself, so its
+    # text cannot trip this specific check. Added 2026-08-23 after inlining
+    # demos/supply-split.html's KCC-0020 GitHub quotes into kips.html flagged
+    # "My view is that..." (Sivan Helfer) and "I had one conceptual
+    # exception..." (Michael Sutton) as if the site had written them. Scoped
+    # narrowly to this one check; other bans (em dashes, etc.) still see
+    # blockquote text, since a banned pattern inside a real quote is still
+    # worth a human look.
+    raw = open(path, encoding="utf-8", errors="ignore").read()
+    if path.endswith(".html"):
+        raw = re.sub(r"<blockquote\b.*?</blockquote>", " ", raw, flags=re.S | re.I)
         raw = re.sub(r"<(script|style|code|pre)\b.*?</\1>", " ", raw, flags=re.S | re.I)
         raw = re.sub(r"<head\b.*?</head>", " ", raw, flags=re.S | re.I)
         raw = re.sub(r"<[^>]+>", " ", raw)
@@ -184,7 +205,7 @@ def analyse(path):
 
     banned = {}
     if not essay:
-        n = len(SITE_VOICE.findall(text))
+        n = len(SITE_VOICE.findall(strip_quoted(path)))
         if n:
             banned["site-voice-first-person"] = n
 

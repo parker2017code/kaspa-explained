@@ -66,8 +66,8 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
   <script defer src="live-kaspa.js?v=20260620-toccata-status"></script>
 </head>
 <body>
@@ -120,7 +120,7 @@
       </div>
       <div class="status-lane-grid grid-cards">
         <a href="/status"><span>Activation</span><strong>The activation record</strong><small>DAA score, block hash, and the release tag that shipped it.</small></a>
-        <a href="/toccata-explained"><span>Try next</span><strong>UTXO expressiveness</strong><small>What covenants let a transaction enforce on itself.</small></a>
+        <a href="/what-is-kaspa#covenants"><span>Try next</span><strong>UTXO expressiveness</strong><small>What covenants let a transaction enforce on itself.</small></a>
         <a href="/status#status-snapshot"><span>Status table</span><strong>Every feature, one status</strong><small>Live, targeted, roadmap, and research, in one table.</small></a>
         <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>The repos and commits every claim on this site traces to.</small></a>
       </div>
@@ -129,74 +129,17 @@
     <section id="demos" class="section" aria-labelledby="demos-title">
       <p class="eyebrow">Try it</p>
       <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
-      <div class="live-demo-frame">
-        <iframe id="collision-frame" src="/demos/collision-sim" title="Collision simulator: single chain vs blockDAG" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
+      <p class="lead">The collision simulator lives inline on the page it explains. <a href="/what-is-kaspa#collision-demo">Drive it on What is Kaspa</a>.</p>
       <div class="grid-cards site-related-grid">
-        <a href="/demos/confirmation-risk"><span>Watch</span><strong>Confirmation risk</strong><p>How long a payment needs before it's safe, as the attacker gets stronger.</p></a>
-        <a href="/demos/emission-schedule"><span>Play</span><strong>Emission schedule</strong><p>Scrub through time and watch the block reward shrink, never a cliff.</p></a>
-        <a href="/demos/mass-calculator"><span>Try</span><strong>Mass calculator</strong><p>Build a transaction and see which limit decides what fits in a block.</p></a>
+        <a href="/why-kaspa-matters#confirmation-risk-demo"><span>Watch</span><strong>Confirmation risk</strong><p>How long a payment needs before it's safe, as the attacker gets stronger.</p></a>
+        <a href="/kaspa-mining#emission-schedule"><span>Play</span><strong>Emission schedule</strong><p>Scrub through time and watch the block reward shrink, never a cliff.</p></a>
+        <a href="/what-is-kaspa#mass-calculator"><span>Try</span><strong>Mass calculator</strong><p>Build a transaction and see which limit decides what fits in a block.</p></a>
       </div>
       <div class="actions">
         <a class="button primary" href="/demos">All demos</a>
         <a class="button" href="/chain-comparer">Compare chains</a>
         <a class="button" href="/model-picker">Compare AI models</a>
       </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('collision-frame');
-        if (!frame) return;
-        frame.addEventListener('load', function () {
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            /* The demo hides its own chrome. It sets data-embedded on its
-               root element before first paint, and its stylesheet keys the
-               header, footer, and skip link off that. This page used to
-               reach in and hide a hardcoded selector list instead, which
-               broke silently the moment the demo's markup changed. */
-            var resize = function () {
-              /* body.scrollHeight excludes the body's own margins, which clipped
-                 the last 25px of the embedded demo. Take the largest honest
-                 measure and add the margins back. */
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-
-        // The toggle in the site header changes this page's own
-        // document.documentElement.dataset.theme, but that is a separate
-        // document from the one inside the iframe: nothing else pushes the
-        // new value across the boundary. Without this, clicking the header
-        // toggle while this demo is already loaded leaves it stranded in
-        // whatever theme it started in until the next full page load. A
-        // MutationObserver on the parent's own theme attribute is what
-        // actually fires on every toggle, regardless of which control
-        // changed it, so it mirrors the value into the iframe's document
-        // the moment it changes here.
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
     </section>
 
     <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
@@ -264,9 +207,9 @@
       <p class="eyebrow">Keep reading</p>
       <h2 id="related-links-title">Next pages</h2>
       <div class="site-related-grid">
-        <a href="/start-here"><span>Next</span><strong>Start with the problem</strong><p>New to this? Crypto from scratch first, then where Kaspa fits.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research, checked against mainnet.</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source, ranked by how much weight it gets.</p></a>
+        <a href="/start-here"><span>Next</span><strong>Start with the problem</strong><p>New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.</p></a>
+        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
+        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
       </div>
     </section>
 <!-- related-links:end -->
@@ -274,7 +217,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -292,7 +238,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -302,7 +248,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>

@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-01">
-  <link rel="stylesheet" href="styles.css?v=20260823-143714">
-  <script defer src="nav.js?v=20260823-143720"></script>
+  <link rel="stylesheet" href="styles.css?v=20260823-182826">
+  <script defer src="nav.js?v=20260823-182826"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -66,8 +66,8 @@
   <main id="top" tabindex="-1" class="knowledge-page">
     <section class="knowledge-hero section">
       <h1>Start with the problem</h1>
-      <p class="lead">Every crypto design answers one question: what breaks when you take away the single trusted operator?</p>
-      <blockquote>A bank holds your balance, checks each change, and cleans up the mess when something goes wrong. Take the bank out and that work does not vanish. Keys, agreement rules, rewards, and open markets are what grows back in its place, and each one arrives with a bill.</blockquote>
+      <p class="lead">Every crypto design answers one question: what breaks when you take away the trusted operator?</p>
+      <blockquote>Take the bank out and its work does not vanish. Keys, agreement rules, rewards, and open markets grow back in its place, and each one arrives with a bill.</blockquote>
       <details class="deep-dive">
         <summary>What "grows back" means, one line each</summary>
         <p>Keys stand in for a login: whoever holds the private key can move the balance, and nobody else can. Agreement rules replace the bank's internal ledger check: strangers running independent software still have to land on one shared history. Rewards replace payroll: something has to pay for the work of proposing and checking blocks. Open markets replace a teller window: getting a balance in or out means finding another party to trade with. No issuer stands behind it.</p>
@@ -77,7 +77,7 @@
     <section id="records" class="section">
       <p class="eyebrow">The starting problem</p>
       <h2>Why owning something digital is hard</h2>
-      <p>A banknote cannot sit in two pockets at once, so scarcity comes free with the paper. A file copies for nothing, so digital money has to build scarcity back out of rules. Most systems do that by naming an operator: a bank or an exchange that runs the database and can freeze, reverse, or gate what you hold. A public crypto network replaces that operator with rules any participant can check alone.</p>
+      <p>A banknote cannot sit in two pockets at once; a file copies for nothing. Digital money has to build scarcity back out of rules. Most systems do that by naming an operator, a bank or an exchange that can freeze, reverse, or gate what you hold. A public crypto network replaces that operator with rules any participant can check alone.</p>
       <details class="deep-dive">
         <summary>What each option actually trades away</summary>
         <p>A bank or payment app gives support, reversals, and fraud handling, and costs you account freezes, operating hours, and jurisdiction limits. An exchange gives fast internal balances and an easy sign-up, and costs you custody risk and withdrawal risk. A public network gives rules nobody can bend for you personally, and costs you more moving parts and mistakes nobody can undo.</p>
@@ -88,114 +88,22 @@
     <section id="keys" class="section">
       <p class="eyebrow">Proof without a login desk</p>
       <h2>Keys take over from the account</h2>
-      <p>No operator means no password reset, so math stands in for both. A private key is the secret that authorizes a spend; a signature proves the key holder approved this exact transaction, the job a username and password do elsewhere. A hash is a fingerprint for data: change one byte and it changes completely, which is how a block commits to the history behind it. A block batches signed transactions against that history, and a node takes the whole batch or none of it.</p>
-      <p>Getting there also takes agreement: thousands of independent computers see messages land in different orders and still have to settle on one shared history, ruling out theft, double-spends, and rewritten history along the way. Then it takes a cost, or fake history is free to fake. <a href="/why-kaspa-matters">How Kaspa compares</a> lays out Proof of Work against Proof of Stake choice by choice; Kaspa pays the Proof of Work bill.</p>
+      <p>No operator means no password reset, so math stands in for both. A private key authorizes a spend; a signature proves the key holder approved this exact transaction. A hash is a fingerprint for data, changing completely if one byte does, which is how a block commits to the history behind it and a node can take the whole batch or none of it.</p>
+      <p>Getting there also takes agreement: thousands of independent computers see messages land in different orders and still have to settle on one shared history, ruling out theft, double-spends, and rewrites. Then it takes a cost, or fake history is free to fake; Kaspa's is Proof of Work.</p>
       <p class="fit-note"><strong>Simple check:</strong> most tokens do not need to exist. Ask what this one does that BTC, ETH, USDC, or a plain database does not already do.</p>
     </section>
 
     <section id="state" class="section">
       <p class="eyebrow">Two ways to track state</p>
       <h2>Balances or notes</h2>
-      <div class="fit-grid grid-cards">
-        <article class="section">
-          <h3>Account model</h3>
-          <p>A balance table. Alice has 10, sends 3, and now Alice has 7 while Bob has 3. It reads well, and it is the default for smart-contract platforms, until two transactions touch the same balance at once and order starts to matter.</p>
-        </article>
-        <article class="section">
-          <h3>UTXO model</h3>
-          <p>Closer to cash notes than to a table. Alice spends a 10-coin output, Bob receives a 3-coin output, Alice receives a 7-coin change output, and the old 10-coin note is gone for good.</p>
-        </article>
-      </div>
-      <p>Kaspa uses the UTXO model, same as Bitcoin. That one choice shapes how a node checks a transaction, how much work can run side by side, and what shape later programmability can take. Spend the wallet below and watch a UTXO get consumed once, whole, and replaced by new outputs.</p>
-
-      <div class="live-demo-frame">
-        <iframe id="utxo-vs-accounts-frame" src="/demos/utxo-vs-accounts" title="Interactive comparison of the UTXO model and the account balance model" loading="lazy" scrolling="no" style="width:100%;border:0;display:block;height:600px;border-radius:14px;overflow:hidden;"></iframe>
-      </div>
-      <script>
-      (function () {
-        var frame = document.getElementById('utxo-vs-accounts-frame');
-        if (!frame) return;
-        var syncFrameTheme = function () {
-          try {
-            var doc = frame.contentDocument;
-            if (doc && doc.documentElement) {
-              doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
-            }
-          } catch (e) {}
-        };
-        frame.addEventListener('load', function () {
-          syncFrameTheme();
-          try {
-            var doc = frame.contentDocument;
-            if (!doc) return;
-            var resize = function () {
-              var cs = doc.defaultView.getComputedStyle(doc.body);
-              var margins = parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
-              frame.style.height = Math.ceil(Math.max(
-                doc.body.scrollHeight + margins,
-                doc.documentElement.scrollHeight,
-                doc.body.getBoundingClientRect().height + margins
-              )) + 'px';
-            };
-            resize();
-            window.addEventListener('resize', resize);
-            if (window.ResizeObserver) new ResizeObserver(resize).observe(doc.body);
-          } catch (e) {}
-        });
-        new MutationObserver(syncFrameTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['data-theme']
-        });
-      })();
-      </script>
+      <p>An account model is a balance table: Alice has 10, sends 3, Alice has 7. Kaspa uses the UTXO model instead, closer to cash notes: Alice spends a 10-coin note whole and gets a 7-coin note back as change. <a href="/utxo-vs-accounts">Spend a wallet on the UTXO-vs-accounts page</a> and watch a UTXO get consumed once and replaced by new outputs.</p>
     </section>
 
     <section id="kaspa" class="section">
       <p class="eyebrow">Where Kaspa enters</p>
       <h2>Keep the mining, fix the ordering</h2>
-      <p>Bitcoin-style chains pick one block path at a time and throw the rest away. That caps how fast blocks can arrive: two honest miners who solve a block seconds apart end up competing for only one slot. Kaspa's bet is that a mined UTXO network can keep both blocks, order them with <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-startpage">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-startpage" role="tooltip">The rule that ranks and orders every block a miner produces, kept ones included, instead of discarding all but one.</span></span>, and bring payments closer to real time without changing what the mining secures. <a href="/why-kaspa-matters">How Kaspa compares</a> works that through against Bitcoin, Ethereum, and Solana.</p>
-      <div class="overview-grid grid-cards">
-        <article>
-          <span>Live now</span>
-          <p>Mainnet runs Proof of Work, UTXOs, GHOSTDAG ordering, pruning-oriented nodes, the 10 BPS <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-startpage">Crescendo<span class="term-def__panel" id="crescendo-def-startpage" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span>-era network, and Toccata's covenant and proof-check primitives.</p>
-        </article>
-        <article>
-          <span>Needs its own receipts</span>
-          <p>A live protocol rule and a shipped product that uses it are separate events. Wallet, explorer, and SDK support for Toccata's new rules each carry a status of their own.</p>
-        </article>
-        <article>
-          <span>Not a Kaspa claim today</span>
-          <p>Native DeFi and vProgs are roadmap; DAGKnight and <span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-startpage">RTD<span class="term-def__panel" id="rtd-def-startpage" role="tooltip">Hashdag's framing: Bitcoin-style PoW security operating in real time.</span></span>-derived app systems are research. None of them is live.</p>
-        </article>
-        <article>
-          <span>The design case</span>
-          <p>Kaspa is testing whether Bitcoin-style mining can feel fast enough for daily use while the base layer sticks to ownership, ordering, and proofs.</p>
-        </article>
-      </div>
-      <p class="fit-note">BPS means blocks per second, not TPS. Each item above carries its own label on the <a href="/status">status page</a>; primary evidence is in <a href="/sources">sources</a>.</p>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow">Quick corrections</p>
-      <h2>Four things beginners get backwards</h2>
-      <div class="reference-grid grid-cards">
-        <article>
-          <h3>A low unit price usually just means more supply</h3>
-          <p>Market cap, float, and real demand carry more signal than the price of one unit.</p>
-        </article>
-        <article>
-          <h3>Speed splits into separate stages</h3>
-          <p>A network can be quick at inclusion and slow at settlement. Confirmation depth, throughput, and how a wallet feels are measured apart.</p>
-        </article>
-        <article>
-          <h3>Influence piles up in more than one place</h3>
-          <p>Mining is the obvious one. Nodes, exchanges, wallets, and RPC providers each form a choke point of their own.</p>
-        </article>
-        <article>
-          <h3>Crypto is several markets sharing one ticker list</h3>
-          <p>Stablecoins, meme coins, governance tokens, and mined money price on completely different things.</p>
-        </article>
-      </div>
+      <p>Bitcoin-style chains pick one block path and throw the rest away, so two honest miners who solve a block seconds apart compete for one slot. Kaspa keeps both blocks and orders them with <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-startpage">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-startpage" role="tooltip">The rule that ranks and orders every block a miner produces, kept ones included, instead of discarding all but one.</span></span> instead, live on mainnet at 10 blocks per second. DAGKnight, vProgs, and native DeFi are still research or roadmap. <a href="/why-kaspa-matters">How Kaspa compares</a> and the <a href="/status">status page</a> carry the sourcing.</p>
+      <p class="fit-note"><a href="/utxo-vs-accounts">Why parallel spends don't collide</a> puts the UTXO and account models side by side in two more demos.</p>
     </section>
 
     <section class="next-step section" aria-label="Suggested next step">
@@ -205,32 +113,22 @@
         <a href="/what-is-kaspa">
           <span>The mechanism</span>
           <strong>What is Kaspa?</strong>
-          <p>How parallel blocks get ordered, how deep to wait for a payment, and what the throughput numbers measure.</p>
+          <p>How blocks get ordered and what the throughput numbers measure.</p>
         </a>
         <a href="/status">
           <span>Live status</span>
           <strong>What is live right now.</strong>
-          <p>Mainnet work against testnet proofs, roadmap, research, and app claims outside base-layer scope.</p>
+          <p>Mainnet against roadmap, research, and app claims.</p>
         </a>
         <a href="/skeptical-case">
           <span>Risk</span>
           <strong>What could go wrong.</strong>
-          <p>What breaks first if this fails: node cost, the security budget, thin liquidity, mining concentration, and shaky tooling.</p>
+          <p>Node cost, security budget, mining concentration.</p>
         </a>
         <a href="/crypto-from-scratch">
           <span>Prices</span>
           <strong>Why crypto has prices.</strong>
-          <p>Price and value are different questions. Market cap, liquidity, and the security budget answer the second one.</p>
-        </a>
-        <a href="/why-kaspa-matters">
-          <span>Categories</span>
-          <strong>Why so many coins exist.</strong>
-          <p>Bitcoin-like money, smart-contract platforms, stablecoins, and meme coins are not one asset class.</p>
-        </a>
-        <a href="/why-kaspa-matters">
-          <span>Checklist</span>
-          <strong>Analyze any coin.</strong>
-          <p>Does the token need to exist? Who got supply first, who secures it, what can fail, and who benefits?</p>
+          <p>Price and value are different questions.</p>
         </a>
       </div>
       <a class="button primary" href="/what-is-kaspa">Read what Kaspa is</a>
@@ -250,7 +148,10 @@
 
   <footer class="footer">
     <div class="footer-grid">
+      <div class="footer-legal">
       <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
@@ -268,7 +169,7 @@
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/toccata-explained">Toccata explained</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>
@@ -278,7 +179,6 @@
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
-          <a href="/about">About</a>
         </div>
       </nav>
     </div>
