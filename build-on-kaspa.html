@@ -69,7 +69,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260822-readsize">
+  <link rel="stylesheet" href="styles.css?v=20260823-glasspass">
   <script defer src="nav.js?v=20260822-anchor-accordion-fix3"></script>
 </head>
 <body>
@@ -340,7 +340,13 @@ amount: "31112708372"</code></pre>
       <p class="lead">Nodes, wallets, pools, exchanges, explorers, indexers, and custom RPC or protobuf code all need work before Toccata. Anyone building on top of those does not.</p>
       <div class="summary-grid grid-cards" data-audience="specialist">
         <article><span>Nodes</span><p>Run Rusty Kaspa v2.0.1 or newer. The database upgrade only runs one direction, so a rollback means a full resync.</p></article>
-        <article><span>Fees</span><p>Direct RPC submission now runs on the standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>. That's a mempool policy number, not a consensus rule.</p></article>
+        <article><span>Fees</span><p>Direct RPC submission now runs on the standard-fee floor: <code>100 sompi * max(compute grams, 2 * transaction bytes)</code><span class="info-affordance" id="compute-grams-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="compute-grams-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What compute grams means</span>
+              </button>
+              <span class="info-affordance__panel" id="compute-grams-panel" role="tooltip">Compute grams price the script work a covenant runs on spend, on top of raw transaction bytes. A sompi is 1/100,000,000 of one KAS.</span>
+            </span>. That's a mempool policy number, not a consensus rule.</p></article>
         <article><span>APIs</span><p>New integrations need <code>storageMass</code>/<code>storage_mass</code>, transaction version <code>1</code>, input <code>computeBudget</code>, output <code>covenant</code>, and UTXO <code>covenant_id</code> wherever those fields apply.</p></article>
         <article><span>Indexers</span><p>No <code>getUtxosByCovenantId</code> RPC exists on mainnet or testnet-10. Every covenant project ships its own indexer; a concrete design has sat unanswered since August 4, 2026.</p></article>
         <article><span>Service providers</span><p>Test deposits, withdrawals, mining templates, and fee estimation against Testnet-10, then against mainnet. The two won't match on every edge case.</p></article>
@@ -418,5 +424,22 @@ amount: "31112708372"</code></pre>
       </nav>
     </div>
   </footer>
+  <script>
+  document.querySelectorAll('.info-affordance').forEach(function (el) {
+    var trigger = el.querySelector('.info-affordance__trigger');
+    trigger.addEventListener('click', function () {
+      var open = el.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('is-open');
+        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+  </script>
 </body>
 </html>

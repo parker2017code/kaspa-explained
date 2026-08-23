@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");document.documentElement.dataset.theme=(t==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
+<script>(function(){try{var t=localStorage.getItem("kaspa-explained-theme");var p=new URLSearchParams(location.search).get("theme");var i=(p==="light"||p==="dark")?p:t;document.documentElement.dataset.theme=(i==="light")?"light":"dark";}catch(e){document.documentElement.dataset.theme="dark";}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collision Simulator, Chain vs BlockDAG</title>
@@ -654,11 +654,17 @@
 })();
 
 // theme: data-theme attribute + localStorage, matching design/page-template.html
+// A ?theme=light|dark URL param wins over the stored value on load, the same
+// precedence nav.js uses on pages that carry the shared nav. This lets a
+// shared link land in the theme it was shared in rather than whatever this
+// browser last saved.
 (function () {
   var key = "kaspa-explained-theme";
   var saved = null;
   try { saved = localStorage.getItem(key); } catch (e) {}
-  document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  var themeParam = new URLSearchParams(window.location.search).get("theme");
+  var initial = (themeParam === "light" || themeParam === "dark") ? themeParam : saved;
+  document.documentElement.dataset.theme = initial === "light" ? "light" : "dark";
   var btn = document.getElementById("theme-toggle");
   // This page is embedded live on the homepage inside an iframe. That iframe
   // shares the parent's origin and its own document reads the same
@@ -669,10 +675,14 @@
   // reads that clobbered value and silently lands in the wrong theme. The
   // toggle only belongs to a reader who opened this page directly; hide it
   // when framed so the embedded preview can only ever follow the site's
-  // theme, never fork it.
+  // theme, never fork it. The same risk applies to a ?theme= link: only
+  // persist it to the shared key when this page is not framed.
   if (window.self !== window.top) {
     if (btn) btn.hidden = true;
     return;
+  }
+  if (themeParam === "light" || themeParam === "dark") {
+    try { localStorage.setItem(key, themeParam); } catch (e) {}
   }
   function sync() {
     btn.textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
