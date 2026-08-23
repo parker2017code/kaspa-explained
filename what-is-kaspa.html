@@ -164,10 +164,8 @@
         <summary>Why honest and hidden miners produce different anticones</summary>
         <p>Within a propagation delay, everyone else sees an honest miner's block and starts referencing it, so its anticone stays small by construction. Nobody can reference blocks they were never shown, so a hidden miner's withheld blocks surface later carrying wide anticones.</p>
       </details>
-      <p>The security parameter k caps how many blue blocks may sit in any blue block's anticone, and its value is derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin.</p>
-      <p>The first spend of a coin wins, any conflicting spend later in the sequence is rejected, and that is how a graph with no single newest block still produces exactly one payment history. Every node runs the identical procedure over the identical graph, so they all derive the identical order without voting, messaging, or a committee.</p>
-      <p>Blue work is also the tiebreak between competing histories: Bitcoin compares chains by accumulated work, Kaspa compares them by accumulated work in the blue set, and an attacker whose blocks are colored red is spending real electricity that buys no weight in that comparison.</p>
-      <p>Losing blocks stop being waste, so the block rate can rise without the orphan rate eating the security budget.</p>
+      <p>The security parameter k caps how many blue blocks may sit in any blue block's anticone, derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin. The first spend of a coin wins; every node runs the identical procedure over the identical graph and derives the identical order with no voting, messaging, or committee.</p>
+      <p>Blue work is the tiebreak between competing histories: Bitcoin compares chains by accumulated work, Kaspa compares them by accumulated work in the blue set, and an attacker whose blocks are colored red is spending real electricity that buys no weight there. Losing blocks stop being waste, so the block rate can rise without the orphan rate eating the security budget.</p>
     </section>
 
     <section id="finality" class="section">
@@ -180,12 +178,13 @@
         <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
         <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
-      <p>On a single chain a confirmation is easy to picture: one more block stacked on the block holding your payment. Kaspa has no single stack. Your block sits in a graph, and what piles up on it is blue work, the proof-of-work carried by every later blue block whose history includes yours.</p>
-      <p>Undoing the payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count.</p>
-      <p>At 10 BPS those references arrive quickly, which is why Kaspa's risk curve drops steeply in the first seconds. Steeply is not vertically. The <a href="/demos/confirmation-risk">confirmation risk</a> demo shows reversal odds fall as blue work stacks up.</p>
-      <p class="fit-note"><a href="/glossary#finality-depth">Finality depth</a> answers a different question: how far back the protocol will let anyone rewrite. It is a consensus parameter, it sits far deeper than any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
-      <p>Kaspa publishes no universal confirmation count, and a single number would be the wrong shape of answer. Three things move the honest one. The value at stake sets how much an attacker stands to gain. Current hash rate and its spread set what competing work would cost to produce.</p>
-      <p>Whether the payment can be undone outside the protocol counts too, because a shipping hold or a customer relationship tolerates a thinner wait than handing over a good nobody can claw back. Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
+      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. The <a href="/demos/confirmation-risk">confirmation risk</a> demo shows the curve.</p>
+      <details class="deep-dive">
+        <summary>What actually sets a safe wait, and how finality depth differs</summary>
+        <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
+        <p>Three things set the honest wait: the value at stake, current hash rate and its spread, and whether the payment can be undone outside the protocol (a shipping hold tolerates a thinner wait than handing over a good nobody can claw back). Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
+        <p><a href="/glossary#finality-depth">Finality depth</a> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
+      </details>
     </section>
 
     <section id="throughput" class="section">
@@ -253,7 +252,7 @@
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage and Rusty Kaspa is the code that runs it, including the current value of k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> collects the term-by-term references for anticone, mergeset, and blue work.</p>
+      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work.</p>
       <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
