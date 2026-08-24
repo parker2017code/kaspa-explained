@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260824-201424">
-  <script defer src="nav.js?v=20260824-201424"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-212456">
+  <script defer src="nav.js?v=20260824-212456"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -323,7 +323,7 @@
               <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">31</output></div>
               <p id="par-fixed-over" class="over-badge" hidden></p>
               <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>wait before a payment confirms</span><output id="par-fixed-time-out">12.4 s</output></div>
+              <div class="gauge-row"><span>wait before it confirms</span><output id="par-fixed-time-out">12.4 s</output></div>
               <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
             </div>
             <div class="side" id="par-side-adaptive">
@@ -333,7 +333,7 @@
               <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:44%; background:var(--green);"></div></div>
               <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">moderate</output></div>
               <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>wait before a payment confirms</span><output id="par-adapt-time-out">5.5 s</output></div>
+              <div class="gauge-row"><span>wait before it confirms</span><output id="par-adapt-time-out">5.5 s</output></div>
               <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
             </div>
           </div>
@@ -668,15 +668,17 @@
             var L = parseFloat(lSlider.value);
 
             var beyondTable = BPS > BPS_TABLE_MAX;
-            var tableBps = Math.min(BPS, BPS_TABLE_MAX);
-            var configuredK = ghostdagK(2 * D * tableBps, DELTA);
+            // Past 32 bps rusty-kaspa has no table entry, but the formula behind
+            // the table runs at any rate. Compute it rather than freeze, so the
+            // reader sees what extending GHOSTDAG would actually cost.
+            var configuredK = ghostdagK(2 * D * BPS, DELTA);
             var requiredK = ghostdagK(2 * L * BPS, DELTA);
 
             bpsOut.textContent = BPS + " block" + (BPS === 1 ? "" : "s") + "/sec" +
               (BPS === 10 ? " (Kaspa mainnet's Crescendo-era rate)" : "") +
               (beyondTable ? ", past GHOSTDAG's 32 bps table" : "");
             dOut.textContent = "D = " + D.toFixed(1) + " s → configured margin (k) = " + configuredK +
-              (beyondTable ? " (frozen, bps=32)" : "");
+              (beyondTable ? " (computed, past the shipped table)" : "");
             lOut.textContent = L.toFixed(1) + " s (margin (k) this actually needs: " + requiredK + ")";
 
             fixedKOut.textContent = configuredK;
@@ -689,12 +691,12 @@
 
             if (beyondTable){
               fixedTableEnd.hidden = false;
-              fixedTableEnd.textContent = "No k past 32 bps: the table stops there. Frozen at bps=32's value.";
+              fixedTableEnd.textContent = "Past the shipped table. This k comes from the same formula, and picking it on mainnet means a hard fork.";
             } else {
               fixedTableEnd.hidden = true;
             }
 
-            if (over && !beyondTable){
+            if (over){
               var factor = (requiredK / configuredK);
               fixedOver.hidden = false;
               fixedOver.textContent = factor.toFixed(1) + "× over margin";
@@ -709,16 +711,12 @@
               return sample > configuredK ? "over" : "ok";
             });
 
-            if (beyondTable){
-              fixedTimeOut.textContent = "–";
-            } else {
-              var fixedTime = configuredK / BPS;
-              fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
-            }
+            var fixedTime = configuredK / BPS;
+            fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
 
             if (beyondTable){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Undefined past 32 bps: the table stops there. Running here needs a new k, hard-forked in, the exact a-priori choice DAGKnight removes.";
+              fixedVerdict.textContent = "Past the shipped table: k=" + configuredK + " is what the formula gives, but running it means hard-forking that constant in ahead of time, the a-priori choice DAGKnight removes.";
             } else if (over){
               fixedVerdict.className = "verdict unsafe";
               fixedVerdict.textContent = "Cap exceeded: needs k=" + requiredK + ", fixed at " + configuredK + ".";
@@ -748,7 +746,7 @@
             }
 
             var live = document.getElementById("par-live-region");
-            live.textContent = beyondTable ? "The fixed-margin side has no defined value past 32 blocks per second." :
+            live.textContent = beyondTable ? "Past the shipped table: the fixed margin is computed from the formula, not read from rusty-kaspa." :
               (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
 
             renderRegimes(BPS, L);
