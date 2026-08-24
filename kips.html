@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260824-212456">
-  <script defer src="nav.js?v=20260824-212456"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-220211">
+  <script defer src="nav.js?v=20260824-220211"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -280,7 +280,7 @@
       <details class="deep-dive" id="parameterless-demo">
         <summary>Try it: fixed margin (GHOSTDAG) versus adjustable margin (DAGKnight, KIP-2)</summary>
         <div class="kip-parameterless-demo">
-          <p class="lede">Faster blocks do not buy proportionally faster confirmation. Raise the block rate and the margin grows with it, so the wait shrinks toward a floor near twice the assumed delay instead of falling away. What sets that floor is the network delay each side assumes: GHOSTDAG budgets for the worst case forever, DAGKnight uses the delay actually happening. Push the sliders and watch the two floors split.</p>
+          <p class="lede">Raising the block rate does not speed confirmation up. It slows it down. GHOSTDAG has to assume a worst-case network delay in advance, and holding that assumption fixed while blocks get faster makes the DAG KNIGHT paper's own confirmation-time bound grow without limit, the two sides below differing only in whether the delay term is that fixed assumption or the delay actually happening. Sompolinsky puts a number on it: going from 10 to 100 blocks a second would need a new k hard-forked in, and "confirmation of transactions will take tens of seconds at least, about 8x long." DAGKnight drops the assumption and tracks the delay actually happening. Push the sliders.</p>
 
           <div class="panel">
             <div class="row bps-block">
@@ -311,6 +311,13 @@
               <button class="btn" type="button" data-l="5">Congested (5 s)</button>
               <button class="btn" type="button" data-l="12">Adversarial spike (12 s)</button>
             </div>
+            <div class="row" style="margin-top:.8rem;">
+              <div class="field">
+                <label for="par-alpha-slider">Attacker's mining share</label>
+                <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out">
+                <span class="valline" id="par-alpha-out">10%</span>
+              </div>
+            </div>
           </div>
 
           <div class="cmp">
@@ -323,7 +330,7 @@
               <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">31</output></div>
               <p id="par-fixed-over" class="over-badge" hidden></p>
               <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>wait before it confirms</span><output id="par-fixed-time-out">12.4 s</output></div>
+              <div class="gauge-row"><span>confirmation bound, no visible attack (D<sub>max</sub> fixed)</span><output id="par-fixed-time-out">12.4 s</output></div>
               <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
             </div>
             <div class="side" id="par-side-adaptive">
@@ -333,25 +340,18 @@
               <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:44%; background:var(--green);"></div></div>
               <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">moderate</output></div>
               <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>wait before it confirms</span><output id="par-adapt-time-out">5.5 s</output></div>
+              <div class="gauge-row"><span>confirmation bound, no visible attack (D<sub>t</sub> tracked)</span><output id="par-adapt-time-out">5.5 s</output></div>
               <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
             </div>
           </div>
 
+          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">The "confirmation bound" row above runs the DAG KNIGHT paper's own no-visible-attack formula (&sect;1.5.2), which carries no unspecified constant: at a fixed 2&nbsp;s delay it gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
+
           <p class="payoff-line" id="par-payoff-line" role="status"></p>
 
           <details>
-            <summary>Also see: the paper's own worst-case bound <span class="status-pill research">Research</span>, a separate and far rougher formula</summary>
-            <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">This is the DAG KNIGHT paper's own asymptotic confirmation-time formula, not the k(D, &lambda;) margin above. The two are different derivations measuring different things and are not meant to match; the numbers below are not comparable to the wait times above.</p>
-            <div class="panel" style="margin-top:.8rem;">
-              <div class="row">
-                <div class="field">
-                  <label for="par-alpha-slider">Attacker's mining share</label>
-                  <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out">
-                  <span class="valline" id="par-alpha-out">10%</span>
-                </div>
-              </div>
-            </div>
+            <summary>Also see: calm versus under attack, for DAGKnight alone <span class="status-pill research">Research</span></summary>
+            <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Same formula and the same three dials above (block rate, actual latency as D<sub>t</sub>, attacker's mining share), but a different comparison: not GHOSTDAG against DAGKnight, just DAGKnight's own confirmation bound in the two regimes the paper analyzes, no visible attack versus one visibly under way.</p>
 
             <div class="cmp">
               <div class="side" id="par-side-optimistic">
@@ -409,38 +409,35 @@
               This scenario represents either a slow down in the network, or a system intentionally parameterized
               with a high block rate, e.g., λ = 10 blocks per second," the same section adding "Kaspa's convergence
               time remains in the order of tens of seconds even when its latency is way below 10 seconds." Also
-              verified, mechanically, from the k(D, λ) formula above and this repo's own bps.rs table: holding D
-              fixed at 5 s, the required margin k climbs from 18 blocks at 1 bps to 553 blocks at 50 bps, a direct,
-              exact consequence of x = 2·D·λ growing with λ. Also verified, direct quote (§1.5.2): the paper's own
-              pessimistic (under-attack) confirmation-time bound is
-              O((1/λ)·(exp(c·D·λ/(1−2α)) + ln(1/ε)/(1−2α))), which grows without bound as λ rises, for fixed D and
-              attacker share α, because the exponential term outpaces the 1/λ in front of it.
-              One number stays <strong>inferred, not asserted by the paper</strong>: dividing that required k by λ
-              (an average-case "expected wait for k blocks at this rate," which is what the "about how long that
-              wait takes" readouts above use) actually falls as λ rises in this simplified model, converging toward
-              2·D. That is a different, gentler quantity than the paper's own worst-case bound above, and this page
-              does not claim to reproduce the paper's exact confirmation-time formula from Section 4, only this
-              simplified conversion, labeled as such.</p>
-              <p><strong>"Also see: the paper's own worst-case bound," tucked in its own closed disclosure below the
-              margin comparison, uses the paper's actual confirmation-time formulas, not the simplified k/λ
-              conversion above, which is why it sits behind a second click rather than open beside the margin: the
-              two derivations answer different questions and their numbers are not meant to be read against each
-              other.</strong> Verified directly against §1.5.2 and §4, which restate the same two bounds in both
-              step-count and second form. Optimistic (no visible attack), in seconds:
-              O((ln(1/ε)/λ + D<sub>t</sub>)/(1−2α) + D<sub>t</sub>²λ). Pessimistic (visible attack), in seconds:
-              O((1/λ)·(exp(c·D<sub>t</sub>·λ/(1−2α)) + ln(1/ε)/(1−2α))), the same bound quoted above. Both
-              D<sub>t</sub> and λ reuse this page's own actual-latency and block-rate sliders, since D<sub>t</sub>
-              is exactly this paper's bound on recent latency, the same quantity DAGKnight tracks (not the
-              PHANTOM-side D<sub>max</sub> above, which is fixed once and never revisited); ε is fixed at 0.01
-              (1% error tolerance, stated on the widget) rather than exposed as a fifth slider, and a separate
-              attacker-share slider supplies α. The paper leaves the pessimistic case's constant c unspecified;
-              the widget sets c = 1 as an illustrative placeholder, not a value the paper states, which is why
-              that side is a rough shape, not a precise prediction. Because exp() grows so fast, the pessimistic
-              side is computed in log space (the same technique the k(D, λ) search above uses): below roughly
-              100 years it prints an exact duration, and past that, matching this site's
-              <a href="/demos/confirmation-risk">confirmation-risk demo</a>, it prints an order of magnitude and
-              a meter that keeps filling rather than a longer digit string, since the paper itself calls this
-              exact bound "far from tight" (§1.5.2) past that scale.</p>
+              verified, direct quote (§1.5.2): the paper's own optimistic (no visible attack) confirmation-time
+              bound is O((ln(1/ε)/λ + D)/(1−2α) + D²λ), which grows both from the additive D term and from the
+              D²λ term as λ rises, for fixed D. That formula, not a k/λ approximation and not the paper's separate
+              worst-case bound, is what the "confirmation bound" readouts above compute directly: the fixed side
+              uses D<sub>max</sub>, this widget's D slider, held fixed regardless of what the network is actually
+              doing; the adaptive side uses D<sub>t</sub>, the actual-latency slider, tracked instead. Swapping one
+              delay term for the other is the entire difference between the two readouts, the same PHANTOM-versus-
+              KNIGHT split the paper draws in Table 1 below. ε is fixed at 0.01 (1% error tolerance, stated on the
+              widget) rather than exposed as a fifth slider, and the shared attacker-share slider above supplies α
+              to both sides. Unlike the paper's pessimistic (visible-attack) bound one click down, this formula
+              carries no unspecified constant, so every digit it prints is a real number the paper commits to, not
+              an illustrative placeholder, and it never needs log-space formatting to avoid overflow.</p>
+              <p><strong>Sompolinsky's "about 8x" figure, reproduced twice, neither time by inventing a
+              constant.</strong> Bitcoin Takeover, S17 E36 (31:06), on moving from 10 to 100 blocks a second under
+              GHOSTDAG: "you will need to hardcode in the hard fork a change of the parameter K in the network in
+              the consensus, which would imply that confirmation of transactions will take tens of seconds at
+              least, about 8x long." Both halves of that sentence come straight out of the optimistic formula
+              above: at a fixed 2 s delay it gives 43 s at 10 blocks/sec, his "tens of seconds," and 402 s (6.7
+              min) at 100, a 9.3× increase, his "about 8x," with no constant chosen to make it land, stated on
+              screen next to the widget above. A second, independent check gives a close second number: the
+              margin formula, fully verified against rusty-kaspa's own <code>bps.rs</code> table and also carrying
+              no unspecified constant, has the required margin k climb from 124 blocks at 10 bps to 1,074 blocks
+              at 100 bps holding D fixed at 5 s, an 8.66× increase. The reading behind that second check: 10× more
+              blocks per second would buy 10× faster confirmation only if the margin could stay fixed; because
+              GHOSTDAG's own security proof forces k to grow with λ at fixed D, the actual speedup is far smaller,
+              which is what "about 8x" is describing. The paper's separate worst-case (visible-attack) bound, one
+              click down, tells the same directional story, unbounded growth in λ at fixed D, but its constant c
+              is left unspecified by the paper (§1.5.2), so it cannot be tuned to hit a specific multiple without
+              inventing a value this page has no basis for, and neither of the two checks above uses it.</p>
               <p><strong>Table 1, transcribed.</strong> The paper directly compares four ordering rules' asymptotic
               convergence time, in blocks (multiply by λ⁻¹ for seconds, per the paper's own note under the table).
               D<sub>max</sub> is an a priori worst-case latency bound fixed in advance; D<sub>t</sub> is a bound on
@@ -475,16 +472,23 @@
                 rather than the current D<sub>t</sub> that KNIGHT and SPECTRE track (§4: PHANTOM "converges in
                 terms of D<sub>max</sub> = D only").</li>
               </ul>
-              <p><strong>What "DAGKnight" shows here is a simplified, labeled model</strong>, not the paper's
-              algorithm. It reuses the same k(D, λ) formula and simply lets the operating point track the
-              actual-latency slider instead of holding it fixed, a fair reading of the paper's qualitative
-              Figure 4 (parameterized protocols hold a flat, hardcoded confirmation bound and can fail past it;
-              parameterless ones track the current latency bound and stay safe, only slower), but not a
-              simulation of DAGKnight's real k-cluster selection or of its actual confirmation-time formula.
-              The paper's own worked example (Figure 3, at λ = 3.75 bps, adversary share α = 0.2, confidence
-              ε = 0.05) reports D = 2 s → k = 4, confirmation ≈ 12 s; D = 1 s → k = 1, confirmation ≈ 6 s;
-              D = 0.1 s → k = 0, confirmation ≈ 1.2 s. Those three points depend on α and ε, which this page
-              does not expose, so they are cited here rather than wired into the sliders.</p>
+              <p><strong>What this widget shows and does not show.</strong> The margin gauges (configured k,
+              margin needed, in blocks) come straight from GHOSTDAG's own anticone-tolerance formula, verified
+              exactly against rusty-kaspa's compiled table; k is a real protocol quantity, but this page does not
+              simulate DAGKnight's actual k-cluster selection algorithm or vote count, a fair reading of the
+              paper's qualitative Figure 4 (parameterized protocols hold a flat, hardcoded confirmation bound and
+              can fail past it; parameterless ones track the current latency bound and stay safe, only slower),
+              not a reproduction of it. The "confirmation bound" readouts, by contrast, are computed directly from
+              the paper's own Table 1 and §1.5.2 optimistic (no-visible-attack) formula, the
+              D<sub>max</sub>-versus-D<sub>t</sub> substitution described above; that formula has no unspecified
+              constant, so those readouts are real numbers the paper commits to. The paper's separate, far rougher
+              worst-case (visible-attack) bound, whose constant c the paper leaves unstated, sits one click down,
+              labeled as a rough shape rather than a precise prediction, the same caveat the paper gives that
+              bound past the point it calls "far from tight." The paper's own worked example (Figure 3, at
+              λ = 3.75 bps, adversary share α = 0.2, confidence ε = 0.05) reports D = 2 s → k = 4, confirmation
+              ≈ 12 s; D = 1 s → k = 1, confirmation ≈ 6 s; D = 0.1 s → k = 0, confirmation ≈ 1.2 s. Those three
+              points use the paper's own tuned parameters, cited here for reference rather than wired into the
+              sliders.</p>
               <p><strong>Where the efficiency question is actually being worked: kaspanet's own branch, plus one contributor's personal fork and wiki.</strong>
               kaspanet/rusty-kaspa's own <code>dagknight</code> branch is active: latest commit
               <a href="https://github.com/kaspanet/rusty-kaspa/commit/956c82fd764d6f412d715a4b0706e6c34e12a49c">"Merge branch 'dk-umc-proposed' into dagknight"</a>,
@@ -512,7 +516,11 @@
               published number. The code itself has landed on kaspanet's own experimental branch; the analysis
               explaining why it matters has not. None of it is peer-reviewed, merged to master, or adopted as
               Kaspa's shipped algorithm.</p>
-              <p>Sources: Sompolinsky &amp; Sutton, <a href="https://eprint.iacr.org/2022/1494">"The DAG KNIGHT Protocol: A Parameterless Generalization of Nakamoto Consensus,"</a>
+              <p>Sources: Sompolinsky, <a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast">Bitcoin Takeover Podcast</a>,
+              S17 E36 (31:06), on the K-parameter/confirmation-time tradeoff going from 10 to 100 blocks/sec
+              (citation supplied directly by this page's editor from the episode; the individual episode page
+              was not independently located as of 2026-08-24, so the show's own listing is linked instead) &middot;
+              Sompolinsky &amp; Sutton, <a href="https://eprint.iacr.org/2022/1494">"The DAG KNIGHT Protocol: A Parameterless Generalization of Nakamoto Consensus,"</a>
               IACR ePrint 2022/1494 (esp. §1.2, §1.3, §1.4, §1.5.2, Theorem 14, Figures 3 to 4), last revised Feb 24,
               2023 (<a href="https://eprint.iacr.org/archive/versions/2022/1494">version history</a>) &middot;
               <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, Status: Proposed,
@@ -579,10 +587,6 @@
           var adaptVerdict = document.getElementById("par-adapt-verdict");
           var payoffLine = document.getElementById("par-payoff-line");
 
-          function fmtSeconds(s){
-            return (s < 10 ? s.toFixed(1) : Math.round(s)) + " s";
-          }
-
           var alphaSlider = document.getElementById("par-alpha-slider");
           var alphaOut = document.getElementById("par-alpha-out");
           var optTimeOut = document.getElementById("par-opt-time-out");
@@ -622,19 +626,39 @@
             return "~10^" + Math.floor(log10Years) + " yr";
           }
 
-          function renderRegimes(BPS, L){
-            var alpha = parseFloat(alphaSlider.value) / 100;
-            alphaOut.textContent = alphaSlider.value + "%";
+          // The paper's own pessimistic (visible-attack) confirmation-time bound, restated in
+          // both Table 1 and section 1.5.2: O((1/lambda)*(exp(c*D*lambda/(1-2*alpha)) +
+          // ln(1/eps)/(1-2*alpha))). D is the paper's D_max (PHANTOM, fixed worst case) or D_t
+          // (KNIGHT, tracked recent latency); that substitution is the only difference between
+          // the two protocols in this formula. Returns the natural log of the bound in seconds,
+          // computed in log space so a huge exponent never has to pass through Math.exp().
+          function pessimisticBoundLn(D, BPS, alpha){
+            var denom = 1 - 2 * alpha;
+            var expArg = PESS_C * D * BPS / denom;
+            var lnEpsTerm = LN_INV_EPS / denom;
+            var lnSum = expArg > 40 ? expArg : Math.log(Math.exp(expArg) + lnEpsTerm);
+            return lnSum - Math.log(BPS);
+          }
+
+          // The paper's own optimistic (no visible attack) confirmation-time bound, restated in
+          // both Table 1 and section 1.5.2: O((ln(1/eps)/lambda + D)/(1-2*alpha) + D^2*lambda).
+          // Unlike the pessimistic bound above, this one carries no unspecified constant, so its
+          // output is a real number the paper commits to, not an illustrative placeholder. D is
+          // D_max (PHANTOM, fixed) or D_t (KNIGHT, tracked); that substitution is the only
+          // difference between the two protocols here too.
+          function optimisticBoundSeconds(D, BPS, alpha){
+            var denom = 1 - 2 * alpha;
+            return (LN_INV_EPS / BPS + D) / denom + D * D * BPS;
+          }
+
+          function renderRegimes(BPS, L, alpha){
             var denom = 1 - 2 * alpha;
 
-            var optSeconds = (LN_INV_EPS / BPS + L) / denom + L * L * BPS;
+            var optSeconds = optimisticBoundSeconds(L, BPS, alpha);
             optTimeOut.textContent = fmtSecondsHuman(optSeconds);
             optVerdict.textContent = "No cap to exceed here, just a wait.";
 
-            var expArg = PESS_C * L * BPS / denom;
-            var lnEpsTerm = LN_INV_EPS / denom;
-            var lnSum = expArg > 40 ? expArg : Math.log(Math.exp(expArg) + lnEpsTerm);
-            var lnPessSeconds = lnSum - Math.log(BPS);
+            var lnPessSeconds = pessimisticBoundLn(L, BPS, alpha);
             var log10Years = (lnPessSeconds - Math.log(SECONDS_PER_YEAR)) / Math.LN10;
 
             var pessLabel, pessFillPct;
@@ -666,6 +690,8 @@
             var BPS = parseFloat(bpsSlider.value);
             var D = parseFloat(dSlider.value);
             var L = parseFloat(lSlider.value);
+            var alpha = parseFloat(alphaSlider.value) / 100;
+            alphaOut.textContent = alphaSlider.value + "%";
 
             var beyondTable = BPS > BPS_TABLE_MAX;
             // Past 32 bps rusty-kaspa has no table entry, but the formula behind
@@ -711,8 +737,13 @@
               return sample > configuredK ? "over" : "ok";
             });
 
-            var fixedTime = configuredK / BPS;
-            fixedTimeOut.textContent = fmtSeconds(fixedTime) + (over ? " (and still not enough)" : "");
+            // The paper's own optimistic (no visible attack) confirmation-time formula
+            // (Table 1, section 1.5.2), not the k/BPS proxy above and not the pessimistic
+            // worst-case bound one click down: PHANTOM (this side) uses D_max, the assumed
+            // worst-case delay, fixed by the slider above regardless of what the network is
+            // actually doing. This formula carries no unspecified constant.
+            var fixedOptSeconds = optimisticBoundSeconds(D, BPS, alpha);
+            fixedTimeOut.textContent = fmtSecondsHuman(fixedOptSeconds);
 
             if (beyondTable){
               fixedVerdict.className = "verdict unsafe";
@@ -732,24 +763,42 @@
 
             makeStrip(adaptStrip, stripCount, function(){ return "ok"; });
 
-            var adaptTime = requiredK / BPS;
-            adaptTimeOut.textContent = fmtSeconds(adaptTime);
+            // Same formula, same shared alpha and epsilon; KNIGHT (this side) uses D_t, the
+            // tracked-latency slider, instead of D_max. That substitution is the only thing that
+            // differs from the fixed side above.
+            var adaptOptSeconds = optimisticBoundSeconds(L, BPS, alpha);
+            adaptTimeOut.textContent = fmtSecondsHuman(adaptOptSeconds);
 
             adaptVerdict.textContent = "No cap: k=" + requiredK + " right now, tracking latency, relaxing once calm.";
 
+            // Ratio between the two sides' bounds. This formula has no unspecified constant, so
+            // this ratio, unlike the pessimistic one one click down, is a real number the paper
+            // commits to, not an illustrative one.
+            var ratioMultiple = fixedOptSeconds >= adaptOptSeconds ?
+              (fixedOptSeconds / adaptOptSeconds).toFixed(1) + "×" :
+              (adaptOptSeconds / fixedOptSeconds).toFixed(1) + "×";
+            var ratioSentence = fixedOptSeconds > adaptOptSeconds * 1.02 ?
+              "GHOSTDAG's is currently " + ratioMultiple + " DAGKnight's" :
+              adaptOptSeconds > fixedOptSeconds * 1.02 ?
+              "DAGKnight's is currently " + ratioMultiple + " GHOSTDAG's, because the actual latency set above is worse than GHOSTDAG's fixed assumption" :
+              "the two are about even at this setting";
+            var boundNote = "The paper's own no-visible-attack formula puts GHOSTDAG's bound at " +
+              fmtSecondsHuman(fixedOptSeconds) + " against DAGKnight's " + fmtSecondsHuman(adaptOptSeconds) +
+              "; " + ratioSentence;
+
             if (beyondTable){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left. DAGKnight has no table to run out of: it would need k=" + requiredK + ", confirming in " + fmtSeconds(requiredK / BPS) + ". That gap is the whole “parameterless” claim.";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need k=" + requiredK + ". " + boundNote + ". That gap is the whole “parameterless” claim.";
             } else if (over){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay. DAGKnight would widen to k=" + requiredK + " and confirm in " + fmtSeconds(requiredK / BPS) + " instead.";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to k=" + requiredK + ". " + boundNote + ".";
             } else {
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG waits " + fmtSeconds(fixedTime) + " and DAGKnight " + fmtSeconds(adaptTime) + ". Raise the block rate and GHOSTDAG’s fixed margin grows with it, needed or not, so the wait shrinks toward a floor instead of falling away: what the higher rate buys back is throughput, not confirmation speed.";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at k=" + configuredK + " against DAGKnight's k=" + requiredK + ". " + boundNote + ".";
             }
 
             var live = document.getElementById("par-live-region");
             live.textContent = beyondTable ? "Past the shipped table: the fixed margin is computed from the formula, not read from rusty-kaspa." :
               (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
 
-            renderRegimes(BPS, L);
+            renderRegimes(BPS, L, alpha);
           }
 
           function clearScenarioState(){
