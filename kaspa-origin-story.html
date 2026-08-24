@@ -50,8 +50,8 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260824-191116">
-  <script defer src="nav.js?v=20260824-191116"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-201424">
+  <script defer src="nav.js?v=20260824-201424"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -83,7 +83,6 @@
     <section class="section" id="fair-launch-proof">
       <p class="eyebrow">See it</p>
       <h2>Kaspa's zero, plotted against three other launches</h2>
-      <p>The paragraphs below trace how that zero came to be. This plots it against the chains that took the other path.</p>
       <details id="fair-launch-demo" class="deep-dive">
         <summary>Try it: plot Kaspa's zero-premine supply against three other launches</summary>
         <div class="fl-demo">
@@ -825,7 +824,7 @@
               <p>Each block inherits its selected parent's DAA score and adds the number of new blocks in its own merge set that qualify for the difficulty window: <code>daa_score = parent_daa_score + (mergeset_size - mergeset_non_daa_count)</code>. Source: <code>consensus/src/processes/difficulty.rs</code>, function <code>internal_calc_daa_score</code>, in <a href="https://github.com/kaspanet/rusty-kaspa" target="_blank" rel="noopener">kaspanet/rusty-kaspa</a>.</p>
 
               <h3>Why the old converter was wrong, and what changed</h3>
-              <p>The previous version of this page anchored on Toccata's activation and applied a single flat rate, 10 DAA units per second, all the way back through history. Kaspa's own consensus config shows that rate only held after Crescendo: <code>consensus/core/src/config/params.rs</code> sets mainnet's <code>pre_crescendo_target_time_per_block</code> to 1000 milliseconds (1 block per second) and its post-Crescendo <code>target_time_per_block</code> to 100 milliseconds (10 blocks per second), with <code>crescendo_activation</code> at DAA score 110,165,000. A flat 10-per-second rate applied to a pre-Crescendo score overstates elapsed time by roughly 10x for every day, which is many months of error for anything mined before 5 May 2025. The converter now switches rates at that boundary and interpolates between three real anchors: Kaspa's mainnet genesis (DAA 0, an exact protocol constant), Crescendo's activation (DAA 110,165,000, near 5 May 2025, 15:00 UTC per Kaspa's own activation announcement), and Toccata's mainnet activation (DAA 474,165,565, an exact date from the release notes).</p>
+              <p>A single flat rate, 10 DAA units per second, does not hold all the way back through history, even anchored on Toccata's activation. Kaspa's own consensus config shows that rate only held after Crescendo: <code>consensus/core/src/config/params.rs</code> sets mainnet's <code>pre_crescendo_target_time_per_block</code> to 1000 milliseconds (1 block per second) and its post-Crescendo <code>target_time_per_block</code> to 100 milliseconds (10 blocks per second), with <code>crescendo_activation</code> at DAA score 110,165,000. A flat 10-per-second rate applied to a pre-Crescendo score overstates elapsed time by roughly 10x for every day, which is many months of error for anything mined before 5 May 2025. The converter now switches rates at that boundary and interpolates between three real anchors: Kaspa's mainnet genesis (DAA 0, an exact protocol constant), Crescendo's activation (DAA 110,165,000, near 5 May 2025, 15:00 UTC per Kaspa's own activation announcement), and Toccata's mainnet activation (DAA 474,165,565, an exact date from the release notes).</p>
 
               <h3>The date conversion used above</h3>
               <p>Genesis anchors the pre-Crescendo segment; Toccata anchors the post-Crescendo segment; both are exact. The rate within each segment is the real elapsed time between its two anchors divided by the DAA units between them, not the bare protocol target, so the two segments meet with no jump at the Crescendo boundary. That interpolation puts the actual average between Crescendo and Toccata at about 0.06% off the 10-per-second target across 421 days, which is the basis for calling the post-Crescendo approximation good, not exact. Dates after Toccata extrapolate forward at the 10-per-second target rate, since there's no later anchor yet.</p>
