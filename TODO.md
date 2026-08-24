@@ -554,3 +554,46 @@ This pass matters more after the demo merge than before it, because
 eighteen demos just moved into pages they were never written for, and the
 voice mismatch between a demo and its host page is exactly what
 cross-reading is for.
+
+## For the owner to decide, not for an agent to act on
+
+Two findings from the layering audit are judgment calls about what the
+site is, not defects with an obvious fix. Both are recorded rather than
+acted on.
+
+### sources.html contradicts the site's own written rule
+
+`design/STANDARD.md` says plainly that sources are not something anyone
+reads, that a source belongs attached to the claim it settles, and that
+if nobody arrives at a page on purpose the page should not exist. By that
+rule `sources.html` should not be a page.
+
+It was cut from 3,443 words to 697 with all 188 URLs kept, and its
+internal layering is now fine. So the question is not whether it is good.
+It is whether it should exist at all, or whether those 188 URLs belong
+attached inline to the claims they settle, with no bibliography page.
+
+Doing it properly means every claim on every page carries its own source
+at the point a reader would doubt the sentence. That is a real piece of
+work and it changes how every page reads. It is also exactly what the
+standard describes. The owner should decide before anyone starts.
+
+### status.html reads as a template
+
+37 disclosures, zero use of the info affordance or the view switch. The
+owner has explicitly rejected uniformity: "There are probably literally
+ten different ways to hide the information in interesting ways." On a
+reference surface, uniform may genuinely be right for scanning, and an
+agent has been asked to argue it either way rather than assume.
+
+The suggested alternative is a view switch across the claim table's
+framings instead of another triangle. Worth a look once it lands.
+
+### Three thin disclosure panels
+
+Low stakes, listed so they are not lost: `what-is-kaspa.html`'s "Why
+Bitcoin chose the opposite trade-off", `why-kaspa-matters.html`'s "Why
+evidence next", and `crypto-from-scratch.html`'s "NIST's definition" are
+one-sentence restatements rather than depth. A disclosure that opens onto
+a restatement teaches a reader not to open the next one, so they should
+either carry real depth or be inlined.

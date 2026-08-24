@@ -88,7 +88,14 @@ def main():
     sitemap_dates = read_sitemap_dates()
     sitemap_urls = set(sitemap_dates)
     iso_date = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-    manifest_urls = {expected_url(page) for page in PAGES}
+    # A 404 page is not a destination and is deliberately kept out of the
+    # sitemap. It stays in the manifest because several checks walk that
+    # array. build-sitemap.py, apply-related-links.py and
+    # check-redirect-stubs.sh all carry the same exclusion, so this one has
+    # to as well or the two files look like they disagree when both are right.
+    NOT_A_DESTINATION = {"404.html"}
+    sitemap_pages = [p for p in PAGES if p not in NOT_A_DESTINATION]
+    manifest_urls = {expected_url(page) for page in sitemap_pages}
     allowed_sitemap_urls = manifest_urls | {
         expected_url(path) if path.endswith(".html") else f"{DOMAIN}/{path}"
         for path in SITEMAP_EXTRA_FILES
@@ -127,7 +134,9 @@ def main():
             fail(errors, f"{page} missing Twitter card")
 
         sitemap_lastmod = sitemap_dates.get(url)
-        if sitemap_lastmod != parser.date_modified[0]:
+        if page in NOT_A_DESTINATION:
+            pass  # deliberately absent from the sitemap, so it has no lastmod to match
+        elif sitemap_lastmod != parser.date_modified[0]:
             fail(errors, f"{page} sitemap lastmod {sitemap_lastmod} does not match dateModified {parser.date_modified[0]}")
         if page == "search.html":
             search_links = {
@@ -135,8 +144,14 @@ def main():
                 for href in parser.links
                 if href == "/" or (href.startswith("/") and "." not in href.rsplit("/", 1)[-1])
             }
-            if not manifest_urls.issubset(search_links):
-                missing = sorted(manifest_urls - search_links)
+            # 404.html is an error page, not a reading destination: search
+            # must never recommend it, so it is excluded from the set of
+            # manifest pages search.html is required to link to. See
+            # apply-related-links.py's NOT_A_DESTINATION for the same rule
+            # applied to the related-links generator.
+            required_urls = manifest_urls - {expected_url("404.html")}
+            if not required_urls.issubset(search_links):
+                missing = sorted(required_urls - search_links)
                 fail(errors, f"search.html missing manifest page links: {', '.join(missing)}")
 
     if errors:

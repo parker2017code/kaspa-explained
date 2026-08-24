@@ -8,7 +8,13 @@ import xml.etree.ElementTree as ET
 
 MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 DOMAIN = MANIFEST["domain"]
-PAGES = MANIFEST["pages"]
+# A 404 page is not a destination and must never be advertised to a crawler
+# as one. It lives in the manifest because the site's own checks walk that
+# array, so it is filtered here rather than removed there. The related-links
+# generator carries the same exclusion for the same reason: it was offering
+# "That page isn't in the guide" as the recommended next read.
+NOT_A_DESTINATION = {"404.html"}
+PAGES = [p for p in MANIFEST["pages"] if p not in NOT_A_DESTINATION]
 EXTRA_FILES = MANIFEST.get("sitemapExtraFiles", [])
 EXTRA_LASTMOD = MANIFEST.get("sitemapExtraLastmod", {})
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"

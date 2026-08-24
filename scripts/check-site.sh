@@ -7,6 +7,16 @@ while IFS= read -r page; do
   expected_pages+=("$page")
 done < <(python3 -c 'import json; print("\n".join(json.load(open("site-manifest.json"))["pages"]))')
 
+# A 404 page is not a destination and is deliberately absent from the sitemap.
+# It stays in the manifest because these checks walk that array to find every
+# real page. build-sitemap.py, apply-related-links.py, check-html.py and
+# check-redirect-stubs.sh all carry the same exclusion; the sitemap loop below
+# needs it too, or it demands an entry the sitemap is right not to have.
+sitemap_pages=()
+for page in "${expected_pages[@]}"; do
+  [[ "$page" == "404.html" ]] || sitemap_pages+=("$page")
+done
+
 expected_files=()
 while IFS= read -r file; do
   expected_files+=("$file")
@@ -196,6 +206,10 @@ for page in "${expected_pages[@]}"; do
     url="${domain}/${page%.html}"
   fi
 
+  if [[ "$page" == "404.html" ]]; then
+    continue  # deliberately not in the sitemap; see sitemap_pages above
+  fi
+
   grep -q "<loc>${url}</loc>" sitemap.xml || {
     echo "sitemap.xml missing ${url}" >&2
     exit 1
@@ -276,6 +290,13 @@ for page in "${expected_pages[@]}"; do
     exit 1
   }
 
+  # The related-links block exists so a reader who finishes a page has a next
+  # step. The homepage is the entry point, not a page anyone finishes, and its
+  # nav and footer already carry every destination on the site. It was rebuilt
+  # on 24 August 2026 to one claim, one demo and one action, which meant
+  # cutting a "Keep reading" row that duplicated the nav one screen above it.
+  # Requiring the block there would put that duplication back.
+  if [[ "$page" != "index.html" ]]; then
   related_count="$(grep -c '<!-- related-links:start -->' "$page")"
   [[ "$related_count" == "1" ]] || {
     echo "$page must contain exactly one generated related-links block" >&2
@@ -286,6 +307,7 @@ for page in "${expected_pages[@]}"; do
     echo "$page missing site-related section" >&2
     exit 1
   }
+  fi
 done
 
 if grep -q 'Ask AI\|llm-widget\|llm-launch' nav.js styles.css; then

@@ -68,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -95,7 +95,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Beginner answer</p>
       <h1>What is Kaspa?</h1>
-      <p class="lead">Kaspa is a live proof-of-work blockDAG network. It keeps Bitcoin-style mining and UTXO ownership, and GHOSTDAG orders parallel blocks into one payment history.</p>
+      <p class="lead">Kaspa is a live proof-of-work blockDAG network. It keeps Bitcoin-style mining and <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wik">UTXO<span class="term-def__panel" id="utxo-def-wik" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> ownership, and GHOSTDAG orders parallel blocks into one payment history.</p>
       <p class="fit-note">Limits get their own page: <a href="/skeptical-case">Risks and Open Questions</a> covers adoption, node load, and security budget.</p>
     </section>
 
@@ -121,13 +121,13 @@
     <section id="collision-sim" class="section prose-section">
       <p class="eyebrow">The core move</p>
       <h2>Parallel blocks are the whole design</h2>
-      <p>A block takes time to reach the rest of the world. When blocks outrun that propagation, miners build on stale information and produce competing blocks that a single chain can only keep one of.</p>
+      <p>A block takes time to reach the rest of the world. When blocks outrun that propagation, miners build on stale information and produce competing blocks that a single chain can only keep one of. Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions are rare too.</p>
       <details class="deep-dive">
-        <summary>Why Bitcoin chose the opposite trade-off</summary>
-        <p>Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions are rare too. It works, and it is why a Bitcoin payment settles at the pace it does.</p>
+        <summary>Why rare blocks are the fix, and what it costs</summary>
+        <p>At a ten-minute interval, propagation delay is small next to the interval itself, so most blocks finish spreading before the next one is found, and a collision is a rare accident rather than routine. Bitcoin never needed a rule for keeping both sides of one: discarding the loser is cheap enough. The cost lands on confirmation time instead. A payment needs several block intervals to be safe, which is why it settles at the pace it does, not in seconds.</p>
       </details>
       <p>Kaspa takes the other road instead: keep the fast blocks and fix the ordering. A block references every tip its miner could see, so two blocks found a moment apart both land in the record as parents of whatever gets mined next.</p>
-      <p>The word blockDAG names that shape. <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. The collision simulator below shows two near-simultaneous blocks both surviving in the record.</p>
+      <p>The word blockDAG names that shape. <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. The simulator below is not extra evidence for that claim, it is that claim: watch two near-simultaneous blocks both survive in the record instead of one getting thrown away.</p>
       <style>
         #collision-demo{
           --bg:#100e0c;
@@ -265,7 +265,7 @@
           padding: 12px 14px 14px;
           margin-bottom: 14px;
         }
-        #collision-demo .panel h2 {
+        #collision-demo .panel .panel-title {
           font-size: .95rem;
           font-weight: 650;
           letter-spacing: -.006em;
@@ -276,14 +276,14 @@
           flex-wrap: wrap;
           gap: 6px;
         }
-        #collision-demo .panel h2 .stat {
+        #collision-demo .panel .panel-title .stat {
           font-weight: 400;
           font-size: .82rem;
           color: var(--muted);
           font-variant-numeric: tabular-nums;
         }
-        #collision-demo .panel h2 .stat b { color: var(--pink); }
-        #collision-demo .panel.dag h2 .stat b { color: var(--green); }
+        #collision-demo .panel .panel-title .stat b { color: var(--pink); }
+        #collision-demo .panel.dag .panel-title .stat b { color: var(--green); }
         #collision-demo canvas {
           display: block;
           width: 100%;
@@ -369,21 +369,21 @@
         <p class="honesty-note" id="cs-honestyNote"></p>
       
         <div class="secondary-control">
-          <label for="cs-delay">How long a block takes to reach other miners <b id="cs-delayVal"></b></label>
+          <label for="cs-delay">How long a block takes to reach other miners: <b id="cs-delayVal"></b></label>
           <input type="range" id="cs-delay" value="500" min="0" max="1000" step="1" aria-label="Propagation delay">
         </div>
-        <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists to cite, so 500 ms is a representative estimate, the midpoint of this slider's own range, not a measured figure; real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
+        <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation set to 500 ms. No published measurement of real Kaspa block propagation exists, so 500 ms is a stand-in: the midpoint of this slider's own range, not a measured figure. Real propagation varies with peer distance and network conditions. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own worst-case network delay bound: the assumption the protocol is built to tolerate, well above what real propagation should take.</p>
       
         <p class="result-line" id="cs-resultLine"></p>
       
         <div class="panel">
-          <h2>Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></h2>
+          <p class="panel-title">Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></p>
           <canvas id="cs-chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
           <div class="legend"><span><i style="background:var(--green)"></i>kept</span><span><i style="background:var(--pink)"></i>thrown away</span></div>
         </div>
       
         <div class="panel dag">
-          <h2>BlockDAG <span class="stat">every block kept</span></h2>
+          <p class="panel-title">BlockDAG <span class="stat">every block kept</span></p>
           <canvas id="cs-dagCanvas" role="img" aria-label="BlockDAG of the same recent blocks, all kept and ordered by parent references instead of being discarded."></canvas>
           <div class="legend"><span><i style="background:var(--green)"></i>every block kept, ordered by parents</span></div>
         </div>
@@ -696,7 +696,7 @@
           <p>Walk that spine from genesis to the current tip, absorbing each <span class="term-def" tabindex="0" role="button" aria-describedby="mergeset-def-wik">mergeset<span class="term-def__panel" id="mergeset-def-wik" role="tooltip">The set of past blocks a new block pulls into view: how parallel work gets folded into the ordering.</span></span> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
         </article>
       </div>
-      <p class="fit-note">Add blocks by hand below and watch blue and red resolve live.</p>
+      <p class="fit-note">This is the ordering rule itself, not a supporting example of it: add blocks by hand below and watch blue and red resolve live.</p>
 <style>
   #ghostdag-demo{
     color-scheme: dark;
@@ -932,7 +932,7 @@
         are still allowed to count. Lower it, and blocks get locked out sooner. Raise it, and more blocks
         keep counting even when a lot of them arrive at once.
       </p>
-      <label class="klabel">k = <output id="gp-k-out">3</output>
+      <label class="klabel">Uncounted neighbors allowed (k): <output id="gp-k-out">3</output>
         <input type="range" id="gp-k-slider" min="0" max="8" value="3" step="1" aria-label="k, how many unrelated blocks a block can have beside it and still count">
       </label>
     </details>
@@ -980,9 +980,9 @@
       Kaspa's answer is the virtual block, a conceptual block that is never mined and never sent to anyone;
       it exists only on each node's own machine, standing in for everything that node has seen. Its parents, the
       virtual parents, are simply that node's current tips. Among those tips, the one with the most
-      already-counted blocks behind it becomes the virtual selected parent, better known as the sink, the
-      same rule an ordinary block uses to pick its own selected parent, just applied one level up, to the
-      view itself rather than to a mined block.
+      already-counted blocks behind it becomes the virtual selected parent, better known as the sink.
+      It's the same rule an ordinary block uses to pick its own selected parent, just applied one level
+      up: to the node's whole view, not to a single mined block.
     </p>
   </details>
 </div>
@@ -1609,7 +1609,7 @@
         <summary>Why honest and hidden miners produce different anticones</summary>
         <p>Within a propagation delay, everyone else sees an honest miner's block and starts referencing it, so its anticone stays small by construction. Nobody can reference blocks they were never shown, so a hidden miner's withheld blocks surface later carrying wide anticones.</p>
       </details>
-      <p>The security parameter k caps how many blue blocks may sit in any blue block's anticone, derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin. The first spend of a coin wins; every node runs the identical procedure over the identical graph and derives the identical order with no voting, messaging, or committee.</p>
+      <p>The security parameter k caps how many blue (well-connected) blocks may sit in any blue block's anticone. k is derived from block rate and expected network delay, so a faster network needs a larger k for the same safety margin. The first spend of a coin wins; every node runs the identical procedure over the identical graph and derives the identical order with no voting, messaging, or committee.</p>
       <p>Blue work is the tiebreak between competing histories: Bitcoin compares chains by accumulated work, Kaspa compares them by accumulated work in the blue set, and an attacker whose blocks are colored red is spending real electricity that buys no weight there. Losing blocks stop being waste, so the block rate can rise without the orphan rate eating the security budget.</p>
     </section>
 
@@ -1623,10 +1623,10 @@
         <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
         <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
       </div>
-      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. The <a href="/demos/confirmation-risk">confirmation risk demo</a> plots that curve: drag its slider and watch reversal odds fall as wait time rises.</p>
+      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours. Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. The <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation risk demo</a> plots that curve: drag its slider and watch reversal odds fall as wait time rises.</p>
       <details class="deep-dive">
         <summary>What actually sets a safe wait, and how finality depth differs</summary>
-        <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 BPS those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
+        <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count. At 10 <span class="term-def" tabindex="0" role="button" aria-describedby="bps-def-wik">BPS<span class="term-def__panel" id="bps-def-wik" role="tooltip">Blocks per second. Kaspa ran at 1 bps until the Crescendo activation, DAA score 110,165,000, and has run at 10 bps since.</span></span> those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
         <p>Three things set the honest wait: the value at stake, current hash rate and its spread, and whether the payment can be undone outside the protocol (a shipping hold tolerates a thinner wait than handing over a good nobody can claw back). Exchanges and payment processors publish their own deposit policies, and those are the numbers that govern what a user experiences.</p>
         <p><span class="term-def" tabindex="0" role="button" aria-describedby="finality-depth-def-wik">Finality depth<span class="term-def__panel" id="finality-depth-def-wik" role="tooltip">The threshold past which old history counts as settled.</span></span> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
         <details class="cell-detail">
@@ -1648,7 +1648,7 @@
           <tbody>
             <tr><td>Simple L1 payments</td><td>Roughly 2.5k to 3.4k TPS for plain transfers.</td><td>Set by 10 BPS and block-mass limits against simple transaction mass.</td></tr>
             <tr><td>Covenant or programmable L1 transactions</td><td>Job by job, usually below simple-payment TPS.</td><td>Covenants add script work, state rules, covenant IDs, extra outputs, and storage effects.</td></tr>
-            <tr><td>ZK proof or settlement transactions</td><td>Fewer, heavier L1 transactions. One proof or settlement transaction can carry many off-chain app actions.</td><td>Set by the proof system, proof size, check cost, batch size, proving time, and settlement design.</td></tr>
+            <tr><td><span class="term-def" tabindex="0" role="button" aria-describedby="zk-def-wik">ZK<span class="term-def__panel" id="zk-def-wik" role="tooltip">Zero-knowledge: a proof that a statement is true without revealing the data behind it, so a script can accept a claim about work done elsewhere without seeing that work.</span></span> proof or settlement transactions</td><td>Fewer, heavier L1 transactions. One proof or settlement transaction can carry many off-chain app actions.</td><td>Set by the proof system, proof size, check cost, batch size, proving time, and settlement design.</td></tr>
             <tr><td>Effective ZK app or future vProg throughput</td><td>App by app, and it can beat raw L1 transaction TPS.</td><td>Count app actions per proof batch or settlement cycle. State access and prover work are the real limits.</td></tr>
           </tbody>
         </table>
@@ -1816,8 +1816,10 @@
   #masscalc-demo .bar-row:last-of-type { margin-bottom: 10px; }
   #masscalc-demo .bar-head {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
+    gap: 4px 10px;
     font-size: .85rem;
     margin-bottom: 5px;
   }
@@ -1911,9 +1913,9 @@
 
 <div id="masscalc-demo">
   <p class="intro">
-    Kaspa doesn't charge by byte count alone. Every transaction is measured on three limits,
-    compute, storage, and transient (proof data), and charged by whichever is largest, never
-    the sum. Build one below and see which limit binds.
+    Every transaction takes up room in a block. Kaspa counts that room as
+    <span class="term-def" tabindex="0" role="button" aria-describedby="mass-def-masscalc">mass<span class="term-def__panel" id="mass-def-masscalc" role="tooltip">Kaspa's own unit for how much block space a transaction uses. Not bytes, not KAS: the network charges a transaction for whichever kind of work costs it most, and only that one.</span></span>,
+    not bytes. Build one below and see how many transactions like it fit in a block.
   </p>
 
   <div class="presets" role="group" aria-label="Transaction presets">
@@ -1964,42 +1966,65 @@
     </div>
 
     <div class="panel">
-      <h3>Mass, per block limit</h3>
-
-      <div class="bar-row" id="mc-computeRow">
-        <div class="bar-head">
-          <span class="name">Compute mass <span class="binding-tag" id="mc-computeTag" hidden>&middot; binding</span></span>
-          <span class="nums"><span id="mc-computeMass">0</span> / 500,000</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill" id="mc-computeFill" role="meter" aria-label="Compute mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
-        </div>
-      </div>
-
-      <div class="bar-row" id="mc-storageRow">
-        <div class="bar-head">
-          <span class="name">Storage mass <span class="binding-tag" id="mc-storageTag" hidden>&middot; binding</span></span>
-          <span class="nums"><span id="mc-storageMass">0</span> / 500,000</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill" id="mc-storageFill" role="meter" aria-label="Storage mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
-        </div>
-      </div>
-
-      <div class="bar-row" id="mc-transientRow">
-        <div class="bar-head">
-          <span class="name">Transient mass <span class="binding-tag" id="mc-transientTag" hidden>&middot; binding</span></span>
-          <span class="nums"><span id="mc-transientMass">0</span> / 1,000,000</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill" id="mc-transientFill" role="meter" aria-label="Transient mass against its 1,000,000 block limit" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0"></div>
-        </div>
-      </div>
+      <h3>How many fit in a block</h3>
 
       <div class="result">
-        <div><span class="big" id="mc-tpsOut">0</span> <span class="label">TPS at 10 blocks/second</span></div>
-        <div class="sub"><span id="mc-tpbOut">0</span> transactions of this shape fit per block, on the dimension that binds.</div>
+        <div><span class="big" id="mc-tpbOut">0</span> <span class="label">transactions like this fit in a block</span></div>
+        <div class="sub"><span id="mc-tpsOut">0</span> TPS at 10 blocks a second, if every block were full of this shape.</div>
       </div>
+
+      <details class="advanced-controls">
+        <summary>Advanced: which limit is binding</summary>
+        <p class="intro" style="margin-top:10px;">A transaction is charged for the largest of three costs, never the sum: compute (running its script), storage (new state it creates), and transient (proof data). Whichever is largest decides how many fit.</p>
+
+        <div class="bar-row" id="mc-computeRow">
+          <div class="bar-head">
+            <span class="name">Compute mass <span class="binding-tag" id="mc-computeTag" hidden>&middot; binding</span><span class="info-affordance" id="mc-compute-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mc-compute-info-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What counts as compute mass</span>
+              </button>
+              <span class="info-affordance__panel" id="mc-compute-info-panel" role="tooltip">Cost of running this transaction's signature and script checks.</span>
+            </span></span>
+            <span class="nums"><span id="mc-computeMass">0</span> / 500,000 mass units</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="mc-computeFill" role="meter" aria-label="Compute mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+          </div>
+        </div>
+
+        <div class="bar-row" id="mc-storageRow">
+          <div class="bar-head">
+            <span class="name">Storage mass <span class="binding-tag" id="mc-storageTag" hidden>&middot; binding</span><span class="info-affordance" id="mc-storage-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mc-storage-info-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What counts as storage mass</span>
+              </button>
+              <span class="info-affordance__panel" id="mc-storage-info-panel" role="tooltip">Cost of new state this transaction leaves behind, such as a change output.</span>
+            </span></span>
+            <span class="nums"><span id="mc-storageMass">0</span> / 500,000 mass units</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="mc-storageFill" role="meter" aria-label="Storage mass against its 500,000 block limit" aria-valuemin="0" aria-valuemax="500000" aria-valuenow="0"></div>
+          </div>
+        </div>
+
+        <div class="bar-row" id="mc-transientRow">
+          <div class="bar-head">
+            <span class="name">Transient mass <span class="binding-tag" id="mc-transientTag" hidden>&middot; binding</span><span class="info-affordance" id="mc-transient-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mc-transient-info-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What counts as transient mass</span>
+              </button>
+              <span class="info-affordance__panel" id="mc-transient-info-panel" role="tooltip">Cost of proof data attached to the transaction, cleared after the block that included it.</span>
+            </span></span>
+            <span class="nums"><span id="mc-transientMass">0</span> / 1,000,000 mass units</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="mc-transientFill" role="meter" aria-label="Transient mass against its 1,000,000 block limit" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0"></div>
+          </div>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -2027,7 +2052,7 @@ script_mass = inputs × 1 sigop × GRAMS_PER_SIGOP_COUNT_UNIT (1000)      [simpl
       <h4>Transient mass</h4>
       <span class="code-block">transient_mass = size × TRANSIENT_BYTE_TO_MASS_FACTOR (4)</span>
 
-      <h4>Storage mass (KIP-0009)</h4>
+      <h4>Storage mass (<span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-wik">KIP<span class="term-def__panel" id="kip-def-wik" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-0009)</h4>
       <span class="code-block">C = STORAGE_MASS_PARAMETER (1,000,000,000,000)
 utxo_plurality(output) = ceil((63 + script_bytes + 32 if covenant else 0) / 100)
      A P2PK-style output (script 34) has plurality 1. A covenant-carrying
@@ -2279,7 +2304,7 @@ TPS = tx_per_block × 10 blocks/second</span>
           <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering and settle proofs back to it, with no separate sequencer.</p></article>
         </div>
         <p>No virtual machine, no accounts, no global shared state. App logic lives in bounded UTXO steps or proofs. A live demo that tries to break a covenant vault is on <a href="/build-on-kaspa#covenant-breaker-demo">build on Kaspa</a>.</p>
-        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>.</p>
+        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, and <a href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">Michael Sutton's Toccata hard-fork outlook</a>.</p>
       </details>
     </section>
 
@@ -2305,7 +2330,65 @@ TPS = tx_per_block × 10 blocks/second</span>
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. The <a href="/sources#learn-kaspa">source list</a> has term-by-term references for anticone, mergeset, and blue work.</p>
+      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. <a href="https://kaspa.com/learn-kaspa">Kaspa.com's Learn Kaspa</a> has term-by-term references for anticone, mergeset, and blue work: vocabulary and mechanics, not protocol status.</p>
+      <details class="source-more">
+        <summary>Kaspa.com Learn Kaspa article index (50 articles)</summary>
+        <div class="compact-columns">
+          <ul>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-and-the-bitcoin-scaling-problem">Scaling Problem</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/pruning-depth">Pruning Depth</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kip-10">KIP 10</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/learn-kaspa-guide">Learning Guide</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kip-20">KIP 20</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kip-21">KIP 21</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/opcodes">OpCodes</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/anatomy-of-a-block">Block Anatomy</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/dagknight">DAGKNIGHT</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/smart-contracts">Smart Contracts</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/storage-mass-kip-0009">Storage Mass</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/block-processing">Block Processing</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/past-median-time">Median Time</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/timestamp-validation">Timestamp Validation</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/virtual-parents">Virtual Parents</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/tx-validation">TX Validation</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/coinbase-transactions">Coinbase Transactions</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/sink-selection">Sink Selection</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/daa-score">DAA Score</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/transaction-mass">Transaction Mass</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/virtual-block">Virtual Block</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/anticone-finalization-depth">Anticone Finalization</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/blocks-per-second">BPS</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/mergeset-size-limit">Mergeset Limit</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/cheat-sheet">Cheat Sheet</a></li>
+          </ul>
+          <ul>
+            <li><a href="https://kaspa.com/learn-kaspa/post/merge-depth-bound">Merge Depth</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/daa-window">DAA Window</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/finality-depth">Finality Depth</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/what-is-kaspa">What is Kaspa</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/ghostdag-k-cluster">k-Cluster</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/intro-transaction-selection">Selection Intro</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/blue-score-and-blue-work">Blue Score/Work</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/first-order-pruning-in-kaspa">First-Order Pruning</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/dag-terminology">DAG Terminology</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/ghostdag-simplified">GHOSTDAG Simplified</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/parents-vs-mergeset">Parents/Mergeset</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/second-order-pruning">Second-Order Pruning</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-utxo-model">UTXO Model</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-uses-muhash">MuHash</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-linking-the-body-to-the-header">Body/Header Linking</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/dag-and-kaspa">BlockDAG</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/archival-nodes-vs-full-nodes">Archival/Full Nodes</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/finality">Finality Types</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/transaction-selection">Transaction Selection</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/k-parameter">K Parameter</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/blue-work-ordering-pt4">Blue Work</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-blocks-blue-vs-red">Blue vs Red</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/kaspa-mergeset-creation">Mergeset</a></li>
+            <li><a href="https://kaspa.com/learn-kaspa/post/parent-chain">Parent Chain</a></li>
+          </ul>
+        </div>
+      </details>
       <details id="live-network">
         <summary>Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
 <style>
@@ -2340,6 +2423,7 @@ TPS = tx_per_block × 10 blocks/second</span>
   #livenet-demo .status-row strong { color: var(--text); font-weight: 600; }
 
   #livenet-demo .fail-banner { display: none; background: color-mix(in srgb, var(--red) 12%, var(--card-bg)); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; font-size: .9rem; }
+  #livenet-demo .is-stale { opacity: .55; filter: grayscale(.4); transition: opacity .3s, filter .3s; }
   #livenet-demo .fail-banner.show { display: block; }
   #livenet-demo .fail-banner b { color: var(--red); }
 
@@ -2443,7 +2527,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     <div class="stat-tile">
       <span class="stat-num" id="ln-sessionPct">&ndash;</span>
       <span class="stat-label" id="ln-sessionLabel">of the blocks this page has watched this session carried nothing but the miner's own reward.</span>
-      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 89.5% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 88.3% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
     </div>
   </div>
 
@@ -2462,10 +2546,10 @@ TPS = tx_per_block × 10 blocks/second</span>
       <p>A block tagged <span class="tag red-block">red</span> below was real and mined honestly, but arrived too late in its local ordering to be counted in the ledger's accepted history; a "blue" block was. That is GHOSTDAG's actual job: keep the block, decide whether it counts.</p>
 
       <h3>What's inside: mostly nothing yet</h3>
-      <p>A block with only its own coinbase transaction and zero spends is marked <span class="content-word empty-word">Empty</span>. Most blocks arrive that way today. That is not this page failing to find activity: it is Kaspa's actual current usage. The same figure appears sitewide: about 0.9 transactions per second sustained, and 89.5% of the raw transaction count is the one-per-block coinbase payout, not economic activity (<code>data/l1-chains.json</code>, cross-checked against live API reads).</p>
+      <p>A block with only its own coinbase transaction and zero spends is marked <span class="content-word empty-word">Empty</span>. Most blocks arrive that way today. That is not this page failing to find activity: it is Kaspa's actual current usage, matching the sitewide figure above (<code>data/l1-chains.json</code>, cross-checked against live API reads).</p>
 
       <h3>Covenants</h3>
-      <p>When a transaction output carries a network-verified <code>covenantId</code>, this page shows a <span class="tag covenant">covenant</span> tag. That field comes straight from the API's own parsed transaction data, not a guess: Toccata-era Kaspa enforces covenants and covenant IDs in consensus, and the site's own August 2026 reads found roughly 28,000 ever created and about 500 still active. They are uncommon in the ordinary block feed; expect long stretches with none.</p>
+      <p>When a transaction output carries a network-verified <code>covenantId</code>, this page shows a <span class="tag covenant">covenant</span> tag. That field comes straight from the API's own parsed transaction data, not a guess: Toccata-era Kaspa enforces covenants and covenant IDs in consensus; see <a href="/build-on-kaspa#covenant-adoption">build-on-kaspa#covenant-adoption</a> for how many are actually running. They are uncommon in the ordinary block feed; expect long stretches with none.</p>
 
       <h3>App attribution: only where it's really written down</h3>
       <p>Kaspa has no protocol-level field that names an app. What this page can honestly show is narrower: some transactions carry a plain-text tag at the front of their payload, such as <code>ciph_msg:1:comm:&hellip;</code>, which identifies the on-chain messaging protocol some Kaspa apps use to write encrypted messages into transactions. When a payload starts with a tag like that, this page shows an <span class="tag app">app: ciph_msg</span> pill and nothing more: it is reading a literal string the transaction's own sender chose to include, not inferring anything. Any other payload here is unlabeled binary; guessing what wrote it would be exactly the kind of fabricated attribution this page exists not to do, so it stays unlabeled.</p>
@@ -2496,6 +2580,9 @@ TPS = tx_per_block × 10 blocks/second</span>
 
   var feedEl = document.getElementById("ln-feed");
   var tipCountEl = document.getElementById("ln-tipCount");
+  var tipLabelEl = document.getElementById("ln-tipLabel");
+  var tipLabelLiveText = tipLabelEl.textContent;
+  var tipLabelStaleText = "blocks were racing for that spot when this page last reached the network. That count is not current; see the banner above.";
   var tipDotsEl = document.getElementById("ln-tipDots");
   var sampleLineEl = document.getElementById("ln-sampleLine");
   var statusLineEl = document.getElementById("ln-statusLine");
@@ -2610,7 +2697,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     el.innerHTML =
       '<div class="meter" aria-hidden="true">' + renderMeter(card) + '</div>' +
       '<div class="block-main">' +
-        '<div class="block-top">' + contentWord + '<span class="block-time">' + relTime(card.timestamp) + '</span></div>' +
+        '<div class="block-top">' + contentWord + '<span class="block-time" data-ts="' + card.timestamp + '">' + relTime(card.timestamp) + '</span></div>' +
         '<div class="block-sub" data-clip-ok="true" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
         (tags ? '<div class="tag-row">' + tags + '</div>' : "") +
       '</div>';
@@ -2651,6 +2738,23 @@ TPS = tx_per_block × 10 blocks/second</span>
   function setStatus(state, text) {
     statusLineEl.textContent = text;
     failBanner.classList.toggle("show", state === "error");
+    setLiveState(state !== "error");
+  }
+
+  function setLiveState(live) {
+    tipLabelEl.textContent = live ? tipLabelLiveText : tipLabelStaleText;
+    tipCountEl.classList.toggle("is-stale", !live);
+    feedEl.classList.toggle("is-stale", !live);
+    if (!live) {
+      sampleLineEl.innerHTML = "No live read since the connection dropped. Everything below is frozen at the last confirmed check, not current.";
+    }
+  }
+
+  function refreshRelativeTimes() {
+    var nodes = feedEl.querySelectorAll(".block-time[data-ts]");
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = relTime(Number(nodes[i].getAttribute("data-ts")));
+    }
   }
 
   function renderTipDots(n) {
@@ -2744,15 +2848,17 @@ TPS = tx_per_block × 10 blocks/second</span>
 
   tick();
   timer = setInterval(tick, POLL_MS);
+  var clockTimer = setInterval(refreshRelativeTimes, 1000);
 
   window.addEventListener("pagehide", function () {
     if (timer) clearInterval(timer);
+    if (clockTimer) clearInterval(clockTimer);
   });
 })();
 </script>
 
       </details>
-      <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
+      <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/core/src/tx/mass.rs">wallet mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
@@ -2819,5 +2925,22 @@ TPS = tx_per_block × 10 blocks/second</span>
       </nav>
     </div>
   </footer>
+  <script>
+  document.querySelectorAll('.info-affordance').forEach(function (el) {
+    var trigger = el.querySelector('.info-affordance__trigger');
+    trigger.addEventListener('click', function () {
+      var open = el.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('is-open');
+        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+  </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-last_checked: 2026-08-23
-recheck_after: 2026-08-30
+last_checked: 2026-08-24
+recheck_after: 2026-08-31
 claims:
   proof_of_work:
     status: live
@@ -22,18 +22,22 @@ claims:
       - Kaspa mainnet payments are instantly final
   l1_status_snapshot_2026_08_20:
     status: measurement_sensitive
-    recheck_after: 2026-08-30
+    recheck_after: 2026-08-31
     summary: >
-      An August 20, 2026 L1 status check showed the public Kaspa REST API on kaspa-mainnet answered by a
-      synced v2.0.1 node, virtual DAA score 517,984,766 (above the Toccata activation score), a 2.31246515
-      KAS block reward, and about 27.651 billion KAS from the public supply endpoint
-      (2,765,075,442,047,419,902 sompi). The reward matches the emission step that runs from DAA
-      504,909,000 to 531,207,000, so the reward reading and the DAA reading corroborate each other.
-      Supersedes the August 8, 2026 reading: DAA 507,631,731 and about 27.627 billion KAS, same node
-      version, same reward. These are time-stamped network readings. They are unsuitable as timeless
-      constants. Do not quote blockCount or headerCount from this endpoint: it load-balances across
-      backend nodes with different pruning states, two reads a minute apart on August 8 returned
-      1,488,846 and 26,573,222, and the August 20 read returned 1,116,061, below both.
+      An August 24, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward, and
+      /info/coinsupply) showed virtual DAA score 521,476,468 (above the Toccata activation score and still
+      inside the 504,909,000-531,207,000 emission step), a 2.31246515 KAS block reward matching that step,
+      and about 27.659 billion KAS from the public supply endpoint (2,765,882,916,490,627,112 sompi). Max
+      supply read 2,870,403,560,500,000,000 sompi, about 28.704 billion KAS. Supersedes the August 20, 2026
+      reading: DAA 517,984,766 and about 27.651 billion KAS, same node version, same reward; the ~7.8
+      million KAS gained over 4 days matches the block-reward math (2.31246515 KAS/block * 864,000
+      blocks/day at 10 BPS is about 1,997,970 KAS/day). Supersedes the August 8, 2026 reading in turn: DAA
+      507,631,731 and about 27.627 billion KAS, same node version, same reward. These are time-stamped
+      network readings. They are unsuitable as timeless constants. Do not quote blockCount or headerCount
+      from this endpoint: it load-balances across backend nodes with different pruning states, two reads a
+      minute apart on August 8 returned 1,488,846 and 26,573,222, the August 20 read returned 1,116,061,
+      below both, and the August 24 read returned 1,149,564, inside neither the August 8 nor the August 20
+      range, further evidence this field is not a stable network-wide count.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
       - August 8 snapshot values are permanent
@@ -60,11 +64,22 @@ claims:
       - emission steps are anchored to calendar dates rather than DAA score
   tps_and_speed_context:
     status: measurement_sensitive
-    recheck_after: 2026-08-25
-    summary: TPS, throughput, and speed claims need measurement context. Current simple-payment capacity can be described as a rough 2.5k-3.4k TPS range at 10 BPS under transaction-shape assumptions. Covenant apps, ZK proof settlements, tokens, and future vProg-style app throughput need separate workload labels before repeating a number as normal mainnet behavior.
+    recheck_after: 2026-09-07
+    summary: >
+      TPS, throughput, and speed claims need measurement context. Current simple-payment capacity can be
+      described as a rough 2.5k-3.4k TPS range at 10 BPS under transaction-shape assumptions. Covenant apps,
+      ZK proof settlements, tokens, and future vProg-style app throughput need separate workload labels
+      before repeating a number as normal mainnet behavior. Rechecked August 24, 2026 directly against
+      params.rs and mass/mod.rs: BPS is still 10 (TenBps), block_mass_limits.compute is still 500,000,
+      mass_per_tx_byte is still 1, and mass_per_script_pub_key_byte is still 10, the exact inputs the
+      2.5k-3.4k range is derived from. Nothing in that math moved. The kaspa-tps-explained.html URL this
+      claim used to cite is now a redirect stub (its content was folded into what-is-kaspa.html on the
+      2026-08-24 rewrite pass); the 2.5k-3.4k figure and the "Ask TPS of what?" breakdown both still render
+      on what-is-kaspa.html, unchanged. site_context updated to point at the live page instead of the
+      redirect.
     source: https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs
     supporting_source: https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs
-    site_context: https://kaspaexplained.com/kaspa-tps-explained
+    site_context: https://kaspaexplained.com/what-is-kaspa
     forbidden_copy:
       - testnet TPS is mainnet TPS
       - lab TPS is normal mainnet use
@@ -114,16 +129,27 @@ claims:
       - Fast payments alone prove adoption
   coordination_markets:
     status: research_direction
-    recheck_after: 2026-09-01
-    summary: Coordination markets are a highlighted Kaspa product direction in current narrative context, but production systems still need concrete commitment, oracle, settlement, privacy, liquidity, and app-rail designs before being described as live.
+    recheck_after: 2026-09-08
+    summary: >
+      Coordination markets are a highlighted Kaspa product direction in current narrative context, but
+      production systems still need concrete commitment, oracle, settlement, privacy, liquidity, and
+      app-rail designs before being described as live. Rechecked August 24, 2026: no new evidence found of
+      a shipped coordination-market product; status unchanged from research direction.
     source: https://x.com/DailyKaspa/status/2052716697262374936
     forbidden_copy:
       - Coordination markets are live on Kaspa
       - Staghunt is production-ready on Kaspa
   app_project_claims:
     status: builder_guardrail
-    recheck_after: 2026-08-29
-    summary: App/project claims are not L1 protocol-status evidence. Igra/Kaskad-style L2 or ecosystem app launches can be useful ecosystem context, but they do not prove native Kaspa L1 smart contracts, Toccata mainnet activation, or mature Kaspa-native DeFi. Mention app projects only when the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners. Otherwise, leave them out.
+    recheck_after: 2026-09-12
+    summary: >
+      App/project claims are not L1 protocol-status evidence. Igra/Kaskad-style L2 or ecosystem app
+      launches can be useful ecosystem context, but they do not prove native Kaspa L1 smart contracts,
+      Toccata mainnet activation, or mature Kaspa-native DeFi. Mention app projects only when the L1 fact
+      itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to
+      miners. Otherwise, leave them out. Rechecked August 24, 2026: docs.kaspa.org/integrate/transaction-payload
+      is reachable and unchanged, still describing the payload field and its transient-mass-derived size
+      ceiling rather than any app-level claim.
     source: https://docs.kaspa.org/integrate/transaction-payload
     forbidden_copy:
       - App activity proves Toccata is live
@@ -131,7 +157,7 @@ claims:
       - A wallet or frontend feature is protocol activation evidence
   toccata:
     status: daa_gated
-    recheck_after: 2026-09-02
+    recheck_after: 2026-09-07
     summary: >
       Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0
       was published on June 5, 2026 as the Mainnet Toccata Release; it set Toccata mainnet activation for
@@ -155,7 +181,16 @@ claims:
       activated behavior: it does not itself activate anything new, and it has not yet shipped in
       a tagged release. Rechecked August 23, 2026: no change. v2.0.1 (June 15, 2026) remains the
       newest tagged release, and PRs #1082-#1084, #1086, #1087, and #1089 all still show merged
-      (August 19-21, 2026) with no new Toccata Cleanup PRs opened since.
+      (August 19-21, 2026) with no new Toccata Cleanup PRs opened since. Rechecked August 24, 2026:
+      a seventh Toccata Cleanup PR appeared and merged same-day, #1101, "Toccata cleanup - P2P
+      follow-ups" (michaelsutton, opened August 23, merged August 24, reviewed and approved by
+      coderofstuff). It continues the same pattern as #1082-#1089: "correct stale post-Toccata
+      consensus comments," remove the old protocol-version-7/8 flow registrations and consolidate
+      P2P flows under version 10 only, remove body_only_ibd_permitted so the IBD client
+      unconditionally requests block bodies, and drop the now-unused HeaderFormat/Versioned<T>
+      plumbing in favor of applying the v10 compressed-parent header format uniformly. This is
+      cleanup of already-activated P2P behavior, not new activation, and v2.0.1 (June 15, 2026) is
+      still the newest tagged release; #1101 has not shipped in a tagged release either.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -169,8 +204,16 @@ claims:
       - merged TN10 KIPs prove mainnet activation
   toccata_operator_readiness:
     status: daa_gated
-    recheck_after: 2026-08-26
-    summary: The Rusty Kaspa Toccata node setup guide says node operators should run v2.0.1 or newer; the node database upgrade is one-way without resync; direct RPC transaction submission uses the standard-fee floor of 100 sompi times max(compute grams, 2 * transaction bytes); new integrations should use storageMass/storage_mass plus transaction version 1, computeBudget, covenant outputs, and UTXO covenant_id where relevant; exchanges, pools, miners, wallets, explorers, and indexers should test against Testnet-10 and mainnet behavior after activation.
+    recheck_after: 2026-09-09
+    summary: >
+      The Rusty Kaspa Toccata node setup guide says node operators should run v2.0.1 or newer; the node
+      database upgrade is one-way without resync; direct RPC transaction submission uses the standard-fee
+      floor of 100 sompi times max(compute grams, 2 * transaction bytes); new integrations should use
+      storageMass/storage_mass plus transaction version 1, computeBudget, covenant outputs, and UTXO
+      covenant_id where relevant; exchanges, pools, miners, wallets, explorers, and indexers should test
+      against Testnet-10 and mainnet behavior after activation. Rechecked August 24, 2026 directly against
+      docs/toccata-guide.md on the rusty-kaspa master branch: text unchanged, including the fee-floor
+      formula and the one-way database upgrade warning.
     source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md
     supporting_source: https://github.com/kaspanet/kaspad/releases/tag/v0.12.23
     forbidden_copy:
@@ -179,8 +222,16 @@ claims:
       - Ordinary users must run a node before the activation score
   tn10_toccata_activation_test:
     status: testnet_only
-    recheck_after: 2026-09-04
-    summary: Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A July 25, 2026 check of the Testnet-10 REST API showed virtual DAA 526,066,399, well above the scheduled scores. This is testnet evidence for the activation path and node behavior. Mainnet activation needs separate mainnet evidence.
+    recheck_after: 2026-09-14
+    summary: >
+      Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on
+      Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled
+      final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A
+      July 25, 2026 check of the Testnet-10 REST API showed virtual DAA 526,066,399, well above the
+      scheduled scores. Rechecked August 24, 2026: both tn10-toc2 and tn10-toc3 release tags still exist
+      unchanged on rusty-kaspa; this is a fixed historical activation record, not a moving figure. This is
+      testnet evidence for the activation path and node behavior. Mainnet activation needs separate mainnet
+      evidence.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3
     forbidden_copy:
       - TN10 activation proves mainnet activation
@@ -190,9 +241,11 @@ claims:
       - TN10 passed the activation score, so Toccata is live on mainnet
   tn12_covenant_evidence:
     status: testnet_only
-    recheck_after: 2026-08-27
+    recheck_after: 2026-09-10
     summary: >
-      The TN12 covenant lab has accepted proof transactions for vault recovery,
+      Rechecked August 24, 2026: the parker2017code/tn12-covenant-vault-demo repo this claim cites is still
+      reachable and unchanged; this is a fixed evidence set from a completed testnet lab run, not a live
+      feed, so it is not expected to move. The TN12 covenant lab has accepted proof transactions for vault recovery,
       vault delayed withdrawal, assurance release/refund, escrow release/refund/cancel,
       role-separated positive paths (all 7), batch-assurance 3-pledge release, and
       40 payload events, including scheduler-intent, scheduler-bid, scheduler-execution, and scheduler-covenant-binding receipts, plus accepted playground role-wallet funding, two user-to-pool deposits, and one pool-to-user payout. The public results and playground pages explain the evidence and role flow without upgrading it into mainnet or production custody. Adversarial rejection evidence covers 13 cases across 5 mutation
@@ -206,16 +259,17 @@ claims:
       - TN12 txids are mainnet txids
   vprogs:
     status: roadmap
-    recheck_after: 2026-09-03
+    recheck_after: 2026-09-07
     summary: >
       vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering,
       including later cross-app atomic composition. They are not a mature live app ecosystem. The public
       vprogs repo README opens with "This repository is in early development / prototype phase. APIs and
       architecture may change significantly," and the workspace carries core, storage, state, scheduling,
-      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 23, 2026: no
-      change since the August 14 check, or the August 7 one before it. Still 19 commits landed in July 2026, the last on July 28 adding a
-      program-agnostic daemon engine and a vprun CLI. Nothing has landed since; the branch has gone over
-      three and a half weeks with no commits, and there are still zero releases, zero tags, and nothing on crates.io. Do not call the work pre-testnet.
+      transaction-runtime, node, l1, zk, sim, runner, and examples members. Checked August 24, 2026: no
+      change since the August 23, August 14, or August 7 checks before it. Still 19 commits landed in July
+      2026, the last on July 28 adding a program-agnostic daemon engine and a vprun CLI. Nothing has landed
+      since; the branch has now gone almost four weeks with no commits, and there are still zero releases,
+      zero tags, and nothing on crates.io. Do not call the work pre-testnet.
       examples/tn10-flow describes itself as "a proof-of-concept that runs the L2 flow against a remote
       testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
       against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
@@ -226,7 +280,7 @@ claims:
       - vProgs are live
   argent:
     status: research
-    recheck_after: 2026-08-30
+    recheck_after: 2026-08-31
     summary: >
       Argent is an actor-based language and compiler for stateful multi-contract applications on
       covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable
@@ -250,17 +304,21 @@ claims:
       changes. This corrects an earlier version of this claim, which read the repo as having gone quiet
       since August 2; that was true as of the check that wrote it but is no longer current.
       The project has its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP
-      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, now 78
-      commits, up from 77 on August 14 with the August 17 sync commit; the per-author breakdown was not
-      rerun at the new count, but Sutton held 73 of the prior 77, with a19q3, Manyfestation, and WolfieOC
-      holding the other four), argent-playground (created July 9, multi-actor and DEX demos, last checked
-      latest July 29), and argent-template (created July 24, last checked latest July 29; both playground
-      and template repos were not rechecked for new pushes this pass). Zero releases and zero
-      tags on every repo. The audit gate is independently visible upstream: kaspanet/silverscript also has
-      zero releases and zero tags, and stayed active through the check window: still "Experimental," still
-      recommending testnet-10-only use ahead of a first stable v1, with commits as recent as August 20,
-      2026 ("feat(compiler): template hash function is blake3"), so
-      the release Argent waits on still has not happened. The template's Scope section says it "does not
+      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, now 80
+      commits, up from 78 on August 23 and 77 on August 14; the per-author breakdown was not rerun at the
+      new count, but Sutton held 73 of the prior 77, with a19q3, Manyfestation, and WolfieOC holding the
+      other four), argent-playground (created July 9, multi-actor and DEX demos, last checked latest July
+      29), and argent-template (created July 24, last checked latest July 29; both playground and template
+      repos were not rechecked for new pushes this pass). Zero releases and zero tags on every repo.
+      Rechecked August 24, 2026: two more commits landed August 23, PR #47 ("Sync hashing and entry
+      dispatch with latest Silverscript") and PR #48 ("support temporal values across Argent"), both
+      continuing the same pattern as the August 17 sync commit, tracking Silverscript's own churn rather
+      than adding new unrelated surface area. The audit gate is independently visible upstream:
+      kaspanet/silverscript also has zero releases and zero tags (confirmed again August 24, releases/latest
+      still redirects to the empty releases page), and stayed active through the check window: still
+      "Experimental," still recommending testnet-10-only use ahead of a first stable v1, with commits as
+      recent as August 24, 2026, so the release Argent waits on still has not happened. The template's Scope
+      section says it "does not
       connect to a Kaspa network, manage a wallet, or submit transactions," and its VS Code extension for
       .ag files is linked out of the Argent checkout rather than shipped by the template. An
       examples/icc/kcc20_asset.ag file prototypes a KCC-0020-style transferable asset covenant whose owner
@@ -276,21 +334,31 @@ claims:
 
   cross_app_composition:
     status: roadmap
-    recheck_after: 2026-09-05
+    recheck_after: 2026-09-07
     summary: >
       Atomic composition means several app states succeed or fail as one operation. Composing separately
       compiled covenant apps atomically inside a single transaction is possible on Toccata itself:
       Argent's Inter-Covenant Communication does it, so far only in unaudited offline demos. The line that
       actually separates vProgs is shared mutable state. Where many users mutate one shared app state, L1
-      composability tends to be exit-style rather than immediate at the moment a user acts.
+      composability tends to be exit-style rather than immediate at the moment a user acts. Attempted
+      recheck August 24, 2026: medium.com blocks automated fetches (HTTP 403) for this source URL, which is
+      Medium's standard bot-wall behavior and not evidence the article itself changed or was removed; the
+      claim's own site (Argent ICC) was independently rechecked this pass via the argent-lang/argent repo
+      and remains unaudited offline demos only, consistent with this summary. Content of the Medium source
+      itself could not be independently reverified this pass.
     source: https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c
     forbidden_copy:
       - cross-app atomic composition requires vProgs
       - Argent ICC demos are deployed on mainnet
   based_apps:
     status: targeted
-    recheck_after: 2026-09-02
-    summary: Based apps are the richer-state app lane around Kaspa L1 sequencing, commitments, proofs, settlement, or exits. They can start as deterministic replay over accepted transactions and add based-zk proof checks when verification is required. Direct L1 covenant examples such as vaults, escrow, and assurance do not require an L2.
+    recheck_after: 2026-09-09
+    summary: >
+      Based apps are the richer-state app lane around Kaspa L1 sequencing, commitments, proofs, settlement,
+      or exits. They can start as deterministic replay over accepted transactions and add based-zk proof
+      checks when verification is required. Direct L1 covenant examples such as vaults, escrow, and
+      assurance do not require an L2. Rechecked August 24, 2026: the source gist is still reachable and
+      still reads as R&D roadmap architecture, not a shipped product; no mainnet based-app evidence found.
     source: https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1
     forbidden_copy:
       - Kaspa apps require an L2
@@ -312,11 +380,21 @@ claims:
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   native_defi:
     status: roadmap
-    recheck_after: 2026-09-05
+    recheck_after: 2026-08-31
     summary: >
       Mature native Kaspa L1 DeFi still depends on future programmability foundations and app tooling, but
       the "nothing is deployed" version of this claim expired between July 25 and August 8, 2026. Measured
-      August 22 via the kascov covenant indexer (kascov.io/data/mainnet-live.json), mainnet carries 28,107
+      fresh August 24, 2026 via the kascov covenant indexer (kascov.io/data/mainnet-live.json), mainnet
+      carries 28,125 covenants ever created, 519 active, 27,606 burned, and 153,072,124,592,616 sompi of
+      live covenant value, about 1,530,721 KAS. That is a real move worth flagging: covenant counts barely
+      shifted from the August 22 read (28,107 -> 28,125 created, +18; 517 -> 519 active, +2; 27,590 ->
+      27,606 burned, +16) but the live-value figure dropped about 12.5 percent, from about 1,750,093 KAS to
+      about 1,530,721 KAS, in two days. Counts and value are decoupling: more covenants exist and more stay
+      alive, but the KAS actually locked in them fell. This pass did not re-derive the reserve-sompi
+      cross-check that fixed the unit as sompi on August 22 (summing priced bonding/graduated market
+      entries independently); markets_total from kascov.io/data/mainnet/markets is still 93 entries as of
+      August 24, unchanged from August 22, so the market count itself has not moved even though covenant
+      value has. Measured August 22 via the same indexer, mainnet carried 28,107
       covenants ever created, 517 active, 27,590 burned, and 175,009,316,300,216 sompi of live covenant
       value, which is about 1,750,093 KAS. The August 21 read gave the same 28,107 / 517 / 27,590 counts
       against about 1,714,200 KAS of live value; only the value field moved. The prior reads were
@@ -334,7 +412,9 @@ claims:
       bonding and graduated entries (excluding the 7 LP-share duplicates and 2 unpriced entries) gives
       about 1,747,632 KAS, within 0.14 percent of the independently computed live covenant value above.
       That agreement is what fixes the unit as sompi. Do not restate this figure without re-deriving it
-      the same way; the field name alone does not carry the unit. This was verified past the indexer on August 8: trade txid
+      the same way; the field name alone does not carry the unit. Given the value drop just measured, that
+      August 22 reserve-sompi cross-check total (1,747,632 KAS) is now stale too and needs its own
+      re-derivation before being restated as current. This was verified past the indexer on August 8: trade txid
       dfca80761ffcebcb9b2f16984ea695fe542780ab9d836b061fb527e0277c708c read as accepted on api.kaspa.org
       with transaction version 1 and p2sh outputs whose amount matched kascov to the sompi; not re-verified
       txid by txid on August 14, since the indexer total itself was read fresh. So say markets exist and
@@ -345,7 +425,17 @@ claims:
       among the p2sh entries. Kaskad/Igra-style L2 lending can be described as ecosystem or L2 DeFi
       context, but it is not evidence that mature native Kaspa L1 DeFi, broad Toccata app usage, or vProgs
       are live. Do not describe the L1 path as Ethereum-style or EVM-compatible execution unless a primary
-      source adds that support.
+      source adds that support. Site check, August 24, 2026: why-kaspa-matters.html was rewritten and no
+      longer carries the detailed kascov numeric table this claim used to point readers at; that page now
+      only makes the qualitative point that native DeFi is roadmap. The live numbers now live on
+      build-on-kaspa.html instead ("28,107 covenants ever created on mainnet by August 22, 2026, with 517
+      still active holding about 1,750,093 KAS across roughly 86 real markets... Testnet-10 holds far more
+      activity, about 80,507 active covenants"), and per the fresh read above, that page's KAS-value figure
+      is now stale by about 12.5 percent (1,750,093 KAS quoted vs about 1,530,721 KAS measured August 24);
+      its covenant counts (28,107 / 517) are close but already behind the fresh 28,125 / 519; and its
+      Testnet-10 active-covenant figure (80,507) is behind a fresh August 24 kascov testnet-10 read of
+      81,835. This is a page-content defect worth fixing on build-on-kaspa.html, not a CLAIMS.yml defect;
+      reported here rather than edited, since page edits are out of this claim owner's scope.
     source: https://kaspaexplained.com/why-kaspa-matters
     forbidden_copy:
       - Native DeFi is live
@@ -360,7 +450,7 @@ claims:
       - Almost nobody is using them in production yet
   dagknight:
     status: research
-    recheck_after: 2026-09-06
+    recheck_after: 2026-09-07
     summary: >
       DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG.
       The parameterless descriptor belongs to the DAGKnight paper itself, "The DAG KNIGHT Protocol: A
@@ -379,7 +469,10 @@ claims:
       conflict-zone work through late July. This corrects an earlier version of this claim, which had
       the branch dormant since a March 22, 2026 commit; that was true as of the check that wrote it but
       is no longer current. Activation still needs a merged KIP and release/network confirmation: current
-      mainnet behavior remains GHOSTDAG, and no rusty-kaspa release ships DAGKnight.
+      mainnet behavior remains GHOSTDAG, and no rusty-kaspa release ships DAGKnight. Rechecked August 24,
+      2026 directly against kip-0002.md and the dagknight branch's commit feed: KIP-2 still reads "Status:
+      Proposed" in its header block, and the dagknight branch's most recent commit is still the August 14,
+      2026 merge, no new commits landed in the ten days since.
     source: https://eprint.iacr.org/2022/1494
     supporting_source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
@@ -398,7 +491,8 @@ claims:
       KIP-2, the DAGKnight consensus proposal itself, only says the optimal BPS is an open research
       question with a recommendation still pending, and does not name 100 BPS or "netsplit-resilient."
       Treat the 100 BPS / netsplit-resilience pairing as unconfirmed roadmap narrative until a KIP,
-      release, or core-contributor source states it directly.
+      release, or core-contributor source states it directly. Rechecked August 24, 2026 directly against
+      kip-0002.md: still no mention of 100 BPS, netsplit, or partition-resilience anywhere in the document.
     source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - Kaspa is 100 BPS today
@@ -406,7 +500,7 @@ claims:
       - DAGKnight lets transactions confirm during a netsplit today
   official_roadmap_framing_lag:
     status: roadmap_framing
-    recheck_after: 2026-08-28
+    recheck_after: 2026-09-07
     summary: >
       Kaspa.org's own Lore and Build pages lag mainnet activation. Checked August 14, 2026, 45
       days after Toccata activated on mainnet (June 30, 2026): Lore's Toccata section still opens
@@ -414,9 +508,12 @@ claims:
       on TN12," with no mainnet mention. Build still says the Toccata hard fork is "currently live
       on TN12 ahead of mainnet activation," and separately says Silverscript is "testing on TN12
       ahead of the Toccata hard fork that lands covenants and zk opcodes on mainnet." Both read as
-      unchanged from the same check on August 1, 2026, 32 days after activation. Roadmap framing on
-      these pages is not activation evidence either way: trust the release tag and DAA score over
-      this prose when they conflict.
+      unchanged from the same check on August 1, 2026, 32 days after activation. Rechecked August
+      24, 2026, 55 days after activation: both pages still carry the exact same wording. Lore still
+      opens "The next hardfork is Toccata" with the TN12-only framing; Build still reads "Currently
+      live on TN12 ahead of mainnet activation." The lag is now 8 weeks and counting. Roadmap
+      framing on these pages is not activation evidence either way: trust the release tag and DAA
+      score over this prose when they conflict.
     # kaspa-org-callout: deliberately citing kaspa.org/lore to document that it is stale
     source: https://kaspa.org/lore
     # kaspa-org-callout: deliberately citing kaspa.org/build to document that it is stale
@@ -443,7 +540,7 @@ claims:
       - Kaspa oracle flows are live
   kcc_conventions:
     status: research_direction
-    recheck_after: 2026-09-05
+    recheck_after: 2026-09-10
     summary: >
       Kaspa Calls for Conventions (KCCs) are an ecosystem-standards process, separate from KIPs.
       Five states must stay distinct here and never get blurred into each other: a number used
@@ -542,6 +639,11 @@ claims:
       concrete evidence backs why a metadata standard matters: 0xKnitser, kas-smiths.org/t/98 post
       8, August 15, 2026, cross-checked one live launchpad's published logo URLs and found "5 of
       19 published logo URLs were dead within days and 3 more served HTML instead of an image."
+      Rechecked August 24, 2026 directly against issue and PR pages: issue #14 is still Open with the same
+      four participants (Knitser, Manyfestation, Sutton, ShawnPearce) and no fifth commenter or spec change;
+      issue #11 is still Closed; PR #6 (KCC-0021) and PR #4 (KCC-0402) are still open, unmerged; the repo
+      still carries exactly three merged KCC files on main (kcc-0001.md, kcc-0002.md, kcc-0020.md), no
+      fourth has landed.
     source: https://github.com/kaspanet/kccs
     forbidden_copy:
       - KCC20 is a ratified Kaspa standard
@@ -577,9 +679,12 @@ claims:
 
   covenant_tooling_and_support:
     status: builder_guardrail
-    recheck_after: 2026-08-30
+    recheck_after: 2026-09-03
     summary: >
-      Rechecked August 20, 2026 against each primary source; every part below held unchanged.
+      Rechecked August 24, 2026 directly against kaspa-python-sdk's releases page and the tn10 REST API's
+      live openapi.json: kaspa-python-sdk v2.0.2.rc1 is still the newest release, still a prerelease, still
+      published July 23, 2026, no newer tag exists. rusty-kaspa's newest tagged release is still v2.0.1
+      (June 15, 2026). Everything below held unchanged from the August 20, 2026 pass against each primary source.
       Post-activation tooling is moving faster than the protocol. kaspa-python-sdk v2.0.2.rc1 is
       still the newest release, published July 23, 2026 as a prerelease; its release notes still
       say only "Release candidate for 2.0.2" and do not confirm SilverScript bindings. kascov is an
@@ -606,9 +711,12 @@ claims:
 
   tn10_rest_submit_drops_compute_budget:
     status: builder_guardrail
-    recheck_after: 2026-09-05
+    recheck_after: 2026-09-07
     summary: >
-      The community REST API at api-tn10.kaspa.org silently drops compute_budget when submitting
+      Rechecked August 24, 2026 directly against the live schema at api-tn10.kaspa.org/openapi.json:
+      SubmitTxModel still carries only version, inputs, outputs, lockTime, and subnetworkId, and
+      SubmitTxInput still carries only previousOutpoint, signatureScript, sequence, and sigOpCount.
+      compute_budget is still absent from the submit path. The community REST API at api-tn10.kaspa.org silently drops compute_budget when submitting
       v1 transactions, so SilverScript covenant deployments fail with "script units exceeded the
       amount committed in the input: used=100000, limit=9999." Verified directly against the live
       schema at https://api-tn10.kaspa.org/openapi.json on August 22, 2026: SubmitTxModel carries
@@ -629,7 +737,7 @@ claims:
 
   covenant_introspection_scope:
     status: research_direction
-    recheck_after: 2026-09-05
+    recheck_after: 2026-08-31
     summary: >
       Kaspa covenant introspection is scoped to the spending transaction itself; there is no
       reference-input equivalent, so any covenant read of shared on-chain state (a price, a pool
@@ -639,7 +747,12 @@ claims:
       reference inputs and CIP-32 inline datums, Ergo's data inputs, and CKB's cell deps, and asked
       whether closing it needs a new KIP or belongs in L2/vProgs. Six reactions, no reply as of
       August 22, 2026. This is a Telegram report. It has not appeared as a kas-smiths.org forum
-      post, and it is not independently confirmed beyond being raised and left unanswered.
+      post, and it is not independently confirmed beyond being raised and left unanswered. Attempted
+      recheck August 24, 2026: t.me/kasparnd's public preview is reachable, but Telegram group message
+      content is not readable without an authenticated Telegram client or bot token, neither available
+      this pass, so whether a reply has since landed could not be independently reverified. Set a short
+      interval given this gap; the next pass should get real Telegram access or confirm no forum
+      cross-post has appeared on kas-smiths.org instead.
     source: https://t.me/kasparnd
     forbidden_copy:
       - Kaspa covenants have a reference-input mechanism like Cardano or Ergo
@@ -648,9 +761,17 @@ claims:
 
   fees_vs_subsidy_2026_08_22:
     status: measurement_sensitive
-    recheck_after: 2026-08-30
+    recheck_after: 2026-08-31
     summary: >
-      Security-budget math for August 22, 2026, computed for the skeptical-case.html "What pays for
+      Rechecked August 24, 2026 against api.kaspa.org/info/blockreward directly: block reward is still
+      2.31246515 KAS, unchanged, still inside the same 504,909,000-531,207,000 emission step (see
+      l1_status_snapshot_2026_08_20 above). api.kaspa.org/info/hashrate read 297,696.9, about 0.2977 EH/s,
+      down from 0.31207 EH/s on August 22, ordinary short-term hash rate variance. A live CoinGecko read
+      gave $0.02864016/KAS, down from $0.02934513 on August 22. The daily_transactions and median_fee_usd
+      inputs from data/l1-chains.json were not rerun this pass since that file carries its own 2026-08-22
+      dated snapshot and is outside this claim's edit scope; the dollar totals below still reflect that
+      date's price and are not restated for the small price move just measured. Security-budget math for
+      August 22, 2026, computed for the skeptical-case.html "What pays for
       the hash rate" section. Block reward 2.31246515 KAS (api.kaspa.org/info/blockreward), at 10
       blocks per second (Crescendo, block_time_s in data/l1-chains.json), gives 864,000 blocks/day
       and 1,997,970 KAS/day of subsidy. At $0.02934513/KAS (CoinGecko simple price, fetched live),

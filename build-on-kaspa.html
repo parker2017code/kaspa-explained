@@ -69,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -122,7 +122,7 @@
         </article>
         <article>
           <span>2 / Reason</span>
-          <strong>Say why a server won't do</strong>
+          <strong>Say why a server can't do it instead</strong>
           <p>Self-custody, public ordering, or proof that state wasn't rewritten in private. One has to be true.</p>
         </article>
       </div>
@@ -151,7 +151,7 @@
       <details class="deep-dive">
         <summary>Why there's no shared-state read, and who's already hit it</summary>
         <p>Reading shared on-chain state, a price, a pool balance, consumes it in the same breath. Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB.</p>
-        <p>A builder raised the gap in the Kaspa Core R&amp;D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no KIP yet says whether the fix belongs at L1 or in a future vProg.</p>
+        <p>A builder raised the gap in the Kaspa Core R&amp;D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-buildon">KIP<span class="term-def__panel" id="kip-def-buildon" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span> yet says whether the fix belongs at L1 or in a future vProg.</p>
       </details>
     </section>
 
@@ -310,7 +310,7 @@
         <i>// no `become`: this covenant's lineage ends here</i>
     }
 }</pre>
-          <p class="cvb-sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research and not yet released; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's actual status. Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>. Both KIP-17 and its continuation-identity companion, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, are live on Kaspa mainnet as of the Toccata upgrade: a spend either carries the same <code>covenant_id</code> as the UTXO it consumes, or proves a fresh one through the genesis hash, so a forged lookalike UTXO cannot claim an existing covenant's identity.</p>
+          <p class="cvb-sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research and not yet released; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's actual status. Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>. Both KIP-17 and its continuation-identity companion, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, are live on Kaspa mainnet as of the Toccata upgrade: a spend either carries the same <code>covenant_id</code> as the <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-buildon">UTXO<span class="term-def__panel" id="utxo-def-buildon" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> it consumes, or proves a fresh one through the genesis hash, so a forged lookalike UTXO cannot claim an existing covenant's identity.</p>
         </details>
       </div>
         </div>
@@ -650,7 +650,8 @@
       <p>A third-party indexer counts thousands of covenants created on mainnet, hundreds still active. Numbers and use-case status below.</p>
       <details class="deep-dive">
         <summary>Covenant counts, and use cases by status</summary>
-        <p>A third-party indexer, <a href="https://kascov.io">kascov</a>, counted 28,107 covenants ever created on mainnet by August 22, 2026, with 517 still active holding about 1,750,093 KAS across roughly 86 real markets. Testnet-10 holds far more activity, about 80,507 active covenants, the gap expected between a place builders test freely and the network real value actually sits on.</p>
+        <p>A third-party indexer, <a href="https://kascov.io">kascov</a>, puts mainnet at <span id="cov-created">28,125</span> covenants ever created, <span id="cov-active">519</span> still active, holding about <span id="cov-value">1,530,721</span> KAS, across roughly 86 real markets counted August 22, 2026. That KAS total moves fast: it was about 1,750,093 two days earlier, a 12.5 percent drop while the covenant counts barely changed, so treat it as a reading, not a fixed fact. Testnet-10 holds far more activity, about <span id="cov-testnet">81,835</span> active covenants, the gap expected between a place builders test freely and the network real value actually sits on.</p>
+        <p class="source-inline" id="cov-stamp">Baseline written into this page August 24, 2026.</p>
         <div class="table-wrap">
           <table class="reality-table">
             <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
@@ -666,8 +667,28 @@
           </table>
         </div>
         <p class="fit-note">The rule for assurance funding runs live today. A shipped coordination-market product does not: that's still a research direction, and a covenant can't see an outside price or event without a named oracle.</p>
-        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>.</p>
+        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>. Raw text, all reading <code>Status: Active</code>: <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0016.md">KIP-16</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0017.md">KIP-17</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0020.md">KIP-20</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0021.md">KIP-21</a>.</p>
       </details>
+      <script>
+      (function () {
+        var stamp = document.getElementById('cov-stamp');
+        function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
+        Promise.all([
+          fetch('https://kascov.io/data/mainnet-live.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('mainnet ' + r.status); return r.json(); }),
+          fetch('https://kascov.io/data/testnet-10-live.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('testnet ' + r.status); return r.json(); })
+        ]).then(function (results) {
+          var mn = results[0] && results[0].stats, tn = results[1] && results[1].stats;
+          if (!mn || !tn || typeof mn.covenants !== 'number' || typeof tn.active !== 'number') throw new Error('missing stats');
+          document.getElementById('cov-created').textContent = fmt(mn.covenants);
+          document.getElementById('cov-active').textContent = fmt(mn.active);
+          document.getElementById('cov-value').textContent = fmt(mn.live_value / 1e8);
+          document.getElementById('cov-testnet').textContent = fmt(tn.active);
+          stamp.textContent = 'Read live from kascov.io just now.';
+        }).catch(function () {
+          stamp.textContent = 'Live read failed. Showing the August 24, 2026 baseline written into this page, not current data.';
+        });
+      })();
+      </script>
     </section>
 
     <section id="zk-boundary-demo" class="section" aria-labelledby="zk-boundary-demo-title">
@@ -1054,6 +1075,7 @@ amount: "31112708372"</code></pre>
               </article>
             </div>
             <p>The community REST API at <code>api-tn10.kaspa.org</code> is a separate trap: its submit schema (checked against the live <a href="https://api-tn10.kaspa.org/openapi.json">openapi.json</a>) never carried <code>compute_budget</code>, so Silverscript covenant deployments through it fail with "script units exceeded the amount committed in the input: used=100000, limit=9999." Submit straight to a kaspad node instead.</p>
+            <p class="source-inline">Kaspa Developer Platform reference: <a href="https://docs.kas.fyi/">index</a>, <a href="https://docs.kas.fyi/llms.txt">llms.txt</a>, <a href="https://docs.kas.fyi/api-reference/v1/transaction/create-transaction-acceptance">transaction acceptance</a>, <a href="https://docs.kas.fyi/api-reference/v1/block/get-block-daa-score">DAA-score blocks</a>, <a href="https://docs.kas.fyi/api-reference/v1/block/get-block-blue-score">blue-score ranges</a>, <a href="https://docs.kas.fyi/essentials/data-types">data types</a>, and <a href="https://docs.kas.fyi/rate-limits">rate limits</a>. The <a href="https://api.kaspa.org/docs">mainnet REST API</a> and <a href="https://docs.kaspa.org/references">docs.kaspa.org references</a> are separate, unauthenticated sources for the same kind of data.</p>
           </div>
         </div>
       </div>
@@ -1133,7 +1155,7 @@ amount: "31112708372"</code></pre>
       <p class="eyebrow">Order of work</p>
       <h2>Build wallets and payments first</h2>
       <p>Small covenant-shaped products come next, and based-app paths only once the product needs shared state. A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider. One hosted API is not enough.</p>
-      <p>If a user hands off an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. A validity proof big enough to be worth submitting trades block size against the standard-fee floor that keeps spam costly.</p>
+      <p>If a user hands off an if-this-then-that strategy, nothing yet stops a miner or searcher from front-running the same event signal. A validity proof has to be large enough to be worth submitting, and that same size is exactly what the standard-fee floor taxes: a floor priced in bytes and compute means a bigger proof pays a bigger fee.</p>
     </section>
 
     <section class="next-step section">
@@ -1141,10 +1163,11 @@ amount: "31112708372"</code></pre>
       <h2>What to read before writing code</h2>
       <ol class="source-list grid-cards" data-audience="specialist">
         <li><a href="https://docs.kaspa.org/">Kaspa docs</a>, especially <a href="https://docs.kaspa.org/integrate/getting-started">Getting started</a>, <a href="https://docs.kaspa.org/programmability">Programmability</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">Transaction payload</a>, <a href="https://docs.kaspa.org/integrate/accepted-transactions">Accepted transactions</a>, and <a href="https://docs.kaspa.org/integrate/kaspa-node">Kaspa node</a>.</li>
-        <li><a href="https://progdoc.izio.fr/overview.html">Izio's programmability overview</a> lays out the same decision tree in more depth: <a href="https://progdoc.izio.fr/state-programs.html">covenants</a>, <a href="https://progdoc.izio.fr/app-vprogs.html">based apps</a>, <a href="https://progdoc.izio.fr/verified-actions.html">inline ZK</a>, and <a href="https://progdoc.izio.fr/full-vprogs.html">full vProgs</a>.</li>
-        <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, and <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a> define the JavaScript SDK request shape.</li>
-        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a>, and the <a href="https://tn12.kaspa.stream/">TN12 explorer</a>, all separate from the <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> activation evidence.</li>
-        <li><span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-buildon">Michael Sutton<span class="term-def__panel" id="sutton-def-buildon" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">vProgs masterclass</a> on app-to-app composition and prover incentives, alongside the <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo.</li>
+        <li><a href="https://progdoc.izio.fr/overview.html">Izio's programmability overview</a> lays out the same decision tree in more depth: <a href="https://progdoc.izio.fr/state-programs.html">covenants</a>, <a href="https://progdoc.izio.fr/app-vprogs.html">based apps</a>, <a href="https://progdoc.izio.fr/verified-actions.html">inline ZK</a>, and <a href="https://progdoc.izio.fr/full-vprogs.html">full vProgs</a>; <a href="https://kasmagazine.com/article/weeklyknightl12s-and-pows">KASmedia's fast-PoW recap</a> covers the same ground for a less technical reader.</li>
+        <li><a href="https://kaspa.aspectron.org/docs/classes/RpcClient.html">Aspectron RpcClient docs</a>, <a href="https://kaspa.aspectron.org/docs/functions/signTransaction.html">signTransaction docs</a>, <a href="https://kaspa.aspectron.org/docs/interfaces/ISubmitTransactionRequest.html">submit-transaction request docs</a>, and <a href="https://github.com/kaspanet/rusty-kaspa/tree/v1.1.0/wasm/examples">worked WASM examples</a> define the JavaScript SDK request shape.</li>
+        <li><a href="https://github.com/kaspanet/rusty-kaspa/tree/tn12">rusty-kaspa TN12 branch</a>, <a href="https://github.com/kaspanet/rusty-kaspa/tree/toccata">Toccata branch</a>, <a href="https://github.com/kaspanet/silverscript">Silverscript</a>, <a href="https://faucet-tn12.kaspanet.io/">TN12 faucet</a>, the <a href="https://faucet-testnet.kaspanet.io">Testnet-10 faucet</a>, and the <a href="https://tn12.kaspa.stream/">TN12 explorer</a>, all separate from the <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> activation evidence. <a href="https://kaspa.aspectron.org/rpc/ports.html">RPC port reference</a> and the <a href="https://kaspa.aspectron.org/rpc/pnn.html">public node network</a> cover how to reach a node directly.</li>
+        <li><span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-buildon">Michael Sutton<span class="term-def__panel" id="sutton-def-buildon" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">vProgs masterclass</a> on app-to-app composition and prover incentives, alongside the <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo, its <a href="https://github.com/kaspanet/vprogs/commit/57039db09ea958689aee2ae89f81ba40c8cc3e6d">RISC0 backend commit</a>, and two of Sutton's design gists: <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1">covenant++</a> and <a href="https://gist.github.com/michaelsutton/a5c9bff6c9e9713edd0de9a3059bab9a">STARK blocks</a>. The based-ZK-rollup design work sits at <a href="https://research.kas.pa/t/on-the-design-of-based-zk-rollups-over-kaspas-utxo-based-dag-consensus/208">research.kas.pa</a>.</li>
+        <li>Node and community infrastructure a builder is likely to touch: the official <a href="https://hub.docker.com/r/kaspanet/rusty-kaspad">rusty-kaspad Docker image</a>, an AI-generated <a href="https://deepwiki.com/kaspanet/rusty-kaspa">DeepWiki</a> read of the codebase, <a href="https://github.com/supertypo/simply-kaspa-indexer">simply-kaspa-indexer</a>, <a href="https://github.com/kaspanet/dnsseeder">the DNS seeder</a>, <a href="https://github.com/aspectron/khost">kHost</a>, the <a href="https://github.com/K-Kluster/kaspa-js">kaspa-js</a> library, two independent signing tools that track the Python SDK, <a href="https://github.com/InKasWeRust/KasSigner">KasSigner</a> and <a href="https://kassigner.org/">KasSee</a>, and the <a href="https://t.me/kasparnd">Core R&amp;D Telegram group</a> where design discussion happens ahead of any KIP.</li>
         <li><a href="/status">Kaspa Explained status</a> and the <a href="/sources">source hierarchy</a> hold the live/targeted/roadmap/research boundaries.</li>
       </ol>
     </section>

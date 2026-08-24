@@ -56,7 +56,7 @@ Use first-party sources first for L1 and status-sensitive claims: kaspanet GitHu
 Use these files instead of turning the README into the source guide:
 
 - `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
-- `kaspa-claims-checker.html` for a browser-readable version of the status-label rules.
+- `status.html#claim-fact-check` for a browser-readable version of the status-label rules.
 - `COPY_STYLE.md` for the repo-wide anti-filler sentence standard.
 - `sources.html` for the public source hierarchy and external reference map.
 - `llms.txt` for compact retrieval guidance.
@@ -75,32 +75,38 @@ Use community portals, media sites, learning libraries, interviews, recaps, and 
 
 ## Site pages
 
-`site-manifest.json`'s `pages` array and `sitemap.xml` are the checked inventory: 23 live, indexable pages as of 2026-08-23. Every other `.html` file in the repository root is a `noindex` redirect stub (meta refresh to one of the 23); this list only covers the 23 live pages, and a filename below with no live-page description means it now redirects rather than holding content.
+`site-manifest.json`'s `pages` array, `sitemap.xml`, and `llms.txt` are the checked inventory: 19 live, indexable pages. Every other `.html` file in the repository root or under `/demos/` is a `noindex` redirect stub (meta refresh to one of the 19, usually to a specific anchor); a filename below with no live-page description now redirects rather than holding content.
 
 - `index.html` routes readers by audience and knowledge level.
-- `what-is-kaspa.html` answers the highest-intent beginner search directly.
-- `why-kaspa-matters.html` bridges into why Kaspa matters: neutral money, self-custody, and public group commitments.
+- `start-here.html` is the true-beginner router into `crypto-from-scratch.html` first, then Kaspa itself.
+- `what-is-kaspa.html` answers the highest-intent beginner search directly and is the core mechanism explainer (PoW, UTXO ownership, blockDAG, GHOSTDAG, covenants). It carries the retired `glossary.html`'s terms as inline hover/tap definitions and embeds the collision-sim, GHOSTDAG playground, live-network, and mass-calculator demos.
+- `why-kaspa-matters.html` bridges into why Kaspa matters: neutral money, self-custody, and public group commitments. Embeds the confirmation-risk demo.
 - `crypto-from-scratch.html`, `chain-comparer.html`, and `model-picker.html` are the beginner curriculum, chain-comparison dial tool, and (off-topic) LLM scorer.
-- `kaspa-origin-story.html` is the sourced fair-launch and origin-history page.
-- `toccata-explained.html` explains Toccata as the expressiveness upgrade: covenants, covenant IDs, ZK proof checks, sequencing lanes, based apps, and the vProgs boundary.
-- `argent-explained.html` explains Argent, the actor-based language compiling to Silverscript covenant applications. Added 2026-08-22 as its own live page; it does not redirect.
-- `build-on-kaspa.html` routes a builder from an app idea to the three build paths and a status gate before publishing publicly (the old `build-this-now.html` recipes, `kaspa-app-ideas.html`, `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`, `kaspa-coordination-markets.html`, and the founder/supporter survey and matching-board pages were retired into this single builder path; those URLs now redirect to `build-on-kaspa.html`, `toccata-explained.html`, `why-kaspa-matters.html`, or `about.html`).
-- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and carries the dated-update changelog (the old `kaspa-status-updates.html` and `kaspa-status-check-may-2026.html` snapshots redirect here).
+- `kaspa-origin-story.html` is the sourced fair-launch and origin-history page (the old `kaspa-status-check-may-2026.html`-adjacent history pages redirect here). Embeds the fair-launch supply-curve and DAA-to-date demos.
+- `argent-explained.html` explains Argent, the actor-based language compiling to Silverscript covenant applications. Embeds the Argent pipeline demo.
+- `build-on-kaspa.html` takes a builder from an app idea to a build path and a
+  status gate. Carries the covenant-breaker vault and ZK-boundary demos.
+  Absorbed `build-this-now.html`, `kaspa-app-ideas.html`,
+  `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`,
+  `kaspa-coordination-markets.html`, and the survey and matching-board pages.
+- `toccata-explained.html` is a stub. Covenants are explained on
+  `what-is-kaspa.html#covenants`; the builder detail is on `build-on-kaspa.html`.
+- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and carries the claim-fact-check section at `#claim-fact-check` (absorbing the retired `kaspa-claims-checker.html`) plus the retired `about.html`'s editorial-policy and claim-status definitions and `kaspa-developments.html`'s durable KIP-vs-KCC distinction. `kaspa-status-updates.html` and `kaspa-claims-checker.html` also redirect here.
 - `skeptical-case.html` is the risks and open-questions page.
-- `kaspa-mining.html` covers price/hash-rate cycles and solo mining to your own node (the old `kaspa-mining-cycle.html`, `kaspa-mining-cycle-visuals.html`, and `solo-mining-guide.html` redirect here).
-- `kaspa-developments.html` is the monthly what-changed page.
-- `kips.html` is the live-fetched KIP and KCC tracker (the old `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `kaspa-smart-contracts-status.html`, and `ghostdag-explained.html` redirect to `toccata-explained.html` or `what-is-kaspa.html`, not to this page; check `sitemap.xml` before assuming a URL is live).
-- `kaspa-claims-checker.html` is the human-readable companion to `CLAIMS.yml`.
+- `kaspa-mining.html` covers price/hash-rate cycles and solo mining to your own node (the old `kaspa-mining-cycle.html`, `kaspa-mining-cycle-visuals.html`, and `solo-mining-guide.html` redirect here). Embeds the attack-cost, emission-schedule, fee-market, and node-cost demos.
+- `kips.html` is the live-fetched KIP and KCC tracker (the old `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `kaspa-smart-contracts-status.html`, `ghostdag-explained.html`, and the hand-maintained `kaspa-developments.html` digest all redirect here or to `what-is-kaspa.html`/`status.html`; check `sitemap.xml` before assuming a URL is live). Embeds the parameterless-security and supply-split demos.
 - `sources.html` is the human source guide.
-- `glossary.html` is the plain-English term glossary.
-- `about.html` is the editorial policy page (the old `ai-guidance.html` prompt builder and `reality-check.html` skepticism page both redirect here or to `status.html`; that guidance now lives in `llms.txt` and `about.html`/`status.html` directly).
+- `utxo-vs-accounts.html` is one page holding two demos: spend from a UTXO wallet, then the shared-state demo comparing Toccata composability against vProgs-style shared mutable state.
 - `the-instrument.html` hosts Moose's monetary-systems essay.
 - `search.html` is the quickest concept/page finder.
 - `404.html` is the not-found page.
+- `demos/index.html` is a live index page that links out to all eighteen demos at their real homes; it hosts none of them itself. Every `/demos/<name>.html` path is a redirect stub into its demo's anchor on its content page, not a page in its own right.
 - `CLAIMS.yml` is the reference file for status-sensitive claims.
 - `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
 - `agent-index.json` is the generated static retrieval index for AI agents.
 - `CONTRIBUTING.md` explains correction and contribution rules.
+
+Retired pages worth knowing about specifically: `about.html`, `glossary.html`, `kaspa-developments.html`, `kaspa-claims-checker.html`, and `toccata-explained.html` all still exist as files but are `noindex` redirect stubs now, not content pages; their content moved into the live pages listed above. Do not cite any of the five as a source or a live URL.
 
 ## Maintenance checks
 

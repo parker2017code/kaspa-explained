@@ -72,7 +72,22 @@ const demoFiles = readdirSync(path.join(ROOT, 'demos'))
   .map((f) => `demos/${f}`)
   .sort();
 
-const pages = [...new Set([...manifest.pages, ...demoFiles])];
+// A redirect stub has no visible-word surface to measure, and loading one
+// navigates the page out from under page.evaluate, which crashes the run with
+// "Execution context was destroyed". Every demo became a stub when the demos
+// were inlined into their topic pages on 23 August 2026, so this filter is the
+// difference between a working gate and a gate that cannot start.
+const isRedirectStub = (rel) => {
+  try {
+    return /http-equiv=["']refresh["']/i.test(readFileSync(path.join(ROOT, rel), 'utf8'));
+  } catch {
+    return false;
+  }
+};
+
+const pages = [...new Set([...manifest.pages, ...demoFiles])].filter(
+  (rel) => !isRedirectStub(rel)
+);
 
 // Runs inside the page. Counts words in text nodes that are actually
 // rendered: not inside script/style/svg/nav/header/footer (site chrome and

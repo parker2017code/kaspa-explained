@@ -44,7 +44,19 @@ const skipDirs = new Set([
   "private-review",
   "gf-project",
   "_preview-site",
+  // Internal working notes for agents, never served to a reader. They quote
+  // the defects and the banned patterns they exist to describe, so linting
+  // them as reader copy is circular in the same way AGENTS.md is.
+  "notes",
 ]);
+
+// Audit and adversarial reports written by agents during a review pass.
+// They quote the exact defects they exist to name, including the banned
+// patterns themselves, so linting them as reader copy is circular. Matched
+// by prefix because each pass creates new ones and an explicit list goes
+// stale the moment someone adds a lens.
+const skipPrefixes = ["AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-"];
+const isInternalReport = (name) => skipPrefixes.some((pre) => name.startsWith(pre));
 
 const skipFiles = new Set([
   "MAINTENANCE.md",
@@ -55,6 +67,8 @@ const skipFiles = new Set([
   "AGENTS.md",
   "CLAUDE.md",
   "COPY_STYLE.md",
+  "THE-BAR.md",
+  "design/THE-BAR.md",
   "CONTENT_BRIEF.md",
   "agent-index.json",
   // Internal working documents. They record findings for agents, and several
@@ -230,7 +244,7 @@ function walk(dir) {
 
     if (!entry.isFile()) continue;
     const normalized = relativePath.split(path.sep).join("/");
-    if (skipFiles.has(normalized)) continue;
+    if (skipFiles.has(normalized) || isInternalReport(normalized)) continue;
     if (skipFilePatterns.some((re) => re.test(normalized))) continue;
     if (!checkedExtensions.has(path.extname(entry.name))) continue;
 

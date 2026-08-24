@@ -287,3 +287,37 @@ for, and anything that makes the rest incomprehensible if missed.
 What closes by default: methodology, sources, caveats, worked examples,
 command blocks, reference tables, and demos on pages where the demo is
 supporting evidence rather than the point.
+
+## The high school test
+
+The owner's standard for demos, set 23 August 2026: "Every demo should be
+so simple that anyone with a high school diploma and basic understanding
+of crypto knows how they work. Nothing more."
+
+That is a pass or fail bar with a real subject, not a style preference.
+The subject has finished high school and knows roughly what a
+cryptocurrency is. They do not know what a UTXO, a DAG, a covenant, a
+mergeset, or a confirmation depth is. They have not read the rest of this
+site and will not.
+
+The test: put that person in front of the demo with no help. Within a few
+seconds they must be able to say what it shows and what to touch first.
+After touching it they must be able to say what changed and why. If they
+cannot, the demo fails.
+
+Three things that do NOT rescue a failing demo:
+
+A longer caption. If the demo needs a paragraph to be understandable, the
+demo is wrong. Fix the thing, not the label on it.
+
+Correctness. A demo can be perfectly accurate, properly sourced, and
+still fail this test. Correct and unusable is a failure on this site.
+
+Familiarity. Anyone who has read the surrounding page, or who already
+knows the subject, is not a valid judge. They cannot unsee what they
+know. Grading has to be done by someone reading it cold, and they have to
+be willing to fail it.
+
+What passing looks like: one obvious thing to do, every number saying
+what it is a number of, every label readable correctly on the first pass,
+and a change the reader can see the moment they act.

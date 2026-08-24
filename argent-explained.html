@@ -51,8 +51,8 @@
     "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
   <style>
   /* Scoped styles for the inlined argent-pipeline demo (formerly demos/argent-pipeline.html).
      Every custom property and selector below is scoped under .argent-pipeline-demo so it cannot
@@ -89,14 +89,25 @@
     background:var(--card-bg); border-radius:18px; padding:16px; box-shadow:var(--shadow);
     display:flex; flex-direction:column; align-items:stretch; gap:10px;
   }
-  .argent-pipeline-demo .step-row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-  .argent-pipeline-demo .step-btn{
-    min-height:44px; border:0; border-radius:980px; padding:0 14px; background:var(--control-bg);
-    color:var(--text); font:inherit; font-size:.8rem; font-weight:600; cursor:pointer;
+  .argent-pipeline-demo .ap-summary{ display:flex; flex-direction:column; gap:12px; align-items:center; }
+  .argent-pipeline-demo .ap-summary__stat{ font-size:1.05rem; line-height:1.4; color:var(--text); text-align:center; max-width:46ch; margin:0; }
+  .argent-pipeline-demo .ap-bar{ display:flex; gap:6px; width:100%; max-width:560px; }
+  .argent-pipeline-demo .ap-bar__seg{
+    flex:1; min-height:52px; border:2px solid transparent; border-radius:14px; padding:8px 6px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    font:inherit; text-align:center; color:var(--text);
+    background:color-mix(in srgb, var(--faint) 14%, transparent);
   }
-  .argent-pipeline-demo .step-btn[aria-pressed="true"]{ background:var(--green); color:var(--ink); }
-  .argent-pipeline-demo .step-btn:hover{ background:var(--control-hover); }
-  .argent-pipeline-demo .step-btn[aria-pressed="true"]:hover{ filter:brightness(1.05); }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="same"]{ background:color-mix(in srgb, var(--green) 16%, transparent); }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="new"]{ background:color-mix(in srgb, var(--pink) 16%, transparent); }
+  .argent-pipeline-demo .ap-bar__seg:hover{ filter:brightness(1.1); }
+  .argent-pipeline-demo .ap-bar__seg[aria-pressed="true"]{ border-color:var(--text); }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="same"][aria-pressed="true"]{ background:color-mix(in srgb, var(--green) 34%, transparent); }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="new"][aria-pressed="true"]{ background:color-mix(in srgb, var(--pink) 34%, transparent); }
+  .argent-pipeline-demo .ap-bar__label{ font-size:.78rem; font-weight:700; }
+  .argent-pipeline-demo .ap-bar__tag{ font-size:.66rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.02em; }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="new"] .ap-bar__tag{ color:var(--pink); }
+  .argent-pipeline-demo .ap-bar__seg[data-cls="same"] .ap-bar__tag{ color:var(--green); }
   .argent-pipeline-demo .pipeline{ display:flex; flex-direction:column; gap:0; }
   .argent-pipeline-demo .layer{
     background:var(--panel-strong); border:1px solid var(--line); border-radius:14px;
@@ -178,7 +189,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Application layer</p>
       <h1>Argent and Silverscript, explained</h1>
-      <p class="lead">Toccata made covenants enforceable. Argent, Michael Sutton's compiler, turns a readable application description into the Silverscript the network already checks.</p>
+      <p class="lead">Toccata made <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-argent">covenants<span class="term-def__panel" id="covenant-def-argent" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, not a server's promise.</span></span> enforceable. Argent, Michael Sutton's compiler, turns a readable application description into the Silverscript the network already checks.</p>
       <p class="fit-note"><strong>Status:</strong> unaudited, pre-release.</p>
       <div class="actions">
         <a class="button primary" href="https://github.com/argent-lang/argent">Argent</a>
@@ -190,13 +201,13 @@
     <section class="section">
       <p class="eyebrow">The gap it fills</p>
       <h2>A covenant is opcodes. An application is several agreeing.</h2>
-      <p>A <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-argent">covenant<span class="term-def__panel" id="covenant-def-argent" role="tooltip">A rule attached to a coin. The network itself checks it on every spend, not a server's promise.</span></span> is a rule attached to a coin, written as raw opcodes. Hand-auditing a multi-contract application in those opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
+      <p>A covenant is a rule attached to a coin, written as raw opcodes. Hand-auditing a multi-contract application in those opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
     </section>
 
     <section class="section">
-      <p class="eyebrow">Inter-Covenant Communication</p>
+      <p class="eyebrow"><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span></p>
       <h2>Two Argent actors, one atomic transaction</h2>
-      <p>Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span> lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. <a href="/utxo-vs-accounts#shared-state">Watch the underlying race on the UTXO-vs-accounts page</a>, where two writers reach for the same slot, to see the collision ICC exists to keep two Argent actors out of.</p>
+      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. <a href="/utxo-vs-accounts#shared-state">Watch the underlying race on the UTXO-vs-accounts page</a>, where two writers reach for the same slot, to see the collision ICC exists to keep two Argent actors out of.</p>
     </section>
 
     <section class="section prose-section" data-audience="specialist">
@@ -235,57 +246,70 @@ app Tickets {
       <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen.</p>
       <p>If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
       <h3>Inter-Covenant Communication</h3>
-      <p>Inter-Covenant Communication extends the same model across independently compiled applications, so an actor from one app can observe or authorize an actor from another inside a single atomic transaction.</p>
       <p>That is the piece that makes something like a mint controller possible: one app owns the asset rule, another owns the policy that decides when supply moves, and neither has to be recompiled into the other.</p>
       <h3>What the compiler outputs</h3>
       <p>The compiler emits three things for each build, and every one is inspectable without rebuilding the project: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and the rest as ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box.</p>
-      <p>An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities, which is KIP-20, the piece Toccata carried to mainnet.</p>
+      <p>An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities, which is <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-argent">KIP<span class="term-def__panel" id="kip-def-argent" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-20, the piece Toccata carried to mainnet.</p>
       </details>
     </section>
 
     <section class="section" id="argent-pipeline">
       <p class="eyebrow">Try it: down the stack</p>
       <h2>Watch the Ticket example move from Argent to Kaspa Script</h2>
-      <p>Pick one of the three lines from the <code>transfer</code> entry above and follow it down. Two of the three turn out to be plain Silverscript, unchanged. The third, <code>become</code>, is the one line Argent actually invents, and the demo says exactly where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
+      <p>Pick one of the three lines from the <code>transfer</code> entry above and see how it holds up through the stack. The demo also says where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
       <div class="argent-pipeline-demo">
         <div class="stage">
-          <div class="step-row" role="group" aria-label="Pick a line from the Ticket example">
-            <button class="step-btn" id="ap-stepOwnership" type="button" aria-pressed="true">Ownership check</button>
-            <button class="step-btn" id="ap-stepSignature" type="button" aria-pressed="false">Signature check</button>
-            <button class="step-btn" id="ap-stepBecome" type="button" aria-pressed="false">Next coin</button>
+          <div class="ap-summary">
+            <p class="ap-summary__stat" id="ap-summary-stat"></p>
+            <div class="ap-bar" role="group" aria-label="Pick a line from the Ticket example">
+              <button class="ap-bar__seg" id="ap-stepOwnership" type="button" aria-pressed="true" data-cls="same">
+                <span class="ap-bar__label">Ownership check</span>
+                <span class="ap-bar__tag">reused</span>
+              </button>
+              <button class="ap-bar__seg" id="ap-stepSignature" type="button" aria-pressed="false" data-cls="same">
+                <span class="ap-bar__label">Signature check</span>
+                <span class="ap-bar__tag">reused</span>
+              </button>
+              <button class="ap-bar__seg" id="ap-stepBecome" type="button" aria-pressed="false" data-cls="new">
+                <span class="ap-bar__label">Next coin</span>
+                <span class="ap-bar__tag">Argent's own</span>
+              </button>
+            </div>
+            <p class="caption" id="ap-caption"></p>
           </div>
 
-          <div class="pipeline">
-            <div class="layer" id="ap-layerArgent">
-              <div class="layer-head">
-                <span class="layer-name">Argent &middot; .ag</span>
-                <span class="layer-tag" id="ap-argentTag"></span>
+          <details class="ap-code-detail">
+            <summary>See the source code: Argent, Silverscript, and Kaspa Script side by side</summary>
+            <div class="pipeline">
+              <div class="layer" id="ap-layerArgent">
+                <div class="layer-head">
+                  <span class="layer-name">Argent &middot; .ag</span>
+                  <span class="layer-tag" id="ap-argentTag"></span>
+                </div>
+                <code class="layer-code" id="ap-argentCode"></code>
               </div>
-              <code class="layer-code" id="ap-argentCode"></code>
-            </div>
-            <div class="arrow-down" id="ap-arrow1"></div>
-            <div class="layer" id="ap-layerSil">
-              <div class="layer-head">
-                <span class="layer-name">Silverscript &middot; .sil</span>
-                <span class="layer-tag" id="ap-silTag"></span>
+              <div class="arrow-down" id="ap-arrow1"></div>
+              <div class="layer" id="ap-layerSil">
+                <div class="layer-head">
+                  <span class="layer-name">Silverscript &middot; .sil</span>
+                  <span class="layer-tag" id="ap-silTag"></span>
+                </div>
+                <code class="layer-code" id="ap-silCode"></code>
+                <p class="layer-note" id="ap-silNote"></p>
               </div>
-              <code class="layer-code" id="ap-silCode"></code>
-              <p class="layer-note" id="ap-silNote"></p>
-            </div>
-            <div class="arrow-down" id="ap-arrow2"></div>
-            <div class="layer" id="ap-layerKaspa">
-              <div class="layer-head">
-                <span class="layer-name">Kaspa Script</span>
-                <span class="layer-tag unpub">not published</span>
+              <div class="arrow-down" id="ap-arrow2"></div>
+              <div class="layer" id="ap-layerKaspa">
+                <div class="layer-head">
+                  <span class="layer-name">Kaspa Script</span>
+                  <span class="layer-tag unpub">not published</span>
+                </div>
+                <p class="layer-note" id="ap-kaspaNote"></p>
               </div>
-              <p class="layer-note" id="ap-kaspaNote"></p>
             </div>
-          </div>
 
-          <p class="caption" id="ap-caption"></p>
+            <p class="source-line">Real source, quoted as written: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a> README, <a href="https://github.com/kaspanet/silverscript/blob/master/docs/TUTORIAL.md" target="_blank" rel="noopener">Silverscript's tutorial</a>.</p>
+          </details>
         </div>
-
-        <p class="source-line">Real source, quoted as written: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a> README, <a href="https://github.com/kaspanet/silverscript/blob/master/docs/TUTORIAL.md" target="_blank" rel="noopener">Silverscript's tutorial</a>.</p>
 
         <details>
           <summary>What's real here, and what's illustrative</summary>
@@ -336,6 +360,13 @@ app Tickets {
         };
 
         var order = ["ownership", "signature", "become"];
+        var newCount = order.filter(function (k) { return STEPS[k].argentTag.cls === "new"; }).length;
+        var sameCount = order.length - newCount;
+        var summaryStatEl = document.getElementById("ap-summary-stat");
+        if (summaryStatEl) {
+          summaryStatEl.innerHTML = "Of the <strong>" + order.length + " lines</strong> in this example, Argent invented <strong>" +
+            newCount + "</strong>. Silverscript already had the other <strong>" + sameCount + "</strong>, unchanged.";
+        }
         var argentCodeEl = document.getElementById("ap-argentCode");
         var argentTagEl = document.getElementById("ap-argentTag");
         var silCodeEl = document.getElementById("ap-silCode");
@@ -395,7 +426,7 @@ app Tickets {
     <section class="section prose-section" data-audience="specialist">
       <p class="eyebrow">What's proven, what isn't</p>
       <h2>Partitioned state works. Shared state is a design direction.</h2>
-      <p>Every example partitions cleanly: one UTXO per ticket, per game, per position. Shared mutable state, most of what people mean by DeFi, has no public Argent implementation yet.</p>
+      <p>Every example partitions cleanly: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position. Shared mutable state, most of what people mean by DeFi, has no public Argent implementation yet.</p>
       <details class="deep-dive">
         <summary>Open the evidence: the DEX example, SECURITY.md, commit history</summary>
         <p>The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
@@ -428,7 +459,7 @@ app Tickets {
         <p>The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use."</p>
         <p>The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned.</p>
         <p>The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
-        <p>Silverscript recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." That reads as the ecosystem's conservative floor, not the project's current state: the same page still links the old repository path.</p>
+        <p>Silverscript recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." That reads as the ecosystem's conservative floor, not the project's current state: Kaspa's own chapter still links the old repository path.</p>
       </details>
     </section>
 
@@ -459,14 +490,19 @@ app Tickets {
         fetch('https://api.github.com/repos/argent-lang/' + name + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
       ]).then(function (p) { return { name: name, repo: p[0], rels: p[1] }; });
     })).then(function (rows) {
-      if (rows.some(function (r) { return !r.repo; })) return;
+      if (rows.some(function (r) { return !r.repo; })) {
+        document.getElementById('argent-stamp').textContent = 'Live read from GitHub failed just now. Showing the baseline dated Aug 22, 2026.';
+        return;
+      }
       document.getElementById('argent-body').innerHTML = rows.map(function (r) {
         var rel = (Array.isArray(r.rels) && r.rels.length) ? r.rels[0].tag_name : 'None';
         return '<tr><td>' + r.name + '</td><td>' + r.repo.created_at.slice(0, 10) + '</td><td>' +
           r.repo.pushed_at.slice(0, 10) + '</td><td>' + r.repo.stargazers_count + '</td><td>' + rel + '</td></tr>';
       }).join('');
       document.getElementById('argent-stamp').textContent = 'Read live from GitHub just now.';
-    }).catch(function () { /* baseline stands */ });
+    }).catch(function () {
+      document.getElementById('argent-stamp').textContent = 'Live read from GitHub failed just now. Showing the baseline dated Aug 22, 2026.';
+    });
   })();
   </script>
 

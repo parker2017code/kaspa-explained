@@ -11,6 +11,13 @@ PAGES = MANIFEST["pages"]
 START = "<!-- related-links:start -->"
 END = "<!-- related-links:end -->"
 
+# Pages that are not reading destinations and must never be offered as a
+# Previous/Next/fallback pick on another page. 404.html is an error page,
+# not content; it can still generate its own outbound block (routing a lost
+# reader to search/status/sources), it just can never be recommended TO
+# someone else as "keep reading."
+NOT_A_DESTINATION = {"404.html"}
+
 
 class PageMetaParser(HTMLParser):
     def __init__(self):
@@ -70,19 +77,29 @@ def card(label, page):
 
 
 def related_for(page):
-    index = PAGES.index(page)
+    # A page excluded as a destination can still be the subject of its own
+    # block (it needs somewhere to route a reader), so keep it in its own
+    # sequence for that one case; drop every other excluded page from the
+    # neighbor chain so it can never be handed to someone else as "keep
+    # reading."
+    sequence = [p for p in PAGES if p == page or p not in NOT_A_DESTINATION]
+    index = sequence.index(page)
     picks = []
     if index > 0:
-        picks.append(("Previous", PAGES[index - 1]))
-    if index + 1 < len(PAGES):
-        picks.append(("Next", PAGES[index + 1]))
+        picks.append(("Previous", sequence[index - 1]))
+    if index + 1 < len(sequence):
+        picks.append(("Next", sequence[index + 1]))
 
     for label, fallback in (
         ("Status", "status.html"),
         ("Sources", "sources.html"),
         ("Claims", "skeptical-case.html"),
     ):
-        if fallback != page and fallback not in [candidate for _, candidate in picks]:
+        if (
+            fallback != page
+            and fallback not in NOT_A_DESTINATION
+            and fallback not in [candidate for _, candidate in picks]
+        ):
             picks.append((label, fallback))
         if len(picks) == 3:
             break

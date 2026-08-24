@@ -66,3 +66,29 @@ Set it directly, then confirm it took:
 
 The computed background must actually differ between the two runs. If it
 does not, the theme did not switch and the check did not happen.
+
+## Never resize the browser window
+
+The browser pane is the owner's own Chrome window on his machine, not a
+scratch instance. Calling `resize_window` moves his window while he is
+working in it. He has asked for this to stop and it is now a standing
+rule in every brief.
+
+Checking a layout at 390, 768, 1024 or 1280 is still required. Do it with
+a harness instead:
+
+Write a scratch HTML file containing an iframe of the exact width you
+want, pointing at the page under test. Serve it and screenshot or measure
+that. Media queries respond to the iframe's viewport width, so a 390px
+iframe is a faithful mobile render. Keep the harness in the session
+scratchpad, never in the repo.
+
+For numbers, reading `getBoundingClientRect` and `getComputedStyle` inside
+that iframe is more precise than a screenshot anyway, and it is what the
+measurements in every audit today were actually based on.
+
+The same courtesy applies to tabs. Several agents had their tab reclaimed
+mid-measurement today and two previous sessions filed false reports of
+sitewide breakage because of it. Confirm `location.href` in the same
+evaluation as every measurement, and do not navigate a tab you did not
+open.

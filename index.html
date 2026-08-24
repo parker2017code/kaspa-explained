@@ -66,9 +66,8 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
-  <script defer src="live-kaspa.js?v=20260620-toccata-status"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -95,124 +94,509 @@
       <div class="hero-copy">
         <p class="eyebrow">Independent explainer</p>
         <h1>Kaspa, explained.</h1>
-        <p class="lead">The <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home" role="tooltip">Miners spend real computation to propose blocks.</span></span> network where miners don't race for one slot. They work in parallel, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home" role="tooltip">Kaspa's live rule for ordering the blockDAG so parallel work counts.</span></span> orders every honest block into one history the whole network agrees on.</p>
-        <div class="hero-signal-grid" aria-label="Kaspa homepage shortcuts">
-          <a href="/what-is-kaspa"><span>What is Kaspa?</span><strong>Network overview</strong><small>PoW, blockDAG, GHOSTDAG, KAS.</small></a>
-          <a href="/status"><span>Live now</span><strong>Current network status</strong><small>Mainnet facts, dated checks.</small></a>
-          <a href="/status#claim-fact-check"><span>Check claims</span><strong>Run a claim through the labels</strong><small>Live, testnet, roadmap, research.</small></a>
-          <a href="/skeptical-case"><span>Risks</span><strong>What can still break</strong><small>Adoption, liquidity, mining.</small></a>
-          <a href="/build-on-kaspa"><span>Build</span><strong>Builder status</strong><small>Payments, Toccata, vProgs.</small></a>
-          <a href="/sources"><span>Sources</span><strong>Primary documents</strong><small>Releases, KIPs, papers.</small></a>
+        <p class="lead">Kaspa is <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home" role="tooltip">Miners spend real computing work to make blocks.</span></span>, the same mechanism as Bitcoin, but its miners don't compete for one slot in one chain. Every miner who finds a valid block keeps it, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home" role="tooltip">Kaspa's live rule for ordering the blockDAG so parallel work counts.</span></span> orders every honest block those miners produce into one history the whole network agrees on. Drag the slider below and watch what a single chain throws away that a blockDAG keeps.</p>
+        <div class="actions">
+          <a class="button primary" href="/start-here">Start Here</a>
         </div>
-        <p class="source-inline">New to crypto? <a href="/start-here">Start Here</a>.</p>
-        <details class="deep-dive">
-          <summary>What each label means</summary>
-          <p>Mainnet: live now. Testnet: built, not on mainnet. Roadmap: planned. Research: open. <a href="/status#claim-fact-check">Check any claim</a> against these four.</p>
-        </details>
       </div>
     </section>
 
-    <section id="toccata-status-preview" class="section status-workbench" aria-labelledby="toccata-status-preview-title">
-      <div>
-        <p class="eyebrow">What's live now</p>
-        <h2 id="toccata-status-preview-title">Toccata is active</h2>
-        <p class="lead">Activated at DAA score <strong>474,165,565</strong>: L1 covenants, ZK verification, sequencing commitments.</p>
-      </div>
-      <div class="status-lane-grid grid-cards">
-        <a href="/status"><span>Activation</span><strong>The activation record</strong><small>DAA score, block hash, and the release tag that shipped it.</small></a>
-        <a href="/what-is-kaspa#covenants"><span>Try next</span><strong>UTXO expressiveness</strong><small>What covenants let a transaction enforce on itself.</small></a>
-        <a href="/status#status-snapshot"><span>Status table</span><strong>Every feature, one status</strong><small>Live, targeted, roadmap, and research, in one table.</small></a>
-        <a href="/sources#code-tracking"><span>Evidence</span><strong>Primary links</strong><small>The repos and commits every claim on this site traces to.</small></a>
-      </div>
-    </section>
-
-    <section id="demos" class="section" aria-labelledby="demos-title">
-      <p class="eyebrow">Try it</p>
+    <section id="demos" class="section prose-section" aria-labelledby="demos-title">
       <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
-      <p class="lead">The collision simulator lives inline on the page it explains. <a href="/what-is-kaspa#collision-demo">Drive it on What is Kaspa</a>.</p>
-      <div class="grid-cards site-related-grid">
-        <a href="/why-kaspa-matters#confirmation-risk-demo"><span>Watch</span><strong>Confirmation risk</strong><p>How long a payment needs before it's safe, as the attacker gets stronger.</p></a>
-        <a href="/kaspa-mining#emission-schedule"><span>Play</span><strong>Emission schedule</strong><p>Scrub through time and watch the block reward shrink, never a cliff.</p></a>
-        <a href="/what-is-kaspa#mass-calculator"><span>Try</span><strong>Mass calculator</strong><p>Build a transaction and see which limit decides what fits in a block.</p></a>
+      <style>
+        #home-collision-demo{
+          --bg:#100e0c;
+          --card-bg:#322f2a;
+          --line-bright:#746e60;
+          --text:#f8f5ef;
+          --muted:#b6b0a7;
+          --faint:#9d988c;
+          --cyan:#2997ff;
+          --green:#66d1c1;
+          --pink:#ff9f0a;
+          --control-bg:#2c2c2e;
+          --control-hover:#3a3a3c;
+          --field-bg:#221f1c;
+          --field-line:#4a453d;
+          --card-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+          color:var(--text); font:15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        :root[data-theme="light"] #home-collision-demo{
+          --bg:#fbfaf6;
+          --card-bg:#fbfaf6;
+          --line-bright:#bcb6a8;
+          --text:#211e1a;
+          --muted:#646057;
+          --faint:#757066;
+          --cyan:#0071e3;
+          --green:#0e7c6b;
+          --pink:#b25000;
+          --control-bg:#e8e8ed;
+          --control-hover:#dededf;
+          --field-bg:#ffffff;
+          --field-line:#d2d2d7;
+          --card-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+        }
+        #home-collision-demo *{box-sizing:border-box;}
+
+        #home-collision-demo .primary-control { margin-bottom: 6px; }
+        #home-collision-demo .primary-control label {
+          display: block;
+          font-size: .82rem;
+          color: var(--faint);
+          margin-bottom: 6px;
+        }
+        #home-collision-demo .primary-control .big-readout {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text);
+          font-variant-numeric: tabular-nums;
+        }
+        #home-collision-demo input[type=range] {
+          width: 100%;
+          height: 44px;
+          margin: 0;
+          padding: 0;
+          background: transparent;
+          accent-color: var(--green);
+          -webkit-appearance: none;
+          appearance: none;
+        }
+        #home-collision-demo input[type=range]::-webkit-slider-runnable-track {
+          height: 4px;
+          border-radius: 2px;
+          background: var(--field-line);
+        }
+        #home-collision-demo input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: var(--green);
+          margin-top: -9px;
+          cursor: pointer;
+        }
+        #home-collision-demo input[type=range]::-moz-range-track {
+          height: 4px;
+          border-radius: 2px;
+          background: var(--field-line);
+        }
+        #home-collision-demo input[type=range]::-moz-range-thumb {
+          width: 22px;
+          height: 22px;
+          border: 0;
+          border-radius: 50%;
+          background: var(--green);
+          cursor: pointer;
+        }
+        #home-collision-demo .marks {
+          position: relative;
+          height: 1.4em;
+          font-size: .7rem;
+          color: var(--faint);
+          margin-top: 2px;
+        }
+        #home-collision-demo .marks span { position: absolute; top: 0; white-space: nowrap; }
+        #home-collision-demo .marks span:first-child { left: 0; }
+        #home-collision-demo .marks span:last-child { right: 0; }
+        @media (max-width: 480px) {
+          #home-collision-demo .marks {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            height: auto;
+          }
+          #home-collision-demo .marks span { position: static; transform: none !important; }
+        }
+
+        #home-collision-demo .secondary-control {
+          margin: 0 0 22px;
+          opacity: .82;
+        }
+        #home-collision-demo .secondary-control label {
+          display: flex;
+          justify-content: space-between;
+          font-size: .78rem;
+          color: var(--faint);
+          margin-bottom: 4px;
+        }
+        #home-collision-demo .secondary-control label b { color: var(--muted); font-weight: 600; }
+        #home-collision-demo .secondary-control input[type=range] { height: 44px; }
+
+        #home-collision-demo .panel {
+          background: var(--card-bg);
+          border-radius: 18px;
+          box-shadow: var(--card-shadow);
+          padding: 12px 14px 14px;
+          margin-bottom: 14px;
+        }
+        #home-collision-demo .panel .panel-title {
+          font-size: .95rem;
+          font-weight: 650;
+          letter-spacing: -.006em;
+          margin: 0 0 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+        #home-collision-demo .panel .panel-title .stat {
+          font-weight: 400;
+          font-size: .82rem;
+          color: var(--muted);
+          font-variant-numeric: tabular-nums;
+        }
+        #home-collision-demo .panel .panel-title .stat b { color: var(--pink); }
+        #home-collision-demo .panel.dag .panel-title .stat b { color: var(--green); }
+        #home-collision-demo canvas {
+          display: block;
+          width: 100%;
+          height: 130px;
+          border-radius: 8px;
+          background: var(--field-bg);
+        }
+        #home-collision-demo button#home-cs-step {
+          min-height: 34px;
+          background: var(--control-bg);
+          border: 0;
+          color: var(--text);
+          border-radius: 8px;
+          padding: 0 16px;
+          font-size: .9rem;
+          cursor: pointer;
+        }
+        #home-collision-demo button#home-cs-step:hover { background: var(--control-hover); }
+        #home-collision-demo a:focus-visible,
+        #home-collision-demo button:focus-visible,
+        #home-collision-demo input:focus-visible,
+        #home-collision-demo textarea:focus-visible,
+        #home-collision-demo select:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+          outline-offset: 3px;
+        }
+        #home-collision-demo input[type=range]:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--cyan) 65%, transparent);
+          outline-offset: 4px;
+        }
+        #home-collision-demo .legend {
+          display: flex;
+          gap: 16px;
+          font-size: .78rem;
+          color: var(--faint);
+          margin-top: 4px;
+        }
+        #home-collision-demo .legend i {
+          display: inline-block;
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          margin-right: 4px;
+        }
+        #home-collision-demo .result-line {
+          font-size: 1rem;
+          margin: 18px 0;
+        }
+        #home-collision-demo .result-line b { color: var(--text); }
+
+        #home-collision-demo details {
+          background: var(--card-bg);
+          border-radius: 14px;
+          padding: 10px 14px;
+          margin-top: 8px;
+          box-shadow: var(--card-shadow);
+        }
+        #home-collision-demo summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--cyan); list-style: none; }
+        #home-collision-demo summary::-webkit-details-marker { display: none; }
+        #home-collision-demo summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+        #home-collision-demo details[open] summary::before { content: "\2212"; }
+        #home-collision-demo details p { color: var(--muted); font-size: .86rem; line-height: 1.6; }
+        #home-collision-demo details a { color: var(--cyan); }
+        #home-collision-demo details b { color: var(--text); }
+        #home-collision-demo .formula {
+          font-family: ui-monospace, Menlo, Consolas, monospace;
+          background: var(--field-bg);
+          border: 1px solid var(--field-line);
+          border-radius: 8px;
+          padding: 10px 14px;
+          margin: 10px 0;
+          color: var(--muted);
+          font-size: .86rem;
+        }
+      </style>
+
+      <div id="home-collision-demo">
+        <div class="primary-control">
+          <label for="home-cs-rate">Block rate: <span class="big-readout" id="home-cs-rateVal"></span></label>
+          <input type="range" id="home-cs-rate" value="791" min="0" max="1000" step="1" aria-label="Block rate">
+          <div class="marks"><span>Bitcoin</span><span>Kaspa</span></div>
+        </div>
+
+        <div class="secondary-control" hidden>
+          <label for="home-cs-delay">Network delay: <b id="home-cs-delayVal"></b></label>
+          <input type="range" id="home-cs-delay" value="500" min="0" max="1000" step="1" aria-label="Propagation delay">
+        </div>
+
+        <p class="result-line" id="home-cs-resultLine"></p>
+
+        <div class="panel">
+          <p class="panel-title">Single chain <span class="stat" id="home-cs-chainStat">0 kept, 0 dropped so far</span></p>
+          <canvas id="home-cs-chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
+          <div class="legend"><span><i style="background:var(--green)"></i>kept</span><span><i style="background:var(--pink)"></i>thrown away</span></div>
+        </div>
+
+        <div class="panel dag">
+          <p class="panel-title">BlockDAG <span class="stat">every block kept</span></p>
+          <canvas id="home-cs-dagCanvas" role="img" aria-label="BlockDAG of the same recent blocks, all kept and ordered by parent references instead of being discarded."></canvas>
+          <div class="legend"><span><i style="background:var(--green)"></i>kept</span></div>
+        </div>
+
+        <button id="home-cs-step" hidden>Step one block</button>
+
+        <p class="demo-more"><a href="/what-is-kaspa#collision-sim">Full math and sources</a></p>
       </div>
-      <div class="actions">
-        <a class="button primary" href="/demos">All demos</a>
-        <a class="button" href="/chain-comparer">Compare chains</a>
-        <a class="button" href="/model-picker">Compare AI models</a>
-      </div>
+
+      <script>
+      (function(){
+        const RATE_LOG_MIN = Math.log10(1/600), RATE_LOG_MAX = Math.log10(100);
+        const DELAY_LOG_MIN = Math.log10(0.05), DELAY_LOG_MAX = Math.log10(5);
+        const rateInput = document.getElementById('home-cs-rate');
+        const delayInput = document.getElementById('home-cs-delay');
+        const rateVal = document.getElementById('home-cs-rateVal');
+        const delayVal = document.getElementById('home-cs-delayVal');
+        const chainCanvas = document.getElementById('home-cs-chainCanvas');
+        const dagCanvas = document.getElementById('home-cs-dagCanvas');
+        const chainCtx = chainCanvas.getContext('2d');
+        const dagCtx = dagCanvas.getContext('2d');
+        const stepBtn = document.getElementById('home-cs-step');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function lambda() {
+          const t = rateInput.value / 1000;
+          return Math.pow(10, RATE_LOG_MIN + t * (RATE_LOG_MAX - RATE_LOG_MIN));
+        }
+        function delay() {
+          const t = delayInput.value / 1000;
+          return Math.pow(10, DELAY_LOG_MIN + t * (DELAY_LOG_MAX - DELAY_LOG_MIN));
+        }
+        function fmtRate(r) {
+          if (r < 1) return '1 every ' + humanDuration(1 / r);
+          return r.toFixed(r < 10 ? 1 : 0) + ' a second';
+        }
+        function fmtDelay(d) {
+          if (d < 1) return Math.round(d * 1000) + ' ms';
+          return d.toFixed(1) + ' s';
+        }
+        function humanDuration(seconds) {
+          if (seconds < 1) return Math.max(1, Math.round(seconds * 1000)) + ' ms';
+          if (seconds < 60) return (seconds < 10 ? seconds.toFixed(1) : Math.round(seconds)) + ' seconds';
+          if (seconds < 3600) return Math.round(seconds / 60) + ' minutes';
+          return (seconds / 3600).toFixed(1) + ' hours';
+        }
+
+        function meanIntervalReal() { return 1 / lambda(); }
+
+        const T_KASPA = (Math.log10(10) - RATE_LOG_MIN) / (RATE_LOG_MAX - RATE_LOG_MIN);
+        const PB_LOG_AT_BITCOIN = Math.log10(6);
+        const PB_LOG_AT_KASPA = Math.log10(0.1);
+        const PB_SLOPE = (PB_LOG_AT_KASPA - PB_LOG_AT_BITCOIN) / T_KASPA;
+        function playbackInterval() {
+          const t = rateInput.value / 1000;
+          return Math.pow(10, PB_LOG_AT_BITCOIN + PB_SLOPE * t);
+        }
+
+        const N = 20;
+        let virtualClock = 0;
+        let total = 0, discarded = 0;
+        let chainTip = { id: 0, tSeen: 0 };
+        let dagTips = [{ id: 0, tSeen: 0 }];
+        let chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: 0 }];
+        let dagBlocks = [{ id: 0, miner: 0, parents: [], born: 0 }];
+        let autoTimer = null;
+        let rafId = null;
+
+        function nextInterArrivalReal() { return -Math.log(Math.random()) * meanIntervalReal(); }
+
+        function resetSim() {
+          virtualClock = 0; total = 0; discarded = 0;
+          chainTip = { id: 0, tSeen: 0 };
+          dagTips = [{ id: 0, tSeen: 0 }];
+          chainBlocks = [{ id: 0, miner: 0, orphaned: false, born: performance.now() }];
+          dagBlocks = [{ id: 0, miner: 0, parents: [], born: performance.now() }];
+        }
+
+        function generateEvent() {
+          const L = lambda(), D = delay();
+          virtualClock += (-Math.log(Math.random()) / L);
+          const tMake = virtualClock;
+          const tSeen = tMake + D;
+          const miner = Math.floor(Math.random() * 4);
+          const id = ++total;
+          const now = performance.now();
+
+          const orphaned = tMake < chainTip.tSeen;
+          if (orphaned) discarded++;
+          else chainTip = { id, tSeen };
+          chainBlocks.push({ id, miner, orphaned, born: now });
+          if (chainBlocks.length > N) chainBlocks.shift();
+
+          let visible = dagTips.filter(t => t.tSeen <= tMake);
+          if (visible.length === 0) visible = dagTips.slice();
+          const parentIds = visible.map(t => t.id);
+          dagTips = dagTips.filter(t => parentIds.indexOf(t.id) === -1);
+          dagTips.push({ id, tSeen });
+          dagBlocks.push({ id, miner, parents: parentIds, born: now });
+          if (dagBlocks.length > N) dagBlocks.shift();
+
+          updateStats();
+        }
+
+        function updateStats() {
+          const kept = total - discarded;
+          const ld = lambda() * delay();
+          const predictedDiscardPct = (ld / (1 + ld)) * 100;
+          document.getElementById('home-cs-chainStat').textContent =
+            kept + ' kept, ' + discarded + ' dropped so far';
+          document.getElementById('home-cs-resultLine').innerHTML =
+            'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of its blocks. The blockDAG keeps them all.';
+        }
+
+        function fitCanvas(c) {
+          const dpr = window.devicePixelRatio || 1;
+          const w = c.clientWidth, h = c.clientHeight;
+          if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
+            c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+          }
+          const ctx = c.getContext('2d');
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          return { w, h };
+        }
+
+        function laneY(h, miner) { return 20 + miner * (h - 40) / 3; }
+        function slotX(w, i, len) {
+          const margin = 22;
+          if (len <= 1) return w - margin;
+          return margin + i * (w - 2 * margin) / (N - 1);
+        }
+
+        function popScale(ageMs) {
+          if (reducedMotion) return 1;
+          const t = Math.min(1, ageMs / 260);
+          const eased = 1 - Math.pow(1 - t, 3);
+          return 0.4 + eased * 0.6 + (t < 1 ? Math.sin(t * Math.PI) * 0.15 : 0);
+        }
+
+        function render() {
+          const now = performance.now();
+          const cs = fitCanvas(chainCanvas);
+          chainCtx.clearRect(0, 0, cs.w, cs.h);
+          const style = getComputedStyle(document.getElementById('home-collision-demo'));
+          const green = style.getPropertyValue('--green').trim();
+          const pink = style.getPropertyValue('--pink').trim();
+          const line = style.getPropertyValue('--line-bright').trim();
+
+          chainCtx.strokeStyle = line;
+          chainCtx.lineWidth = 1.5;
+          let prevX = null, prevY = null;
+          chainBlocks.forEach((b, i) => {
+            const x = slotX(cs.w, i, chainBlocks.length);
+            const y = laneY(cs.h, b.miner);
+            if (!b.orphaned && prevX !== null) {
+              chainCtx.beginPath();
+              chainCtx.moveTo(prevX, prevY);
+              chainCtx.lineTo(x, y);
+              chainCtx.stroke();
+            }
+            if (!b.orphaned) { prevX = x; prevY = y; }
+          });
+          chainBlocks.forEach((b, i) => {
+            const x = slotX(cs.w, i, chainBlocks.length);
+            const y = laneY(cs.h, b.miner);
+            const scale = popScale(now - b.born);
+            chainCtx.globalAlpha = b.orphaned ? 0.45 : 1;
+            chainCtx.fillStyle = b.orphaned ? pink : green;
+            chainCtx.beginPath();
+            chainCtx.arc(x, y, (b.orphaned ? 5 : 6) * scale, 0, Math.PI * 2);
+            chainCtx.fill();
+            chainCtx.globalAlpha = 1;
+          });
+
+          const ds = fitCanvas(dagCanvas);
+          dagCtx.clearRect(0, 0, ds.w, ds.h);
+          const idIndex = {};
+          dagBlocks.forEach((b, i) => { idIndex[b.id] = i; });
+          dagCtx.strokeStyle = line;
+          dagCtx.lineWidth = 1.2;
+          dagBlocks.forEach((b, i) => {
+            const x = slotX(ds.w, i, dagBlocks.length);
+            const y = laneY(ds.h, b.miner);
+            b.parents.forEach(pid => {
+              const pi = idIndex[pid];
+              if (pi === undefined) return;
+              const pb = dagBlocks[pi];
+              const px = slotX(ds.w, pi, dagBlocks.length);
+              const py = laneY(ds.h, pb.miner);
+              dagCtx.beginPath();
+              dagCtx.moveTo(px, py);
+              dagCtx.lineTo(x, y);
+              dagCtx.stroke();
+            });
+          });
+          dagBlocks.forEach((b, i) => {
+            const x = slotX(ds.w, i, dagBlocks.length);
+            const y = laneY(ds.h, b.miner);
+            const scale = popScale(now - b.born);
+            dagCtx.fillStyle = green;
+            dagCtx.beginPath();
+            dagCtx.arc(x, y, 6 * scale, 0, Math.PI * 2);
+            dagCtx.fill();
+          });
+
+          const stillAnimating = chainBlocks.some(b => now - b.born < 260) || dagBlocks.some(b => now - b.born < 260);
+          if (!reducedMotion && stillAnimating) {
+            rafId = requestAnimationFrame(render);
+          } else {
+            rafId = null;
+          }
+        }
+
+        function requestRender() {
+          if (rafId === null) rafId = requestAnimationFrame(render);
+        }
+
+        function scheduleNext() {
+          if (reducedMotion) return;
+          const waitMs = playbackInterval() * 1000;
+          autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
+        }
+
+        function onSliderChange() {
+          rateVal.textContent = fmtRate(lambda());
+          delayVal.textContent = fmtDelay(delay());
+          if (autoTimer) clearTimeout(autoTimer);
+          resetSim();
+          updateStats();
+          requestRender();
+          if (!reducedMotion) scheduleNext();
+        }
+
+        rateInput.addEventListener('input', onSliderChange);
+        delayInput.addEventListener('input', onSliderChange);
+        window.addEventListener('resize', requestRender);
+
+        rateInput.value = Math.round(T_KASPA * 1000);
+        delayInput.value = 500;
+        onSliderChange();
+
+        if (reducedMotion) {
+          stepBtn.hidden = false;
+          stepBtn.addEventListener('click', function () { generateEvent(); render(); });
+        }
+      })();
+      </script>
     </section>
 
-    <section id="live-network" class="live-kaspa-panel section" aria-labelledby="live-network-title">
-      <div class="live-panel-head">
-        <div>
-          <p class="eyebrow">Live API read</p>
-          <h2 id="live-network-title">Current network numbers</h2>
-          <p class="lead">Live from the public API.</p>
-        </div>
-        <div class="live-status-light" id="live-status-light" aria-live="polite">
-          <span aria-hidden="true"></span>
-          <strong>Loading</strong>
-        </div>
-      </div>
-      <div class="live-metric-grid grid-cards" aria-label="Live Kaspa metrics">
-        <article>
-          <span>Circulating supply</span>
-          <span class="info-affordance" id="supply-info">
-            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="supply-info-panel">
-              <i class="info-affordance__glyph" aria-hidden="true">i</i>
-              <span class="sr-only">More about circulating supply</span>
-            </button>
-            <span class="info-affordance__panel" id="supply-info-panel" role="tooltip">Reported by <code>api.kaspa.org/info/coinsupply</code>. Genesis is auditable in rusty-kaspa's <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">genesis.rs</a>.</span>
-          </span>
-          <strong id="live-supply">Loading</strong>
-        </article>
-        <article>
-          <span>Mined</span>
-          <span class="info-affordance" id="mined-info">
-            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="mined-info-panel">
-              <i class="info-affordance__glyph" aria-hidden="true">i</i>
-              <span class="sr-only">More about mined percentage</span>
-            </button>
-            <span class="info-affordance__panel" id="mined-info-panel" role="tooltip">Circulating supply divided by max supply.</span>
-          </span>
-          <strong id="live-mined">Loading</strong>
-        </article>
-        <article>
-          <span>Blocks stored by one node</span>
-          <span class="info-affordance" id="blocks-info">
-            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="blocks-info-panel">
-              <i class="info-affordance__glyph" aria-hidden="true">i</i>
-              <span class="sr-only">More about this figure</span>
-            </button>
-            <span class="info-affordance__panel" id="blocks-info-panel" role="tooltip">Not a network total: the API load-balances across nodes with different pruning states, so this is whichever backend answered.</span>
-          </span>
-          <strong id="live-blocks">Loading</strong>
-        </article>
-        <article>
-          <span>DAA score</span>
-          <span class="info-affordance" id="daa-info">
-            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="daa-info-panel">
-              <i class="info-affordance__glyph" aria-hidden="true">i</i>
-              <span class="sr-only">More about DAA score</span>
-            </button>
-            <span class="info-affordance__panel" id="daa-info-panel" role="tooltip">Kaspa's progress marker, roughly analogous to block height.</span>
-          </span>
-          <strong id="live-daa">Loading</strong>
-        </article>
-      </div>
-      <p class="live-footnote" id="live-updated">Waiting for live data.</p>
-    </section>
-<!-- related-links:start -->
-    <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/start-here"><span>Next</span><strong>Start with the problem</strong><p>New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
-      </div>
-    </section>
-<!-- related-links:end -->
   </main>
 
   <footer class="footer">

@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="Two demos: spend a UTXO wallet, then compose two apps together. Why a coin never has to queue behind another spender the way an account balance does.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-23">
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -67,7 +67,7 @@
     <section class="section">
       <p class="eyebrow">Two models, side by side</p>
       <h1>Why parallel spends don't collide</h1>
-      <p class="lead">An account balance is one slot two spenders can fight over. A UTXO coin isn't. Two demos below show why.</p>
+      <p class="lead">An account balance is one slot two spenders can fight over. A <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-uva">UTXO<span class="term-def__panel" id="utxo-def-uva" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> coin isn't. Two demos below show why.</p>
     </section>
 
     <section class="section">
@@ -244,9 +244,9 @@
             <p>The one case where UTXO can't parallelize is the same coin spent twice. That's a real conflict, not a queue: just one of the two spends is kept, and the other loses outright. Kaspa settles this with a fixed rule: the first spend of a coin to appear in the ordered record wins, and any later clashing spend loses. Every node runs the same rule over the same DAG and lands on the same answer with no voting round.</p>
 
             <h3>The honest cost: broad contracts</h3>
-            <p>The account model's shared, mutable, openly readable balance is really the easier shape for any contract. One contract can hold state, and any other contract can call into it, read that state, and change it, all in the same transaction, because there is one address with one storage slot others can point at. That's what makes something like Ethereum's account based virtual machine a good home for composable, broad logic. This is a real advantage of the account model, not a strawman.</p>
-            <p>UTXO has no matching shared slot. State lives split up across many coins, and a script can inspect only the spend touching it. It cannot call another coin the way one contract calls another. Writing a broad, composable smart contract platform directly on top of that is really harder, and Kaspa doesn't pretend otherwise.</p>
-            <p>That's the reason Kaspa's own contract story runs through <b>covenants</b>, not a broad account based virtual machine. A covenant is a rule attached to a coin about how it, and what it makes, are allowed to be spent, checked by script level checks on the spend itself. Post-Toccata mainnet Kaspa has covenants, covenant IDs, and ZK proof checks enforced at the script level. There is no account based VM underneath any of it.</p>
+            <p>The account model's shared, mutable, openly readable balance is really the easier shape for any contract. One contract can hold state, and any other contract can call into it, read that state, and change it, all in the same transaction, because there is one address with one storage slot others can point at. That's what makes something like Ethereum's account based virtual machine a good home for composable, broad logic.</p>
+            <p>UTXO has no matching shared slot. State lives split up across many coins, and a script can inspect only the spend touching it. It cannot call another coin the way one contract calls another. Writing a broad, composable smart contract platform directly on top of that is really harder.</p>
+            <p>That's the reason Kaspa's own contract story runs through <b>covenants</b>, not a broad account based virtual machine. A covenant is a rule attached to a coin about how it, and what it makes, are allowed to be spent, checked by script level checks on the spend itself. Post-Toccata mainnet Kaspa has covenants, covenant IDs, and <span class="term-def" tabindex="0" role="button" aria-describedby="zk-def-uva">ZK<span class="term-def__panel" id="zk-def-uva" role="tooltip">Zero-knowledge: a proof that a statement is true without revealing the data behind it, so a script can accept a claim about work done elsewhere without seeing that work.</span></span> proof checks enforced at the script level. There is no account based VM underneath any of it.</p>
             <p>Kaspa's push past that stays inside the one spend being checked, not a shared slot other spends can reach into whenever they like. KIP-16 added an opcode that checks a ZK proof inside a spend, so a script can accept a claim about work done elsewhere without replaying it. Argent's Inter-Covenant Communication uses covenant IDs and checks to let one app's actor allow or watch another's, but only inside a single atomic spend both apps get spent and remade in, and it has shipped so far only in unaudited offline demos. vProgs, aimed at the harder case of many users sharing one app's state across many spends, is a plan with zero releases as of this writing. None of it is an account VM. How far that combining reaches today is its own demo, below.</p>
 
             <div class="evidence-note">
@@ -344,13 +344,14 @@
           return t >= amount ? chosen.sort(function (a, b) { return b - a; }) : null;
         }
 
+        function setMovesBusy() {
+          moveButtons.forEach(function (b) { b.disabled = true; });
+        }
+
         function doPay(amount) {
           var idxs = pickCoins(amount);
           if (acctBalance < amount || !idxs) return;
-
-          acctBalance -= amount;
-          acctNum.textContent = fmt(acctBalance);
-          pulseAcct();
+          setMovesBusy();
 
           var consumedVals = idxs.map(function (i) { return coins[i].v; }).sort(function (a, b) { return b - a; });
           var els = coinRow.children;
@@ -364,10 +365,14 @@
             if (change > 0) { coins.push({ v: change, change: true }); newIdx = coins.length - 1; }
             renderCoins(newIdx);
 
+            acctBalance -= amount;
+            acctNum.textContent = fmt(acctBalance);
+            pulseAcct();
+
             var massNote = "";
             if (consumedVals.length > 1) {
               massNote = " Spending " + consumedVals.length + " coins at once means " + consumedVals.length +
-                " separate signature checks in this one transaction: more inputs means more bytes and more mass, which is exactly what <a href=\"/demos/mass-calculator\">the mass calculator</a> charges a transaction for.";
+                " separate signature checks in this one transaction: more inputs means more bytes and more mass, which is exactly what <a href=\"/what-is-kaspa#mass-calculator\">the mass calculator</a> charges a transaction for.";
             }
             var consumedText = consumedVals.length === 1
               ? "its whole " + fmt(consumedVals[0]) + " KAS coin"
@@ -385,6 +390,7 @@
 
         function doCombine() {
           if (coins.length < 2) return;
+          setMovesBusy();
           var order = coins.map(function (c, i) { return { v: c.v, i: i }; }).sort(function (a, b) { return a.v - b.v; });
           var idxs = [order[0].i, order[1].i].sort(function (a, b) { return b - a; });
           var vals = idxs.map(function (i) { return coins[i].v; }).sort(function (a, b) { return b - a; });
@@ -407,10 +413,11 @@
           var order = coins.map(function (c, i) { return { v: c.v, i: i }; }).sort(function (a, b) { return b.v - a.v; });
           var idx = order[0].i;
           var v = coins[idx].v;
-          if (v < 20) return;
+          if (v < 20 || acctBalance < v) return;
           var a = roundTen(v * 0.55);
           if (a >= v) a = v - 10;
           var b = v - a;
+          setMovesBusy();
 
           var els = coinRow.children;
           if (els[idx]) els[idx].classList.add("consumed");
@@ -452,7 +459,7 @@
           moveLotBtn.disabled = acctBalance < PAY_LOT || t < PAY_LOT;
           moveCombineBtn.disabled = coins.length < 2;
           var biggest = coins.length ? Math.max.apply(null, coins.map(function (c) { return c.v; })) : 0;
-          moveSplitBtn.disabled = biggest < 20;
+          moveSplitBtn.disabled = biggest < 20 || acctBalance < biggest;
         }
 
         function setPressedMove(active) {
@@ -688,23 +695,26 @@
           <p class="caption" id="ss-caption">One shared slot. Both want it now.</p>
         </div>
 
-        <div class="apps-panel">
-          <p class="cross-app-lead">Can two apps compose across spends?</p>
-          <div class="mode-row" role="group" aria-label="Choose which app-composition case to see">
-            <button class="mode-btn" id="ss-modeSameTx" type="button" aria-pressed="true">Same transaction</button>
-            <button class="mode-btn" id="ss-modeManyUsers" type="button" aria-pressed="false">Many users</button>
-            <button class="mode-btn" id="ss-modeVprogs" type="button" aria-pressed="false">vProgs</button>
+        <details class="deep-dive">
+          <summary>A separate, harder question: can two apps compose?</summary>
+          <div class="apps-panel">
+            <p class="cross-app-lead">Can two apps compose across spends?</p>
+            <div class="mode-row" role="group" aria-label="Choose which app-composition case to see">
+              <button class="mode-btn" id="ss-modeSameTx" type="button" aria-pressed="true">Same transaction</button>
+              <button class="mode-btn" id="ss-modeManyUsers" type="button" aria-pressed="false">Many users</button>
+              <button class="mode-btn" id="ss-modeVprogs" type="button" aria-pressed="false">vProgs</button>
+            </div>
+            <p class="apps-status" id="ss-appsStatus">Possible today, in one spend only.</p>
+            <div class="apps-row" id="ss-appsRow">
+              <div class="app-box" id="ss-appA"><span class="app-dot"></span>App A</div>
+              <div class="connector" id="ss-connAB"></div>
+              <div class="app-box" id="ss-appB"><span class="app-dot"></span>App B</div>
+              <div class="connector" id="ss-connBC"></div>
+              <div class="app-box" id="ss-appC"><span class="app-dot"></span>App C</div>
+            </div>
+            <p class="caption" id="ss-appsCaption">One app can act on another's, inside a single spend. Shipped only in unaudited demos.</p>
           </div>
-          <p class="apps-status" id="ss-appsStatus">Possible today, in one spend only.</p>
-          <div class="apps-row" id="ss-appsRow">
-            <div class="app-box" id="ss-appA"><span class="app-dot"></span>App A</div>
-            <div class="connector" id="ss-connAB"></div>
-            <div class="app-box" id="ss-appB"><span class="app-dot"></span>App B</div>
-            <div class="connector" id="ss-connBC"></div>
-            <div class="app-box" id="ss-appC"><span class="app-dot"></span>App C</div>
-          </div>
-          <p class="caption" id="ss-appsCaption">One app can act on another's, inside a single spend. Shipped only in unaudited demos.</p>
-        </div>
+        </details>
 
         <details>
           <summary>Why this happens, and what Toccata actually shipped</summary>
@@ -714,7 +724,7 @@
             <p>This is a simple model of outpoint contention and of account style sequencing, not real network timing (mempool spread, block ordering, gas and fee markets).</p>
             <p><strong>What blocks the double spend.</strong> Nothing stops two clashing spends from being broadcast in the first place: a wallet can sign and send two spends against the same coin, and the network does not check for that at broadcast time. What cannot happen is both landing in the kept state. It is not a single block rule: a block cannot hold two of its own spends of the same coin, rusty-kaspa's consensus turns that block down outright. But Kaspa is a DAG, so the real race is usually between two blocks landing at the same time, not two spends in one block. GHOSTDAG orders every block into one sequence first, then each block's spends are replayed in that order against a running UTXO diff; whichever spend lands earlier in that order wins, the other block stays valid and stays in the DAG, but its clashing spend fails validation against the state it is checked against and never joins the kept set. That after-the-fact order is also why two actions on separate coins cannot be made to depend on each other the way two calls into one shared account can: each spend is checked against a snapshot GHOSTDAG fixes later, not against a promise that the other side will also succeed. Sources: rusty-kaspa's <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block body double spend check</a> and the <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">mergeset acceptance loop</a> that orders and replays spends by GHOSTDAG before applying them to the UTXO diff.</p>
             <p><strong>What Toccata put on mainnet for this.</strong> Three of the KIPs Toccata turned on are the live primitives the panel above runs on. KIP-17 gives a script's check opcodes over the spend touching it: it can read that spend's own inputs, outputs, and payload, not some other spend's. KIP-20 adds covenant IDs, a lineage tag tracked by consensus an output can only carry by continuing a covenant or genesis-initializing a fresh one, so one covenant's record can't be forged. KIP-16 adds an opcode that checks a ZK proof inside a spend, useful for taking a claim about work done without replaying it. None of the three lets a script reach out and read a different covenant's live state the way a function call reads another contract's storage on an account chain; that reading stays scoped to the one spend now being checked.</p>
-            <p><strong>What that permits between two apps, and the block versus transaction line.</strong> Two apps built apart can still compose today, but only by both being spent and remade inside the same spend, built by whoever assembles it: Argent's Inter-Covenant Communication is just that pattern, one app's actor allowing or watching another's in one atomic spend, and it works because the two apps' state sits in the readable inputs and outputs of that one spend. It has shipped so far only in unaudited offline demos, per Argent's README; anyone who says an Argent app is running on Kaspa mainnet today is saying something that has not happened. The line that matters is the spend, not the block: sharing a block with other spends does not link them, the same way two spends in different blocks are no less composed than two in the same block would be. KIP-21's partitioned sequencing lanes (Status: Active) scale how much of that throughput a block can carry; they do not change what a single spend can bind together. Sources: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a>.</p>
+            <p><strong>What composition permits, and why the block doesn't matter.</strong> Two apps built apart can compose today, but only inside a single spend that remakes both of them at once. Argent's Inter-Covenant Communication works this way: one app's actor allows or watches another's, and it works because both apps' state sits in the readable inputs and outputs of that one spend. It has shipped so far only in unaudited offline demos, per Argent's README; anyone who says an Argent app is running on Kaspa mainnet today is saying something that has not happened. The line that matters is the spend, not the block: sharing a block with other spends does not link them, the same way two spends in different blocks are no less composed than two in the same block would be. KIP-21's partitioned sequencing lanes (Status: Active) scale how much of that throughput a block can carry; they do not change what a single spend can bind together. Sources: <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a>.</p>
             <p><strong>vProgs, and its status.</strong> The gap those two don't close: many users writing to one shared app's state at once (an exchange pool, say), where combining apps on L1 today tends toward an exit style, settling when someone leaves rather than the moment they act. vProgs is a roadmap plan aimed at that gap, not a shipped feature: its own repo README opens with "This repository is in early development / prototype phase. APIs and architecture may change significantly," and as of this writing it carries zero releases and zero tags. Its own architect, Kaspa core developer Michael Sutton, frames the design tradeoff as a choice between "losing synchronous composability or losing sovereignty," and describes one target as "standalone, non-composable sovereign vprogs" settling back to L1 through their own way out, which is the tradeoff the panel shows. Sources: <a href="https://github.com/kaspanet/vprogs" target="_blank" rel="noopener">kaspanet/vprogs</a>, <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1" target="_blank" rel="noopener">Michael Sutton's based-apps design notes</a>.</p>
           </div>
         </details>
@@ -846,7 +856,7 @@
         var CAPTIONS = {
           "same-tx": "One app can act on another's, inside a single transaction. Shipped only in unaudited offline demos.",
           "many-users": "That trick only reaches as far as one transaction. When many different users touch the very same shared object across many separate transactions, spread over many blocks, the atomic bundling above is gone. Composition between apps is exit-style: you leave one app's state and re-enter the other's, rather than one live call reaching across while both keep running.",
-          vprogs: "vProgs (proposed, not running on mainnet) targets exactly that many-user gap. Its own author frames the tradeoff plainly: reaching for that live, synchronous interaction costs standalone independence; keeping full independence keeps the exit-style pattern above. That give-and-take, not a free upgrade, is what “sovereignty” means here."
+          vprogs: "vProgs (a roadmap plan, not running on mainnet) targets exactly that many-user gap. Getting a live, synchronous call between apps costs each app some of its standalone independence; keeping full independence keeps today's exit-style pattern instead. That trade, not a free upgrade, is what vProgs would actually buy."
         };
 
         function setAppsMode(mode) {

@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -119,7 +119,9 @@
     outline-offset:3px;
   }
   .kip-parameterless-demo .cmp{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-  @media (max-width:640px){ .kip-parameterless-demo .cmp{ grid-template-columns:1fr; } }
+  .kip-parameterless-demo .cmp.cmp3{ grid-template-columns:1fr 1fr 1fr; }
+  @media (max-width:900px){ .kip-parameterless-demo .cmp.cmp3{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:640px){ .kip-parameterless-demo .cmp{ grid-template-columns:1fr; } .kip-parameterless-demo .cmp.cmp3{ grid-template-columns:1fr; } }
   .kip-parameterless-demo .side{ border:0; border-radius:18px; padding:.85rem; background:var(--card-bg); box-shadow:var(--card-shadow); }
   .kip-parameterless-demo .side h3{ margin:0 0 .15rem; display:flex; align-items:center; gap:.4rem; }
   .kip-parameterless-demo .side .sub{ font-size:1rem; color:var(--faint); margin:0 0 .6rem; }
@@ -269,7 +271,7 @@
   <main id="top" tabindex="-1">
     <section class="section">
       <p class="eyebrow">Proposal tracker</p>
-      <h1>KIPs and KCCs</h1>
+      <h1><span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-kips">KIP<span class="term-def__panel" id="kip-def-kips" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>s and KCCs</h1>
       <p class="lead">Two separate processes decide what Kaspa becomes. One changes the protocol, one does not. This page reads both straight from their repositories, so what you see is the current state rather than a label somebody typed once.</p>
       <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API, and ships when implemented and activated. A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change. The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior." A merged KIP marked Active is protocol law; an open KCC pull request is a draft people are still arguing about.</p>
     </section>
@@ -318,7 +320,7 @@
               <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
               <tbody>
                 <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-                <tr><td>17</td><td>Covenants and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>17</td><td><span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">Covenants<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span> and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
                 <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
                 <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
               </tbody>
@@ -327,7 +329,7 @@
         </details>
       </div>
       <p class="hint" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
-      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet. KIP-2, the <a href="/demos/parameterless">DAGKnight</a> upgrade, has been Proposed for years and stays Proposed: internal devnet only, no testnet, no date. Eleven further KIPs sit open as pull requests. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
+      <p>KIPs 16, 17, 20, and 21 were marked Active on July 15, 2026, after Toccata carried them onto mainnet, through the merge pull requests that first proposed each one: <a href="https://github.com/kaspanet/kips/pull/31">KIP-16</a>, <a href="https://github.com/kaspanet/kips/pull/32">KIP-17</a>, <a href="https://github.com/kaspanet/kips/pull/35">KIP-20</a>, <a href="https://github.com/kaspanet/kips/pull/36">KIP-21</a>. KIP-2, the <a href="#parameterless-demo">DAGKnight</a> upgrade, has been Proposed for years and stays Proposed: internal devnet only, no testnet, no date. Eleven further KIPs sit open as pull requests. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
       <p class="fit-note">KIP-2 proposes replacing GHOSTDAG's fixed margin with one that adapts to actual network latency. Try it below.</p>
       <details class="deep-dive" id="parameterless-demo">
         <summary>Try it: fixed margin (GHOSTDAG) versus adjustable margin (DAGKnight, KIP-2)</summary>
@@ -406,21 +408,29 @@
             </div>
           </div>
 
-          <div class="cmp">
+          <div class="cmp cmp3">
+            <div class="side" id="par-side-ghostdag-regime">
+              <h3>GHOSTDAG <span class="status-pill live">Live</span></h3>
+              <p class="sub">Same number in both columns to the right: set at D = <span id="par-regime-ghost-d"></span> s, paid every block whether an attack is visible or not.</p>
+              <div class="gauge-row"><span>margin (k)</span><output id="par-regime-ghost-k">124</output></div>
+              <div class="gauge-row"><span>wait (k blocks at this rate)</span><output id="par-regime-ghost-wait">12.4 s</output></div>
+              <div class="verdict" id="par-regime-ghost-verdict" role="status">Fixed at setup. Does not read the attacker-share slider at all.</div>
+            </div>
             <div class="side" id="par-side-optimistic">
-              <h3>No visible attack</h3>
+              <h3>No visible attack <span class="status-pill research">DAGKnight</span></h3>
               <p class="sub">Every block looks honest right now.</p>
               <div class="gauge-row"><span>predicted wait</span><output id="par-opt-time-out"></output></div>
               <div class="verdict safe" id="par-opt-verdict" role="status"></div>
             </div>
             <div class="side" id="par-side-pessimistic">
-              <h3>Attack visibly under way</h3>
+              <h3>Attack visibly under way <span class="status-pill research">DAGKnight</span></h3>
               <p class="sub">An attacker is actively forking the DAG.</p>
               <div class="gauge-row"><span>predicted wait</span><output id="par-pess-time-out"></output></div>
               <p id="par-pess-toolong" class="over-badge" hidden></p>
               <div class="verdict unsafe" id="par-pess-verdict" role="status"></div>
             </div>
           </div>
+          <p class="sub" style="max-width:74ch; margin:0 0 1rem;">The GHOSTDAG number here is the same simplified k/&lambda; figure from the panel above (an average-case reading of the real production formula), not the paper's own O(...) worst-case bound used for DAGKnight's two numbers beside it. They are sourced from different derivations and not proven equivalent, so read this as showing the structural difference (fixed regardless of conditions, versus reactive to them), not as a literal race between the three numbers.</p>
 
           <p class="payoff-line" id="par-regime-payoff-line" role="status"></p>
 
@@ -484,9 +494,11 @@
               constant c unspecified; the widget sets c = 1 as an illustrative placeholder, not a value the paper
               states, which is why that side is a rough shape, not a precise prediction. Because exp() grows so
               fast, the pessimistic side is computed in log space (the same technique the k(D, λ) search above uses)
-              and falls back to a plain "too long" state, matching this site's <a href="/demos/confirmation-risk">confirmation-risk
-              demo</a>, once the wait would pass 100 years rather than printing a number of seconds longer than
-              that has any everyday meaning.</p>
+              throughout, including for display: past roughly 10<sup>6</sup> years it prints an order of magnitude
+              (e.g. "~10^7 yr") instead of an exact duration, since the exact digit is not meaningful at that scale
+              and a plain number would overflow. Past 100 years, an additional note states plainly that the paper
+              calls this exact bound "far from tight" (§1.5.2), so the reader is told to read the growth, not the
+              last digit, without the number itself disappearing.</p>
               <p><strong>Table 1, transcribed.</strong> The paper directly compares four ordering rules' asymptotic
               convergence time, in blocks (multiply by λ⁻¹ for seconds, per the paper's own note under the table).
               D<sub>max</sub> is an a priori worst-case latency bound fixed in advance; D<sub>t</sub> is a bound on
@@ -641,8 +653,13 @@
           var EPSILON = 0.01;
           var LN_INV_EPS = Math.log(1 / EPSILON);
           var PESS_C = 1;
-          var TOO_LONG_SECONDS = 100 * 365.25 * 86400;
-          var LN_TOO_LONG = Math.log(TOO_LONG_SECONDS);
+          var LOOSE_BOUND_YEARS_LOG10 = Math.log(100) / Math.LN10; // paper calls this bound "far from tight" past this scale
+          var SECONDS_PER_YEAR = 365.25 * 86400;
+
+          var ghostDOut = document.getElementById("par-regime-ghost-d");
+          var ghostKOut = document.getElementById("par-regime-ghost-k");
+          var ghostWaitOut = document.getElementById("par-regime-ghost-wait");
+          var ghostVerdict = document.getElementById("par-regime-ghost-verdict");
 
           function fmtSecondsHuman(s){
             if (s < 1) return Math.round(s * 1000) + " ms";
@@ -654,10 +671,27 @@
             return Math.round(s / 31557600) + " yr";
           }
 
-          function renderRegimes(BPS, D){
+          // Formats a duration given only its natural log in seconds, so
+          // astronomically large results (the pessimistic bound routinely
+          // produces these) never have to pass through Math.exp() and
+          // overflow to Infinity. Below 10^6 years it prints an exact
+          // human duration; past that it prints an order of magnitude,
+          // which is still a legible, moving number, not a shrug.
+          function fmtLogSecondsHuman(lnSeconds){
+            var log10Years = (lnSeconds - Math.log(SECONDS_PER_YEAR)) / Math.LN10;
+            if (log10Years < 6) return fmtSecondsHuman(Math.exp(lnSeconds));
+            return "~10^" + Math.floor(log10Years) + " yr";
+          }
+
+          function renderRegimes(BPS, D, configuredK, beyondTable){
             var alpha = parseFloat(alphaSlider.value) / 100;
             alphaOut.textContent = alphaSlider.value + "%";
             var denom = 1 - 2 * alpha;
+
+            ghostDOut.textContent = D.toFixed(1);
+            ghostKOut.textContent = configuredK + (beyondTable ? " (frozen, bps=32)" : "");
+            ghostWaitOut.textContent = fmtSeconds(configuredK / BPS);
+            ghostVerdict.textContent = "Fixed at setup. Does not read the attacker-share slider at all.";
 
             var optSeconds = (LN_INV_EPS / BPS + D) / denom + D * D * BPS;
             optTimeOut.textContent = fmtSecondsHuman(optSeconds);
@@ -667,26 +701,20 @@
             var lnEpsTerm = LN_INV_EPS / denom;
             var lnSum = expArg > 40 ? expArg : Math.log(Math.exp(expArg) + lnEpsTerm);
             var lnPessSeconds = lnSum - Math.log(BPS);
+            var pessLabel = fmtLogSecondsHuman(lnPessSeconds);
+            pessTimeOut.textContent = pessLabel;
 
-            var pessTooLong = lnPessSeconds > LN_TOO_LONG;
-            var pessSeconds = pessTooLong ? null : Math.exp(lnPessSeconds);
-
-            if (pessTooLong){
-              pessTimeOut.textContent = "too long";
+            var log10PessYears = (lnPessSeconds - Math.log(SECONDS_PER_YEAR)) / Math.LN10;
+            if (log10PessYears >= LOOSE_BOUND_YEARS_LOG10){
               pessToolong.hidden = false;
-              pessToolong.textContent = "still an impractically long wait at " + alphaSlider.value + "% attacker share: the exponential term has already taken over.";
-              pessVerdict.textContent = "Not worth printing: the paper calls this bound \"far from tight.\"";
+              pessToolong.textContent = "The exponential term already dominates at " + alphaSlider.value + "% attacker share: this is the shape of the bound, not a claim about a real wait. The paper calls this exact bound \"far from tight\" (§1.5.2), so read the growth, not the last digit.";
+              pessVerdict.textContent = "The paper's worst-case bound for a visible attack, at this rate and share, loose past " + fmtSecondsHuman(Math.pow(10, LOOSE_BOUND_YEARS_LOG10) * SECONDS_PER_YEAR) + ".";
             } else {
-              pessTimeOut.textContent = fmtSecondsHuman(pessSeconds);
               pessToolong.hidden = true;
               pessVerdict.textContent = "The paper's worst-case bound for a visible attack, at this rate and share.";
             }
 
-            if (pessTooLong){
-              regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: past any wait worth naming.";
-            } else {
-              regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: " + fmtSecondsHuman(pessSeconds) + ".";
-            }
+            regimePayoffLine.textContent = "GHOSTDAG: " + fmtSeconds(configuredK / BPS) + " every block, calm or not. DAGKnight: " + fmtSecondsHuman(optSeconds) + " calm, " + pessLabel + " once an attack is visible.";
           }
 
           function makeStrip(el, count, colorClassFn){
@@ -787,7 +815,7 @@
             live.textContent = beyondTable ? "The fixed-margin side has no defined value past 32 blocks per second." :
               (over ? "The fixed-margin side is now unsafe at this latency." : "The fixed-margin side is safe at this latency.");
 
-            renderRegimes(BPS, D);
+            renderRegimes(BPS, D, configuredK, beyondTable);
           }
 
           function clearScenarioState(){
@@ -820,7 +848,7 @@
       <p class="lead">Builder agreements on encoding, not protocol changes: three merged, all still marked draft.</p>
       <p>The KCC repository was created on July 15, 2026. Three specifications have merged into it: KCC-0001, KCC-0002, and KCC-0020. Each one's own document header still reads <code>Status: Draft</code>.</p>
       <p>A merged file in this repo is a checked-in draft, not an adopted standard: the README's own bar for acceptance is a Comments-URI discussion window and consensus among implementers, and none of the three has cleared that.</p>
-      <p class="fit-note">KCC-0001 defines the byte layout for a <span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">covenant<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span>, a rule attached to a coin that these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
+      <p class="fit-note">KCC-0001 defines the byte layout for a covenant, a rule attached to a coin that these tokens sit on. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
       <div id="kcc-groups">
         <details class="deep-dive">
           <summary>Merged, Status: Draft (3)</summary>
@@ -899,7 +927,7 @@
           <details>
             <summary>What the spec's own authors said about this</summary>
             <div class="quotes-body">
-              <p class="note">This demo is a simplified stand-in for KCC-0020, a draft Kaspa token rule that lets an issuer update the state of some holders and not others. Issue #14, opened by Knitser on kaspanet/kccs, August 21, 2026, reports that this same mechanism permanently splits a token's supply once triggered. Two KCC-0020 co-authors replied. This is not a universal bug: one pattern below is defended as intended, a different one is conceded as a wrong pattern the standard does not yet handle. The reporter never withdrew his concern, and the issue is still open.</p>
+              <p class="note">This demo is a simplified stand-in for KCC-0020, a draft Kaspa token rule that lets an issuer update the state of some holders and not others. Issue #14, opened by Knitser on kaspanet/kccs, August 21, 2026, reports that this same mechanism permanently splits a token's supply once triggered. Two KCC-0020 co-authors replied. This is not a universal bug: one pattern below is defended as intended, a different one is conceded as a wrong pattern the standard does not yet handle. Knitser said on August 23, 2026 that the co-authors' explanation clears up his original concern; a pull request tightening the spec's wording is open but not merged.</p>
               <blockquote>
                 &ldquo;My view is that the combination of extended state, alongside token-specific entry points, allows for various use cases which are not only write-once, nor only for a singleton token. The standard transfer function, though, is meant to transfer fungible tokens, hence, it assumes that inputs and outputs state (excluding ownership and amount) must be identical (or else could not be treated as fungible)&rdquo;
                 <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
@@ -993,7 +1021,7 @@
       </details>
       <details class="deep-dive" id="supply-split">
         <summary>The supply-split consequence, defended in part, conceded in part</summary>
-        <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser has not withdrawn his original concern, and no spec change has merged.</p>
+        <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser replied on August 23, 2026 that the co-authors' explanation "clears it up": an entrypoint that changes extended state makes a different type of token out of those specific cells rather than updating the original, so neither of his two originally proposed fixes was right. He then asked the spec text to say this more plainly in four places: the commitment wording, how balances display across commitment values, which entrypoints may change a commitment and under what authority, and how to handle receipt-like data. Manyfestation opened a pull request the same day, "Clarify KCC20 extended state fungibility semantics" (<a href="https://github.com/kaspanet/kccs/pull/16">#16</a>), to cover it. The issue is still open and the pull request has not merged.</p>
       </details>
       <details class="deep-dive">
         <summary>The one production implementer's own conformance admission</summary>
@@ -1053,6 +1081,16 @@
         var groups = [[], [], []];
         rows.forEach(function (r) { groups[kipBucket(r.n)].push(r); });
         var container = document.getElementById('kip-groups');
+        // The static HTML baseline wires two term-def reveals onto this
+        // table: "covenant" on the KIP-17 row and "Crescendo" on the KIP-14
+        // row (each reader's first plain-prose encounter with that word on
+        // this page). That markup lives only in the baseline, so a
+        // successful live fetch below would otherwise silently drop both:
+        // reproduce them here, on the first live row whose title actually
+        // contains the word, so each reveal survives whether the fetch
+        // succeeds or fails.
+        var covenantWired = false;
+        var crescendoWired = false;
         container.innerHTML = groups.map(function (g, i) {
           if (!g.length) return '';
           var active = g.filter(function (r) { return r.status === 'Active'; }).length;
@@ -1060,7 +1098,28 @@
           var label = 'KIP ' + lo + (hi > lo ? '–' + hi : '') + ', ' + kipGroupNames[i] +
             ' (' + active + ' of ' + g.length + ' active)';
           var rowsHtml = g.map(function (r) {
-            return '<tr><td>' + r.n + '</td><td>' + r.title + '</td><td>' + r.layer + '</td><td>' + r.status + '</td></tr>';
+            var titleHtml = r.title;
+            if (!covenantWired) {
+              var cm = titleHtml.match(/Covenants?/);
+              if (cm) {
+                covenantWired = true;
+                titleHtml = titleHtml.slice(0, cm.index) +
+                  '<span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">' + cm[0] +
+                  '<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server\'s promise.</span></span>' +
+                  titleHtml.slice(cm.index + cm[0].length);
+              }
+            }
+            if (!crescendoWired) {
+              var sm = titleHtml.match(/Crescendo/);
+              if (sm) {
+                crescendoWired = true;
+                titleHtml = titleHtml.slice(0, sm.index) +
+                  '<span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-kips">' + sm[0] +
+                  '<span class="term-def__panel" id="crescendo-def-kips" role="tooltip">The May 2025 upgrade that sped Kaspa\'s mainnet from one block a second to ten.</span></span>' +
+                  titleHtml.slice(sm.index + sm[0].length);
+              }
+            }
+            return '<tr><td>' + r.n + '</td><td>' + titleHtml + '</td><td>' + r.layer + '</td><td>' + r.status + '</td></tr>';
           }).join('');
           return '<details class="deep-dive"><summary>' + label + '</summary>' +
             '<div class="table-wrap"><table class="reality-table">' +
@@ -1070,7 +1129,10 @@
         document.getElementById('kip-stamp').textContent =
           'Read live from the KIP repository just now. ' + rows.length + ' proposals indexed.';
       })
-      .catch(function () { /* baseline stands */ });
+      .catch(function () {
+        document.getElementById('kip-stamp').textContent =
+          'Live read failed. Showing the August 22, 2026 baseline written into this page, not current data.';
+      });
 
     fetch('https://api.github.com/repos/kaspanet/kccs/pulls?state=open&per_page=30', { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('kccs ' + r.status); return r.json(); })
@@ -1085,7 +1147,10 @@
         document.getElementById('kcc-stamp').textContent =
           'Read live from the KCC repository just now. ' + prs.length + ' open, none merged as a specification.';
       })
-      .catch(function () { /* baseline stands */ });
+      .catch(function () {
+        document.getElementById('kcc-stamp').textContent =
+          'Live read failed. Showing the August 22, 2026 baseline written into this page, not current data.';
+      });
   })();
   </script>
 

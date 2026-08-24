@@ -98,9 +98,60 @@
   // and the scroll never visibly starts. "instant" is a distinct value
   // from "auto" in the same spec and always jumps synchronously,
   // regardless of the CSS scroll-behavior value.
+  // Every demo on this site now lives inside the page that explains it, most
+  // behind a <details> block that is closed by default for a reader
+  // scrolling the page normally. A fragment can name that details directly,
+  // an element nested inside one or more closed details, or (the more common
+  // shape here) a <section> that itself wraps a closed "Demo" accordion as a
+  // child. A reader who clicked a link named after that demo asked for it
+  // directly, so the closed-by-default rule does not apply to them: reveal
+  // the target from both directions before this function measures anything.
+  //
+  // Upward: open every closed ancestor of the target (the target itself
+  // included, if it is a details), outermost first, so a fragment landing
+  // inside a closed details is actually rendered.
+  //
+  // Downward: open the outermost closed details found inside the target,
+  // but leave anything nested inside THAT details alone. A demo can carry
+  // its own optional foldout further in (a "why this happens" aside inside
+  // the widget), and that is exactly the kind of depth this site keeps
+  // collapsed for a reader who scrolls in normally; only the demo's own
+  // accordion is what the click promised to open.
+  //
+  // This runs on every call (the initial snap and each scheduled re-snap),
+  // which is safe because opening an already-open details is a no-op, and
+  // it means the reveal survives no matter which of the click handler,
+  // hashchange, or load path reached this function first.
+  const revealAncestorDetails = (target) => {
+    const closedAncestors = [];
+    let node = target;
+    while (node) {
+      if (node.tagName === "DETAILS" && !node.open) closedAncestors.push(node);
+      node = node.parentElement;
+    }
+    closedAncestors.reverse().forEach((details) => {
+      details.open = true;
+    });
+
+    target.querySelectorAll("details").forEach((details) => {
+      if (details.open) return;
+      let hasCloserDetailsAncestor = false;
+      let ancestor = details.parentElement;
+      while (ancestor && ancestor !== target) {
+        if (ancestor.tagName === "DETAILS") {
+          hasCloserDetailsAncestor = true;
+          break;
+        }
+        ancestor = ancestor.parentElement;
+      }
+      if (!hasCloserDetailsAncestor) details.open = true;
+    });
+  };
+
   const snapToId = (id) => {
     const target = document.getElementById(id);
     if (!target) return null;
+    revealAncestorDetails(target);
     const clearance = parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue("--site-header-clearance")
     ) || 132;
@@ -155,10 +206,81 @@
     else window.addEventListener("load", snapToHash, { once: true });
   }
 
+  // Mobile nav focus trap. The panel only exists below 700px: that is the
+  // breakpoint (styles.css, the max-width: 700px block that first sets
+  // .nav-menu-button { display: inline-flex } and hides .nav-links behind
+  // data-open) where the button becomes visible and nav-links stops being a
+  // plain visible row and starts being a toggled panel. Above that width the
+  // button is display: none and never receives a click, so nothing below
+  // needs to special-case desktop; it is gated on the same query anyway so a
+  // mid-session resize cannot leave a trap active in the wrong mode.
+  const mobilePanelQuery = window.matchMedia("(max-width: 700px)");
+  if (!links.hasAttribute("tabindex")) links.setAttribute("tabindex", "-1");
+
+  const supportsInert = "inert" in HTMLElement.prototype;
+  const backgroundSiblings = () =>
+    Array.from(document.body.children).filter((child) => child !== nav && !child.contains(nav));
+
+  const setBackgroundInert = (isInert) => {
+    backgroundSiblings().forEach((child) => {
+      if (supportsInert) child.inert = isInert;
+      if (isInert) {
+        // Fallback for browsers without inert support (Safari < 15.5,
+        // Firefox < 112): aria-hidden alone keeps content out of the
+        // accessibility tree but does nothing about tab order, so the
+        // keydown trap below is what actually stops Tab from reaching it.
+        child.setAttribute("aria-hidden", "true");
+      } else {
+        child.removeAttribute("aria-hidden");
+      }
+    });
+  };
+
+  const focusableSelector =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const getFocusable = (container) =>
+    Array.from(container.querySelectorAll(focusableSelector)).filter(
+      (el) => el.getClientRects().length > 0
+    );
+
+  const trapTabKey = (event) => {
+    if (event.key !== "Tab") return;
+    const focusable = getFocusable(nav);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    } else if (!nav.contains(document.activeElement)) {
+      // Focus somehow landed outside the trap (a browser extension, a
+      // programmatic .focus() call elsewhere); pull it back in rather than
+      // letting Tab continue from wherever it is.
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
   const setOpen = (isOpen) => {
+    const wasOpen = nav.dataset.open === "true";
+    const isPanel = mobilePanelQuery.matches;
     nav.dataset.open = isOpen ? "true" : "false";
     button.setAttribute("aria-expanded", String(isOpen));
     requestAnimationFrame(updateHeaderClearance);
+
+    if (isOpen && isPanel) {
+      setBackgroundInert(true);
+      document.addEventListener("keydown", trapTabKey, true);
+      const firstFocusable = getFocusable(links)[0];
+      (firstFocusable || links).focus({ preventScroll: true });
+    } else if (wasOpen) {
+      setBackgroundInert(false);
+      document.removeEventListener("keydown", trapTabKey, true);
+      if (isPanel) button.focus({ preventScroll: true });
+    }
   };
 
   setOpen(false);
@@ -173,6 +295,14 @@
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") setOpen(false);
+  });
+
+  // If the viewport crosses the panel breakpoint while the menu is open
+  // (rotating a tablet, resizing a browser window), tear down the trap and
+  // the inert background rather than leaving them stuck in a state the
+  // current layout no longer matches.
+  mobilePanelQuery.addEventListener("change", () => {
+    if (nav.dataset.open === "true") setOpen(false);
   });
 
   const imageFigures = Array.from(document.querySelectorAll(".article-visual"));

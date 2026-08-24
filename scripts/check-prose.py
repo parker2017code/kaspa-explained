@@ -105,7 +105,7 @@ SKIP_FILES = {
     "COLD-READ.md", "REVIEW.md", "TODO.md", "HANDOFF.md", "AUDIT.md",
     "BREAK.md", "FACTS.md", "CROSS-READ.md", "CONTRIBUTING.md",
     "CLI_FROM_ZERO.md", "PROGRESS.md", "STANDARD.md", "house-style.md",
-    "handoff-checklist.md", "model-picker-methodology.md",
+    "handoff-checklist.md", "model-picker-methodology.md", "THE-BAR.md",
 }
 
 
@@ -249,7 +249,16 @@ def main():
         # site copy, and scanning them fails the gate on content no reader
         # will ever see. check-links.sh hit this same class of bug.
         paths = [p for p in paths if not _ignored(p)]
-    paths = [p for p in paths if os.path.basename(p) not in SKIP_FILES]
+    # Audit and adversarial reports quote the defects they exist to name,
+    # including the banned patterns themselves, so linting them as reader
+    # copy is circular. Matched by prefix because each review pass creates
+    # new ones and an explicit list goes stale as soon as a lens is added.
+    _REPORT_PREFIXES = ("AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-")
+    paths = [
+        p for p in paths
+        if os.path.basename(p) not in SKIP_FILES
+        and not os.path.basename(p).startswith(_REPORT_PREFIXES)
+    ]
 
     rows = [r for r in (analyse(p) for p in paths) if r]
     # worst first: banned hits, then how uniform the sentence lengths are

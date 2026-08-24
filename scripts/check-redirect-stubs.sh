@@ -9,7 +9,13 @@ from pathlib import Path
 
 manifest = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 domain = manifest["domain"]
-live_pages = set(manifest["pages"])
+# A 404 page is not a destination. It stays in the manifest because several
+# checks walk that array, and it is filtered out of the sitemap by
+# build-sitemap.py and out of the related-links chain by
+# apply-related-links.py for the same reason. Filter it here too, or this
+# check reports the two files disagreeing when they are both correct.
+NOT_A_DESTINATION = {"404.html"}
+live_pages = set(manifest["pages"]) - NOT_A_DESTINATION
 
 
 def page_to_path(page):

@@ -73,8 +73,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260823-182826">
-  <script defer src="nav.js?v=20260823-182826"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-143221">
+  <script defer src="nav.js?v=20260824-143221"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -120,16 +120,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>Self-custodied money</td><td>Fair-launched Proof-of-Work UTXO asset with direct wallet control.</td><td>Live</td></tr>
-              <tr><td>Fast payment feel</td><td>10 BPS blockDAG gets a payment into a block faster than slow PoW chains.</td><td>Live, with confirmation tradeoffs</td></tr>
+              <tr><td>Self-custodied money</td><td>Fair-launched Proof-of-Work <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wkm">UTXO<span class="term-def__panel" id="utxo-def-wkm" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> asset with direct wallet control.</td><td>Live</td></tr>
+              <tr><td>Fast payment feel</td><td>10 BPS <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wkm">blockDAG<span class="term-def__panel" id="blockdag-def-wkm" role="tooltip">A graph where multiple honest blocks exist in parallel instead of a single forced line.</span></span> gets a payment into a block faster than slow PoW chains.</td><td>Live, with confirmation tradeoffs</td></tr>
               <tr><td>One shared record</td><td>GHOSTDAG orders parallel honest blocks in a DAG.</td><td>Live</td></tr>
-              <tr><td>Assets with rules</td><td>Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork into L1.</td><td>
-                Covenant rules live on L1; wallet and app evidence next
-                <details class="cell-detail">
-                  <summary>Why "evidence next"</summary>
-                  <p>Covenant rules run in consensus today. Wallets and developer tooling have not caught up yet, so builder evidence is what to watch next. See Programmability, below, for what builders get today.</p>
-                </details>
-              </td></tr>
+              <tr><td>Assets with rules</td><td>Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork into L1.</td><td>Covenant rules live on L1; wallet and app evidence next. See <a href="#kaspa-apps">Programmability, below</a>, for what builders get today.</td></tr>
               <tr><td>Group commitments</td><td>Base Real-Time Decentralization (RTD) today. RTD-derived attestations, oracles, and <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-wkm">TangVM<span class="term-def__panel" id="tangvm-def-wkm" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span> come later.</td><td>Base idea live; app systems still future work</td></tr>
             </tbody>
           </table>
@@ -148,7 +142,7 @@
         <div class="reference-grid grid-cards">
           <article>
             <h3>Hard money: Bitcoin</h3>
-            <p>A block every ten minutes is the price of settlement money that holds still. Kaspa keeps the Proof of Work and the fixed supply, then swaps the single chain for a <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wkm">blockDAG<span class="term-def__panel" id="blockdag-def-wkm" role="tooltip">A graph where multiple honest blocks exist in parallel instead of a single forced line.</span></span> that keeps the blocks other PoW chains discard as orphans.</p>
+            <p>A block every ten minutes is the price of settlement money that holds still. Kaspa keeps the Proof of Work and the fixed supply, then swaps the single chain for a blockDAG that keeps the blocks other PoW chains discard as orphans.</p>
           </article>
           <article>
             <h3>Contract depth: Ethereum</h3>
@@ -192,7 +186,7 @@
               <div class="pressure-map" aria-hidden="true">
                 <div class="pressure-node speed"><strong>Speed</strong><span>feedback</span></div>
                 <div class="pressure-node security"><strong>Security</strong><span>cost</span></div>
-                <div class="pressure-node decentralization"><strong>Many verifiers</strong><span>decentralization</span></div>
+                <div class="pressure-node decentralization"><strong>Many verifiers</strong><span>friction</span></div>
                 <div class="pressure-node privacy"><strong>Privacy</strong><span>hidden data</span></div>
                 <div class="pressure-node usability"><strong>Usability</strong><span>recovery</span></div>
                 <p>Improve one corner and another gives.</p>
@@ -230,27 +224,8 @@
       <p>Kaspa comes out of the research line asking whether mining work that a single chain throws away as a collision can count toward consensus instead.</p>
       <details class="deep-dive">
         <summary>How GHOSTDAG and real-time decentralization work</summary>
-        <p>Every Nakamoto-style system carries Bitcoin's latency tradeoff by design. The goal Kaspa chases instead has a name. <span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-wkm">RTD<span class="term-def__panel" id="rtd-def-wkm" role="tooltip">Hashdag's framing: Bitcoin-style PoW security operating in real time.</span></span>, Real-Time Decentralization, is <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-wkm">Hashdag<span class="term-def__panel" id="hashdag-def-wkm" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span>'s term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack.</p>
-        <p>Blue work is what makes it measurable, letting nodes compare total work across a graph instead of a single chain.</p>
-        <div class="concept-diagram dag-concept" role="img" aria-label="Parallel blocks reference earlier blocks and are ordered by GHOSTDAG">
-          <svg viewBox="0 0 760 260" aria-hidden="true">
-            <path class="diagram-link" d="M70 130 L190 75 L320 105 L455 70 L610 118"></path>
-            <path class="diagram-link" d="M70 130 L190 185 L320 155 L455 190 L610 118"></path>
-            <path class="diagram-link muted" d="M190 75 L320 155"></path>
-            <path class="diagram-link muted" d="M190 185 L320 105"></path>
-            <path class="diagram-link muted" d="M320 105 L455 190"></path>
-            <path class="diagram-link muted" d="M320 155 L455 70"></path>
-            <g class="diagram-node selected" transform="translate(70 130)"><circle r="24"></circle><text y="6">A</text></g>
-            <g class="diagram-node blue" transform="translate(190 75)"><circle r="24"></circle><text y="6">B</text></g>
-            <g class="diagram-node blue" transform="translate(190 185)"><circle r="24"></circle><text y="6">C</text></g>
-            <g class="diagram-node blue" transform="translate(320 105)"><circle r="24"></circle><text y="6">D</text></g>
-            <g class="diagram-node red" transform="translate(320 155)"><circle r="24"></circle><text y="6">E</text></g>
-            <g class="diagram-node blue" transform="translate(455 70)"><circle r="24"></circle><text y="6">F</text></g>
-            <g class="diagram-node blue" transform="translate(455 190)"><circle r="24"></circle><text y="6">G</text></g>
-            <g class="diagram-node selected" transform="translate(610 118)"><circle r="28"></circle><text y="6">V</text></g>
-          </svg>
-          <p><strong>GHOSTDAG does not make every block equal.</strong> It gives nodes a rule for ordering the graph.</p>
-        </div>
+        <p>Every Nakamoto-style system carries Bitcoin's latency tradeoff by design. <span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-wkm">RTD<span class="term-def__panel" id="rtd-def-wkm" role="tooltip">Hashdag's framing: Bitcoin-style PoW security operating in real time.</span></span>, Real-Time Decentralization, is <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-wkm">Hashdag<span class="term-def__panel" id="hashdag-def-wkm" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span>'s term for a partially synchronous system that moves as fast as the network really allows: fast when conditions are clean, slower but still safe when the network is struggling or under attack.</p>
+        <p>Blue work is what makes it measurable, letting nodes compare total work across a graph instead of a single chain. See <a href="/what-is-kaspa#ghostdag">how GHOSTDAG colors and orders that graph</a> and try the live version there.</p>
         <p>Storage-mass pricing charges a transaction for the UTXO footprint it leaves behind for good, on top of its raw size.</p>
         <p>Pruning and bounded anticones cap what a node has to hold and how far the parallel edges can spread, which is what lets an ordinary machine keep up with a fast proof-of-work DAG.</p>
         <p>Hashdag points that speed at shared commitments instead of price charts. The simplest version is Kickstarter-like funding, where money moves only if enough people commit and a public rule holds the threshold instead of a company that can wave it away.</p>
@@ -314,9 +289,9 @@
             <p><b>Model.</b> This is the "double-spend race" from Satoshi Nakamoto's Bitcoin whitepaper, section 11 (2008). An attacker holding a share of the network's mining power races to out-produce the blocks already confirming a payment. The whitepaper models that race as a Poisson process and asks: what is the chance the attacker still catches up after z blocks.</p>
             <div class="cr-formula">P(z) = 1 &minus; &sum;<sub>k=0</sub><sup>z</sup> Poisson(k; &lambda;)&middot;(1 &minus; (q/p)<sup>z&minus;k</sup>), &lambda;=z&middot;q/p, q&lt;p</div>
             <p>Block count is converted to wait time using each chain's target block interval (Bitcoin 600 s, Litecoin 150 s, Kaspa 0.1 s), which is why Bitcoin's line visibly steps every ten minutes while Kaspa's looks smooth.</p>
-            <p><b>Where the Kaspa line is an approximation.</b> Kaspa is not a single chain. GHOSTDAG keeps parallel blocks instead of discarding them and orders them by accumulated work across a DAG, not a simple block count. Feeding Kaspa's block interval into this single-chain formula is a stand-in, not a derivation from GHOSTDAG's own security proof. It likely understates Kaspa's real security, since a naive fast chain would waste a lot of honest work to collisions that GHOSTDAG does not waste. It may also understate how GHOSTDAG's bounded tolerance for parallel blocks affects very recent ordering. Net effect not established with confidence either way.</p>
+            <p><b>Where the Kaspa line is an approximation.</b> Kaspa is not a single chain. GHOSTDAG keeps parallel blocks instead of discarding them and orders them by accumulated work across a DAG, not a simple block count. Feeding Kaspa's block interval into this single-chain formula is a stand-in, not a derivation from GHOSTDAG's own security proof. It likely understates Kaspa's real security, since a naive fast chain wastes honest work to collisions GHOSTDAG does not, though bounded tolerance for recent ordering may cut the other way, and the net effect isn't established.</p>
             <p><b>Finality is a different, harder guarantee, not shown here.</b> This site's <a href="/chain-comparer">chain comparer</a> puts Kaspa's finality boundary at 12 hours: a fixed rule past which a node will not reorganize at all, no matter the attacker's share. It sits far to the right of anything on this chart.</p>
-            <p><b>Is 12 hours arbitrary?</b> It is a chosen constant, not one derived from a security proof the way GHOSTDAG's own k parameter is. In rusty-kaspa's consensus code, <code>FINALITY_DURATION</code> is a plain 43,200-second (12-hour) constant, and the block-count threshold is just that duration times blocks per second: 432,000 blocks at 10 BPS. Compare that to GHOSTDAG's k, which the same codebase computes from a target probability bound through a named function, <code>calculate_ghostdag_k</code>. Finality duration has no equivalent formula behind it in the source. It is a judgment call about how much margin is enough, held fixed in wall-clock time even as Kaspa's blocks per second have changed, and picked to sit well past the point where the curve above has already fallen close to zero for any attacker share worth trying. This site does not dress that up as derived math: it is a number someone chose.</p>
+            <p><b>12 hours is a chosen constant</b>, not one derived from a security proof the way GHOSTDAG's own k parameter is. In rusty-kaspa's consensus code, <code>FINALITY_DURATION</code> is a plain 43,200-second (12-hour) constant, and the block-count threshold is just that duration times blocks per second: 432,000 blocks at 10 BPS. Compare that to GHOSTDAG's k, which the same codebase computes from a target probability bound through a named function, <code>calculate_ghostdag_k</code>. Finality duration has no equivalent formula behind it in the source. It is a judgment call about how much margin is enough, held fixed in wall-clock time even as Kaspa's blocks per second have changed, and picked to sit well past the point where the curve above has already fallen close to zero for any attacker share worth trying.</p>
           </details>
 
           <p class="cr-demo-footnote">Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</p>
@@ -380,6 +355,8 @@
           .cr-demo .cr-readout .cr-swatch { width: 10px; height: 10px; border-radius: 3px; }
           .cr-demo .cr-readout b { color: var(--cr-text); }
           .cr-demo .cr-readout .cr-wait { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--cr-text); text-align: right; white-space: nowrap; }
+          .cr-demo .cr-readout .cr-wait.cr-pulse { animation: cr-wait-pulse 260ms ease-out; }
+          @keyframes cr-wait-pulse { from { color: var(--cr-green); } to { color: var(--cr-text); } }
           .cr-demo .cr-chain-note { font-size: .78rem; color: var(--cr-faint); margin: 0 0 20px; }
           .cr-demo .cr-result-line { font-size: 1rem; margin: 18px 0; }
           .cr-demo .cr-result-line b { color: var(--cr-text); }
@@ -496,34 +473,26 @@
             if (mode === 'toolong') {
               if (row.raf) { cancelAnimationFrame(row.raf); row.raf = null; }
               row.displayedSeconds = null;
-              row.msg.textContent = 'would take an impractically long wait.';
-              row.wait.textContent = 'too long';
+              row.msg.textContent = 'would take longer than this model checks, over ' + fmtTime(waitSeconds) + '.';
+              row.wait.textContent = 'beyond ' + fmtTime(waitSeconds);
               return;
             }
             row.msg.textContent = 'becomes safe';
-            if (reducedMotion || row.displayedSeconds == null) {
-              row.displayedSeconds = waitSeconds;
-              row.wait.textContent = fmtTime(waitSeconds);
-              return;
+            // The number sets synchronously, in the same call that sets the
+            // result sentence, so the two can never visibly disagree. A CSS
+            // pulse (see .cr-readout .cr-wait.cr-pulse) gives it the
+            // "responds instantly and feels alive" motion instead of a
+            // requestAnimationFrame tween, because a tween can stall behind
+            // its target when the tab is backgrounded or input events arrive
+            // faster than the animation completes, which is what produced a
+            // frozen, stale number next to a live sentence.
+            row.displayedSeconds = waitSeconds;
+            row.wait.textContent = fmtTime(waitSeconds);
+            if (!reducedMotion) {
+              row.wait.classList.remove('cr-pulse');
+              void row.wait.offsetWidth;
+              row.wait.classList.add('cr-pulse');
             }
-            if (row.raf) cancelAnimationFrame(row.raf);
-            var from = row.displayedSeconds;
-            var to = waitSeconds;
-            var start = performance.now();
-            var duration = 200;
-            function step(now) {
-              var t = Math.min(1, (now - start) / duration);
-              var eased = 1 - Math.pow(1 - t, 3);
-              row.wait.textContent = fmtTime(from + (to - from) * eased);
-              if (t < 1) {
-                row.raf = requestAnimationFrame(step);
-              } else {
-                row.raf = null;
-                row.displayedSeconds = to;
-                row.wait.textContent = fmtTime(to);
-              }
-            }
-            row.raf = requestAnimationFrame(step);
           }
 
           tolGroup.addEventListener('click', function (e) {
@@ -604,14 +573,15 @@
               var last = pts[pts.length - 1];
               labelSpots.push({ name: c.name, color: c.color, x: Math.min(last[0] + 8, W - PAD_R - 4), y: last[1] + 3 });
 
-              var z = blocksToReach(share, tolerance, 20000000);
+              var zMax = 20000000;
+              var z = blocksToReach(share, tolerance, zMax);
               var waitSeconds = (z === null) ? null : z * c.blockTime;
               results.push({ name: c.name, waitSeconds: waitSeconds, neverSafe: share >= 0.5, tooLong: z === null && share < 0.5 });
               var row = rows[c.id];
               if (share >= 0.5) {
                 setRowState(row, 'never', null);
               } else if (z === null) {
-                setRowState(row, 'toolong', null);
+                setRowState(row, 'toolong', zMax * c.blockTime);
               } else {
                 setRowState(row, 'safe', waitSeconds);
               }
@@ -684,7 +654,7 @@
     <section id="kaspa-tests" class="section">
       <p class="eyebrow">Checklist</p>
       <h2>Check any coin, including this one</h2>
-      <p>Check price last. KAS clears the token-necessity question more easily than most app tokens do: it is the asset a PoW UTXO blockDAG network tracks, charges fees in, and pays out as the mining reward. Remove KAS and there is no network left underneath it, and the fair launch leaves no insider allocation to discount for.</p>
+      <p>Check price last. Run KAS through the same token-necessity question as any other coin: it is the asset a PoW UTXO blockDAG network tracks, charges fees in, and pays out as the mining reward. Remove KAS and there is no network left underneath it, and the fair launch leaves no insider allocation to discount for. Whether that clears the bar better than another token's answer is for the reader to judge against the other nine questions below, not for this page to grade.</p>
       <details class="deep-dive">
         <summary>The ten questions, and why market cap misleads</summary>
         <div class="check-grid grid-cards">
@@ -713,6 +683,7 @@
           <li><a href="https://www.youtube.com/live/GaJmYV8OHfQ">Bitcoin Takeover S16 E41 with Yonatan Sompolinsky</a>, and the <a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast/episodes/s16-e41-yonatan-sompolinsky-on-bitcoin-kaspa-amp-proof-of-work">Podscan transcript</a> for searching it.</li>
           <li><a href="https://www.youtube.com/watch?v=VIZGKoIaGR0">Yonatan Sompolinsky's Oxford Union address</a> for group-commitment markets and stag-hunt framing, plus the <a href="https://www.youtube.com/watch?v=S1dS1xvvFss">Q&amp;A</a> on AI agents and network effects.</li>
           <li><a href="https://tokenize-event.com/theatre-2-blockchain-technologies-and-the-potential-of-web3/utilising-decentralised-tech-secure-digital-wallets">Kaspa: Mining the Internet</a> for the RTD and miner-attestation framing.</li>
+          <li><a href="https://medium.com/@kukuxcs/uphold-x-kaspa-w-dr-martin-hiesboeck-yonatan-sompolinsky-9b07b789e585">Uphold X Space transcript</a> with Sompolinsky and Uphold's Martin Hiesboeck, and the <a href="https://x.com/DailyKaspa/status/2052716697262374936">Kaspa Daily Q&amp;A</a> this site's status claims lean on for current narrative context.</li>
           <li><a href="https://www.youtube.com/watch?v=xHlOcR1x2tU">Michael Sutton's vProgs talk</a>, and <a href="https://www.youtube.com/watch?v=p21KDrKEhB8">Sutton on Crescendo, based rollups, and DAGKnight</a> for 10 BPS and sequencing commitments.</li>
           <li><a href="https://hashd.ag/">hashd.ag</a> and <a href="https://hashd.ag/raw">hashd.ag/raw</a> for Hashdag's own writing and research notes.</li>
           <li><a href="https://bitcoin.org/bitcoin.pdf">Bitcoin whitepaper</a>, <a href="https://ethereum.org/en/roadmap/scaling/">Ethereum scaling docs</a>, and the <a href="https://solana.com/">Solana homepage</a> for how each project states its own case.</li>
