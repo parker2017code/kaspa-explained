@@ -35,10 +35,21 @@ while IFS= read -r url; do
     local_path="${local_path%%\?*}"
     if [[ -z "$local_path" || "$local_path" == "/" ]]; then
       local_file="index.html"
+    elif [[ "$local_path" == */ ]]; then
+      # Directory-style URL (e.g. "/demos/"): clean-URL convention on this
+      # site resolves to that directory's own index.html, same as
+      # scripts/serve-local.py and GitHub Pages actually serve it. Used to
+      # append ".html" straight onto the trailing slash and fail every
+      # such link ("demos/" + ".html" = "demos/.html", which never exists).
+      local_file="${local_path#/}index.html"
     else
       local_file="${local_path#/}"
       if [[ "$local_file" != *.* ]]; then
-        local_file="${local_file}.html"
+        if [[ -f "${local_file}/index.html" ]]; then
+          local_file="${local_file}/index.html"
+        else
+          local_file="${local_file}.html"
+        fi
       fi
     fi
 

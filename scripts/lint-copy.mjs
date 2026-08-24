@@ -55,7 +55,7 @@ const skipDirs = new Set([
 // patterns themselves, so linting them as reader copy is circular. Matched
 // by prefix because each pass creates new ones and an explicit list goes
 // stale the moment someone adds a lens.
-const skipPrefixes = ["AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-"];
+const skipPrefixes = ["AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-", "LIVE-SWEEP"];
 const isInternalReport = (name) => skipPrefixes.some((pre) => name.startsWith(pre));
 
 const skipFiles = new Set([

@@ -51,8 +51,8 @@
     "about": ["Kaspa", "Argent", "Silverscript", "Covenants", "KIP-20"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260824-143221">
-  <script defer src="nav.js?v=20260824-143221"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-191116">
+  <script defer src="nav.js?v=20260824-191116"></script>
   <style>
   /* Scoped styles for the inlined argent-pipeline demo (formerly demos/argent-pipeline.html).
      Every custom property and selector below is scoped under .argent-pipeline-demo so it cannot
@@ -179,7 +179,7 @@
         <a href="/status">Live now</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
-        <a href="/demos">Demos</a>
+        <a href="/demos">Try it</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -198,65 +198,10 @@
       </div>
     </section>
 
-    <section class="section">
-      <p class="eyebrow">The gap it fills</p>
-      <h2>A covenant is opcodes. An application is several agreeing.</h2>
-      <p>A covenant is a rule attached to a coin, written as raw opcodes. Hand-auditing a multi-contract application in those opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, is the working attempt at that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow"><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span></p>
-      <h2>Two Argent actors, one atomic transaction</h2>
-      <p>Argent's Inter-Covenant Communication lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps still succeed or fail together. <a href="/utxo-vs-accounts#shared-state">Watch the underlying race on the UTXO-vs-accounts page</a>, where two writers reach for the same slot, to see the collision ICC exists to keep two Argent actors out of.</p>
-    </section>
-
-    <section class="section prose-section" data-audience="specialist">
-      <p class="eyebrow">Language model</p>
-      <h2>Four ideas, and a worked example</h2>
-      <details class="deep-dive">
-        <summary>Open the language model and a worked example</summary>
-      <p>On an account chain, a contract sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it.</p>
-      <p>Four ideas carry the core, and they are not the whole surface: the documented set is eight, adding <code>delegate</code>, <code>consumes</code>, and <code>emits</code>, with the route machinery sitting behind those.</p>
-      <p>A <strong>state</strong> is a typed record. An <strong>actor</strong> owns one. An <strong>entry</strong> is a way to spend that actor, taking arguments and declaring which actors it emits. And <code>become</code> names the successor the transaction creates.</p>
-      <div class="table-wrap">
-        <pre><code>state TicketState {
-    byte[32] owner;
-    int units;
-}
-
-actor Ticket owns TicketState {
-    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
-        require(blake2b(owner_pk) == owner);
-        require(checkSig(owner_sig, owner_pk));
-        require(next.value == self.value);
-
-        TicketState new_state = {
-            owner: next_owner,
-            units: units,
-        };
-
-        become next &lt;- Ticket(new_state);
-    }
-}
-
-app Tickets {
-    actor Ticket;
-}</code></pre>
-      </div>
-      <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen.</p>
-      <p>If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
-      <h3>Inter-Covenant Communication</h3>
-      <p>That is the piece that makes something like a mint controller possible: one app owns the asset rule, another owns the policy that decides when supply moves, and neither has to be recompiled into the other.</p>
-      <h3>What the compiler outputs</h3>
-      <p>The compiler emits three things for each build, and every one is inspectable without rebuilding the project: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and the rest as ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box.</p>
-      <p>An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities, which is <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-argent">KIP<span class="term-def__panel" id="kip-def-argent" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-20, the piece Toccata carried to mainnet.</p>
-      </details>
-    </section>
-
     <section class="section" id="argent-pipeline">
       <p class="eyebrow">Try it: down the stack</p>
       <h2>Watch the Ticket example move from Argent to Kaspa Script</h2>
-      <p>Pick one of the three lines from the <code>transfer</code> entry above and see how it holds up through the stack. The demo also says where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
+      <p>A single Argent entry, transferring a ticket to a new owner, has three lines. Pick one and see how it holds up through the stack. The demo also says where the public trail stops: Silverscript's compiled bytecode isn't published as a readable opcode listing anywhere in either repository.</p>
       <div class="argent-pipeline-demo">
         <div class="stage">
           <div class="ap-summary">
@@ -278,7 +223,7 @@ app Tickets {
             <p class="caption" id="ap-caption"></p>
           </div>
 
-          <details class="ap-code-detail">
+          <details>
             <summary>See the source code: Argent, Silverscript, and Kaspa Script side by side</summary>
             <div class="pipeline">
               <div class="layer" id="ap-layerArgent">
@@ -314,7 +259,7 @@ app Tickets {
         <details>
           <summary>What's real here, and what's illustrative</summary>
           <div class="quotes-body">
-            <p>The Argent lines are quoted from the Ticket <code>transfer</code> entry above and in Argent's own README. Argent, Silverscript, and Kaspa Script all use <code>require</code>, and <code>blake2b</code> and <code>checkSig</code> are Silverscript builtins, documented in its tutorial with the identical call shape Argent uses. That is the real relationship for those two lines: Argent inherits Silverscript's expressions rather than reinventing them.</p>
+            <p>The Argent lines are quoted from the Ticket <code>transfer</code> entry (the full listing is below, in the language model section) and from Argent's own README. Argent, Silverscript, and Kaspa Script all use <code>require</code>, and <code>blake2b</code> and <code>checkSig</code> are Silverscript builtins, documented in its tutorial with the identical call shape Argent uses. That is the real relationship for those two lines: Argent inherits Silverscript's expressions rather than reinventing them.</p>
             <p>The <code>become</code> line is different. Argent's README says <code>become</code> routes "lower to output validation," and that an exact continuation into the same actor "can use cheaper script-public-key checks." Silverscript's own tutorial documents the named builtin for that job:</p>
             <pre>validateOutputState(int outputIndex, object newState)</pre>
             <p>used to "validate continuation into the same contract template." The Silverscript line shown for that step names this real, documented builtin and shapes it around the Ticket example's own fields. It is not a copy of Argent's actual generated <code>.sil</code> output for this contract, which neither repository publishes.</p>
@@ -423,40 +368,79 @@ app Tickets {
       </script>
     </section>
 
-    <section class="section prose-section" data-audience="specialist">
-      <p class="eyebrow">What's proven, what isn't</p>
-      <h2>Partitioned state works. Shared state is a design direction.</h2>
-      <p>Every example partitions cleanly: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position. Shared mutable state, most of what people mean by DeFi, has no public Argent implementation yet.</p>
-      <details class="deep-dive">
-        <summary>Open the evidence: the DEX example, SECURITY.md, commit history</summary>
-        <p>The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
-        <p>Three repositories, and one person writes nearly all of it. As of mid-August, Michael Sutton held 73 of the compiler's 77 commits, and 58 of those landed in July, when the project moved out of his personal namespace into an <code>argent-lang</code> organization. The compiler is up to 78 commits as of August 17, 2026, syncing generated output with Silverscript's own August changes; the per-author split was not rechecked at the new count.</p>
+    <section class="section">
+      <p class="eyebrow">The gap it fills</p>
+      <h2>A covenant is opcodes. An application is several agreeing.</h2>
+      <p>A covenant is a rule attached to a coin, written as raw opcodes; hand-auditing a multi-contract application in those opcodes is not realistic for most teams. Argent, not officially blessed by the protocol team, works that gap: an actor is a covenant object a transaction consumes and recreates, and the compiler turns a readable description into enforced script.</p>
+      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span> lets an actor from one compiled app observe or authorize an actor from another inside a single transaction, so separately built apps succeed or fail together. <a href="/utxo-vs-accounts#shared-state">Watch the underlying race on the UTXO-vs-accounts page</a>, where two writers reach for the same slot, to see the collision ICC exists to keep two Argent actors out of.</p>
+      <details class="deep-dive" data-audience="specialist">
+        <summary>Open the language model and a worked example</summary>
+      <p>On an account chain, a contract sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it.</p>
+      <p>Four ideas carry the core, and they are not the whole surface: the documented set is eight, adding <code>delegate</code>, <code>consumes</code>, and <code>emits</code>, with the route machinery sitting behind those.</p>
+      <p>A <strong>state</strong> is a typed record. An <strong>actor</strong> owns one. An <strong>entry</strong> is a way to spend that actor, taking arguments and declaring which actors it emits. And <code>become</code> names the successor the transaction creates.</p>
+      <div class="table-wrap">
+        <pre><code>state TicketState {
+    byte[32] owner;
+    int units;
+}
+
+actor Ticket owns TicketState {
+    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
+        require(blake2b(owner_pk) == owner);
+        require(checkSig(owner_sig, owner_pk));
+        require(next.value == self.value);
+
+        TicketState new_state = {
+            owner: next_owner,
+            units: units,
+        };
+
+        become next &lt;- Ticket(new_state);
+    }
+}
+
+app Tickets {
+    actor Ticket;
+}</code></pre>
+      </div>
+      <p>Nothing here is a call to a contract. The transaction spends the old ticket and creates the new one, and every <code>require</code> is a condition the script engine checks before it will let that happen.</p>
+      <p>If a condition fails, the transaction is invalid. There is no revert, no gas refund, and no partially applied state, because there was never a running program to interrupt.</p>
+      <h3>What the compiler outputs</h3>
+      <p>The compiler emits three things for each build, and every one is inspectable without rebuilding the project: <code>artifact.json</code> as the portable description, <code>manifest.json</code> as build metadata, and the rest as ordinary <code>.sil</code> Silverscript contracts. Those contracts use no covenant macros and compile like any other Silverscript, which matters for review: an auditor reads generated script, not a black box.</p>
+      <p>An <code>argentc inspect</code> command reports script and state sizes, static opcode counts, entry arguments, route metadata, and signature-script size estimates without rebuilding. The design targets script composition primitives such as <code>OP_CAT</code> and <code>OP_SUBSTR</code>, transaction introspection, and consensus-supported covenant identities, which is <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-argent">KIP<span class="term-def__panel" id="kip-def-argent" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-20, the piece Toccata carried to mainnet.</p>
       </details>
     </section>
+
 
     <section class="section">
       <p class="eyebrow">Repository signals</p>
       <h2>What the three repos show</h2>
-      <div class="table-wrap">
-        <table class="reality-table" id="argent-table">
-          <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
-          <tbody id="argent-body">
-            <tr><td>argent</td><td>2026-06-16</td><td>2026-08-17</td><td>21</td><td>None</td></tr>
-            <tr><td>argent-playground</td><td>2026-07-09</td><td>2026-08-17</td><td>6</td><td>None</td></tr>
-            <tr><td>argent-template</td><td>2026-07-24</td><td>2026-08-17</td><td>7</td><td>None</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="hint" id="argent-stamp">Dated Aug 22, 2026.</p>
+      <details class="deep-dive" open>
+        <summary>Three repos' age, activity, and stars, none over 21</summary>
+        <div class="table-wrap">
+          <table class="reality-table" id="argent-table">
+            <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
+            <tbody id="argent-body">
+              <tr><td>argent</td><td>2026-06-16</td><td>2026-08-17</td><td>21</td><td>None</td></tr>
+              <tr><td>argent-playground</td><td>2026-07-09</td><td>2026-08-17</td><td>6</td><td>None</td></tr>
+              <tr><td>argent-template</td><td>2026-07-24</td><td>2026-08-17</td><td>7</td><td>None</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="live-footnote" id="argent-stamp">Dated Aug 22, 2026.</p>
+      </details>
     </section>
 
-    <section class="section prose-section">
-      <p class="eyebrow">The README, in full</p>
-      <h2>What Argent's own README actually says</h2>
+    <section class="section prose-section" data-audience="specialist">
+      <p class="eyebrow">What's proven, what isn't</p>
+      <h2>Partitioned state works. Shared state is a design direction.</h2>
+      <p>Every example partitions cleanly: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position. Shared mutable state, most of what people mean by DeFi, has no public Argent implementation yet.</p>
       <p>The README's caution is real, and so is its list of working pieces; quoting only one half gets it wrong. Anyone describing Argent applications as running on Kaspa mainnet today is describing something that has not happened.</p>
       <details class="deep-dive">
-        <summary>Open the README's own words, quoted in full</summary>
-        <p>The caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use."</p>
+        <summary>Open the evidence: the DEX example, commit history, and the README quoted in full</summary>
+        <p>The playground's DEX is a single pair, and the compiler's own SECURITY.md never mentions replicas, keepers, or bounded divergence, the shape a partitioned pool would need.</p>
+        <p>Three repositories, and one person writes nearly all of it. As of mid-August, Michael Sutton held 73 of the compiler's 77 commits, and 58 of those landed in July, when the project moved out of his personal namespace into an <code>argent-lang</code> organization. The compiler is up to 78 commits as of August 17, 2026, syncing generated output with Silverscript's own August changes; the per-author split was not rechecked at the new count.</p>
+        <p>The README's caution is real: "The project is still under active development and is not yet release-ready," a production path opens only "Once Silverscript completes its audit and is released," and Argent "will still need further audit and hardening before general production use."</p>
         <p>The second half names what that caution is about: "The main pieces are present: compiler, generated Silverscript, portable artifacts, runtime transaction building, multi-actor routing, cross-app linking," and five more. That is a list of things that work, not things planned.</p>
         <p>The gate is a review queue, not a construction site: an audit on Silverscript, then a release, then an audit on Argent. Until then the README points at advanced users who can read the generated <code>.sil</code> themselves.</p>
         <p>Silverscript recommends its bytecode artifact only on testnet-10. Kaspa's <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again, calling it "a design direction and prototype, not a production-stable API." That reads as the ecosystem's conservative floor, not the project's current state: Kaspa's own chapter still links the old repository path.</p>
@@ -535,7 +519,7 @@ app Tickets {
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
-          <a href="/demos">Demos</a>
+          <a href="/demos">Try it</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

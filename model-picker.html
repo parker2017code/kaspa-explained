@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-20">
-  <link rel="stylesheet" href="styles.css?v=20260824-143221">
-  <script defer src="nav.js?v=20260824-143221"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-191116">
+  <script defer src="nav.js?v=20260824-191116"></script>
   <style>
     .mp-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
     /* minmax(0, 1fr), not 1fr. A bare 1fr floors the column at the widest
@@ -258,7 +258,7 @@
         <a href="/status">Live now</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
-        <a href="/demos">Demos</a>
+        <a href="/demos">Try it</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -272,7 +272,7 @@
 
     <section class="section">
       <div class="mp-shell">
-        <div class="mp-controls">
+        <div>
           <div class="mp-block">
             <p class="mp-label">Start from a job</p>
             <div class="mp-presets" id="mpPresets"></div>
@@ -313,7 +313,7 @@
           </div>
         </div>
 
-        <div class="mp-results">
+        <div>
           <div class="mp-results-head">
             <p class="mp-label" id="mpCount">Ranking</p>
             <span class="mp-head-actions">
@@ -376,14 +376,14 @@
               <li><b>Each dial says whether it can separate the leaders.</b> A dial reading a figure the frontier has maxed out is ranking noise with a decimal point on it. Each one carries its own top-five gap, worked out from the loaded data, and reads separates, barely separates, or cannot separate.</li>
               <li><b>Every dial carries exactly one figure, all weighted the same.</b> Ten dials of one now, no figure on more than one dial, no weight above any other by construction. One figure per dial has a real cost: there is no second reading to catch a bad one. Not making things up pays that cost hardest. Nothing else on the page predicts it: the best anchor, held out, reaches an r squared of 0.058. That is why a model's row is left unfilled there. Estimating it would overclaim.</li>
             </ol>
-            <p class="hint">Every dial, and the figures it is built from.</p>
+            <p class="live-footnote">Every dial, and the figures it is built from.</p>
             <div class="table-wrap"><table class="mp-map"><tbody id="mpMap"></tbody></table></div>
           </details>
           <p class="mp-scale" id="mpScale"></p>
           <div class="mp-close" id="mpClose" hidden></div>
           <p class="mp-tie-note" id="mpTieNote" hidden></p>
           <ol class="mp-list" id="mpList"></ol>
-          <details class="mp-prov" open>
+          <details class="mp-prov" id="mpParetoDetail">
             <summary>Value chart</summary>
             <div class="mp-pareto-head" id="mpParetoHead">
               <b class="mp-pareto-title">What you cannot get cheaper</b>
@@ -392,10 +392,10 @@
             </div>
             <div class="mp-pareto" id="mpPareto"></div>
           </details>
-          <details class="mp-prov" open>
+          <details class="mp-prov" id="mpMcDetail">
             <summary>How often each model wins</summary>
             <div class="mp-mc-head" id="mpMcHead">
-              <b class="mp-mc-title">4,000 simulated rankings</b>
+              <b class="mp-mc-title">1,000 simulated rankings</b>
               <span class="mp-mc-why">The ranking above is one draw. This is the distribution it came from.</span>
             </div>
             <div id="mpMonte"></div>
@@ -446,7 +446,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
-          <a href="/demos">Demos</a>
+          <a href="/demos">Try it</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
@@ -977,7 +977,7 @@
       var prov = '<details class="mp-prov"><summary>Which benchmarks, and why</summary>' +
         '<div class="mp-prov-body"><p>' + d.why + '</p>' +
         '<p><b>Why it opens at this weight.</b> ' + (WHYW[d.k] || '') + '</p>' +
-        '<p class="mp-mix-full">' + mixNote + '</p>' +
+        '<p>' + mixNote + '</p>' +
         '<ul class="mp-bm">' + provRows + '</ul></div></details>';
       l.innerHTML = '<span>' + d.t + '</span><output id="out-' + d.k + '">off</output>' +
         '<em class="mp-why-dial">' +
@@ -1023,6 +1023,19 @@
       if ($('mpCov')) $('mpCov').value = '0';
       $('mpShowAll').setAttribute('aria-pressed', 'false');
       clearPreset(); render();
+    });
+    // The value chart and the 1,000-run distribution are supporting
+    // evidence for the ranking, not the ranking itself, so both now load
+    // closed (design/STANDARD.md, "Default collapsed"). render() already
+    // redraws them on every dial move, so nothing here depends on the
+    // panel being open to size correctly; re-running render() on open
+    // just guarantees whatever is inside reflects the current dials the
+    // instant a reader opens it, even if they opened it without touching
+    // a dial first.
+    document.querySelectorAll('.mp-prov').forEach(function (d) {
+      if (d.id === 'mpParetoDetail' || d.id === 'mpMcDetail') {
+        d.addEventListener('toggle', function () { if (d.open) render(); });
+      }
     });
 
     var mw = document.createDocumentFragment();
@@ -1242,7 +1255,7 @@
   //
   // Box-Muller for the normal draw, seeded per run so a rerun of the same
   // question gives the same answer rather than shimmering.
-  var MC_RUNS = 4000;
+  var MC_RUNS = 1000;
 
   function mulberry(seed) {
     return function () {
@@ -1383,7 +1396,7 @@
         + '<span class="mp-mc-pct">' + (r.pct >= 10 ? Math.round(r.pct) : r.pct.toFixed(1)) + '%</span></li>';
     }).join('');
     host.innerHTML = '<p class="mp-mc-verdict">' + verdict + '</p><ol class="mp-mc-list">' + bars + '</ol>'
-      + '<details class="mp-mc-foot"><summary>How the 4,000 runs work, and why a lower row can win more often</summary><p>Four thousand rankings, each figure redrawn from its own '
+      + '<details class="mp-mc-foot"><summary>How the 1,000 runs work, and why a lower row can win more often</summary><p>One thousand rankings, each figure redrawn from its own '
       + 'error. Where a board publishes no interval, 1.5 points is assumed, which is the '
       + 'weakest input here. A figure a model never published is stood in for by the '
       + 'median of the field and drawn with the spread of the field, the same '

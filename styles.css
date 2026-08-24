@@ -782,6 +782,10 @@ li,
   background: var(--line-bright);
 }
 
+.transaction-rail.step-diagram article:not(:last-child)::after {
+  content: "";
+}
+
 .transaction-rail span {
   width: 30px;
   height: 30px;
@@ -1902,6 +1906,10 @@ blockquote {
   overflow-wrap: anywhere;
 }
 
+.path-grid span {
+  font-size: 16px;
+}
+
 .path-grid strong {
   display: block;
   max-width: 100%;
@@ -1947,6 +1955,78 @@ blockquote {
 .summary-grid p {
   margin: 0;
   color: var(--muted);
+}
+
+/* skeptical-case.html only: the seven risks were a div/article grid with
+   no table, image, or form control anywhere in it, so the page-height
+   gate saw one 900px+ run with nothing to look at, above the actual
+   table further down that stays closed by default. Real <table> markup
+   for the same seven risks, same content, fixes the pacing and the
+   semantics in one move. Two columns at rest (risk name, then the risk
+   and its disclosure) since that already matches how the content reads;
+   stacked one column on phone so the second cell's long paragraphs never
+   need horizontal scroll, unlike .reality-table's fixed 980px table
+   which is built for short data cells, not prose. */
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: clamp(20px, 3vw, 32px);
+}
+
+.risk-table td {
+  border: 1px solid var(--line);
+  padding: clamp(18px, 2vw, 24px);
+  vertical-align: top;
+  background: var(--card-bg);
+}
+
+.risk-table tr + tr td {
+  border-top: 0;
+}
+
+.risk-table td:first-child {
+  width: 12rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.risk-table td:last-child p:first-child {
+  margin-top: 0;
+}
+
+.risk-table td:last-child > p {
+  color: var(--muted);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .risk-table,
+  .risk-table tbody,
+  .risk-table tr,
+  .risk-table td {
+    display: block;
+    width: auto;
+  }
+
+  .risk-table tr {
+    margin-bottom: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .risk-table td:first-child {
+    border-bottom: 0;
+    padding-bottom: 10px;
+  }
+
+  .risk-table tr + tr td:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .risk-table td:last-child {
+    border-top: 0;
+    padding-top: 0;
+  }
 }
 
 .mining-cycle-page .mining-data-panel strong {
@@ -6673,7 +6753,7 @@ figure img,
 
 .footer-link-group {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   align-content: start;
 }
 
@@ -7604,4 +7684,190 @@ p.live-footnote:not(:last-child) {
   text-decoration: none;
   border-color: rgba(155, 215, 189, .55);
   background: rgba(155, 215, 189, .14);
+}
+
+/* One deliberate next step per page (design/THE-BAR.md, JOB 2, 2026-08-24),
+   replacing the three-card Previous/Next/fallback grid the old
+   .site-related-grid rendered. A single sentence-link in the page's own
+   voice, not a card: no border, no background, no arrow-hover distance
+   travel, nothing that reads as a step counter. Sized a step above body
+   text so it reads as the piece's closing move, not a footnote. */
+.site-next {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.site-next a {
+  color: var(--text);
+  font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+  font-weight: 560;
+  line-height: 1.5;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.site-next a:hover,
+.site-next a:focus-visible {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+/* Defect-class fix (2026-08-24): 35 classes used in HTML with no matching
+   rule anywhere, found by scripts/check-orphan-classes.mjs. Appended here,
+   at the true end of the file, so these additions cannot collide with any
+   other rule under active edit elsewhere in the sheet. Each block below
+   fixes one real orphan; page-scoped orphans got their fix inside that
+   page's own <style> block instead and are not repeated here. */
+
+/* .footer-legal / .footer-disclosure (2026-08-24): the conflict-disclosure
+   line moved into the footer on every page and carried no rule at all.
+   .footer-legal is purely structural, the grid item .footer-grid already
+   lays out; min-width: 0 keeps it a normal shrinking grid child, the same
+   safety net .cc-shell/.mp-shell give their own children. .footer-disclosure
+   needs to read quieter than the legal line above it and than the nav links
+   beside it, both of which already resolve to 12px/var(--muted) through
+   .footer-grid p and .footer p. Ancestor-scoped selectors (.footer .X) are
+   required here, not .footer-disclosure alone, to outrank those existing
+   rules (0,2,0 beats 0,1,1). No padding growth otherwise. Top margin raised
+   to 4px on 2026-08-24 (check-render.mjs near-overlap fix): the two
+   .footer-legal paragraphs rendered 2.0px apart at 1280/light, under the
+   site's 4px NEAR_OVERLAP_PX target; 4px matches the .footer-link-group
+   gap fix from the same pass. */
+.footer-legal {
+  min-width: 0;
+}
+
+.footer .footer-disclosure {
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* .quad-cell.eth (2026-08-24): .kas, .btc, and .sol each get a modifier
+   rule restoring a border after the site-wide de-glass batch zeroed every
+   .quad-cell border. Ethereum's cell carried the "eth" class from the
+   start but no matching modifier was ever written, so it alone renders
+   with no border while the other three chains in the same quadrant do.
+   Same values as the other three restore parity. */
+.quad-cell.eth {
+  border-color: var(--line);
+  background: var(--card-bg);
+}
+
+/* .live-demo-frame (2026-08-24): wraps an inline interactive demo
+   (why-kaspa-matters.html's confirmation-risk demo, build-on-kaspa.html's
+   proof-boundary demo) directly in page prose with no visual break of its
+   own; the demo widgets inside set their own colors and max-width but no
+   frame. Reuses .deep-dive-plain's established bordered/tinted panel
+   language, the site's one existing pattern for framing embedded content,
+   instead of inventing a new box style. */
+.live-demo-frame {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(var(--cyan-rgb), .04);
+}
+
+/* search.html page-length pass (2026-08-24): search.html's job is a page
+   map a reader scans and filters, not a set of cards a reader reads one
+   by one, so the 17-card list is compacted from tall bordered cards
+   (~124px each on phone, 2474px of total scroll for the results block
+   alone) into a dense scannable list, closer to how Google or a file
+   browser renders a result index. No card, title, or description is
+   removed; .search-results still holds all 17 entries with full text.
+   Only the layout gets denser. Same specificity as the earlier
+   `.search-results article` rules above (0,0,1,1); this wins on source
+   order, the established pattern in this file (see the "APPLE DESIGN
+   LAYER" note in CLAUDE.md). .search-results is unique to search.html
+   (grep confirmed), so nothing else depends on the rules being
+   overridden here. */
+/* .search-filters: quick category chips, added the same pass as the
+   compaction above. Not decoration: each button sets the search box to
+   that category and re-runs the existing scoring logic, a real control a
+   reader can use to narrow the page map without typing. It also gives
+   the results block a genuine landmark (a button, in the undifferentiated-
+   run sense design/STANDARD.md's page-length gate checks for) between the
+   search box and the card list, where previously nothing between the two
+   registered as one. */
+.search-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 20px;
+}
+
+.search-filters button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: var(--card-bg);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+}
+
+.search-filters button:hover {
+  border-color: color-mix(in srgb, var(--cyan) 44%, var(--line));
+  color: var(--text);
+}
+
+.search-filters button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: color-mix(in srgb, var(--cyan) 16%, var(--card-bg));
+  color: var(--text);
+}
+
+.search-results {
+  gap: 4px;
+}
+
+.search-results article {
+  padding: 8px 16px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.search-results span {
+  display: inline;
+  margin: 0 8px 0 0;
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.search-results h3 {
+  display: inline;
+  margin: 0;
+}
+
+/* The card title link is the real touch target, not a decorative label:
+   padding (not a stretched-overlay trick) gives the <a> element itself a
+   44px-tall box, the minimum design/THE-BAR.md sets and check-render.mjs
+   measures directly against the anchor's own rect. inline-block lets it
+   still sit on the same line as the category span above. */
+.search-results h3 a {
+  display: inline-block;
+  padding: 13px 4px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.search-results p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Semantic marker for the inclusion-vs-confirmation quadrant diagram on
+   why-kaspa-matters.html, used by the page-length landmark check
+   (design/STANDARD.md, "The page-length ceiling") to recognize this
+   .quadrant instance as the real diagram it is. No-op visually: mirrors
+   .quadrant's own position: relative. */
+.confirm-quadrant-diagram {
+  position: relative;
 }

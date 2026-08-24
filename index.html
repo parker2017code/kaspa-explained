@@ -66,8 +66,8 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260824-143221">
-  <script defer src="nav.js?v=20260824-143221"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-191116">
+  <script defer src="nav.js?v=20260824-191116"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -83,7 +83,7 @@
         <a href="/status">Live now</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
-        <a href="/demos">Demos</a>
+        <a href="/demos">Try it</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -209,6 +209,16 @@
           }
           #home-collision-demo .marks span { position: static; transform: none !important; }
         }
+        #home-collision-demo .honesty-note {
+          font-size: .76rem;
+          color: var(--faint);
+          margin: 6px 0 20px;
+        }
+        #home-collision-demo .model-caption {
+          font-size: .78rem;
+          color: var(--muted);
+          margin: 0 0 10px;
+        }
 
         #home-collision-demo .secondary-control {
           margin: 0 0 22px;
@@ -328,17 +338,32 @@
 
       <div id="home-collision-demo">
         <div class="primary-control">
-          <label for="home-cs-rate">Block rate: <span class="big-readout" id="home-cs-rateVal"></span></label>
-          <input type="range" id="home-cs-rate" value="791" min="0" max="1000" step="1" aria-label="Block rate">
-          <div class="marks"><span>Bitcoin</span><span>Kaspa</span></div>
+          <label for="home-cs-rate">Block rate: <span class="big-readout" id="home-cs-rateVal"></span> <span class="info-affordance" id="home-cs-rate-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="home-cs-rate-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">Why the range stops at 32</span>
+              </button>
+              <span class="info-affordance__panel" id="home-cs-rate-panel" role="tooltip">10 a second is Kaspa mainnet's real rate today. Bitcoin marks the low end for comparison, another network, not a Kaspa setting. 32 a second is the top of the slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
+            </span></label>
+          <input type="range" id="home-cs-rate" value="882" min="0" max="1000" step="1" aria-label="Block rate">
+          <div class="marks"><span>Bitcoin</span><span>Kaspa mainnet</span></div>
         </div>
+        <p class="honesty-note" id="home-cs-honestyNote"></p>
 
         <div class="secondary-control" hidden>
           <label for="home-cs-delay">Network delay: <b id="home-cs-delayVal"></b></label>
-          <input type="range" id="home-cs-delay" value="500" min="0" max="1000" step="1" aria-label="Propagation delay">
+          <input type="range" id="home-cs-delay" value="350" min="0" max="1000" step="1" aria-label="Propagation delay">
         </div>
 
-        <p class="result-line" id="home-cs-resultLine"></p>
+        <p class="result-line"><span id="home-cs-resultLine"></span> <span class="info-affordance" id="home-cs-assumption-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="home-cs-assumption-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">What this number assumes</span>
+            </button>
+            <span class="info-affordance__panel" id="home-cs-assumption-panel" role="tooltip">Modeled with network delay fixed at 250 ms, inside a live-data bracket, not a direct Kaspa measurement of propagation. Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, 24 August 2026) found a single-chain-equivalent delay between roughly 204 ms and 666 ms; 250 ms sits inside that bracket. The full demo's slider tops out at 5 s, rusty-kaspa's own one-way <code>NETWORK_DELAY_BOUND</code> worst case, a protocol constant, not a typical delay. The share is a running sample that drifts toward the modeled figure as more blocks accumulate, not a fixed reading.</span>
+          </span></p>
+
+        <p class="model-caption">Both panels run at the rate above. Single chain is a model of what a longest-chain rule would lose at that rate, not Bitcoin today. Losing that fight also makes a single chain less secure as the rate climbs.</p>
 
         <div class="panel">
           <p class="panel-title">Single chain <span class="stat" id="home-cs-chainStat">0 kept, 0 dropped so far</span></p>
@@ -354,12 +379,12 @@
 
         <button id="home-cs-step" hidden>Step one block</button>
 
-        <p class="demo-more"><a href="/what-is-kaspa#collision-sim">Full math and sources</a></p>
+        <p class="live-footnote"><a href="/what-is-kaspa#collision-sim">Full math and sources</a></p>
       </div>
 
       <script>
       (function(){
-        const RATE_LOG_MIN = Math.log10(1/600), RATE_LOG_MAX = Math.log10(100);
+        const RATE_LOG_MIN = Math.log10(1/600), RATE_LOG_MAX = Math.log10(32);
         const DELAY_LOG_MIN = Math.log10(0.05), DELAY_LOG_MAX = Math.log10(5);
         const rateInput = document.getElementById('home-cs-rate');
         const delayInput = document.getElementById('home-cs-delay');
@@ -398,13 +423,15 @@
         function meanIntervalReal() { return 1 / lambda(); }
 
         const T_KASPA = (Math.log10(10) - RATE_LOG_MIN) / (RATE_LOG_MAX - RATE_LOG_MIN);
-        const PB_LOG_AT_BITCOIN = Math.log10(6);
-        const PB_LOG_AT_KASPA = Math.log10(0.1);
-        const PB_SLOPE = (PB_LOG_AT_KASPA - PB_LOG_AT_BITCOIN) / T_KASPA;
-        function playbackInterval() {
-          const t = rateInput.value / 1000;
-          return Math.pow(10, PB_LOG_AT_BITCOIN + PB_SLOPE * t);
-        }
+        // Playback pace has one fixed point: at 1 block a second the display
+        // shows a block a second, real time. At and above that rate there is
+        // no compression at all, so 32 a second means 32 a second on screen.
+        // Below it the display rate is the seventh root of the real rate,
+        // compressed hard enough that Bitcoin's one-every-10-minutes lands
+        // every couple of seconds instead of reading as a label nobody waits
+        // for. The collision math always uses the real rate and delay.
+        function playbackRate(L) { return L >= 1 ? L : Math.pow(L, 1 / 7); }
+        function playbackInterval() { return 1 / playbackRate(lambda()); }
 
         const N = 20;
         let virtualClock = 0;
@@ -475,8 +502,14 @@
 
         function laneY(h, miner) { return 20 + miner * (h - 40) / 3; }
         function slotX(w, i, len) {
+          // Oldest block sits at the left margin (i = 0); the strip fills
+          // left to right as blocks arrive and scrolls left once it's full.
+          // A stray len <= 1 special case used to place the very first
+          // block at the right edge for one frame before the second block
+          // arrived and everything snapped left -- the "blocks start on
+          // the right" glitch. The general formula already puts i = 0 at
+          // the left margin, so there is no special case left to apply.
           const margin = 22;
-          if (len <= 1) return w - margin;
           return margin + i * (w - 2 * margin) / (N - 1);
         }
 
@@ -571,9 +604,29 @@
           autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
         }
 
+        function fmtShown(s) {
+          if (s < 1) return Math.round(s * 1000) + ' ms';
+          return s.toFixed(1) + ' s';
+        }
+
+        function updateHonesty() {
+          const real = meanIntervalReal();
+          const shown = playbackInterval();
+          const note = document.getElementById('home-cs-honestyNote');
+          if (shown < real * 0.85) {
+            const n = Math.round(real / shown);
+            note.textContent = 'A block at this rate arrives every ' + humanDuration(real) +
+              ' in reality, sped up about ' + n + 'x here so the wait is watchable. From one block a second upward, playback is real time.';
+          } else {
+            note.textContent = 'Real time: blocks arrive here as fast as they would on a network running this rate, one every ' +
+              fmtShown(shown) + '.';
+          }
+        }
+
         function onSliderChange() {
           rateVal.textContent = fmtRate(lambda());
           delayVal.textContent = fmtDelay(delay());
+          updateHonesty();
           if (autoTimer) clearTimeout(autoTimer);
           resetSim();
           updateStats();
@@ -586,7 +639,7 @@
         window.addEventListener('resize', requestRender);
 
         rateInput.value = Math.round(T_KASPA * 1000);
-        delayInput.value = 500;
+        delayInput.value = 350;
         onSliderChange();
 
         if (reducedMotion) {
@@ -628,7 +681,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
-          <a href="/demos">Demos</a>
+          <a href="/demos">Try it</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

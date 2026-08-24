@@ -253,7 +253,7 @@ def main():
     # including the banned patterns themselves, so linting them as reader
     # copy is circular. Matched by prefix because each review pass creates
     # new ones and an explicit list goes stale as soon as a lens is added.
-    _REPORT_PREFIXES = ("AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-")
+    _REPORT_PREFIXES = ("AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-", "LIVE-SWEEP")
     paths = [
         p for p in paths
         if os.path.basename(p) not in SKIP_FILES

@@ -101,22 +101,32 @@
   // Every demo on this site now lives inside the page that explains it, most
   // behind a <details> block that is closed by default for a reader
   // scrolling the page normally. A fragment can name that details directly,
-  // an element nested inside one or more closed details, or (the more common
-  // shape here) a <section> that itself wraps a closed "Demo" accordion as a
-  // child. A reader who clicked a link named after that demo asked for it
-  // directly, so the closed-by-default rule does not apply to them: reveal
-  // the target from both directions before this function measures anything.
+  // an element nested inside one or more closed details, or a <section>
+  // that itself wraps a closed "Demo" accordion as a child. A reader who
+  // clicked a link named after that demo asked for it directly, so the
+  // closed-by-default rule does not apply to them: reveal the target from
+  // both directions before this function measures anything.
   //
   // Upward: open every closed ancestor of the target (the target itself
   // included, if it is a details), outermost first, so a fragment landing
   // inside a closed details is actually rendered.
   //
-  // Downward: open the outermost closed details found inside the target,
-  // but leave anything nested inside THAT details alone. A demo can carry
-  // its own optional foldout further in (a "why this happens" aside inside
-  // the widget), and that is exactly the kind of depth this site keeps
-  // collapsed for a reader who scrolls in normally; only the demo's own
-  // accordion is what the click promised to open.
+  // Downward: open only a details that is explicitly marked
+  // data-fragment-demo. That marker means "the target renders as nothing
+  // meaningful without this open" and is set by hand in the markup on the
+  // handful of sections whose entire demo sits behind one closed accordion
+  // (build-on-kaspa.html's covenant-breaker-demo and zk-boundary-demo, as
+  // of this writing). Most fragment targets are sections that already
+  // render real content on their own, with unrelated closed details further
+  // down (a code panel, a caveat panel, a reference table); those must stay
+  // closed, matching what a reader gets by scrolling to the same spot
+  // instead of clicking a link. An unmarked heuristic here (guessing from
+  // position or depth) was tried and got this backwards on
+  // argent-explained.html: it opened the page's "What's real here, and
+  // what's illustrative" caveat, which is exactly the kind of panel the
+  // site's own closed-by-default rule exists to keep shut. The explicit
+  // marker cannot make that mistake and will not drift the next time
+  // someone adds another caveat panel inside a demo section.
   //
   // This runs on every call (the initial snap and each scheduled re-snap),
   // which is safe because opening an already-open details is a no-op, and
@@ -133,18 +143,13 @@
       details.open = true;
     });
 
-    target.querySelectorAll("details").forEach((details) => {
-      if (details.open) return;
-      let hasCloserDetailsAncestor = false;
-      let ancestor = details.parentElement;
-      while (ancestor && ancestor !== target) {
-        if (ancestor.tagName === "DETAILS") {
-          hasCloserDetailsAncestor = true;
-          break;
-        }
-        ancestor = ancestor.parentElement;
-      }
-      if (!hasCloserDetailsAncestor) details.open = true;
+    // If the target itself is a details, the reader named that one thing
+    // directly and got it from the upward loop above; stop there and leave
+    // whatever is nested inside it (its own optional foldouts) alone.
+    if (target.tagName === "DETAILS") return;
+
+    target.querySelectorAll("details[data-fragment-demo]").forEach((details) => {
+      details.open = true;
     });
   };
 

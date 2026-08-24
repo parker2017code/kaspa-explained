@@ -50,8 +50,8 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260824-143221">
-  <script defer src="nav.js?v=20260824-143221"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-191116">
+  <script defer src="nav.js?v=20260824-191116"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -67,7 +67,7 @@
         <a href="/status">Live now</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
-        <a href="/demos">Demos</a>
+        <a href="/demos">Try it</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -80,61 +80,10 @@
       <p class="lead">Kaspa's launch structure was not chosen. It was what was left after research into faster proof-of-work ordering ran through DAGLabs and an April 2021 testnet, then through a hardware plan, a presale, and a DeFi pitch, each of which fell apart. Every earlier structure would have made Kaspa answer to something outside the protocol. Fair launch took the premine, the pre-sale, and the insider table off the starting line before mainnet existed, and it proved nothing about later adoption, price, or whether the tech would work.</p>
     </section>
 
-    <section class="section prose-section">
-      <p class="eyebrow">Research first</p>
-      <h2>The problem came before the coin</h2>
-      <p>Bitcoin at high block rates has one weak point: two honest miners can solve a block seconds apart, and the single-chain rule throws one of those blocks' work away. Kaspa's research line starts from that exact waste. A blockDAG keeps both blocks visible instead of dropping one, then uses a rule like GHOSTDAG to order that graph into one shared history.</p>
-      <details class="deep-dive">
-        <summary>The papers behind it</summary>
-        <p>DBLP lists Yonatan Sompolinsky and Aviv Zohar's 2018 paper, <a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">PHANTOM: A Scalable BlockDAG Protocol</a>, as an IACR ePrint paper, sitting on the same blockDAG research line as SPECTRE before it. A July 2017 Epicenter episode with Zohar and Sompolinsky describes SPECTRE as dropping the blockchain data structure so blocks can be made all the time and merged after. No one races for one slot.</p>
-      </details>
-    </section>
-
-    <section class="section prose-section">
-      <p class="eyebrow">DAGLabs and testnet</p>
-      <h2>DAGLabs came first, then the fair launch</h2>
-      <p>DAGLabs was co-founded by Yonatan Sompolinsky and Guy Corem. It paid for and ran part of the pre-mainnet path: a Golang build of Phantom/GHOSTDAG, then an April 2021 public testnet. There was no token premine, but there was a VC-funded backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
-      <details class="deep-dive">
-        <summary>Founding date dispute, testnet bundle, and the code's real origin</summary>
-        <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018. Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a broader form of Nakamoto Consensus. The testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard, framed as testnet first, mainnet later, no pre-mining or founder allocations planned. Yonatan's <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-origin">Hashdag<span class="term-def__panel" id="hashdag-def-origin" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span> archive describes the original Kaspad codebase as built from the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
-      </details>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow">Could-have-been paths</p>
-      <h2>Failed plans are part of the story</h2>
-      <p>An <span class="term-def" tabindex="0" role="button" aria-describedby="asic-def-origin">ASIC<span class="term-def__panel" id="asic-def-origin" role="tooltip">Application-specific integrated circuit: a chip built to do one job, in Kaspa's case running kHeavyHash, fast. It cannot be reprogrammed for anything else the way a general-purpose CPU or GPU can.</span></span>-and-presale plan, a DeFi-sequencing pitch, and a flawed gamenet all came before the fair launch, and none of them worked out.</p>
-      <details class="deep-dive">
-        <summary>What each failed path actually was</summary>
-        <div class="reference-grid grid-cards">
-          <article>
-            <h3>ASIC and presale path</h3>
-            <p>Hashdag's 2020 archive said Kaspa would have no premine or founder rewards, then called DAGLabs a for-profit miner with a pre-launch ASIC-tuning path and a DeFi-contract auction for rights to future Kaspa coins. Yonatan later said that path never happened: the optical ASIC chips it leaned on weren't ready.</p>
-          </article>
-          <article>
-            <h3>DeFi sequencing path</h3>
-            <p>The April 2021 launch article framed Kaspa as faster ordering rails for DeFi apps on Ethereum. The Uphold interview recap agrees: Kaspa's focus is sequencing, where transaction order and MEV move real money. Neither is a claim Kaspa ever shipped as an Ethereum L2.</p>
-          </article>
-          <article>
-            <h3>Gamenet path</h3>
-            <p>Yonatan later called the gamenet attempt flawed: closer to a testnet with rewards bolted on than a real mainnet.</p>
-          </article>
-          <article>
-            <h3>Fair-launch path</h3>
-            <p>In the HackerNoon interview, Yonatan called DAGLabs a failed attempt to square venture-backed and fair-launch models; investors pushed for launch with no business model or ROI plan. Asked if Polychain pushed him to launch, he agreed, and added that Gadi pushed too, because he saw the promise.</p>
-          </article>
-          <article>
-            <h3>"Solana-like" developer experience</h3>
-            <p>The comparison comes from Yonatan's own interviews, and it points at developer and user experience: one cohesive, Rust-friendly toolchain that feels fast to work in. It is not a claim about copying Solana's execution model, which Kaspa L1 does not share.</p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <section class="section prose-section">
-      <p class="eyebrow">Launch</p>
-      <h2>Mainnet launched without a premine</h2>
-      <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-origin">UTXO<span class="term-def__panel" id="utxo-def-origin" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> commitment that trace back to an empty genesis. Mining made the whole supply, but a fair launch didn't guarantee equal access to early mining.</p>
+    <section class="section" id="fair-launch-proof">
+      <p class="eyebrow">See it</p>
+      <h2>Kaspa's zero, plotted against three other launches</h2>
+      <p>The paragraphs below trace how that zero came to be. This plots it against the chains that took the other path.</p>
       <details id="fair-launch-demo" class="deep-dive">
         <summary>Try it: plot Kaspa's zero-premine supply against three other launches</summary>
         <div class="fl-demo">
@@ -270,7 +219,7 @@
               <input type="range" id="fl-decaySlider" min="0.2" max="5" step="0.1" value="1">
             </div>
             <p class="result-line" id="fl-resultLine" aria-live="polite"></p>
-            <p class="dagLabsNote">Tracks founders, company, and foundation shares only. DAGLabs' own early mining is a separate question, covered below.</p>
+            <p class="live-footnote">Tracks founders, company, and foundation shares only. DAGLabs' own early mining is a separate question, covered below.</p>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
@@ -588,6 +537,63 @@
           </script>
         </div>
       </details>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">Research first</p>
+      <h2>The problem came before the coin</h2>
+      <p>Bitcoin at high block rates has one weak point: two honest miners can solve a block seconds apart, and the single-chain rule throws one of those blocks' work away. Kaspa's research line starts from that exact waste. A blockDAG keeps both blocks visible instead of dropping one, then uses a rule like GHOSTDAG to order that graph into one shared history.</p>
+      <details class="deep-dive">
+        <summary>The papers behind it</summary>
+        <p>DBLP lists Yonatan Sompolinsky and Aviv Zohar's 2018 paper, <a href="https://dblp.org/rec/journals/iacr/SompolinskyZ18.html">PHANTOM: A Scalable BlockDAG Protocol</a>, as an IACR ePrint paper, sitting on the same blockDAG research line as SPECTRE before it. A July 2017 Epicenter episode with Zohar and Sompolinsky describes SPECTRE as dropping the blockchain data structure so blocks can be made all the time and merged after. No one races for one slot.</p>
+      </details>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">DAGLabs and testnet</p>
+      <h2>DAGLabs came first, then the fair launch</h2>
+      <p>DAGLabs was co-founded by Yonatan Sompolinsky and Guy Corem. It paid for and ran part of the pre-mainnet path: a Golang build of Phantom/GHOSTDAG, then an April 2021 public testnet. There was no token premine, but there was a VC-funded backstory that shaped the hardware, mining, and fair-launch debate before mainnet existed.</p>
+      <details class="deep-dive">
+        <summary>Founding date dispute, testnet bundle, and the code's real origin</summary>
+        <p>Public sources disagree on when DAGLabs was founded. An April 26, 2021 Investing.com launch article says 2017, with $8 million raised from Polychain and Accomplice. The HackerNoon interview intro says Sompolinsky founded DAGLabs in 2018. Guy Corem's April 13, 2021 testnet note calls Kaspa a Golang build of Phantom/GHOSTDAG and a broader form of Nakamoto Consensus. The testnet bundle: full node, web wallet, faucet, Katnip block explorer, graph inspector, Kashboard, framed as testnet first, mainnet later, no pre-mining or founder allocations planned. Yonatan's <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-origin">Hashdag<span class="term-def__panel" id="hashdag-def-origin" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span> archive describes the original Kaspad codebase as built from the Bitcoin client <code>btcd</code>, written in Golang. That holds up; the unsourced "Bitcoin Core 0.19" claim floating around does not.</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Could-have-been paths</p>
+      <h2>Failed plans are part of the story</h2>
+      <p>An <span class="term-def" tabindex="0" role="button" aria-describedby="asic-def-origin">ASIC<span class="term-def__panel" id="asic-def-origin" role="tooltip">Application-specific integrated circuit: a chip built to do one job, in Kaspa's case running kHeavyHash, fast. It cannot be reprogrammed for anything else the way a general-purpose CPU or GPU can.</span></span>-and-presale plan, a DeFi-sequencing pitch, and a flawed gamenet all came before the fair launch, and none of them worked out.</p>
+      <details class="deep-dive">
+        <summary>What each failed path actually was</summary>
+        <div class="reference-grid grid-cards">
+          <article>
+            <h3>ASIC and presale path</h3>
+            <p>Hashdag's 2020 archive said Kaspa would have no premine or founder rewards, then called DAGLabs a for-profit miner with a pre-launch ASIC-tuning path and a DeFi-contract auction for rights to future Kaspa coins. Yonatan later said that path never happened: the optical ASIC chips it leaned on weren't ready.</p>
+          </article>
+          <article>
+            <h3>DeFi sequencing path</h3>
+            <p>The April 2021 launch article framed Kaspa as faster ordering rails for DeFi apps on Ethereum. The Uphold interview recap agrees: Kaspa's focus is sequencing, where transaction order and MEV move real money. Neither is a claim Kaspa ever shipped as an Ethereum L2.</p>
+          </article>
+          <article>
+            <h3>Gamenet path</h3>
+            <p>Yonatan later called the gamenet attempt flawed: closer to a testnet with rewards bolted on than a real mainnet.</p>
+          </article>
+          <article>
+            <h3>Fair-launch path</h3>
+            <p>In the HackerNoon interview, Yonatan called DAGLabs a failed attempt to square venture-backed and fair-launch models; investors pushed for launch with no business model or ROI plan. Asked if Polychain pushed him to launch, he agreed, and added that Gadi pushed too, because he saw the promise.</p>
+          </article>
+          <article>
+            <h3>"Solana-like" developer experience</h3>
+            <p>The comparison comes from Yonatan's own interviews, and it points at developer and user experience: one cohesive, Rust-friendly toolchain that feels fast to work in. It is not a claim about copying Solana's execution model, which Kaspa L1 does not share.</p>
+          </article>
+        </div>
+      </details>
+    </section>
+
+    <section class="section prose-section">
+      <p class="eyebrow">Launch</p>
+      <h2>Mainnet launched without a premine</h2>
+      <p>Mainnet followed the April 2021 testnet within the year: a fair-launched Proof-of-Work network with no premine, insider allocation, or pre-sales. The node's own genesis record is the proof, not marketing copy: rusty-kaspa's <code>genesis.rs</code> ships a checkpoint DAA score and a <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-origin">UTXO<span class="term-def__panel" id="utxo-def-origin" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> commitment that trace back to an empty genesis. Mining made the whole supply, but a fair launch didn't guarantee equal access to early mining.</p>
       <p>Yonatan's own archive is blunter than the lore: the launch was messy, he baked several bad ideas into the first gamenet rules, and a few thousand CPUs found the project within days, pushing hashrate up no matter what the plan wanted. The Black Tuesday post puts it in one clause: the gamenet idea never caught air, so he swapped the random block reward for a flat one.</p>
       <details class="deep-dive">
         <summary>Early-miner share estimate</summary>
@@ -607,14 +613,9 @@
     </section>
 
     <section class="section prose-section">
-      <p class="eyebrow">Rust and Crescendo</p>
+      <p class="eyebrow">Rust, Crescendo, Toccata</p>
       <h2>Golang was not the final version</h2>
       <p>Hashdag's 2022 "Kaspa where to" archive says Michael Sutton pushed for a big refactor and Rust rewrite, because the Golang code carried old debt that made it hard for new coders to work in; how the rewrite was funded is not known here. The rusty-kaspa repo describes the Rust build as a drop-in replacement for the older Golang node. Its README puts the Crescendo hard fork on May 5, 2025, moving the network from 1 BPS to 10 BPS; the v1.0.0 release notes name the exact trigger, mainnet DAA score 110,165,000.</p>
-    </section>
-
-    <section class="section prose-section">
-      <p class="eyebrow">Toccata boundary</p>
-      <h2>Crescendo and Toccata are not the same fork</h2>
       <p>"Toccata" gets pinned on 10 BPS often enough to be worth fixing. Crescendo is the fork that made 10 BPS live on mainnet. Toccata is separate and later: base-layer code support with covenants, Silverscript, <span class="term-def" tabindex="0" role="button" aria-describedby="zk-def-origin">ZK<span class="term-def__panel" id="zk-def-origin" role="tooltip">Zero-knowledge: a proof that a statement is true without revealing the data behind it, so a script can accept a claim about work done elsewhere without seeing that work.</span></span>-facing proof checks, sequencing commitments, and native-asset groundwork, turned on at DAA score 474,165,565. Rusty Kaspa v2.0.0 shipped that switch, v2.0.1 followed as the Toccata release; wallet, indexer, and app use are still building, so check the <a href="/status">status page</a> for where each stands.</p>
 
       <details id="dag-time-demo" class="deep-dive">
@@ -1049,7 +1050,7 @@
     </section>
 
     <section class="section">
-      <p class="eyebrow">What to say</p>
+      <p class="eyebrow">Get it right</p>
       <h2>The careful version holds up better</h2>
       <details class="deep-dive">
         <summary>Six topics, the sourced phrasing and the wrong version to avoid</summary>
@@ -1067,11 +1068,6 @@
           </table>
         </div>
       </details>
-    </section>
-
-    <section class="section">
-      <p class="eyebrow">Sources</p>
-      <h2>Sources for this origin page</h2>
       <details class="deep-dive">
         <summary>Eighteen sources, with what each backs</summary>
         <ol class="source-list grid-cards">
@@ -1139,7 +1135,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
-          <a href="/demos">Demos</a>
+          <a href="/demos">Try it</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>

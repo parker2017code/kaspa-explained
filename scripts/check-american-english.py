@@ -130,6 +130,29 @@ PROTECT = re.compile(
     r"""|`[^`]*`"""                   # markdown code spans
     r"""|\b[\w./-]+\.(?:css|js|py|json|html|svg|png|yml|md)\b"""   # filenames
     r"""|\b(?:classList|querySelector|getElementById|dataset)\b"""
+    # Verbatim quotations. This site's rule is that a quote is reproduced
+    # exactly, so a British spelling inside quote marks is correct and
+    # rewriting it silently makes the quote a paraphrase wearing quote marks.
+    # That already happened once: a dk-wiki quote of "k-colouring" was
+    # Americanized in place, which broke the verbatim claim on kips.html.
+    # HTML tags are masked by the rule above, so attribute values never reach
+    # this. Bounded length so an unbalanced quote cannot swallow a whole line.
+)
+
+# Verbatim quotations, applied to prose files only. This site's rule is that a
+# quote is reproduced exactly, so a British spelling inside quote marks is
+# correct and rewriting it silently turns the quote into a paraphrase wearing
+# quote marks. That already happened once: a dk-wiki quote of "k-colouring" was
+# Americanized in place, which broke the verbatim claim on kips.html.
+#
+# Scoped to .html and .md because in .json and .js every string literal is
+# quoted, so applying this there would exempt the entire file. HTML tags are
+# consumed by the rule above before their attribute quotes are reached.
+# Bounded length so one unbalanced quote cannot swallow a document.
+QUOTE_EXTS = {".html", ".md"}
+PROTECT_QUOTED = re.compile(
+    PROTECT.pattern + r'|"[^"]{0,400}"' + r'|\u201c[^\u201d]{0,400}\u201d',
+    re.X,
 )
 
 EXTS = {".html", ".md", ".txt", ".yml", ".yaml", ".json", ".py", ".js", ".css"}
@@ -157,10 +180,18 @@ def scan(paths, fix=False):
         except (UnicodeDecodeError, OSError):
             continue
         out_lines, touched = [], False
+        # Blank out protected spans so they cannot match, but keep their length
+        # so offsets stay aligned when rewriting. Masking the whole file rather
+        # than each line is what lets a quotation spanning two lines count as
+        # one protected span.
+        pattern = PROTECT_QUOTED if p.suffix in QUOTE_EXTS else PROTECT
+        # Newlines survive the mask so the masked text keeps the same line
+        # count as the original; everything else in a protected span is blanked.
+        masked_text = pattern.sub(
+            lambda m: "".join("\n" if c == "\n" else "\x00" for c in m.group(0)), text)
+        masked_lines = masked_text.split("\n")
         for i, line in enumerate(text.split("\n"), 1):
-            # Blank out protected spans so they cannot match, but keep their
-            # length so offsets stay aligned when rewriting.
-            masked = PROTECT.sub(lambda m: "\x00" * len(m.group(0)), line)
+            masked = masked_lines[i - 1]
             found = WORD.findall(masked)
             if found:
                 for f in found:

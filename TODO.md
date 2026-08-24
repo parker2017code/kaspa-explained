@@ -597,3 +597,172 @@ evidence next", and `crypto-from-scratch.html`'s "NIST's definition" are
 one-sentence restatements rather than depth. A disclosure that opens onto
 a restatement teaches a reader not to open the next one, so they should
 either carry real depth or be inlined.
+
+## STATE AT COMPACTION, 24 August 2026
+
+Live at `cccdfba`, verified on kaspaexplained.com by cache key
+`20260824-143221`, not by the push succeeding. Clean-clone gate passed.
+
+### Five agents running at compaction
+
+1. Retire `demos/index.html`, build a reading path with one curated next
+   step per page. Replaces the auto-generated related-links block, which
+   picks neighbors by manifest index and is why a 404 was being offered
+   as a recommended read.
+2. `kips.html`: self-talk cuts landed. Still owed, sent and not yet done:
+   the two DAGKnight widgets contradict each other. Same protocol, same
+   condition, 5.5 seconds in the top widget and 4.3 minutes in the
+   bottom, a few inches apart. Plan sent: use the paper's Table 1, which
+   is already transcribed on the page and unused, build ONE widget as a
+   two by two, make attacker share the single primary slider.
+3. `what-is-kaspa.html` length cut, plus `model-picker.html` run count
+   4,000 to 10,000 with a recompute timing check first.
+4. `build-on-kaspa.html`: apply default collapsed properly. The owner has
+   asked repeatedly. Route table, twelve product cards, evidence
+   checklist, infrastructure items and the entire References section are
+   all open on arrival.
+5. New blocking gate for broken links, missing anchors and blank rendered
+   content. Ordered to report raw findings BEFORE fixing, and to watch it
+   fail on three deliberate breakages before wiring it in.
+
+### 35 orphan classes: used in HTML, styled nowhere
+
+Found by scanning every `class="..."` against `styles.css` and page-scoped
+styles. Same defect as `answer-block`, which made the status page's "Not
+built yet" block sit unstyled and left-aligned.
+
+Worst: `.footer-legal` and `.footer-disclosure`, 19 files each, added
+today with the footer disclosure and never styled. Then `.hint` on three
+pages, `.live-demo-frame` on two, `.demo-more` on the homepage,
+`.cc-gap-panel`, `.ap-code-detail`, `.mp-controls`.
+
+`.deadClass` in `build-on-kaspa.html` is a leftover test artifact from the
+dead-CSS scan and should be deleted outright.
+
+Several entries in the scan are false positives from JavaScript string
+parsing, for example `.lab'` and `.(cls`. Filter those before acting.
+
+An invented class name is invisible to every gate we have. It produces no
+error and silently renders wrong. Worth its own check.
+
+### Self-talk: the class report
+
+`status.html` carries the real remaining instances: a lead sentence
+describing the page rather than Kaspa, a summary reading "Page scope, and
+when this table was last checked", and the line "Education stays honest."
+`argent-explained.html` and `build-on-kaspa.html` came back clean.
+`why-kaspa-matters.html` has only cosmetic candidates.
+
+### Owner-facing, still true
+
+He is finding defects by scrolling. Every one this session was real. The
+audits were partitioned by file, so each agent passed its own page, and
+nobody read the site end to end as a person. The live sweep reached only
+6 of 18 pages visually before stopping.
+
+KIP 7 and 8 do not exist as files. Both are open unmerged pull requests,
+PR #10 and PR #13, same as 11, 12, 18, 19 and 22 through 25. Now stated
+on the page.
+
+## STATE AT SECOND COMPACTION, 24 August 2026
+
+Live is still `cccdfba`. Everything below is on disk, uncommitted, and NOT
+deployed. Nothing has been pushed since that commit.
+
+### Landed since the last compaction note
+
+Demos page KEPT after the owner reversed the retirement, and renamed
+"Demos" to "Try it" across nav and footer on all 19 pages plus the index
+itself. Cards keep their importance order.
+
+`site-manifest.json` pages array reordered into a reading path:
+start-here, crypto-from-scratch, what-is-kaspa, kips, kaspa-origin-story,
+why-kaspa-matters, utxo-vs-accounts, status, skeptical-case, kaspa-mining,
+build-on-kaspa, argent-explained, chain-comparer, model-picker,
+the-instrument, sources.
+
+`scripts/apply-related-links.py` rewritten. The old three-card Keep
+reading block is gone, replaced by one hand-written next step per page in
+the page's own voice, several pointing at a demo anchor. New `.site-next`
+rule appended to `styles.css`.
+
+`build-on-kaspa.html` default-collapsed applied: 2,089 open words to
+1,046. `what-is-kaspa.html` 1,884 to 1,641. `model-picker.html` run count
+4,000 to 1,000, measured: 10,000 cost 600 to 900ms per dial drag, 1,000
+costs 40ms and feels identical to 4,000.
+
+Fragment auto-open fixed properly: explicit `data-fragment-demo` marker,
+and if the target is itself a `<details>` nothing nested inside opens.
+Verified across 22 anchors by diffing open-state between a plain load and
+a fragment load. All 17 demo card destinations land with the demo visible.
+
+KIP 7 and 8 do not exist as files. Open unmerged PRs #10 and #13.
+
+### Running at compaction, four agents
+
+1. `kips.html` DAGKnight widget, on its third target from me. Current
+   instruction: restore the margin comparison as the hero, configured k
+   124 against needed k 55 with the latency slider moving the gap, because
+   that is what teaches parameterless consensus. Table 1 unification was
+   my instruction and it threw the teaching away. Default latency stays
+   honest at 2 seconds even though KNIGHT loses to PHANTOM there; state
+   the crossover plainly rather than defaulting around it.
+2. 35 orphan classes plus a new gate. Widened mid-flight to cover classes
+   that exist only inside JavaScript template strings, which my original
+   scan missed entirely and which is how the owner found an unstyled
+   generated line on kips.
+3. Broken link, missing anchor and blank content gate. Ordered to report
+   raw findings before fixing and to watch it fail on three deliberate
+   breakages before wiring in.
+4. Three open reference tables plus twenty repeated "More" summaries on
+   chain-comparer, plus the two open tables on what-is-kaspa.
+
+### Known open, not yet assigned
+
+`what-is-kaspa.html` reading grade 9.1 against a 9.0 cap, from a
+concurrent prose rewrite. Blocks the gate.
+
+`LIVE-SWEEP.md` fails the em-dash prose check. Untracked working file;
+either exempt it by prefix like the other reports or clean it.
+
+`status.html` self-talk: a lead sentence describing the page, a summary
+reading "Page scope, and when this table was last checked", and the line
+"Education stays honest."
+
+### The lesson worth carrying
+
+Every defect the owner found this session was real, and he found them by
+scrolling the site as a person. The audits were partitioned by file, so
+each agent passed its own page. Nobody read it end to end. The live sweep
+reached 6 of 18 pages visually before stopping.
+
+A demo makes ONE point and shows it happening. Not the point plus its
+caveats plus its derivation. When a reader does not get it, the fix is to
+cut until the one thing is unmissable, never to explain harder. Explaining
+harder is what produced 10^59 years followed by a paragraph saying not to
+believe it.
+
+### Added just before compaction
+
+Open reference tables all closed: the eight-row era table on
+crypto-from-scratch, the repo table on argent-explained, and the two on
+what-is-kaspa. The twenty repeated "More" summaries on chain-comparer now
+say what each row holds. Two identical summaries on crypto-from-scratch
+split so each names its own content.
+
+TWO READING-GRADE FAILURES BLOCK THE GATE:
+  what-is-kaspa.html   9.1 against a 9.0 cap, from today's prose cuts
+  argent-explained.html 11.4, specialist block, pre-existing at HEAD
+
+The DAGKnight widget: the agent that had it stood down and wrote a full
+handover into its final report, covering the current on-disk state, every
+element id and class, where each number is computed, what must not be
+lost, and three approaches that were tried and reversed. A fresh agent is
+rebuilding from git history rather than from my description, because the
+version the owner liked is in the history and my four successive specs are
+what broke it.
+
+The reversal that matters: DO NOT reduce the widget to one slider. It had
+several dials and the owner liked it. Recover, do not redesign. Fix only
+the two real defects, the second widget contradicting the first, and the
+absurd printed figure.

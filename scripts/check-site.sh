@@ -95,6 +95,12 @@ if [[ -n "$NODE_BIN" ]]; then
   "$NODE_BIN" scripts/audit-domain-terms.mjs
   "$NODE_BIN" scripts/audit-content-flow.mjs
   "$NODE_BIN" scripts/audit-visual-guardrails.mjs
+  # Orphan-class gate (2026-08-24): a class used in HTML (static markup or
+  # built by that page's own JavaScript) with no matching rule in
+  # styles.css or that page's own scoped <style> block renders with no
+  # styling at all, no error, and no other check catches it. See the
+  # script for what it does and does not treat as a checkable class.
+  "$NODE_BIN" scripts/check-orphan-classes.mjs
 
   # Browser-rendering checks (2026-08-23): everything below this line opens
   # every page in headless Chromium, which is the ~4-minute cost that made
@@ -107,7 +113,7 @@ if [[ -n "$NODE_BIN" ]]; then
   # and no check at all. See .githooks/pre-commit for the other half of this
   # split.
   if [[ "${SKIP_RENDER_CHECKS:-0}" == "1" ]]; then
-    echo "SKIPPED (SKIP_RENDER_CHECKS=1, pre-commit only): check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render" >&2
+    echo "SKIPPED (SKIP_RENDER_CHECKS=1, pre-commit only): check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-broken-and-blank" >&2
   else
   # Heading-as-link color gate (2026-08-22): card/section titles that happen
   # to be links rendered in inline-link blue instead of heading color, twice.
@@ -162,9 +168,32 @@ if [[ -n "$NODE_BIN" ]]; then
   RENDER_GATE_BLOCKING="${RENDER_GATE_BLOCKING:-false}" \
     "$NODE_BIN" scripts/check-render.mjs || \
     [ "${RENDER_GATE_BLOCKING:-false}" != "true" ]
+  # Page-length gate (design/STANDARD.md, "The page-length ceiling",
+  # 2026-08-24): a hard open-height ceiling (3 viewport heights desktop, 5
+  # phone) on the five route/answer pages (index, start-here, status,
+  # search, 404.html), plus a longest-undifferentiated-vertical-run check
+  # against every page. See the script header for why total height alone
+  # is not the rule for every page. Advisory until the violation list is
+  # empty, same pattern as VISIBLE_WORDS_BLOCKING and RENDER_GATE_BLOCKING.
+  # Flip PAGE_HEIGHT_BLOCKING to true once it is.
+  PAGE_HEIGHT_BLOCKING="${PAGE_HEIGHT_BLOCKING:-false}" \
+    "$NODE_BIN" scripts/check-page-height.mjs || \
+    [ "${PAGE_HEIGHT_BLOCKING:-false}" != "true" ]
+  # Broken-link and blank-content gate (owner instruction, 2026-08-24: "How
+  # can you catch page links and things that are broken before I do?"). The
+  # existing checks above verify structure, copy, style, and layout, but
+  # nothing renders every page, opens every disclosure, and asks "does this
+  # link go anywhere, and is this element actually showing something." This
+  # is that check: dead internal links, dead in-page/cross-page anchors,
+  # empty headings and table cells, literal placeholder text ("undefined",
+  # "NaN", "null", "[object Object]"), empty disclosures, and broken images,
+  # across every manifest page and demos/ file, at 390/1280 in both themes,
+  # with every <details> forced open. It BLOCKS, not advisory: this class of
+  # bug was reaching the owner by scrolling instead of by a gate.
+  "$NODE_BIN" scripts/check-broken-and-blank.mjs
   fi
 else
-  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-broken-and-blank" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {

@@ -91,6 +91,70 @@ Chrome that states the obvious. A line telling the reader which site
 they are on is noise. If removing a sentence costs the reader nothing,
 it was never earning its place.
 
+## The page-length ceiling
+
+The owner, immediately after saying this has to be a site Meta, Apple, or
+Tesla would publish: "no page should be more than 3 page lengths on
+normal screen, maybe 5 or equiv on smartphone." That was tried as a flat
+rule, applied to every page, and it failed its own justifying test: Apple's
+product pages and Tesla's own site run well past ten screens, so a rule
+that would fail Apple's and Tesla's pages cannot be the rule a site like
+theirs follows. Total height was never the actual defect. When a rule and
+a good page disagree, the page wins and the rule gets fixed, in the open,
+with the reason stated. This is that fix.
+
+What actually makes a page feel long is undifferentiated scroll:
+paragraph after paragraph with no landmark and no sense of progress. What
+keeps a long page from feeling long is the opposite: every screen carries
+one idea and one thing to look at or touch. That is the thing to measure,
+and it splits the rule into three parts.
+
+**1. A hard open-height ceiling, but only for pages whose job is to route
+or answer.** `index.html`, `start-here.html`, `status.html`,
+`search.html`, `404.html`. These have no business being long at all, and
+the owner's original number is exactly right for this class: total
+document scroll height stays at or under 3 viewport heights at desktop
+and at or under 5 at phone width, measured with nothing expanded.
+
+**2. Sitewide, a cap on consecutive undifferentiated content.** No page,
+including long-form guides, runs more than roughly one viewport height of
+continuous prose without hitting a landmark: a demo, an interactive
+control, an image, an svg, a canvas, a diagram, a chart, or a table.
+Headings do NOT count. A heading tells a reader what is coming; it does
+not give them anything to look at or touch, which is the actual reason
+Apple's ten-screen pages do not read as long. The first version of this
+rule counted headings as landmarks and passed every page on the site the
+same day the owner was pointing at those same pages as too long -- a wall
+of text with a heading dropped in every few paragraphs is still a wall of
+text, and a rule that cannot see that is not measuring the thing it
+exists to catch. A closed disclosure does not count as a landmark on its
+own either, since a closed summary line is a heading wearing different
+clothes; it counts only if what a reader can see without opening it
+already contains one of the above. This is the measurement that predicts
+whether a page reads as long, and it lets a guide be long while forcing
+it to earn its length rather than banning length outright. It is the same
+shape as the 300-word surface becoming a per-section rule on long-form
+pages, for the same reason.
+
+**3. Everything past the page's answer stays closed on arrival.** Already
+stated above for the 300-word surface; what changes here is that it now
+gets measured instead of only asserted, since part 1's open-height figure
+is exactly the number that reveals whether a route/answer page is
+following it.
+
+The failure mode to watch for is the same one banned above, and it
+applies to all three parts: hitting a ceiling by collapsing primary
+content instead of cutting or moving it. The page's answer, what the
+reader came for, stays open on arrival. Depth closes. A page that meets a
+number by folding its lead answer into a disclosure has not met the rule,
+it has broken a different one to get there.
+
+Enforced by `scripts/check-page-height.mjs`, wired into
+`scripts/check-site.sh` as advisory behind `PAGE_HEIGHT_BLOCKING`, same
+pattern as `VISIBLE_WORDS_BLOCKING` and `RENDER_GATE_BLOCKING`. It flips
+to blocking once every page is under both the hard ceiling and the
+undifferentiated-run cap.
+
 ## Reference points
 
 macOS and iOS set the bar, and they are not the only reference. Google

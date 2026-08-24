@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="Twenty layer ones on the same fields. Move the dials for what your job needs and see which chain fits.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260824-143221">
-  <script defer src="nav.js?v=20260824-143221"></script>
+  <link rel="stylesheet" href="styles.css?v=20260824-191116">
+  <script defer src="nav.js?v=20260824-191116"></script>
   <style>
     .cc-shell { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
     /* The results column runs to 20 ranked chains; the controls column is a
@@ -88,6 +88,47 @@
        not reopen that; verified at 390/768/1280 with no horizontal scroll. */
     body { overflow: visible; }
     @media (max-width: 860px) { .cc-shell { grid-template-columns: 1fr; gap: 22px; } .cc-controls { align-self: auto; } .cc-controls-sticky { position: static; } }
+    /* Phone/tablet only: the presets + ten dials ran 1081px before any
+       ranked result appeared, more than half the page. The dials are the
+       tool, not depth, so they stay fully working; on a narrow screen they
+       open on tap instead of loading open, the same disclosure pattern the
+       page already uses for scoring method and caveats. Desktop keeps them
+       open (button hidden, panel never gets .cc-controls-body's collapsed
+       state because that only applies inside this same query). */
+    .cc-controls-toggle { display: none; }
+    @media (max-width: 860px) {
+      .cc-controls-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 44px;
+        font: inherit;
+        font-size: .95rem;
+        font-weight: 600;
+        color: var(--text);
+        background: var(--control-bg);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 14px;
+        cursor: pointer;
+      }
+      .cc-controls-toggle:hover { border-color: var(--line-bright); }
+      .cc-controls-toggle::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-right: 2px solid var(--muted);
+        border-bottom: 2px solid var(--muted);
+        transform: rotate(45deg);
+        transition: transform .2s ease;
+        flex: none;
+      }
+      .cc-controls-toggle[aria-expanded="true"]::after { transform: rotate(225deg); }
+      .cc-controls-body { display: none; }
+      .cc-controls-body.is-open { display: block; }
+    }
     .cc-block { margin-bottom: 26px; }
     .cc-label { color: var(--faint); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 10px; }
     .cc-presets { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -159,6 +200,31 @@
     .cc-gap b { color: var(--text); font-weight: 600; }
     .cc-empty { color: var(--muted); padding: 18px 0; }
     .cc-map td:first-child { white-space: nowrap; }
+    /* Orphan-class fixes (2026-08-24): .cc-gap-panel and .cc-notes are
+       <details> matching .cc-method's shape (a collapsible reference
+       block) so they reuse its summary treatment. .cc-gap-table reuses
+       .reality-table's look with this file's own tokens instead of the
+       rgba-white borders .reality-table still carries, which THE-BAR bans
+       for new rules. .num, .cc-tag, and the claim/measured gap classes
+       were built entirely by the JS below and never had a rule. */
+    .cc-gap-panel,
+    .cc-notes { margin: 0 0 12px; }
+    .cc-gap-panel > summary,
+    .cc-notes > summary { cursor: pointer; color: var(--muted); font-size: 1rem; padding: 3px 0; }
+    .cc-gap-panel > summary:hover,
+    .cc-notes > summary:hover { color: var(--text); }
+    .cc-notes p { color: var(--muted); font-size: 1rem; line-height: 1.55; margin: 10px 0 0; }
+    .cc-gap-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    .cc-gap-table th,
+    .cc-gap-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); font-size: .85rem; }
+    .cc-gap-table th { color: var(--faint); font-weight: 700; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; }
+    .cc-gap-table td { color: var(--text); }
+    .cc-note { display: block; color: var(--muted); font-size: .78rem; margin-top: 8px; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .cc-tag { display: inline-block; margin: 2px 0 6px; font-size: .68rem; font-weight: 700; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+    .gap.ok { color: var(--green); }
+    .gap.warn { color: var(--pink); }
+    .gap.bad { color: var(--red); }
   </style>
 </head>
 <body>
@@ -173,7 +239,7 @@
         <a href="/status">Live now</a>
         <a href="/skeptical-case">Risks</a>
         <a href="/build-on-kaspa">Build</a>
-        <a href="/demos">Demos</a>
+        <a href="/demos">Try it</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
     </nav>
@@ -190,18 +256,21 @@
       <div class="cc-shell">
         <div class="cc-controls">
           <div class="cc-controls-sticky">
-            <div class="cc-block">
-              <p class="cc-label">Start from a job</p>
-              <div class="cc-presets" id="ccPresets"></div>
-              <p class="cc-preset-why" id="ccPresetWhy"></p>
-            </div>
-            <div class="cc-block">
-              <p class="cc-label">What matters</p>
-              <div id="ccDials"></div>
+            <button type="button" class="cc-controls-toggle" id="ccControlsToggle" aria-expanded="false" aria-controls="ccControlsBody">Customize the ranking</button>
+            <div id="ccControlsBody" class="cc-controls-body">
+              <div class="cc-block">
+                <p class="cc-label">Start from a job</p>
+                <div class="cc-presets" id="ccPresets"></div>
+                <p class="cc-preset-why" id="ccPresetWhy"></p>
+              </div>
+              <div class="cc-block">
+                <p class="cc-label">What matters</p>
+                <div id="ccDials"></div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="cc-results">
+        <div>
           <div class="cc-results-head">
             <p class="cc-label" id="ccCount">Ranking</p>
             <span class="cc-head-actions">
@@ -235,7 +304,7 @@
             <p class="cc-note">Claimed figures come from each project's own materials. Measured figures are this site's readings from 22 August 2026.</p>
           </details>
           <details class="cc-notes">
-            <summary>How to read this</summary>
+            <summary>Why two throughput numbers, and how fresh this snapshot is</summary>
             <p>Throughput is shown as what a chain carries now and what it has been seen carrying at peak, because those answer different questions. A quiet chain is not a slow one. <a href="/what-is-kaspa#throughput">Kaspa's own breakdown</a> works through why one number never covers it.</p>
             <p>Field readings are dated snapshots. All twenty rows were re-measured against live endpoints on 22 August 2026, and none of them update themselves.</p>
             <p>Check that date against today's before treating any single number as current. Read the whole panel as a snapshot for comparing chains against each other; it does not update as a live feed.</p>
@@ -286,7 +355,7 @@
         </div>
         <div class="footer-link-group" aria-label="Tools">
           <span>Tools</span>
-          <a href="/demos">Demos</a>
+          <a href="/demos">Try it</a>
           <a href="/chain-comparer">Compare chains</a>
           <a href="/model-picker">Compare AI models</a>
           <a href="/search">Search</a>
@@ -483,6 +552,15 @@
       DIALS.forEach(function (d) { state[d.k] = 0; els[d.k].value = 0; });
       clearPreset(); render();
     });
+    if ($('ccControlsToggle')) {
+      $('ccControlsToggle').addEventListener('click', function () {
+        var btn = $('ccControlsToggle');
+        var body = $('ccControlsBody');
+        var open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        body.classList.toggle('is-open', !open);
+      });
+    }
     if ($('ccShowAll')) {
       $('ccShowAll').addEventListener('click', function () {
         var btn = $('ccShowAll');
@@ -625,7 +703,7 @@
         '<span class="cc-cell"><span class="cc-title"><span class="cc-name">' + m.n + '</span></span>' +
         '<span class="cc-meta">' + bits.join('<span class="sep">·</span>') + '</span>' +
         (m.weak ? '<span class="cc-weak"><b>Weak:</b> ' + m.weak + '</span>' : '') +
-        '<details class="cc-row-detail"><summary>More</summary>' +
+        '<details class="cc-row-detail"><summary>Why ' + m.n + ' ranks #' + (i + 1) + (r.missing.length ? ', and what it stays quiet on' : ', and how it holds up') + '</summary>' +
         '<span class="cc-tag">' + m.con + '</span>' +
         '<span class="cc-purpose">' + (m.why || '') + '</span>' +
         '<span class="cc-meta">' + detailBits.join('<span class="sep">·</span>') + '</span>' +
