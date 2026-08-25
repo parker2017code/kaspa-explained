@@ -674,7 +674,10 @@
     <p class="lede" id="answerLede">Attacking Bitcoin for one hour would cost about</p>
     <p class="amount" id="hourlyCost">$0</p>
     <p class="ratio" id="ratioNote">&nbsp;</p>
-    <div class="ratio-bar"><div class="fill" id="ratioFill" style="width:0%"></div></div>
+    <div class="ratio-bar-wrap">
+      <div class="ratio-bar"><div class="fill" id="ratioFill" style="width:0%"></div></div>
+      <div class="ratio-axis" aria-hidden="true"><span>0.001%</span><span>0.01%</span><span>0.1%</span><span>1%</span><span>10%</span><span>100%</span></div>
+    </div>
   </div>
 
   <details class="deep-dive" id="limitsDetails">
@@ -847,11 +850,19 @@
   }
 .ac-demo .answer-panel .ratio { font-size: 1rem; color: var(--muted); margin-top: 8px; }
 .ac-demo .answer-panel .ratio b { color: var(--text); }
+.ac-demo .ratio-bar-wrap { margin: 10px auto 0; max-width: 320px; }
 .ac-demo .ratio-bar {
+    position: relative;
     height: 6px; border-radius: 980px; background: var(--field-bg); border: 1px solid var(--field-line);
-    overflow: hidden; margin: 10px auto 0; max-width: 320px;
+    overflow: hidden;
   }
 .ac-demo .ratio-bar .fill { height: 100%; background: var(--green); transition: width .3s ease; }
+.ac-demo .ratio-axis {
+    display: flex; justify-content: space-between;
+    margin-top: 4px; font-size: .68rem; color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+.ac-demo .ratio-axis span { flex: 0 0 auto; }
 .ac-demo .limits {
     border-left: 3px solid var(--pink);
     border-radius: 0 14px 14px 0;
@@ -1075,6 +1086,9 @@
   }
   function fmtPct(p) {
     if (p < 0.001) return 'under 0.001%';
+    // Below 0.01 the two-decimal rounding below prints "0%", which contradicts
+    // the log-scale bar, which still draws a visible fill down to 0.001%.
+    if (p < 0.01) return 'under 0.01%';
     if (p < 1) return (Math.round(p * 100) / 100) + '%';
     if (p < 10) return (Math.round(p * 10) / 10) + '%';
     return Math.round(p) + '%';
@@ -1161,6 +1175,22 @@
       'Litecoin\'s network is about <b>' + Math.round(sizeRatio).toLocaleString('en-US') + 'x smaller</b> than Bitcoin\'s, yet renting 51% of it costs only about a tenth as much, not a tiny fraction of that. Scrypt (Litecoin\'s algorithm) rents for about <b>' + Math.round(algoRatio).toLocaleString('en-US') + 'x more per equivalent EH/s</b> than SHA-256 (Bitcoin\'s) does, so the two gaps mostly cancel. <details class="inline-detail"><summary>Why network size alone doesn\'t set the price</summary><p>Litecoin\'s network-size advantage and Scrypt\'s per-unit rental premium partly cancel, leaving Litecoin cheaper overall but nowhere near as cheap as its network size alone would suggest. A GH/s of Scrypt and a TH/s of SHA-256 are not the same currency of work; comparing dollar cost, not raw hash rate, is the only fair comparison across algorithms.</p></details>';
   }
 
+  // ratio is a percent (e.g. 0.39 for 0.39%) and spans several orders of
+  // magnitude between buy mode (~0.3-0.6%) and rent mode (~0.001%). The bar
+  // is a log scale over five decades, 0.001% to 100%, matching the axis
+  // labels drawn under it, so the fill position is readable against a
+  // stated scale instead of an unlabeled compression.
+  function ratioToBarPct(ratioPct) {
+    var minLog = -3, maxLog = 2;
+    var clamped = Math.max(Math.pow(10, minLog), ratioPct);
+    var log = Math.log(clamped) / Math.LN10;
+    var pos = (log - minLog) / (maxLog - minLog) * 100;
+    // Round off float noise (e.g. 8.88e-15 instead of a clean 0) before the
+    // clamp, so a ratio at or under the floor renders an exact 0% fill
+    // instead of a technically-nonzero width that inspects strangely.
+    return Math.max(0, Math.min(100, Math.round(pos * 1000) / 1000));
+  }
+
   function computePow(c) {
     var netHashTH = c.hashrateEH * 1e6;
     var attackerTH = netHashTH * ATTACKER_HASH_SHARE;
@@ -1222,13 +1252,7 @@
     state.lastCost = cost;
     var ratio = (cost / c.valueSecuredUSD) * 100;
     document.getElementById('ratioNote').innerHTML = 'That is <b>' + fmtPct(ratio) + '</b> of the ' + fmtUSD(c.valueSecuredUSD) + ' the network secures, shown for scale, not the headline number.';
-    // ratio (a percent, e.g. 0.39) spans several orders of magnitude between
-    // buy mode (~0.3-0.6%) and rent mode (~0.001%). A flat multiplier can't
-    // serve both without either saturating buy mode at 100% (it did: ratio*2000
-    // hits 100 by ratio=0.05, which every buy-mode chain exceeds) or making
-    // rent mode invisible. Square root compresses the range so both stay
-    // legible and the bar only truly fills for a genuinely large ratio.
-    document.getElementById('ratioFill').style.width = Math.min(100, Math.sqrt(ratio) * 80) + '%';
+    document.getElementById('ratioFill').style.width = ratioToBarPct(ratio) + '%';
     document.getElementById('limitsNote').textContent = limitsNote;
     document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
   }
@@ -1242,7 +1266,7 @@
     state.lastCost = hourlyCostVal;
     var ratio = (spotCost / c.valueSecuredUSD) * 100;
     document.getElementById('ratioNote').innerHTML = 'Buying ' + Math.round(STAKE_SHARE*100) + '% of ' + c.name + '\'s supply at today\'s spot price ties up capital equal to <b>' + fmtPct(ratio) + '</b> of its ' + fmtUSD(c.valueSecuredUSD) + ' total value, shown for scale, not as the headline number.';
-    document.getElementById('ratioFill').style.width = Math.min(100, ratio) + '%';
+    document.getElementById('ratioFill').style.width = ratioToBarPct(ratio) + '%';
     document.getElementById('limitsNote').textContent =
       'This is the spot-market price only: it ignores that buying a third of a token\'s supply on the open market pushes the price up as you buy. There is no sourced, defensible number for how much on this chain, so nothing is added for it. The figure is a floor: the real cost of acquiring this stake would run higher.';
     document.getElementById('permanenceNote').textContent = PERMANENCE_POS;
@@ -1503,7 +1527,7 @@
   <div class="top-row">
     <h4>The fee market</h4>
   </div>
-  <p class="lead">Load real traffic into this block and watch fees against the subsidy gap.</p>
+  <p class="lead">Load real traffic and watch fees against the subsidy gap.</p>
 
   <div class="layout">
     <div class="panel">
@@ -1525,6 +1549,13 @@
         <input type="range" id="tps" min="-1" max="3.7" step="0.01" value="-0.049">
       </div>
 
+      <div class="field spotlight" id="feeField">
+        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b><span class="info-affordance" id="fee-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fee-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="fee-info-panel" role="tooltip">Demand decides how crowded the block is. This is the one control that decides whether your transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee today, 22 Aug 2026.</span></span></label>
+        <input type="range" id="fee" min="-1" max="3.3" step="0.01" value="0">
+
+        <p class="fee-context valline" id="feeContext">-</p>
+      </div>
+
       <details class="deep-dive">
         <summary>Advanced: shape, block rate, price, timing</summary>
       <div class="subgroup field">
@@ -1534,7 +1565,7 @@
           <button type="button" data-shape="covenant">Covenant</button>
           <button type="button" data-shape="proof">ZK proof</button>
         </div>
-        
+
         <p class="shape-note" id="shapeNote">-</p>
       </div>
 
@@ -1547,17 +1578,10 @@
         </div>
       </div>
 
-      <div class="field spotlight" id="feeField">
-        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b><span class="info-affordance" id="fee-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fee-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="fee-info-panel" role="tooltip">Demand decides how crowded the block is. This is the one control that decides whether your transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee today, 22 Aug 2026.</span></span></label>
-        <input type="range" id="fee" min="-1" max="3.3" step="0.01" value="0">
-        
-        <p class="fee-context" id="feeContext">-</p>
-      </div>
-
       <div class="field">
         <label for="price">KAS price <b id="priceVal">$0.0293</b><span class="info-affordance" id="price-info"><button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="price-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="price-info-panel" role="tooltip">Real price, CoinGecko, fetched 22 Aug 2026. The subsidy is paid in KAS too, so price scales both dollar figures together and does not close the gap by itself. Only more traffic or a higher fee narrows it.</span></span></label>
         <input type="range" id="price" min="-1" max="1" step="0.01" value="0">
-        
+
       </div>
 
       <div class="subgroup field">
@@ -1727,7 +1751,7 @@ feerate = fee_sompi / mass_grams</span>
 .fm-demo .field.spotlight label { color: var(--text); font-weight: 600; font-size: .9rem; }
 .fm-demo .field.spotlight label b { color: var(--green); font-size: 1rem; }
 .fm-demo .field.spotlight input[type=range] { accent-color: var(--green); height: 48px; }
-.fm-demo .fee-context, .fm-demo .shape-note {
+.fm-demo .fee-context, .fm-demo .shape-note, .fm-demo .valline {
     font-size: 1.067rem; color: var(--text); margin: 6px 0 0; background: var(--panel-strong);
     border-radius: 8px; padding: 6px 10px; min-height: 18px;
   }
@@ -2114,7 +2138,7 @@ feerate = fee_sompi / mass_grams</span>
     var presetKey = state.volumePreset;
     var todayLabel = fmtTps(TODAY_TPS);
     if (presetKey === "today") {
-      els.scenarioNote.innerHTML = "<b>Today, measured.</b> " + todayLabel + ", Kaspa's same-day transaction count. Nothing else here is happening yet.";
+      els.scenarioNote.innerHTML = "<b>Today, measured.</b> " + todayLabel + ", Kaspa's same-day transaction count.";
     } else {
       var multVsToday = tps / TODAY_TPS;
       var multLabel = multVsToday >= 10 ? fmtNum(multVsToday, 0) : fmtNum(multVsToday, 1);
@@ -2184,18 +2208,20 @@ feerate = fee_sompi / mass_grams</span>
       els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
       els.gridNote.textContent = "Only your transaction so far. Nothing else is competing for this block.";
     } else if (sim.hiddenCount === 0) {
+      var txWord = sim.popCount === 1 ? " transaction" : " transactions";
       els.gridScaleLabel.textContent = "This block, to scale";
       els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
       els.gridNote.textContent = sim.congested
-        ? fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity) + " slots. Every one is drawn."
-        : fmtNum(sim.popCount) + " transactions, all fitting this block. Every one is drawn.";
+        ? fmtNum(sim.popCount) + txWord + " competing for " + fmtNum(capacity) + " slots. Every one is drawn, plus yours."
+        : fmtNum(sim.popCount) + txWord + ", all fitting this block. Every one is drawn, plus yours.";
     } else {
       var sampleRatio = sim.popCount / sim.displayPop;
       var sampleRatioLabel = sampleRatio >= 10 ? fmtNum(sampleRatio, 0) : fmtNum(sampleRatio, 1);
       els.gridScaleLabel.textContent = "This block, sampled";
       els.gridDotHint.innerHTML = "Each dot stands for about " + sampleRatioLabel + " transactions, same ratio as the real count. Pink: <b>yours</b>.";
       els.gridNote.textContent = fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity)
-        + " slots. Showing " + fmtNum(sim.displayPop) + " sampled dots (" + fmtNum(sim.hiddenCount) + " more not pictured, same ratio).";
+        + " slots. Showing " + fmtNum(sim.displayPop) + " of them plus yours, " + fmtNum(sim.displayPop + 1)
+        + " dots in all (" + fmtNum(sim.hiddenCount) + " not pictured, same ratio).";
     }
     els.blockGrid.innerHTML = "";
     var ordered = sim.included.concat(sim.waiting);

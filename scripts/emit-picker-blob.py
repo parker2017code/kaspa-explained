@@ -874,7 +874,7 @@ def load_livebench_rungs(_cache={}):
     return out
 
 
-ARC_CORPUS = ROOT / "data" / "arc-agi-2026-08-21.md"
+ARC_CORPUS = ROOT / "data" / "arc-agi-2026-08-25.md"
 
 
 def load_arc(_cache={}):

@@ -1052,13 +1052,22 @@
   }
 
   function seed(){
+    // Five parallel children of genesis, merged by one block, is the
+    // smallest topology where the default k (3) actually locks a block
+    // out: with 5 siblings competing for the same anticone slots, the
+    // fifth one processed exceeds k and renders red. A narrower seed (2-3
+    // siblings) never binds k at its default value, so the demo would
+    // open showing every block blue, the one state that can't teach what
+    // the k slider does.
     blocks = {}; nextId = 0; hiddenQueue = []; hiddenBranchParents = []; hiddenMode = false;
     focusedId = null; pinnedId = null;
     var g = addBlock([], false);
-    var a = addBlock([g], false);
-    var b = addBlock([g], false);
-    var m = addBlock([a, b], false);
-    addBlock([m], false);
+    var p0 = addBlock([g], false);
+    var p1 = addBlock([g], false);
+    var p2 = addBlock([g], false);
+    var p3 = addBlock([g], false);
+    var p4 = addBlock([g], false);
+    addBlock([p0, p1, p2, p3, p4], false);
   }
 
   function computeGhostdagState(parentIds, state, getAncestors, anticoneWithin, diag){
@@ -1468,8 +1477,16 @@
     var d = lastVirtualDiag[id];
     var name = "Block " + id;
     var text;
-    if (b.onSpine || !d){
+    if (b.onSpine){
       text = name + ": on the main chain, so it always counts.";
+    } else if (!d){
+      // No virtual diagnostic for this block: it was resolved in an earlier
+      // round rather than against the current tip. Describe it from its own
+      // verdict instead of falling through to the main-chain line, which
+      // claimed a locked-out block always counts.
+      text = b.color === "blue"
+        ? name + ": counted. It stayed within the cap of k = " + k + " when its order was settled."
+        : name + ": locked out. Too many blocks it never saw had already counted, past the cap of k = " + k + ".";
     } else if (b.color === "blue"){
       text = name + ": never saw " + neverSaw + " other block" + (neverSaw === 1 ? "" : "s") +
         ". Of those, " + d.anticoneAcceptedCount + " already counted, within the cap of k = " + k + ". It counts.";
@@ -2415,7 +2432,7 @@ TPS = tx_per_block × 10 blocks/second</span>
           </ul>
         </div>
       </details>
-      <details id="live-network">
+      <details id="live-network" open>
         <summary>Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
 <style>
   #livenet-demo {

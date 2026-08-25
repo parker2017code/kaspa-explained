@@ -11,7 +11,7 @@ sources, percentiles are computed fresh from the raw values, and a roster
 rule decides inclusion in an auditable, one-line-change way.
 
 Pipeline:
-  1. Parse data/aa-2026-08-20.md, data/livebench-2026-08-20.md, and every
+  1. Parse data/aa-2026-08-25.md, data/livebench-2026-08-25.md, and every
      data/arena-*.md file present (glob'd, so sibling deep-pull files that
      land later are picked up automatically).
   2. Resolve each source row's model name to a canonical key via the
@@ -53,7 +53,7 @@ MIN_METRICS = 10
 #
 # Wiring decisions and why a metric was left raw-only:
 #
-# AA (data/aa-2026-08-20.md): the file's own header notes flag GPQA-Diamond,
+# AA (data/aa-2026-08-25.md): the file's own header notes flag GPQA-Diamond,
 # AA-LCR, TB-v2.1, CritPt and MMMU-Pro as saturated or too-tight on this
 # roster; APEX-Agents, ITBench, IFBench, TB-Hard, AA-AnalystAgent and
 # tau2-Telecom as too sparse (<10/22 coverage) to trust. OmniscienceIndex is
@@ -360,7 +360,12 @@ ALIASES: dict[str, dict[str, list[str]]] = {
     },
     "glm-5.3-max": {
         "aa": ["GLM-5.3 (max)"],
-        "livebench": [],
+        # LiveBench's 25 Aug pull adds an untiered "GLM-5.3" row (new since
+        # 20 Aug) with no competing GLM-5.3 tier on that board -- aliased to
+        # -max by the same elimination rule already used for Grok 4.6 and
+        # Gemini 3.1 Pro Preview above (one row, no other tier to confuse it
+        # with).
+        "livebench": ["GLM-5.3"],
         "arena": ["GLM 5.3 (Max)", "glm-5.3-max"],
     },
     "glm-5.2-max": {
@@ -381,7 +386,9 @@ ALIASES: dict[str, dict[str, list[str]]] = {
     "qwen3.8-27b": {
         "aa": ["Qwen3.8 27B"],
         "livebench": ["Qwen3.8 27B [open]"],
-        "arena": [],
+        # New on Arena as of the 25 Aug WebDev pull (rank 9); not present on
+        # any Arena board in the 20 Aug capture.
+        "arena": ["qwen3.8-27b"],
     },
     "gemini-3.7-flash-high": {
         "aa": ["Gemini 3.7 Flash (high)"],
@@ -408,6 +415,21 @@ ALIASES: dict[str, dict[str, list[str]]] = {
         "aa": ["Gemini 3.1 Pro Preview"],
         "livebench": ["Gemini 3.1 Pro Preview High"],
         "arena": ["gemini-3.1-pro-preview", "Gemini 3.1 Pro Preview"],
+    },
+    # Gemini 3.5 Flash: new to the roster as of the 25 Aug pull. AA only
+    # publishes "(medium)" and "-Lite" rows for it (no "(high)" row exists
+    # on AA), so only those two get canonical entries, each matched to its
+    # Arena tier by the same untiered/single-row elimination rule used
+    # elsewhere in this table. No LiveBench row for either at this pull.
+    "gemini-3.5-flash-medium": {
+        "aa": ["Gemini 3.5 Flash (medium)"],
+        "livebench": [],
+        "arena": ["gemini-3.5-flash-medium"],
+    },
+    "gemini-3.5-flash-lite": {
+        "aa": ["Gemini 3.5 Flash-Lite"],
+        "livebench": ["Gemini 3.5 Flash-Lite High"],
+        "arena": ["gemini-3.5-flash-lite"],
     },
     "deepseek-v4-pro-0813-max": {
         "aa": ["DeepSeek V4 Pro 0813 (max)"],
@@ -768,8 +790,8 @@ def main() -> int:
     unmatched: dict[str, list[str]] = {"aa": [], "livebench": [], "arena": []}
     parser_failures: list[str] = []
 
-    aa_data = parse_aa(DATA / "aa-2026-08-20.md", unmatched["aa"])
-    lb_data = parse_livebench(DATA / "livebench-2026-08-20.md", unmatched["livebench"])
+    aa_data = parse_aa(DATA / "aa-2026-08-25.md", unmatched["aa"])
+    lb_data = parse_livebench(DATA / "livebench-2026-08-25.md", unmatched["livebench"])
 
     arena_files = sorted(glob.glob(str(DATA / "arena-*.md")))
     models: dict[str, dict] = {}
