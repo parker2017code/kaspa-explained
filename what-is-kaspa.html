@@ -1795,6 +1795,7 @@
     margin-bottom: 4px;
   }
   #masscalc-demo .field label b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  #masscalc-demo .field-hint { font-size: .78rem; color: var(--faint); margin: 6px 0 0; }
   #masscalc-demo .field input[type=range] { width: 100%; height: 44px; accent-color: var(--green); }
   #masscalc-demo .field input[type=number] {
     width: 100%;
@@ -1959,6 +1960,7 @@
       <div class="field">
         <label for="mc-amount">Amount per output (KAS) <b id="mc-amountVal">1,000</b></label>
         <input type="range" id="mc-amount" min="0" max="6" step="0.02" value="3">
+        <p class="field-hint" id="mc-amountHint" hidden>Storage mass is 0 for this shape at any amount, so this slider will not move the numbers.</p>
       </div>
 
       <div class="field">
@@ -1986,7 +1988,7 @@
 
       <div class="result">
         <div><span class="big" id="mc-tpbOut">0</span> <span class="label">transactions like this fit in a block</span></div>
-        <div class="sub"><span id="mc-tpsOut">0</span> TPS at 10 blocks a second, if every block were full of this shape.</div>
+        <div class="sub"><span id="mc-tpsOut">0</span> transactions per second (TPS) at 10 blocks a second, if every block were full of this shape.</div>
       </div>
 
       <details class="advanced-controls">
@@ -2177,6 +2179,10 @@ TPS = tx_per_block × 10 blocks/second</span>
     var harmonicOuts = outputs * outPlurality * outPlurality * (STORAGE_MASS_PARAMETER / outAmountSompi);
     var linearIns = inputs * (STORAGE_MASS_PARAMETER / inAmountSompi);
     var storageMass = Math.max(0, harmonicOuts - linearIns);
+    // Storage mass scales as 1/amount, but only when outputs * plurality^2 exceeds
+    // inputs^2 / outputs; below that the two terms cancel at every amount and the
+    // slider has nothing to move. Flag that case so the control doesn't look dead.
+    var amountMatters = (outputs * outPlurality * outPlurality - (inputs * inputs) / outputs) > 1e-9;
 
     var transientNormalized = transientMass * (BLOCK_COMPUTE_LIMIT / BLOCK_TRANSIENT_LIMIT);
     var txMass = Math.max(computeMass, storageMass, transientNormalized);
@@ -2189,7 +2195,8 @@ TPS = tx_per_block × 10 blocks/second</span>
     var tps = txPerBlock * BLOCKS_PER_SECOND;
 
     return { computeMass: computeMass, storageMass: storageMass, transientMass: transientMass,
-             txMass: txMass, binding: binding, txPerBlock: txPerBlock, tps: tps, outPlurality: outPlurality };
+             txMass: txMass, binding: binding, txPerBlock: txPerBlock, tps: tps, outPlurality: outPlurality,
+             amountMatters: amountMatters };
   }
 
   function render() {
@@ -2216,6 +2223,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     document.getElementById('mc-inputsVal').textContent = inputsEl.value;
     document.getElementById('mc-outputsVal').textContent = outputsEl.value;
     document.getElementById('mc-amountVal').textContent = fmt(amountKAS());
+    document.getElementById('mc-amountHint').hidden = r.amountMatters;
     document.getElementById('mc-payloadVal').textContent = fmt(parseInt(payloadEl.value, 10));
     document.getElementById('mc-budgetVal').textContent = budgetEl.value;
   }

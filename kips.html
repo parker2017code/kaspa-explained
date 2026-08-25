@@ -336,7 +336,7 @@
                 <label for="par-alpha-slider">Hypothetical attacker's mining share</label>
                 <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out par-alpha-hint">
                 <span class="valline"><span id="par-alpha-out">10%</span></span>
-                <span class="valline info-affordance" id="par-alpha-hint">Hypothetical, not observed.
+                <span class="valline info-affordance" id="par-alpha-hint">Hypothetical, not observed. Both formulas below barely move until this gets close to 50%, then rise fast.
                   <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-alpha-hint-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Why 10%, and what this dial imagines</span>
@@ -764,10 +764,10 @@
               (beyondTable ? ", past GHOSTDAG's 32 bps table" : "");
             var dIsMainnet = D === 5;
             var kIsMainnet = dIsMainnet && BPS === 10;
-            dOut.textContent = "D = " + D.toFixed(1) + " s" + (dIsMainnet ? ", mainnet's real setting" : "") +
-              " → margin (k) = " + configuredK + (kIsMainnet ? ", mainnet's real margin" : "") +
+            dOut.textContent = "Assumed worst case: " + D.toFixed(1) + " s" + (dIsMainnet ? " (mainnet's real setting)" : "") +
+              " → margin needed: " + configuredK + (kIsMainnet ? " (mainnet's real margin)" : "") +
               (beyondTable ? " (computed, past the shipped table)" : "");
-            lOut.textContent = L.toFixed(1) + " s (margin (k) this actually needs: " + requiredK + ")";
+            lOut.textContent = L.toFixed(1) + " s (margin this actually needs: " + requiredK + ")";
 
             fixedKOut.textContent = configuredK;
             fixedReqOut.textContent = requiredK;
@@ -779,7 +779,7 @@
 
             if (beyondTable){
               fixedTableEnd.hidden = false;
-              fixedTableEnd.textContent = "Past the shipped table. This k comes from the same formula, and picking it on mainnet means a hard fork.";
+              fixedTableEnd.textContent = "Past the shipped table. This margin comes from the same formula, and picking it on mainnet means a hard fork.";
             } else {
               fixedTableEnd.hidden = true;
             }
@@ -809,13 +809,13 @@
 
             if (beyondTable){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Past the shipped table: k=" + configuredK + " is what the formula gives, but running it means hard-forking that constant in ahead of time, the a-priori choice DAGKnight removes.";
+              fixedVerdict.textContent = "Past the shipped table: a margin of " + configuredK + " is what the formula gives, but running it means hard-forking that constant in ahead of time, the a-priori choice DAGKnight removes.";
             } else if (over){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Cap exceeded: needs k=" + requiredK + ", fixed at " + configuredK + ".";
+              fixedVerdict.textContent = "Cap exceeded: needs a margin of " + requiredK + ", fixed at " + configuredK + ".";
             } else {
               fixedVerdict.className = "verdict safe";
-              fixedVerdict.textContent = "Within the cap: latency needs k=" + requiredK + "; the fixed " + configuredK + " covers it.";
+              fixedVerdict.textContent = "Within the cap: this latency needs a margin of " + requiredK + "; the fixed " + configuredK + " covers it.";
             }
 
             adaptKOut.textContent = requiredK;
@@ -831,7 +831,7 @@
             var adaptOptSeconds = optimisticBoundSeconds(L, BPS, alpha);
             adaptTimeOut.textContent = fmtSecondsHuman(adaptOptSeconds);
 
-            adaptVerdict.textContent = "No cap: k=" + requiredK + " right now, tracking latency, relaxing once calm.";
+            adaptVerdict.textContent = "No cap: margin sits at " + requiredK + " right now, tracking latency, relaxing once calm.";
 
             // Ratio between the two sides' bounds. This formula has no unspecified constant, so
             // this ratio, unlike the pessimistic one one click down, is a real number the paper
@@ -859,11 +859,11 @@
             }
 
             if (beyondTable){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need k=" + requiredK + ". " + boundNote + " That gap is the whole “parameterless” claim.";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need a margin of " + requiredK + ". " + boundNote + " That gap is the whole “parameterless” claim.";
             } else if (over){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to k=" + requiredK + ". " + boundNote;
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to a margin of " + requiredK + ". " + boundNote;
             } else {
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at k=" + configuredK + " against DAGKnight's k=" + requiredK + ". " + boundNote;
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at " + configuredK + " against DAGKnight's " + requiredK + ". " + boundNote;
             }
 
             var live = document.getElementById("par-live-region");

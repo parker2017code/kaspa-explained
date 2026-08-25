@@ -1222,7 +1222,13 @@
     state.lastCost = cost;
     var ratio = (cost / c.valueSecuredUSD) * 100;
     document.getElementById('ratioNote').innerHTML = 'That is <b>' + fmtPct(ratio) + '</b> of the ' + fmtUSD(c.valueSecuredUSD) + ' the network secures, shown for scale, not the headline number.';
-    document.getElementById('ratioFill').style.width = Math.min(100, ratio * 2000) + '%';
+    // ratio (a percent, e.g. 0.39) spans several orders of magnitude between
+    // buy mode (~0.3-0.6%) and rent mode (~0.001%). A flat multiplier can't
+    // serve both without either saturating buy mode at 100% (it did: ratio*2000
+    // hits 100 by ratio=0.05, which every buy-mode chain exceeds) or making
+    // rent mode invisible. Square root compresses the range so both stay
+    // legible and the bar only truly fills for a genuinely large ratio.
+    document.getElementById('ratioFill').style.width = Math.min(100, Math.sqrt(ratio) * 80) + '%';
     document.getElementById('limitsNote').textContent = limitsNote;
     document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
   }
@@ -1582,8 +1588,8 @@
       <p class="payoff" id="blockPayoff">-</p>
 
       <div class="block-frame">
-        <h6 class="grid-note">This block, to scale</h6>
-        <p class="you-note">Each dot: one transaction. Pink: <b>yours</b>.</p>
+        <h6 class="grid-note" id="gridScaleLabel">This block, to scale</h6>
+        <p class="you-note" id="gridDotHint">Each dot: one transaction. Pink: <b>yours</b>.</p>
         <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">-</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
         <div class="legend">
@@ -1986,6 +1992,8 @@ feerate = fee_sompi / mass_grams</span>
     fillCaption: document.getElementById("fillCaption"),
     blockPayoff: document.getElementById("blockPayoff"),
     gridNote: document.getElementById("gridNote"),
+    gridScaleLabel: document.getElementById("gridScaleLabel"),
+    gridDotHint: document.getElementById("gridDotHint"),
     blockGrid: document.getElementById("blockGrid"),
     feeRevOut: document.getElementById("feeRevOut"),
     subsidyOut: document.getElementById("subsidyOut"),
@@ -2083,7 +2091,7 @@ feerate = fee_sompi / mass_grams</span>
       included: included, waiting: waiting, selfIncluded: selfIncluded,
       lowerFeeIncluded: lowerFeeIncluded, higherFeeWaiting: higherFeeWaiting,
       hiddenCount: hiddenCount, congested: totalCandidates > capacity,
-      popCount: popCount, capacity: capacity
+      popCount: popCount, capacity: capacity, displayPop: displayPop
     };
   }
 
@@ -2166,14 +2174,29 @@ feerate = fee_sompi / mass_grams</span>
     els.blockPayoff.innerHTML = blockMsg;
 
     // grid
-    // Uncongested state says nothing here: the count is already the bar-fill
-    // caption and the stat-row above, so restating it a third time would be
-    // pure redundancy. The congested state keeps its own text because
-    // "not pictured" is caveat information that exists nowhere else on the
-    // page.
-    els.gridNote.textContent = sim.congested
-      ? fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity) + " slots" + (sim.hiddenCount > 0 ? " (+" + fmtNum(sim.hiddenCount) + " more, not pictured)" : "") + "."
-      : "";
+    // The grid can never draw more than 71 dots (see the cap in
+    // simulateBlock), so past that point the picture is a proportional
+    // sample, not a literal count. gridScaleLabel, gridDotHint and gridNote
+    // all say so plainly whenever that cap is active; they only claim
+    // "to scale" when every dot on screen is a real transaction.
+    if (sim.popCount === 0) {
+      els.gridScaleLabel.textContent = "This block, to scale";
+      els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
+      els.gridNote.textContent = "Only your transaction so far. Nothing else is competing for this block.";
+    } else if (sim.hiddenCount === 0) {
+      els.gridScaleLabel.textContent = "This block, to scale";
+      els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
+      els.gridNote.textContent = sim.congested
+        ? fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity) + " slots. Every one is drawn."
+        : fmtNum(sim.popCount) + " transactions, all fitting this block. Every one is drawn.";
+    } else {
+      var sampleRatio = sim.popCount / sim.displayPop;
+      var sampleRatioLabel = sampleRatio >= 10 ? fmtNum(sampleRatio, 0) : fmtNum(sampleRatio, 1);
+      els.gridScaleLabel.textContent = "This block, sampled";
+      els.gridDotHint.innerHTML = "Each dot stands for about " + sampleRatioLabel + " transactions, same ratio as the real count. Pink: <b>yours</b>.";
+      els.gridNote.textContent = fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity)
+        + " slots. Showing " + fmtNum(sim.displayPop) + " sampled dots (" + fmtNum(sim.hiddenCount) + " more not pictured, same ratio).";
+    }
     els.blockGrid.innerHTML = "";
     var ordered = sim.included.concat(sim.waiting);
     ordered.sort(function (a, b) {

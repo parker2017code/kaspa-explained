@@ -1,209 +1,123 @@
 # Kaspa Explained
 
-Plain-English guide to Kaspa, fast Proof of Work, current status, claim checking, sources, glossary, and crypto basics.
+[kaspaexplained.com](https://kaspaexplained.com) is a plain-English guide to
+Kaspa built around twenty demos you can push on. Move a slider and watch a
+blockDAG keep the blocks a single chain throws away. Price a 51% attack at
+today's hash rate. Watch a covenant refuse a spend that breaks its own rule.
 
-This is not an official Kaspa website and it is not investment advice. It is written for:
+This is not an official Kaspa website and it is not investment advice.
 
-- readers who want a clear entry point,
-- readers checking what is live, what is roadmap, and what is research,
-- builders and researchers checking sources,
-- search and retrieval systems,
-- people trying to separate live Kaspa facts from roadmap, research, and speculation.
-- people trying to separate real crypto use cases from forced blockchain/token use cases.
+## Why it looks like this
 
-For contributor and editorial context, start with `CONTENT_BRIEF.md`.
-Working cleanup notes live under `.github/notes/` so they do not become part of the public site surface.
-If you are starting from a blank terminal, use `CLI_FROM_ZERO.md` for the split between Kaspa mainnet node/wallet verification, TN12 testnet practice, and future Toccata-era command paths.
+The first version was built to be read by language models. That was the wrong
+call. Nobody used it, including the person who built it. The site is now built
+for people, and the demos are the point: the "Try it" section in the nav is the
+front door, and every topic page carries the demo that backs its claim.
 
-## Domain
+The writing still matters, but it is there to support the thing you just did,
+not the other way round.
 
-`kaspaexplained.com`
+## Contributing
 
-The root `CNAME` file must contain exactly:
+Corrections are the most useful contribution, especially on status claims.
+Kaspa moves, and a page that was right in June can be wrong in August. See
+`CONTRIBUTING.md`.
 
-```txt
-kaspaexplained.com
-```
+Content is CC BY 4.0. Code, CSS, scripts, and workflows are MIT. See
+`LICENSE.md`. The site belongs to the community more than to any one
+maintainer; fork it, lift a demo, argue with a number.
 
-## GitHub Pages setup
+## What is where
 
-- Repository: `parker2017code/kaspa-explained`
-- Visibility: public
-- Pages source: deploy from branch
-- Branch: `main`
-- Folder: `/` root
-- Custom domain: `kaspaexplained.com`
-- Enforce HTTPS when GitHub makes it available
+`site-manifest.json`, `sitemap.xml`, and `llms.txt` are the checked inventory:
+19 live pages. Every other `.html` file in the root or under `/demos/` is a
+`noindex` redirect stub pointing at one of those 19, usually to a specific
+anchor.
 
-## DNS
-
-For Namecheap or equivalent DNS:
-
-- Apex `@` A records:
-  - `185.199.108.153`
-  - `185.199.109.153`
-  - `185.199.110.153`
-  - `185.199.111.153`
-- `www` CNAME:
-  - `parker2017code.github.io`
-
-Do not point `www` to the repository name.
+- `index.html` routes by audience, and carries the collision demo inline.
+- `start-here.html` sends a true beginner to `crypto-from-scratch.html` first.
+- `what-is-kaspa.html` is the core mechanism explainer: proof of work, UTXO
+  ownership, blockDAG, GHOSTDAG, covenants. Carries four demos.
+- `why-kaspa-matters.html` covers neutral money, self-custody, and the
+  confirmation-risk curve.
+- `kips.html` tracks KIPs and KCCs live from GitHub, and carries the DAGKnight
+  demo comparing a fixed consensus margin against one that tracks real latency.
+- `status.html` separates live mainnet from testnet, targeted, roadmap, and
+  research, and fact-checks 16 claims.
+- `skeptical-case.html` is the case against, in seven risks.
+- `kaspa-mining.html` covers price and hash-rate cycles plus solo mining, with
+  four demos including attack cost and node cost.
+- `build-on-kaspa.html` takes a builder from an idea to a build path.
+- `argent-explained.html` covers the actor-based language compiling to
+  Silverscript covenants.
+- `utxo-vs-accounts.html` is two demos: spend a UTXO, then watch shared state
+  fail the way an account model does.
+- `kaspa-origin-story.html` is the sourced fair-launch history.
+- `chain-comparer.html` and `model-picker.html` are dial-driven tools.
+- `sources.html` ranks what settles a claim.
+- `demos/index.html` maps every demo to the page it lives on.
 
 ## Source discipline
 
-Use first-party sources first for L1 and status-sensitive claims: kaspanet GitHub repositories, releases, KIPs, Kaspa.org, docs.kaspa.org, public Kaspa API/node readings, and research papers. Core technical posts can explain rationale, but they do not replace release, KIP, node, or activation evidence.
+First-party sources first for anything status-sensitive: kaspanet GitHub
+repositories, releases, KIPs, docs.kaspa.org, public API and node readings, and
+research papers. Core technical posts explain rationale; they do not replace a
+release tag, a merged KIP, or activation evidence.
 
-Use these files instead of turning the README into the source guide:
+The kaspa.org marketing pages are not used as a source. Twice, months apart,
+they still described Toccata as pending on testnet long after it activated on
+mainnet. `wiki.kaspa.org` and `docs.kaspa.org` are fine.
 
-- `CLAIMS.yml` for status-sensitive claim boundaries and recheck dates.
-- `status.html#claim-fact-check` for a browser-readable version of the status-label rules.
-- `COPY_STYLE.md` for the repo-wide anti-filler sentence standard.
-- `sources.html` for the public source hierarchy and external reference map.
-- `llms.txt` for compact retrieval guidance.
-- `agent-index.json` for a static, read-only agent gateway over page text and reference files.
-- `CLI_FROM_ZERO.md` for local command-line setup and verification.
-- `CONTENT_BRIEF.md` for editorial context and source-use rules.
-- `.github/notes/` for internal cleanup queues and flow rules.
+`CLAIMS.yml` is the checked registry: every status-sensitive claim, its source,
+and the date it must be rechecked. `scripts/check-status-freshness.py` fails the
+build when a recheck date passes, so claims cannot quietly rot.
 
-After Toccata activation, refresh `CLI_FROM_ZERO.md`,
-`status.html`, `build-on-kaspa.html`, `sources.html`, `CLAIMS.yml`, and
-`llms.txt` from public activation evidence, Rusty Kaspa releases, official docs,
-and working tool commands before changing public status language. (`builder-guide.html`
-is a redirect stub into `build-on-kaspa.html`, not its own page.)
-
-Use community portals, media sites, learning libraries, interviews, recaps, and public technical accounts for orientation, links, and framing. Use code, releases, KIPs, protocol docs, direct technical notes, or verifiable network evidence for activation dates, shipped-feature claims, exchange claims, and protocol guarantees.
-
-## Site pages
-
-`site-manifest.json`'s `pages` array, `sitemap.xml`, and `llms.txt` are the checked inventory: 19 live, indexable pages. Every other `.html` file in the repository root or under `/demos/` is a `noindex` redirect stub (meta refresh to one of the 19, usually to a specific anchor); a filename below with no live-page description now redirects rather than holding content.
-
-- `index.html` routes readers by audience and knowledge level.
-- `start-here.html` is the true-beginner router into `crypto-from-scratch.html` first, then Kaspa itself.
-- `what-is-kaspa.html` answers the highest-intent beginner search directly and is the core mechanism explainer (PoW, UTXO ownership, blockDAG, GHOSTDAG, covenants). It carries the retired `glossary.html`'s terms as inline hover/tap definitions and embeds the collision-sim, GHOSTDAG playground, live-network, and mass-calculator demos.
-- `why-kaspa-matters.html` bridges into why Kaspa matters: neutral money, self-custody, and public group commitments. Embeds the confirmation-risk demo.
-- `crypto-from-scratch.html`, `chain-comparer.html`, and `model-picker.html` are the beginner curriculum, chain-comparison dial tool, and (off-topic) LLM scorer.
-- `kaspa-origin-story.html` is the sourced fair-launch and origin-history page (the old `kaspa-status-check-may-2026.html`-adjacent history pages redirect here). Embeds the fair-launch supply-curve and DAA-to-date demos.
-- `argent-explained.html` explains Argent, the actor-based language compiling to Silverscript covenant applications. Embeds the Argent pipeline demo.
-- `build-on-kaspa.html` takes a builder from an app idea to a build path and a
-  status gate. Carries the covenant-breaker vault and ZK-boundary demos.
-  Absorbed `build-this-now.html`, `kaspa-app-ideas.html`,
-  `kaspa-covenants-explained.html`, `kaspa-vs-ethereum-apps.html`,
-  `kaspa-coordination-markets.html`, and the survey and matching-board pages.
-- `toccata-explained.html` is a stub. Covenants are explained on
-  `what-is-kaspa.html#covenants`; the builder detail is on `build-on-kaspa.html`.
-- `status.html` separates live mainnet, testnet, targeted, roadmap, and research claims, and carries the claim-fact-check section at `#claim-fact-check` (absorbing the retired `kaspa-claims-checker.html`) plus the retired `about.html`'s editorial-policy and claim-status definitions and `kaspa-developments.html`'s durable KIP-vs-KCC distinction. `kaspa-status-updates.html` and `kaspa-claims-checker.html` also redirect here.
-- `skeptical-case.html` is the risks and open-questions page.
-- `kaspa-mining.html` covers price/hash-rate cycles and solo mining to your own node (the old `kaspa-mining-cycle.html`, `kaspa-mining-cycle-visuals.html`, and `solo-mining-guide.html` redirect here). Embeds the attack-cost, emission-schedule, fee-market, and node-cost demos.
-- `kips.html` is the live-fetched KIP and KCC tracker (the old `kaspa-vprogs-explained.html`, `kaspa-tps-explained.html`, `kaspa-smart-contracts-status.html`, `ghostdag-explained.html`, and the hand-maintained `kaspa-developments.html` digest all redirect here or to `what-is-kaspa.html`/`status.html`; check `sitemap.xml` before assuming a URL is live). Embeds the parameterless-security and supply-split demos.
-- `sources.html` is the human source guide.
-- `utxo-vs-accounts.html` is one page holding two demos: spend from a UTXO wallet, then the shared-state demo comparing Toccata composability against vProgs-style shared mutable state.
-- `the-instrument.html` hosts Moose's monetary-systems essay.
-- `search.html` is the quickest concept/page finder.
-- `404.html` is the not-found page.
-- `demos/index.html` is a live index page that links out to all eighteen demos at their real homes; it hosts none of them itself. Every `/demos/<name>.html` path is a redirect stub into its demo's anchor on its content page, not a page in its own right.
-- `CLAIMS.yml` is the reference file for status-sensitive claims.
-- `site-manifest.json` is the checked page, nav, sitemap-extra, and support-file inventory.
-- `agent-index.json` is the generated static retrieval index for AI agents.
-- `CONTRIBUTING.md` explains correction and contribution rules.
-
-Retired pages worth knowing about specifically: `about.html`, `glossary.html`, `kaspa-developments.html`, `kaspa-claims-checker.html`, and `toccata-explained.html` all still exist as files but are `noindex` redirect stubs now, not content pages; their content moved into the live pages listed above. Do not cite any of the five as a source or a live URL.
-
-## Maintenance checks
-
-The `scripts/` folder contains the local and CI validation gates:
-
-- `scripts/check-site.sh` checks the expected public pages and support files, custom domain, generated sitemap, canonical links, skip links, social metadata, `dateModified` metadata, nav wiring, search-result coverage, local anchors, sensitive claim markers, forbidden overclaim phrases, and nav synchronization.
-- `scripts/build-agent-index.py` builds and checks the static agent index from public pages and reference files.
-- `scripts/check-nav-sync.sh` compares the copied static nav links across every HTML page and checks the primary nav against `site-manifest.json`.
-- `scripts/check-links.sh` audits external links for routine maintenance and runs separately from the push gate.
-- `scripts/check-rendered-layout.sh` optionally opens key pages in Chromium at mobile and desktop sizes and verifies screenshots can be rendered.
-
-Internal setup notes live under `.github/notes/`.
-
-Run the static check before publishing:
+## Checks
 
 ```sh
 bash scripts/check-site.sh
 ```
 
-The check verifies the custom domain, sitemap/canonical links, public pages,
-skip-link targets, social-card metadata, date metadata, local anchors, the PNG
-OpenGraph image, search cards, sensitive-claim consistency markers, and
-`CLAIMS.yml` forbidden-copy phrases. It also runs `scripts/check-nav-sync.sh`
-so the duplicated static nav does not drift between pages or point at routes
-outside `site-manifest.json`. The same check runs in GitHub Actions on push,
-pull request, and a weekly schedule.
+That is the publish gate, and `Site checks passed.` is the only line that
+counts. It runs about two dozen checks: HTML validity, claim consistency,
+source bans, status freshness, nav synchronization, redirect stubs, reading
+grade, prose rules, American English, rendered layout at three widths in both
+themes, broken links and missing anchors, visible-word ceilings, page height,
+and per-demo surface budgets.
 
-For public copy, layout, or framing changes, also check:
+Several of those exist because a specific defect shipped once. The demo-surface
+check exists because a demo grew four blocks of specialist prose on its
+opening screen and no gate could see it. The page-height check counts only
+things a reader can look at or touch, because an earlier version counted
+headings as landmarks and passed every page on a day when every page was too
+long.
 
-- mobile and desktop screenshots for affected pages,
-- no text overlap in diagrams, tables, cards, axis labels, buttons, or hero areas,
-- medium authority and medium visual weight in public copy,
-- `llms.txt`, `CLAIMS.yml`, `sources.html`, and `CONTENT_BRIEF.md` when status/source boundaries change,
-- GitHub About metadata when the public framing or README intro changes,
-- live HTML after GitHub Pages deploys.
-
-Rendered screenshot smoke check, when Chromium is available:
+Local preview, with clean URLs so `/status` resolves:
 
 ```sh
-bash scripts/check-rendered-layout.sh
+python3 scripts/serve-local.py --port 4187
 ```
 
-The fast-PoW comparison graphic on `why-kaspa-matters.html` needs special care: it should separate inclusion speed from explicit vote/stake coordination and should not imply instant finality or a simple "stronger confirmation" ranking.
-
-Writing rule: reader attention is the scarce resource. Keep length only when it adds evidence, a distinction, a consequence, a decision, or a source path. Say the necessary claim, give enough support, and stop.
-
-External links are audited separately:
+External links are audited separately and weekly, so a third-party outage does
+not block a content fix:
 
 ```sh
 bash scripts/check-links.sh
 ```
 
-That audit runs weekly and can be triggered manually in GitHub Actions. It is
-separate from the normal push check so temporary third-party outages do not
-block routine content fixes.
+## For contributors and agents
 
-## License
+`AGENTS.md` is the durable instruction file: voice, verification contract,
+source rules, and the failure modes this repo has already hit.
+`WORKING-STATE.md` carries what is true today. `design/STANDARD.md` and
+`design/THE-BAR.md` carry the design and credibility bars, including the test
+every demo has to pass: someone with a high school diploma and a rough idea of
+what crypto is should know what the demo shows and what to touch, immediately,
+with no help.
 
-Content is licensed under CC BY 4.0. Code, CSS, scripts, and workflow files are
-licensed under MIT. See `LICENSE.md`.
+## Hosting
 
-## Current Status Rules
-
-Do not flatten everything into "live."
-
-- Live: Proof of Work blockDAG, UTXO model, GHOSTDAG, Crescendo 10 BPS era.
-- Volatile facts: do not add values that can change in seconds, minutes, or hours unless they are free, source-backed, and read from a current API or live node/API script. If the fact is not important to Kaspa L1 status, omit it.
-- App/project catalogs are out of scope for status updates unless the L1 fact itself matters, such as transaction payload behavior, accepted transaction evidence, or fees paid to miners.
-- Live track: Toccata activated on mainnet at DAA score 474,165,565 on June 30, 2026, adding covenant-style spend constraints, asset rules, covenant IDs, ZK-facing verification, sequencing commitments, native-asset groundwork, and standalone based-app foundations to L1. Rusty Kaspa v2.0.1 (June 15, 2026) is the current Toccata release; v2.0.0 (June 5, 2026) carried the activation parameters. Rusty Kaspa's `tn10-toc2` pre-release scheduled the first Testnet-10 activation point at DAA score 467,579,632; `tn10-toc3` scheduled final Toccata ZK hardening at DAA score 476,232,000; and a June 29, 2026 API check showed Testnet-10 virtual DAA 503,616,667. Use the activation record plus upgraded-node and transaction behavior for the mainnet label; app claims still need their own evidence.
-- Toccata operator note: the Rusty Kaspa Toccata node setup guide adds practical upgrade evidence for node operators, wallets, exchanges, pools, miners, explorers, and indexers. It covers operator readiness: v2.0.1+ operation, one-way database migration, higher standard-fee policy for RPC submission, storageMass/storage_mass and transaction version 1 field handling, and Testnet-10 infrastructure testing. Product claims still need wallet, explorer, tooling, transaction, and user evidence.
-- June 29 L1 snapshot: public REST checks at 08:05 UTC showed `kaspa-mainnet`, virtual DAA 473,005,279, 1,102,009 blocks, about 27.542 billion KAS from the supply endpoint, and 2.59565436 KAS per block. Recheck exact values before quoting.
-- Builder tooling: Python SDK v2.0.0/v2.0.1 added Toccata-aligned wallet, lane-proof, SMT-sync, and covenant-binding support. Rusty Kaspa PR #953 merged an `R0ScriptBuilder` helper for RISC Zero proof scripts. Open KIP-24 covers transaction-v1 fields and hashing; open KIP-22 covers P2MR quantum-resistance and MAST-style ScriptPublicKey work. Treat these as tooling/design evidence until merged release and activation evidence changes the status.
-- TPS/capacity: use `what-is-kaspa.html` when the answer depends on workload (`kaspa-tps-explained.html` is a redirect stub into it, not its own page). Current simple-payment capacity is a rough 2.5k-3.4k TPS range at 10 BPS from block mass and transaction shape; covenant, proof, token, and vProg-style app capacity need actual workload specs.
-- Emission: the official schedule steps down monthly: 27.5 KAS/sec from May 8, 2026; 25.9565436 KAS/sec from June 7; 24.49971475 KAS/sec from July 7. Do not call July a one-day emission cliff.
-- Architecture / roadmap: vProgs as apps that prove richer logic while sharing Kaspa ordering, plus app-level verifiable programs, computational-DAG metadata, prover-backed execution, Kaspa-native DeFi rails, native-feeling developer experience, and eventual synchronous composability.
-- Research / speculative: DAGKnight activation, 100 BPS with probabilistic predecessor selection, app-level miner attestation/oracle incentive designs, TangVM-style extensions, Proof of Useful Work, post-quantum migration.
-
-Kaspa programmability should be framed as concrete use first, neutral primitives second. Say what the user or app is trying to do: lock funds, enforce a vault rule, create an asset, route a payment, fund a public good, resolve a market, attest to an event, or prove app logic. Then explain that the protocol should expose durable L1 surfaces while apps define incentives, semantics, oracle sources, legal/risk constraints, and user-facing products. Apply that rule to attestations, prediction markets, DePIN freshness markets, portfolio automation, launch rails, AI-agent task boards, and DeFi.
-
-Narrative update from the May 8, 2026 Kaspa Daily Yonatan Q&A: "fast money," Base of Liquidity, and merchant/POS flows are rails inside a broader adoption strategy. The stronger public framing is products people repeat, visible on-chain activity, liquidity, coordination-market direction, and L1-first app architecture.
-
-Narrative update from Junny Ho's Web3 Festival HK 2026 talk (`https://www.youtube.com/watch?v=b3wPZ04p410`): frame coordination markets around stag-hunt coordination, credible commitments, conditional participation, economic exposure, and real-time decentralized confirmation. Keep shipped-feature claims tied to activation evidence.
-
-Toccata/vProgs split: Toccata enables L1 covenant programming and standalone based-app foundations. A based app anchors app-specific state to Kaspa L1 ordering, commitments, proofs, settlement, or exits; ZK is one verification path for based apps. Hans Moog's `kaspanet/vprogs` repo is early compatible runtime work for based computation on Kaspa, with core, storage, state, scheduling, transaction-runtime, node, L1, and ZK workspace components. Michael Sutton's `michaelsutton/argent` repo is experimental actor-style Silverscript tooling research. Production readiness and activation claims need separate evidence. Full synchronous vProgs need separate activation evidence. Frame Kaspa around L1-first shared sequencing, settlement, commitments, and verification.
-
-Editorial voice: explain Kaspa in first-principles everyday language for the page's intended reader, then give deeper readers clear routes into technical, adoption, app-design, and source-checking material. Apply Concrete-First Translation as defined in `CONTENT_BRIEF.md`. The target is not one page that serves every reader equally; it is a site with clear paths from absolute beginner through crypto-curious reader, crypto-native comparer, Bitcoin/PoW reader, adoption researcher, app designer, protocol expert, community educator, journalist, and source-checking reviewer.
-
-Startup verification: before substantive edits, recheck current web/source state for drift-prone Kaspa facts such as Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows. Keep public pages clean of visible verification boxes unless explicitly requested.
-
-Builder verification rule: accepted app state starts after accepted transaction evidence. Builder pages should tell readers to record SDK, node, network, endpoint, tx shape, and acceptance evidence, then label failures narrowly as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.
-
-## Local check
-
-This is a plain static site. Use the clean-URL server for local preview so links such as `/status` resolve to `status.html`:
-
-```sh
-python3 scripts/serve-local.py --port 8783
-```
-
-Then open `http://127.0.0.1:8783/`.
+GitHub Pages from `main`, root folder, custom domain `kaspaexplained.com`. The
+`CNAME` file must contain exactly that. Apex A records point at GitHub's four
+Pages addresses; `www` is a CNAME to `parker2017code.github.io`, never to the
+repository name.

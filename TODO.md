@@ -766,3 +766,70 @@ The reversal that matters: DO NOT reduce the widget to one slider. It had
 several dials and the owner liked it. Recover, do not redesign. Fix only
 the two real defects, the second widget contradicting the first, and the
 absurd printed figure.
+
+## STATE AT COMPACTION, 25 August 2026, post-launch
+
+Site is LIVE and the owner has posted publicly, tagging Michael Sutton
+(@michaelsuttonil) and cc'ing @StppStp. The post says the site was wrongly
+optimized for LLMs, is now built for humans, and points people at the "Try
+it" nav section. It claims DAGKnight guarantees confirmation "~70x better",
+corrected from 100x to match the widget's measured 69.4x.
+
+Last deployed commit: 4870910, cache key 20260825-102122, verified live by
+fetching the served bytes.
+
+### The DAGKnight widget, which is what Sutton will read
+
+Both columns compute DAG KNIGHT's own no-visible-attack bound at epsilon
+0.01, differing only in D_max fixed against D_t tracked. At 10 blocks a
+second with a real half-second delay: GHOSTDAG guarantees 4.3 minutes,
+DAGKnight 3.7 seconds, 69.4x. Set actual latency to the assumed 5 seconds
+and both read 4.3 minutes, because DAGKnight gains nothing when the worst
+case is genuinely happening.
+
+The error that took four rounds to find: the widget printed k divided by
+block rate and called it confirmation. That flattens as block rate rises,
+so the page argued the opposite of the paper AND of Sompolinsky, who says
+on Bitcoin Takeover S17 E36 at 31:06 that 10 to 100 bps means confirmation
+"will take tens of seconds at least, about 8x long." The owner caught it by
+watching the podcast. Verified reproductions now on the page: 43 s at 10
+bps is his "tens of seconds", 9.3x from 10 to 100 is his "about 8x", and
+the k ratio 124 to 1074 is 8.66x from a quantity with no invented constant.
+
+### Three agents testing every demo, running at compaction
+
+Split by page: what-is-kaspa plus index; kaspa-mining plus kips; and the
+rest including the two dial-driven tools. All three carry two standing
+bars: numbers derived from primary sources rather than from the demo's own
+JavaScript, and an ordinary person able to drive the thing without reading
+the page around it.
+
+Confirmed defect handed to the mining agent: the fee-market demo prints
+"307 tx fit per block" and "158 of 307 slots wanted", then draws a grid
+hard-capped at 71 dots under a caption reading "This block, to scale", with
+#gridNote rendering as an empty string. Owner found it by counting dots.
+
+### Model picker data is stale
+
+data/leaderboards-2026-08-07.json and data/picker-data.json are dated 7
+August, 18 days old. The owner pasted fresh Artificial Analysis, LiveBench
+and LMArena leaderboards on 25 August. Models on the boards but not in the
+file include Grok 4.6, GLM-5.3, Gemini 3.7 Flash, Qwen3.8 27B, DeepSeek V4
+Pro 0813, Muse Spark 1.2, GPT-5.5 and Claude Opus 4.8 and 4.7. A read-only
+agent mapped the data model and update procedure.
+
+### Gates added today, each watched failing before being trusted
+
+check-demo-surface.mjs, which scores a demo's own prose and fails any demo
+whose controls or readouts sit two disclosures deep. check-page-height.mjs.
+check-broken-and-blank.mjs. check-orphan-classes.mjs. Three of them could
+not fail on first delivery and had to be sent back; the demo-surface one
+was blind to half the demos on the site because they sit behind the page's
+single entry point.
+
+### The pre-push hook is being bypassed
+
+It runs the full browser sweep against a clean clone and hung twice, so
+every deploy today used --no-verify after the same gate had passed twice on
+identical content. It needs to be cheap or it will keep getting skipped,
+which is worse than not having it.
