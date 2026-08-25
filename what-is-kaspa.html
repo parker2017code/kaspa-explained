@@ -68,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-094924">
-  <script defer src="nav.js?v=20260825-094924"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-102122">
+  <script defer src="nav.js?v=20260825-102122"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -2520,7 +2520,15 @@ TPS = tx_per_block × 10 blocks/second</span>
 </style>
 
 <div id="livenet-demo">
-  <p style="color:var(--muted); margin:0 0 14px;">Real blocks, read live from Kaspa's own public API. Kaspa makes about 10 a second; this checks in every 9 seconds and shows what it actually fetched, not a simulation of the rest. If the API can't be reached, it says so instead of faking it.</p>
+  <p style="color:var(--muted); margin:0 0 14px;">Real blocks, read live from Kaspa's own public API.
+    <span class="info-affordance" id="ln-intro-info">
+      <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="ln-intro-info-panel">
+        <i class="info-affordance__glyph" aria-hidden="true">i</i>
+        <span class="sr-only">How often this reads, and what happens if it fails</span>
+      </button>
+      <span class="info-affordance__panel" id="ln-intro-info-panel" role="tooltip">Kaspa makes about 10 blocks a second; this checks in every 9 seconds and shows what it actually fetched, not a simulation of the rest. If the API can't be reached, it says so instead of faking it.</span>
+    </span>
+  </p>
 
   <div class="fail-banner" id="ln-failBanner" role="status"><b>Can't reach the public network right now.</b> <span id="ln-failDetail">Retrying every 9 seconds. The explanation below still applies; nothing on this page is invented while it waits.</span></div>
 
@@ -2545,7 +2553,13 @@ TPS = tx_per_block × 10 blocks/second</span>
     <div class="stat-tile">
       <span class="stat-num" id="ln-sessionPct">&ndash;</span>
       <span class="stat-label" id="ln-sessionLabel">of the blocks this page has watched this session carried nothing but the miner's own reward.</span>
-      <span class="stat-compare">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 88.3% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+      <span class="info-affordance" id="ln-baseline-info">
+        <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="ln-baseline-info-panel">
+          <i class="info-affordance__glyph" aria-hidden="true">i</i>
+          <span class="sr-only">How this compares to Kaspa's measured baseline</span>
+        </button>
+        <span class="info-affordance__panel" id="ln-baseline-info-panel" role="tooltip">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 88.3% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+      </span>
     </div>
   </div>
 
@@ -2582,10 +2596,9 @@ TPS = tx_per_block × 10 blocks/second</span>
       <p>api.kaspa.org sits behind a Cloudflare edge cache with <code>max-age=8</code>: two requests inside that window get the identical cached response, so checking faster than every 8 seconds would not surface a single extra block, only waste requests. This page checks every 9 seconds. But Kaspa itself is producing roughly 10 blocks a second, so each check's <code>tipHashes</code> array (the network's current open tip set, typically 5 to 9 hashes) is a small sample of everything that actually happened since the last check, not the full count. The line above the block feed states both numbers plainly: how many blocks the network produced in that window against how many this page could fetch and show. The blocks-per-second figure next to it is not looked up anywhere; it is computed live from the change in <code>blockCount</code> between this page's own polls.</p>
 
       <p class="evidence-note">Endpoints used: <code>api.kaspa.org/info/blockdag</code> (tip hashes and <code>blockCount</code>, polled every 9 seconds; the API's own cache doesn't refresh faster than about 8 seconds, confirmed live 2026-08-22) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, header + transactions + color, capped at 16 per check; observed tip-set width stayed at 5-9 across dozens of live samples, and no per-IP rate limit is documented or was observed). Source for the API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22. Covenant and block-producer caveats: this site's own <code>CLAIMS.yml</code>.</p>
+      <p class="demo-footnote">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
     </div>
   </details>
-
-  <p class="demo-footnote">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
 </div>
 
 <script>

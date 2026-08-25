@@ -50,8 +50,8 @@
     "description": "A sourced Kaspa origin story: DAGLabs, PHANTOM/GHOSTDAG research, the April 2021 testnet, fair launch, early bugs, the Rust rewrite, Crescendo, and the Toccata boundary."
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-094924">
-  <script defer src="nav.js?v=20260825-094924"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-102122">
+  <script defer src="nav.js?v=20260825-102122"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -187,7 +187,7 @@
             }
           </style>
 
-          <p class="lead">Every chain set a rule for who'd hold the first coins, at block zero. Drag the year marker to see who held what. What matters is how long the grip lasts.</p>
+          <p class="lead">Drag the year marker to see who held the first coins at block zero, and how long each grip lasted.</p>
 
           <div class="panel">
             <h3>Founders, company, or foundation share</h3>
@@ -197,10 +197,46 @@
               <label><input type="checkbox" data-chain="cardano" checked><i class="swatch shape-triangle" style="background:var(--purple)"></i>Cardano</label>
               <label><input type="checkbox" data-chain="xrp" checked><i class="swatch shape-diamond" style="background:var(--pink)"></i>XRP</label>
             </div>
-            <p class="why-note">Ethereum and Cardano funded a foundation; XRP had no public sale at all.</p>
+            <span class="info-affordance" id="fl-why-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fl-why-info-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">Why the other three chains differ</span>
+              </button>
+              <span class="info-affordance__panel" id="fl-why-info-panel" role="tooltip">Ethereum and Cardano funded a foundation; XRP had no public sale at all.</span>
+            </span>
             <p class="kaspa-badge"><b>Kaspa: 0%.</b> No founder, company, or foundation has ever held a share. DAGLabs, the founders' own company, mined an estimated 2.5&ndash;3% of supply after launch, the same way anyone with hardware could.</p>
-            <svg id="fl-chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest. Solid segments are documented history; dashed segments are modeled projection past each chain's own current age."></svg>
-            <p class="chart-caption" id="fl-chartCaption">Solid: documented history. Dashed, past the marker: modeled projection.</p>
+
+            <div class="view-switch">
+              <input class="view-switch__input" type="radio" name="fl-view" id="fl-view-chart" checked>
+              <input class="view-switch__input" type="radio" name="fl-view" id="fl-view-table">
+              <div class="view-switch__tabs" role="radiogroup" aria-label="Chart or table">
+                <label class="view-switch__tab" for="fl-view-chart">Chart</label>
+                <label class="view-switch__tab" for="fl-view-table">Table</label>
+              </div>
+              <div class="view-switch__panels">
+                <div class="view-switch__panel">
+                  <svg id="fl-chart" viewBox="0 0 640 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Share of supply held by founders, company, or foundation over 14 years for four chains, each chain drawn with its own color, dash pattern, and end marker shape. Kaspa's line is flat at zero and drawn thicker than the rest. Solid segments are documented history; dashed segments are modeled projection past each chain's own current age."></svg>
+                  <p class="chart-caption" id="fl-chartCaption">Solid: documented history.
+                    <span class="info-affordance" id="fl-caption-info">
+                      <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fl-caption-info-panel">
+                        <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                        <span class="sr-only">About the dashed segments</span>
+                      </button>
+                      <span class="info-affordance__panel" id="fl-caption-info-panel" role="tooltip">Dashed, past each chain's own age marker: modeled projection, not measured history.</span>
+                    </span>
+                  </p>
+                </div>
+                <div class="view-switch__panel">
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
+                      <tbody id="fl-tableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="yearControl">
               <label for="fl-yearSlider">Year since genesis <b id="fl-yearVal">0</b></label>
               <input type="range" id="fl-yearSlider" min="0" max="14" step="1" value="0">
@@ -218,29 +254,27 @@
               <input type="range" id="fl-decaySlider" min="0.2" max="5" step="0.1" value="1">
             </div>
             <p class="result-line" id="fl-resultLine" aria-live="polite"></p>
-            <p class="live-footnote">Tracks founders, company, and foundation shares only. DAGLabs' own early mining is a separate question, covered below.</p>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Chain</th><th class="num">Founders/company held</th><th class="num">Public / open</th><th>Status at this year</th></tr></thead>
-                <tbody id="fl-tableBody"></tbody>
-              </table>
-            </div>
           </div>
 
           <div class="fair-note launch-history">
-            <h3>What a <span class="term-def" tabindex="0" role="button" aria-describedby="fl-premine-def">premine<span class="term-def__panel" id="fl-premine-def" role="tooltip">Coins created and held before launch, before anyone else could mine or buy them.</span></span> buys, and what Kaspa's launch looked like</h3>
-            <p>
-              See the number above. What's not settled is how DAGLabs' own early mining split between Polychain and the team; full sourcing below.
-            </p>
+            <h3>What a <span class="term-def" tabindex="0" role="button" aria-describedby="fl-premine-def">premine<span class="term-def__panel" id="fl-premine-def" role="tooltip">Coins created and held before launch, before anyone else could mine or buy them.</span></span> buys, and what Kaspa's launch looked like
+              <span class="info-affordance" id="fl-history-info">
+                <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="fl-history-info-panel">
+                  <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                  <span class="sr-only">What this table tracks, and what's still unsettled</span>
+                </button>
+                <span class="info-affordance__panel" id="fl-history-info-panel" role="tooltip">Tracks founders, company, and foundation shares only. See the number above. What's not settled is how DAGLabs' own early mining split between Polychain and the team; full sourcing below.</span>
+              </span>
+            </h3>
           </div>
 
           <details id="fl-assumptions">
             <summary>Full launch history, assumptions, and sources</summary>
             <div id="fl-assumptionsBody"></div>
+            <p class="demo-footnote">Runs entirely in your browser.</p>
           </details>
 
           <p class="live-footer" id="fl-liveFooter" aria-live="polite"></p>
-          <p class="demo-footnote">Runs entirely in your browser.</p>
 
           <script>
           (function () {
@@ -401,16 +435,9 @@
                   svg.appendChild(tmark);
 
                   drawMarker(ns, todayX, todayY, chain.shape, chain.color);
-
-                  var labelAbove = todayY - 8;
-                  var lbl = document.createElementNS(ns, 'text');
-                  lbl.setAttribute('x', Math.min(todayX + 7, W - padR - 2));
-                  lbl.setAttribute('y', labelAbove < padT + 10 ? todayY + 13 : labelAbove);
-                  lbl.setAttribute('text-anchor', todayX + 7 > W - padR - 2 ? 'end' : 'start');
-                  lbl.setAttribute('fill', chain.color);
-                  lbl.setAttribute('class', 'switch-label');
-                  lbl.textContent = 'modeled from age ' + chain.ageNow;
-                  svg.appendChild(lbl);
+                  // Per-chain "modeled from age N" label removed: redundant with
+                  // the chart-caption's "modeled projection" line, which already
+                  // states what the dashed segment past the marker means.
                 }
               });
 
@@ -745,7 +772,7 @@
             }
           </style>
 
-          <p class="lead">Kaspa's clock counts blocks, not seconds, at two different speeds since Crescendo. Drag the slider and read a block's real date.</p>
+          <p class="lead">Drag the slider to convert a DAA score to a real date.</p>
 
           <div class="stage">
             <p class="eyebrow">1. Read a DAA score</p>
@@ -765,7 +792,15 @@
 
             <p class="payoff-main" id="dt-daaPayoffMain"></p>
             <p class="payoff-sub" id="dt-daaPayoffSub"></p>
-            <p class="caveat">Two exact points anchor this: genesis and Toccata's activation. Rates between them come from real elapsed time, not the bare protocol target. Dates after Toccata are an estimate assuming today's rate holds.</p>
+            <p class="caveat">
+              <span class="info-affordance" id="dt-caveat-info">
+                <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="dt-caveat-info-panel">
+                  <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                  <span class="sr-only">How this conversion is anchored</span>
+                </button>
+                <span class="info-affordance__panel" id="dt-caveat-info-panel" role="tooltip">Two exact points anchor this: genesis and Toccata's activation. Rates between them come from real elapsed time, not the bare protocol target. Dates after Toccata are an estimate assuming today's rate holds.</span>
+              </span>
+            </p>
 
             <div class="presets">
               <button class="preset-btn" id="dt-presetGenesis" type="button">Jump to genesis</button>

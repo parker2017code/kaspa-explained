@@ -73,8 +73,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-094924">
-  <script defer src="nav.js?v=20260825-094924"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-102122">
+  <script defer src="nav.js?v=20260825-102122"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -225,7 +225,15 @@
           </div>
 
           <div class="cr-secondary-row">
-            <span class="cr-tag">how careful you want to be</span>
+            <span class="cr-tag">how careful you want to be
+              <span class="info-affordance" id="cr-reorg-info">
+                <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="cr-reorg-info-panel">
+                  <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                  <span class="sr-only">What a reorg does</span>
+                </button>
+                <span class="info-affordance__panel" id="cr-reorg-info-panel" role="tooltip">A reorg is not paperwork. If the block carrying your payment gets replaced, the attacker can spend the same coins again elsewhere. That double-spend is what this wait protects against.</span>
+              </span>
+            </span>
             <div class="cr-pill-group" id="crTolGroup" role="group" aria-label="Risk tolerance">
               <button type="button" data-tol="5">relaxed</button>
               <button type="button" data-tol="1" aria-pressed="true">normal</button>
@@ -235,17 +243,20 @@
 
           <ul class="cr-readout" id="crReadout"></ul>
           <p class="cr-result-line" id="crResultLine"></p>
-          <p class="cr-chain-note">A reorg is not paperwork. If the block carrying your payment gets replaced, the attacker can spend the same coins again elsewhere. That double-spend is what this wait protects against.</p>
-          <p class="cr-chain-note">Safe means the attacker has lost the race to out-mine your payment, a chance that falls the longer you wait. Kaspa's separate finality rule blocks any reorg past 432,000 blocks (12 hours), no matter the attacker's share; how the two differ is below.</p>
 
           <div class="cr-panel">
+            <span class="info-affordance" id="cr-chart-info">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="cr-chart-info-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">What "safe" means, and what's on this chart</span>
+              </button>
+              <span class="info-affordance__panel" id="cr-chart-info-panel" role="tooltip">Safe means the attacker has lost the race to out-mine your payment, a chance that falls the longer you wait. Kaspa's separate finality rule blocks any reorg past 432,000 blocks (12 hours), no matter the attacker's share; how the two differ is in the model details below. Three chains, same three this site compares everywhere: Bitcoin and Litecoin as classic single-chain proof of work at different speeds, Kaspa as the fast blockDAG this site explains. Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</span>
+            </span>
             <svg id="crChart" viewBox="0 0 720 340" role="img" aria-labelledby="crChartTitle crChartDesc">
               <title id="crChartTitle">Chance of reversal against how long you wait</title>
               <desc id="crChartDesc">Line chart. Horizontal axis is wait time, log scale. Vertical axis is the chance an attacker still reverses the payment, 0 to 100 percent. Each chain's line carries its own color, dash pattern, and label. A dashed line marks the chosen risk tolerance. Exact wait times are listed above the chart as text.</desc>
             </svg>
           </div>
-
-          <p class="cr-chain-note">Three chains, same three this site compares everywhere: Bitcoin and Litecoin as classic single-chain proof of work at different speeds, Kaspa as the fast blockDAG this site explains.</p>
 
           <details class="cr-details">
             <summary>The model, and where the Kaspa line is an approximation</summary>
@@ -257,7 +268,6 @@
             <p><b>12 hours is a chosen constant</b>, not one derived from a security proof the way GHOSTDAG's own k parameter is. In rusty-kaspa's consensus code, <code>FINALITY_DURATION</code> is a plain 43,200-second (12-hour) constant, and the block-count threshold is just that duration times blocks per second: 432,000 blocks at 10 BPS. Compare that to GHOSTDAG's k, which the same codebase computes from a target probability bound through a named function, <code>calculate_ghostdag_k</code>. Finality duration has no equivalent formula behind it in the source. It is a judgment call about how much margin is enough, held fixed in wall-clock time even as Kaspa's blocks per second have changed, and picked to sit well past the point where the curve above has already fallen close to zero for any attacker share worth trying.</p>
           </details>
 
-          <p class="cr-demo-footnote">Modeled from the Bitcoin whitepaper's confirmation-risk formula, not a live network feed.</p>
         </div>
         <style>
           .cr-demo {

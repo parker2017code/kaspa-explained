@@ -51,8 +51,8 @@
     "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-094924">
-  <script defer src="nav.js?v=20260825-094924"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-102122">
+  <script defer src="nav.js?v=20260825-102122"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -677,15 +677,18 @@
     <div class="ratio-bar"><div class="fill" id="ratioFill" style="width:0%"></div></div>
   </div>
 
-  <div class="limits ">
-    <p id="limitsNote"></p>
-  </div>
-  <div class="impact-note " id="impactNote" style="display:none;">
-    <p>Buying this much hash power or stake on the open market would push its own price up as you buy it, the way any large purchase does in a market with finite depth. That effect is real and it is not in the figure above: the number shown is a floor, not an estimate of the true cost, and how large that markup would run at this scale is not something this page can source.</p>
-  </div>
-  <div class="limits " id="permanencePanel">
-    <p id="permanenceNote"></p>
-  </div>
+  <details class="deep-dive" id="limitsDetails">
+    <summary>Limits of this number</summary>
+    <div class="limits ">
+      <p id="limitsNote"></p>
+    </div>
+    <div class="impact-note " id="impactNote" style="display:none;">
+      <p>Buying this much hash power or stake on the open market would push its own price up as you buy it, the way any large purchase does in a market with finite depth. That effect is real and it is not in the figure above: the number shown is a floor, not an estimate of the true cost, and how large that markup would run at this scale is not something this page can source.</p>
+    </div>
+    <div class="limits " id="permanencePanel">
+      <p id="permanenceNote"></p>
+    </div>
+  </details>
 
   <details  id="assumptions">
     <summary>Assumptions, exact math, and sources</summary>
@@ -1494,7 +1497,7 @@
   <div class="top-row">
     <h4>The fee market</h4>
   </div>
-  <p class="lead">Kaspa's blocks are nearly empty today. Load one with real traffic and watch what a full block does to fees and the subsidy gap.</p>
+  <p class="lead">Load real traffic into this block and watch fees against the subsidy gap.</p>
 
   <div class="layout">
     <div class="panel">
@@ -1579,8 +1582,8 @@
       <p class="payoff" id="blockPayoff">-</p>
 
       <div class="block-frame">
-        <p class="grid-note">This block, to scale</p>
-        <p class="you-note">Every dot is one transaction; the pink square is <b>yours</b>.</p>
+        <h6 class="grid-note">This block, to scale</h6>
+        <p class="you-note">Each dot: one transaction. Pink: <b>yours</b>.</p>
         <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">-</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
         <div class="legend">
@@ -1600,7 +1603,15 @@
   </div>
 
   <div class="honesty ">
-    <p style="margin:0;"><b>None of this is happening yet.</b> Real traffic runs about 0.894 tx/s; every other scenario here is hypothetical. Fees run 12,054&times; below the subsidy; closing that gap takes more throughput, higher fees, price appreciation, or the halving schedule.</p>
+    <p style="margin:0;"><b>None of this is happening yet.</b>
+      <span class="info-affordance" id="honesty-info">
+        <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="honesty-info-panel">
+          <i class="info-affordance__glyph" aria-hidden="true">i</i>
+          <span class="sr-only">What would close the gap</span>
+        </button>
+        <span class="info-affordance__panel" id="honesty-info-panel" role="tooltip">Real traffic runs about 0.894 tx/s; every other scenario here is hypothetical. Fees run 12,054&times; below the subsidy; closing that gap takes more throughput, higher fees, price appreciation, or the halving schedule.</span>
+      </span>
+    </p>
   </div>
 
   <details >
@@ -1635,12 +1646,9 @@ feerate = fee_sompi / mass_grams</span>
       <p>Today's $58,631/day subsidy, $4.86/day fee revenue, and the roughly 12,054&times; gap between them are reused exactly as computed in <code>CLAIMS.yml</code>'s <code>fees_vs_subsidy_2026_08_22</code> entry, not re-derived here. The subsidy over time uses the same halving formula as <a href="#emission-schedule">demos/emission-schedule.html</a>: reward(n) = 23.12465141 &times; 2^(&minus;n/12) KAS/second, n in months from today, verified against <code>coinbase.rs</code>'s <code>SUBSIDY_BY_MONTH_TABLE</code>. The default KAS price, $0.02934513, is the same CoinGecko snapshot from 22 Aug 2026 used in that CLAIMS.yml entry.</p>
       <p>The price slider multiplies both dollar figures (fee revenue and subsidy) by the same factor, since both are really paid in KAS and only converted to dollars for display. That keeps the ratio between them honest: price alone cannot close the gap, because it moves both sides equally. Only a higher fee or more transactions changes the ratio.</p>
       <p>Source: <a href="https://api.kaspa.org/info/blockreward">api.kaspa.org/info/blockreward</a>, this repo's <a href="/CLAIMS.yml">CLAIMS.yml</a>.</p>
+      <p class="sources">Offline model, checked against rusty-kaspa source and this repo's data; see <a href="/skeptical-case">the skeptical case</a>. Independent illustration, runs entirely in your browser.</p>
     </div>
   </details>
-
-  <p class="sources">Offline model, checked against rusty-kaspa source and this repo's data; see <a href="/skeptical-case">the skeptical case</a>.</p>
-
-  <p class="demo-footnote ">Independent illustration. Runs entirely in your browser.</p>
 </div>
 <style>
 .fm-demo {
@@ -2158,9 +2166,14 @@ feerate = fee_sompi / mass_grams</span>
     els.blockPayoff.innerHTML = blockMsg;
 
     // grid
+    // Uncongested state says nothing here: the count is already the bar-fill
+    // caption and the stat-row above, so restating it a third time would be
+    // pure redundancy. The congested state keeps its own text because
+    // "not pictured" is caveat information that exists nowhere else on the
+    // page.
     els.gridNote.textContent = sim.congested
       ? fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity) + " slots" + (sim.hiddenCount > 0 ? " (+" + fmtNum(sim.hiddenCount) + " more, not pictured)" : "") + "."
-      : "Room to spare: " + fmtNum(sim.popCount) + " transactions, " + fmtNum(capacity) + " slots available.";
+      : "";
     els.blockGrid.innerHTML = "";
     var ordered = sim.included.concat(sim.waiting);
     ordered.sort(function (a, b) {
@@ -2569,8 +2582,6 @@ feerate = fee_sompi / mass_grams</span>
       <p class="prose"><strong>MuHash: the actual answer to "is this safe."</strong> None of this works without a way to prove the current <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-mining">UTXO<span class="term-def__panel" id="utxo-def-mining" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> set, who owns what, right now, is correct without replaying the history that produced it. MuHash is Kaspa's answer: a rolling, order-independent commitment over the UTXO set, so a node can add and remove entries as coins are created and spent and land on the same fingerprint it would get from hashing everything at once (rusty-kaspa's <code>crypto/muhash</code> crate). A pruned node checks each new block's UTXO commitment against that fingerprint instead of re-deriving it from years of transactions. That check, not an assumption that old data probably doesn't matter, is what makes discarding it safe.</p>
     </details>
   </div>
-
-  <p class="prose ">A pruned Kaspa node runs about 50 GB: Bitcoin 758 GB, Ethereum 2 TB, Solana 2.5 TB, Internet Computer 32 TB.</p>
 
   <details >
     <summary>How each chain handles history</summary>
