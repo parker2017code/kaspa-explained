@@ -91,6 +91,32 @@ Chrome that states the obvious. A line telling the reader which site
 they are on is noise. If removing a sentence costs the reader nothing,
 it was never earning its place.
 
+## A demo's surface budget
+
+A demo is a demo wherever it sits. Some pages carry the 300-word surface
+rule at the per-section level instead of the whole-page level (kaspa-
+mining.html, kips.html, and others in scripts/essay-pages.json's
+per_section_pages), because a reader arrives at that page already knowing
+which part they want. That reasoning is about the page. It does not
+transfer to an interactive demo embedded partway down that page, which is
+often the one thing a stranger actually lands on cold. A demo does not
+inherit its host page's exemption; its own surface, measured on arrival,
+inside its own boundary, gets checked on its own regardless of what budget
+the page around it runs on.
+
+A demo's controls and its primary readouts are never surface words to be
+reduced. They are the thing this budget exists to protect, not the thing it
+measures against. Wrapping a demo's sliders or its results in a second,
+inner closed disclosure to bring the word count down is not compliance --
+it fails harder than the defect the budget exists to catch, because a
+reader who reaches the demo then finds nothing to touch. The budget applies
+to the prose framing a demo, never to the demo itself.
+
+Enforced by `scripts/check-demo-surface.mjs`, wired into
+`scripts/check-site.sh` as advisory behind `DEMO_SURFACE_BLOCKING`, same
+pattern as `VISIBLE_WORDS_BLOCKING`, `RENDER_GATE_BLOCKING`, and
+`PAGE_HEIGHT_BLOCKING`.
+
 ## The page-length ceiling
 
 The owner, immediately after saying this has to be a site Meta, Apple, or

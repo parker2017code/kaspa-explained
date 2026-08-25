@@ -51,8 +51,8 @@
     "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-083903">
-  <script defer src="nav.js?v=20260825-083903"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-094924">
+  <script defer src="nav.js?v=20260825-094924"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -2413,7 +2413,80 @@ feerate = fee_sompi / mass_grams</span>
       <div class="summary-grid grid-cards">
         <article><span>ASIC</span><p>An IceRiver, Bitmain, Goldshell, or another compatible Kaspa ASIC. The bridge docs also list BzMiner support.</p></article>
         <article class="node-cost-card"><span>Node computer</span><p>A computer running Rusty Kaspa v2.0.1 or newer. Running bridge and node on the same machine avoids a second network hop while learning. A pruned Kaspa node's disk footprint stays near 50 GB regardless of how long it runs.</p>
-<details class="guide-detail" id="node-cost">
+          <p class="fit-note">Full storage comparison: <a href="#node-cost">node cost, chain by chain</a>.</p>
+        </article>
+        <article><span>Wallet address</span><p>A Kaspa address for rewards. Copy it carefully. Never paste a private key into miner or bridge settings.</p></article>
+        <article><span>Local IP</span><p>The node computer's address on the home network, such as <code>192.168.1.10</code>.</p></article>
+        <article><span>Bridge config</span><p>The release archive ships the <code>stratum-bridge</code> binary and no config file. Download the sample <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">config.yaml</a> from the repository and save it as <code>bridge/config.yaml</code> beside the binary.</p></article>
+      </div>
+
+      <h4>Which Rusty Kaspa file do I download?</h4>
+      <p>Use the official Rusty Kaspa v2.0.1 release page and grab the archive matching the computer that will run the node and bridge.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Computer</th>
+              <th>Release asset</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Windows</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-win64.zip"><code>rusty-kaspa-v2.0.1-win64.zip</code></a></td></tr>
+            <tr><td>macOS</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-osx.zip"><code>rusty-kaspa-v2.0.1-osx.zip</code></a></td></tr>
+            <tr><td>Linux, 64-bit Intel/AMD</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-linux-amd64.zip"><code>rusty-kaspa-v2.0.1-linux-amd64.zip</code></a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fit-note">Skip the GitHub Source code zip and the WASM SDK zip: those build from source or target browser apps, and neither matches this setup.</p>
+
+      <h4>Get from zip file to working folder</h4>
+      <p>Every command below runs from the folder holding the extracted binaries.</p>
+      <div class="summary-grid grid-cards">
+        <article><span>Windows</span><p>Right-click the downloaded zip, choose Extract All, then open the extracted folder. The Windows archive puts four binaries at the top level, among them <code>kaspad.exe</code> and <code>stratum-bridge.exe</code>.</p></article>
+        <article><span>macOS</span><p>Double-click the zip (Safari may have already unpacked it). The macOS archive nests its four binaries one level down, in a <code>bin</code> folder holding <code>kaspad</code> and <code>stratum-bridge</code>.</p></article>
+        <article><span>Linux</span><p>Use the file manager's Extract option, or run <code>unzip rusty-kaspa-v2.0.1-linux-amd64.zip</code>. Like macOS, the Linux archive puts its binaries in a <code>bin</code> folder.</p></article>
+      </div>
+      <p class="fit-note">"Open a terminal in that folder" means whichever directory holds <code>kaspad</code> and <code>stratum-bridge</code>: the top of the extract on Windows, the <code>bin</code> subfolder on macOS and Linux. None of the three archives carries a config file, so put the downloaded sample at <code>bridge/config.yaml</code> under that same directory before running the bridge.</p>
+
+      <h4>Which instructions apply to you?</h4>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead>
+            <tr>
+              <th>Your setup</th>
+              <th>Use this route</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A synced node already runs on this computer</td><td>Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
+            <tr><td>Rusty Kaspa is downloaded but the node hasn't started yet</td><td>Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
+            <tr><td>The bridge should start its own node</td><td>Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
+            <tr><td>The node runs on another computer</td><td>Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Step 1. Open terminal window A and run the node</h4>
+      <p>Get into the folder holding the binaries first. On Windows, open the extracted folder in File Explorer, click the address bar, type <code>powershell</code>, and press Enter. On macOS or Linux, open Terminal, type <code>cd </code>, drag the <code>bin</code> folder from inside the extract into Terminal, and press Enter.</p>
+      <p>Run the node command for your system, and leave this window open. The bridge needs the node running continuously to fetch templates and submit blocks.</p>
+      <div class="api-command-grid grid-cards">
+        <article class="api-command-card">
+          <span class="command-method">Windows PowerShell</span>
+          <h4>Terminal window A</h4>
+          <pre><code>.\kaspad.exe --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+        </article>
+        <article class="api-command-card">
+          <span class="command-method">macOS / Linux</span>
+          <h4>Terminal window A</h4>
+          <pre><code>./kaspad --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
+        </article>
+      </div>
+      <p class="fit-note">Templates from an unsynced node point at stale chain state, so let sync finish before judging mining results. If a node already runs with custom flags, keep those flags and add the RPC listen setting only if the bridge can't reach the node. The official bridge docs use <code>127.0.0.1:16110</code> for the node RPC address.</p>
+
+        </div>
+      </details>
+
+      <details class="guide-detail" id="node-cost">
           <summary>
             <span class="eyebrow">Interactive demo &middot; Node cost</span>
             <h3>What a node costs, chain by chain</h3>
@@ -2866,77 +2939,7 @@ feerate = fee_sompi / mass_grams</span>
 })();
 </script>
           </div>
-        </details></article>
-        <article><span>Wallet address</span><p>A Kaspa address for rewards. Copy it carefully. Never paste a private key into miner or bridge settings.</p></article>
-        <article><span>Local IP</span><p>The node computer's address on the home network, such as <code>192.168.1.10</code>.</p></article>
-        <article><span>Bridge config</span><p>The release archive ships the <code>stratum-bridge</code> binary and no config file. Download the sample <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">config.yaml</a> from the repository and save it as <code>bridge/config.yaml</code> beside the binary.</p></article>
-      </div>
-
-      <h4>Which Rusty Kaspa file do I download?</h4>
-      <p>Use the official Rusty Kaspa v2.0.1 release page and grab the archive matching the computer that will run the node and bridge.</p>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead>
-            <tr>
-              <th>Computer</th>
-              <th>Release asset</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Windows</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-win64.zip"><code>rusty-kaspa-v2.0.1-win64.zip</code></a></td></tr>
-            <tr><td>macOS</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-osx.zip"><code>rusty-kaspa-v2.0.1-osx.zip</code></a></td></tr>
-            <tr><td>Linux, 64-bit Intel/AMD</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-linux-amd64.zip"><code>rusty-kaspa-v2.0.1-linux-amd64.zip</code></a></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="fit-note">Skip the GitHub Source code zip and the WASM SDK zip: those build from source or target browser apps, and neither matches this setup.</p>
-
-      <h4>Get from zip file to working folder</h4>
-      <p>Every command below runs from the folder holding the extracted binaries.</p>
-      <div class="summary-grid grid-cards">
-        <article><span>Windows</span><p>Right-click the downloaded zip, choose Extract All, then open the extracted folder. The Windows archive puts four binaries at the top level, among them <code>kaspad.exe</code> and <code>stratum-bridge.exe</code>.</p></article>
-        <article><span>macOS</span><p>Double-click the zip (Safari may have already unpacked it). The macOS archive nests its four binaries one level down, in a <code>bin</code> folder holding <code>kaspad</code> and <code>stratum-bridge</code>.</p></article>
-        <article><span>Linux</span><p>Use the file manager's Extract option, or run <code>unzip rusty-kaspa-v2.0.1-linux-amd64.zip</code>. Like macOS, the Linux archive puts its binaries in a <code>bin</code> folder.</p></article>
-      </div>
-      <p class="fit-note">"Open a terminal in that folder" means whichever directory holds <code>kaspad</code> and <code>stratum-bridge</code>: the top of the extract on Windows, the <code>bin</code> subfolder on macOS and Linux. None of the three archives carries a config file, so put the downloaded sample at <code>bridge/config.yaml</code> under that same directory before running the bridge.</p>
-
-      <h4>Which instructions apply to you?</h4>
-      <div class="table-wrap">
-        <table class="reality-table">
-          <thead>
-            <tr>
-              <th>Your setup</th>
-              <th>Use this route</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>A synced node already runs on this computer</td><td>Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
-            <tr><td>Rusty Kaspa is downloaded but the node hasn't started yet</td><td>Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
-            <tr><td>The bridge should start its own node</td><td>Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
-            <tr><td>The node runs on another computer</td><td>Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h4>Step 1. Open terminal window A and run the node</h4>
-      <p>Get into the folder holding the binaries first. On Windows, open the extracted folder in File Explorer, click the address bar, type <code>powershell</code>, and press Enter. On macOS or Linux, open Terminal, type <code>cd </code>, drag the <code>bin</code> folder from inside the extract into Terminal, and press Enter.</p>
-      <p>Run the node command for your system, and leave this window open. The bridge needs the node running continuously to fetch templates and submit blocks.</p>
-      <div class="api-command-grid grid-cards">
-        <article class="api-command-card">
-          <span class="command-method">Windows PowerShell</span>
-          <h4>Terminal window A</h4>
-          <pre><code>.\kaspad.exe --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
-        </article>
-        <article class="api-command-card">
-          <span class="command-method">macOS / Linux</span>
-          <h4>Terminal window A</h4>
-          <pre><code>./kaspad --utxoindex --rpclisten=127.0.0.1:16110</code></pre>
-        </article>
-      </div>
-      <p class="fit-note">Templates from an unsynced node point at stale chain state, so let sync finish before judging mining results. If a node already runs with custom flags, keep those flags and add the RPC listen setting only if the bridge can't reach the node. The official bridge docs use <code>127.0.0.1:16110</code> for the node RPC address.</p>
-
-        </div>
-      </details>
+        </details>
 
       <details id="windows" class="guide-detail">
         <summary>

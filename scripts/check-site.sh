@@ -113,7 +113,7 @@ if [[ -n "$NODE_BIN" ]]; then
   # and no check at all. See .githooks/pre-commit for the other half of this
   # split.
   if [[ "${SKIP_RENDER_CHECKS:-0}" == "1" ]]; then
-    echo "SKIPPED (SKIP_RENDER_CHECKS=1, pre-commit only): check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-broken-and-blank" >&2
+    echo "SKIPPED (SKIP_RENDER_CHECKS=1, pre-commit only): check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-demo-surface, check-broken-and-blank" >&2
   else
   # Heading-as-link color gate (2026-08-22): card/section titles that happen
   # to be links rendered in inline-link blue instead of heading color, twice.
@@ -179,6 +179,19 @@ if [[ -n "$NODE_BIN" ]]; then
   PAGE_HEIGHT_BLOCKING="${PAGE_HEIGHT_BLOCKING:-false}" \
     "$NODE_BIN" scripts/check-page-height.mjs || \
     [ "${PAGE_HEIGHT_BLOCKING:-false}" != "true" ]
+  # Demo-surface gate (design/STANDARD.md, "A demo's surface budget",
+  # 2026-08-25): the 300-word surface rule above is enforced per page, or
+  # per section on the pages in scripts/essay-pages.json's
+  # per_section_pages. It is never enforced per demo, so an interactive
+  # demo embedded in an otherwise-exempt page (a KIP table, a mining guide)
+  # could grow an unbounded surface of its own even while its host page
+  # passed. This measures every demo's own visible-word surface on arrival,
+  # independent of its host page's budget. Advisory until every demo
+  # complies, same pattern as the checks above. Flip DEMO_SURFACE_BLOCKING
+  # to true once it is.
+  DEMO_SURFACE_BLOCKING="${DEMO_SURFACE_BLOCKING:-false}" \
+    "$NODE_BIN" scripts/check-demo-surface.mjs || \
+    [ "${DEMO_SURFACE_BLOCKING:-false}" != "true" ]
   # Broken-link and blank-content gate (owner instruction, 2026-08-24: "How
   # can you catch page links and things that are broken before I do?"). The
   # existing checks above verify structure, copy, style, and layout, but
@@ -193,7 +206,7 @@ if [[ -n "$NODE_BIN" ]]; then
   "$NODE_BIN" scripts/check-broken-and-blank.mjs
   fi
 else
-  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-broken-and-blank" >&2
+  echo "SKIPPED (no node found on PATH or in the bundled runtime): lint-copy, audit-domain-terms, audit-content-flow, audit-visual-guardrails, check-heading-link-color, check-glass-gate, check-visible-words, check-visible-sections, check-render, check-page-height, check-demo-surface, check-broken-and-blank" >&2
 fi
 
 [[ "$(tr -d '\r\n' < CNAME)" == "kaspaexplained.com" ]] || {

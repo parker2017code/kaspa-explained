@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260825-083903">
-  <script defer src="nav.js?v=20260825-083903"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-094924">
+  <script defer src="nav.js?v=20260825-094924"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -280,7 +280,7 @@
       <details class="deep-dive" id="parameterless-demo">
         <summary>Try it: fixed margin (GHOSTDAG) versus adjustable margin (DAGKnight, KIP-2)</summary>
         <div class="kip-parameterless-demo">
-          <p class="lede">Raising the block rate does not speed confirmation up. It slows it down. GHOSTDAG has to assume a worst-case network delay in advance, and holding that assumption fixed while blocks get faster makes the DAG KNIGHT paper's own confirmation-time bound grow without limit, the two sides below differing only in whether the delay term is that fixed assumption or the delay actually happening. Sompolinsky puts a number on it: going from 10 to 100 blocks a second would need a new k hard-forked in, and "confirmation of transactions will take tens of seconds at least, about 8x long." DAGKnight drops the assumption and tracks the delay actually happening. Push the sliders.</p>
+          <p class="lede">GHOSTDAG fixes its worst-case delay assumption in advance. DAGKnight tracks the delay actually happening instead. Push the sliders and watch the <span class="term-def" tabindex="0" role="button" aria-describedby="par-margin-def">margin<span class="term-def__panel" id="par-margin-def" role="tooltip">How many concurrent blocks a side tolerates before calling one an attack, written k.</span></span> each needs, and how long each guarantees confirmation will take.</p>
 
           <div class="panel">
             <div class="row bps-block">
@@ -288,14 +288,27 @@
                 <label for="par-bps-slider">Block rate (blocks/sec)</label>
                 <input type="range" class="primary" id="par-bps-slider" min="1" max="100" step="1" value="10" aria-describedby="par-bps-out par-bps-hint">
                 <span class="valline" id="par-bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
-                <span class="valline" id="par-bps-hint" style="color:var(--faint);">rusty-kaspa ships a lookup table that stops at 32 blocks/sec. The formula behind it runs at any rate; the table is the limit, not the math. Push &lambda; up while D stays fixed and PHANTOM's own confirmation time under attack grows exponentially in the paper's own bound, the harder reason to stop, not a shrinking security threshold: that decay is Nakamoto Consensus's problem, not PHANTOM's.</span>
+                <span class="valline info-affordance" id="par-bps-hint">Runs past mainnet's rate on purpose.
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-bps-hint-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">Why the range goes to 100</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-bps-hint-panel" role="tooltip">rusty-kaspa ships a lookup table that stops at 32 blocks/sec. The formula behind it runs at any rate; the table is the limit, not the math. Push &lambda; up while D stays fixed and PHANTOM's own confirmation time under attack grows exponentially in the paper's own bound, the harder reason to stop, not a shrinking security threshold: that decay is Nakamoto Consensus's problem, not PHANTOM's.</span>
+                </span>
               </div>
             </div>
             <div class="row">
               <div class="field">
-                <label for="par-d-slider">Assumed worst-case latency (D)</label>
+                <label for="par-d-slider">Worst-case latency GHOSTDAG assumes in advance (D)</label>
                 <input type="range" id="par-d-slider" min="0.5" max="15" step="0.5" value="5" aria-describedby="par-d-out">
-                <span class="valline" id="par-d-out">D = 5.0 s &rarr; configured margin (k) = 124</span>
+                <span class="valline info-affordance">
+                  <span id="par-d-out">D = 5.0 s, mainnet's real setting &rarr; margin (k) = 124, mainnet's real margin</span>
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-d-out-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">Where 5 seconds and 124 come from</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-d-out-panel" role="tooltip">5 s is rusty-kaspa's own <code>NETWORK_DELAY_BOUND</code> constant (<code>consensus/core/src/config/constants.rs</code>, checked 2026-08-25). <a href="https://github.com/kaspanet/kips/blob/master/kip-0014.md">KIP-14</a>, the Crescendo hardfork, sets D = 5, &delta; = 0.01 and states the resulting margin is "recalculated to be 124." Neither number is a choice this page made; both are what mainnet runs today.</span>
+                </span>
               </div>
             </div>
             <div class="row" style="margin-top:.8rem;">
@@ -303,7 +316,13 @@
                 <label id="par-l-label" for="par-l-slider">Actual latency</label>
                 <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="0.5" aria-labelledby="par-l-label" aria-describedby="par-l-out par-l-hint">
                 <span class="valline" id="par-l-out">0.5 s (margin (k) this actually needs: 18)</span>
-                <span class="valline" id="par-l-hint" style="color:var(--faint);">No published measurement of Kaspa's real block propagation exists to cite, so 0.5 s opens as a representative assumption, not a measured figure; real propagation varies with peer distance and network load. Move the slider or pick a scenario below.</span>
+                <span class="valline info-affordance" id="par-l-hint">Not a measured figure.
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-l-hint-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">Why 0.5 seconds, and what this dial does not claim</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-l-hint-panel" role="tooltip">No published measurement of Kaspa's real block propagation exists to cite, so 0.5 s opens as a representative assumption, not a measured figure; real propagation varies with peer distance and network load. Move the slider or pick a scenario below.</span>
+                </span>
               </div>
             </div>
             <div class="scenario-btns" role="group" aria-label="Latency scenario presets" style="margin-top:.7rem;">
@@ -314,46 +333,83 @@
             </div>
             <div class="row" style="margin-top:.8rem;">
               <div class="field">
-                <label for="par-alpha-slider">Attacker's mining share</label>
-                <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out">
-                <span class="valline" id="par-alpha-out">10%</span>
+                <label for="par-alpha-slider">Hypothetical attacker's mining share</label>
+                <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out par-alpha-hint">
+                <span class="valline"><span id="par-alpha-out">10%</span></span>
+                <span class="valline info-affordance" id="par-alpha-hint">Hypothetical, not observed.
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-alpha-hint-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">Why 10%, and what this dial imagines</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-alpha-hint-panel" role="tooltip">Mainnet has no known attacker; this dial imagines one so the guarantees below mean something. 10% opens as a serious but not fringe threat, below the 50% share both formulas assume never happens.</span>
+                </span>
               </div>
             </div>
           </div>
-
           <div class="cmp">
             <div class="side" id="par-side-fixed">
-              <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
-              <p class="sub">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks/sec.</p>
+              <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin <span class="info-affordance" id="par-fixed-sub-info">
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-fixed-sub-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">What this side is</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-fixed-sub-panel" role="tooltip">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks/sec.</span>
+                </span></h3>
               <div class="gauge-row"><span>configured margin (k)</span><output id="par-fixed-k-out">124</output></div>
               <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:3%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap"></div></div>
               <p id="par-fixed-tableend" class="over-badge" hidden></p>
               <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">18</output></div>
               <p id="par-fixed-over" class="over-badge" hidden></p>
               <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>GHOSTDAG's guarantee, no visible attack (D<sub>max</sub> fixed, &epsilon;&#8201;=&#8201;0.01)</span><output id="par-fixed-time-out">4.3 min</output></div>
+              <div class="gauge-row"><span class="info-affordance">Worst case, guaranteed
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-fixed-time-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">What this guarantee assumes</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-fixed-time-panel" role="tooltip">The DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), computed at a stated 1% error tolerance. Uses D<sub>max</sub>, the assumed delay set by the D slider above, held fixed regardless of what the network is actually doing.</span>
+                </span><output id="par-fixed-time-out">4.3 min</output></div>
               <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
             </div>
             <div class="side" id="par-side-adaptive">
-              <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
-              <p class="sub">No table to run out of: margin tracks the latency actually happening.</p>
+              <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin <span class="info-affordance" id="par-adapt-sub-info">
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-adapt-sub-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">What this side is</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-adapt-sub-panel" role="tooltip">No table to run out of: margin tracks the latency actually happening.</span>
+                </span></h3>
               <div class="gauge-row"><span>effective margin (k) right now</span><output id="par-adapt-k-out">18</output></div>
               <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:3%; background:var(--green);"></div></div>
               <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">low</output></div>
               <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>DAGKnight's guarantee, no visible attack (D<sub>t</sub> tracked, &epsilon;&#8201;=&#8201;0.01)</span><output id="par-adapt-time-out">3.7 s</output></div>
+              <div class="gauge-row"><span class="info-affordance">Worst case, guaranteed
+                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-adapt-time-panel">
+                    <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                    <span class="sr-only">What this guarantee assumes</span>
+                  </button>
+                  <span class="info-affordance__panel" id="par-adapt-time-panel" role="tooltip">The same DAG KNIGHT no-visible-attack bound (&sect;1.5.2) as GHOSTDAG's, at the same 1% error tolerance. Uses D<sub>t</sub>, the actual-latency slider above, tracked instead of assumed in advance.</span>
+                </span><output id="par-adapt-time-out">3.7 s</output></div>
               <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
             </div>
           </div>
 
-          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Both rows above are guarantees, not observations: each is the DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), which carries no unspecified constant, computed at a stated 1% error tolerance (&epsilon;&#8201;=&#8201;0.01). At a fixed 2&nbsp;s delay the same formula gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
-
-          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Neither guarantee above is what a payment actually waits for. Both bound the worst case against a delay chosen in advance, GHOSTDAG's fixed at D<sub>max</sub> forever, DAGKnight's tracked at whatever D<sub>t</sub> is set on this page. A transaction confirms in practice once nobody is attacking it and the odds of a reversal have fallen far enough for the recipient's own comfort, which is a different question this site answers separately: the <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation-risk demo</a> models that everyday wait directly from the Bitcoin whitepaper's double-spend race, not from this page's DAG KNIGHT bound. Read the two pages together and the shape is this: GHOSTDAG's guarantee sits in the minutes because it must always budget for a five-second worst case that rarely happens; DAGKnight's guarantee moves down to track the delay actually happening instead, which is the argument KIP-2 is making.</p>
+          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">What you'd notice using it: a transaction is typically included in a block within about 1 second at mainnet's real rate. That's not either guarantee above <span class="info-affordance">
+              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-observed-panel">
+                <i class="info-affordance__glyph" aria-hidden="true">i</i>
+                <span class="sr-only">Source and why this differs from the two guarantees</span>
+              </button>
+              <span class="info-affordance__panel" id="par-observed-panel" role="tooltip">About 1 s is this site's own figure for mainnet inclusion at 10 blocks/sec, on <a href="/what-is-kaspa">What is Kaspa?</a>, not a DAG KNIGHT bound and not independently republished here. Inclusion is a block landing a transaction; it is not the same as confirmation, which is how long before a recipient trusts a reversal won't happen. Both guarantees above bound that worst case against a delay chosen in advance, GHOSTDAG's fixed at D<sub>max</sub> forever, DAGKnight's tracked at whatever D<sub>t</sub> is set on this page; neither is what a payment actually waits for day to day. A transaction confirms in practice once nobody is attacking it and the odds of a reversal have fallen far enough for the recipient's own comfort, which the <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation-risk demo</a> models directly from the Bitcoin whitepaper's double-spend race, not from this page's DAG KNIGHT bound. Read the two pages together and the shape is this: GHOSTDAG's guarantee sits in the minutes because it must always budget for a five-second worst case that rarely happens; DAGKnight's guarantee moves down to track the delay actually happening instead, which is the argument KIP-2 is making.</span>
+            </span>.</p>
 
           <p class="payoff-line" id="par-payoff-line" role="status"></p>
 
           <details>
-            <summary>Also see: calm versus under attack, for DAGKnight alone <span class="status-pill research">Research</span></summary>
+            <summary>Where these numbers come from</summary>
+            <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Both rows above are guarantees, not observations: each is the DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), which carries no unspecified constant, computed at a stated 1% error tolerance (&epsilon;&#8201;=&#8201;0.01). At a fixed 2&nbsp;s delay the same formula gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
+          </details>
+
+          <details>
+            <summary>Also see: DAGKnight, calm versus under attack <span class="status-pill research">Research</span></summary>
             <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Same formula and the same three dials above (block rate, actual latency as D<sub>t</sub>, attacker's mining share), but a different comparison: not GHOSTDAG against DAGKnight, just DAGKnight's own confirmation bound in the two regimes the paper analyzes, no visible attack versus one visibly under way.</p>
 
             <div class="cmp">
@@ -379,7 +435,7 @@
             <h3>What this costs</h3>
             <p class="sub caveat-lead">Not shipped, not parameter-free, efficiency unsolved.</p>
             <details>
-              <summary>Every caveat, with sources</summary>
+              <summary>Caveats and sources</summary>
               <ul class="honest">
                 <li><strong>Not shipped.</strong> Mainnet runs GHOSTDAG. <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a> is Status: Proposed; the <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, unmerged development on kaspanet's own repo, most recently "Merge branch 'dk-umc-proposed' into dagknight" on August 14, 2026. Still no testnet, no activation date.</li>
                 <li><strong>Not actually parameter-free.</strong> The paper still requires a client-set bound D, and D must cover the latency an attacker could cause, not what the network is currently showing (Pass-Shi, Theorem 14). A calm network does not license a low D.</li>
@@ -706,7 +762,10 @@
             bpsOut.textContent = BPS + " block" + (BPS === 1 ? "" : "s") + "/sec" +
               (BPS === 10 ? " (Kaspa mainnet's Crescendo-era rate)" : "") +
               (beyondTable ? ", past GHOSTDAG's 32 bps table" : "");
-            dOut.textContent = "D = " + D.toFixed(1) + " s → configured margin (k) = " + configuredK +
+            var dIsMainnet = D === 5;
+            var kIsMainnet = dIsMainnet && BPS === 10;
+            dOut.textContent = "D = " + D.toFixed(1) + " s" + (dIsMainnet ? ", mainnet's real setting" : "") +
+              " → margin (k) = " + configuredK + (kIsMainnet ? ", mainnet's real margin" : "") +
               (beyondTable ? " (computed, past the shipped table)" : "");
             lOut.textContent = L.toFixed(1) + " s (margin (k) this actually needs: " + requiredK + ")";
 
@@ -777,24 +836,34 @@
             // Ratio between the two sides' bounds. This formula has no unspecified constant, so
             // this ratio, unlike the pessimistic one one click down, is a real number the paper
             // commits to, not an illustrative one.
+            // One idea per sentence: the guarantee-time sentence used to carry two
+            // quantities and a multiplier in a single clause ("...4.3 min against
+            // DAGKnight's 3.7 s; GHOSTDAG's is currently 69.4x DAGKnight's"), which read
+            // as a single dense breath. The multiplier now attaches to the slower side's
+            // own number instead of trailing as a bolt-on fragment, so the sentence names
+            // one relationship, not three separate facts stitched together.
             var ratioMultiple = fixedOptSeconds >= adaptOptSeconds ?
               (fixedOptSeconds / adaptOptSeconds).toFixed(1) + "×" :
               (adaptOptSeconds / fixedOptSeconds).toFixed(1) + "×";
-            var ratioSentence = fixedOptSeconds > adaptOptSeconds * 1.02 ?
-              "GHOSTDAG's is currently " + ratioMultiple + " DAGKnight's" :
-              adaptOptSeconds > fixedOptSeconds * 1.02 ?
-              "DAGKnight's is currently " + ratioMultiple + " GHOSTDAG's, because the actual latency set above is worse than GHOSTDAG's fixed assumption" :
-              "the two are about even at this setting";
-            var boundNote = "The paper's own no-visible-attack formula puts GHOSTDAG's guarantee at " +
-              fmtSecondsHuman(fixedOptSeconds) + " against DAGKnight's " + fmtSecondsHuman(adaptOptSeconds) +
-              "; " + ratioSentence;
+            var boundNote;
+            if (fixedOptSeconds > adaptOptSeconds * 1.02) {
+              boundNote = "The paper's own no-visible-attack bound puts GHOSTDAG's guarantee at " +
+                fmtSecondsHuman(fixedOptSeconds) + ", " + ratioMultiple + " DAGKnight's " + fmtSecondsHuman(adaptOptSeconds) + ".";
+            } else if (adaptOptSeconds > fixedOptSeconds * 1.02) {
+              boundNote = "The paper's own no-visible-attack bound puts DAGKnight's guarantee at " +
+                fmtSecondsHuman(adaptOptSeconds) + ", " + ratioMultiple + " GHOSTDAG's " + fmtSecondsHuman(fixedOptSeconds) +
+                ", because the actual latency set above is worse than GHOSTDAG's fixed assumption.";
+            } else {
+              boundNote = "The paper's own no-visible-attack bound puts both guarantees at about the same point: " +
+                fmtSecondsHuman(fixedOptSeconds) + " for GHOSTDAG, " + fmtSecondsHuman(adaptOptSeconds) + " for DAGKnight.";
+            }
 
             if (beyondTable){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need k=" + requiredK + ". " + boundNote + ". That gap is the whole “parameterless” claim.";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need k=" + requiredK + ". " + boundNote + " That gap is the whole “parameterless” claim.";
             } else if (over){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to k=" + requiredK + ". " + boundNote + ".";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to k=" + requiredK + ". " + boundNote;
             } else {
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at k=" + configuredK + " against DAGKnight's k=" + requiredK + ". " + boundNote + ".";
+              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at k=" + configuredK + " against DAGKnight's k=" + requiredK + ". " + boundNote;
             }
 
             var live = document.getElementById("par-live-region");
@@ -1172,6 +1241,23 @@
           'Live read failed. Showing the August 22, 2026 baseline written into this page, not current data.';
       });
   })();
+  </script>
+  <script>
+  document.querySelectorAll('.info-affordance').forEach(function (el) {
+    var trigger = el.querySelector('.info-affordance__trigger');
+    trigger.addEventListener('click', function () {
+      var open = el.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('is-open');
+        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
   </script>
 
 

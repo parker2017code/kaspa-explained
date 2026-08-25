@@ -68,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260825-083903">
-  <script defer src="nav.js?v=20260825-083903"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-094924">
+  <script defer src="nav.js?v=20260825-094924"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -362,12 +362,12 @@
           <label for="cs-delay">How long a block takes to reach other miners: <b id="cs-delayVal"></b></label>
           <input type="range" id="cs-delay" value="350" min="0" max="1000" step="1" aria-label="Propagation delay">
         </div>
-        <p class="honesty-note">Opens at Kaspa's real rate, 10 blocks a second, with propagation modeled at 250 ms, inside a live-data bracket, not a Kaspa measurement of propagation itself. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own one-way worst-case delay assumption, a protocol constant, not a typical delay. <span class="info-affordance" id="cs-latency-info">
+        <p class="honesty-note">Opens at Kaspa's real rate: 10 blocks a second, 250 ms modeled propagation. <span class="info-affordance" id="cs-latency-info">
             <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="cs-latency-panel">
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
-              <span class="sr-only">Why 250 ms</span>
+              <span class="sr-only">Why 250 ms, and what the slider's top end means</span>
             </button>
-            <span class="info-affordance__panel" id="cs-latency-panel" role="tooltip">Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, a 948.6 second window, 24 August 2026) found 86.9% were concurrent blocks a strict one-winner chain would have discarded, though GHOSTDAG kept nearly all of them blue. Inverting that share on this page's model gives a single-chain-equivalent delay between roughly 204 ms and 666 ms, depending on which form of the formula is solved. 250 ms sits inside that bracket. It brackets the number; it does not settle it, since a DAG's parallelism inflates the discard share past what a true single chain would show. A stricter read: on that same walk, only 2 of 10,719 blocks were ever marked red on mainnet, because k, the anticone tolerance, absorbs ordinary collisions before they turn red. That figure measures k doing its job, not propagation speed, so it is not used to set this slider.</span>
+            <span class="info-affordance__panel" id="cs-latency-panel" role="tooltip">Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, a 948.6 second window, 24 August 2026) found 86.9% were concurrent blocks a strict one-winner chain would have discarded, though GHOSTDAG kept nearly all of them blue. Inverting that share on this page's model gives a single-chain-equivalent delay between roughly 204 ms and 666 ms, depending on which form of the formula is solved. 250 ms sits inside that bracket. It brackets the number; it does not settle it, since a DAG's parallelism inflates the discard share past what a true single chain would show. A stricter read: on that same walk, only 2 of 10,719 blocks were ever marked red on mainnet, because k, the anticone tolerance, absorbs ordinary collisions before they turn red. That figure measures k doing its job, not propagation speed, so it is not used to set this slider. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own one-way worst-case delay assumption, a protocol constant, not a typical delay.</span>
           </span></p>
 
         <p class="result-line"><span id="cs-resultLine"></span> <span class="info-affordance" id="cs-model-info">
@@ -375,10 +375,16 @@
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
               <span class="sr-only">What this model is and how it was checked</span>
             </button>
-            <span class="info-affordance__panel" id="cs-model-panel" role="tooltip">A Poisson single-chain race model, not an observation of any running network. Checked against real data: Decker &amp; Wattenhofer measured Bitcoin's stale rate at 1.69%, with a mean propagation delay of 12.6 s. Solving this model backward for that stale rate gives about 10.3 s, the same order of magnitude as the measured figure, within roughly 1.5 to 2x. Not an exact match.</span>
+            <span class="info-affordance__panel" id="cs-model-panel" role="tooltip">A Poisson single-chain race model, not an observation of any running network. Checked against real data: Decker &amp; Wattenhofer measured Bitcoin's stale rate at 1.69%, with a mean propagation delay of 12.6 s. Solving this model backward for that stale rate gives about 10.3 s, the same order of magnitude as the measured figure, within roughly 1.5 to 2x. Not an exact match. The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>
           </span></p>
 
-        <p class="model-caption">Both panels run at the rate above. Single chain is a model of what a longest-chain rule would lose at that rate, not a picture of Bitcoin today. Splitting hash power that way also makes a single chain less secure as the rate climbs, the DAGKNIGHT paper's own reason a longest-chain rule stops scaling.</p>
+        <p class="model-caption">Both panels run at the rate above. <span class="info-affordance" id="cs-caption-info">
+            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="cs-caption-panel">
+              <i class="info-affordance__glyph" aria-hidden="true">i</i>
+              <span class="sr-only">Why single chain is a model, not a picture of Bitcoin</span>
+            </button>
+            <span class="info-affordance__panel" id="cs-caption-panel" role="tooltip">Single chain is a model of what a longest-chain rule would lose at that rate, not a picture of Bitcoin today. Splitting hash power that way also makes a single chain less secure as the rate climbs, the DAGKNIGHT paper's own reason a longest-chain rule stops scaling.</span>
+          </span></p>
 
         <div class="panel">
           <p class="panel-title">Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></p>
@@ -513,8 +519,7 @@
           document.getElementById('cs-chainStat').textContent =
             'so far: ' + kept + ' kept, ' + discarded + ' thrown away (' + observedDiscardPct.toFixed(0) + '% discarded)';
           document.getElementById('cs-resultLine').innerHTML =
-            'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of the blocks it makes here. The blockDAG keeps all of it.' +
-            '<span> The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>';
+            'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of the blocks it makes here. The blockDAG keeps all of it.';
         }
       
         function fitCanvas(c) {
@@ -959,14 +964,20 @@
     <p class="focus-caption" id="gp-focus-caption" aria-live="polite"></p>
     <div class="verdict-box" id="gp-verdict" hidden></div>
     <div class="virtual-toggle-row">
-      <button class="btn-quiet" id="gp-btn-toggle-virtual" type="button" aria-pressed="false">Show what the network sees right now</button>
+      <button class="btn-quiet" id="gp-btn-toggle-virtual" type="button" aria-pressed="false">Show what the network sees</button>
     </div>
     <p class="virtual-caption" id="gp-virtual-caption" aria-live="polite" hidden></p>
   </div>
 
   <div class="panel">
     <h2>Linear order</h2>
-    <p style="color:var(--muted); font-size:.85rem; margin-top:0;">The one ordering every node agrees on: walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</p>
+    <p style="color:var(--muted); font-size:.85rem; margin-top:0;">The one ordering every node agrees on. <span class="info-affordance" id="gp-order-info">
+        <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="gp-order-panel">
+          <i class="info-affordance__glyph" aria-hidden="true">i</i>
+          <span class="sr-only">How this order is built</span>
+        </button>
+        <span class="info-affordance__panel" id="gp-order-panel" role="tooltip">Walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</span>
+      </span></p>
     <ol class="order-list" id="gp-order-list" aria-live="polite"></ol>
   </div>
 
@@ -2080,16 +2091,15 @@ TPS = tx_per_block × 10 blocks/second</span>
         conserved with no fee. Real network TPS is lower once relay policy, fee markets, and
         mempool behavior are added on top of this pure mass ceiling.
       </p>
+      <p class="sources">
+        Formulas verified against
+        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
+        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
+        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">core constants</a>.
+        Offline calculator, no network requests.
+      </p>
     </div>
   </details>
-
-  <p class="sources">
-    Formulas verified against
-    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
-    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
-    <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">core constants</a>.
-    Offline calculator, no network requests.
-  </p>
 </div>
 
 <script>
