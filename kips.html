@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
   <meta name="dateModified" content="2026-08-22">
-  <link rel="stylesheet" href="styles.css?v=20260824-220211">
-  <script defer src="nav.js?v=20260824-220211"></script>
+  <link rel="stylesheet" href="styles.css?v=20260825-083903">
+  <script defer src="nav.js?v=20260825-083903"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -301,12 +301,13 @@
             <div class="row" style="margin-top:.8rem;">
               <div class="field">
                 <label id="par-l-label" for="par-l-slider">Actual latency</label>
-                <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="2" aria-labelledby="par-l-label" aria-describedby="par-l-out">
-                <span class="valline" id="par-l-out">2.0 s (margin (k) this actually needs: 55)</span>
+                <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="0.5" aria-labelledby="par-l-label" aria-describedby="par-l-out par-l-hint">
+                <span class="valline" id="par-l-out">0.5 s (margin (k) this actually needs: 18)</span>
+                <span class="valline" id="par-l-hint" style="color:var(--faint);">No published measurement of Kaspa's real block propagation exists to cite, so 0.5 s opens as a representative assumption, not a measured figure; real propagation varies with peer distance and network load. Move the slider or pick a scenario below.</span>
               </div>
             </div>
             <div class="scenario-btns" role="group" aria-label="Latency scenario presets" style="margin-top:.7rem;">
-              <button class="btn" type="button" data-l="0.5">Healthy (0.5 s)</button>
+              <button class="btn" type="button" data-l="0.5" aria-pressed="true">Healthy (0.5 s)</button>
               <button class="btn" type="button" data-l="2">Typical (2 s)</button>
               <button class="btn" type="button" data-l="5">Congested (5 s)</button>
               <button class="btn" type="button" data-l="12">Adversarial spike (12 s)</button>
@@ -325,27 +326,29 @@
               <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin</h3>
               <p class="sub">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks/sec.</p>
               <div class="gauge-row"><span>configured margin (k)</span><output id="par-fixed-k-out">124</output></div>
-              <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:100%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap"></div></div>
+              <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:3%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap"></div></div>
               <p id="par-fixed-tableend" class="over-badge" hidden></p>
-              <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">31</output></div>
+              <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">18</output></div>
               <p id="par-fixed-over" class="over-badge" hidden></p>
               <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>confirmation bound, no visible attack (D<sub>max</sub> fixed)</span><output id="par-fixed-time-out">12.4 s</output></div>
+              <div class="gauge-row"><span>GHOSTDAG's guarantee, no visible attack (D<sub>max</sub> fixed, &epsilon;&#8201;=&#8201;0.01)</span><output id="par-fixed-time-out">4.3 min</output></div>
               <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
             </div>
             <div class="side" id="par-side-adaptive">
               <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin</h3>
               <p class="sub">No table to run out of: margin tracks the latency actually happening.</p>
-              <div class="gauge-row"><span>effective margin (k) right now</span><output id="par-adapt-k-out">55</output></div>
-              <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:44%; background:var(--green);"></div></div>
-              <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">moderate</output></div>
+              <div class="gauge-row"><span>effective margin (k) right now</span><output id="par-adapt-k-out">18</output></div>
+              <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:3%; background:var(--green);"></div></div>
+              <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">low</output></div>
               <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
-              <div class="gauge-row"><span>confirmation bound, no visible attack (D<sub>t</sub> tracked)</span><output id="par-adapt-time-out">5.5 s</output></div>
+              <div class="gauge-row"><span>DAGKnight's guarantee, no visible attack (D<sub>t</sub> tracked, &epsilon;&#8201;=&#8201;0.01)</span><output id="par-adapt-time-out">3.7 s</output></div>
               <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
             </div>
           </div>
 
-          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">The "confirmation bound" row above runs the DAG KNIGHT paper's own no-visible-attack formula (&sect;1.5.2), which carries no unspecified constant: at a fixed 2&nbsp;s delay it gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
+          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Both rows above are guarantees, not observations: each is the DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), which carries no unspecified constant, computed at a stated 1% error tolerance (&epsilon;&#8201;=&#8201;0.01). At a fixed 2&nbsp;s delay the same formula gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
+
+          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Neither guarantee above is what a payment actually waits for. Both bound the worst case against a delay chosen in advance, GHOSTDAG's fixed at D<sub>max</sub> forever, DAGKnight's tracked at whatever D<sub>t</sub> is set on this page. A transaction confirms in practice once nobody is attacking it and the odds of a reversal have fallen far enough for the recipient's own comfort, which is a different question this site answers separately: the <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation-risk demo</a> models that everyday wait directly from the Bitcoin whitepaper's double-spend race, not from this page's DAG KNIGHT bound. Read the two pages together and the shape is this: GHOSTDAG's guarantee sits in the minutes because it must always budget for a five-second worst case that rarely happens; DAGKnight's guarantee moves down to track the delay actually happening instead, which is the argument KIP-2 is making.</p>
 
           <p class="payoff-line" id="par-payoff-line" role="status"></p>
 
@@ -412,7 +415,7 @@
               verified, direct quote (§1.5.2): the paper's own optimistic (no visible attack) confirmation-time
               bound is O((ln(1/ε)/λ + D)/(1−2α) + D²λ), which grows both from the additive D term and from the
               D²λ term as λ rises, for fixed D. That formula, not a k/λ approximation and not the paper's separate
-              worst-case bound, is what the "confirmation bound" readouts above compute directly: the fixed side
+              worst-case bound, is what the "guarantee" readouts above compute directly: the fixed side
               uses D<sub>max</sub>, this widget's D slider, held fixed regardless of what the network is actually
               doing; the adaptive side uses D<sub>t</sub>, the actual-latency slider, tracked instead. Swapping one
               delay term for the other is the entire difference between the two readouts, the same PHANTOM-versus-
@@ -478,7 +481,7 @@
               simulate DAGKnight's actual k-cluster selection algorithm or vote count, a fair reading of the
               paper's qualitative Figure 4 (parameterized protocols hold a flat, hardcoded confirmation bound and
               can fail past it; parameterless ones track the current latency bound and stay safe, only slower),
-              not a reproduction of it. The "confirmation bound" readouts, by contrast, are computed directly from
+              not a reproduction of it. The "guarantee" readouts, by contrast, are computed directly from
               the paper's own Table 1 and §1.5.2 optimistic (no-visible-attack) formula, the
               D<sub>max</sub>-versus-D<sub>t</sub> substitution described above; that formula has no unspecified
               constant, so those readouts are real numbers the paper commits to. The paper's separate, far rougher
@@ -782,7 +785,7 @@
               adaptOptSeconds > fixedOptSeconds * 1.02 ?
               "DAGKnight's is currently " + ratioMultiple + " GHOSTDAG's, because the actual latency set above is worse than GHOSTDAG's fixed assumption" :
               "the two are about even at this setting";
-            var boundNote = "The paper's own no-visible-attack formula puts GHOSTDAG's bound at " +
+            var boundNote = "The paper's own no-visible-attack formula puts GHOSTDAG's guarantee at " +
               fmtSecondsHuman(fixedOptSeconds) + " against DAGKnight's " + fmtSecondsHuman(adaptOptSeconds) +
               "; " + ratioSentence;
 
