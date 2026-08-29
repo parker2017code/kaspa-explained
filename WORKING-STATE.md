@@ -52,7 +52,7 @@ been pushed. The site is mid-rebuild.
 
 - Both copies of the collision demo now draw a real DAG. One line had let every block
   reference a parent it could not have seen, so 100% of blocks had one parent and the
-  panel labelled BlockDAG drew a chain. Now 75/12/6/4% with a tail to ten parents.
+  panel labeled BlockDAG drew a chain. Now 75/12/6/4% with a tail to ten parents.
 - Block arrivals are exponential, not on a fixed timer. The sampler existed and was dead.
 - 44 CSS rules deleted whose classes appear in no HTML file anywhere. 7705 to 7452 lines.
 - `scripts/refresh-model-data.py` now refuses to run and prints the live path.
