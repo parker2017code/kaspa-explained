@@ -43,10 +43,18 @@ which is the whole reason it exists. Fix what it finds; do not hand back a list.
 Order, after the code sweep commits:
 
 1. Serve locally and confirm the port answers 200 before trusting anything rendered.
-2. Every live page at 390, 768 and 1280, in both light and dark. Roughly 20 pages, so
-   about 120 renders. Use the in-app browser. Never touch or resize the owner's Chrome;
-   narrow widths go through a fixed-width iframe harness in a scratchpad directory, since
-   media queries respond to iframe viewport width.
+2. Every live page at 320, 390, 768, 1024, 1280 and 1600, in both light and dark. Roughly
+   20 pages, so about 240 renders. Use the in-app browser. Never touch or resize the
+   owner's Chrome; narrow widths go through a fixed-width iframe harness in a scratchpad
+   directory, since media queries respond to iframe viewport width. 320 catches the
+   smallest real phone and is where text overflows first; 1600 catches measure running too
+   wide and heroes stranding their content in the middle of the screen. Read the text at
+   each width rather than checking that it fits: legibility, line length, and whether a
+   table or chart has become a horizontal scroll nobody will discover.
+
+   Check touch targets stay at least 44px at every width, that nothing clips or overlaps,
+   and that no page scrolls horizontally. Wide content scrolls inside its own container,
+   never the body.
 3. Drive every demo rather than looking at it. Every control, first touch, both extremes,
    the empty state, the reset. A control that produces no legible change is a defect. A
    demo that needs scrolling to be understood has not been designed yet.
@@ -56,12 +64,21 @@ Order, after the code sweep commits:
    you measure stale CSS.
 5. Spot-check claims against `data/ground-truth-2026-08-29.json`, not against any agent's
    report of what it did.
-6. Fix everything found, in place, then rerun the affected checks.
-7. `bash scripts/check-site.sh` must print `Site checks passed.` Never push past a failing
+
+6. The social preview, which nothing in the gate covers and which is the first thing most
+   readers see. `og-kaspa-explained.png`, its dated variant, and the `.svg` it comes from
+   are all modified and unreviewed. Render the card at the size a feed actually shows it,
+   not at full resolution, and confirm the text is legible small. Check `og:title`,
+   `og:description`, `og:image`, and the Twitter card tags on every page: they go stale
+   silently because no reader on the site ever sees them, and a page rewritten today will
+   still carry the old page's description. Confirm the image dimensions match what the tags
+   declare, and that the claims on the card are still true after the rewrite.
+7. Fix everything found, in place, then rerun the affected checks.
+8. `bash scripts/check-site.sh` must print `Site checks passed.` Never push past a failing
    gate.
-8. Push, then confirm the exact changed strings from served bytes on kaspaexplained.com
+9. Push, then confirm the exact changed strings from served bytes on kaspaexplained.com
    with a cache-busting URL. A successful push is not a live check.
-9. Say plainly what could not be verified. Silence reads as completion.
+10. Say plainly what could not be verified. Silence reads as completion.
 
 ## Rules that apply to every item
 
