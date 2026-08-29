@@ -45,6 +45,50 @@ Two THE-BAR rules deserve restating because they are the root of defects found t
   displays, the prose goes."** That is the do-not-narrate rule below, and THE-BAR
   stated it first.
 
+## Whom it has to land with
+
+Written down 29 Aug 2026 because it was never written down, and a standard without a
+named reader is taste. Five readers, in priority order. Where they conflict, the earlier
+one wins.
+
+**1. The skeptical newcomer.** High school diploma, rough idea what crypto is, average
+technical confidence, arrived from a link or a search. Their working assumption is that a
+site about a coin is selling one, and that assumption is correct almost everywhere else.
+They give the page under two minutes. It lands when they touch one demo, learn one true
+mechanical thing, and notice the site declining a chance to flatter itself. It fails when
+they have to read a paragraph to find out what the demo is for, or when the first screen
+argues instead of showing. This reader sets the reading grade cap, the density limits and
+the comprehension bar, and outranks every other reader on every page they might land on.
+
+**2. The evaluator.** An engineer, a researcher, or someone comparing layer ones on the
+merits. Not a believer and not hostile. They spot-check. It lands when they pick the claim
+they doubt most, follow it to a primary source, and find it supports the exact sentence.
+It fails on one unsourced number, one protocol constant dressed as a measurement, or one
+model presented as an observation. This reader is why the sourcing rules exist and why a
+round number is a tell.
+
+**3. The builder.** Reading `build-on-kaspa.html` and `kips.html` to decide whether they
+can ship something. It lands when they know what is live, what is proposed, and what is
+research, without cross-referencing three pages. Status labels are load-bearing for this
+reader specifically.
+
+**4. The adversarial reader.** A competitor, a critic, or someone who would enjoy
+publishing a catch. Assume they read every page looking for the overstatement. It lands
+when they find nothing worth quoting. This reader is the reason weaknesses appear where
+the strength is claimed rather than one page over, and the reason the conflict disclosure
+sits in every footer.
+
+**5. The next maintainer, human or agent.** Every line of code lands with whoever changes
+it next. It lands when they can say what breaks if a line is removed. It fails at a dead
+script beside a live one, a constant left behind when the data moved, a rule that matches
+nothing, and a comment describing behavior the code no longer has. This is the reader for
+everything under `scripts/`, for `styles.css`, and for the data files, none of which the
+first four ever see.
+
+The common failure is writing for a sixth reader who does not exist: someone who already
+believes, already knows the vocabulary, and enjoys reading about the mechanism for its own
+sake. That reader forgives everything, so writing for them measures nothing.
+
 ## Authority, granted 29 Aug 2026
 
 The owner's words, and they are the frame for everything below: "I don't care if it
