@@ -163,6 +163,29 @@ prose does. Each of these is a defect, not clutter:
 Do not refactor for taste. Deletion and correction need the same external criterion as a
 page rewrite: say what breaks if it goes, and if nothing breaks, it goes.
 
+### A judge holding only a description will rubber-stamp
+
+Separate judging from building structurally, not by intention. A judge holding reference
+images and measured targets cannot rubber-stamp; a judge holding a description of what
+someone says they did will. Whoever verifies this rebuild is verifying reports written by
+the same kind of process that wrote the pages, and a fluent, specific, confident account
+of broken work is the characteristic output of that process.
+
+So the measured baseline is in the repo rather than in a brief:
+**`data/ground-truth-2026-08-29.json`**, counted from repo data and not from prose. It
+carries the real counts, the per-page density measurements taken before any rewriting,
+every inconsistency found sitewide, the stale numbers already fixed, and what the counting
+pass could not reach.
+
+Verify against that file, not against what an agent reported. Where a page's claim and
+that file disagree, the file wins until someone recounts from the data and says so. Four
+numbers worth knowing before reading any page: 23 models across 9 labs, 6 dials, 18
+distinct demos with 19 instances, and 20 chains. The site has said 21, 10 and 20 demos in
+various places, and each of those was wrong.
+
+If you cannot check a claim against a measurement, say so and mark it unverified. An
+unverified claim named is worth more than a verified-sounding one that was only read.
+
 ### The one exclusion
 
 **Do not touch The Instrument** (the-instrument.html and anything under it). It is a
