@@ -136,6 +136,33 @@ Not a skim for obvious breakage. Every line of visible text, every control, ever
 label, every caption, every axis, every legend, every heading, every empty state.
 Each one either earns its place against the bars below or it goes.
 
+### Scope is every line in the repo, not only what a reader sees
+
+The owner, 29 Aug 2026: it goes over every single line of code in the repo. So this
+standard is not a copy standard that happens to mention code. `styles.css`, everything
+under `scripts/`, the gate scripts themselves, the data files, and the JavaScript inside
+every demo are all in scope and all held to the bars below.
+
+The deletion test bites hardest here, because code hides its dead parts better than
+prose does. Each of these is a defect, not clutter:
+
+- A CSS rule that matches nothing, or that is overridden everywhere it applies. This
+  file's stylesheet has real cascade debt: the same selector is redefined at several
+  points, so a rule can look load-bearing and be inert.
+- A script nobody runs. `scripts/refresh-model-data.py` is dead and must never be run;
+  the live path is `build-picker-data.py` into `emit-picker-blob.py`. A dead script beside
+  a live one is a trap for the next reader, not neutral.
+- A constant left behind when the shape of the data moved. This repo's recurring bug,
+  documented in `WORKING-STATE.md`, and the reason two `MIN_METRICS` with different values
+  exist at different pipeline stages.
+- A check that cannot fail. Watch it fail on a deliberate violation, or delete it. A gate
+  reporting success it cannot distinguish from silence is worse than no gate, because it
+  buys confidence without earning it.
+- A comment describing behavior the code no longer has.
+
+Do not refactor for taste. Deletion and correction need the same external criterion as a
+page rewrite: say what breaks if it goes, and if nothing breaks, it goes.
+
 ### The one exclusion
 
 **Do not touch The Instrument** (the-instrument.html and anything under it). It is a
