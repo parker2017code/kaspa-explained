@@ -30,7 +30,7 @@
   <meta property="og:description" content="Search the Kaspa Explained page map by topic, audience, status, and source type.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaspaexplained.com/search">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,8 +38,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Search Kaspa Explained | Kaspa Explained">
   <meta name="twitter:description" content="Search the Kaspa Explained page map by topic, audience, status, and source type.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
+  <meta name="dateModified" content="2026-08-29">
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
 </head>
@@ -72,10 +72,10 @@
         <span>Search terms</span>
         <input id="site-search" type="search" placeholder="Try GHOSTDAG, receipts, Toccata, UTXO, beginner, DeFi..." autocomplete="off">
       </label>
-      <p class="fit-note" id="search-count">Showing all pages.</p>
+      <p class="fit-note" id="search-count" aria-live="polite">Indexing page text...</p>
       <details class="deep-dive">
         <summary>How this search works</summary>
-        <p>It matches each page's title, short description, and a hidden keyword list first, then indexes every linked page's live text in the background, so a term that only appears in a destination page's body will match once that background pass finishes.</p>
+        <p>Titles and keywords match first. Every linked page's own text is indexed in the background, so a term that appears only in a page's body starts matching a moment after this one loads.</p>
       </details>
     </section>
 
@@ -84,109 +84,116 @@
       <h2>Page map</h2>
       <div class="search-filters" id="search-filters" role="group" aria-label="Filter by page type">
         <button type="button" data-filter="" aria-pressed="true">All</button>
-        <button type="button" data-filter="guide" aria-pressed="false">Guides</button>
-        <button type="button" data-filter="tool" aria-pressed="false">Tools</button>
+        <button type="button" data-filter="start" aria-pressed="false">Start</button>
+        <button type="button" data-filter="guide" aria-pressed="false">Guide</button>
+        <button type="button" data-filter="tool" aria-pressed="false">Tool</button>
         <button type="button" data-filter="reference" aria-pressed="false">Reference</button>
-        <button type="button" data-filter="status" aria-pressed="false">Status</button>
+        <button type="button" data-filter="check" aria-pressed="false">Check</button>
       </div>
       <div class="search-results" id="search-results">
-        <article data-search="kaspa explained home start overview index">
-          <span>Overview</span>
+        <article data-type="start" data-search="kaspa explained home start overview index">
+          <span>Start</span>
           <h3><a href="/">Home</a></h3>
           <p>Where to start, and what's live.</p>
         </article>
-        <article data-search="beginner start here route records keys blocks consensus scams glossary new user basics first">
-          <span>Guide</span>
+        <article data-type="start" data-search="beginner start here route records keys blocks consensus scams glossary new user basics first">
+          <span>Start</span>
           <h3><a href="/start-here">Start here</a></h3>
           <p>Start where your knowledge runs out.</p>
         </article>
-        <article data-search="crypto basics beginner bitcoin ethereum history value price money ledger keys mining stablecoins defi what crypto is good for why it has value">
+        <article data-type="guide" data-search="crypto basics beginner bitcoin ethereum history value price money ledger keys mining stablecoins defi what crypto is good for why it has value">
           <span>Guide</span>
           <h3><a href="/crypto-from-scratch">Crypto from scratch</a></h3>
           <p>Blockchain basics.</p>
         </article>
-        <article data-search="what is kaspa kas kaspa explained proof of work blockdag ghostdag 10 bps beginner search answer live now roadmap">
+        <article data-type="guide" data-search="what is kaspa kas kaspa explained proof of work blockdag ghostdag 10 bps beginner search answer live now roadmap">
           <span>Guide</span>
           <h3><a href="/what-is-kaspa">What is Kaspa?</a></h3>
           <p>Mining and UTXOs, ordered by GHOSTDAG.</p>
         </article>
-        <article data-search="kip kips kcc kccs improvement proposals calls for conventions tracker status active proposed draft rejected dagknight kip-2 covenant ids kip-20 kip-17 kip-16 kip-21 kcc20 fungible token standard live tracker">
+        <article data-type="reference" data-search="kip kips kcc kccs improvement proposals calls for conventions tracker status active proposed draft rejected dagknight kip-2 covenant ids kip-20 kip-17 kip-16 kip-21 kcc20 fungible token standard live tracker">
           <span>Reference</span>
           <h3><a href="/kips">KIPs and KCCs</a></h3>
           <p>Read straight from GitHub.</p>
         </article>
-        <article data-search="kaspa origin story fair launch daglabs yonatan sompolinsky gadi glickberg polychain phantom ghostdag testnet april 2021 katnip web wallet faucet asic presale optical asic gamenet black tuesday dust attack golang btcd rust rewrite crescendo toccata">
+        <article data-type="guide" data-search="kaspa origin story fair launch daglabs yonatan sompolinsky gadi glickberg polychain phantom ghostdag testnet april 2021 katnip web wallet faucet asic presale optical asic gamenet black tuesday dust attack golang btcd rust rewrite crescendo toccata">
           <span>Guide</span>
           <h3><a href="/kaspa-origin-story">Kaspa's origin story</a></h3>
           <p>A launch that was mostly leftover.</p>
         </article>
-        <article data-search="kaspa design case RTD neutral money shared record one record without one operator GHOSTDAG blockDAG proof of work UTXO group commitments">
-          <span>Case</span>
+        <article data-type="check" data-search="kaspa design case RTD neutral money shared record one record without one operator GHOSTDAG blockDAG proof of work UTXO group commitments">
+          <span>Check</span>
           <h3><a href="/why-kaspa-matters">Kaspa's design case</a></h3>
           <p>PoW security, closer to real time.</p>
         </article>
-        <article data-search="utxo vs accounts parallel spends collide demo wallet coins balance GHOSTDAG conflict resolution shared state app composition vprogs">
+        <article data-type="tool" data-search="utxo vs accounts parallel spends collide demo wallet coins balance GHOSTDAG conflict resolution shared state app composition vprogs">
           <span>Tool</span>
           <h3><a href="/utxo-vs-accounts">Why parallel spends don't collide</a></h3>
           <p>Five payments at once, on coins and on a balance.</p>
         </article>
-        <article data-search="status live targeted roadmap research Toccata TN10 TN12 DAGKnight vProgs native DeFi Crescendo 10 BPS 100 BPS TPS finality testnet common misconceptions transaction payload accepted transactions miner fees partition resilient payments claims checker claim fact check true wrong misleading not yet KCC-0020 KCC-0021 KCC-0402">
-          <span>Status</span>
+        <article data-type="check" data-search="status live targeted roadmap research Toccata TN10 TN12 DAGKnight vProgs native DeFi Crescendo 10 BPS 100 BPS TPS finality testnet common misconceptions transaction payload accepted transactions miner fees partition resilient payments claims checker claim fact check true wrong misleading not yet KCC-0020 KCC-0021 KCC-0402">
+          <span>Check</span>
           <h3><a href="/status">Kaspa status</a></h3>
           <p>Live now, and still coming.</p>
         </article>
-        <article data-search="skeptical case objections risks scam rug pull ponzi is kaspa legit node pressure security budget liquidity mining concentration developer mindshare ecosystem fragility overclaims roadmap execution native defi toccata vprogs">
-          <span>Case</span>
+        <article data-type="check" data-search="skeptical case objections risks scam rug pull ponzi is kaspa legit node pressure security budget liquidity mining concentration developer mindshare ecosystem fragility overclaims roadmap execution native defi toccata vprogs">
+          <span>Check</span>
           <h3><a href="/skeptical-case">Risks and open questions</a></h3>
           <p>What would break each claim.</p>
         </article>
-        <article data-search="mining solo miner asic stratum bridge rusty kaspa node hash rate price cycle emission halving pool payout kheavyhash setup guide">
+        <article data-type="guide" data-search="mining solo miner asic stratum bridge rusty kaspa node hash rate price cycle emission halving pool payout kheavyhash setup guide">
           <span>Guide</span>
           <h3><a href="/kaspa-mining">Kaspa mining</a></h3>
           <p>Point a miner at your node.</p>
         </article>
-        <article data-search="build on kaspa app ideas builder guide fintech toccata explained expressiveness upgrade covenants covenant ids kip 17 kip 20 kip 16 kip 21 zk proof checks sequencing lanes based apps vprogs evm rust stratum bridge evidence">
+        <article data-type="guide" data-search="build on kaspa app ideas builder guide fintech toccata explained expressiveness upgrade covenants covenant ids kip 17 kip 20 kip 16 kip 21 zk proof checks sequencing lanes based apps vprogs evm rust stratum bridge evidence">
           <span>Guide</span>
           <h3><a href="/build-on-kaspa">Build on Kaspa</a></h3>
           <p>Payments first, Toccata rules after.</p>
         </article>
-        <article data-search="argent silverscript explained michael sutton compiler covenant actor state entry become inter covenant communication readme audit unaudited testnet-10 language model worked example">
+        <article data-type="reference" data-search="argent silverscript explained michael sutton compiler covenant actor state entry become inter covenant communication readme audit unaudited testnet-10 language model worked example">
           <span>Reference</span>
           <h3><a href="/argent-explained">Argent and Silverscript, explained</a></h3>
           <p>Language model and worked example.</p>
         </article>
-        <article data-search="compare chains layer 1 l1 comparison bitcoin ethereum solana cardano avalanche tron sui aptos ton near hedera algorand litecoin monero polkadot cosmos icp stellar tps finality fees nakamoto coefficient node requirements developers custody etf wallets tool interactive ranking">
+        <article data-type="tool" data-search="compare chains layer 1 l1 comparison bitcoin ethereum solana cardano avalanche tron sui aptos ton near hedera algorand litecoin monero polkadot cosmos icp stellar tps finality fees nakamoto coefficient node requirements developers custody etf wallets tool interactive ranking">
           <span>Tool</span>
           <h3><a href="/chain-comparer">Which chain fits the job?</a></h3>
           <p>Twenty L1s, ranked by your job.</p>
         </article>
-        <article data-search="ai model picker llm compare claude gpt gemini kimi deepseek llama qwen benchmark coding reasoning agentic cost latency context open weights tool interactive ranking leaderboard">
+        <article data-type="tool" data-search="ai model picker llm compare claude gpt gemini kimi deepseek llama qwen benchmark coding reasoning agentic cost latency context open weights tool interactive ranking leaderboard">
           <span>Tool</span>
           <h3><a href="/model-picker">Which AI model should you use?</a></h3>
           <p>Frontier models, scored across four leaderboards.</p>
         </article>
-        <article data-search="the instrument moose book pdf value theory proof of work proof of stake joule floor thermodynamics ratchet monetary systems guest essay themooseisloos5">
-          <span>Guest</span>
+        <article data-type="reference" data-search="model picker method methodology how the score works benchmarks dials effort ladder style control estimation regression arc-agi-2 livebench artificial analysis lm arena coverage frontier spread scoring">
+          <span>Reference</span>
+          <h3><a href="/model-picker-method">How the model picker scores</a></h3>
+          <p>Every decision behind the ranking.</p>
+        </article>
+        <article data-type="reference" data-search="the instrument moose book pdf value theory proof of work proof of stake joule floor thermodynamics ratchet monetary systems guest essay themooseisloos5">
+          <span>Reference</span>
           <h3><a href="/the-instrument">The Instrument, by Moose</a></h3>
           <p>279 pages, hosted here in full.</p>
         </article>
-        <article data-search="sources references claims source hierarchy KIPs releases code research Learn Kaspa KASmedia Kaspa Daily Yonatan Q&A Base of Liquidity coordination markets payment paths mainnet testnet toccata activation release docs kdp docs kas fyi hosted api transaction acceptance block ranges blue score daa score data types rate limits">
+        <article data-type="reference" data-search="sources references claims source hierarchy KIPs releases code research Learn Kaspa KASmedia Kaspa Daily Yonatan Q&A Base of Liquidity coordination markets payment paths mainnet testnet toccata activation release docs kdp docs kas fyi hosted api transaction acceptance block ranges blue score daa score data types rate limits">
           <span>Reference</span>
           <h3><a href="/sources">Sources</a></h3>
           <p>Protocol material first, then explainers.</p>
         </article>
+        <article data-type="tool" data-search="demos try it interactive demo index every demo playground ghostdag fee market emission attack cost covenant zk collision fair launch supply split parallel spends node cost mass calculator live network confirmation risk argent pipeline">
+          <span>Tool</span>
+          <h3><a href="/demos">Every demo</a></h3>
+          <p>All of them, in one list, ranked by how much they matter.</p>
+        </article>
       </div>
-      <p class="search-empty" id="search-empty" hidden>No page matches those terms. Try a broader word like <strong>status</strong>, <strong>UTXO</strong>, <strong>GHOSTDAG</strong>, <strong>receipt</strong>, <strong>Toccata</strong>, <strong>DeFi</strong>, or <strong>sources</strong>.</p>
+      <p class="search-empty" id="search-empty" hidden>No page matches that. Press All, or try a broader word like <strong>status</strong>, <strong>UTXO</strong>, <strong>GHOSTDAG</strong>, <strong>receipt</strong>, <strong>Toccata</strong>, <strong>DeFi</strong>, or <strong>sources</strong>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/the-instrument"><span>Previous</span><strong>The Instrument</strong><p>A 279 page framework for judging monetary systems by their physical cost floor, written by Moose and hosted here in full. His argument...</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Start here</h2>
+      <p class="site-next"><a href="/start-here">Start at the beginning: no assumed vocabulary, nothing skipped.</a></p>
     </section>
 <!-- related-links:end -->
   </main>
@@ -236,6 +243,7 @@
     const empty = document.getElementById('search-empty');
     const parser = new DOMParser();
     let fullIndexReady = false;
+    let activeType = '';
 
     const params = new URLSearchParams(window.location.search);
     const initialQuery = params.get('q');
@@ -331,7 +339,10 @@
       const terms = normalizedQuery.split(/\s+/).filter(Boolean);
       let visible = 0;
       const scored = results.map((item, index) => {
-        const score = terms.length ? matchScore(item, terms, normalizedQuery) : { tier: 2, strength: 0 };
+        const typeOk = !activeType || item.dataset.type === activeType;
+        const score = !typeOk ? { tier: 0, strength: 0 }
+          : terms.length ? matchScore(item, terms, normalizedQuery)
+          : { tier: 2, strength: 0 };
         return { item, score, index };
       });
       scored.sort((a, b) => b.score.tier - a.score.tier || b.score.strength - a.score.strength || a.index - b.index);
@@ -340,8 +351,14 @@
         if (score.tier > 0) visible += 1;
         item.parentElement.appendChild(item);
       }
+      // The count line always says something. It used to render an empty
+      // paragraph once indexing finished with an empty box, which is a blank
+      // readout on the page's only status line.
       const indexNote = fullIndexReady ? '' : ' Page text is still indexing.';
-      count.textContent = terms.length ? `${visible} page${visible === 1 ? '' : 's'} match.${indexNote}` : fullIndexReady ? '' : 'Indexing page text...';
+      const filtered = terms.length || activeType;
+      count.textContent = filtered
+        ? `${visible} of ${results.length} pages.${indexNote}`
+        : `All ${results.length} pages.${indexNote}`;
       empty.hidden = visible !== 0;
       const url = new URL(window.location.href);
       if (terms.length) {
@@ -352,26 +369,26 @@
       window.history.replaceState({}, '', url);
     }
 
-    // Quick category chips set the search box and run matchScore() above.
-    // A chip finds the same pages typing the word would.
+    // Category chips filter on each card's own kind, held in data-type, and
+    // compose with whatever is typed in the box. The previous version typed
+    // the chip's word into the search field instead, which put a word in the
+    // box the reader had not typed and matched any page whose keyword list
+    // happened to contain it: "Guides" pulled in the mining page for the
+    // phrase "setup guide". Every chip name is also a card label, and every
+    // card label is a chip, so no card is reachable only through All.
     const filterButtons = Array.from(document.querySelectorAll('#search-filters button'));
     function syncFilterButtons() {
-      const value = input.value.trim().toLowerCase();
-      filterButtons.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.filter === value)));
+      filterButtons.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.filter === activeType)));
     }
     filterButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        input.value = btn.dataset.filter;
+        activeType = btn.dataset.filter;
         syncFilterButtons();
         updateSearch();
-        input.focus();
       });
     });
 
-    input.addEventListener('input', () => {
-      syncFilterButtons();
-      updateSearch();
-    });
+    input.addEventListener('input', updateSearch);
     syncFilterButtons();
     updateSearch();
 

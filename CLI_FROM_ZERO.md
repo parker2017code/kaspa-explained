@@ -65,7 +65,6 @@ Use public Kaspa resources for the exact commands and versions:
 
 Useful source URLs:
 
-- `https://kaspa.org/build`
 - `https://docs.kaspa.org/`
 - `https://github.com/kaspanet/rusty-kaspa`
 - `https://github.com/kaspanet/rusty-kaspa/releases`
@@ -213,7 +212,7 @@ Use this route if you are starting from zero:
 
 1. Read `start-here.html` and `status.html` to separate live, targeted, roadmap,
    and research claims.
-2. Use `builder-guide.html` and `sources.html` to find the public docs behind a
+2. Use `build-on-kaspa.html` and `sources.html` to find the public docs behind a
    command path.
 3. Run a mainnet node only from current Rusty Kaspa release/source docs.
 4. Use `kaspa-cli` or wallet docs only after checking network, key storage, and
@@ -229,9 +228,9 @@ This site does not invent mainnet command guidance. It points readers back to
 public Kaspa resources:
 
 - `sources.html` lists the source hierarchy and reference map.
-- `builder-guide.html` links to Kaspa.org Build, official Kaspa docs, Rusty
-  Kaspa releases, WASM examples, accepted-transaction docs, payload docs, node
-  docs, explorers, and testnet resources.
+- `build-on-kaspa.html` routes an app idea to the three build lanes and to the
+  repositories, release tags, node docs, explorers, and testnet resources behind
+  each one.
 - `status.html` says which claims are live, testnet-only, targeted, roadmap,
   or research.
 - Official mainnet work should start from public Kaspa wallet, node, SDK, and
@@ -245,7 +244,7 @@ public Kaspa resources:
 ## Maintainer Reminder
 
 After Toccata activation, update this file, `status.html`,
-`builder-guide.html`, `sources.html`, `CLAIMS.yml`, and `llms.txt` from public
+`build-on-kaspa.html`, `sources.html`, `CLAIMS.yml`, and `llms.txt` from public
 activation evidence, Rusty Kaspa releases, official docs, and working tool
 commands. Until that evidence exists, keep Toccata/TN12 command examples in the
 testnet or targeted lane.

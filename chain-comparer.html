@@ -30,7 +30,7 @@
   <meta property="og:description" content="Twenty layer ones on the same fields. Move the dials for what your job needs and see which chain fits.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaspaexplained.com/chain-comparer">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,7 +38,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Which chain fits the job?">
   <meta name="twitter:description" content="Twenty layer ones on the same fields. Move the dials for what your job needs and see which chain fits.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-22">
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
@@ -88,8 +88,8 @@
        not reopen that; verified at 390/768/1280 with no horizontal scroll. */
     body { overflow: visible; }
     @media (max-width: 860px) { .cc-shell { grid-template-columns: 1fr; gap: 22px; } .cc-controls { align-self: auto; } .cc-controls-sticky { position: static; } }
-    /* Phone/tablet only: the presets + ten dials ran 1081px before any
-       ranked result appeared, more than half the page. The dials are the
+    /* Phone/tablet only: the presets plus the eleven dials ran 1081px before
+       any ranked result appeared, more than half the page. The dials are the
        tool, not depth, so they stay fully working; on a narrow screen they
        open on tap instead of loading open, the same disclosure pattern the
        page already uses for scoring method and caveats. Desktop keeps them
@@ -140,7 +140,6 @@
     .cc-dial > span { font-size: .93rem; color: var(--text); display: inline-flex; align-items: center; gap: 3px; }
     .cc-dial > output { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
     .cc-dial > input { grid-column: 1 / -1; }
-    .cc-why-dial { grid-column: 1 / -1; font-style: normal; font-size: 1rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
     .cc-info { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 0; background: var(--control-bg); color: var(--muted); font: inherit; font-size: .66rem; font-weight: 700; line-height: 1; cursor: pointer; flex: none; }
     .cc-info::before { content: ""; position: absolute; inset: -13px; }
     .cc-info:hover { color: var(--text); background: var(--control-hover); }
@@ -214,11 +213,17 @@
     .cc-gap-panel > summary:hover,
     .cc-notes > summary:hover { color: var(--text); }
     .cc-notes p { color: var(--muted); font-size: 1rem; line-height: 1.55; margin: 10px 0 0; }
-    .cc-gap-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    .cc-gap-table { width: 100%; table-layout: fixed; margin-top: 10px; border-collapse: collapse; }
+    /* Same defect as the constants table on kaspa-origin-story: width: 100% does
+       not bound a table whose cell content has a wider minimum. Measured 380px
+       wide at a 320px viewport on 2026-08-29, third column unreachable. */
     .cc-gap-table th,
     .cc-gap-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); font-size: .85rem; }
     .cc-gap-table th { color: var(--faint); font-weight: 700; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; }
     .cc-gap-table td { color: var(--text); }
+    .cc-none { color: var(--faint); font-variant-numeric: normal; }
+    .cc-gap-table th,
+    .cc-gap-table td { overflow-wrap: anywhere; }
     .cc-note { display: block; color: var(--muted); font-size: .78rem; margin-top: 8px; }
     .num { text-align: right; font-variant-numeric: tabular-nums; }
     .cc-tag { display: inline-block; margin: 2px 0 6px; font-size: .68rem; font-weight: 700; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
@@ -280,18 +285,20 @@
           </div>
 
           <details class="cc-method">
-            <summary>How the score works</summary>
-            <ol>
-              <li><b>Every dial is a weight.</b> Turn one up and it takes a bigger share of the score. It never acts as a filter: nothing is removed from the list for failing a requirement.</li>
-              <li><b>Each field is normalized across the chains that report it</b>, then the score is the weighted average of those. The shares shown next to each dial add to 100.</li>
-              <li><b>A chain that never published a field is skipped on that dial.</b> It is never scored zero for staying silent. It is dropped entirely once the fields it does report cover under 70% of what you asked about, and the row says how many dials it stayed quiet on.</li>
-              <li><b>Throughput is what a chain carries now, next to its highest observed burst</b>, for the reason given above. A headline capacity figure is not a measurement.</li>
-              <li><b>Some numbers are not comparable across rows even though they share a column.</b> Nakamoto coefficients use different thresholds for proof of work and proof of stake, developer counts roll up child ecosystems for some chains and not others, and block-producer counts measure different things by design.</li>
-              <li><b>Every row was re-measured on the same day, and the row says which fields were.</b> All twenty were re-measured against live endpoints on 22 August 2026, closing the gap from an earlier pass on 1 August that covered only nine: some readings come from aggregated chain stats, some from timing blocks on the chain's own RPC or mirror node. That pass found real drift. It is not a rounding error: Ethereum's sustained rate ran 18 percent higher than the 1 August reading, Avalanche's ran 62 percent lower, and Internet Computer's came back roughly 3.6x higher on a different metric endpoint than the one the earlier figure likely used. Two fields could not be independently re-derived this pass. Polkadot's throughput stays unscored because the relay chain itself carries almost no user transactions. TON's throughput still carries a same-day correction made earlier; it has not been freshly re-derived. A number nobody re-checked is worth less than one somebody did, so the row tells you which it is.</li>
-              <li><b>"Shows up fast" and "settles for good" are two different properties.</b> Across the 14 chains that carry a coded finality rule, the two barely move together (r=0.05, n=14): a chain that includes a transaction quickly is not reliably the one that finalizes it quickly. Kaspa is the clearest case. A block shows up in 0.1s and the coded finality boundary sits at 12 hours. That figure reflects GHOSTDAG. DAGKnight is a research proposal (KIP-2, Status: Proposed) with no mainnet implementation and would only change this if it ships. Bitcoin, Litecoin, Monero and Bitcoin Cash stay unscored on settlement; the 6-confirmation convention they use by custom does not count, so it no longer inflates this comparison.</li>
-              <li><b>"Pays for its own security" replaced a hash-power dial that ranked Bitcoin's 912.5 EH/s against Kaspa's 0.303 EH/s on one axis.</b> SHA-256, Scrypt, RandomX and kHeavyHash hash rates do not convert to a common unit of work, so that ranking compared five different things as if they were one. Daily issuance in dollars does convert, so the dial now scores that instead: only the five proof-of-work chains here have it sourced (each row shows native units and dollars at spot). Every proof-of-stake, BFT, federated and permissioned chain stays unscored on this dial; none of them is credited with zero. Ethereum is one of those left out on purpose: its net issuance is burn-adjusted under EIP-1559 and moves with fee demand, so there is no single "tokens per day" figure to quote without a netting calculation this pass did not do.</li>
-            </ol>
-          </details>
+        <summary>How the score works</summary>
+        <ol>
+          <li><b>Every dial is a weight.</b> Turn one up and it takes a bigger share of the score. No dial ever acts as a filter: nothing is removed from the list for failing a requirement.</li>
+          <li><b>Each field is normalized across the chains that report it</b>, and the score is the weighted average. The shares next to each dial add to 100.</li>
+          <li><b>A chain that never published a field is skipped on that dial</b>, never scored zero for staying silent. It is dropped from the list entirely once the fields it does report cover under 70% of what you asked about, and its row says how many dials it stayed quiet on.</li>
+          <li><b>Throughput is what a chain carries now, next to its highest observed burst.</b> A headline capacity figure is a claim, not a measurement, and it sits in its own table below.</li>
+          <li><b>Some columns are not comparable across rows.</b> Nakamoto coefficients use different thresholds for proof of work and proof of stake, developer counts roll up child ecosystems for some chains and not others, and block-producer counts measure different things by design.</li>
+          <li><b>Every row was re-measured against live endpoints on 22 August 2026</b>, and each row names which of its own fields were. Two could not be re-derived that day: Polkadot's throughput, because its relay chain carries almost no user transactions, and TON's, which carries an earlier same-day correction instead.</li>
+          <li><b>"Shows up fast" and "settles for good" are different properties.</b> Across the 14 chains with a coded finality rule they barely move together, r = 0.05, n = 14. Kaspa is the clearest case: a block shows up in 0.1 seconds and its coded finality boundary sits at 12 hours.</li>
+          <li><b>Settlement scores a consensus rule, not a habit.</b> Bitcoin, Litecoin, Monero and Bitcoin Cash code no reorg limit, so they stay unscored here rather than being credited with the 6-confirmation convention people use by custom. Kaspa's 12 hours reflects GHOSTDAG; DAGKnight is a proposal and is not scored.</li>
+          <li><b>"Pays for its own security" scores daily issuance in dollars.</b> Hash rates do not convert across SHA-256, Scrypt, RandomX and kHeavyHash, so ranking those on one axis compared different things as if they were one. Dollars convert.</li>
+          <li><b>Only five chains have that issuance sourced</b>, the proof-of-work ones. Proof-of-stake, BFT, federated and permissioned chains stay unscored rather than credited with zero. Ethereum's issuance is burn-adjusted under EIP-1559, so there is no single daily figure to quote.</li>
+        </ol>
+      </details>
           <p class="cc-why" id="ccWhy" hidden></p>
           <ol class="cc-list" id="ccList"></ol>
           <p class="cc-empty" id="ccEmpty" hidden></p>
@@ -314,13 +321,9 @@
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/crypto-from-scratch"><span>Previous</span><strong>What crypto does, and what it&#x27;s worth</strong><p>What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.</p></a>
-        <a href="/model-picker"><span>Next</span><strong>Which model should you use?</strong><p>A live scorer for language models. Move the dials for what your work needs and the ranking reorders against published benchmark numbers.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Which model should you use?</h2>
+      <p class="site-next"><a href="/model-picker">A second dial tool, off-topic to Kaspa: rank language models against what your own work actually needs.</a></p>
     </section>
 <!-- related-links:end -->
   </main>
@@ -367,18 +370,18 @@
 (function () {
   var D = window.__CC__, M = D.chains;
 
-  // Each dial is a question a person actually has, mapped onto measured fields.
-  // dir 1 means higher is better, -1 means lower is better.
-  // t is the dial. why is what the number means, in ten words or fewer, shown
-  // under it. f is the measured field it reads.
-  // Seven dials, each one something a person actually has an opinion about.
-  // Wallet support and institutional access moved to filters, because they are
-  // yes-or-no facts instead of things you weigh.
-  // Ten dials. Nothing is a hard requirement any more: the three checkboxes that
-  // used to sit under "Hard requirements" silently deleted chains from the list,
-  // so asking for smart contracts made Bitcoin and Kaspa vanish instead of score
-  // low. They are factors now. Programmability is graded instead of yes/no, and
-  // wallets, custody, ETF and futures fold into one "ready to use" number.
+  // Eleven dials, each one a question a person actually has, mapped onto a
+  // measured field. k is the state key, t is the dial's name, f is the field it
+  // reads, dir 1 means higher is better and -1 means lower is better, log
+  // marks a field whose values span orders of magnitude, and info is the
+  // explanation behind the dial's own "i" button.
+  //
+  // Nothing here is a hard requirement. Three checkboxes under "Hard
+  // requirements" used to delete chains from the list outright, so asking for
+  // smart contracts made Bitcoin and Kaspa vanish instead of score low. Every
+  // one of those is a weighted factor now: programmability is graded rather
+  // than yes-or-no, and wallets, custody, ETF and futures fold into one
+  // "ready to use" number.
   //
   // Inclusion and settlement are separate dials on purpose. A chain can show a
   // payment in a tenth of a second and still take ten seconds to settle it, and
@@ -521,7 +524,6 @@
       row.innerHTML =
         '<span id="' + nameId + '">' + d.t + infoBtn + '</span>' +
         '<output id="co-' + d.k + '">off</output>' +
-        (d.why ? '<em class="cc-why-dial">' + d.why + '</em>' : '') +
         '<input type="range" id="cd-' + d.k + '" min="0" max="4" step="0.1" value="0" aria-labelledby="' + nameId + '">' +
         (d.info ? '<div class="cc-info-panel" id="ci-' + d.k + '" hidden>' + d.info + '</div>' : '');
       dw.appendChild(row);
@@ -549,7 +551,9 @@
 
     $('ccReset').addEventListener('click', function () {
       DIALS.forEach(function (d) { state[d.k] = 0; els[d.k].value = 0; });
-      clearPreset(); render();
+      clearPreset();
+      $('ccPresetWhy').textContent = '';
+      render();
     });
     if ($('ccControlsToggle')) {
       $('ccControlsToggle').addEventListener('click', function () {
@@ -606,13 +610,20 @@
     var list = $('ccList'), empty = $('ccEmpty');
     list.textContent = '';
     if (!any) {
+      // Every readout that described the previous ranking has to go with it.
+      // Leaving the preset's own sentence standing under a cleared set of
+      // dials described a job the reader had just turned off, and leaving
+      // "Show all 17" visible offered a control with nothing to show.
       $('ccCount').textContent = 'Ranking';
+      $('ccWhy').textContent = '';
+      $('ccWhy').hidden = true;
+      if ($('ccShowAll')) $('ccShowAll').hidden = true;
       empty.hidden = false;
       empty.textContent = 'Pick a job above, or turn up a dial. Nothing is ranked until something matters to you.';
       return;
     }
 
-    var rows = [], blocked = 0;
+    var rows = [];
     M.forEach(function (m) {
       var num = 0, den = 0, parts = [];
       DIALS.forEach(function (d) {
@@ -637,20 +648,23 @@
 
     if (!rows.length) {
       $('ccCount').textContent = 'Ranking';
+      $('ccWhy').textContent = '';
+      $('ccWhy').hidden = true;
+      if ($('ccShowAll')) $('ccShowAll').hidden = true;
       empty.hidden = false;
       empty.textContent = 'No chain publishes enough of what you asked about to be scored fairly. Turn on a second dial.';
       return;
     }
     empty.hidden = true;
     rows.sort(function (a, b) { return b.s - a.s; });
-    var dropped = M.length - rows.length - blocked;
+    // Nothing is filtered out any more, only dropped for thin coverage, so
+    // this is one number rather than the two the hard-requirement checkboxes
+    // used to need.
+    var dropped = M.length - rows.length;
     $('ccCount').textContent = rows.length + ' of ' + M.length + ' scored';
     var why = $('ccWhy');
-    var parts = [];
-    if (blocked) parts.push(blocked + ' filtered out');
-    if (dropped > 0) parts.push(dropped + ' dropped for thin coverage');
-    why.textContent = parts.join(', ');
-    why.hidden = !parts.length;
+    why.textContent = dropped > 0 ? dropped + ' dropped for thin coverage' : '';
+    why.hidden = dropped <= 0;
 
     var showAll = $('ccShowAll') && $('ccShowAll').getAttribute('aria-pressed') === 'true';
     var CAP = 3;
@@ -754,9 +768,13 @@
         ? ' <span class="cc-infl">its own headline count is ' +
           (ratio < 10 ? ratio.toFixed(1) : Math.round(ratio)) + '× this</span>'
         : '';
+      // A bare dash in a numeric cell reads as a rendering failure rather than
+      // as an absence, and the two absences here mean different things: one
+      // chain never published a headline figure, another was never measured.
+      // Both say so in words.
       return '<tr><td>' + m.n + infl + '</td>' +
-        '<td class="num">' + (m.claim ? m.claim.toLocaleString() : '–') + '</td>' +
-        '<td class="num">' + (m.tps !== null ? fmtTps(m.tps) : '–') + '</td>' +
+        '<td class="num">' + (m.claim ? m.claim.toLocaleString() : '<span class="cc-none">none</span>') + '</td>' +
+        '<td class="num">' + (m.tps !== null ? fmtTps(m.tps) : '<span class="cc-none">not measured</span>') + '</td>' +
         '<td class="gap ' + cls + '">' + gap + '</td></tr>';
     }).join('');
     $('ccGap').innerHTML = out;

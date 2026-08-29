@@ -87,6 +87,13 @@ NEXT_STEP = {
         "/the-instrument",
         "A 279-page argument for judging every monetary system, Kaspa included, by its physical cost floor.",
     ),
+    # Added 2026-08-29 with the page itself. A reader arrives here from the
+    # picker to check how the score is built, so the step that follows is
+    # going back and using it with that in hand.
+    "model-picker-method.html": (
+        "/model-picker",
+        "Take the numbers back to the tool: move the six dials and watch the ranking reorder against them.",
+    ),
     "the-instrument.html": (
         "/sources",
         "Check this argument the way every claim on this site gets checked: against the primary sources behind it.",

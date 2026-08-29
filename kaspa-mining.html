@@ -30,7 +30,7 @@
   <meta property="og:description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kaspa-mining">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,7 +38,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Mining | Kaspa Explained">
   <meta name="twitter:description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
@@ -87,7 +87,7 @@
       <h2>What the network is doing</h2>
       <div class="summary-grid grid-cards">
         <article><span>KAS price</span><p>Kaspa API: <strong id="snap-price">$0.02784831</strong> per KAS. Coinbase all-time high: <strong>$0.2075</strong>.</p></article>
-        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">328.1 PH/s</strong>, about <span id="snap-hash-mult">656</span> times the 500 TH/s the Kaspa wiki records for November 29, 2022.</p></article>
+        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">328.1 PH/s</strong>, about <strong id="snap-hash-mult">656</strong> times the 500 TH/s the Kaspa wiki records for November 29, 2022.</p></article>
         <article><span>Supply</span><p>Kaspa API: <strong id="snap-circ">27.669B KAS</strong> mined of a <strong>28.704B KAS</strong> maximum.</p></article>
         <article><span>Block reward</span><p>Kaspa API: <strong id="snap-reward">2.31246515 KAS</strong> per block, the emission step that began at DAA score 504,909,000.</p></article>
       </div>
@@ -264,7 +264,7 @@
   <div class="primary-control">
     <label for="timeSlider" id="sliderLabel">How far in the future: <span class="big-readout" id="timeReadout">today</span></label>
     <input type="range" id="timeSlider" min="0" max="120" step="1" value="0" aria-label="Point in time">
-    <div class="marks" id="sliderMarks"><span>today</span><span>1 year</span><span>3 years</span><span>10 years</span></div>
+    <div class="marks" id="sliderMarks"><span style="left:0%">today</span><span class="tight" style="left:10%">1 year</span><span style="left:30%">3 years</span><span style="left:100%">10 years</span></div>
   </div>
 
   <p class="result-line" id="resultLine"></p>
@@ -274,7 +274,7 @@
     <svg id="curveSvg" viewBox="0 0 700 200" preserveAspectRatio="none" role="img" aria-labelledby="curveTitle">
       <title id="curveTitle">Block reward over time, a smooth staircase down, no cliff</title>
     </svg>
-    <p class="chart-caption" id="chartCaption">Each bar is one month. Taller bar means a bigger block reward. The highlighted bar is the month you're looking at above.</p>
+    <p class="chart-caption" id="chartCaption">Each bar is one month's block reward.</p>
   </div>
 
   <details >
@@ -285,12 +285,12 @@
     <p>On 5 May 2025, the Crescendo hard fork moved Kaspa from 1 block per second to 10 (DAA score 110,165,000, per the v1.0.0 release notes).</p>
       <p>That split the same monthly reward across ten times as many blocks; it did not change how much is issued per month. That's why a reward chart drawn before and after Crescendo looks continuous instead of jumping.</p>
     <p>The reward right now, the total mined to date, and Kaspa's maximum supply all come from a live read of <code>api.kaspa.org/info/blockdag</code> and <code>api.kaspa.org/info/coinsupply</code>. If that fails, the page falls back to a reading captured 2026&#8209;08&#8209;29: DAA score 525,951,308, reward 2.31246515 KAS per block, 27.669 billion KAS mined of a 28.704 billion KAS maximum.</p>
-    <p>Exact formula: reward(n) = 23.12465141 &times; 2<sup>&minus;n/12</sup> KAS per second, where n = 0 begins at DAA score 504,909,000 and each step advances the DAA score by 26,298,000 (one month at 10 BPS). Divide by the current blocks-per-second to get KAS per block. Verified against <code>SUBSIDY_BY_MONTH_TABLE</code> and <code>SECONDS_PER_MONTH = 2,629,800</code> in rusty-kaspa's <code>consensus/src/processes/coinbase.rs</code>.</p>
+    <p>Exact formula: reward(n) = 23.12465141 &times; 2<sup>&minus;n/12</sup> KAS per second, where n = 0 begins at DAA score 504,909,000 and each step advances the DAA score by 26,298,000 (one month at 10 blocks per second). Divide by the current blocks-per-second to get KAS per block. Verified against <code>SUBSIDY_BY_MONTH_TABLE</code> and <code>SECONDS_PER_MONTH = 2,629,800</code> in rusty-kaspa's <code>consensus/src/processes/coinbase.rs</code>.</p>
     <p>Today's own total supply is a measured figure, read live from the network. Every other point the slider can visit, a past date or a future one, is this page's own model of the schedule above, scaled to match that live reading.</p>
       <p>Treat past points as close estimates of the real historical curve and future points as projection, since nothing has mined those blocks yet.</p>
   </details>
 
-  <p class="live-footer " id="liveFooter" aria-live="polite"></p>
+  <p class="sr-only" id="liveFooter" aria-live="polite"></p>
 </div>
 </div>
 <style>
@@ -342,7 +342,13 @@
 .es-demo input[type=range] {
     width:100%; height:44px; accent-color:var(--green); padding-block:14px;
   }
-.es-demo .marks { display:flex; justify-content:space-between; font-size:.7rem; color:var(--faint); margin-top:2px; }
+.es-demo .marks { position:relative; height:1.1em; font-size:.7rem; color:var(--faint); margin-top:2px; }
+.es-demo .marks span { position:absolute; transform:translateX(-50%); white-space:nowrap; }
+.es-demo .marks span:first-child { transform:none; }
+.es-demo .marks span:last-child { transform:translateX(-100%); }
+/* At 390px "today" at 0% and "1 year" at 10% collided into "todayyear". The readout above
+   always names the exact point, so the tightest tick steps out on a narrow screen. */
+@media (max-width: 600px) { .es-demo .marks span.tight { display:none; } }
 .es-demo .result-line { font-size:1.05rem; margin:20px 0 8px; }
 .es-demo .result-line b { color:var(--green); }
 .es-demo .supply-line { font-size:.92rem; color:var(--muted); margin:0 0 20px; }
@@ -372,9 +378,8 @@
 .es-demo details {
     background:var(--card-bg); border-radius:14px; padding:10px 14px; margin-top:8px; box-shadow:var(--shadow-card);
   }
-.es-demo summary {cursor:pointer; font-size:.88rem; font-weight:600; color:var(--cyan); list-style:none;}
-.es-demo summary::-webkit-details-marker {display:none;}
-.es-demo summary::before {content:"+"; font-weight:800; margin-right:6px;}
+.es-demo summary {cursor:pointer; font-size:.88rem; font-weight:600; color:var(--text);}
+.es-demo summary::marker {color:var(--green);}
 .es-demo details[open] summary::before {content:"\2212";}
 .es-demo details p { color:var(--muted); font-size:.86rem; line-height:1.6; }
 .es-demo code {
@@ -546,7 +551,7 @@
         ' (around ' + dateAtG(g) + '), each block pays about <b>' + fmtReward(reward) + ' KAS</b>, ' +
         Math.max(0, pctLess).toFixed(pctLess < 100 && pctLess >= 0 ? 2 : 0) + '% less than today. ' + tag;
     } else {
-      line = (isGenesis ? 'At genesis' : ('In ' + dateAtG(g))) + ', each block ' + (isFuture ? 'will pay' : 'paid') +
+      line = (isGenesis ? 'At genesis' : ('On ' + dateAtG(g))) + ', each block ' + (isFuture ? 'will pay' : 'paid') +
         ' about <b>' + fmtReward(reward) + ' KAS</b>. ' + tag;
     }
     document.getElementById('resultLine').innerHTML = line;
@@ -558,10 +563,11 @@
         (isFuture ? 'will have been' : 'had been') + ' issued, roughly <b>' + pct + '%</b> of the ' +
         fmtBillions(maxSupply) + ' billion KAS maximum. ' + tag;
 
-    document.getElementById('liveFooter').innerHTML =
+    document.getElementById('liveFooter').textContent =
       (mode === 'all'
-        ? 'You just moved to ' + (isGenesis ? 'genesis' : (isNow ? 'today' : yearsSinceGenesis(g) + ' years after genesis')) + ': the reward ' + (isFuture ? 'would be' : 'was') + ' about <b>' + fmtReward(reward) + ' KAS</b> per block, with about <b>' + pct + '%</b> of all Kaspa issued by then.'
-        : 'You just set the clock to ' + humanMonths(val) + ': the reward ' + (isFuture ? 'would be' : 'is') + ' about <b>' + fmtReward(reward) + ' KAS</b> per block, ' + pct + '% of all Kaspa issued by then.');
+        ? (isGenesis ? 'Genesis' : (isNow ? 'Today' : yearsSinceGenesis(g) + ' years after genesis'))
+        : humanMonths(val).replace(/^./, function (c) { return c.toUpperCase(); })) +
+      ': about ' + fmtReward(reward) + ' KAS per block, ' + pct + '% of all Kaspa issued by then.';
 
     paintCurve(g, gMin, gMax);
   }
@@ -591,7 +597,7 @@
       if (!isNaN(circ) && circ > 0) circulatingToday = circ;
       if (!isNaN(max) && max > 0) maxSupply = max;
       recalibrate();
-      setStatus(true, 'Reading live from the network.');
+      setStatus(true, 'Live from the network.');
       render();
     }).catch(function(){
       clearTimeout(timeout);
@@ -609,13 +615,18 @@
     if (mode === 'today') {
       slider.min = 0; slider.max = 120; slider.value = 0;
       document.getElementById('sliderLabel').firstChild.textContent = 'How far in the future: ';
-      document.getElementById('sliderMarks').innerHTML = '<span>today</span><span>1 year</span><span>3 years</span><span>10 years</span>';
-      document.getElementById('chartCaption').textContent = 'Each bar is one month from today. Taller means a bigger reward. The bright bar is the month above.';
+      document.getElementById('sliderMarks').innerHTML =
+        '<span style="left:0%">today</span><span class="tight" style="left:10%">1 year</span>' +
+        '<span style="left:30%">3 years</span><span style="left:100%">10 years</span>';
+      document.getElementById('chartCaption').textContent = "Each bar is one month's block reward.";
     } else {
       slider.min = 0; slider.max = ALL_MAX_MONTHS; slider.value = Math.round(gToday);
       document.getElementById('sliderLabel').firstChild.textContent = 'Point in Kaspa\'s history: ';
-      document.getElementById('sliderMarks').innerHTML = '<span>genesis</span><span>' + Math.round(gToday/12) + ' yrs (today)</span><span>' + Math.round(ALL_MAX_MONTHS/12) + ' yrs</span>';
-      document.getElementById('chartCaption').textContent = 'Each bar is one month since genesis. Solid bars are mined history. Past the "today" line, faint bars are projection, not a network reading.';
+      document.getElementById('sliderMarks').innerHTML =
+        '<span style="left:0%">genesis</span>' +
+        '<span style="left:' + ((gToday / ALL_MAX_MONTHS) * 100).toFixed(1) + '%">' + Math.round(gToday / 12) + ' yrs (today)</span>' +
+        '<span style="left:100%">' + Math.round(ALL_MAX_MONTHS / 12) + ' yrs</span>';
+      document.getElementById('chartCaption').textContent = 'Each bar is one month\'s block reward since genesis. Past the "today" line the faint bars are projection, not a network reading.';
     }
     render();
   }
@@ -641,7 +652,7 @@
   <p class="live-status" id="liveStatus">Reading live hash rates and prices&hellip;</p>
 
   <div class="primary-control" id="hoursControl">
-    <label for="ac-hoursSlider">How long the attack runs: <span class="big-readout" id="hoursOut">1 hour</span></label>
+    <label for="ac-hoursSlider">How long the attack runs: <span class="big-readout" id="hoursOut">60 minutes</span></label>
     <input type="range" id="ac-hoursSlider" min="0" max="1000" value="563" step="1" aria-label="Length of the attack, from about a minute to a day">
     <div class="marks"><span>1 minute</span><span>1 day</span></div>
   </div>
@@ -886,9 +897,8 @@
 .ac-demo details {
     background: var(--card-bg); border-radius: 14px; padding: 10px 14px; margin-top: 8px; box-shadow: var(--shadow-card);
   }
-.ac-demo summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--cyan); list-style: none; }
-.ac-demo summary::-webkit-details-marker { display: none; }
-.ac-demo summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+.ac-demo summary { cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--text); }
+.ac-demo summary::marker { color: var(--green); }
 .ac-demo details[open] summary::before { content: "\2212"; }
 .ac-demo details p, .ac-demo details li { color: var(--muted); font-size: 1rem; line-height: 1.6; }
 .ac-demo details ul { padding-left: 1.2em; margin: 6px 0; }
@@ -983,12 +993,12 @@
     },
     kaspa: {
       name: 'Kaspa', security: 'pow',
-      hashrateEH: 0.30,
-      valueSecuredUSD: 8.07e8,
+      hashrateEH: 0.33008,
+      valueSecuredUSD: 7.72e8,
       hwPricePerTH: 20, hwEffJPerTH: 283, elecPerKWh: 0.06,
       hwSource: 'IceRiver KS5L: 12 TH/s at 3,400 W (about 283 J/TH); around $20/TH used as a mid-market estimate, the least certain figure here (hashrate.no, asicminervalue.com, dated Aug 22, 2026; no live feed for ASIC street prices is fetched here).',
-      hashSource: 'Network hash rate reads live from api.kaspa.org/info/hashrate, the same public API this site\'s live-kaspa.js already uses elsewhere. Dated fallback if that read fails: around 300 to 330 PH/s in mid-August 2026, after a decline earlier in the year (Kaspalytics, 2Miners, minerstat).',
-      valueNote: 'Market capitalization reads live from api.kaspa.org/info/marketcap, the same public API this page already uses for hash rate (CORS-enabled, no key required). Dated fallback if that read fails: about 27.65 billion circulating KAS (CLAIMS.yml l1_status_snapshot_2026_08_20, api.kaspa.org) times roughly $0.029, Aug 22, 2026.',
+      hashSource: 'Network hash rate reads live from api.kaspa.org/info/hashrate, the same public API this site\'s live-kaspa.js already uses elsewhere. Dated fallback if that read fails: 330.1 PH/s, read 29 Aug 2026, after a decline earlier in the year (Kaspalytics, 2Miners, minerstat).',
+      valueNote: 'Market capitalization reads live from api.kaspa.org/info/marketcap, the same public API this page already uses for hash rate (CORS-enabled, no key required). Dated fallback if that read fails: $772 million, the same api.kaspa.org read the snapshot at the top of this page uses, 29 Aug 2026.',
       noRent: true,
       noRentNote: 'Not priceable because there is no verified rental market at attack scale, not because KAS itself is hard to buy: NiceHash lists kHeavyHash, but nowhere near the order-book depth to rent 51% of Kaspa\'s network is confirmed, so this page will not substitute a guessed number for it.'
     },
@@ -1219,7 +1229,7 @@
         document.getElementById('hourlyCost').textContent = 'no market to price';
         document.getElementById('costSplit').textContent = 'Nobody sells ' + c.name + ' hash power at this scale, so there is no rate to multiply by. Switch to buy it outright for a figure.';
         document.getElementById('ratioNote').textContent = 'A missing market, not a low price: an attacker would have to buy and run the machines.';
-        document.getElementById('ratioFill').style.width = '0%';
+        setRatioBar(null);
         document.getElementById('limitsNote').textContent = c.noRentNote;
         document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
         return;
@@ -1249,7 +1259,7 @@
       document.getElementById('hourlyCost').textContent = 'no hardware price to quote';
       document.getElementById('costSplit').textContent = 'This page has no verified street price for ' + c.name + ' mining hardware at attack scale. Switch to rent the power for a figure.';
       document.getElementById('ratioNote').textContent = 'A missing price, not a low one.';
-      document.getElementById('ratioFill').style.width = '0%';
+      setRatioBar(null);
       document.getElementById('limitsNote').textContent = c.noBuyNote;
       document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
       return;
@@ -1269,9 +1279,16 @@
     document.getElementById('costSplit').textContent = split;
     var ratio = (cost / c.valueSecuredUSD) * 100;
     document.getElementById('ratioNote').innerHTML = 'That is <b>' + fmtPct(ratio) + '</b> of the ' + fmtUSD(c.valueSecuredUSD) + ' the network secures, shown for scale, not the headline number.';
-    document.getElementById('ratioFill').style.width = ratioToBarPct(ratio) + '%';
+    setRatioBar(ratioToBarPct(ratio));
     document.getElementById('limitsNote').textContent = limitsNote;
     document.getElementById('permanenceNote').textContent = PERMANENCE_POW;
+  }
+
+  function setRatioBar(pct) {
+    var wrap = document.querySelector('.ac-demo .ratio-bar-wrap');
+    if (pct === null) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    document.getElementById('ratioFill').style.width = pct + '%';
   }
 
   function computePos(c) {
@@ -1283,7 +1300,7 @@
     state.lastCost = hourlyCostVal;
     var ratio = (spotCost / c.valueSecuredUSD) * 100;
     document.getElementById('ratioNote').innerHTML = 'Buying ' + Math.round(STAKE_SHARE*100) + '% of ' + c.name + '\'s supply at today\'s spot price ties up capital equal to <b>' + fmtPct(ratio) + '</b> of its ' + fmtUSD(c.valueSecuredUSD) + ' total value, shown for scale, not as the headline number.';
-    document.getElementById('ratioFill').style.width = ratioToBarPct(ratio) + '%';
+    setRatioBar(ratioToBarPct(ratio));
     document.getElementById('limitsNote').textContent =
       'This is the spot-market price only: it ignores that buying a third of a token\'s supply on the open market pushes the price up as you buy. There is no sourced, defensible number for how much on this chain, so nothing is added for it. The figure is a floor: the real cost of acquiring this stake would run higher.';
     document.getElementById('costSplit').textContent = 'All of it stake, bought outright and held. There is no hash power to rent by the hour, so nothing here depends on how long the attack runs.';
@@ -1438,7 +1455,7 @@
       } else if (okCount > 0) {
         setLiveStatus('partial', okCount + ' of ' + (okCount + failCount) + ' live reads succeeded; the rest fall back to the dated Aug 22, 2026 baseline (see the assumptions below).');
       } else {
-        setLiveStatus('error', 'Live reads failed. Showing the dated Aug 22, 2026 baseline for every figure that would otherwise be live.');
+        setLiveStatus('error', 'Live reads failed. Every figure that would otherwise be live is showing its own dated baseline, each one listed in the assumptions below.');
       }
       renderAssumptions();
       compute();
@@ -1512,7 +1529,7 @@
       <p class="eyebrow">Try it</p>
       <h3 id="fee-market">How far fees are from paying for the network</h3>
 <div class="fm-demo">
-  <p class="lead">Load a day of real traffic onto Kaspa and compare what fees bring in against what new supply pays out.</p>
+  <p class="lead">Load a day of real traffic, and compare fee income against what new supply pays out.</p>
 
   <div class="layout">
     <div class="panel">
@@ -1520,14 +1537,14 @@
 
       <div class="chip-scroll-wrap">
       <div class="chipset" role="group" aria-label="Traffic scenarios" id="volumeChips">
-        <button type="button" data-preset="today" aria-pressed="true">Today, measured</button>
+        <button type="button" data-preset="today" aria-pressed="true">Kaspa's own traffic</button>
         <button type="button" data-preset="bitcoin">Bitcoin's traffic</button>
         <button type="button" data-preset="ethereum">Ethereum's traffic</button>
         <button type="button" data-preset="solana">Solana's traffic</button>
         <button type="button" data-preset="fill">Fill this block exactly</button>
       </div>
       </div>
-      <p class="scenario-note" id="scenarioNote" aria-live="polite"><b>Today, measured.</b> 0.89 tx/s, Kaspa's same-day transaction count.</p>
+      <p class="scenario-note" id="scenarioNote" aria-live="polite"><b>Kaspa's own traffic.</b> 0.89 tx/s, measured 22 Aug 2026.</p>
 
       <div class="field">
         <label for="tps">Transactions per second <b id="tpsVal">0.9</b><span class="info-affordance" id="tps-info"><button class="info-affordance__trigger" type="button" aria-describedby="tps-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="tps-info-panel" role="tooltip">Slide it yourself, or use a scenario above. Log scale: each notch to the right is roughly 2x more traffic. This is how crowded the block gets, not who gets in.</span></span></label>
@@ -1535,7 +1552,7 @@
       </div>
 
       <div class="field spotlight" id="feeField">
-        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b><span class="info-affordance" id="fee-info"><button class="info-affordance__trigger" type="button" aria-describedby="fee-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="fee-info-panel" role="tooltip">Demand decides how crowded the block is. This is the one control that decides whether your transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee today, 22 Aug 2026.</span></span></label>
+        <label for="fee">Your fee <b id="feeVal">$0.000063/tx</b><span class="info-affordance" id="fee-info"><button class="info-affordance__trigger" type="button" aria-describedby="fee-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="fee-info-panel" role="tooltip">Demand decides how crowded the block is. This is the one control that decides whether your transaction gets a seat once it's crowded. $0.000063 is Kaspa's real median fee, measured 22 Aug 2026.</span></span></label>
         <input type="range" id="fee" min="-1" max="3.3" step="0.01" value="0">
 
         <p class="fee-context valline" id="feeContext">Not full yet, so any fee gets you in. Raise <b>transactions per second</b> above to fill it.</p>
@@ -1558,8 +1575,8 @@
         <span class="taglabel">Block rate<span class="info-affordance" id="bps-info"><button class="info-affordance__trigger" type="button" aria-describedby="bps-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this control</span></button><span class="info-affordance__panel" id="bps-info-panel" role="tooltip">Blocks per second is a consensus parameter: a higher rate needs a larger GHOSTDAG k for the same security margin, not just more throughput.</span></span></span>
         <div class="chipset" role="group" aria-label="Blocks per second" id="bpsChips">
           <button type="button" data-bps="1">1 block/sec</button>
-          <button type="button" data-bps="10" aria-pressed="true">10 block/sec, current mainnet</button>
-          <button type="button" data-bps="32">32 block/sec, code's ceiling</button>
+          <button type="button" data-bps="10" aria-pressed="true">10 blocks/sec, current mainnet</button>
+          <button type="button" data-bps="32">32 blocks/sec, code's ceiling</button>
         </div>
       </div>
 
@@ -1580,7 +1597,7 @@
 
       </details>
 
-      <div class="reset-row"><button class="reset-btn" id="resetBtn" type="button">Reset to today</button></div>
+      <div class="reset-row"><button class="reset-btn" id="resetBtn" type="button">Reset</button></div>
     </div>
 
     <div class="panel">
@@ -1588,18 +1605,18 @@
 
       <div class="stat-row">
         <div class="stat"><div class="num" id="capacityOut">307</div><div class="cap">tx fit per block</div></div>
-        <div class="stat"><div class="num" id="capacityTpsOut">3,070 tx/s</div><div class="cap">tx/s of room</div></div>
+        <div class="stat"><div class="num" id="capacityTpsOut">3,070</div><div class="cap">tx/s of room</div></div>
       </div>
 
       <div class="bar-track"><div class="bar-fill" id="fillBar"></div></div>
-      <p class="bar-caption" id="fillCaption">0.1 of 307 slots wanted per block (0.029% of capacity).</p>
+      <p class="bar-caption" id="fillCaption">Under 1 of 307 slots wanted per block (0.029% of capacity).</p>
 
-      <p class="payoff" id="blockPayoff">Every transaction fits, yours included. At 0.89 tx/s and 10 block/sec, Kaspa isn't full.</p>
+      <p class="payoff" id="blockPayoff">Every transaction fits, yours included, at 0.89 tx/s against 10 blocks/sec.</p>
 
       <div class="block-frame">
         <h6 class="grid-note" id="gridScaleLabel">This block, to scale</h6>
-        <p class="you-note" id="gridDotHint">Each dot: one transaction. Pink: <b>yours</b>.</p>
-        <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">Only your transaction so far. Nothing else is competing for this block.</p>
+        <p class="you-note" id="gridDotHint">Each dot is one transaction.</p>
+        <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">Nothing else is competing for this block.</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
         <div class="legend">
           <span><span class="sw i"></span>included</span>
@@ -1613,7 +1630,7 @@
         <div class="stat"><div class="num" id="feeRevOut">$4.86/day</div><div class="cap">fees per day</div></div>
         <div class="stat"><div class="num" id="subsidyOut">$58,631/day</div><div class="cap">subsidy per day</div></div>
       </div>
-      <p class="payoff" id="revenuePayoff">At this volume and fee, Kaspa earns <b>$4.86/day</b> in fees, about 12,054× below the <b>$58,631/day</b> subsidy on 22 Aug 2026.</p>
+      <p class="payoff" id="revenuePayoff">At this volume and fee, fees run about <b>12,054×</b> below the subsidy, on 22 Aug 2026.</p>
     </div>
   </div>
 
@@ -1633,7 +1650,8 @@
     <summary>Show the mass and capacity formulas</summary>
     <div class="formula-body">
       <h3>Transaction mass, reused exactly from the mass calculator</h3>
-      <p>This demo's three transaction shapes plug the same fixed inputs (1 input, 1 output, 1,000 KAS, no fee) into the identical formulas as <a href="/what-is-kaspa#mass-calculator">the mass calculator</a>, so the two demos agree on every number: a plain payment costs 1,624 mass, a covenant costs 5,660, and a ZK-proof-style transaction with an 8,000-byte payload costs 16,528, bound by transient mass rather than compute mass.</p>
+      <p>The three transaction shapes here use the same fixed inputs as <a href="/what-is-kaspa#mass-calculator">the mass calculator</a>, and the same formulas: 1 input, 1 output, 1,000 KAS, no fee. So the two demos agree on every number.</p>
+      <p>A plain payment costs 1,624 mass, a covenant 5,660, and a ZK-proof-style transaction with an 8,000-byte payload 16,528, bound by transient mass rather than compute mass.</p>
       <span class="code-block">tx_mass = max(compute_mass, storage_mass, transient_mass &times; 500,000/1,000,000)
 Block limit: 500,000 mass (compute and storage share it; transient's own limit is 1,000,000)
 capacity per block = floor(500,000 / tx_mass)</span>
@@ -1646,7 +1664,7 @@ capacity per block = floor(500,000 / tx_mass)</span>
       <span class="code-block">k(1 bps) = 18       mergeset limit = 180 (floor)
 k(10 bps) = 124     mergeset limit = 248
 k(32 bps) = 362     mergeset limit = 512 (ceiling)</span>
-      <p>Source: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>. Higher rates than mainnet's 10 bps are a research question, not a shipped setting; <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-mining">KIP<span class="term-def__panel" id="kip-def-mining" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-2 (DAGKnight) leaves the optimal rate open rather than naming one.</p>
+      <p>Source: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>. Higher rates than mainnet's 10 blocks per second are a research question, not a shipped setting; <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-mining">KIP<span class="term-def__panel" id="kip-def-mining" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>-2 (DAGKnight) leaves the optimal rate open rather than naming one.</p>
 
       <h3>How the mempool actually picks, not sorts</h3>
       <p>rusty-kaspa's mempool does not keep a strictly sorted fee queue. Its <code>Frontier</code> weighs each candidate transaction by <code>feerate^alpha</code> with <code>alpha = 3</code>, where feerate is fee divided by mass, in sompi per gram.</p>
@@ -1822,9 +1840,8 @@ feerate = fee_sompi / mass_grams</span>
 .fm-demo .honesty b { color: var(--text); }
 .fm-demo details { margin-top: 22px; background: var(--card-bg); border-radius: 18px; box-shadow: var(--shadow-card); padding: 14px 16px; }
 .fm-demo details + details { margin-top: 12px; }
-.fm-demo summary { cursor: pointer; font-weight: 600; color: var(--text); list-style: none; }
-.fm-demo summary::-webkit-details-marker { display: none; }
-.fm-demo summary::before { content: "+"; font-weight: 800; margin-right: 6px; }
+.fm-demo summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.fm-demo summary::marker { color: var(--green); }
 .fm-demo details[open] summary::before { content: "\2212"; }
 .fm-demo .formula-body { margin-top: 12px; color: var(--muted); font-size: 1.067rem; }
 .fm-demo .formula-body h3 { font-size: .8rem; color: var(--faint); margin: 16px 0 4px; text-transform: uppercase; letter-spacing: .03em; }
@@ -1987,7 +2004,7 @@ feerate = fee_sompi / mass_grams</span>
   function priceFromLog(x) { return KAS_PRICE_USD_DEFAULT * Math.pow(10, x); }
 
   var SCENARIO_LABELS = {
-    today: "Today, measured",
+    today: "Kaspa's own traffic",
     bitcoin: "Bitcoin's traffic",
     ethereum: "Ethereum's traffic",
     solana: "Solana's traffic",
@@ -2138,18 +2155,18 @@ feerate = fee_sompi / mass_grams</span>
     els.feeVal.textContent = fmtFeeUsd(feeUsdEach) + " (" + fmtMult(feeMult) + ")";
     els.priceVal.textContent = fmtPrice(price);
     els.capacityOut.textContent = fmtNum(capacity);
-    els.capacityTpsOut.textContent = fmtTps(capacityTps);
+    els.capacityTpsOut.textContent = fmtTps(capacityTps).replace(" tx/s", "");
 
     // scenario self-explainer: what selecting this preset just set, in the reader's terms
     var presetKey = state.volumePreset;
     var todayLabel = fmtTps(TODAY_TPS);
     if (presetKey === "today") {
-      els.scenarioNote.innerHTML = "<b>Today, measured.</b> " + todayLabel + ", Kaspa's same-day transaction count.";
+      els.scenarioNote.innerHTML = "<b>Kaspa's own traffic.</b> " + todayLabel + ", measured 22 Aug 2026.";
     } else {
       var multVsToday = tps / TODAY_TPS;
       var multLabel = multVsToday >= 10 ? fmtNum(multVsToday, 0) : fmtNum(multVsToday, 1);
       var name = SCENARIO_LABELS[presetKey] || "Custom";
-      els.scenarioNote.innerHTML = "<b>Loaded: " + name + ".</b> " + fmtTps(tps) + ", about " + multLabel + "× today's " + todayLabel + ". Hypothetical, not current.";
+      els.scenarioNote.innerHTML = "<b>Loaded: " + name + ".</b> " + fmtTps(tps) + ", about " + multLabel + "× Kaspa's own " + todayLabel + ". Hypothetical, not current.";
     }
 
     // shape self-explainer: the mass tradeoff, shown live instead of left implicit
@@ -2174,7 +2191,8 @@ feerate = fee_sompi / mass_grams</span>
       : pctLabel >= 1 ? fmtNum(pctLabel, 0)
       : pctLabel > 0 ? pctLabel.toPrecision(2).replace(/0+$/, "").replace(/\.$/, "")
       : "0";
-    els.fillCaption.textContent = fmtNum(perBlockDemand, 1) + " of " + fmtNum(capacity)
+    els.fillCaption.textContent = (perBlockDemand < 1 ? "Under 1" : fmtNum(perBlockDemand, 1))
+      + " of " + fmtNum(capacity)
       + " slots wanted per block (" + pctText + "% of capacity).";
 
     var sim = simulateBlock(perBlockDemand, capacity, feeMult);
@@ -2189,7 +2207,7 @@ feerate = fee_sompi / mass_grams</span>
     // block payoff sentence
     var blockMsg;
     if (!sim.congested) {
-      blockMsg = "Every transaction fits, yours included. At " + fmtTps(tps) + " and " + state.bps + " block/sec, Kaspa isn't full.";
+      blockMsg = "Every transaction fits, yours included, at " + fmtTps(tps) + " against " + state.bps + (state.bps === 1 ? " block/sec" : " blocks/sec") + ".";
       els.blockPayoff.classList.remove("waiting");
     } else if (sim.selfIncluded) {
       blockMsg = "Your transaction paid <b>" + fmtMult(feeMult) + "</b> and got into this block.";
@@ -2220,12 +2238,12 @@ feerate = fee_sompi / mass_grams</span>
     // "to scale" when every dot on screen is a real transaction.
     if (sim.popCount === 0) {
       els.gridScaleLabel.textContent = "This block, to scale";
-      els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
-      els.gridNote.textContent = "Only your transaction so far. Nothing else is competing for this block.";
+      els.gridDotHint.textContent = "Each dot is one transaction.";
+      els.gridNote.textContent = "Nothing else is competing for this block.";
     } else if (sim.hiddenCount === 0) {
       var txWord = sim.popCount === 1 ? " transaction" : " transactions";
       els.gridScaleLabel.textContent = "This block, to scale";
-      els.gridDotHint.innerHTML = "Each dot: one transaction. Pink: <b>yours</b>.";
+      els.gridDotHint.textContent = "Each dot is one transaction.";
       els.gridNote.textContent = sim.congested
         ? fmtNum(sim.popCount) + txWord + " competing for " + fmtNum(capacity) + " slots. Every one is drawn, plus yours."
         : fmtNum(sim.popCount) + txWord + ", all fitting this block. Every one is drawn, plus yours.";
@@ -2233,7 +2251,7 @@ feerate = fee_sompi / mass_grams</span>
       var sampleRatio = sim.popCount / sim.displayPop;
       var sampleRatioLabel = sampleRatio >= 10 ? fmtNum(sampleRatio, 0) : fmtNum(sampleRatio, 1);
       els.gridScaleLabel.textContent = "This block, sampled";
-      els.gridDotHint.innerHTML = "Each dot stands for about " + sampleRatioLabel + " transactions, same ratio as the real count. Pink: <b>yours</b>.";
+      els.gridDotHint.textContent = "Each dot stands for about " + sampleRatioLabel + " transactions, the same ratio as the real count.";
       els.gridNote.textContent = fmtNum(sim.popCount) + " transactions competing for " + fmtNum(capacity)
         + " slots. Showing " + fmtNum(sim.displayPop) + " of them plus yours, " + fmtNum(sim.displayPop + 1)
         + " dots in all (" + fmtNum(sim.hiddenCount) + " not pictured, same ratio).";
@@ -2281,9 +2299,9 @@ feerate = fee_sompi / mass_grams</span>
     } else if (subsidyUsd / dailyFeeUsd >= 1.02) {
       var ratio = subsidyUsd / dailyFeeUsd;
       var ratioLabel = ratio >= 100 ? fmtNum(ratio, 0) : fmtNum(ratio, 1);
-      revMsg = "At this volume and fee, Kaspa earns <b>" + fmtUsd(dailyFeeUsd) + "/day</b> in fees, about " + ratioLabel + "× below the <b>" + fmtUsd(subsidyUsd) + "/day</b> subsidy " + timeLabel + ".";
+      revMsg = "At this volume and fee, fees run about <b>" + ratioLabel + "×</b> below the subsidy, " + timeLabel + ".";
     } else {
-      revMsg = "At this volume and fee, fee revenue of <b>" + fmtUsd(dailyFeeUsd) + "/day</b> matches or beats the <b>" + fmtUsd(subsidyUsd) + "/day</b> subsidy " + timeLabel + ", closing the gap.";
+      revMsg = "At this volume and fee, fees match or beat the subsidy, " + timeLabel + ". The gap closes.";
     }
     if (tps > capacityTps * 1.001) {
       revMsg += " Only " + fmtTps(capacityTps) + " of the " + fmtTps(tps) + " fit, so the rest pay nothing.";
@@ -2461,7 +2479,7 @@ feerate = fee_sompi / mass_grams</span>
       <button type="button" class="zoom-btn" id="zoomBtn" aria-pressed="false">Zoom into the small end</button>
     </div>
     <div class="bars" id="barRows"></div>
-    <p class="scale-note" id="scaleNote">Linear scale: bar length is proportional to gigabytes. Bars under 3% are floored to stay visible.</p>
+    <p class="scale-note" id="scaleNote">Linear scale: bar length is proportional to gigabytes. A bar under 3% of the row width is floored to stay visible; read its number.</p>
   </div>
 
   <div class="panel " id="guessPanel">
@@ -2481,7 +2499,7 @@ feerate = fee_sompi / mass_grams</span>
   <details class="deep-dive">
     <summary>How the 50 GB stays flat: finality, pruning, and the discard window</summary>
     <div class="nc-mechanism-body">
-    <h5>Why 10 blocks a second doesn't balloon the disk</h5>
+    <h5>Why 10 blocks per second doesn't balloon the disk</h5>
     <p class="prose">A pruned Kaspa node, not run with <code>--archival</code> (below), and not another chain.</p>
     <div class="window-controls">
       <label for="nc-hoursSlider">Hours since a block</label>
@@ -2519,7 +2537,8 @@ feerate = fee_sompi / mass_grams</span>
     <details>
       <summary>Archival mode, second-order pruning, and MuHash</summary>
       <p class="prose"><strong>Full node vs. archival node.</strong> The behavior above is what a default node does.</p>
-      <p class="prose">Anyone who wants every block kept forever can run the same rusty-kaspa software with its own <code>--archival</code> flag, documented in the node's own help text as running "an archival node: avoids deleting old block data when moving the pruning point," with a plain warning attached: "heavy disk usage." No published size exists for a mainnet node run this way, so this page does not estimate one.</p>
+      <p class="prose">Anyone who wants every block kept forever runs the same rusty-kaspa software with its <code>--archival</code> flag. The node's own help text describes it as "an archival node: avoids deleting old block data when moving the pruning point," and attaches a plain warning: "heavy disk usage."</p>
+      <p class="prose">No published size exists for a mainnet node run that way, so this page does not estimate one.</p>
       <p class="prose"><strong>First-order and second-order pruning.</strong> Pruning itself is two passes, not one. First, at the 1,080,000-block boundary above, a node discards block bodies and transactions, keeping headers.</p>
       <p class="prose">Second, deeper still, it discards most of the headers too, keeping only a sparse "posterity" chain of headers spaced about 24 hours apart back to genesis, plus a cryptographic pruning proof that lets a new node verify that sparse chain is genuine. Source: rusty-kaspa's pruning-processor code and KIP-15.</p>
       <p class="prose"><strong>MuHash: the actual answer to "is this safe."</strong> None of this works without a way to prove the current <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-mining">UTXO<span class="term-def__panel" id="utxo-def-mining" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> set, who owns what, right now, is correct without replaying the history that produced it.</p>
@@ -2548,7 +2567,7 @@ feerate = fee_sompi / mass_grams</span>
       <p>It does not show a growth curve over time, a total including user transactions, or a true unpruned figure, because those inputs are not sourced anywhere this site can check.</p>
       <p>No number here is invented; where an input is a genuine measurement it is labeled as such above, and where it is a model built from real but incomplete constants, it is labeled ESTIMATE.</p>
       <p>Finality and pruning depth: rusty-kaspa <code>consensus/core/src/config/{params.rs,bps.rs,constants.rs}</code>. <code>FINALITY_DURATION</code> is 43,200 seconds (12 hours); <code>PRUNING_DURATION</code> is 108,000 seconds (30 hours).</p>
-      <p>At mainnet's 10 blocks/second, <code>finality_depth()</code> = 432,000 blocks and <code>pruning_depth()</code> takes the larger of a formula (finality depth plus safety terms for merge depth and anticone/mergeset size, referencing the project's <a href="https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf">Prunality analysis</a>) and the flat 108,000-second floor; at 10 BPS the flat floor wins, giving 1,080,000 blocks.</p>
+      <p>At mainnet's 10 blocks per second, <code>finality_depth()</code> = 432,000 blocks and <code>pruning_depth()</code> takes the larger of a formula (finality depth plus safety terms for merge depth and anticone/mergeset size, referencing the project's <a href="https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf">Prunality analysis</a>) and the flat 108,000-second floor. At 10 blocks per second the flat floor wins, giving 1,080,000 blocks.</p>
       <p>No source found explains why 30 hours specifically, rather than a different round number, was chosen for that floor; it reads as a margin the protocol's authors judged sufficient rather than a value derived from a unique calculation.</p>
       <p>KIP-15 independently states the same figure in its own words: a node "prunes the transaction and header data after c. 52 hours (30 hours post-Crescendo)."</p>
       <p>Archival mode: rusty-kaspa <code>kaspad</code> CLI, <code>--archival</code> flag, help text "Run as an archival node: avoids deleting old block data when moving the pruning point (Warning: heavy disk usage)," plus <code>--retention-period-days</code> for partial retention.</p>
@@ -2718,9 +2737,8 @@ feerate = fee_sompi / mass_grams</span>
 .nc-demo .boundary-row span {color:var(--faint); font-size:1.07rem;}
 .nc-demo p.prose {font-size:1.07rem;}
 .nc-demo details {border:0; background:var(--panel); border-radius:14px; padding:10px 14px; margin-top:8px;}
-.nc-demo summary {cursor:pointer; font-size:.88rem; font-weight:600; color:var(--cyan); list-style:none;}
-.nc-demo summary::-webkit-details-marker {display:none;}
-.nc-demo summary::before {content:"+"; font-weight:800; margin-right:6px;}
+.nc-demo summary {cursor:pointer; font-size:.88rem; font-weight:600; color:var(--text);}
+.nc-demo summary::marker {color:var(--green);}
 .nc-demo details[open] summary::before {content:"\2212";}
 .nc-demo .formula {font-size:1.07rem; color:var(--muted); margin-top:10px;}
 .nc-demo .formula p {margin:0 0 10px;}
@@ -2799,7 +2817,13 @@ feerate = fee_sompi / mass_grams</span>
     container.innerHTML = '';
     var pool = zoomed ? CHAINS.filter(function(c){ return SMALL_SET.indexOf(c.name) !== -1; }) : CHAINS;
     var shown = pool.filter(function(c){ return zoomed ? true : active[c.name]; });
-    if (!shown.length){ return; }
+    if (!shown.length){
+      var empty = document.createElement('p');
+      empty.className = 'scale-note';
+      empty.textContent = 'No chains selected. Pick one above to compare.';
+      container.appendChild(empty);
+      return;
+    }
     var maxDisk = Math.max.apply(null, shown.map(function(c){ return c.disk; }));
     shown.sort(function(a,b){ return a.disk - b.disk; });
     shown.forEach(function(c){
@@ -2844,15 +2868,15 @@ feerate = fee_sompi / mass_grams</span>
     document.getElementById('windowMarker').style.left = pct + '%';
     var blocksDeep = Math.round(hours * BLOCKS_PER_HOUR).toLocaleString();
     var statusEl = document.getElementById('windowStatus');
-    if (hours <= FINALITY_HOURS){
+    if (hours < FINALITY_HOURS){
       statusEl.className = 'window-status kept';
-      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep, before finality.';
-    } else if (hours <= PRUNING_HOURS){
+      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep, not final yet.';
+    } else if (hours < PRUNING_HOURS){
       statusEl.className = 'window-status margin';
-      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep, past finality. Refused outright, but kept anyway as safety margin.';
+      statusEl.textContent = 'Kept: ' + blocksDeep + ' blocks deep. Final, so no reorganization can rewrite it, and still inside the 18-hour margin before pruning.';
     } else {
       statusEl.className = 'window-status discarded';
-      statusEl.textContent = 'Discarded: ' + blocksDeep + ' blocks deep, past pruning. No reason left to keep it.';
+      statusEl.textContent = 'Discarded: ' + blocksDeep + ' blocks deep, past the pruning point. Nothing needs it now.';
     }
   }
 
@@ -2904,24 +2928,26 @@ feerate = fee_sompi / mass_grams</span>
 </script>
 
       <h3>The setup, step by step</h3>
-      <div class="reference-grid grid-cards">
-        <article>
-          <h3>Miner</h3>
-          <p>The ASIC does the hashing. Its web screen usually asks for a pool URL, username, and password.</p>
-        </article>
-        <article>
-          <h3>Bridge</h3>
-          <p>The Rusty Kaspa Stratum Bridge accepts the miner connection and talks to a Kaspa node.</p>
-        </article>
-        <article>
-          <h3>Node</h3>
-          <p>The node hands the bridge block templates and takes back solved blocks.</p>
-        </article>
-        <article>
-          <h3>Wallet address</h3>
-          <p>The address in the miner username is where a solo block reward lands if the miner finds a block.</p>
-        </article>
+      <style>
+      /* Four unordered cards used to describe a path that has an order. Same four pieces,
+         drawn as the chain they form. Row on a wide screen, column on a phone. */
+      .mining-path-diagram { display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; margin:18px 0 0; }
+      .mining-path-diagram .hop { flex:1 1 190px; min-width:0; border:1px solid var(--line-bright, #746e60); border-radius:14px; padding:14px 16px; }
+      .mining-path-diagram .hop b { display:block; font-size:1rem; font-weight:700; margin-bottom:4px; }
+      .mining-path-diagram .hop span { display:block; font-size:.95rem; color:var(--muted, #b6b0a7); line-height:1.45; }
+      .mining-path-diagram .hop-arrow { flex:0 0 auto; align-self:center; font-size:1.3rem; color:var(--faint, #9d988c); }
+      @media (max-width: 700px) { .mining-path-diagram .hop-arrow { transform:rotate(90deg); align-self:center; width:100%; text-align:center; } }
+      </style>
+      <div class="mining-path-diagram" role="img" aria-label="The mining path: ASIC miner to Stratum Bridge to Kaspa node to the Kaspa network">
+        <div class="hop"><b>ASIC miner</b><span>Does the hashing. Its web screen asks for a pool URL, a username, and a password.</span></div>
+        <div class="hop-arrow" aria-hidden="true">&rarr;</div>
+        <div class="hop"><b>Stratum Bridge</b><span>Speaks Stratum to the miner and RPC to the node. Neither one talks to the other directly.</span></div>
+        <div class="hop-arrow" aria-hidden="true">&rarr;</div>
+        <div class="hop"><b>Kaspa node</b><span>Hands out block templates, and takes solved blocks back.</span></div>
+        <div class="hop-arrow" aria-hidden="true">&rarr;</div>
+        <div class="hop"><b>Kaspa network</b><span>A solved block goes out to the DAG, and the reward is paid to the address in it.</span></div>
       </div>
+      <p>Your wallet address travels in the miner's username field. That is where a solo block reward lands.</p>
       <p class="fit-note">Shares only prove the miner is talking to the bridge. A block reward arrives when the hardware finds a valid block, and solo variance means that can take a while even on working hardware.</p>
       <h4>The beginner setup</h4>
       <p>One computer runs both the node and bridge. Keep two terminal windows open on that computer, then open the miner's web screen in a browser.</p>
@@ -3283,9 +3309,9 @@ feerate = fee_sompi / mass_grams</span>
 
     <section id="sources" class="section">
       <p class="eyebrow">Sources</p>
-      <h2>Source notes</h2>
+      <h2>Sources, with what each backs</h2>
       <details class="source-more">
-        <summary>Twelve sources, bridge docs to public APIs</summary>
+        <summary>Open the table: bridge docs, node guides, and public APIs</summary>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
@@ -3299,9 +3325,9 @@ feerate = fee_sompi / mass_grams</span>
             <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a></td><td>The file to download, since the release archives do not carry one. It sets the dashboard port, the Stratum ports, and the node RPC address.</td></tr>
             <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a></td><td>v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</td></tr>
             <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a></td><td>The Windows, macOS, and Linux archives used in this guide.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td>August 22, 2026 mainnet DAA and network read.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td>Dated supply and reward panel.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td>The dated hash-rate reading in the snapshot above.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td>The mainnet DAA and network read behind the snapshot above.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td>The supply and reward figures in the snapshot above.</td></tr>
+            <tr><td><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td>The hash-rate reading in the snapshot above.</td></tr>
             <tr><td><a href="https://wiki.kaspa.org/en/timeline">Kaspa wiki timeline</a></td><td>Early hash-rate milestones: 60 MH/s in November 2021, 10 TH/s in June 2022, 50 TH/s in August 2022, and 500 TH/s in November 2022.</td></tr>
             <tr><td><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa wiki tokenomics</a></td><td>Fair-launch and no-premine context.</td></tr>
             <tr><td><a href="https://www.coinbase.com/price/kaspa">Coinbase Kaspa price page</a></td><td>All-time-high reference and market-data context.</td></tr>
@@ -3315,13 +3341,9 @@ feerate = fee_sompi / mass_grams</span>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/skeptical-case"><span>Previous</span><strong>Kaspa risks and open questions</strong><p>The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.</p></a>
-        <a href="/kips"><span>Next</span><strong>KIPs and KCCs</strong><p>A live tracker of Kaspa&#x27;s change proposals. It reads the repositories direct, so it cannot go stale.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Build Kaspa apps</h2>
+      <p class="site-next"><a href="/build-on-kaspa#covenant-breaker-demo">Try to break a Toccata covenant vault yourself, and see exactly which attack gets stopped and why.</a></p>
     </section>
 <!-- related-links:end -->
   </main>

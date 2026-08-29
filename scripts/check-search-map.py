@@ -10,7 +10,14 @@ MANIFEST = json.loads(Path("site-manifest.json").read_text(encoding="utf-8"))
 # and the search page itself are destinations nobody searches for, and this
 # check previously required them to be listed, which is how they got there.
 _EXCLUDED = set(MANIFEST.get("searchExcludedPages", []))
+# The map also has to cover the manifest's "demos" array, not just "pages".
+# Until 2026-08-29 this script walked "pages" alone, so /demos, which sits in
+# the primary nav of every page on the site, could be absent from the page map
+# and the check would still pass: it was structurally unable to see the
+# omission. Anything the site navigates to belongs on the map, whichever
+# manifest array holds it.
 PAGES = [p for p in MANIFEST["pages"] if p not in _EXCLUDED]
+PAGES += [p for p in MANIFEST.get("demos", []) if p not in _EXCLUDED]
 
 
 class SearchParser(HTMLParser):
@@ -56,6 +63,8 @@ class SearchParser(HTMLParser):
 def expected_href(page):
     if page == "index.html":
         return "/"
+    if page.endswith("/index.html"):
+        return "/" + page[: -len("/index.html")]
     if page.endswith(".html"):
         page = page[:-5]
     return f"/{page}"

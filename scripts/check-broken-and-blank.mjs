@@ -53,7 +53,7 @@
  *
  * Usage: node scripts/check-broken-and-blank.mjs
  */
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import http from 'node:http';
 import { createRequire } from 'node:module';
 import path from 'node:path';
@@ -97,8 +97,17 @@ const isRedirectStub = (rel) => {
   }
 };
 
+// A redirect stub carries no content: it is a <meta http-equiv="refresh">
+// and nothing else. A headless browser follows that refresh, so loading one
+// here measures the DESTINATION page a second time and files every defect it
+// finds under the stub's filename. 18 of the 19 files under demos/ are stubs
+// (verified 2026-08-29), which is how check-render.mjs came to report
+// demos/confirmation-risk.html, a 569-byte stub, with 90 violations including
+// 2 clipped chart labels that are really why-kaspa-matters.html's. Stubs are
+// already checked, correctly, by scripts/check-redirect-stubs.sh.
 const demoFiles = readdirSync(path.join(ROOT, 'demos'))
   .filter((f) => f.endsWith('.html'))
+.filter((f) => !readFileSync(path.join(ROOT, 'demos', f), 'utf8').includes('http-equiv="refresh"'))
   .map((f) => `demos/${f}`)
   .sort();
 
@@ -137,12 +146,25 @@ function startServer() {
     if (pathname === '/') pathname = '/index.html';
     let filePath = path.join(ROOT, pathname);
 
-    if (!existsSync(filePath) || filePath.endsWith('/')) {
+    // A clean URL naming a real directory (/demos) is the case this used to
+    // miss: existsSync said true, so neither fallback ran and readFileSync
+    // below was handed a directory and threw EISDIR, taking the whole gate
+    // down rather than reporting anything. serve-local.py, the server a
+    // person previews against, has always resolved this to the directory's
+    // index.html; this now matches it.
+    const isDir = existsSync(filePath) && statSync(filePath).isDirectory();
+    if (!existsSync(filePath) || isDir || filePath.endsWith('/')) {
       if (existsSync(path.join(filePath, 'index.html'))) {
         filePath = path.join(filePath, 'index.html');
       } else if (existsSync(filePath + '.html')) {
         filePath = filePath + '.html';
       }
+    }
+
+    if (existsSync(filePath) && statSync(filePath).isDirectory()) {
+      res.writeHead(404);
+      res.end('Not found');
+      return;
     }
 
     if (!existsSync(filePath) || !filePath.startsWith(ROOT)) {

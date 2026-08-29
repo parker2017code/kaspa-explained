@@ -762,34 +762,40 @@ claims:
     status: measurement_sensitive
     recheck_after: 2026-08-31
     summary: >
-      Rechecked August 24, 2026 against api.kaspa.org/info/blockreward directly: block reward is still
-      2.31246515 KAS, unchanged, still inside the same 504,909,000-531,207,000 emission step (see
-      l1_status_snapshot_2026_08_20 above). api.kaspa.org/info/hashrate read 297,696.9, about 0.2977 EH/s,
-      down from 0.31207 EH/s on August 22, ordinary short-term hash rate variance. A live CoinGecko read
-      gave $0.02864016/KAS, down from $0.02934513 on August 22. The daily_transactions and median_fee_usd
-      inputs from data/l1-chains.json were not rerun this pass since that file carries its own 2026-08-22
-      dated snapshot and is outside this claim's edit scope; the dollar totals below still reflect that
-      date's price and are not restated for the small price move just measured. Security-budget math for
-      August 22, 2026, computed for the skeptical-case.html "What pays for
-      the hash rate" section. Block reward 2.31246515 KAS (api.kaspa.org/info/blockreward), at 10
-      blocks per second (Crescendo, block_time_s in data/l1-chains.json), gives 864,000 blocks/day
-      and 1,997,970 KAS/day of subsidy. At $0.02934513/KAS (CoinGecko simple price, fetched live),
-      that is about $58,631/day. Daily transactions 77,207 and median_fee_usd 0.000063, both from
-      data/l1-chains.json's Kaspa entry, give daily fee revenue of about $4.86. Subsidy runs about
-      12,054 times fee revenue; fees fund roughly 0.0083% of daily miner income. Hash rate 311.5
-      PH/s (api.kaspa.org/info/hashrate, fetched live), consistent with l1-chains.json's
-      hashrate_ehs of 0.31207 EH/s. Emission steps down 2^(-1/12) per month, about 5.61%, per
-      rusty-kaspa's coinbase.rs SUBSIDY_BY_MONTH_TABLE (also cited in this file's
-      emission_schedule_may_2026 claim); 12 monthly steps compound to exactly half, so holding KAS price flat the daily
-      subsidy falls to about $29,315/day in one year and about $3,664/day in four years, still
-      roughly 6,000x and 750x today's fee revenue respectively. Holding today's median fee flat,
-      matching today's $58,631/day subsidy from fees alone needs about 10,771 tx/s sustained, a
-      roughly 12,000x rise from Kaspa's own 0.895 tps sustained figure and above every chain's
-      measured sustained rate in data/l1-chains.json, including Solana's 1,175. Holding today's
-      77,207 tx/day flat, the same match needs a median fee near $0.76/tx, about 6x Bitcoin's own
-      $0.1317 median (data/l1-chains.json). These are same-day snapshots multiplied through, not
-      predictions: KAS price, hash rate, throughput, and fee levels all move independently, and
-      price appreciation or throughput growth can each close part of the gap on their own.
+      Recomputed August 29, 2026 from data/l1-chains.json's Kaspa row (meta.as_of 2026-08-22),
+      which is now the single source skeptical-case.html reads. The figures this entry carried
+      before that date came from a superseded revision of the same file and no longer matched it:
+      77,207 daily transactions against the file's 82,023, Solana's sustained 1,175 tx/s against
+      2,032.805, and a Bitcoin median fee of $0.1317 against $0.054431. Those three are corrected
+      below, and the page's demo now derives its copy from the same five fields rather than
+      restating them by hand.
+      Block reward 2.31246515 KAS (api.kaspa.org/info/blockreward), at 10 blocks per second
+      (Crescendo, block_time_s in data/l1-chains.json), gives 864,000 blocks/day and 1,997,970
+      KAS/day of subsidy, matching the file's emission_native_per_day. At $0.0292121/KAS, the
+      CoinGecko price meta.caveats.emission names for that date, that is $58,357.75/day, the
+      file's emission_usd_per_day. Daily transactions 82,023 and median_fee_usd 0.000063 give
+      daily fee revenue of about $5.17. Subsidy runs about 11,293 times fee revenue; fees fund
+      roughly 0.0089% of daily miner income.
+      Emission steps down 2^(-1/12) per month, about 5.61%, per rusty-kaspa's coinbase.rs
+      SUBSIDY_BY_MONTH_TABLE (also cited in this file's emission_schedule_may_2026 claim); 12
+      monthly steps compound to exactly half, so holding KAS price flat the daily subsidy falls
+      to about $29,179/day in one year and about $3,647/day in four.
+      Holding today's median fee flat, matching today's subsidy from fees alone needs about
+      926,313,492 transactions a day, 10,721 tx/s sustained: roughly 11,300 times Kaspa's own
+      0.949 tx/s in the same file, 4.8 times its highest observed burst of 2,229.2, and 5.3 times
+      Solana's 2,032.805, the highest sustained rate any chain in that file carries. Holding
+      today's 82,023 tx/day flat instead, the same match needs a median fee near $0.7115, about 13
+      times Bitcoin's own $0.054431 median in the same file.
+      Two earlier notes kept for the record. An August 24 recheck against api.kaspa.org read the
+      block reward unchanged at 2.31246515 KAS, still inside the 504,909,000-531,207,000 emission
+      step, hash rate at 297,696.9 GH/s (about 0.2977 EH/s), and a CoinGecko price of
+      $0.02864016/KAS. An earlier version of this entry priced the subsidy at $0.02934513/KAS for
+      $58,631/day; that is a different same-day CoinGecko read from the one l1-chains.json used,
+      0.47 percent apart, which is a price move inside the day rather than a disagreement about
+      the issuance rate. The page uses the file's figure so the site has one home for it.
+      These are same-day snapshots multiplied through, not predictions: KAS price, hash rate,
+      throughput, and fee levels all move independently, and price appreciation or throughput
+      growth can each close part of the gap on their own.
     source: https://api.kaspa.org/info/blockreward
 
   chain_comparer_dial_corrections_2026_08_22:

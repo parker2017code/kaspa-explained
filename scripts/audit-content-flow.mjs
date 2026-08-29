@@ -34,9 +34,20 @@ const longReferenceAllowed = new Set([
   // check was applying both.
   "why-kaspa-matters.html",
   "crypto-from-scratch.html",
-  "toccata-explained.html",
   "build-on-kaspa.html",
   "kaspa-origin-story.html",
+  // The methodology behind model-picker.html's ranking: benchmark provenance
+  // for 230 cells across 23 models and 6 dials. It lived inside one closed
+  // "How the score works" disclosure on model-picker.html, 6,685 words behind
+  // a single toggle, until 2026-08-29. This check's own failure message says
+  // to "move reference material behind a dedicated reference page"; this page
+  // is that page, so the whole-page ceiling is the wrong standard for it, the
+  // same way it is for the guides above. check-visible-sections.mjs still caps
+  // every unbroken prose run on it at 300 words.
+  "model-picker-method.html",
+  // toccata-explained.html was listed here and has been a redirect stub into
+  // /what-is-kaspa#covenants since the page merge. It carries no prose, so the
+  // exemption protected nothing. Removed 2026-08-29.
 ]);
 
 const normalPageWordLimit = 2400;

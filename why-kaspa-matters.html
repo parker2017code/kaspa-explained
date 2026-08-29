@@ -30,7 +30,7 @@
   <meta property="og:description" content="What Kaspa is trying to be: money nobody can quietly change the rules on, that still settles fast.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/why-kaspa-matters">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,7 +38,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Design Case | Kaspa Explained">
   <meta name="twitter:description" content="What Kaspa is trying to be: money nobody can quietly change the rules on, that still settles fast.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
@@ -473,7 +473,13 @@
             W = Math.max(240, w || 720);
             NARROW = W < 460;
             H = NARROW ? 300 : Math.round(Math.min(360, Math.max(260, W * 0.47)));
-            PAD_L = NARROW ? 36 : 46;
+            /* Phone gutter widened from 36 to 44. The y-axis labels are drawn
+               at x = PAD_L - 6 with text-anchor: end, so the gutter has to hold
+               the widest of them. "100%" renders about 32px at the .75rem this
+               chart uses, which needs 38px of gutter; at 36 it started at -2 and
+               the svg's own overflow box cut it. Measured by check-render.mjs at
+               390px in both themes, 2026-08-29. */
+            PAD_L = NARROW ? 44 : 46;
             PAD_R = NARROW ? 10 : 16;
             PAD_T = 30;
             PAD_B = 30;
@@ -727,13 +733,9 @@
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/what-is-kaspa"><span>Previous</span><strong>What is Kaspa?</strong><p>What is Kaspa? KAS, Proof of Work, blockDAGs, GHOSTDAG, 10 BPS, and what&#x27;s live on mainnet versus still roadmap.</p></a>
-        <a href="/crypto-from-scratch"><span>Next</span><strong>What crypto does, and what it&#x27;s worth</strong><p>What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Why parallel spends don&#x27;t collide</h2>
+      <p class="site-next"><a href="/utxo-vs-accounts">Spend from a coin model and a balance model side by side, and watch one queue while the other hands back change.</a></p>
     </section>
 <!-- related-links:end -->
   </main>

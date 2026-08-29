@@ -15,7 +15,8 @@ place, their parents, and their transactions."
 
 Colors come from the dark palette in the APPLE DESIGN LAYER of styles.css,
 which is the site's default theme. They are duplicated here because an SVG
-cannot read CSS custom properties; check-og-card.py fails if they drift.
+cannot read CSS custom properties. There is no checker for that drift: this
+comment used to claim check-og-card.py enforced it, and no such script exists.
 
 There is no text on the card, and that is the finding rather than a shortcut.
 Four competent references were fetched and looked at on 29 Aug 2026:
@@ -46,7 +47,12 @@ import shutil
 import subprocess
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-PNG_NAME = "og-kaspa-explained-20260829.png"
+# One card, one file. The dated variants (og-kaspa-explained-20260514.png and
+# og-kaspa-explained-20260829.png) were deleted on 2026-08-29: three copies of one
+# social card is the same defect as two copies of one demo, and the two dated files
+# were byte-identical to each other while every page pointed at the older art.
+# Pages cache-bust with ?v=<date> on this stable name instead.
+PNG_NAME = "og-kaspa-explained.png"
 
 
 def rasterize(root, svg_path):

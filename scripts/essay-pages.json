@@ -2,11 +2,6 @@
   "_comment": "Shared source of truth for which live pages are essays. Read by scripts/audit-content-flow.mjs (Node) and scripts/check-density.sh (embedded Python), so the two content gates cannot drift on which pages count as an essay the way they did on 2026-08-22. See design/density-budget.md, 'Page-type scope,' for what qualifies a page for this list and what each field controls. Redirect stubs (e.g. toccata-expressiveness-upgrade*.html) do not belong here: they carry no prose and are not in site-manifest.json's live pages.",
   "essays": [
     {
-      "file": "skeptical-case.html",
-      "extended_word_limit": false,
-      "reason": "Argues a case in continuous prose; reverted 2026-08-22 from a collapsed version because burying the argument was the worst defect found in that rewrite. 1,555 visible words, under the normal 2,400-word ceiling, so it does not need the extended one."
-    },
-    {
       "file": "the-instrument.html",
       "extended_word_limit": false,
       "reason": "Hosted guest piece by Moose, explicitly outside the site's checked claim set; owner confirmed it stays untouched. 191 visible words, far under the normal ceiling."
@@ -85,6 +80,15 @@
     {
       "file": "argent-explained.html",
       "reason": "Reference page carrying a live repository table and an embedded demo. Governed by the per-section rule."
+    },
+    {
+      "file": "skeptical-case.html",
+      "reason": "Risk table plus an embedded security-budget demo and two short prose sections. Its surface is seven table rows, the demo's own controls and readouts, and about 200 words of prose; the whole-page 300-word ceiling would have to hide the table or the demo to pass, which is the inverted disclosure design/STANDARD.md bans. Moved here from essays 2026-08-29; see _essays_removed_2026_08_29b."
+    },
+    {
+      "file": "model-picker-method.html",
+      "reason": "Added 2026-08-29. This is the 6,685-word methodology that model-picker.html used to hold inside one closed \"How the score works\" disclosure, 8.4x the roughly 800-word ceiling SITE-STANDARD sets for a panel. Moved to its own page per that file's own instruction, structured under nine headings with a chip index so a reader can arrive at one section deliberately. A lookup reference, like sources.html and kips.html above, so the per-section rule measures it rather than the whole-page ceiling."
     }
-  ]
+  ],
+  "_essays_removed_2026_08_29b": "skeptical-case.html was listed under essays with the reason \"Argues a case in continuous prose ... 1,555 visible words\". That stopped being true before this pass: the page was already a seven-row risk table with per-cell disclosures, not continuous prose, and it measured 417 visible words. The essay exemption also waived the 60-word paragraph cap on a page whose longest paragraph was 155 words and sat inside a closed <details> inside a table cell. Rewritten 2026-08-29 as a risk table plus one interactive demo (#security-budget-demo) and two short prose sections: 721 visible words, none of them hidden, longest paragraph 54. Same shape as utxo-vs-accounts.html and argent-explained.html below, so it moves to per_section_pages, where the structural-break rule measures it and the paragraph cap applies."
 }

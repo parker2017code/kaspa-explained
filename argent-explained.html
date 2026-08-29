@@ -30,7 +30,7 @@
   <meta property="og:description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/argent-explained">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,7 +38,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Argent and Silverscript, Explained | Kaspa Explained">
   <meta name="twitter:description" content="Argent compiles covenant applications down to Silverscript. Here is the language model, a worked example, what the README actually says, and the repository signals.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
@@ -340,8 +340,7 @@
       <h2>A covenant is opcodes. An application is several agreeing.</h2>
       <p>A covenant is <a href="/what-is-kaspa#covenants">a rule attached to a coin</a>, written as raw opcodes. One coin with one rule is readable. An application is several of them that have to agree, and few teams can audit that by hand.</p>
       <p>Argent is Michael Sutton's answer, not an official protocol project. You describe an actor, a coin that carries state and the rules for spending it, and the compiler writes the script.</p>
-      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled covenant apps joined into one all-or-nothing transaction: either every part lands, or none does.</span></span> lets an actor in one compiled app authorize an actor in another, inside a single transaction. Two apps built separately then land together or not at all.</p>
-      <p>It is the second of <a href="/utxo-vs-accounts#shared-state">three rungs on the UTXO page</a>, and the first one that is not live.</p>
+      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled covenant apps joined into one all-or-nothing transaction: either every part lands, or none does.</span></span> lets an actor in one compiled app authorize an actor in another, inside a single transaction, so two apps built separately land together or not at all. It is the second of <a href="/utxo-vs-accounts#shared-state">three rungs on the UTXO page</a>, and the first that is not live.</p>
       <details class="deep-dive" data-audience="specialist">
         <summary>Open the language model and a worked example</summary>
       <p>On an account chain, a contract sits at an address and receives calls. On Kaspa there is no such thing to call. There are only outputs, and a covenant is a rule about what the next output has to look like. Argent takes that constraint seriously instead of hiding it.</p>
@@ -402,7 +401,15 @@ app Tickets {
     <section class="section" data-audience="specialist">
       <p class="eyebrow">What's proven, what isn't</p>
       <h2>Partitioned state works. Shared state is a design direction.</h2>
-      <p>Every example gives each thing its own coin: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, one per game, one per position. Shared state, which is most of what people mean by DeFi, has no public Argent example yet.</p>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Shape of the state</th><th>What Argent has for it</th></tr></thead>
+          <tbody>
+            <tr><td>One coin per thing</td><td>Every published example: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position.</td></tr>
+            <tr><td>One state, many writers</td><td>Nothing public. That shape is most of what people mean by DeFi.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p>The README carries a caution and a list of working pieces. Quote one half without the other and you get the project wrong. Either way, nothing built with Argent runs on Kaspa mainnet today.</p>
       <details class="deep-dive">
         <summary>Open the evidence: the DEX example, commit history, and the README quoted in full</summary>
@@ -430,13 +437,9 @@ app Tickets {
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/kaspa-origin-story"><span>Previous</span><strong>Kaspa&#x27;s fair launch was the path left after the other paths failed</strong><p>How Kaspa got here, from a research paper to a fair launch to a live smart contract layer.</p></a>
-        <a href="/build-on-kaspa"><span>Next</span><strong>Build Kaspa apps</strong><p>Three ways to build on Kaspa, and how to work out which one your idea needs.</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Which chain fits the job?</h2>
+      <p class="site-next"><a href="/chain-comparer">Move the dials yourself and see which of twenty layer-one chains actually fits what your app needs.</a></p>
     </section>
 <!-- related-links:end -->
   </main>

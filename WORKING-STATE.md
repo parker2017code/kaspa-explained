@@ -363,7 +363,7 @@ in its own checked-line so a future reader cannot miss it.
 
 3. Full numbers and derivations, including `TARGET_F` (now 0.43, re-derived with ARC included) and `MIN_CORE_FOR_OWN_CAP` (back to an absolute floor of 4 after a wrong attempt to scale it), are under "The model picker, briefly" below. Read that section before touching any constant in `scripts/emit-picker-blob.py`.
 
-4. `check-model-picker.py` passes on the working tree: 10 dials, all weights resolve. The full publish gate (`check-site.sh`) has not been run this pass; run it before committing.
+4. `check-model-picker.py` passes on the working tree: 6 dials, all weights resolve. The full publish gate (`check-site.sh`) has not been run this pass; run it before committing.
 
 5. **TOP ITEM FOR NEXT SESSION.** Wire ARC Prize into the ladder machinery (`BOARD_LADDER`, `own_curve()`, the cost reconstruction fits): it is currently only used for its own scored/ladder-evidence figures, not for any of the effort-curve fitting, which still sees only the 6 Artificial Analysis families with 3+ priced rungs against ARC's 20. Then re-derive `TARGET_F` and `POOLED_CURVE` in code, with an assertion, instead of the hand-computed literal and hardcoded lookup table sitting there now. Rebuild the page copy last, once those numbers stop moving.
 
@@ -398,11 +398,15 @@ state. When they disagree about a fact, this one is authoritative.
 
 ## Where this stands
 
-**72 public pages, 22 dated claims, 4 data files.** `CLAIMS.yml` is executable:
-`check-status-freshness.py` fails the build when a `recheck_after` passes and
-when a `forbidden_copy` phrase appears in any page's visible text.
+**93 HTML files in the root and under `demos/`, 22 dated claims, 4 data files.**
+`CLAIMS.yml` is executable: `check-status-freshness.py` fails the build when a
+`recheck_after` passes and when a `forbidden_copy` phrase appears in any page's
+visible text.
 
-**48 of the 72 pages are redirect stubs.** Pages get merged and the stub keeps
+**72 of the 93 are redirect stubs, leaving 21 live pages** (counted 29 August
+2026 by grepping every file in the root and `demos/` for a refresh meta tag; the
+figures this block used to carry, 72 public pages and 48 stubs, were both a pass
+behind). Pages get merged and the stub keeps
 the URL alive. That is fine for readers and a trap for anything citing a page by
 slug: the citation returns 200 and lands somewhere else. Check a slug against
 the stub list, never against its status code.
@@ -420,8 +424,18 @@ and the "as of" line inside any dated post.
 
 ## The model picker, briefly
 
-One page of 72, and it carries more machinery than the rest combined, so it
-gets one section rather than a third of this document.
+One page of the 21 live ones, and it carries more machinery than the rest
+combined, so it gets one section rather than a third of this document.
+
+**CORRECTED 29 AUGUST 2026, and the correction is the point.** The shape
+paragraphs below described ten dials over twenty scored figures for most of a
+day after the page had been rebuilt to six over ten, while this file's own
+header calls it authoritative on facts. Counted from the artifacts: `DIALS` in
+`model-picker.html` holds 6 entries, `window.__MP__.metrics` holds 10, and
+`window.__MP__.models` holds 23 across 9 labs. The methodology that used to sit
+inside one closed 6,685-word panel on that page now lives at
+`model-picker-method.html`, which is why the live-page count went from 20 to
+21.
 
 **State below describes the working tree. The last commit is behind it.** HEAD and
 origin/main both sit at `7df640f`. Everything in this section describes
@@ -429,8 +443,11 @@ uncommitted changes on top of it. The emitter is finished and the blob is
 frozen for this pass. Run `git status --short` before assuming the live
 page matches this description.
 
-**SHAPE.** 10 dials, 2 figures each, weight 1/1, no figure repeated across
-dials. 20 scored figures, cut from 25. Selection test: how far apart the
+**SHAPE.** 6 dials over 10 scored figures, no figure repeated across dials.
+It was 10 dials over 10 figures until 29 August 2026; the paragraphs below
+about 20 figures and 25 candidates describe the 21 August pass and are kept as
+the record of how the figures were chosen, not as a description of what ships.
+Selection test: how far apart the
 top five models sit on a figure, on the honest scale (worst-ever to
 best-ever across every model ever measured on that board, not a percentile
 of this roster). A figure whose top five land within a point or two cannot
@@ -447,8 +464,11 @@ call, made deliberately.
 
 Sources are FOUR boards, derived not hardcoded: `source_counts()` reads the
 split off `METRICS` via `source_of()` and asserts it sums to the total.
-Current split: Artificial Analysis 9, LiveBench 7, LM Arena 3, ARC Prize 1,
-sum 20. `source_of()` had no branch for the `arc` prefix until this pass,
+Split as it ships, read off the page's own provenance panels 29 August 2026:
+Artificial Analysis 4 (Humanity's Last Exam, CritPt, Omniscience accuracy,
+Omniscience non-hallucination rate), LiveBench 4 (coding, agentic coding,
+instruction following, language), LM Arena 1 (WebDev), ARC Prize 1 (ARC-AGI-2),
+sum 10. The 9/7/3/1 split recorded here was the twenty-figure roster. `source_of()` had no branch for the `arc` prefix until this pass,
 so ARC figures were being filed under Artificial Analysis (AA read as 10,
 a fourth board invisible). Fixed: another instance of the bug class below.
 
@@ -458,7 +478,7 @@ publishes both a capability score and a cost per task at every effort rung
 a lab exposes, so one row is a point on a capability ladder and a price
 ladder at once.
 
-ARC-AGI-2 is one of the 20 scored figures, on the `reason` dial paired with
+ARC-AGI-2 is one of the 10 scored figures, on the `reason` dial paired with
 HLE. ARC-AGI-1 is loaded and used but deliberately NOT scored: top five sit
 within 2.0 points, the same saturation that took GPQA Diamond out, and it
 correlates with ARC-AGI-2 at r = 0.920. It stays on the page as ladder
@@ -528,8 +548,10 @@ Every error width (`es`, the sibling-shift spread, the estimate spread) is
 now converted through the same `honest(unpctile(...))` transform the value
 itself takes, in `to_honest()` in the emitter.
 
-**ROSTER: 21 models.** `check-model-picker.py` passes on the working tree:
-10 dials, all weights resolve to a loaded figure.
+**ROSTER: 23 models across 9 labs**, counted from `window.__MP__.models` on
+29 August 2026. The 21 recorded here was the roster on 21 August.
+`check-model-picker.py` passes on the working tree: 6 dials, all weights resolve
+to a loaded figure.
 
 **`ci_note` is fixed, not outstanding.** It now derives its figure count
 from `len(METRICS)` and names all four boards, rather than a hardcoded

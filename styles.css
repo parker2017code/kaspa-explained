@@ -1368,12 +1368,12 @@ blockquote {
   margin: 14px 0 0;
   max-width: 100%;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .api-command-card code {
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .api-command-card-note {
@@ -7304,10 +7304,31 @@ p.live-footnote:not(:last-child) {
    travel, nothing that reads as a step counter. Sized a step above body
    text so it reads as the piece's closing move, not a footnote. */
 
+/* Restored 2026-08-29. The comment above shipped without the rules it
+   describes: the pages still carried the old three-card block, so .site-next
+   matched no markup, and a dead-CSS removal pass took the rules while leaving
+   the comment. Running scripts/apply-related-links.py put the new block on
+   every page and check-orphan-classes.mjs immediately reported 19 unstyled
+   instances, one per page. */
+.site-next {
+  margin: 0;
+  max-width: 34em;
+  font-size: clamp(19px, 1.6vw, 22px);
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
 
+.site-next a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--green) 55%, transparent);
+  padding-bottom: 2px;
+}
 
-
-
+.site-next a:hover {
+  color: var(--green);
+  border-bottom-color: var(--green);
+}
 
 /* Defect-class fix (2026-08-24): 35 classes used in HTML with no matching
    rule anywhere, found by scripts/check-orphan-classes.mjs. Appended here,
@@ -7453,10 +7474,18 @@ p.live-footnote:not(:last-child) {
   line-height: 1.3;
 }
 
+/* 16px/1.6, raised from 13px/1.4 on 2026-08-29. These are the only sentences
+   on search.html a reader actually reads, one per result, and at 390px they
+   rendered at 13px: check-render.mjs flagged all 17 as sub-16px body copy and
+   was right. The site's small-type band (11-17px, house-style.md) covers a
+   label paired with a larger value, not a result's whole description. The
+   surrounding article already sets 17px. Note this is the second
+   `.search-results p` block in this file; the one near line 1631 loses to it
+   on source order, so edit here. */
 .search-results p {
   margin: 0 0 6px;
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* Semantic marker for the inclusion-vs-confirmation quadrant diagram on

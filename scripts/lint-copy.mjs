@@ -88,7 +88,6 @@ const skipFiles = new Set([
   "CROSS-READ.md",
   "CONTRIBUTING.md",
   "CLI_FROM_ZERO.md",
-  "PROGRESS.md",
   "REVIEW.md",
   "TODO.md",
   "HANDOFF.md",

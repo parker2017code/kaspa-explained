@@ -67,8 +67,17 @@ const essayLimits = new Map(
 const essayModule = JSON.parse(readFileSync(path.join(ROOT, 'scripts/essay-pages.json')));
 const sectionPages = new Set((essayModule.per_section_pages || []).map((e) => e.file));
 
+// A redirect stub carries no content: it is a <meta http-equiv="refresh">
+// and nothing else. A headless browser follows that refresh, so loading one
+// here measures the DESTINATION page a second time and files every defect it
+// finds under the stub's filename. 18 of the 19 files under demos/ are stubs
+// (verified 2026-08-29), which is how check-render.mjs came to report
+// demos/confirmation-risk.html, a 569-byte stub, with 90 violations including
+// 2 clipped chart labels that are really why-kaspa-matters.html's. Stubs are
+// already checked, correctly, by scripts/check-redirect-stubs.sh.
 const demoFiles = readdirSync(path.join(ROOT, 'demos'))
   .filter((f) => f.endsWith('.html'))
+.filter((f) => !readFileSync(path.join(ROOT, 'demos', f), 'utf8').includes('http-equiv="refresh"'))
   .map((f) => `demos/${f}`)
   .sort();
 

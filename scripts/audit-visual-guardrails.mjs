@@ -7,6 +7,47 @@ const htmlFiles = [...new Set([...manifest.pages, "404.html"])];
 const css = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const failures = [];
 
+/* Every guardrail below defends a rendered appearance. A guardrail whose target
+   class renders on no page defends nothing, and it does worse than nothing: it
+   demands a stylesheet rule for an element that does not exist, so the gate goes
+   red and the only way to green it is to add dead CSS. That is what happened to
+   .origin-proof-strip, .reality-grid, .field-study-grid and .ai-destination-grid,
+   removed from every page in b87ff53/dbc472d and still guarded here on
+   2026-08-29, blocking the gate with eight failures nobody could act on.
+   GUARDED_CLASSES is the fix in the other direction: name every class a guardrail
+   depends on, and fail when one stops rendering, pointing at the guardrail to
+   delete rather than at the stylesheet to pad. */
+const markupCorpus = [...htmlFiles, ...(fs.existsSync(path.join(root, "demos"))
+  ? fs.readdirSync(path.join(root, "demos")).filter((f) => f.endsWith(".html")).map((f) => `demos/${f}`)
+  : [])]
+  .filter((f) => fs.existsSync(path.join(root, f)))
+  .map((f) => fs.readFileSync(path.join(root, f), "utf8"))
+  .join("\n");
+
+const GUARDED_CLASSES = [
+  "section",
+  "transaction-rail",
+  "code-block",
+  "nav-links",
+  /* .nav-cta was removed from every page and 11 rules for it still sit in
+     styles.css. It is named in auditHeaderControls's hover regex as an optional
+     alternation, so that guardrail still covers the three controls that do
+     render. Not listed here because the fix is deleting its CSS, not restoring
+     the class. */
+  "theme-toggle",
+  "nav-menu-button",
+];
+
+function auditGuardrailTargetsStillRender() {
+  for (const name of GUARDED_CLASSES) {
+    const used = new RegExp(`class="[^"]*\\b${name}\\b`).test(markupCorpus)
+      || new RegExp(`classList[^\n]*['"\`]${name}['"\`]`).test(markupCorpus);
+    if (!used) {
+      fail(`guardrail targets .${name}, which no page renders any more. Delete the guardrail, do not add CSS for it.`);
+    }
+  }
+}
+
 function fail(message) {
   failures.push(message);
 }
@@ -259,26 +300,6 @@ function auditCardPadding() {
     fail(".section internal padding fell below the 12px floor");
   }
 
-  const originProofBlock = declarationBlock(/\n\.origin-proof-strip\s*\{([\s\S]*?)\n\}/, "origin proof strip spacing");
-  if (declarationValue(originProofBlock, "padding-top")) {
-    fail(".origin-proof-strip needs full card padding on all relevant sides");
-  }
-  const originProofPadding = declarationValue(originProofBlock, "padding");
-  if (
-    !/clamp\(18px,\s*3vw,\s*28px\)\s+clamp\(18px,\s*3vw,\s*26px\)\s+clamp\(18px,\s*2\.5vw,\s*24px\)/.test(
-      originProofPadding,
-    )
-  ) {
-    fail(".origin-proof-strip needs enough inline padding to keep mobile text off the border");
-  }
-
-  const realityCardBlock = declarationBlock(
-    /\n\.reality-grid article,\s*\n\.field-study-grid article\s*\{([\s\S]*?)\n\}/,
-    "reality and field-study card spacing",
-  );
-  if (!/padding:\s*clamp\(15px,\s*2vw,\s*20px\);/.test(realityCardBlock)) {
-    fail(".reality-grid and .field-study-grid article padding should prevent flush-left text");
-  }
 }
 
 function auditResponsiveCardGrids() {
@@ -293,19 +314,6 @@ function auditResponsiveCardGrids() {
   );
   if (declarationValue(transactionConnectorBlock, "content") !== "none") {
     fail(".transaction-rail connectors should default off until the layout has enough room");
-  }
-
-  const aiDestinationBlock = declarationBlock(/\n\.ai-destination-grid\s*\{([\s\S]*?)\n\}/, "AI destination grid");
-  if (!/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(100%,\s*7\.25rem\),\s*1fr\)\);/.test(aiDestinationBlock)) {
-    fail(".ai-destination-grid should auto-fit instead of forcing cramped columns");
-  }
-
-  const aiDestinationLinkBlock = declarationBlock(/\n\.ai-destination-grid a\s*\{([\s\S]*?)\n\}/, "AI destination links");
-  if (declarationValue(aiDestinationLinkBlock, "min-width") !== "0") {
-    fail(".ai-destination-grid links need min-width: 0 for grid shrink behavior");
-  }
-  if (declarationValue(aiDestinationLinkBlock, "overflow-wrap") !== "anywhere") {
-    fail(".ai-destination-grid links need overflow-wrap: anywhere");
   }
 }
 
@@ -414,6 +422,7 @@ auditResponsiveCardGrids();
 auditCodeBlocks();
 auditNextStepButtons();
 auditHeaderControls();
+auditGuardrailTargetsStillRender();
 
 if (failures.length > 0) {
   console.error("\nVisual guardrail audit failed:\n");

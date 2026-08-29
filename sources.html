@@ -30,7 +30,7 @@
   <meta property="og:description" content="The source hierarchy behind this site's claims: what settles a claim, what only explains it, and why kaspa.org's marketing pages are excluded.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/sources">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,20 +38,31 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Sources | Kaspa Explained">
   <meta name="twitter:description" content="The source hierarchy behind this site's claims: what settles a claim, what only explains it, and why kaspa.org's marketing pages are excluded.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
-  <meta name="dateModified" content="2026-08-24">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
+  <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Sources",
     "url": "https://kaspaexplained.com/sources",
-    "dateModified": "2026-08-24",
+    "dateModified": "2026-08-29",
     "description": "The source hierarchy behind this site's claims: what settles a claim, what only explains it, and why kaspa.org's marketing pages are excluded."
   }
   </script>
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
+  <style>
+    /* styles.css stacks .reality-table into cards under 700px and hides the
+       header row, then supplies the per-cell labels only for tables also
+       carrying .status-snapshot, whose four column names are hardcoded by
+       position. Neither table here has those columns, so the labels come off
+       the cells instead. The shared rule already styles this pseudo-element;
+       only its content is set here. */
+    @media (max-width: 700px) {
+      .sources-page .reality-table td[data-label]::before { content: attr(data-label); }
+    }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -80,44 +91,69 @@
       <p class="lead">Every claim's source lives next to the claim, ranked by tier: code and releases settle it, interviews and libraries explain it, social posts only point at it.</p>
       <div class="actions">
         <a class="button primary" href="/status#claim-fact-check">Check a claim</a>
-        <a class="button" href="/status">Open status</a>
       </div>
     </section>
 
     <section id="source-hierarchy" class="section">
       <p class="eyebrow">Source hierarchy</p>
       <h2>What settles a claim</h2>
-      <p>Four tiers: code/KIPs/releases settle a claim; a node/API settles current numbers; interviews and learning libraries explain; X posts and dashboards only point at links. The links themselves live on the page that makes each claim.</p>
-      <details class="deep-dive" id="claim-source" open>
-        <summary>14-row table: best source per claim type</summary>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Tier</th><th>What it settles</th><th>Where that is</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-label="Tier"><strong>1. Code, KIPs, releases</strong></td>
+              <td data-label="Settles">Whether a feature exists, and when it turned on.</td>
+              <td data-label="Where"><a href="https://github.com/kaspanet/rusty-kaspa">rusty-kaspa</a>, <a href="https://github.com/kaspanet/kips">the KIP repo</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases">release tags</a></td>
+            </tr>
+            <tr>
+              <td data-label="Tier"><strong>2. A mainnet node or public API</strong></td>
+              <td data-label="Settles">What a number is right now, with the moment it was read.</td>
+              <td data-label="Where"><a href="https://api.kaspa.org/docs">api.kaspa.org</a>, <a href="https://explorer.kaspa.org/">the block explorer</a></td>
+            </tr>
+            <tr>
+              <td data-label="Tier"><strong>3. Papers, docs, interviews</strong></td>
+              <td data-label="Settles">Nothing on its own. It explains why something was designed the way it was.</td>
+              <td data-label="Where"><a href="https://research.kas.pa/">Kaspa Research</a>, <a href="https://docs.kaspa.org/">docs.kaspa.org</a>, <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-sources">Hashdag<span class="term-def__panel" id="hashdag-def-sources" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span></td>
+            </tr>
+            <tr>
+              <td data-label="Tier"><strong>4. Posts and dashboards</strong></td>
+              <td data-label="Settles">Nothing. They point at something else worth checking.</td>
+              <td data-label="Where">X accounts, aggregators, community recaps</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Nothing on this site counts as shipped on tier 3 or 4 alone. A number without a read date is treated the same way.</p>
+
+      <h3 id="claim-source">Which source answers which question</h3>
       <div class="table-wrap">
         <table class="reality-table">
           <thead>
             <tr>
-              <th>Claim type</th>
-              <th>Source</th>
+              <th>If the question is</th>
+              <th>Go to</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Origin, fair launch</td><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">genesis.rs</a>, <span class="term-def" tabindex="0" role="button" aria-describedby="hashdag-def-sources">Hashdag<span class="term-def__panel" id="hashdag-def-sources" role="tooltip">Kaspa co-founder Yonatan Sompolinsky's research writing site, where he lays out design ideas ahead of protocol work.</span></span> archives</td></tr>
-            <tr><td>Live feature</td><td>Code, releases, KIPs</td></tr>
-            <tr><td>L1 snapshot</td><td>Mainnet node/API</td></tr>
-            <tr><td>TPS, capacity</td><td>Consensus params</td></tr>
-            <tr><td>Emission, supply</td><td>Emission schedule</td></tr>
-            <tr><td>Price, hashrate, mining cycle</td><td>Time-stamped market data</td></tr>
-            <tr><td>Consensus mechanics</td><td>Kaspa Research, papers</td></tr>
-            <tr><td>Toccata timing, scope</td><td>docs.kaspa.org, <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-sources">KIP<span class="term-def__panel" id="kip-def-sources" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span> PRs</td></tr>
-            <tr><td>App, project claims</td><td>Payload, fee docs</td></tr>
-            <tr><td>Roadmap framing</td><td>Release tags; Kaspa.org excluded</td></tr>
-            <tr><td>API, indexing, history</td><td>Rusty Kaspa, node docs</td></tr>
-            <tr><td>vProgs, app architecture</td><td><a href="https://github.com/kaspanet/vprogs">vProgs repo</a>, <a href="https://docs.kaspa.org/programmability">programmability docs</a></td></tr>
-            <tr><td>DAGKnight</td><td>Hashdag, Kaspa Research</td></tr>
-            <tr><td><span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-sources">RTD<span class="term-def__panel" id="rtd-def-sources" role="tooltip">Hashdag's framing: Bitcoin-style PoW security operating in real time.</span></span></td><td>hashd.ag/raw; <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-sources">TangVM<span class="term-def__panel" id="tangvm-def-sources" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span></td></tr>
+            <tr><td data-label="Question">Origin and fair launch</td><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/genesis.rs">genesis.rs</a>, and Hashdag's own <a href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">launch-plan post</a></td></tr>
+            <tr><td data-label="Question">Whether a feature is live</td><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases">release tags</a> and the <a href="https://github.com/kaspanet/kips">KIP files</a></td></tr>
+            <tr><td data-label="Question">What the chain reads right now</td><td data-label="Source"><a href="https://api.kaspa.org/info/blockdag">the blockDAG endpoint</a> and <a href="https://api.kaspa.org/info/coinsupply">the supply endpoint</a></td></tr>
+            <tr><td data-label="Question">Throughput limits and capacity</td><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params.rs</a>, the consensus constants themselves</td></tr>
+            <tr><td data-label="Question">Emission and supply</td><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs">coinbase.rs</a>, and <a href="https://wiki.kaspa.org/en/tokenomics">the wiki's tokenomics page</a></td></tr>
+            <tr><td data-label="Question">Price, hash rate, mining cycle</td><td data-label="Source"><a href="https://api.kaspa.org/info/hashrate">the hash-rate endpoint</a> and <a href="https://www.coingecko.com/en/coins/kaspa">CoinGecko</a>, each with the date it was read</td></tr>
+            <tr><td data-label="Question">How consensus works</td><td data-label="Source"><a href="https://research.kas.pa/">Kaspa Research</a> and its <a href="https://qa.kas.pa/">question archive</a></td></tr>
+            <tr><td data-label="Question">Toccata timing and scope</td><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">the v2.0.0 release</a> and the <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a></td></tr>
+            <tr><td data-label="Question">What a transaction can carry</td><td data-label="Source"><a href="https://docs.kaspa.org/integrate/transaction-payload">the payload docs</a> and <a href="https://docs.kaspa.org/integrate/accepted-transactions">the acceptance docs</a></td></tr>
+            <tr><td data-label="Question">Running a node, indexing, history</td><td data-label="Source"><a href="https://docs.kaspa.org/integrate/kaspa-node">the node docs</a> and <a href="https://api.kaspa.org/docs">the REST reference</a></td></tr>
+            <tr><td data-label="Question">vProgs and app architecture</td><td data-label="Source"><a href="https://github.com/kaspanet/vprogs">the vProgs repo</a> and <a href="https://docs.kaspa.org/programmability">the programmability docs</a></td></tr>
+            <tr><td data-label="Question">DAGKnight</td><td data-label="Source"><a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, still Proposed, and <a href="https://hashd.ag/">hashd.ag</a></td></tr>
+            <tr><td data-label="Question"><span class="term-def" tabindex="0" role="button" aria-describedby="rtd-def-sources">RTD<span class="term-def__panel" id="rtd-def-sources" role="tooltip">Hashdag's framing: Bitcoin-style proof-of-work security operating in real time.</span></span> and <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-sources">TangVM<span class="term-def__panel" id="tangvm-def-sources" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span></td><td data-label="Source"><a href="https://hashd.ag/raw">hashd.ag/raw</a>. Research writing, so tier 3.</td></tr>
+            <tr><td data-label="Question">A roadmap date</td><td data-label="Source">There is no tier 1 or 2 source for one. This site labels those Research and says so.</td></tr>
           </tbody>
         </table>
       </div>
-      </details>
-      <p>The supporting links live on the page whose claim they back: <a href="/build-on-kaspa">Build on Kaspa</a>, <a href="/status">Status</a>, <a href="/kips">KIPs and KCCs</a>, <a href="/kaspa-origin-story">the origin story</a>, <a href="/why-kaspa-matters">how Kaspa compares</a>, and <a href="/what-is-kaspa">What is Kaspa</a>.</p>
+      <p>Every claim's own links sit on the page that makes it: <a href="/build-on-kaspa">Build on Kaspa</a>, <a href="/status">Status</a>, <a href="/kips">KIPs and KCCs</a>, <a href="/kaspa-origin-story">the origin story</a>, <a href="/why-kaspa-matters">how Kaspa compares</a>, and <a href="/what-is-kaspa">What is Kaspa</a>.</p>
     </section>
 
     <section id="community-sources" class="section">
@@ -143,24 +179,11 @@
       </details>
       <p class="fit-note">Found a stale claim? <a href="https://github.com/parker2017code/kaspa-explained/issues/new?template=stale-claim.yml">Open a correction</a>.</p>
     </section>
-    <section class="next-step section" aria-label="Suggested next step">
-      <p class="eyebrow">Next step</p>
-      <h2>Pick the next page by what you are checking</h2>
-      <p>A shipped-feature claim goes to Status. New to the machinery underneath? Start from zero.</p>
-      <div class="actions">
-        <a class="button primary" href="/status">Open status</a>
-        <a class="button" href="/start-here">Start from zero</a>
-      </div>
-    </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/kips"><span>Previous</span><strong>KIPs and KCCs</strong><p>A live tracker of Kaspa&#x27;s change proposals. It reads the repositories direct, so it cannot go stale.</p></a>
-        <a href="/utxo-vs-accounts"><span>Next</span><strong>Why parallel spends don&#x27;t collide</strong><p>Two demos: spend a UTXO wallet, then compose two apps together. Why a coin never has to queue behind another spender the way an account...</p></a>
-        <a href="/status"><span>Status</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Kaspa current status</h2>
+      <p class="site-next"><a href="/status">See what&#x27;s live on the network today, and come back here whenever a claim needs a fresh check.</a></p>
     </section>
 <!-- related-links:end -->
   </main>

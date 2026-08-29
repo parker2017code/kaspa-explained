@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script id="theme-init">
+    (function () {
+      var key = "kaspa-explained-theme";
+      var saved = null;
+      try { saved = localStorage.getItem(key); } catch (e) {}
+      var theme = new URLSearchParams(window.location.search).get("theme");
+      if (theme !== "light" && theme !== "dark") { theme = saved; }
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <title>How the Model Picker Scores | Kaspa Explained</title>
+  <meta name="description" content="How the model picker scores: the four boards it reads, why six dials, how a missing figure is estimated, and what the ranking cannot tell you.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <link rel="canonical" href="https://kaspaexplained.com/model-picker-method">
+  <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=20260512-k4" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="application-name" content="Kaspa Explained">
+  <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:title" content="How the Model Picker Scores | Kaspa Explained">
+  <meta property="og:description" content="How the model picker scores: the four boards it reads, why six dials, how a missing figure is estimated, and what the ranking cannot tell you.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kaspaexplained.com/model-picker-method">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How the Model Picker Scores | Kaspa Explained">
+  <meta name="twitter:description" content="How the model picker scores: the four boards it reads, why six dials, how a missing figure is estimated, and what the ranking cannot tell you.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
+  <meta name="dateModified" content="2026-08-29">
+  <link rel="stylesheet" href="styles.css?v=20260825-102122">
+  <script defer src="nav.js?v=20260825-102122"></script>
+  <style>
+    /* One numbered list per section, each entry led by the claim it makes.
+       The claim is the scannable part, so it carries the weight and the
+       explanation follows it in the same block. */
+    .mm-list { margin: 0; padding-left: 1.4em; }
+    .mm-list li { margin: 0 0 22px; color: var(--muted); line-height: 1.6; }
+    .mm-list li p { margin: 0 0 10px; }
+    .mm-list li p:last-child { margin-bottom: 0; }
+    .mm-list li b, .mm-list li strong { color: var(--text); }
+    .mm-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding: 0; list-style: none; }
+    .mm-toc a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 6px 14px;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--control-bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      text-decoration: none;
+    }
+    .mm-toc a:hover { background: var(--control-hover); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-label="Kaspa Explained home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Kaspa Explained
+      </a>
+      <button class="nav-menu-button" type="button" aria-expanded="false" aria-controls="primary-links">Menu</button>
+      <div id="primary-links" class="nav-links">
+        <a href="/what-is-kaspa">What is Kaspa</a>
+        <a href="/status">Live now</a>
+        <a href="/skeptical-case">Risks</a>
+        <a href="/build-on-kaspa">Build</a>
+        <a href="/demos">Try it</a>
+      </div>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">Light</button>
+    </nav>
+  </header>
+
+  <main id="top" tabindex="-1" class="sources-page">
+    <section class="sources-hero section">
+      <p class="eyebrow">Method</p>
+      <h1>How the model picker scores</h1>
+      <p class="lead">Every decision behind <a href="/model-picker">the ranking</a>: which boards it reads, why the dials were cut from ten to six, how a figure no board published gets filled in, and what the answer cannot tell you.</p>
+      <ul class="mm-toc">
+        <li><a href="#what-it-can-tell-you">What this can tell you, and what it cannot</a></li>
+        <li><a href="#sources">The sources, the dials, and the ten figures</a></li>
+        <li><a href="#six-dials">Why six dials, and not ten</a></li>
+        <li><a href="#scoring">Turning ten figures into one score</a></li>
+        <li><a href="#coverage">Coverage, and estimating a figure a board never published</a></li>
+        <li><a href="#effort-ladder">One row per model, at one point on its own effort curve</a></li>
+        <li><a href="#moving-figures">Moving a figure down to that point</a></li>
+        <li><a href="#style-control">Style control on LM Arena</a></li>
+        <li><a href="#cost-speed">Why cost and speed are not scored</a></li>
+      </ul>
+    </section>
+
+    <section class="section" id="what-it-can-tell-you">
+      <h2>What this can tell you, and what it cannot</h2>
+      <ol class="mm-list">
+        <li><p><b>What this tool can tell you, and what it cannot.</b> It can tell you a model is at the frontier. It is much weaker at telling you which frontier model is better. Move the dials at random 5,000 times and the typical model lands anywhere in a <b>9-place band</b> out of 23.</p><p>Only one model in 23 holds a 3-place window. The ends of the list are the firm part: Claude Opus 5 and Claude Fable 5 take first place between them in <b>84%</b> of those settings, and the bottom model is bottom almost however you ask. The middle is where the ordering is mostly your weighting talking.</p><p>Read the top few as a shortlist, not the order as a verdict.</p></li>
+        <li><p><b>How you weight the dials moves the answer more than anything else here.</b> It moves it further than which models are in the roster, and further than how the figures are combined. That is why the shares are printed next to the dials, and why the ranking restates every gap in the boards' own units.</p><p>A ranking that swings nine places on weighting alone should not be read as a measurement of nine places.</p></li>
+        <li><p><b>The spread between these models is a property of the benchmarks. It says nothing about the models.</b> Pick a different set of tests and the gaps change size. Every figure here is a frontier model against other frontier models, so the floor of each scale is simply a strong model caught on its weakest board.</p><p>It is never a model that cannot do the work. Every gap in the ranking is restated in the units the boards print, next to what each model costs against the leader.</p><p>That is the reading worth acting on: the whole field fits inside 44 Elo on Arena Hard Prompts, which is the best of them winning 56 times out of 100 against the worst, and the models that give up almost nothing often cost several times less.</p></li>
+        <li><p><b>The leader depends on how the scale is read, which is a choice nobody can settle from the data.</b> Averaging the figures as percentages puts Claude Opus 5 first. Averaging them as log-odds, which treats two points near the ceiling as worth more than two points in the middle, puts Claude Fable 5 first instead.</p><p>The two orderings agree at 0.97 and no model moves more than four places, so the shape of the list is safe. The name at the top is not. The page averages percentages, which is the simpler claim, and this note is here because the alternative is defensible.</p></li>
+        <li><p><b>Zero is the worst result anyone has recorded, 100 is the best.</b> Not a percentile across the 23 models here, which would make the bottom model 0 and the top model 100 by construction no matter how close together they actually are.</p><p>Each figure is read against the full board it came from: Artificial Analysis publishes 610 models, LiveBench its whole history across 11 releases, LM Arena a board that starts in 2023, and ARC-AGI-2 the 0-to-100 scale a human panel is scored on.</p><p>A model scoring 100 overall would hold first place on every one of the ten figures; a model scoring 0 would hold last place on all of them. Nothing here comes near either end, and that is the finding.</p><p>The field is far closer together than a page that stretched it end to end would suggest, and the picker prints the real distance under every score.</p></li>
+        <li><p><b>Not every model is measured on everything, and the gap runs one way.</b> A model is scored on what it published, which quietly rewards publishing less. Any row not measured on all of what you asked for says which parts it missed and how much of your question its score covers.</p></li>
+        <li><p><b>This tool is a part of the analysis behind it, not all of it.</b> In here: the ten figures, the six dials, the move to a common effort setting, the value chart, and the simulation.</p><p>Not in here, and living only in the working notes: a cost axis measured in tokens rather than dollars, the fitted effort curves per model family, and comparisons that hold computation equal instead of money. A reader who uses only the picker gets one view.</p><p>It is the view most people want and it is not the whole picture.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="sources">
+      <h2>The sources, the dials, and the ten figures</h2>
+      <ol class="mm-list">
+        <li><p><b>Four sources, six dials, ten figures.</b> Artificial Analysis and LiveBench 2026-06-25, both read 25 August 2026; LM Arena, read the same day; and ARC Prize, read the same day. Four figures come from Artificial Analysis, four from LiveBench, one from LM Arena and one, ARC-AGI-2, from ARC Prize.</p><p>Twenty-three models are ranked across nine labs, so the grid holds 230 cells.</p></li>
+        <li><p><b>Where the numbers came from, and how they get refreshed.</b> Six reads, run at once, all live: one for Artificial Analysis, one for LiveBench, and four for LM Arena, which alone carries fifteen boards and the longest of them ranks 393 models. ARC Prize adds a seventh; its corpus is read directly, never fetched live.</p><p>The reads split by how much text each part holds. Source is not the variable, and no board is ever read in part. A rank means nothing against half a field. Every figure on the picker is derived from those files by script, so a refresh is a re-read and a rebuild, never an edit.</p></li>
+        <li><p><b>Ten figures, chosen on how far apart the top five sit. Reputation had no vote.</b> Every figure on these boards was ranked by its own top-five spread on the honest scale, and the widest in each dial's territory is the one that ships.</p><p>No fixed table of those spreads is printed on the picker, because the number moves with the dials: the top five are the top five under your weights, so the spread is worked out again every time you move a slider. A figure the frontier has already maxed out cannot tell the leaders apart, however famous the name.</p></li>
+        <li><p><b>A benchmark earns its place by still telling the leaders apart. Fame alone does not qualify it.</b> Every figure was checked on its top-five gap: how far apart the five strongest models are on it. A test the best models have already maxed out cannot rank them.</p><p>That cut GPQA Diamond, which spans two points across the top five, and with it the AA Intelligence Index, LiveBench reasoning, AA-LCR, Terminal-Bench v2.1, MMMU Pro and LiveBench overall. CritPt was checked against the same test and kept, because its top five stay far enough apart to rank.</p></li>
+        <li><p><b>Nothing is counted twice.</b> Each figure feeds exactly one dial. No board's own overall score feeds anything, because those are blends of figures already scored here. Input price is not loaded either: it tracks output price at 0.98, so one price figure does the work of both.</p></li>
+        <li><p><b>No figure sits on more than one dial, and inside a dial the figures are weighted the same.</b> Three dials carry one figure each; three carry two or three.</p><p>Averaging inside a dial is only right if its figures track each other in a straight line over the range these models cover, so that was checked rather than assumed: on each merged pair, a straight line beats a curve on four of five and loses the fifth by 2 percent.</p><p>Not making things up stays alone whatever else merges. It runs against six of the other nine figures, and nothing on the page predicts it: the best anchor, held out, reaches an r squared of 0.058. That is why a model's row is left unfilled there. Estimating it would overclaim.</p></li>
+        <li><p><b>A figure counts for how far apart it can still tell the leaders.</b> Every figure carries the spread among the top five under your own weights, measured from the loaded data rather than asserted.</p><p>A figure the frontier has already maxed out is ranking noise with a decimal point on it, so that spread scales how much it is allowed to count. Blended across the dials you turned up, the same number decides whether the ranking says the top few are tied.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="six-dials">
+      <h2>Why six dials, and not ten</h2>
+      <ol class="mm-list">
+        <li><p><b>This was ten dials until 29 August 2026, and ten was more than the evidence supports.</b> Across the ten figures, the first principal component carries 42.8 percent of the variance and the effective dimensionality is 5.26 of 10.</p><p>Predicting each figure from the other nine, holding out one model at a time, lands at a median r-squared of 0.35, and one figure, LiveBench coding, comes out worse than simply guessing the average. So the ten figures are worth about five or six questions, not ten.</p><p>The dials now match that: six, grouped by clustering the page's own correlations rather than by counting benchmarks.</p></li>
+        <li><p><b>The board overalls agree with each other far more than their own benchmarks agree with one another.</b> Artificial Analysis's intelligence index and LiveBench Overall move together at r = 0.930 across 38 models. LiveBench Overall and ARC-AGI-2 move together at r = 0.868 across 20.</p><p>Pick two single benchmarks instead of two overalls and the agreement drops well below that. An overall averages away each benchmark's own noise and keeps only the shared skill underneath. Two overalls agreeing is not proof that their own benchmarks measure the same thing.</p></li>
+        <li><p><b>LiveBench Overall is not independent evidence. It is arithmetic.</b> It is the plain average of its seven category scores, weighted equally. Checked across all 44 published rows, the biggest gap between that average and the published number is 0.057.</p><p>So predicting a LiveBench category from LiveBench Overall is partly predicting a number from itself: the arithmetic alone produces an r squared near 0.143, before any real link between the two is measured.</p></li>
+        <li><p><b>On a shortlist this size, most links between benchmarks cannot be resolved at all.</b> There are 45 pairs across the ten figures.</p><p>Correcting for testing all 45 at once, <b>12</b> reach significance, and only <b>3</b> also have a 95 percent interval clear of r = 0.5, which is the bar for calling a link strong rather than merely present. Twenty-three models is not enough to measure a correlation matrix over ten figures, and no method fixes that.</p><p>The three that hold up are Humanity's Last Exam with CritPt at <b>+0.813</b>, LiveBench agentic coding with LM Arena WebDev at <b>+0.806</b>, and Humanity's Last Exam with omniscience accuracy at <b>+0.803</b>.</p><p>Every one of those pairs sat on two different dials before 29 August, so a reader raising both was weighting one measurement twice while the page said they were weighting two abilities. All three now sit inside one dial.</p></li>
+        <li><p><b>Consolidating was expected to cost expressiveness and it did the opposite.</b> Over 6,000 random dial settings, the ten-dial version could put only <b>7</b> of the 23 models in first place and produced 23 different top-three sets.</p><p>Six dials put <b>10</b> models in first place and produce 52 different top-three sets, and the distance between two readers' rankings roughly doubles. Five dials pointing at one general ability were averaging each other out.</p><p>Checked against four different patterns of slider use, the six-dial version keeps at worst 82 percent of what ten could do, against a floor of 80 percent set before the check was run. Five dials was tried too and falls to 73 percent, so six is the smallest grouping that holds up.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="scoring">
+      <h2>Turning ten figures into one score</h2>
+      <ol class="mm-list">
+        <li><p><b>Each dial is a weight.</b> Turn one up and it takes a bigger share. The shares next to the dials add to 100. Open weights is the only filter, because a model either ships its weights or it does not.</p></li>
+        <li><p><b>A figure counts for what its evidence will bear.</b> The weight written against it says how much it should matter, which is a judgment call. Whether it can answer at all is measured: how much of this roster published it, and how far apart the top five are on it.</p><p>A thin or maxed-out figure counts for less than a well covered one.</p></li>
+        <li><p><b>Weighting figures by how well they are measured was tried and rejected, for a reason worth stating.</b> Weighting each figure by the share of its spread that is real signal moves this ranking hard: agreement with the shipped order falls to 0.76 and one model moves eleven places.</p><p>It does that by almost silencing not making things up, whose measured spread is entirely error by that test, because nothing else here predicts it. A rule that deletes the one figure carrying information no other figure carries is measuring redundancy, not quality. So the figures are weighted equally inside a dial and the limitation is stated instead.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="coverage">
+      <h2>Coverage, and estimating a figure a board never published</h2>
+      <ol class="mm-list">
+        <li><p><b>Two coverage gates sit at two different stages, and they are not the same number.</b> The first runs where the boards are parsed: a model needs at least <b>10</b> figures across the whole catalog to enter the roster at all, which keeps out rows with almost nothing behind them.</p><p>The second runs where the page's ten scored figures are chosen, and it scales with the grid rather than sitting at a fixed count: <b>a fifth</b> of the scored figures, which works out to 4 of 10.</p><p>It scales because it used to be a fixed 9, and when the scored set was cut from forty figures to ten that 9 quietly went from a fifth of the grid to nearly all of it and dropped a model whose coverage had not changed.</p><p>A model failing either gate is not in the ranking at all, so you never see it. A model that passes and is still thin says so on its own row.</p></li>
+        <li><p><b>There is no default coverage floor.</b> The roster is every model these boards publish. No minimum figure count filters weak entries out. A model is ranked on whatever it published, and its row says how much of your question the score actually covers.</p><p>You set a floor of your own with the coverage control on the picker, which counts against the dials you turned up, never against every figure loaded.</p></li>
+        <li><p><b>One figure carries more of the picker than any other, and ten models do not have it.</b> ARC-AGI-2 is published for <b>13</b> of the 23 models here. The other <b>10</b> are filled by regression from figures that are not themselves dials, and that fill is the deepest thing anything on the picker rests on.</p><p>If it is wrong, ten rows are wrong together, not one at a time. Across the whole grid, <b>25</b> of 230 cells are estimated this way and <b>29</b> more are carried across from another effort setting of the same model. Every estimated cell is marked on its row.</p></li>
+        <li><p><b>A missing figure is estimated from whatever correlates with it, weighted by how much that correlate explains.</b> The old rule wanted three donors agreeing at 0.70 and threw the rest away, which is a strange way to treat evidence: a donor at 0.45 is worth about a fifth of a figure, so use a fifth of it.</p><p>Every donor now counts, weighted by its r squared, and the answer is pulled back toward the middle of the field by however much they fail to explain. Strong donors land near their prediction; one weak donor lands near the middle with a wide error; nothing at all lands in the middle exactly.</p><p>No cell is left blank: all <b>230</b> of them, 23 models across 10 figures, carry a figure.</p></li>
+        <li><p><b>The estimates were tested by hiding real answers.</b> Each model's figures were hidden in turn and predicted from the other twenty, then checked against what that model actually published. A prediction lands 12.5 points off on average, with a tenth of them more than 23 points off.</p><p>It also declares its own error, and 94.6 percent of the held-out misses fell inside the interval it declared. That last number is why these ship: the simulation discounts an estimate by exactly the error it claims, and the claim holds up. Looser settings filled twice as many figures but overstated their own confidence, so they were dropped.</p></li>
+        <li><p><b>Price and speed are never estimated.</b> A predicted price on a value chart would argue for a model on a number nobody published. Speed is refused for a different reason: it does not track capability at all, and asking the regression for it produced the worst miss in the whole test, 87 points on tokens per second.</p><p>How fast a model serves is a fact about the hardware behind it.</p></li>
+        <li><p><b>A missing figure does not zero a dial.</b> A model missing one of a dial's figures is scored on the others behind it, and on whichever other dials it has. A dial reads no data for a model only when every figure behind it is absent for that model.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="effort-ladder">
+      <h2>One row per model, at one point on its own effort curve</h2>
+      <ol class="mm-list">
+        <li><p><b>Each model appears once, at the setting worth running.</b> These boards publish a model several times over, once per effort setting, and 39 rows for 23 models is a list nobody can read. It also invites you to hold one lab's max effort against another lab's medium and call it a win.</p><p>So each model ships at the setting that buys the most capability per dollar. The highest-scoring setting is beside the point. The rule: capability minus eight points for every doubling of price, where capability is measured only on the figures every setting of that model published. Eight is set by what these ladders cost.</p><p>Paying three times as much for ten more points works out to 6.3 points per doubling, and that trade is refused. Claude Opus 5 at max effort scores 63.8 against 65.9 at medium on the thirteen figures both settings publish, which is a tie, and charges $2.34 a task against $0.72. Medium ships.</p><p>Price, speed and latency on every row always come from the setting that shipped.</p></li>
+        <li><p><b>Every model is quoted at the same point on its own effort curve, because otherwise none of this compares.</b> These boards test whatever each lab submitted. Claude Opus 5 appears at five settings, GLM-5.2 only at max, Grok 4.5 only at high.</p><p>Ranking those against each other ranks submissions, so every model is moved to one common point first. That point is <b>0.40 of the way up each model's own price span</b>, between medium effort and high.</p><p>It is fitted from the data each time the page is rebuilt, and the rebuild stops before it ships a number the evidence has moved away from. Read the figure as thin: an independent sweep of 108 configurations, bootstrapped 4000 times, put the knee at 0.30 on Artificial Analysis alone with a 95% interval of 0.20 to 0.40.</p><p>The pooled fit across both boards gives 0.40, so 0.40 ships, at the top of that interval rather than the middle of it. Six families carry this, and it is the least certain number here.</p></li>
+        <li><p><b>Price is a poor measure of effort and still the best axis to place on, which was tested rather than assumed.</b> Cost per task includes the prompt, so it rises only half as fast as the work a model does. Response time tracks the work almost exactly, which makes it the better measure of effort.</p><p>It is not the better ruler for this job.</p><p>Placing a model as a fraction along its own ladder needs a ladder wide enough to divide by, and on response time four of twenty families span almost nothing: Kimi K3 answers in 66 seconds at its cheapest setting and 71 at its dearest, so its two rungs land 6% apart and the order flips on noise.</p><p>Asked directly which axis better predicts what a rung buys, held out one whole family at a time, price misses by <b>0.167</b> against <b>0.260</b> for response time, <b>0.241</b> for tokens and <b>0.214</b> for time to first token. Price ships.</p><p>The reason it wins is the same fixed prompt cost that contaminates it: it spreads out the cheap rungs where the clock piles them on top of each other.</p></li>
+        <li><p><b>One fraction cannot describe every ladder, and the picker uses one anyway.</b> Where the climb stops paying differs by family, from the cheapest rung on some to the dearest on others. A single position is a compromise, and the interval on every moved row is sized to say so.</p><p>Vendors also differ in how much their effort control does: measured as the share of the room a family had left, one lab's ladder uses about a third of it and another's about two thirds.</p><p>That gap holds up as a difference (p = 0.014) on four to six models per lab, so read it as a direction and not as a score.</p></li>
+        <li><p><b>That point is a position.</p><p>It behaves nothing like a label, and the difference matters more than it sounds.</b> Measured as a fraction along a model’s own price ladder, where 0 is its cheapest published setting and 1 its dearest, the word "high" lands at 0.00 for GPT-5.6 Terra, which is its cheapest setting, and at 1.00 for Gemini 3.7 Flash, which is its dearest.</p><p>Sol’s high sits at 0.52 and Claude Opus 5’s at 0.62. The same word spans the whole ladder, so quoting everything at "high" would put one model at the bottom of its curve and another at the top and call that fair.</p></li>
+        <li><p><b>The position is derived from where the curve stops paying, and every rung a model publishes is used to find it.</b> Ladders are read off the full board, never off whatever settings happened to be wired here.</p><p>GPT-5.6 Luna arrived with two of its six, so its ladder started at $0.03 and 53 seconds when the model really starts at $0.01 and under a second, and the correction pushed its price the wrong way.</p><p>A model that prints no setting at all is placed by what its work consumed: cost over output price recovers the tokens a task took, which predicts position at <b>r&nbsp;=&nbsp;0.665</b> where the clock alone manages 0.389.</p><p>Three features together reach <b>R²&nbsp;=&nbsp;0.646</b> in-sample, fitted and measured on the same 52 rows, and the placement is shrunk by exactly that figure, so it moves two thirds of the way to the fit and a third toward no claim.</p></li>
+        <li><p><b>A model with its own ladder is interpolated on it; a model without one borrows the shared curve and says so.</b> Thirteen models here publish two or more priced settings, so they are read straight off their own measured curve and carry little assumption.</p><p>The rest publish one setting, which is a single point and no curve at all, so the pooled shape stands in and the row carries a much wider error: a label places a model anywhere from 0.00 to 1.00 of its span, and the interval on those rows is sized to admit it.</p></li>
+        <li><p><b>Where that point sits is measured, and it is the thinnest constant behind the picker.</b> Six families on these boards publish three or more priced settings, which is what it takes to watch a curve bend. Pooled, capability per doubling of price falls from about 70 points near the cheapest settings, through the 60s and 50s.</p><p>It flattens at <b>0.40</b> of the price span. Past that point, a further doubling buys about the same capability as the last one. A separate check puts the same knee a bit lower: a 108-configuration sweep with a 4,000-sample bootstrap, run on Artificial Analysis alone, lands it at 0.30.</p><p>Its 95 percent interval runs from 0.20 to 0.40, about a fifth of the whole scale across six families. Asked separately, the six families put their own flattening point anywhere from 15% to 78% of the span.</p><p>Six numbers cannot carry 23 answers, and 10 of these 23 models publish one setting and so have no curve to ask. That is why the pooled figure is used for all of them, and stated as a range; a single precise number would overclaim.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="moving-figures">
+      <h2>Moving a figure down to that point</h2>
+      <ol class="mm-list">
+        <li><p><b>Thinking, reasoning and effort are one control under three names.</b> These boards have renamed it twice, and a model listed without the word "Thinking" is the same dial turned down. It is not a different dial. Artificial Analysis files all of it in one column.</p><p>The one real break is a model told explicitly not to reason: "Non-reasoning" is its own floor, below every setting of on, because not reasoning is a different thing from reasoning a little. OpenAI's "minimal" sits above that floor: reasoning turned down, still switched on.</p></li>
+        <li><p><b>Every figure is moved separately, because effort does not buy the same thing everywhere.</b> Across the families that publish a full ladder, a low-to-max climb buys 71.9 percentile points on Terminal-Bench and 2.2 on the non-hallucination rate. Effort transforms agentic coding and does almost nothing for whether a model makes things up.</p><p>Some figures move backwards: Claude Opus 5 loses 10 points of long-context reasoning climbing to max effort while GPT-5.6 Sol gains 70 on the same figure.</p><p>So a model that publishes its own ladder is read off its own curve figure by figure, and a model without one borrows how much that figure responds board-wide, never a single flat number for all of them.</p></li>
+        <li><p><b>Each moved figure carries its own error, and they differ by a lot.</b> Kimi K3 was measured on Humanity’s Last Exam at both ends of its ladder, so moving that figure is worth an error of 1.0 points. Its LiveBench mathematics score exists at one setting only, so moving that one is a guess worth 27.5.</p><p>Both numbers go into the simulation, which is why a row built on well laddered figures holds its place and a row built on single readings does not.</p></li>
+        <li><p><b>The clock moves further than anything else, and it is the number labs quietly wreck by submitting at max.</b> Over a full climb the median model multiplies its price by 3.9, its total response time by 11.7, and its time to first token by <b>35.6</b>, while capability moves 29.7 points on a field spanning about 35.</p><p>The clock runs away nine times faster than price and price already outruns capability. GPT-5.6 Sol was submitted at 209 seconds to first token and runs at 6.6 at the common point; Terra at 219 becomes 16.5.</p><p>Throughput barely moves either way, at 1.02, and output price per token does not move at all, because effort changes how many tokens a model spends and not what one costs.</p></li>
+        <li><p><b>A clock is a floor plus thinking time, and only the thinking part moves.</b> Treating latency as one multiplier fails twice: dropping it ignores a large real effect, and pooling it puts GLM-5.2 at 0.2 seconds. Latency is not one quantity.</p><p>Across the ten families on this board that publish a ladder, a full climb multiplies the wait by anywhere from 0.96 to 133.8, and what predicts it is simply how slow the model already is at the top: log ratio against log max-effort latency fits at <b>r = 0.970</b>. Every model starts from about the same floor.</p><p>The cheapest setting of each family reads 0.92, 1.67, 1.78, 1.96, 2.78, 3.07, 3.51 and 4.29 seconds, a median of 1.91, while their max-effort readings run from 0.88 to 223. All of the spread is thinking.</p></li>
+        <li><p><b>The thinking budget is spent late, and that is fitted too.</b> Reading the share spent at each position across those families gives f to the power 3.5, with a root mean square error of 0.111.</p><p>Every model on the page moves on this, with no exceptions and nothing invented: GPT-5.6 Sol goes from 209 seconds to 4.6, Claude Sonnet 5 from 172.6 to 6.2. GLM-5.2 has a floor of 1.91 seconds and a budget of 0.04, so it moves 2 percent, and DeepSeek V4 Pro does not move at all.</p><p>Those models were never thinking before they answered, so there is nothing to take away, which is the result a pooled multiplier could not produce.</p></li>
+        <li><p><b>Room to the ceiling does not predict what effort buys, and it was tested.</b> The obvious guess is that a model already near the top of a test has little left to gain, so effort should matter less to it.</p><p>Measured across every figure and family with a full ladder, the correlation between room remaining and points gained is minus 0.04, which is nothing. What predicts the gain is which test it is: the non-hallucination rate moves 1 to 3 points whatever the room, and GDPval moves 14 to 19 with less room than that.</p><p>So the correction stays per figure and no headroom term was added.</p></li>
+        <li><p><b>A moved row says so, and carries the error to prove it.</b> Moving a model down from max to the common point cuts its price toward <b>0.40</b> of the max-effort price and lowers its score by an amount that varies by family, averaging around 18 points with a spread of about 7.</p><p>Every figure on a moved row is drawn through that spread in the simulation, and a moved row can lose runs it would have won at max, which is the point.</p></li>
+        <li><p><b>A rung the board leaves unpriced is priced from its own latency. It is never thrown away.</b> Artificial Analysis publishes a cost per task at some effort settings and not others. Claude Sonnet 5 publishes six settings and only two carry a cost, so it used to be placed by reading the word "max" off a table.</p><p>Within a model, time to first token tracks cost per task at <b>r = +0.989</b>, positive in all six families that publish a full ladder, because both are driven by how long the model thinks. Latency alone recovers a held-out price within <b>20% at the median</b> and inside 50% every time.</p><p>Fitting all of a model's own clocks together, latency and total response and output speed and where the rung lands on the index, does better still: held out on families never seen in the fit, it misses by <b>17.7% at the median</b>, against an in-sample <b>r&sup2; = 0.84</b> measured on the same rows it was fitted to.</p><p>All of them are used and latency alone is only the fallback. Eighteen rungs are priced this way. Rebuilding cost from output tokens instead was tried and fails at 69%, because the speed columns are measured on a short prompt and the cost is measured across the whole suite.</p></li>
+        <li><p><b>Prices and benchmarks are trusted separately, because the evidence for them is separate.</b> A model can publish a full price ladder and almost no benchmarks. Claude Sonnet 5 does: four of its rungs carry a single figure each, and the only one common to all of them is GDPval.</p><p>Fitting its whole climb to that one benchmark put its capability shift at 24.9 points against 9.7 from the pooled curve, on the strength of a number that happens to climb steeply. A model now needs four figures measured at every rung before its own curve speaks for what effort buys it.</p><p>Below that it keeps its own prices, which are real, and borrows the pooled curve for capability.</p></li>
+        <li><p><b>Where a figure can be moved by a model's own clocks, it is.</b> Everything that answers to effort answers to the same thing underneath, which is how long the model thinks, and that shows up in latency, first answer, total response, output speed and their spreads, all published at far more settings than the benchmarks are.</p><p><b>Which predictors each figure gets is decided by holding out whole models, never by how well the fit looks on the data it was fitted to.</b> That distinction is doing real work: given nine predictors and nine models, tau3-Banking fits at r&sup2; 0.94 and Terminal-Bench Hard at 0.67, and held out they fall to 0.24 and 0.03.</p><p>Every figure that survives holding out lands between <b>0.88 and 0.43</b>, and takes the smallest predictor set that wins rather than the largest one available. Figures that clear nothing are left alone.</p><p>That itself is the finding: the non-hallucination rate and the slower-moving knowledge figures barely respond to effort inside a model, so predicting them is worse than not moving them. The four price columns fit at r&sup2; near zero, which is this method independently reaching the same answer as the ratio test.</p></li>
+        <li><p><b>Output price does not move with effort, and output speed does.</b> Both numbers come from measurement, never assumption. Across the twelve families that publish a full ladder, dollars per million output tokens is identical at every setting without a single exception: effort buys more tokens. It never buys costlier ones.</p><p>Output speed rises <b>8.1%</b> from the cheapest setting to max, with a 95% interval of 2.6 to 13.9, small enough to dismiss by eye and real in the data. It was not being applied at all and now is.</p></li>
+        <li><p><b>The curve was checked against a second board that measures something else.</b> LiveBench publishes Claude 4.5 Opus at low, medium and high effort with reasoning on, across four releases. Asked what share of the low-to-high gain is already delivered at medium, it answers 0.753, 0.764 and 0.788 in the three releases where the order is monotonic.</p><p>The curve used here answers 0.687. Two boards, one a composite of 23 live tasks and the other a set of capability figures, agreeing to 13 percent about the same shape.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="style-control">
+      <h2>Style control on LM Arena</h2>
+      <ol class="mm-list">
+        <li><p><b>Some of what LM Arena measures is presentation, and Arena itself will tell you how much.</b> Its Style Control setting strips formatting and length out of the ranking, and the gap between the plain board and the controlled one is a measurement nothing else publishes.</p><p>Across 33 models the median model loses <b>10 points</b> when style is taken away, so most of this board is partly a writing contest. GPT-5.6 Sol loses 28, Luna 22, Terra 20. Claude Fable 5 loses 13 and falls from first to fifth.</p><p>Claude Opus 5 is the one real exception in the other direction, gaining 16 points at max effort and 12 at high, which moves it from twelfth to second. It is the only model here materially under-rated by presentation.</p></li>
+        <li><p><b>The four Arena text figures here are read with Style Control on.</b> That is Arena’s own correction for formatting and length, and Hard Prompts, Creative Writing, Instruction Following and Longer Query were each confirmed against the live toggle. The fifth Arena figure, WebDev, comes from a separate board and is still the plain number.</p></li>
+        <li><p><b>A raw before and after on Arena scores is not a valid comparison.</b> Elo is a relative fit, so turning the correction on refits the whole board and moves the scale: the median model shifts <b>+21</b> points on Hard Prompts, <b>+8</b> on Instruction Following and <b>+33</b> on Coding. That is the scale moving. No model actually improved.</p><p>Centering each board on its median model is what isolates who gains and loses against the field.</p></li>
+        <li><p><b>Style dependence is a property of the model, and it barely varies by task.</b> Once centered, a model’s figure on one board predicts its figure on another at <b>r = 0.955</b> to <b>0.977</b> across Hard Prompts, Instruction Following and Coding. A model that wins on presentation wins that way on every board, by about the same amount.</p></li>
+        <li><p><b>Claude Opus 5 depends on presentation more than anything else measured.</b> Against the field it gives up <b>27</b> points at high effort and <b>33</b> at max on Hard Prompts, and <b>31</b> and <b>37</b> on Coding, when formatting and length are removed. Qwen3.8 Max follows at about 14 and Gemini 3.7 Flash at about 11.</p><p>Claude Fable 5 is the flat case, moving a point or less on every board, so its standing is close to all substance.</p></li>
+        <li><p><b>Nothing predicts how much a model leans on presentation.</b> It was tested against every other quantity in the data behind the picker: cost per task, price paid per step up the effort ladder, capability bought per step, output speed, time to first token, context length, how much of the question the model is measured on, open weights, and overall capability.</p><p>Eleven tests, and none survive. Overall capability was the only one to reach the bar at <b>r = −0.488</b> against a threshold of 0.47, and it collapses to −0.29 the moment Claude Opus 5 is dropped, with a rank-based check at <b>−0.387</b>.</p><p>So the honest reading is that a strong model is not more presentation-dependent, it just happens that the most presentation-dependent model here is also a strong one.</p></li>
+        <li><p><b>That is the reason this figure is scored on its own.</b> A trait no other measurement predicts cannot be inferred, only read off the board. It also means style dependence carries no information about cost or effort, which is why the effort normalization leaves it out entirely.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="cost-speed">
+      <h2>Why cost and speed are not scored</h2>
+      <ol class="mm-list">
+        <li><p><b>The expensive end of the value chart is solid and the cheap end is not.</b> Which models sit on the line at the bottom depends on which cost figure you use, and the boards disagree: one model here is priced between $1.44 and $5.45 a task depending on the source, a fourfold spread on one model.</p><p>The costly models on the line stay on it whatever you use. A cheap model on the line is a candidate to check. Confirm its price against a second board before you act on the position.</p></li>
+        <li><p><b>Most of a cost-per-task figure is the prompt, not the thinking.</b> Working the generated output back out of these boards, throughput times response time, the median task on Artificial Analysis produces about <b>2,600</b> tokens, and the median row spends <b>96%</b> of its cost per task on something other than generating them.</p><p>That something is the prompt and the test harness. So cheap per task and cheap per generated token are two different claims: across 101 priced rows they agree at only r = 0.688, under half the variance shared.</p><p>A model can be cheap because it thinks less or because it is priced lower, and the value chart cannot tell you which.</p></li>
+        <li><p><b>Writing more is not thinking better, between models.</b> Inside one model, spending more tokens buys score, which is the whole reason the effort ladder exists. Across models it does not: how many tokens a model produces per task predicts its score here at <b>r = 0.16</b> on 21 models, which at this sample size is nothing.</p><p>A slow, wordy model is not a careful one.</p></li>
+        <li><p><b>Cost is not scored.</b> It is the horizontal axis of the value chart on the picker and nothing else. Scoring it as a seventh dial would have counted it twice: once toward the score, and again toward where the model lands on that chart. A cheap model would have earned credit for being cheap in both places.</p></li>
+        <li><p><b>Speed is not scored either.</b> On the honest scale, time to first token separates the top five by 0.3 points. Total response time separates them by 0.9. Every model shipping today is fast, measured against the all-time floor these boards track.</p><p>A dial that cannot separate the leaders is ranking noise with a decimal point on it, the same test every scored figure had to pass.</p></li>
+        <li><p><b>One board here is read and not scored, on purpose.</b> LM Arena's Agent board prints the size of a number without its sign. Whether a model did better or worse than the field shows up only as a small arrow, and the switch from better to worse falls at row 28 of 50.</p><p>The last row reads 19.82 percent and means minus 19.82. Scoring what is printed would have turned the weakest half of that board into the strongest.</p></li>
+        <li><p><b>Knowing things and not making things up pull against each other, and the dials do not stop you asking for both.</b> On this roster they run opposite at <b>r = -0.58</b>. A model that answers more questions correctly also declines fewer of the ones it cannot answer, so it invents more.</p><p>Turn both dials up and you are asking for two things the field does not currently deliver together. That opposition gets stronger, not weaker, the further you restrict to frontier models, so it is not an artifact of this shortlist. Decide which failure costs you more and weight accordingly.</p></li>
+      </ol>
+    </section>
+
+    <section class="next-step section" aria-label="Back to the tool">
+      <p class="eyebrow">Back to it</p>
+      <h2>Move the dials yourself</h2>
+      <p>The ranking reorders against these figures as you weight them.</p>
+      <div class="actions">
+        <a class="button primary" href="/model-picker">Open the model picker</a>
+      </div>
+    </section>
+<!-- related-links:start -->
+    <section class="section site-related" aria-labelledby="related-links-title">
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Which model should you use?</h2>
+      <p class="site-next"><a href="/model-picker">Take the numbers back to the tool: move the six dials and watch the ranking reorder against them.</a></p>
+    </section>
+<!-- related-links:end -->
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-legal">
+      <p><strong>Independent Kaspa explainer.</strong> Claims are labeled live, targeted, roadmap, research, unsupported, or wrong. Not investment advice.</p>
+      <p class="footer-disclosure">Independent site with no official Kaspa role. No wallet, exchange, mining, or price service. Nobody pays for coverage; the maintainer may hold KAS.</p>
+      </div>
+      <nav class="footer-nav-groups" aria-label="Footer">
+        <div class="footer-link-group" aria-label="Learn">
+          <span>Learn</span>
+          <a href="/start-here">Start here</a>
+          <a href="/crypto-from-scratch">Crypto from scratch</a>
+          <a href="/what-is-kaspa">What is Kaspa</a>
+          <a href="/why-kaspa-matters">How it compares</a>
+        </div>
+        <div class="footer-link-group" aria-label="Verify">
+          <span>Verify</span>
+          <a href="/status">Status</a>
+          <a href="/skeptical-case">Skeptical case</a>
+          <a href="/sources">Sources</a>
+        </div>
+        <div class="footer-link-group" aria-label="Build">
+          <span>Build</span>
+          <a href="/build-on-kaspa">Build on Kaspa</a>
+          <a href="/what-is-kaspa#covenants">Covenants explained</a>
+          <a href="/kaspa-mining">Mining Kaspa</a>
+          <a href="/kips">KIPs and KCCs</a>
+        </div>
+        <div class="footer-link-group" aria-label="Tools">
+          <span>Tools</span>
+          <a href="/demos">Try it</a>
+          <a href="/chain-comparer">Compare chains</a>
+          <a href="/model-picker">Compare AI models</a>
+          <a href="/search">Search</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -444,14 +444,31 @@ true one. Measured on 29 Aug 2026, against the actual data:
 
 | claim in prose | places | ground truth |
 |---|---|---|
-| "21 models" | 2 | **23 models in the picker blob** |
-| "Twenty demos" | 4, including README | unverified |
-| "Eighteen interactive demos" | 1, on demos/index.html | unverified |
+| "21 models" | 1, on search.html | **23 models in the picker blob**; fixed by deleting the count |
+| "21 models" | 1, on model-picker.html | **correct as written**, see the row below |
+| "Twenty demos" | 4, including README | **18 distinct demos, 19 instances**; counted 29 Aug |
+| "Eighteen interactive demos" | 1, on demos/index.html | **18, correct**; the count was deleted anyway |
 | "Twenty L1s" | 1 | 20 in data/l1-chains.json, correct |
 
-The site contradicts itself on its own demo count: four places say twenty, the demos
-index says eighteen, and nobody has counted. The model count is two roster changes
-behind.
+Two corrections to this table, made 29 Aug 2026 after counting rather than reading.
+
+**The "21 models" row was half wrong, and acting on it would have fabricated a
+statistic.** It counted two places. One, search.html's model-picker card, was a
+genuine stale roster count and is gone. The other, model-picker.html's
+"r = 0.16 on 21 models", is a documented sample size that matches
+`data/model-analysis-2026-08-25.md` line 1121; changing it to 23 would have
+invented a correlation nobody computed. A count in prose is not automatically a
+roster count. Check what the number is counting before replacing it.
+
+**The demo count is no longer unverified.** `scripts/check-demo-surface.mjs`
+finds 19 demo boundaries across the manifest pages; one, index.html's, is a
+second copy of what-is-kaspa.html's collision demo, so there are 18 distinct
+interactive demos and 19 instances. Two earlier hand counts were wrong in
+opposite directions: skeptical-case.html carried a `<section id="attack-cost-demo">`
+with zero controls that every automated check read as a demo, and
+utxo-vs-accounts.html's `#shared-state` is prose with a table and no controls,
+counted as a demo by hand. Both are resolved: the first is now a real demo, the
+second is not counted.
 
 ### The rule
 

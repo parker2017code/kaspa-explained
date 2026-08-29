@@ -94,26 +94,25 @@ def _ignored(path):
         return False
 
 
-SKIP_FILES = {
-    "PROSE_STANDARD.md", "COPY_STYLE.md", "AGENTS.md", "CLAUDE.md",
-    "MAINTENANCE.md", "CONTENT_BRIEF.md", "README.md", "CLAIMS.yml",
-    "PLAN-REDESIGN.md", "PLAN-2026-08-22.md", "PLAN-DEMO-MERGE.md", "RESEARCH-2026-08-22.md",
-    # Internal working documents: findings, decisions, and red-team reports.
-    # Several quote the exact patterns they exist to report, so linting them
-    # as reader-facing copy is circular and blocks commits over the wording
-    # of a defect report.
-    "COLD-READ.md", "REVIEW.md", "TODO.md", "HANDOFF.md", "AUDIT.md",
-    "BREAK.md", "FACTS.md", "CROSS-READ.md", "CONTRIBUTING.md",
-    "CLI_FROM_ZERO.md", "PROGRESS.md", "STANDARD.md", "house-style.md",
-    "handoff-checklist.md", "model-picker-methodology.md", "THE-BAR.md",
-    # The two governing spec documents, added 2026-08-29. Same reason as the
-    # block above, one step further: SITE-STANDARD.md quotes the owner in his
-    # own first person ("I don't care if it fucks up every page"), which is
-    # three site-voice-first-person hits, so --strict exited 1 and the publish
-    # gate failed on the file that defines the standard. Rewriting a quotation
-    # to satisfy a linter would destroy the thing being quoted.
-    "SITE-STANDARD.md", "PRINCIPLES.md",
-}
+# What this gate judges is the site's published pages, read from
+# site-manifest.json, plus the demo pages under demos/.
+#
+# It used to glob every *.html and *.md at the repo root and subtract a
+# hand-maintained roster of internal documents. That roster rotted three times
+# in six days: the audit reports had to be excluded by filename prefix, then
+# SITE-STANDARD.md and PRINCIPLES.md by name after a quotation of the owner's
+# own first person failed --strict, then WORKING-STATE.md would have been the
+# third. Every one of those failures had the same shape. A working document is
+# not site copy, the gate had no way to tell, and the only available fix was to
+# extend a list that would rot again on the next document anyone wrote.
+#
+# The manifest already answers the question the list was approximating: these
+# are the pages that ship. Markdown at the repo root is internal documentation,
+# agent guidance, draft social copy, or a license, and none of it is written in
+# the site's voice. Judging it was never the intent; it was a side effect of
+# globbing.
+#
+# Pass explicit paths to lint anything else: python3 scripts/check-prose.py FILE
 
 
 def visible_text(path):
@@ -251,21 +250,12 @@ def main():
     if args:
         paths = args
     else:
-        paths = sorted(glob.glob("*.html")) + sorted(glob.glob("*.md"))
-        # Only judge what ships. Gitignored drafts and scratch files are not
-        # site copy, and scanning them fails the gate on content no reader
-        # will ever see. check-links.sh hit this same class of bug.
-        paths = [p for p in paths if not _ignored(p)]
-    # Audit and adversarial reports quote the defects they exist to name,
-    # including the banned patterns themselves, so linting them as reader
-    # copy is circular. Matched by prefix because each review pass creates
-    # new ones and an explicit list goes stale as soon as a lens is added.
-    _REPORT_PREFIXES = ("AUDIT-", "BREAK-", "CHECK-", "MISREAD", "CROSS-READ-", "PLAN-", "LIVE-SWEEP")
-    paths = [
-        p for p in paths
-        if os.path.basename(p) not in SKIP_FILES
-        and not os.path.basename(p).startswith(_REPORT_PREFIXES)
-    ]
+        manifest = json.load(open("site-manifest.json", encoding="utf-8"))
+        paths = list(manifest["pages"]) + sorted(glob.glob("demos/*.html"))
+        # Gitignored drafts and scratch files are not site copy, and scanning
+        # them fails the gate on content no reader will ever see.
+        # check-links.sh hit this same class of bug.
+        paths = [p for p in paths if os.path.exists(p) and not _ignored(p)]
 
     rows = [r for r in (analyse(p) for p in paths) if r]
     # worst first: banned hits, then how uniform the sentence lengths are

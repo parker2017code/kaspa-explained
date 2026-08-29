@@ -30,7 +30,7 @@
   <meta property="og:description" content="The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/skeptical-case">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,8 +38,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Risks and Open Questions | Kaspa Explained">
   <meta name="twitter:description" content="The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
-  <meta name="dateModified" content="2026-08-22">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
+  <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -48,23 +48,189 @@
       {
         "@type": "Question",
         "name": "What are the main risks for Kaspa?",
-        "acceptedAnswer": {"@type": "Answer", "text": "The main risks are node and indexer pressure, long-term security budget, Proof-of-Work external-cost tradeoffs, liquidity, mining concentration, app-roadmap execution, and public claims that treat roadmap or testnet work as live mainnet behavior."}
+        "acceptedAnswer": {"@type": "Answer", "text": "The main risks are node and indexer pressure, the long-term security budget, the external cost of proof of work, liquidity, mining concentration, roadmap execution, and public claims that treat roadmap or testnet work as live mainnet behavior."}
       },
       {
         "@type": "Question",
-        "name": "What evidence would strengthen Kaspa?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Evidence that would strengthen Kaspa includes independent node operation at scale, healthy mining distribution, durable security budget, liquidity, repeat-use apps, wallet support, indexers, and accepted mainnet evidence for upgrade claims."}
+        "name": "Who pays Kaspa's miners?",
+        "acceptedAnswer": {"@type": "Answer", "text": "New coins pay almost all of it. On 22 August 2026 the block subsidy was worth about $58,358 a day and transaction fees came to about $5.17, so fees covered 0.0089% of miner pay. The subsidy halves every twelve months on a schedule fixed in the protocol."}
       },
       {
         "@type": "Question",
         "name": "What would weaken the Kaspa case?",
-        "acceptedAnswer": {"@type": "Answer", "text": "Kaspa's case weakens if node or indexer operation centralizes, security budget weakens, liquidity stays thin, app claims outrun shipped evidence, or roadmap items are marketed as live products."}
+        "acceptedAnswer": {"@type": "Answer", "text": "Kaspa's case weakens if node or indexer operation centralizes, the security budget shrinks without fee demand replacing it, liquidity stays thin, app claims outrun shipped evidence, or roadmap items are marketed as live products."}
       }
     ]
   }
   </script>
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
+  <style>
+    /* Second paragraph of a risk cell: the answer to "what would settle
+       this?", which used to sit behind a per-row <details> summary reading
+       "What would settle it". Seven disclosures for seven 30-word answers
+       cost a reader seven clicks to read the argument the page exists to
+       make, so the answers are inline now. styles.css's .risk-table
+       td:last-child > p sets margin: 0 on every paragraph in the cell, so
+       the pair needs its own separation here. */
+    .risk-settle { margin-top: 12px !important; }
+    .risk-settle b { color: var(--text); }
+
+    /* Security-budget demo. Uses the site's own tokens rather than
+       redeclaring a palette, so it follows the theme toggle by itself. */
+    .sb-demo {
+      margin: 22px 0 8px;
+      padding: clamp(16px, 2.4vw, 22px);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .sb-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+    /* One column on a phone puts the readout under the controls, which means
+       moving a slider changes a number that has scrolled off the bottom of
+       the screen. Reversed here so the figure a reader is changing stays
+       above the control changing it; the two-column desktop layout below
+       does not have the problem and keeps controls on the left. */
+    @media (max-width: 759px) { .sb-readout { order: -1; } }
+    @media (min-width: 760px) { .sb-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+    .sb-panel {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px 16px 18px;
+    }
+    .sb-control + .sb-control { margin-top: 18px; }
+    .sb-control label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+    .sb-control output {
+      display: block;
+      margin: 2px 0 2px;
+      font-size: 1.05rem;
+      font-weight: 650;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+    .sb-control input[type="range"] {
+      width: 100%;
+      height: 44px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+    .sb-presets-label {
+      margin: 20px 0 8px;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+    .sb-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sb-presets button {
+      min-height: 44px;
+      padding: 6px 14px;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--control-bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .sb-presets button:hover { background: var(--control-hover); }
+    .sb-readout { display: flex; flex-direction: column; container-type: inline-size; }
+    .sb-big {
+      margin: 0;
+      font-size: clamp(2.4rem, 6vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+    }
+    .sb-big-label { margin: 4px 0 18px; color: var(--muted); font-size: .98rem; }
+    .sb-scale { margin-bottom: 18px; }
+    .sb-track {
+      position: relative;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--control-bg);
+      /* The hairline ticks this track used to paint (a repeating-linear-gradient
+         every 20%, plus an inset shadow for the one at 100%) are gone. The six
+         .sb-ticks labels below sit at exactly those stops, so the hairlines
+         restated them, and below 560px two of those labels are hidden while the
+         hairlines stayed, so the track showed six ticks against four labels. The
+         labels are the scale. Removed 2026-08-29; also the last two glass-gate
+         violations on this page. */
+    }
+    .sb-marker {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      margin-left: -7px;
+      border-radius: 50%;
+      background: var(--green);
+      border: 2px solid var(--card-bg);
+      transform: translateY(-50%);
+    }
+    .sb-ticks { position: relative; height: 1.2em; margin-top: 7px; }
+    .sb-ticks span {
+      position: absolute;
+      font-size: .72rem;
+      color: var(--faint);
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+    .sb-ticks span:nth-child(1) { left: 0; transform: none; }
+    .sb-ticks span:nth-child(2) { left: 20%; }
+    .sb-ticks span:nth-child(3) { left: 40%; }
+    .sb-ticks span:nth-child(4) { left: 60%; }
+    .sb-ticks span:nth-child(5) { left: 80%; }
+    .sb-ticks span:nth-child(6) { left: 100%; transform: translateX(-100%); }
+    /* Six decade labels need about 330px. Below that they collide, and the
+       readout column gets that narrow both on a phone and in the two-column
+       desktop layout at around a 760px viewport, so this keys off the
+       readout's own width rather than the window's. The tick marks on the
+       track stay; only two of the six labels drop. */
+    @container (max-width: 330px) {
+      .sb-ticks span:nth-child(2),
+      .sb-ticks span:nth-child(4) { display: none; }
+    }
+    .sb-figs { margin: 0 0 16px; display: grid; gap: 8px; }
+    .sb-figs > div { display: flex; justify-content: space-between; gap: 12px; }
+    .sb-figs dt { color: var(--faint); font-size: .92rem; }
+    .sb-figs dd {
+      margin: 0;
+      color: var(--text);
+      font-size: .95rem;
+      font-weight: 600;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .sb-reset {
+      margin-top: auto;
+      align-self: flex-start;
+      min-height: 44px;
+      padding: 6px 16px;
+      font: inherit;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--control-bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .sb-reset:hover { background: var(--control-hover); }
+    .sb-note, .sb-source { margin: 14px 0 0; font-size: .88rem; color: var(--faint); }
+    .sb-source { margin-top: 6px; }
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -90,7 +256,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">What could go wrong</p>
       <h1>Kaspa risks and open questions</h1>
-      <p class="lead">The case for Kaspa rests on a handful of separate claims, and any one of them can fail without the others failing.</p>
+      <p class="lead">The case for Kaspa is seven separate claims. Any one of them can fail while the rest hold.</p>
     </section>
 
     <section class="section deep-dive-plain">
@@ -100,112 +266,119 @@
         <tr>
           <td>Verification cost</td>
           <td>
-            <p>Higher block rates raise the bandwidth, CPU, and storage a node needs. Push that too far and only a few well-funded operators can still check the chain.</p>
-            <details class="cell-detail">
-              <summary>What would settle it</summary>
-              <p>Many separate operators running nodes, APIs, explorers, and indexers. Fast blocks alone do not settle it.</p>
-            </details>
+            <p>Ten blocks a second raise the bandwidth, processor time, and disk a node needs. Push that far enough and only well-funded operators can still check the chain for themselves.</p>
+            <p class="risk-settle"><b>Settled by</b> many separate people running nodes, APIs, explorers, and indexers. Fast blocks on their own settle nothing.</p>
           </td>
         </tr>
         <tr>
           <td>Security budget</td>
           <td>
-            <p>Block rewards decline over time. Unless fees and demand replace that revenue, miner income falls and so does the cost of attacking the network.</p>
-            <details class="cell-detail">
-              <summary>What would settle it</summary>
-              <p>Fees and real demand paying for enough hash power over time. Price and enthusiasm alone do not settle it.</p>
-              <p>Kaspa's block reward is 2.31246515 KAS (api.kaspa.org/info/blockreward): 864,000 blocks a day at 10 blocks per second, 1,997,970 KAS of new supply daily. At $0.02934513 per KAS (CoinGecko, read August 22, 2026), that's about $58,631 a day paid to miners, funding a network running at roughly 311.5 PH/s (api.kaspa.org/info/hashrate). Fees are a rounding error next to that: about 77,207 transactions a day at a median $0.000063 (this site's own <a href="/chain-comparer">chain data</a>) comes to $4.86 a day, roughly 1/12,054th of the subsidy, 0.0083%. The other 99.99% is new supply. Demand pays almost none of it.</p>
-              <p>The subsidy is also shrinking on its own schedule. Kaspa's reward steps down every month by a factor of 2<sup>&minus;1/12</sup>, about 5.61%, per rusty-kaspa's <code>coinbase.rs</code> subsidy table. Twelve of those steps compound to exactly half, so holding KAS price flat, the daily payout to miners falls to about $29,315 a year from now and about $3,664 in four years. Fees, unchanged, would need to grow about 6,000-fold in a year and 750-fold in four just to stay this far behind. That is the size of the gap they would have to close before catching up even starts.</p>
-              <p>Catching up would take real transaction volume. Holding today's $0.000063 median fee flat, matching today's $58,631 subsidy from fees alone needs about 10,771 transactions per second, held continuously. A momentary peak would not be enough. That's roughly 12,000 times Kaspa's own 0.894 tx/s on the same 22 Aug 2026 one-day snapshot this section's other figures use (77,207 daily transactions divided by 86,400 seconds, per <code>CLAIMS.yml</code>'s <code>fees_vs_subsidy_2026_08_22</code> entry), and higher than any one-day sustained rate in this site's own comparison data, including Solana's 1,579.6 on that same one-day basis (see the <a href="/kaspa-mining#fee-market">mining page's traffic-scenarios sourcing</a> for the full derivation; the site's 30-day means, a different and larger figure for a bursty chain like Kaspa, are on <a href="/chain-comparer">chain-comparer</a>). Holding today's transaction count flat instead, the same match needs a median fee near $0.76, about six times Bitcoin's own $0.1317 median. Neither looks close, and both would have to happen while the subsidy itself keeps shrinking underneath them.</p>
-              <p>This isn't unique to Kaspa: Bitcoin has run the same subsidy-funded deficit for its entire existence and remains the hardest chain to attack. Today, Kaspa's security is bought almost entirely with inflation. People paying to use the chain fund almost none of it, and no visible trend closes that gap on fees alone.</p>
-              <p class="fit-note">The <a href="/kaspa-mining#attack-cost">attack cost calculator</a> prices what it costs to outrun this hash rate for an hour.</p>
-            </details>
+            <p>New coins pay the miners. That payment shrinks on a fixed schedule, and fees are not replacing it. As miner income falls, so does the cost of attacking the network.</p>
+            <p class="risk-settle"><b>Settled by</b> fee demand large enough to take over from new coins. <a href="#security-budget-demo">Price the gap yourself below.</a></p>
           </td>
         </tr>
         <tr>
           <td>External cost</td>
-          <td><p>PoW security is bought with power, ASICs, and supply chains. That cost is real, and a fast chain does not make it go away.</p></td>
+          <td>
+            <p>Proof-of-work security is bought with electricity, chips, and supply chains. A faster chain does not make that bill smaller.</p>
+            <p class="risk-settle"><b>Nothing settles this one.</b> It is the price of the security model, and it is paid every day the network runs.</p>
+          </td>
         </tr>
         <tr>
           <td>Liquidity</td>
           <td>
-            <p>Depth, custody, exchange support, and market makers do not follow from good design. They take years and money.</p>
-            <details class="cell-detail">
-              <summary>What would settle it</summary>
-              <p>Users able to get in and out, hold their own keys, keep books, get help, and trade at depth. Holders and volume existing on their own do not settle it.</p>
-            </details>
+            <p>Market depth, custody, and exchange support do not follow from good design. They take years, money, and legal work that has nothing to do with consensus.</p>
+            <p class="risk-settle"><b>Settled by</b> people able to get in and out, hold their own keys, keep books, and trade at depth. Holder counts and daily volume do not settle it.</p>
           </td>
         </tr>
         <tr>
           <td>Mining concentration</td>
           <td>
-            <p>A small number of makers control <span class="term-def" tabindex="0" role="button" aria-describedby="asic-def-skeptical">ASIC<span class="term-def__panel" id="asic-def-skeptical" role="tooltip">Application-specific integrated circuit: a chip built to do one job, in Kaspa's case running kHeavyHash, fast. It cannot be reprogrammed for anything else the way a general-purpose CPU or GPU can.</span></span> supply. Pools cluster, and so does geography, so control can land in few hands even with an open protocol.</p>
-            <details class="cell-detail">
-              <summary>Fair-launch context</summary>
-              <p>No premine does not mean no early concentration. The <a href="/kaspa-origin-story#fair-launch-demo">fair-launch comparison</a> plots Kaspa's genesis supply against Ethereum, Cardano, and XRP, and what a fair launch does and doesn't guarantee.</p>
-            </details>
+            <p>A few firms control <span class="term-def" tabindex="0" role="button" aria-describedby="asic-def-skeptical">ASIC<span class="term-def__panel" id="asic-def-skeptical" role="tooltip">Application-specific integrated circuit: a chip built to do one job, in Kaspa's case running kHeavyHash, fast. It cannot be reprogrammed for anything else the way an ordinary processor can.</span></span> supply. Pools cluster, and so does geography, so control can still land in few hands under a fully open protocol.</p>
+            <p class="risk-settle"><b>Settled by</b> block production spread across many independent payout addresses over long windows. No premine does not mean no early concentration: the <a href="/kaspa-origin-story#fair-launch-demo">fair-launch comparison</a> plots what a fair start does and does not buy.</p>
           </td>
         </tr>
         <tr>
           <td>Roadmap execution</td>
           <td>
-            <p>Toccata activated on mainnet. vProgs, DAGKnight, and native DeFi are still separate tracks on separate timelines; a testnet demo of one is not evidence for the rest.</p>
-            <details class="cell-detail">
-              <summary>What would settle it</summary>
-              <p>A mainnet release and proof it turned on, with wallets, indexers, accepted transactions, and repeat flows. A talk, a branch, or a testnet demo does not settle it.</p>
-              <div class="table-wrap">
-                <table class="reality-table">
-                  <thead><tr><th>Risk</th><th>What would answer it?</th></tr></thead>
-                  <tbody>
-                    <tr><td>Toccata tooling stays rough after it turns on.</td><td>Toccata activated at DAA score 474,165,565, the score set by Rusty Kaspa v2.0.0, with v2.0.1 released after it.
-                      <details class="cell-detail">
-                        <summary>What's left to check</summary>
-                        <p>Stable releases, docs that work, and builder examples anyone can repeat. <span class="term-def" tabindex="0" role="button" aria-describedby="tn10-def-skeptical">TN10<span class="term-def__panel" id="tn10-def-skeptical" role="tooltip">A Kaspa test network used to trial protocol changes, including Toccata, ahead of mainnet activation.</span></span>/<span class="term-def" tabindex="0" role="button" aria-describedby="tn12-def-skeptical">TN12<span class="term-def__panel" id="tn12-def-skeptical" role="tooltip">A separate Kaspa test network used to trial covenant and script changes ahead of mainnet.</span></span> tests alone are not enough.</p>
-                      </details>
-                    </td></tr>
-                    <tr><td>Native apps stay demos with no users.</td><td>Repeat users, real fee demand, wallets, separate indexers, and apps that keep working.</td></tr>
-                    <tr><td>DeFi claims get ahead of custody and oracles.</td><td>Audited custody rules and real wallet signing. An oracle design, liquidation rules, and settlement that gets accepted.</td></tr>
-                    <tr><td>Based-app language becomes too abstract.</td><td>Real products where app state is tied to Kaspa ordering, proofs, settlement, or exits.</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </details>
+            <p>Toccata activated on mainnet. vProgs, DAGKnight, and native DeFi are separate tracks on separate timelines, and a testnet demo of one is no evidence for the rest.</p>
+            <p class="risk-settle"><b>Settled by</b> a mainnet release and proof it turned on, with wallets, indexers, accepted transactions, and repeat use. <a href="/status">The status page</a> tracks each track on its own.</p>
           </td>
         </tr>
         <tr>
           <td>User demand</td>
           <td>
-            <p>Low fees and spare room are needed for apps to exist. They are no proof that anyone will use them twice.</p>
-            <details class="cell-detail">
-              <summary>What would settle it</summary>
-              <p>People coming back because an app does the job better on Kaspa than on a normal server. Low fees alone do not settle it.</p>
-            </details>
+            <p>Low fees and spare room are what apps need in order to exist. They are no proof that anyone will use one twice.</p>
+            <p class="risk-settle"><b>Settled by</b> people coming back because an app does the job better on Kaspa than on an ordinary server. Low fees alone do not settle it.</p>
           </td>
         </tr>
         </tbody>
       </table>
     </section>
 
-    <section id="attack-cost-demo" class="section" aria-labelledby="attack-cost-demo-title">
+    <section class="section" aria-labelledby="sb-title">
       <p class="eyebrow">Try it</p>
-      <h2 id="attack-cost-demo-title">Price the security budget yourself</h2>
-      <p>The security-budget risk above turns on one number: what it costs to outrun Kaspa's hash rate. <a href="/kaspa-mining#attack-cost">Run the attack-cost calculator on the mining page</a> and set your own time window to see that cost priced live.</p>
+      <h2 id="sb-title">Who pays Kaspa's miners</h2>
+      <p>Miners sell hash power to whoever pays for it. If total pay falls, hash rate follows it down, and the cost of attacking Kaspa falls with it.</p>
+
+      <div class="sb-demo" id="security-budget-demo">
+        <div class="sb-grid">
+          <div class="sb-panel">
+            <div class="sb-control">
+              <label for="sbTime">How far ahead</label>
+              <output id="sbTimeOut" for="sbTime">today</output>
+              <input type="range" id="sbTime" min="0" max="144" step="1" value="0">
+            </div>
+            <div class="sb-control">
+              <label for="sbDemand">Payments a day</label>
+              <output id="sbDemandOut" for="sbDemand">82,023</output>
+              <input type="range" id="sbDemand" min="0" max="1000" step="1" value="0">
+            </div>
+            <p class="sb-presets-label" id="sbPresetLabel">Jump to</p>
+            <div class="sb-presets" role="group" aria-labelledby="sbPresetLabel">
+              <button type="button" data-preset="today">Today</button>
+              <button type="button" data-preset="peak">Kaspa's busiest hour, forever</button>
+              <button type="button" data-preset="solana">Solana's traffic</button>
+              <button type="button" data-preset="even">Fees match new coins</button>
+            </div>
+          </div>
+
+          <div class="sb-panel sb-readout" aria-live="polite">
+            <p class="sb-big"><span id="sbShare">0.0089%</span></p>
+            <p class="sb-big-label">of miner pay comes from fees</p>
+            <div class="sb-scale">
+              <div class="sb-track"><span class="sb-marker" id="sbMarker" style="left:18.9%"></span></div>
+              <div class="sb-ticks">
+                <span>0.001%</span><span>0.01%</span><span>0.1%</span><span>1%</span><span>10%</span><span>100%</span>
+              </div>
+            </div>
+            <dl class="sb-figs">
+              <div><dt>New coins</dt><dd id="sbSubsidy">$58,358 a day</dd></div>
+              <div><dt>Fees</dt><dd id="sbFees">$5.17 a day</dd></div>
+              <div><dt>Gap</dt><dd id="sbGap">fees are 11,293x too small</dd></div>
+            </dl>
+            <button type="button" class="sb-reset" id="sbReset">Reset</button>
+          </div>
+        </div>
+
+        <p class="sb-note">Each step on the scale is ten times more fee income. New coins are priced at 22 August 2026's KAS price, held flat; the payout schedule itself is fixed in the protocol and steps down 5.61% a month, halving every twelve. Fees are held at the measured median of $0.000063 a payment.</p>
+        <p class="sb-source">Source: <a href="/chain-comparer">this site's chain data</a>, Kaspa row, read 22 August 2026. Payout schedule from rusty-kaspa's <code>coinbase.rs</code> subsidy table; <a href="/kaspa-mining#emission-schedule">the emission demo</a> steps through it month by month.</p>
+      </div>
+
+      <p>This deficit is not a Kaspa problem. Bitcoin has run on the same subsidy for its whole life and is still the most expensive chain in the world to attack. What is worth watching here is whether the gap closes, not that a gap exists.</p>
+      <p class="fit-note">To price the other side of it, <a href="/kaspa-mining#attack-cost">the attack-cost calculator</a> puts a dollar figure on outrunning today's hash rate.</p>
     </section>
 
     <section class="section deep-dive-plain">
       <h2>What to watch</h2>
-      <p>How many separate node, API, and indexer operators exist. Whether roadmap items turn into apps with repeat users. Staying a demo does not count. And how fast the words live, testnet, roadmap, and research get flattened into one story in a hype cycle.</p>
-      <p>For the price and hash-rate version, read <a href="/kaspa-mining">Kaspa price, hash rate, and the mining cycle</a>.</p>
+      <p>How many separate node, API, and indexer operators exist. Whether roadmap items turn into apps with repeat users, since staying a demo does not count. And how fast the words live, testnet, roadmap, and research get flattened into one story in a hype cycle.</p>
+      <p>For the price and hash-rate version of the same question, read <a href="/kaspa-mining">Kaspa price, hash rate, and the mining cycle</a>.</p>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
-      <p class="eyebrow">Keep reading</p>
-      <h2 id="related-links-title">Next pages</h2>
-      <div class="site-related-grid">
-        <a href="/status"><span>Previous</span><strong>Kaspa current status</strong><p>What is live, targeted, roadmap, and research on Kaspa right now, checked against mainnet, releases, and KIPs.</p></a>
-        <a href="/kaspa-mining"><span>Next</span><strong>Kaspa mining</strong><p>Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.</p></a>
-        <a href="/sources"><span>Sources</span><strong>Sources for Kaspa Explained</strong><p>Every source this site uses, ranked by how much weight it gets and why.</p></a>
-      </div>
+      <p class="eyebrow">Next</p>
+      <h2 id="related-links-title" class="sr-only">Next: Kaspa mining</h2>
+      <p class="site-next"><a href="/kaspa-mining#attack-cost">Price what a 51% attack on Kaspa would really cost, in dollars per hour, against five other chains.</a></p>
     </section>
 <!-- related-links:end -->
   </main>
@@ -247,5 +420,136 @@
       </nav>
     </div>
   </footer>
+
+  <script>
+  (function () {
+    // Every constant below is one field of data/l1-chains.json's Kaspa row
+    // (meta.as_of 2026-08-22), or, for the KAS price behind the dollar
+    // figure, the number that file's meta.caveats.emission names as the
+    // source of emission_usd_per_day. Nothing here is transcribed from
+    // prose on another page. If the data file is re-measured, these five
+    // values are what has to move, and the page's copy derives from them
+    // instead of restating them by hand.
+    var SB = {
+      subsidyUsdPerDay: 58357.75,   // emission_usd_per_day
+      txPerDay: 82023,              // daily_transactions
+      medianFeeUsd: 0.000063,       // median_fee_usd
+      peakTps: 2229.2,              // tps_peak_observed
+      solanaTxPerDay: 175634352     // Solana's daily_transactions, same file
+    };
+    // The demand slider is logarithmic. A linear slider from today's traffic
+    // to a billion payments a day would spend almost all its travel above
+    // anything a reader can picture, and the whole question here is one of
+    // orders of magnitude. The maximum leaves headroom above the point where
+    // fees would match today's subsidy (about 926 million a day) so the
+    // "Fees match new coins" preset never has to clamp.
+    var TX_MIN = SB.txPerDay, TX_MAX = 1.5e9, STEPS = 1000;
+    var SPAN = Math.log(TX_MAX / TX_MIN);
+    // The readout scale is logarithmic for the same reason: fees start four
+    // decades below the subsidy, so a linear bar would read as empty across
+    // most of the range worth exploring. Floor of the scale is 0.001%.
+    var SCALE_FLOOR = 1e-5, SCALE_DECADES = 5;
+
+    var $ = function (id) { return document.getElementById(id); };
+    var timeEl = $('sbTime'), demandEl = $('sbDemand');
+    if (!timeEl || !demandEl) return;
+
+    // The slider quantizes to 1,000 log steps, which is about a 0.9% jump
+    // per step. That is invisible on a bar and glaring in a nine-digit
+    // readout: rounding "Solana's traffic" to the nearest slider step
+    // printed 175,419,591 next to a button claiming Solana's actual
+    // 175,634,352. So the exact figure is state, and the slider position is
+    // derived from it. A preset sets the number and moves the handle; a drag
+    // sets the handle and recomputes the number.
+    var txValue = SB.txPerDay;
+
+    var fmt = function (n) { return n.toLocaleString('en-US'); };
+    var money = function (n) {
+      if (n >= 1000) return '$' + fmt(Math.round(n));
+      if (n >= 10) return '$' + n.toFixed(0);
+      return '$' + n.toFixed(2);
+    };
+    var times = function (n) { return n >= 10 ? fmt(Math.round(n)) : n.toFixed(1); };
+    var txFromSlider = function (v) { return TX_MIN * Math.exp(SPAN * v / STEPS); };
+    var sliderFromTx = function (tx) {
+      var v = STEPS * Math.log(Math.min(Math.max(tx, TX_MIN), TX_MAX) / TX_MIN) / SPAN;
+      return Math.round(Math.min(Math.max(v, 0), STEPS));
+    };
+    var months = function () { return +timeEl.value; };
+    var subsidy = function () { return SB.subsidyUsdPerDay * Math.pow(2, -months() / 12); };
+
+    var timeWords = function (m) {
+      if (m === 0) return 'today';
+      var y = Math.floor(m / 12), r = m % 12, parts = [];
+      if (y) parts.push(y + (y === 1 ? ' year' : ' years'));
+      if (r) parts.push(r + (r === 1 ? ' month' : ' months'));
+      return parts.join(' ') + ' from now';
+    };
+
+    var pct = function (p) {
+      if (p >= 10) return p.toFixed(0) + '%';
+      if (p >= 1) return p.toFixed(1) + '%';
+      if (p >= 0.01) return p.toFixed(2) + '%';
+      return p.toPrecision(2) + '%';
+    };
+
+    function render() {
+      var sub = subsidy();
+      var fees = txValue * SB.medianFeeUsd;
+      var share = fees / (sub + fees);
+
+      timeEl.setAttribute('aria-valuetext', timeWords(months()));
+      $('sbTimeOut').textContent = timeWords(months());
+
+      var perSec = txValue / 86400;
+      $('sbDemandOut').textContent = fmt(Math.round(txValue)) + ' (' +
+        (perSec < 10 ? perSec.toFixed(2) : fmt(Math.round(perSec))) + ' a second)';
+      demandEl.setAttribute('aria-valuetext', fmt(Math.round(txValue)) + ' payments a day');
+
+      $('sbShare').textContent = pct(share * 100);
+      $('sbSubsidy').textContent = money(sub) + ' a day';
+      $('sbFees').textContent = money(fees) + ' a day';
+
+      var ratio = fees / sub;
+      $('sbGap').textContent = ratio < 0.995 ? 'fees are ' + times(1 / ratio) + 'x too small'
+        : ratio > 1.005 ? 'fees are ' + times(ratio) + 'x bigger than needed'
+        : 'fees exactly cover it';
+
+      // Marker and headline read the same quantity, so the picture and the
+      // number can never disagree.
+      var pos = share <= SCALE_FLOOR ? 0
+        : Math.min(1, (Math.log10(share) + SCALE_DECADES) / SCALE_DECADES);
+      $('sbMarker').style.left = (pos * 100).toFixed(2) + '%';
+    }
+
+    function setTx(tx) {
+      txValue = Math.min(Math.max(tx, TX_MIN), TX_MAX);
+      demandEl.value = sliderFromTx(txValue);
+      render();
+    }
+
+    document.querySelectorAll('.sb-presets button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var p = btn.dataset.preset;
+        if (p === 'today') setTx(SB.txPerDay);
+        else if (p === 'peak') setTx(SB.peakTps * 86400);
+        else if (p === 'solana') setTx(SB.solanaTxPerDay);
+        else if (p === 'even') setTx(subsidy() / SB.medianFeeUsd);
+      });
+    });
+
+    $('sbReset').addEventListener('click', function () {
+      timeEl.value = 0;
+      setTx(SB.txPerDay);
+    });
+
+    timeEl.addEventListener('input', render);
+    demandEl.addEventListener('input', function () {
+      txValue = txFromSlider(+demandEl.value);
+      render();
+    });
+    render();
+  })();
+  </script>
 </body>
 </html>

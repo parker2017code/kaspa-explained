@@ -130,7 +130,7 @@
  *
  * Usage: node scripts/check-render.mjs
  */
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import http from 'node:http';
 import path from 'node:path';
@@ -195,8 +195,17 @@ function buildPageList() {
   const locs = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const fromSitemap = locs.map(sitemapToRelPath).filter(Boolean);
 
+  // A redirect stub carries no content: it is a <meta http-equiv="refresh">
+  // and nothing else. A headless browser follows that refresh, so loading one
+  // here measures the DESTINATION page a second time and files every defect it
+  // finds under the stub's filename. 18 of the 19 files under demos/ are stubs
+  // (verified 2026-08-29), which is how check-render.mjs came to report
+  // demos/confirmation-risk.html, a 569-byte stub, with 90 violations including
+  // 2 clipped chart labels that are really why-kaspa-matters.html's. Stubs are
+  // already checked, correctly, by scripts/check-redirect-stubs.sh.
   const demoFiles = readdirSync(path.join(ROOT, 'demos'))
     .filter((f) => f.endsWith('.html'))
+  .filter((f) => !readFileSync(path.join(ROOT, 'demos', f), 'utf8').includes('http-equiv="refresh"'))
     .map((f) => `demos/${f}`);
 
   return [...new Set([...fromSitemap, ...demoFiles])].sort();
@@ -231,7 +240,13 @@ function startServer() {
     if (pathname === '/') pathname = '/index.html';
     let filePath = path.join(ROOT, pathname);
 
-    if (!existsSync(filePath) || (existsSync(filePath) && filePath.endsWith('/'))) {
+    // The second arm used to test filePath.endsWith('/'), which can never be
+    // true: path.join strips a trailing slash, so path.join(ROOT, '/demos/')
+    // is ".../demos". A request for the "/demos" nav link every page carries
+    // therefore fell straight through to readFileSync on a directory, threw
+    // EISDIR, and killed this gate mid-run with a stack trace instead of a
+    // report. Test the filesystem, not the string.
+    if (!existsSync(filePath) || statSync(filePath).isDirectory()) {
       if (existsSync(path.join(filePath, 'index.html'))) {
         filePath = path.join(filePath, 'index.html');
       } else if (existsSync(filePath + '.html')) {

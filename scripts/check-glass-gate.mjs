@@ -41,7 +41,7 @@
  *        GLASS_GATE_PAGES=index.html,status.html node scripts/check-glass-gate.mjs
  *        GLASS_GATE_VERBOSE=1 node scripts/check-glass-gate.mjs
  */
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import http from 'node:http';
@@ -84,8 +84,17 @@ function buildPageList() {
   const locs = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const fromSitemap = locs.map(sitemapToRelPath).filter(Boolean);
 
+  // A redirect stub carries no content: it is a <meta http-equiv="refresh">
+  // and nothing else. A headless browser follows that refresh, so loading one
+  // here measures the DESTINATION page a second time and files every defect it
+  // finds under the stub's filename. 18 of the 19 files under demos/ are stubs
+  // (verified 2026-08-29), which is how check-render.mjs came to report
+  // demos/confirmation-risk.html, a 569-byte stub, with 90 violations including
+  // 2 clipped chart labels that are really why-kaspa-matters.html's. Stubs are
+  // already checked, correctly, by scripts/check-redirect-stubs.sh.
   const demoFiles = readdirSync(path.join(ROOT, 'demos'))
     .filter((f) => f.endsWith('.html'))
+  .filter((f) => !readFileSync(path.join(ROOT, 'demos', f), 'utf8').includes('http-equiv="refresh"'))
     .map((f) => `demos/${f}`);
 
   return [...new Set([...fromSitemap, ...demoFiles, '404.html'])].sort();
@@ -110,6 +119,13 @@ function startServer() {
     let filePath = path.join(ROOT, pathname);
     if (!existsSync(filePath)) {
       if (existsSync(filePath + '.html')) filePath += '.html';
+    } else if (statSync(filePath).isDirectory()) {
+      // A clean-URL directory request, e.g. the "/demos" nav link every page
+      // carries. The real site and scripts/serve-local.py both resolve that to
+      // the directory's index.html. This server did not: existsSync passed on
+      // the directory, so the .html fallback above was skipped and readFileSync
+      // below threw EISDIR and killed the whole gate mid-run.
+      filePath = path.join(filePath, 'index.html');
     }
     if (!existsSync(filePath) || !filePath.startsWith(ROOT)) {
       res.writeHead(404);
