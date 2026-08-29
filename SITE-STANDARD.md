@@ -45,6 +45,41 @@ Two THE-BAR rules deserve restating because they are the root of defects found t
   displays, the prose goes."** That is the do-not-narrate rule below, and THE-BAR
   stated it first.
 
+## Measured typography targets, not chosen ones
+
+Taken 29 Aug 2026 from rendered pages via `scripts/measure-typography.mjs`, which reads
+computed styles rather than a stylesheet or a screenshot. Raw numbers in
+`data/reference-metrics-2026-08-29.json`. Every number below replaces one an orchestrator
+picked out of the air, which is what most of this file's density rules were.
+
+| Metric | ciechanow.ski | distill | linear | OWID | wikipedia | ours |
+| --- | --- | --- | --- | --- | --- | --- |
+| Body px | 19.2 | 17 | 17 | 14 | 16 | 16 |
+| Line height | 1.6 | 1.7 | 1.6 | 1.5 | 1.63 | 1.5 |
+| Measure, ch | 61.1 | 68.7 | 40.7 | 53.8 | 84.5 | 78.8 |
+| Distinct sizes | 10 | 11 | 6 | 9 | 10 | 11 to 16 |
+| Paragraph p90, words | 69 | 99 | 54 | 54 | 169 | 109 |
+
+Targets, each traceable to a row above:
+
+- **Measure at most 70ch on reading pages.** We sit at 78.8, wider than every reference
+  except Wikipedia and the Federal Reserve, which are documents people consult rather than
+  read. `model-picker.html` is worst at 82.7.
+- **Body at least 17px on reading pages.** We sit at 16, the floor of the set. The model
+  for this site runs 19.2. This is a reading site, not a reference table.
+- **Line height at least 1.6 on body copy.** We sit at 1.5; four of five references are
+  1.6 or more.
+- **At most 10 distinct font sizes rendering text on a page.** `kaspa-mining.html` has 16
+  and `what-is-kaspa.html` has 15. Linear does its whole marketing site in 6. Sixteen
+  sizes is not a hierarchy, it is the absence of one.
+- **Paragraph 90th percentile at most 70 words.** `index.html` sits at 109, on the page a
+  newcomer hits first, and against a 60-word rule this same file already stated.
+
+Where we already beat a reference, keep ours and say so. The point is external
+calibration, not imitation, and two of these references are cautionary rather than
+exemplary: Wikipedia and the Fed show what happens when measure is allowed to run past
+80ch.
+
 ## Whom it has to land with
 
 Written down 29 Aug 2026 because it was never written down, and a standard without a
