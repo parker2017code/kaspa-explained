@@ -1,5 +1,27 @@
 # Kaspa Explained Agent Guidance
 
+## Read these two first, before anything else in this file
+
+- **`PRINCIPLES.md`**: how to work. The owner's governing principles, stated
+  repeatedly and unprompted, plus the full reasoning behind each. **These outrank
+  every other document in this repo, including this one and including any brief you
+  are handed.** If a brief conflicts with them, the brief is wrong: say so and act on
+  the principles.
+- **`SITE-STANDARD.md`**: what "good" means here, in numbers. The authority you have
+  over pages **and over demos that already exist**, the comprehension bar, the
+  do-not-narrate rule, the density limits, the rendering gates, and the measured
+  defects this site has actually shipped. Anything you build or rewrite is judged
+  against it. Two rules there decide most rewrites, so know them before you start:
+  a rewrite criterion must be **external**, not preference, and the **deletion test**
+  is how you tell improvement from reproduction. If you cannot say what breaks when a
+  section is removed, you have not recovered why it exists. Read that file's own
+  contents list rather than trusting any summary of it, this one included.
+
+Neither is optional and neither is background reading. A brief that forgets to mention
+them does not excuse skipping them; that is exactly the failure mode `PRINCIPLES.md`
+describes, where the orchestrator is the least reliable input in the system.
+
+
 ## Read `WORKING-STATE.md` first
 
 It is the single home for what is true today: the state of every dated claim and
@@ -48,7 +70,12 @@ Ask first only for things that are genuinely destructive or hard to reverse: for
 
 Use these commands when relevant:
 
-- Local clean-URL preview: `python3 scripts/serve-local.py --port 4187`
+- Local clean-URL preview: `python3 scripts/serve-local.py --port 4196`. Check the port
+  is free and answering before using it: `curl -s -m 3 -o /dev/null -w '%{http_code}'
+  http://127.0.0.1:4196/`. A stale server from an earlier session can hold a port,
+  accept connections, and never respond, which looks like a hung page rather than a
+  refused one. If it does not return 200, pick another port rather than debugging the
+  site. Port 4187 has been wedged this way.
 - Rebuild agent index: `python3 scripts/build-agent-index.py`
 - Rebuild sitemap: `python3 scripts/build-sitemap.py`
 - Copy lint: `npm run lint:copy`

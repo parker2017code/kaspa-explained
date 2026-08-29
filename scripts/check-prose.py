@@ -106,6 +106,13 @@ SKIP_FILES = {
     "BREAK.md", "FACTS.md", "CROSS-READ.md", "CONTRIBUTING.md",
     "CLI_FROM_ZERO.md", "PROGRESS.md", "STANDARD.md", "house-style.md",
     "handoff-checklist.md", "model-picker-methodology.md", "THE-BAR.md",
+    # The two governing spec documents, added 2026-08-29. Same reason as the
+    # block above, one step further: SITE-STANDARD.md quotes the owner in his
+    # own first person ("I don't care if it fucks up every page"), which is
+    # three site-voice-first-person hits, so --strict exited 1 and the publish
+    # gate failed on the file that defines the standard. Rewriting a quotation
+    # to satisfy a linter would destroy the thing being quoted.
+    "SITE-STANDARD.md", "PRINCIPLES.md",
 }
 
 
