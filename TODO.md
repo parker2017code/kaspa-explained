@@ -184,6 +184,29 @@ Anything that has to be true in two places belongs in one.
 The same question should be asked of every other duplicated demo before deploy. Ground
 truth records 18 distinct demos across 19 instances, so at least one other pair exists.
 
+## Verified clean by hand, 29 Aug 2026. Do not re-litigate these.
+
+- **All 42 range controls sitewide** produce visible change at both extremes, with no NaN,
+  Infinity or undefined in any output and no JavaScript errors on any page. Checked by
+  driving each one to both ends and comparing text, canvas pixels, SVG content and inline
+  styles. A text-only comparison reports five false deaths; canvas and SVG demos change
+  nothing a text diff can see.
+- **53 distinct in-page anchors** across the site all resolve. No link lands nowhere.
+- **404.html**, which no agent was assigned, is clean: every link resolves 200, no
+  overflow or clipped text at 320, 390, 768, 1280 and 1600 in both themes.
+- **The live-read failure path works**, verified during a genuine GitHub API 403 rather
+  than a simulated one. `argent-explained` and `kips` both say the read failed and leave no
+  dashes, spinners, undefined or NaN behind.
+- **Agent 3's five pages** load with no JavaScript errors after its predecessor died
+  mid-repair, and carry no machine-split prose.
+
+**A warning about the tooling built today.** The fast detectors over-report badly. Six
+findings were raised and all six dissolved on verification: hidden tooltip panels, screen
+reader only text, tables scrolling correctly inside their own container, a summary line
+that ignored its own overflow field, a lede-plus-number typographic pattern read as a
+truncated sentence, and a slider called dead that moves DAA from 0 to 906,165,565. Verify
+every flag against the live thing before recording it as a defect.
+
 ## Outstanding: one commit bypassed the gate, deliberately
 
 `2ecbaac` (the homepage DAG rebuild) was committed with `--no-verify`. The gate was
