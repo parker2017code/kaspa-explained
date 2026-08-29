@@ -42,7 +42,7 @@ with a cache buster: 10 scored figures, 21 models, 10 dials of ONE figure each,
 four sources (Artificial Analysis 4, LiveBench 4, LM Arena 1, ARC Prize 1),
 every model carries a price. **Superseded on 29 August: 23 models, 9 labs, 6
 dials. See `data/ground-truth-2026-08-29.json`, counted from repo data.** The
-sample sizes quoted further down (n=21, n=38, n=20) are the sizes those analyzes
+sample sizes quoted further down (n=21, n=38, n=20) are the sizes those analyses
 actually ran on and stay as written; they are not roster counts and must not be
 "corrected" to today's roster.
 

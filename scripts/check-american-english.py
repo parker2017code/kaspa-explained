@@ -34,8 +34,15 @@ PAIRS = {
     "armour": "armor", "harbour": "harbor", "savour": "savor", "flavour": "flavor",
     "rigour": "rigor", "vigour": "vigor", "odour": "odor",
     # -ise / -ize  (only words that are genuinely -ize in American English)
-    "analyse": "analyze", "analysed": "analyzed", "analyses": "analyzes",
+    "analyse": "analyze", "analysed": "analyzed",
     "analysing": "analyzing", "analyser": "analyzer",
+    # "analyses" is deliberately absent. It is the plural of "analysis" and
+    # correct American English in that use, which is the common one in technical
+    # prose. Only the British verb conjugation ("he analyses the data") should
+    # change, and this checker cannot tell the two apart without part-of-speech
+    # tagging. It rewrote "those analyses ran on" to "those analyzes ran on" in
+    # WORKING-STATE.md on 29 Aug 2026, which is ungrammatical. A missed British
+    # verb is a smaller harm than a corrupted noun.
     "capitalise": "capitalize", "capitalised": "capitalized", "capitalising": "capitalizing",
     "categorise": "categorize", "categorised": "categorized", "categorising": "categorizing",
     "centralise": "centralize", "centralised": "centralized", "centralising": "centralizing",
