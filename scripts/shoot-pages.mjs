@@ -54,8 +54,22 @@ for (const theme of themes) {
             (typeof el.className === 'string' && el.className.trim()
               ? '.' + el.className.trim().split(/\s+/)[0] : '');
           const els = [...document.querySelectorAll('body *')].filter(visible);
+          // Wide content is allowed to exceed the viewport when an ancestor
+          // scrolls it, which is what the standard asks for: the box scrolls,
+          // the page does not. Flagging those made this report 16 false
+          // positives on tables that were behaving correctly.
+          const inScroller = (el) => {
+            let n = el.parentElement;
+            while (n && n !== document.body) {
+              const ox = getComputedStyle(n).overflowX;
+              if (ox === 'auto' || ox === 'scroll') return true;
+              n = n.parentElement;
+            }
+            return false;
+          };
           const over = els
             .filter((el) => el.getBoundingClientRect().right > de.clientWidth + 1)
+            .filter((el) => !inScroller(el))
             .slice(0, 6).map(name);
           // Text clipped by its own box: content wider than the box, no scroll
           // affordance, and the box is not deliberately truncating with ellipsis.
@@ -84,8 +98,16 @@ for (const theme of themes) {
 }
 await browser.close();
 fs.writeFileSync(`${outdir}/report.json`, JSON.stringify(report, null, 2) + '\n');
-const bad = report.filter((r) => r.error || (r.scrollW > r.clientW + 1) || (r.clipped || []).length);
-console.error(`shot ${report.length} renders, ${bad.length} with overflow or clipped text`);
+// Count every defect field. An earlier version omitted `over` from this
+// filter and printed "0 with overflow" while report.json held 16 renders with
+// overflowing elements, which is a summary that contradicts its own data.
+const bad = report.filter((r) => r.error ||
+  (r.scrollW > r.clientW + 1) ||
+  (r.clipped || []).length ||
+  (r.over || []).length ||
+  (r.tiny || []).length);
+console.error(`shot ${report.length} renders, ${bad.length} with a defect ` +
+  `(page-scroll, element overflow, clipped text, or sub-44px target)`);
 for (const b of bad.slice(0, 25)) {
   console.error(`  ${b.path} @${b.w} ${b.theme}: ` +
     (b.error ? b.error : `scroll ${b.scrollW}>${b.clientW} over=[${(b.over||[]).join(', ')}] clipped=[${(b.clipped||[]).join(' | ')}]`));

@@ -35,6 +35,41 @@ Its brief, so it does not have to be reconstructed:
 - Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
   commit, do not push.
 
+## Homepage collision demo: one thing to fix, one thing to leave alone
+
+Reviewed 29 Aug 2026 by reading the demo's own script and looking at it rendered at 390
+and 1280 in both themes.
+
+**Leave alone: the randomness is already correct, and better than random.** The owner
+asked whether the discarded blocks are genuinely random rather than on a repeating
+pattern. They are. `nextInterArrivalReal()` returns `-Math.log(Math.random()) * mean`,
+which is inverse-transform sampling of an exponential distribution, the true inter-arrival
+time of a Poisson process. And a block is not assigned orphan status by a coin flip:
+`const orphaned = tMake < chainTip.tSeen`, so it is orphaned when it was mined before its
+miner saw the current tip. The orange blocks emerge from propagation delay, which is the
+real mechanism. Do not "improve" this into a random assignment; that would be a
+downgrade.
+
+**Fix: the vertical axis carries information nothing decodes.**
+`laneY(h, miner) { return 20 + miner * (h - 40) / 3; }`. Vertical position is a swimlane
+per miner, four lanes, four miners. The legend says only "kept" and "thrown away", so a
+newcomer sees vertical scatter and has no way to learn it means who found the block.
+Information that is present and unreadable is worse than decoration. Label the lanes, or
+drop the encoding and put every block on one line.
+
+**Fix: mobile, 390px.** The value breaks across a line, rendering as "How fast blocks are
+found: 10.0 a / second", which splits a number from its unit. The slider's endpoint labels
+stack into a vertical list, so "Bitcoin, 1 every 10 min", "Kaspa mainnet, 10/s" and "32/s"
+no longer indicate where on the slider they sit, and "32/s" alone means nothing. The
+BlockDAG panel compresses into an unreadable zigzag.
+
+**Fix: the demo's answer is its smallest text.** "so far: 2 kept, 5 thrown away" against
+"7 kept, 0 thrown away" is the entire point of the comparison and it is set small,
+right-aligned and low contrast in a panel header.
+
+**Fix: one blue link on an all-teal page.** "How this works, and the sources" is the only
+blue element on the homepage.
+
 ## MUST FIX BEFORE DEPLOY: page density got worse during the rebuild
 
 Measured 29 Aug 2026 against the live working tree with `PAGE_HEIGHT_BLOCKING=true node
