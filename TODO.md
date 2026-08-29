@@ -50,6 +50,27 @@ miner saw the current tip. The orange blocks emerge from propagation delay, whic
 real mechanism. Do not "improve" this into a random assignment; that would be a
 downgrade.
 
+**Done 29 Aug: block arrivals were metronomic and now are not.** `scheduleNext()` used a
+fixed `setTimeout`, so blocks appeared on a steady drumbeat while the tally underneath
+sampled an exponential correctly. The screen taught the opposite of how a random search
+works. `nextInterArrivalReal()` had been written for exactly this and appeared once in the
+file, its own definition: dead on arrival. Now wired as `nextWaitMs()`. Measured after the
+change: gaps 12ms to 166ms, coefficient of variation 0.67, where a metronome scores 0.00.
+
+**Declined 29 Aug: Bitcoin orange as the single-chain panel's identity.** The idea is
+sound, the panel does need a stronger identity, but the page says one line below the demo
+that "Single chain is a model, not a picture of Bitcoin today." Painting it in Bitcoin's
+brand color asserts the identity that sentence walks back. Give the panel its identity
+some other way.
+
+**Fix: the `--pink` token is orange.** It resolves to `#ff9f0a` in dark and `#b25000` in
+light, and the collision demo uses it for discarded blocks. Neither is pink, and `#ff9f0a`
+sits close to Bitcoin's `#F7931A`, so the discarded blocks already read as Bitcoin orange
+by accident. A maintainer reading `--pink` expects pink. Rename it for what it is. It is
+also defined four times in `styles.css`, at lines 17, 70, 4846 and 4897; the first two are
+legacy and dead under the design layer. That is the cascade debt this repo is known for,
+in a single token.
+
 **Fix: the vertical axis carries information nothing decodes.**
 `laneY(h, miner) { return 20 + miner * (h - 40) / 3; }`. Vertical position is a swimlane
 per miner, four lanes, four miners. The legend says only "kept" and "thrown away", so a
