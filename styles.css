@@ -4776,7 +4776,12 @@ body::after {
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
   border-radius: 0;
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  /* Opaque, not 72% of --bg. A translucent bar needs a backdrop blur behind it
+     to stay legible, and this site bans in-page blur outright (see the glass
+     gate). Without one, scrolled page text read straight through the nav: at
+     1280px on /status, "Proved on a test network" sat inside the words "What
+     is Kaspa" and "Live now". Fixed 29 August 2026. */
+  background: var(--bg);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
