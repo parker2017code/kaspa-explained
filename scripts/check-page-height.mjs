@@ -152,10 +152,18 @@ const DESKTOP_CEILING_PX = DESKTOP.height * DESKTOP_CEILING_VH; // 2400
 const PHONE_CEILING_PX = PHONE.height * PHONE_CEILING_VH; // 4220
 const GAP_CEILING_PX = DESKTOP.height; // ~one desktop viewport height, 800px
 
-// The five route/answer pages held to the hard open-height ceiling. Every
-// other manifest page is teaching/reference material and is checked only
-// on the undifferentiated-run rule below.
-const SHORT_PAGES = new Set(['index.html', 'start-here.html', 'status.html', 'search.html', '404.html']);
+// The route/answer pages held to the hard open-height ceiling. Every other
+// manifest page is teaching/reference material and is checked only on the
+// undifferentiated-run rule below.
+//
+// status.html left this set on 29 August 2026. It was a 300-word route page
+// when the set was written; it is now a 29-row reference table (13 features,
+// 16 repeated claims) that renders open, with the source and the reasoning for
+// each row. Twenty-nine rows cannot fit in three viewports, and the only way
+// to make them fit is to close the table into a disclosure, which is the exact
+// move this script's own header bans. The page is checked on the run rule with
+// every other reference page instead.
+const SHORT_PAGES = new Set(['index.html', 'start-here.html', 'search.html', '404.html']);
 
 const manifest = JSON.parse(readFileSync(path.join(ROOT, 'site-manifest.json')));
 
@@ -182,9 +190,25 @@ const pages = manifest.pages.filter((rel) => !isRedirectStub(rel));
 // preceding heading (for the diagnosis report only -- headings still
 // label the report, they just do not count as landmarks).
 function computeLongestGap() {
+  // Two additions, 29 August 2026, after screenshotting every page this gate
+  // flagged. Both were false positives of the same kind: the site renders a
+  // landmark with markup this list did not name.
+  //   .grid-cards is the shared container for every bordered card grid here
+  //   (.reference-grid, .cycle-grid, .api-command-grid, .quick-grid). A row of
+  //   bordered cards breaks a page exactly the way the table already in this
+  //   list does; build-on-kaspa.html's "2,761px undifferentiated run" was
+  //   twelve product cards and a five-step card grid.
+  //   a.button / .actions a are this site's primary action controls. The list
+  //   already counts <button>; the site writes its actions as anchors, so the
+  //   same control was invisible here depending on which tag it used.
+  // This is NOT a reopening of the headings question in the header comment. A
+  // heading gives a reader nothing to look at; a bordered card grid and a
+  // touchable pill both do. Checked after the change: model-picker-method.html
+  // still fails, correctly, at 15,472px of prose with nothing to look at.
   const SEL =
     'table,img,svg,figure,canvas,' +
     '[class*="demo"],[class*="diagram"],[class*="chart"],' +
+    '.grid-cards,a.button,.actions a,' +
     'button,input,select,textarea';
   const root = document.querySelector('main') || document.body;
   const footer = root.querySelector('.site-related');
@@ -379,7 +403,8 @@ console.log(
 );
 console.log(
   `Undifferentiated-run ceiling (${GAP_CEILING_PX}px, desktop viewport) applies to every page. ` +
-    `Landmarks: table, img/svg/canvas/figure, button/input/select/textarea, and class*=demo|diagram|chart. ` +
+    `Landmarks: table, img/svg/canvas/figure, button/input/select/textarea, .grid-cards card grids, ` +
+    `anchor-styled action buttons, and class*=demo|diagram|chart. ` +
     `Headings do not count (see script header). The .site-related footer block is excluded from each ` +
     `page's own gap and not separately scored by this script.\n`
 );
