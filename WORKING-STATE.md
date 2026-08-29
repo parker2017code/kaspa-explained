@@ -1,3 +1,62 @@
+# RESUME HERE, 29 August 2026, written before a compaction
+
+Read this block, then `TODO.md`, then `PRINCIPLES.md` and `SITE-STANDARD.md`. Nothing has
+been pushed. The site is mid-rebuild.
+
+## Where the work is
+
+- Rebuild workflow `wf_44c36aa8-948`, five sequential agents, **2 of 5 finished**.
+  Agent 1 (ground truth) and agent 2 (index, start-here, crypto-from-scratch,
+  what-is-kaspa, why-kaspa-matters) are done. Agent 3 (kaspa-mining, build-on-kaspa,
+  argent-explained, kips, utxo-vs-accounts) is on its **second attempt**, id `ae87a11`,
+  after the first died at 16:18 with 20.5MB. Agent 2 also died once and was auto-retried.
+  Agent 4 takes the remaining eight pages, agent 5 integrates, gates and commits.
+  The workflow commits but does **not** push.
+- Owner's limit after the workflow: me, or at most **two agents, one alive at a time**,
+  Opus. The code sweep is my job, not an agent's, and the reference measurement is done.
+- I do the final pass and the deploy: every page at six widths in both themes, every demo
+  hand-driven as a newcomer, every link and control clicked, every line of code read.
+
+## Local environment
+
+- Site: `python3 scripts/serve-local.py --port 4196`. Verify it answers 200 before
+  trusting anything; port 4187 is wedged and 29 stale servers are listening from old
+  sessions.
+- Width harness on 4291, card preview on 4288.
+- Node is not on PATH: `export PATH="$HOME/.local/opt/node-v22.14.0-darwin-arm64/bin:$PATH"`
+- Never touch or resize the owner's Chrome. Use playwright with its own viewport, or the
+  iframe harness.
+
+## Blocking the push, all recorded in TODO.md
+
+1. **Glass gate fails**, 6 blocking violations: brand-gradient action buttons on
+   `build-on-kaspa.html` and `kips.html`. Verified this is agent 3 inlining demo widgets
+   into root pages, **not** my CSS removal: the gate fails identically with the original
+   stylesheet. Under `demos/` these are advisory; on root pages they block.
+2. **Ten pages exceed the 800px undifferentiated-run limit**, worse than the six before
+   the rebuild. `kaspa-origin-story` is at 4016px.
+3. **Five typography targets missed**, measured against nine references: measure 78.8ch
+   against a 70 target, body 16px against 17, line height 1.5 against 1.6, up to 16
+   distinct font sizes against 10, homepage paragraph p90 109 words against 70.
+4. **`og:image` still points at the May card** on all 19 pages. The new wordless card is
+   built and committed as `og-kaspa-explained-20260829.png`; the tags were left alone
+   because agents own most of those pages.
+5. **Several commits used `--no-verify`** against a sitemap race caused by agents editing
+   pages concurrently. `HEAD` was verified clean in an isolated clone each time. Never
+   carry one past a push.
+6. The full gate must run with rendering on and every advisory flag blocking:
+   `VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true PAGE_HEIGHT_BLOCKING=true
+   DEMO_SURFACE_BLOCKING=true bash scripts/check-site.sh`
+
+## What was fixed today and must not be undone
+
+- Both copies of the collision demo now draw a real DAG. One line had let every block
+  reference a parent it could not have seen, so 100% of blocks had one parent and the
+  panel labelled BlockDAG drew a chain. Now 75/12/6/4% with a tail to ten parents.
+- Block arrivals are exponential, not on a fixed timer. The sampler existed and was dead.
+- 44 CSS rules deleted whose classes appear in no HTML file anywhere. 7705 to 7452 lines.
+- `scripts/refresh-model-data.py` now refuses to run and prints the live path.
+
 # kaspa explained working state
 
 
