@@ -35,6 +35,46 @@ Its brief, so it does not have to be reconstructed:
 - Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
   commit, do not push.
 
+## FIRST PHASE OF THE CODE SWEEP: measure real references, then judge us against them
+
+Owner, 29 Aug 2026: writing, text spacing, sizing, page method, spacing and density all
+get compared against competent examples. This runs before any editing, because a standard
+chosen after the work gets chosen to be passed, and every density number currently in
+`SITE-STANDARD.md` was picked by an orchestrator rather than measured off anything.
+
+Read the stylesheet, not the screenshot. Measuring where a page landed never tells you how
+it was built. Use the browser's computed styles, not an eyeball or a screenshot.
+
+Measure on every reference and on every one of our pages, into
+`data/reference-metrics.json`:
+
+- Body font size in px, line height as a ratio, and measure in characters per line.
+- The full type ladder: every distinct font size on the page, and the ratio between steps.
+  Count the sizes. Three sizes of bold is not a hierarchy.
+- Max content width, and whether it is set in ch or px.
+- Paragraph length in words: median and 90th percentile, not just the mean.
+- Vertical space between sections, expressed as a multiple of body line height.
+- Density: visible words per 1000px of scroll.
+- Distinct colors carrying meaning, excluding text and background.
+- Words a reader passes before the first thing they can touch.
+
+Reference set, and the split matters. The first group is the floor, the answer any model
+gives to "what does good look like," so matching it produces something competent and
+interchangeable. The second group is what actually moves the reference points, and it is
+where the technique should come from:
+
+- Floor: Stripe docs, Linear, Apple product pages.
+- Movers: `ciechanow.ski`, the closest thing to a model for this site; Distill.pub for
+  rigorous interactive figures; Our World in Data for numbers carrying an argument
+  undressed; `ncase.me` for play before explanation; and institutional plain technical
+  writing with zero hype, which is the register a reader who assumes they are being sold
+  something will actually trust.
+
+Report where we sit against each metric, name which of our numbers were invented rather
+than measured, and change the numbers in `SITE-STANDARD.md` to measured ones. Where we
+already sit better than a reference, say so and keep ours; the point is external
+calibration, not imitation.
+
 ## THEN: the pre-deploy pass, owner's instruction 29 Aug 2026
 
 Not delegable. This is the only step in the run where the verifier is not the producer,
