@@ -1,189 +1,107 @@
-# RESUME HERE. Written 29 August 2026 against a compaction. Read this first.
+# RESUME HERE. Read this first, every session, before touching anything.
 
 Nothing has been pushed. The site is mid-rebuild. Read this, then `TODO.md`, then
-`PRINCIPLES.md` and `SITE-STANDARD.md`.
+`PRINCIPLES.md` and `SITE-STANDARD.md`. `CLAUDE.md` imports `AGENTS.md`, which points here.
 
-## The five steps left, in order
+## Who you are working for, and how he works
 
-1. **Agent 3** finishes `kaspa-mining`, `build-on-kaspa`, `argent-explained`, `kips`,
-   `utxo-vs-accounts`.
-2. **Agent 4** does the remaining eight: `status`, `skeptical-case`, `kaspa-origin-story`,
-   `chain-comparer`, `sources`, `demos/index`, `search`, `model-picker`.
-3. **Agent 5** integrates: one voice across three agents' work, claims verified by driving
-   pages not reading diffs, the uncommitted model-picker work folded in, derived files
-   regenerated, gate run, commit. It does **not** push.
-4. **The pre-deploy pass, mine, not delegable.** Every page at 320/390/768/1024/1280/1600
-   in both themes. Every demo hand-driven as a newcomer against the four questions. Every
-   link, nav item, footer link, disclosure, tooltip and keyboard path used. Every line of
-   code read. Fix what it finds rather than listing it.
-5. **Push, then verify** the exact changed strings from served bytes on kaspaexplained.com
-   with a cache-busting URL. A successful push is not a live check.
+He gives standing instructions and expects them held without re-asking. The ones in force:
 
-## Why agents keep dying, and the bound on it
-
-The owner's wifi drops. That kills an agent mid-call regardless of what it is doing. Agent
-2 died once, agent 3 four times so far. The harness auto-restarts the same slot, so the run
-is still five agents; `parallel()` and `pipeline()` do not appear in the script and there
-are only three `agent()` call sites, so it cannot grow past five.
-
-Progress accumulates across attempts because each retry reads the worktree as it stands.
-Measured mid-run: 1049 insertions against 1523 deletions across agent 3's five pages, and
-each attempt picks up different work rather than repeating.
-
-**Bound:** if agent 3 reaches a sixth attempt, finish its five pages by hand instead. Its
-work is largely landed already.
-
-## Owner's constraints, standing
-
-- After the workflow: the owner, or at most **two agents, one alive at a time**, Opus.
-- The code sweep is **not** an agent's job. It is mine. Reference measurement is done.
-- **Never** touch or resize the owner's Chrome. Use playwright with its own viewport, or
-  the fixed-width iframe harness.
-- **Never** edit `the-instrument.html`. It is Moose's 279-page work, hosted as a guest
+- **Do the whole job. Never announce a reduced scope.** Saying "I'll read the logic and
+  cover the markup mechanically" is worse than the shortcut itself: it asks permission to
+  do less while sounding rigorous. Compress the reporting, never the work.
+- **Record after every task**, because compaction can land at any moment. This block is
+  the record. Update it as work completes, not at the end.
+- **Do not burn tokens.** Exploring is fine. Redundant verification loops and long
+  restatements are not.
+- **Maximum two agents, one alive at a time, Opus, and no agent may spawn subagents.**
+  Verified zero subagent spawns across seven agent instances so far.
+- **Never touch or resize his Chrome.** Use playwright with its own viewport or the
+  fixed-width iframe harness. His wifi drops, which is what keeps killing agents; that is
+  environmental, not a fault in their work.
+- **Never edit `the-instrument.html`.** It is Moose's 279-page work, hosted as a guest
   piece.
-- Agents must not spawn subagents.
+- **Rules break for the good of the site**, but say so and say why.
 
-## Local environment
+## Where the work stands
 
-    export PATH="$HOME/.local/opt/node-v22.14.0-darwin-arm64/bin:$PATH"
-    python3 scripts/serve-local.py --port 4196      # the site
-    curl -s -m 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:4196/   # must be 200
+The rebuild workflow `wf_44c36aa8-948` runs five sequential agents. **2 of 5 finished.**
+Agent 1 produced ground truth (`data/ground-truth-2026-08-29.json`). Agent 2 rebuilt
+`index`, `start-here`, `crypto-from-scratch`, `what-is-kaspa`, `why-kaspa-matters`. Agent 3
+is on `kaspa-mining`, `build-on-kaspa`, `argent-explained`, `kips`, `utxo-vs-accounts`, on
+its **fourth attempt** after three wifi deaths; progress accumulates across attempts
+because each retry reads the worktree as it stands. Agent 4 then takes the remaining eight
+pages including `model-picker`. Agent 5 integrates, regenerates derived files, gates and
+commits. **The workflow never pushes.**
 
-Port 4187 is wedged: it accepts connections and never answers, which looks like a hung
-page rather than a refused one. Roughly 29 stale servers from old sessions are listening.
-Width harness on 4291, social-card preview on 4288, both scratchpad-served.
+**You do the final pass and the deploy.** Every page at 320/390/768/1024/1280/1600 in both
+themes. Every demo hand-driven as a newcomer against the four questions: what am I looking
+at, what do I touch, what just happened, why does this matter. Every link, nav item,
+footer link, disclosure, tooltip and keyboard path used. Every line of code read. Fix what
+you find; do not hand back a list. Then push, then verify the changed strings from served
+bytes with a cache-busting URL. A successful push is not a live check.
 
-## Six things blocking the push
+## The single most important lesson from this session
 
-1. **Glass gate fails**, 6 blocking violations: brand-gradient action buttons on
-   `build-on-kaspa.html` and `kips.html`. Verified as agent 3 inlining demo widgets into
-   root pages, not the CSS deletion: the gate fails identically against the original
-   stylesheet. Under `demos/` these are advisory; on root pages they block.
-2. **Ten pages over the 800px undifferentiated-run limit**, against six before the
-   rebuild. `kaspa-origin-story` is at 4016px, roughly four screens with no break.
-3. **Five measured typography targets missed**: measure 78.8ch against 70, body 16px
-   against 17, line height 1.5 against 1.6, up to 16 distinct font sizes against 10,
-   homepage paragraph p90 109 words against 70. Numbers in
-   `data/reference-metrics-2026-08-29.json`, taken from nine reference sites.
-4. **`og:image` still points at the May card** on all 19 pages. The replacement is built
-   and committed: `og-kaspa-explained-20260829.png`, regenerate with
-   `python3 scripts/build-og-card.py`. Tags were left alone because agents own most of
-   those pages. Delete the two byte-identical 339KB originals once nothing references them.
-5. **Several commits used `--no-verify`** against a sitemap race caused by agents editing
-   pages concurrently. `HEAD` was verified clean in an isolated clone each time. Never
-   carry one past a push.
-6. **Derived files cannot be made consistent while agents are editing.** `sitemap.xml` and
-   `agent-index.json` are generated from page content. Regenerating them uses the working
-   tree, which holds uncommitted agent edits, so the result never matches HEAD's committed
-   pages. This is why several commits used `--no-verify`. It is agent 5's step 5 and must
-   be done once the tree is stable, then verified in a clean clone before pushing.
-7. **The full gate must run with rendering on and every advisory flag blocking.** The
-   pre-commit hook sets `SKIP_RENDER_CHECKS=1` and five checks are advisory by default, so
-   a passing commit means the structural half only:
+**Reading finds defects. Scanning does not.** Every real defect came from reading code or
+driving the rendered page. Every one of the seven flags raised by fast detectors was false:
+hidden tooltip panels, screen-reader-only text, tables scrolling correctly in their own
+container, a summary line ignoring its own data field, a lede-plus-number typographic
+pattern, a slider that moves DAA from 0 to 906 million, and correct whitepaper math I
+tested against transposed expected values.
+
+**And a scanner cannot see what it cannot open.** Commit `cccdfba` removed the image
+viewer's display rule during a stylesheet cut, because a dead-CSS scanner never opens a
+dialog, so a rule that only applies while one is open read as unmatched. Expand on
+`kaspa-mining` then rendered a 0x0 element for months. This is why the 238 rules measured
+as dead or inert in `data/dead-css-scan-2026-08-29.json` must **not** be bulk-removed.
+
+## What blocks the push
+
+1. **Glass gate fails**, 6 blocking violations: brand-gradient buttons on
+   `build-on-kaspa.html` and `kips.html`. Confirmed as agent 3 inlining demo widgets into
+   root pages, not the CSS deletion; the gate fails identically against the original
+   stylesheet. Advisory under `demos/`, blocking on root pages.
+2. **Ten pages exceed the 800px undifferentiated-run limit**, worse than the six before the
+   rebuild. `kaspa-origin-story` sits at 4016px.
+3. **Five measured typography targets missed**, from nine reference sites in
+   `data/reference-metrics-2026-08-29.json`: measure 78.8ch against 70, body 16px against
+   17, line height 1.5 against 1.6, up to 16 distinct font sizes against 10, homepage
+   paragraph p90 109 words against 70.
+4. **`og:image` still points at the May card** on all 19 pages. The replacement is built and
+   committed as `og-kaspa-explained-20260829.png`; regenerate with
+   `python3 scripts/build-og-card.py`. Delete the two byte-identical 339KB originals once
+   nothing references them.
+5. **Several commits used `--no-verify`.** `sitemap.xml` and `agent-index.json` are
+   generated from page content, so regenerating them picks up uncommitted agent edits and
+   never matches HEAD. Unfixable mid-run; agent 5's step 5. Verify in a clean clone before
+   pushing and never carry a `--no-verify` past a push.
+6. **Run the FULL gate.** The pre-commit hook sets `SKIP_RENDER_CHECKS=1` deliberately,
+   because the render block costs four minutes and commits had started landing with
+   `--no-verify` under that pressure. CI always runs it. You push directly, so you must:
 
        VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true \
        PAGE_HEIGHT_BLOCKING=true DEMO_SURFACE_BLOCKING=true \
        bash scripts/check-site.sh
 
-## Fixed today. Do not undo any of this.
+## Environment
 
-- **The GHOSTDAG demo named a different sink than it drew.** `computeVirtualInfo` scored
-  tips by a raw count of blue ancestors with the opposite tiebreak, so the caption said
-  Block 16 while the chain ended at Block 15. It now uses the virtual block's selected
-  parent. Verified over 80 states, 61 multi-tip, zero mismatches.
-- **36 tooltips declared `aria-expanded="false"` permanently** while their panels were
-  open. The affordance is CSS-only so nothing could ever update it. Attribute removed;
-  `aria-describedby` kept. The nav button and chain-comparer's two are real disclosures and
-  were left alone after checking each.
-- **The image viewer was completely broken and now works.** `.image-viewer` was
-  display:none in every state because `cccdfba` removed its display rule during a
-  stylesheet cut: a dead-CSS scanner never opens a dialog, so the rule read as unmatched.
-  Expand loaded the image and showed a 0x0 element. Also made it a real modal: focus into
-  the dialog, Tab trapped, background inert, focus restored on close. **This proves the
-  hazard behind refusing to bulk-remove the 238 dead-or-inert rules.**
-- **A stray `%` in any URL no longer throws on every page.** `nav.js` decoded the fragment
-  unguarded, so `URIError: URI malformed` fired on both the load and hashchange paths,
-  sitewide. Falls back to the raw id now.
-- **Live block feed now escapes API strings by one rule.** The title attribute escaped only
-  quotes while the text beside it used escapeHtml, and the miner address reached a code
-  element unescaped. Not exploitable, but two standards for untrusted data in one function.
-- **`slotX` removed from two files**, orphaned when both collision panels moved to a shared
-  time axis.
+    export PATH="$HOME/.local/opt/node-v22.14.0-darwin-arm64/bin:$PATH"
+    python3 scripts/serve-local.py --port 4196
+    curl -s -m 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:4196/    # must be 200
 
-- **Both copies of the collision demo now draw a real DAG.** One line let every block
-  reference a parent it could not have seen, so 100% of blocks had exactly one parent and
-  the panel labeled BlockDAG drew a chain, on the homepage and on the page that exists to
-  explain the DAG. Now 75/12/6/4% with a tail to ten parents.
-- **Block arrivals are exponential, not on a fixed timer.** The sampler existed in the file
-  and was never wired in.
-- Chain drawn as a line with discarded blocks off it, both panels on one shared time axis,
-  blocks drawn as blocks, nothing allowed outside its canvas, legend matching the drawing.
-- **44 CSS rules deleted** whose classes appear in no HTML file anywhere, a test that holds
-  at any width and any state. 7705 to 7452 lines.
-- **`scripts/refresh-model-data.py` refuses to run** and prints the live path. Its docstring
-  is the reason it was kept rather than deleted.
-- The social card was rebuilt wordless after looking at how Ciechanowski, Distill, OWID and
-  Linear actually build theirs. None carries a headline plus subtitle plus URL.
+Port 4187 is wedged: it accepts connections and never answers, which looks like a hung page
+rather than a refused one. About 29 stale servers from old sessions are listening.
 
-## Read log. What I have actually read, line by line, versus checked mechanically.
+## Do not undo any of this
 
-    what-is-kaspa.html   ALL FOUR DEMOS READ. collision (fixed: DAG model, arrival timing,
-                         layout), ghostdag playground (core verified correct incl. the
-                         k-cluster recheck; sink mismatch found and fixed), mass calculator
-                         (verified clean under every extreme on every script type), live
-                         network feed (escaping unified; failure path verified correct).
-    why-kaspa-matters    confirmation-risk script READ and VERIFIED. reversalProb is
-                         Satoshi 2008 section 11, in log space with a Lanczos logGamma,
-                         truncated at 12 sigma, and the truncation errs conservative.
-                         Checked against all 20 published table rows: zero mismatches to
-                         seven decimals. Do not "simplify" this; it is correct. Chart code
-                         read too: axis, label de-collision, ResizeObserver, and the
-                         title/desc preservation that keeps aria-labelledby valid across
-                         re-render. Render measured at 9.6 to 26.9 ms across the slider
-                         range, fine for a drag; the 12-sigma truncation is what keeps
-                         blocksToReach cheap at zMax = 20 million. No defect.
-    nav.js               READ WHOLE, 516 lines. Loaded on every page. Two real defects
-                         found and fixed: URIError on a malformed hash fragment, and the
-                         image viewer that never opened plus its missing modal behavior.
-                         The focus trap, inert fallback, fragment re-snap and details
-                         animation are all correct and carry good reasons in comments.
-    scripts/check-site.sh READ. The pre-commit/CI split is deliberate and documented: the
-                         hook sets SKIP_RENDER_CHECKS=1 because the render block costs
-                         ~4 minutes and commits had started landing with --no-verify under
-                         that pressure. CI (site-check.yml) and check-clean-clone.sh always
-                         run the full block. Pushing directly still requires running it.
-    index.html           demo script read and fixed; head, markup and CSS read.
-    start-here.html      READ WHOLE. clean. aria-pressed, aria-live and aria-current all
-                         correct; a comment records that dimming the unselected card was
-                         measured at 2.95:1 dark and rejected against the 4.5:1 floor.
-    crypto-from-scratch  READ WHOLE. clean. checkbox readout correct at every count,
-                         sources are primary and include BIS 2022 chapter III, the case
-                         against crypto.
-
-    ALL FIVE OF AGENT 2's PAGES ARE NOW FULLY READ.
-    everything else      mechanical coverage only: 42 sliders driven, 169 buttons clicked,
-                         154 disclosures opened, 53 anchors resolved, glass/orphan/html
-                         gates, dead-CSS render scan, page-height, typography measurement.
-
-Not yet read line by line: kaspa-mining (1576 JS), model-picker (1989), kips (477),
-kaspa-origin-story (478), build-on-kaspa (441), chain-comparer (411), why-kaspa-matters
-(375), search (196), utxo-vs-accounts (178), argent-explained (156), plus styles.css (7452)
-and scripts/ (17875). Agent 3 and 4 are still rewriting most of those, so read them after
-the workflow lands, not before.
-
-## Tools built today, all in scripts/, none wired into the gate
-
-    node scripts/shoot-pages.mjs <outdir> http://127.0.0.1:4196 "/,/page" "320,390,768,1024,1280,1600" "dark,light"
-    node scripts/measure-typography.mjs out.json <url>...
-    node scripts/study-references.mjs out.json <url>...    # CSSOM half unreliable, see its header
-    node scripts/dead-css-scan.mjs . styles.css --out=out.json   # needs the site root, crashes without it
-    python3 scripts/build-og-card.py
-
-`shoot-pages.mjs` produced four false positives before it was fixed: hidden tooltip panels,
-screen-reader-only text, tables scrolling correctly in their own container, and a summary
-line that ignored its own overflow field. It is now verified against planted defects. Plant
-a failure before trusting any of these.
-
+Both collision demos now draw a real DAG; one fallback line had given every block a parent
+it could not have seen, so 100% had exactly one parent and the panel labeled BlockDAG drew
+a chain. Arrivals are exponential, not a fixed timer. The GHOSTDAG demo names the same sink
+it draws. 36 tooltips no longer tell screen readers they are collapsed while open. A stray
+`%` in a URL no longer throws sitewide. The image viewer opens and is a real modal. 44 CSS
+rules whose classes appear in no HTML anywhere are gone. `refresh-model-data.py` refuses to
+run and prints the live path.
 # kaspa explained working state
 
 
