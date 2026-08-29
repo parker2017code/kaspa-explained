@@ -70,6 +70,14 @@ const skipFiles = new Set([
   "THE-BAR.md",
   "design/THE-BAR.md",
   "CONTENT_BRIEF.md",
+  // The two governing spec documents. Same circularity as the block above,
+  // and they additionally quote the owner verbatim: PRINCIPLES.md carries
+  // "do everything, do not skip, do not hedge with 'except this part'",
+  // which trips does-not-reframe-but. Rewriting it to satisfy the linter
+  // would falsify a quotation, which THE-BAR forbids outright.
+  // check-prose.py already skips both for the same reason.
+  "PRINCIPLES.md",
+  "SITE-STANDARD.md",
   "agent-index.json",
   // Internal working documents. They record findings for agents, and several
   // quote the exact patterns they exist to ban, so linting them as reader
