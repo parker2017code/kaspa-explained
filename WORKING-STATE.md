@@ -137,6 +137,16 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
                          re-render. Render measured at 9.6 to 26.9 ms across the slider
                          range, fine for a drag; the 12-sigma truncation is what keeps
                          blocksToReach cheap at zMax = 20 million. No defect.
+    nav.js               READ WHOLE, 516 lines. Loaded on every page. Two real defects
+                         found and fixed: URIError on a malformed hash fragment, and the
+                         image viewer that never opened plus its missing modal behaviour.
+                         The focus trap, inert fallback, fragment re-snap and details
+                         animation are all correct and carry good reasons in comments.
+    scripts/check-site.sh READ. The pre-commit/CI split is deliberate and documented: the
+                         hook sets SKIP_RENDER_CHECKS=1 because the render block costs
+                         ~4 minutes and commits had started landing with --no-verify under
+                         that pressure. CI (site-check.yml) and check-clean-clone.sh always
+                         run the full block. Pushing directly still requires running it.
     index.html           demo script read and fixed; head, markup and CSS read.
     start-here.html      READ WHOLE. clean. aria-pressed, aria-live and aria-current all
                          correct; a comment records that dimming the unselected card was
