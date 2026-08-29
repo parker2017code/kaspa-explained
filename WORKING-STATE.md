@@ -128,7 +128,15 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
                          re-render. Render measured at 9.6 to 26.9 ms across the slider
                          range, fine for a drag; the 12-sigma truncation is what keeps
                          blocksToReach cheap at zMax = 20 million. No defect.
-    index.html           demo script read and fixed; head, markup and CSS read to line 450.
+    index.html           demo script read and fixed; head, markup and CSS read.
+    start-here.html      READ WHOLE. clean. aria-pressed, aria-live and aria-current all
+                         correct; a comment records that dimming the unselected card was
+                         measured at 2.95:1 dark and rejected against the 4.5:1 floor.
+    crypto-from-scratch  READ WHOLE. clean. checkbox readout correct at every count,
+                         sources are primary and include BIS 2022 chapter III, the case
+                         against crypto.
+
+    ALL FIVE OF AGENT 2's PAGES ARE NOW FULLY READ.
     everything else      mechanical coverage only: 42 sliders driven, 169 buttons clicked,
                          154 disclosures opened, 53 anchors resolved, glass/orphan/html
                          gates, dead-CSS render scan, page-height, typography measurement.
