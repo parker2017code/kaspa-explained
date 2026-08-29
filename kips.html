@@ -127,10 +127,10 @@
      child, so at a 320px viewport the whole card measured 356px and the verdict
      text was cut off the right edge with nothing to scroll. Measured 2026-08-29. */
   .kip-parameterless-demo .side{ min-width:0; }
-  .kip-parameterless-demo .side h3{ margin:0 0 .15rem; display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; min-width:0; }
+  .kip-parameterless-demo .side h3{ margin:0 0 .55rem; display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; min-width:0; }
   .kip-parameterless-demo .side h3 > *{ min-width:0; }
-  .kip-parameterless-demo .sub{ font-size:1rem; color:var(--faint); margin:0 0 .6rem; }
-  .kip-parameterless-demo .gauge-row{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; column-gap:.5rem; font-size:.78rem; color:var(--muted); margin-bottom:.25rem; }
+  .kip-parameterless-demo .sub{ font-size:1rem; color:var(--muted); margin:0 0 .6rem; }
+  .kip-parameterless-demo .gauge-row{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; column-gap:.5rem; font-size:1rem; color:var(--muted); margin-bottom:.35rem; }
   .kip-parameterless-demo .gauge-row output{ white-space:nowrap; }
   .kip-parameterless-demo .gauge{ position:relative; height:14px; border-radius:980px; background:var(--field-bg); border:1px solid var(--field-line); overflow:visible; margin-top:1.1rem; margin-bottom:.35rem; }
   .kip-parameterless-demo .gauge .fill{ position:absolute; inset:0 auto 0 0; border-radius:980px; background:var(--cyan); overflow:hidden; }
@@ -339,13 +339,13 @@
       <p class="eyebrow">Try it</p>
       <h2 id="parameterless-heading">A margin fixed in advance, against one that tracks the network</h2>
         <div class="kip-parameterless-demo" id="parameterless-demo">
-          <p class="lede">A <span class="term-def" tabindex="0" role="button" aria-describedby="par-margin-def">margin<span class="term-def__panel" id="par-margin-def" role="tooltip">How many blocks arriving at once a side tolerates before treating one of them as an attack. The DAG KNIGHT paper writes it k.</span></span> is how many blocks arriving at once a network tolerates before one looks like an attack. Too low and honest blocks get rejected. Too high and the worst-case wait grows.</p>
+          <p class="lede">A <span class="term-def" tabindex="0" role="button" aria-describedby="par-margin-def">margin<span class="term-def__panel" id="par-margin-def" role="tooltip">How many blocks arriving at once a side tolerates before treating one of them as an attack. The DAG KNIGHT paper writes it k.</span></span> is how many blocks arriving at once a network tolerates before one looks like an attack. Too low and honest blocks get rejected. Too high and everyone waits longer than the network needs, because the margin was picked before anyone knew how fast it would run.</p>
 
           <div class="panel">
             <div class="row bps-block">
               <div class="field">
                 <label for="par-bps-slider">Block rate, in blocks per second</label>
-                <input type="range" class="primary" id="par-bps-slider" min="1" max="100" step="1" value="10" aria-describedby="par-bps-out par-bps-hint">
+                <input type="range" id="par-bps-slider" min="1" max="100" step="1" value="10" aria-describedby="par-bps-out par-bps-hint">
                 <span class="valline" id="par-bps-out">10 blocks per second (Kaspa mainnet's Crescendo-era rate)</span>
                 <span class="valline info-affordance" id="par-bps-hint">Runs past mainnet's rate on purpose.
                   <button class="info-affordance__trigger" type="button" aria-describedby="par-bps-hint-panel">
@@ -358,10 +358,10 @@
             </div>
             <div class="row">
               <div class="field">
-                <label for="par-d-slider">Worst-case latency GHOSTDAG assumes in advance</label>
+                <label for="par-d-slider">Slowest block delivery GHOSTDAG assumes in advance</label>
                 <input type="range" id="par-d-slider" min="0.5" max="15" step="0.5" value="5" aria-describedby="par-d-out">
                 <span class="valline info-affordance">
-                  <span id="par-d-out">Assumed worst case: 5.0 s (mainnet's real setting) &rarr; margin needed: 124 (mainnet's real margin)</span>
+                  <span id="par-d-out">Assumed worst case: 5.0 s (mainnet's real setting) &rarr; margin needed: 124 blocks (mainnet's real margin)</span>
                   <button class="info-affordance__trigger" type="button" aria-describedby="par-d-out-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Where 5 seconds and 124 come from</span>
@@ -372,9 +372,9 @@
             </div>
             <div class="row" style="margin-top:.8rem;">
               <div class="field">
-                <label id="par-l-label" for="par-l-slider">Actual latency</label>
-                <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="0.5" aria-labelledby="par-l-label" aria-describedby="par-l-out par-l-hint">
-                <span class="valline" id="par-l-out">0.5 s (margin this actually needs: 18)</span>
+                <label id="par-l-label" for="par-l-slider">How long block delivery actually takes</label>
+                <input type="range" class="primary" id="par-l-slider" min="0.5" max="20" step="0.5" value="0.5" aria-labelledby="par-l-label" aria-describedby="par-l-out par-l-hint">
+                <span class="valline" id="par-l-out">0.5 s (margin this actually needs: 18 blocks)</span>
                 <span class="valline info-affordance" id="par-l-hint">Not a measured figure.
                   <button class="info-affordance__trigger" type="button" aria-describedby="par-l-hint-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
@@ -414,8 +414,8 @@
                   </button>
                   <span class="info-affordance__panel" id="par-fixed-sub-panel" role="tooltip">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks per second.</span>
                 </span></h3>
-              <div class="gauge-row"><span>margin it is configured for</span><output id="par-fixed-k-out">124</output></div>
-              <div class="gauge-row"><span>margin these conditions need</span><output id="par-fixed-req-out">18</output></div>
+              <div class="gauge-row"><span>margin it is configured for</span><output id="par-fixed-k-out">124 blocks</output></div>
+              <div class="gauge-row"><span>margin these conditions need</span><output id="par-fixed-req-out">18 blocks</output></div>
               <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:11%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap" style="left:80%;"></div></div>
               <p id="par-fixed-tableend" class="over-badge" hidden></p>
               <p id="par-fixed-over" class="over-badge" hidden></p>
@@ -426,7 +426,7 @@
                   </button>
                   <span class="info-affordance__panel" id="par-fixed-time-panel" role="tooltip">The DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), computed at a stated 1% error tolerance. Uses D<sub>max</sub>, the assumed delay set by the D slider above, held fixed regardless of what the network is actually doing.</span>
                 </span><output id="par-fixed-time-out">4.3 min</output></div>
-              <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Concurrent blocks stay inside the fixed margin; nothing reads as an attack.</div>
+              <div class="verdict safe" id="par-fixed-verdict" role="status">No honest block looks like an attack at this delivery speed.</div>
             </div>
             <div class="side" id="par-side-adaptive">
               <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin <span class="info-affordance" id="par-adapt-sub-info">
@@ -436,7 +436,7 @@
                   </button>
                   <span class="info-affordance__panel" id="par-adapt-sub-panel" role="tooltip">No table to run out of: margin tracks the latency actually happening.</span>
                 </span></h3>
-              <div class="gauge-row"><span>margin it is running right now</span><output id="par-adapt-k-out">18</output></div>
+              <div class="gauge-row"><span>margin it is running right now</span><output id="par-adapt-k-out">18 blocks</output></div>
               <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:11%; background:var(--green);"></div></div>
               <div class="gauge-row"><span class="info-affordance">Worst case, guaranteed
                   <button class="info-affordance__trigger" type="button" aria-describedby="par-adapt-time-panel">
@@ -445,13 +445,13 @@
                   </button>
                   <span class="info-affordance__panel" id="par-adapt-time-panel" role="tooltip">The same DAG KNIGHT no-visible-attack bound (&sect;1.5.2) as GHOSTDAG's, at the same 1% error tolerance. Uses D<sub>t</sub>, the actual-latency slider above, tracked instead of assumed in advance.</span>
                 </span><output id="par-adapt-time-out">3.7 s</output></div>
-              <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed, and no person to retune it.</div>
+              <div class="verdict adaptive" id="par-adapt-verdict" role="status">Nobody has to retune this by hand when the network slows down.</div>
             </div>
           </div>
 
           <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Neither number above is
             what a payment waits for. Both bound the worst case against a delay chosen in advance.</p>
-          <p class="sub" style="max-width:74ch; margin:.2rem auto 0; text-align:center;">A transaction is typically
+          <p class="sub" style="max-width:74ch; margin:.55rem auto 0; text-align:center;">A transaction is typically
             <em>included</em> in a block in about a second.
             <span class="info-affordance">
               <button class="info-affordance__trigger" type="button" aria-describedby="par-observed-panel">
@@ -749,12 +749,12 @@
             var dIsMainnet = D === 5;
             var kIsMainnet = dIsMainnet && BPS === 10;
             dOut.textContent = "Assumed worst case: " + D.toFixed(1) + " s" + (dIsMainnet ? " (mainnet's real setting)" : "") +
-              " → margin needed: " + configuredK + (kIsMainnet ? " (mainnet's real margin)" : "") +
+              " → margin needed: " + configuredK + " blocks" + (kIsMainnet ? " (mainnet's real margin)" : "") +
               (beyondTable ? " (computed, past the shipped table)" : "");
-            lOut.textContent = L.toFixed(1) + " s (margin this actually needs: " + requiredK + ")";
+            lOut.textContent = L.toFixed(1) + " s (margin this actually needs: " + requiredK + " blocks)";
 
-            fixedKOut.textContent = configuredK;
-            fixedReqOut.textContent = requiredK;
+            fixedKOut.textContent = configuredK + " blocks";
+            fixedReqOut.textContent = requiredK + " blocks";
             var over = requiredK > configuredK;
             var scale = Math.max(configuredK, requiredK) * 1.25;
             fixedCap.style.left = ((configuredK / scale) * 100) + "%";
@@ -789,13 +789,13 @@
               fixedVerdict.textContent = "rusty-kaspa has no table entry at this rate. Running this margin on mainnet means hard-forking the constant in ahead of time, the a-priori choice DAGKnight removes.";
             } else if (over){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Cap exceeded. Honest blocks now fall outside the fixed margin and read as an attack.";
+              fixedVerdict.textContent = "Honest blocks now fall outside the margin, and the network reads them as an attack.";
             } else {
               fixedVerdict.className = "verdict safe";
-              fixedVerdict.textContent = "Within the cap. Concurrent blocks stay inside the fixed margin; nothing reads as an attack.";
+              fixedVerdict.textContent = "No honest block looks like an attack at this delivery speed.";
             }
 
-            adaptKOut.textContent = requiredK;
+            adaptKOut.textContent = requiredK + " blocks";
             adaptFill.style.width = ((requiredK / scale) * 100) + "%";
 
             // Same formula, same shared alpha and epsilon; KNIGHT (this side) uses D_t, the
@@ -804,7 +804,7 @@
             var adaptOptSeconds = optimisticBoundSeconds(L, BPS, alpha);
             adaptTimeOut.textContent = fmtSecondsHuman(adaptOptSeconds);
 
-            adaptVerdict.textContent = "No cap to exceed, and no person to retune it.";
+            adaptVerdict.textContent = "Nobody has to retune this by hand when the network slows down.";
 
             // Ratio between the two sides' bounds. This formula has no unspecified constant, so
             // this ratio, unlike the pessimistic one one click down, is a real number the paper

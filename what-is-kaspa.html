@@ -386,6 +386,7 @@
             <span class="info-affordance__panel" id="cs-model-panel" role="tooltip">A Poisson single-chain race model, not an observation of any running network. Checked against real data: Decker &amp; Wattenhofer measured Bitcoin's stale rate at 1.69%, with a mean propagation delay of 12.6 s. Solving this model backward for that stale rate gives about 10.3 s, the same order of magnitude as the measured figure, within roughly 1.5 to 2x. Not an exact match. The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>
           </span></p>
 
+        <p class="result-line">Each thrown-away block cost a miner real electricity and bought nothing.</p>
         <p class="model-caption">Single chain is a model, not a picture of Bitcoin today.</p>
 
         <div class="panel">
@@ -940,6 +941,9 @@
     font-size:.85rem; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line);
     border-radius:10px; padding:.6rem .8rem; margin-top:.6rem;
   }
+  #ghostdag-demo .gp-why{
+    font-size:1rem; color:var(--muted); line-height:1.55; margin:.7rem 0 0; max-width:62ch;
+  }
   #ghostdag-demo .node.virtual{
     border-radius:8px; border:2px dashed var(--purple); background:transparent; color:var(--purple);
   }
@@ -1031,7 +1035,7 @@
   </div>
 
   <div class="panel">
-    <h3>The DAG</h3>
+    <h3>The block graph</h3>
     <div class="stage-wrap" id="gp-stage-wrap">
       <span class="scroll-hint" id="gp-scroll-hint" hidden>Scroll to see more &rarr;</span>
       <div class="stage" id="gp-stage">
@@ -1061,6 +1065,7 @@
         <span class="info-affordance__panel" id="gp-order-panel" role="tooltip">Walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</span>
       </span></p>
     <ol class="order-list" id="gp-order-list" aria-live="polite"></ol>
+    <p class="gp-why">Without one order every node agrees on, two people can each be told a different owner for the same coin.</p>
   </div>
 
   <details class="panel">
@@ -2102,6 +2107,8 @@
         <div><span class="big" id="mc-tpbOut">0</span> <span class="label" id="mc-tpbLabel">transactions like this fit in a block</span></div>
         <div class="sub" id="mc-tpsLine"><span id="mc-tpsOut">0</span> transactions per second at ten blocks a second, if every block were full of this shape.</div>
       </div>
+
+      <p class="intro" style="margin-top:10px;">Change the shape and the count changes with it, which is why a headline transactions-per-second figure says nothing until someone names the transaction it counted.</p>
 
       <p class="intro" style="margin-top:10px;">Three limits, each with its own budget. Fill a block with this transaction and they run down like this. The one that empties first sets the count above.</p>
 

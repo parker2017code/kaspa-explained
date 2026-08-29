@@ -41,7 +41,7 @@ has not been said.
 | node-cost | kaspa-mining | pass | pass | pass | pass |
 | parameterless | kips | **fail** | **fail** | **fail** | **fail** |
 | supply-split | kips | pass | pass | pass | pass |
-| dag-time | kaspa-origin-story | **fail** | pass | pass | **fail** |
+| dag-time | kaspa-origin-story | pass | pass | pass | **fail** |
 | fair-launch | kaspa-origin-story | pass | pass | pass | pass |
 | parallel payments | utxo-vs-accounts | pass | pass | pass | pass |
 | covenant-breaker | build-on-kaspa | pass | pass | pass | pass |
@@ -113,8 +113,11 @@ not the same nine, and for different reasons.
   restate it in their own words in seconds.
 - **Agree, `parameterless`,** and more harshly. The prior audit marked it a
   question-3 failure. It fails all four.
-- **New, `dag-time`.** The primary slider's own label is "DAA score", an
-  abbreviation the reader does not know, expanded nowhere on the surface.
+- **Withdrawn on rereading, `dag-time` question 1.** The label "DAA score" is
+  an abbreviation the reader does not know, but the sentence directly above the
+  slider defines the thing in plain words: it "rises by about one per accepted
+  block, not once a second". A working definition beats an expansion. It passes
+  question 1 and fails only question 4.
 - **New, `ghostdag-playground`.** The main graphic's panel title is "The DAG".
 
 ## Three things that do not rescue a failing demo
