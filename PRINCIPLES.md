@@ -96,6 +96,13 @@ large amount of work beats many workers each doing a little. When you hit the ca
 rather than cancel: a canceled run throws away everything it had already paid for, and
 restarting it costs the whole amount again.
 
+**Do the whole job; never announce a reduced scope.** Owner, 29 August 2026: do
+everything, do not skip, do not hedge with "except this part", keep it tight but do it
+right in good faith. Announcing a shortcut is worse than taking one, because it asks for
+permission to do less while sounding rigorous. When the scope looks too large, compress the
+reporting, not the work. This does not license silence about a genuine block: if something
+truly cannot be done, say so once, plainly, where it blocks, with what it would take.
+
 **Say what you did not do.** Silence implies completion, and models fill silence with
 implied success. State plainly what was skipped, unverified, or left broken. An honest
 negative is worth more than a confident wrong answer, and it is the only thing that makes
