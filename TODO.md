@@ -35,6 +35,34 @@ Its brief, so it does not have to be reconstructed:
 - Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
   commit, do not push.
 
+## THEN: the pre-deploy pass, owner's instruction 29 Aug 2026
+
+Not delegable. This is the only step in the run where the verifier is not the producer,
+which is the whole reason it exists. Fix what it finds; do not hand back a list.
+
+Order, after the code sweep commits:
+
+1. Serve locally and confirm the port answers 200 before trusting anything rendered.
+2. Every live page at 390, 768 and 1280, in both light and dark. Roughly 20 pages, so
+   about 120 renders. Use the in-app browser. Never touch or resize the owner's Chrome;
+   narrow widths go through a fixed-width iframe harness in a scratchpad directory, since
+   media queries respond to iframe viewport width.
+3. Drive every demo rather than looking at it. Every control, first touch, both extremes,
+   the empty state, the reset. A control that produces no legible change is a defect. A
+   demo that needs scrolling to be understood has not been designed yet.
+4. Run both harnesses in `_preview-site/measure.html` to clean: the alignment measurer over
+   every direct child of every centered hero, and the glass inventory over computed styles
+   in both themes. Eyeballing missed that class three times. Cache-bust each iframe load or
+   you measure stale CSS.
+5. Spot-check claims against `data/ground-truth-2026-08-29.json`, not against any agent's
+   report of what it did.
+6. Fix everything found, in place, then rerun the affected checks.
+7. `bash scripts/check-site.sh` must print `Site checks passed.` Never push past a failing
+   gate.
+8. Push, then confirm the exact changed strings from served bytes on kaspaexplained.com
+   with a cache-busting URL. A successful push is not a live check.
+9. Say plainly what could not be verified. Silence reads as completion.
+
 ## Rules that apply to every item
 
 - Verified at 390, 768, and 1280, in both light and dark themes.
