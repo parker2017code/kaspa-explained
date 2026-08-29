@@ -184,6 +184,60 @@ crawlable file. `kaspa-x-posts-2026-07-10-to-08-31.md` cites 30 stubs,
 live. `AGENTS.md` and `MAINTENANCE.md` each cite 3 stubs and should be fixed rather
 than cut.
 
+## Spot check of the first final pass, and the measured gate gap. 21:00, 29 Aug 2026.
+
+Five spots checked against the artifact, not against the agent's report. All five hold.
+
+- `bash scripts/check-site.sh` prints "Site checks passed.", exit 0, run here rather
+  than quoted from a report. Clean-clone safe at e44c7c9.
+- og:image: 20 references, all on the new card, one file on disk. The two byte-identical
+  339KB originals are gone.
+- `the-instrument.html` appears in the diff and the change is chrome only: the og tags
+  and the generated related-links block between its markers. Moose's text is untouched.
+  That is the allowed half of the rule, correctly read.
+- **No gate was loosened to manufacture green.** This was the check that mattered most.
+  Two were tightened instead. `check-search-map.py` now covers the manifest's `demos`
+  array and was previously unable to notice that `/demos`, in the primary nav of every
+  page, was missing from the page map. `skeptical-case.html` moved OFF the essay list,
+  which waives the 60-word paragraph cap, onto the stricter per-section rule, with the
+  measurement that justified it recorded in the file.
+- `model-picker-method.html`, the 20th page, is not an unreviewed dump. It is the
+  6,685-word methodology that used to sit inside one closed disclosure on
+  `model-picker.html`, which SITE-STANDARD names as a defect and instructs moving to its
+  own page. It is 15,365px with zero landmarks, which is a real remaining defect.
+
+**The all-flags gate FAILS, measured here, exit 1.** One failure point:
+`Render-matrix check failed. 2048 violation(s) across 17 page(s)`. Everything before it
+passes blocking. Three counts exist for one thing: the first agent reported 1,981, a run
+here against a tree carrying one uncommitted file measured 2,048, and a clean run at the
+same HEAD measured 1,953. The clean run is the one to quote. The orchestrator asserted
+2,048 as independently confirmed and was the furthest off; a dirty tree is not a clean
+measurement and the difference was never checked before the number was stated.
+
+Roughly 1,033 were sub-16px text. `ul.mm-toc > li > a` at 14.4px was recorded here as
+sitting on `sources.html`. It does not: that class exists only on
+`model-picker-method.html`, and `sources.html` has zero font-size violations. About 284
+were reader-facing `summary` elements. The
+previous agent refused to extend the exemption roster to clear them and was right:
+manufacturing green by loosening an accessibility guard is the wrong trade.
+
+**A FIFTH advisory flag exists that every earlier brief here missed.**
+`DENSITY_GATE_BLOCKING=false` in `scripts/check-density.sh` is hiding **35 hard
+density-budget violations** (150-word intro, 60-word paragraph, 30-word cell, collapsed
+details exempt). The blocking command recorded in this file was incomplete. The correct
+one is:
+
+    VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true PAGE_HEIGHT_BLOCKING=true \
+    DEMO_SURFACE_BLOCKING=true DENSITY_GATE_BLOCKING=true bash scripts/check-site.sh
+
+**A judging agent is now running.** It built none of this, which is the point: the first
+pass reported honestly that it drove all 140 demo controls but never judged one against
+the four newcomer questions, and a producer cannot judge its own work. Its jobs are the
+newcomer pass on all 19 demo instances, the 2,048 render violations fixed by raising the
+text rather than widening the roster, the 35 hidden density violations, the six pages
+still over the 800px cap, the four remaining typography targets, and the roughly 17,900
+lines under `scripts/` the first pass did not read.
+
 # kaspa explained working state
 
 

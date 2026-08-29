@@ -90,6 +90,13 @@ const skipFiles = new Set([
   "CLI_FROM_ZERO.md",
   "REVIEW.md",
   "TODO.md",
+  // The state file. Never shipped: absent from sitemap.xml and
+  // site-manifest.json, read only by agents picking up the work. Every other
+  // internal working document above is already skipped for the same reason;
+  // this one's omission was an oversight, and it surfaced only because the
+  // pre-commit hook checks the STAGED tree, so an uncommitted state file is
+  // invisible to it while blocking a full-gate run.
+  "WORKING-STATE.md",
   "HANDOFF.md",
   "AUDIT.md",
   "design/STANDARD.md",
