@@ -2800,7 +2800,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     el.innerHTML =
       '<div class="block-main">' +
         '<div class="block-top">' + contentWord + '<span class="block-time" data-ts="' + card.timestamp + '">' + relTime(card.timestamp) + '</span></div>' +
-        '<div class="block-sub" data-clip-ok="true" title="' + (card.minerAddress + " " + card.minerInfo).replace(/"/g, "&quot;") + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + shortAddr(card.minerAddress) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
+        '<div class="block-sub" data-clip-ok="true" title="' + escapeHtml(card.minerAddress + " " + card.minerInfo) + '">' + (card.isEmpty ? "nothing but the miner's own reward &middot; " : "") + 'mined by <code>' + escapeHtml(shortAddr(card.minerAddress)) + '</code>' + (card.minerInfo ? " &middot; " + escapeHtml(card.minerInfo) : "") + '</div>' +
         (tags ? '<div class="tag-row">' + tags + '</div>' : "") +
       '</div>';
     return el;
