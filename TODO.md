@@ -146,6 +146,27 @@ into a deploy pass. Re-run the scan across all six widths and with states driven
 trusting any deletion, and remember that dead CSS costs a reader nothing; this is a
 maintenance win, not a reader-facing one.
 
+## 296 design-token values are copied into page-local style blocks
+
+Found reading `index.html` top to bottom, not by any grep, because the copies are correct.
+
+    what-is-kaspa.html      84      kaspa-mining.html       88
+    kaspa-origin-story.html 44      kips.html               40
+    index.html              22      argent-explained.html   18
+
+Each demo redeclares the palette for both themes inside its own `<style>` block:
+`--bg`, `--card-bg`, `--text`, `--muted`, `--faint`, `--green`, `--cyan`, `--pink`,
+`--line-bright`, `--field-bg`, `--field-line`.
+
+**Checked, and nothing has drifted yet.** All six sampled tokens match `styles.css` exactly
+in both themes. That is the whole point: it is a latent hazard, not a present defect, and
+it will read as fine right up until someone changes the palette and six demos quietly keep
+the old one. It is the same shape as the two collision-demo copies, which also looked fine
+until one of them hid a correctness bug.
+
+Fix by having the demos inherit the tokens rather than restate them. Do not fold this into
+a deploy pass; it touches six pages and needs its own verification in both themes.
+
 ## Cascade debt in styles.css, measured 29 Aug 2026
 
 229 of 941 selectors in `styles.css` are declared three or more times. `h2` is declared
