@@ -614,17 +614,6 @@
           });
           return pos;
         }
-        function slotX(w, i, len) {
-          // Oldest block sits at the left margin (i = 0); the strip fills
-          // left to right as blocks arrive and scrolls left once it's full.
-          // A stray len <= 1 special case used to place the very first
-          // block at the right edge for one frame before the second block
-          // arrived and everything snapped left -- the "blocks start on
-          // the right" glitch. The general formula already puts i = 0 at
-          // the left margin, so there is no special case left to apply.
-          const margin = 22;
-          return margin + i * (w - 2 * margin) / (N - 1);
-        }
       
         function popScale(ageMs) {
           if (reducedMotion) return 1;
