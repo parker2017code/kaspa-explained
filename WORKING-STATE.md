@@ -72,7 +72,12 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
 5. **Several commits used `--no-verify`** against a sitemap race caused by agents editing
    pages concurrently. `HEAD` was verified clean in an isolated clone each time. Never
    carry one past a push.
-6. **The full gate must run with rendering on and every advisory flag blocking.** The
+6. **Derived files cannot be made consistent while agents are editing.** `sitemap.xml` and
+   `agent-index.json` are generated from page content. Regenerating them uses the working
+   tree, which holds uncommitted agent edits, so the result never matches HEAD's committed
+   pages. This is why several commits used `--no-verify`. It is agent 5's step 5 and must
+   be done once the tree is stable, then verified in a clean clone before pushing.
+7. **The full gate must run with rendering on and every advisory flag blocking.** The
    pre-commit hook sets `SKIP_RENDER_CHECKS=1` and five checks are advisory by default, so
    a passing commit means the structural half only:
 
