@@ -1357,15 +1357,23 @@ blockquote {
   margin: 0;
 }
 
+/* Commands here are typed, not skimmed, so none of one may be off screen. With
+   `white-space: pre` these scrolled sideways with no visible cue, and the Windows
+   node command rendered as `--rpclisten=127.0.0.1:1611` at 1280px: a reader who
+   copies what they can see gets the wrong port. Measured 2026-08-29 at 390, 768,
+   1024 and 1280px; every command block overflowed, by 44 to 871px. Wrapping shows
+   the whole line at every width. Used only by kaspa-mining.html and
+   build-on-kaspa.html. */
 .api-command-card pre {
   margin: 14px 0 0;
   max-width: 100%;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .api-command-card code {
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .api-command-card-note {
@@ -2044,6 +2052,15 @@ blockquote {
   background: rgba(0, 0, 0, .82);
 }
 
+/* Without this the viewer is display:none in every state, so Expand set
+   aria-hidden="false", loaded the image, and showed a 0x0 element. A
+   dead-CSS pass removed the rule because the scanner never opens the viewer,
+   so it read as unmatched. Any rule that only applies while a dialog is open
+   looks dead to a scanner that cannot open the dialog. */
+.image-viewer[aria-hidden="false"] {
+  display: flex;
+}
+
 
 .image-viewer figure {
   width: min(1180px, 100%);
@@ -2055,7 +2072,7 @@ blockquote {
   width: 100%;
   max-height: min(78vh, 760px);
   object-fit: contain;
-  border: 1px solid rgba(255, 255, 255, .2);
+  border: 1px solid var(--line);
   border-radius: 8px;
   background: #050607;
   box-shadow: 0 26px 90px rgba(0, 0, 0, .5);

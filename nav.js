@@ -339,17 +339,71 @@
 
     const viewerImage = viewer.querySelector("img");
     const viewerCaption = viewer.querySelector("figcaption");
+    const viewerClose = viewer.querySelector(".image-viewer-close");
+
+    // This declares role="dialog" and aria-modal="true", which tells assistive
+    // technology the rest of the page is unavailable. Nothing was making that
+    // true: focus stayed on whatever opened the viewer, Tab walked straight
+    // back into the page behind it, and the page was never inert. A keyboard
+    // reader could open the viewer and never reach its close button.
+    let viewerOpener = null;
+
+    const viewerBackground = () =>
+      Array.from(document.body.children).filter((child) => child !== viewer);
+
+    const setViewerInert = (isInert) => {
+      viewerBackground().forEach((child) => {
+        if (supportsInert) child.inert = isInert;
+        if (isInert) child.setAttribute("aria-hidden", "true");
+        else child.removeAttribute("aria-hidden");
+      });
+    };
+
+    const trapViewerTab = (event) => {
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable(viewer);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (!viewer.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
     const closeViewer = () => {
+      if (viewer.getAttribute("aria-hidden") === "true") return;
       viewer.setAttribute("aria-hidden", "true");
       document.body.classList.remove("image-viewer-open");
       viewerImage.removeAttribute("src");
+      setViewerInert(false);
+      document.removeEventListener("keydown", trapViewerTab, true);
+      if (viewerOpener && document.contains(viewerOpener)) {
+        viewerOpener.focus({ preventScroll: true });
+      }
+      viewerOpener = null;
     };
     const openViewer = (image, captionText) => {
+      viewerOpener = document.activeElement;
       viewerImage.src = image.currentSrc || image.src;
       viewerImage.alt = image.alt || "";
       viewerCaption.textContent = captionText || "";
       viewer.setAttribute("aria-hidden", "false");
       document.body.classList.add("image-viewer-open");
+      setViewerInert(true);
+      document.addEventListener("keydown", trapViewerTab, true);
+      // .image-viewer is display:none until body.image-viewer-open applies, and
+      // an element in a display:none subtree cannot take focus. Reading
+      // offsetHeight forces the layout so the close button is focusable in this
+      // same call rather than focus silently falling back to body.
+      void viewer.offsetHeight;
+      (viewerClose || viewer).focus({ preventScroll: true });
     };
 
     viewer.addEventListener("click", (event) => {
