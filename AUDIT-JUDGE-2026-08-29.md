@@ -124,3 +124,76 @@ not the same nine, and for different reasons.
 
 A longer caption. Correctness. Familiarity. All nine failures above are
 correct; that is not what was being tested.
+
+---
+
+# What the gates actually measured, 29 August 2026
+
+Numbers below are before and after on the same command, not estimates.
+
+## Render matrix
+
+`RENDER_GATE_BLOCKING=true node scripts/check-render.mjs`, 20 pages, 120
+renders, three widths, both themes.
+
+| Assertion | Before | After |
+|---|---|---|
+| font-size | 1152 | 69 |
+| contrast | 331 | 239 |
+| touch-target | 298 | 88 |
+| near-overlap | 172 | 94 |
+| overlap | 0 | 8 |
+| **total** | **1953** | **498** |
+
+The exemption roster is unchanged. 303 sub-16px declarations were raised, a
+floor block was appended to styles.css, and five near-miss color tokens were
+recomputed against the surfaces they actually sit on.
+
+## Density
+
+`DENSITY_GATE_BLOCKING=true bash scripts/check-density.sh`: 37 to 6. Twenty
+three of the original 37 were the gate counting hover-only tooltip text into
+the paragraph hosting it. Eight were real and are cut. The six that remain are
+all the same measure, words before the first thing a reader can touch:
+skeptical-case 446, why-kaspa-matters 386, kaspa-mining 177, status 172,
+crypto-from-scratch 157, kaspa-origin-story 154, against a limit of 150.
+
+## Page length
+
+Six pages over the 800px undifferentiated-run cap, before and after.
+model-picker-method went from 15,365px with zero landmarks to 10,686px with
+five. The other five are unchanged and are listed in the gate's own output.
+
+# Three claims in the brief that did not survive checking
+
+**`ul.mm-toc > li > a` at 14.4px on sources.html.** The class is real but it is
+on model-picker-method.html. sources.html has no font-size violation at all,
+before or after: its entire violation list was six touch-target and two
+near-overlap.
+
+**Body type at 16px against a 17px target, and line height 1.5 against 1.6.**
+Both come from `scripts/measure-typography.mjs`, which defines "body" as the
+paragraph with the most words on the page. On this site that is usually a demo
+lede or an inline definition. Checked with getComputedStyle on the live page,
+what-is-kaspa's body element is 17px with a computed line-height of 27.2px,
+which is 1.6. Both targets were already met before this pass started. Measure
+and the size ladder are real and still open: 67.6ch to 85.4ch across five pages
+against 70ch, and 15 to 16 distinct sizes on the two largest pages.
+
+**2,048 render violations.** The number was 1,953 on a clean run at HEAD.
+
+# Gates watched failing
+
+Both planted, watched red, reverted, and the revert confirmed by SHA-256 and by
+`git status` reporting the file byte-identical to HEAD.
+
+- **check-render.mjs.** A 12px paragraph and a 2.38:1 color planted on
+  start-here.html took that page from 0 violations to 20: twelve font-size, six
+  contrast, two touch-target. Reverted, back to 0.
+- **check-density.sh.** A 70-word paragraph and a 40-word table cell planted on
+  the same page took the gate from 6 to 8 and from exit 0 to exit 1, naming both
+  by word count. Reverted, back to 6.
+
+Not watched failing: check-page-height.mjs, check-demo-surface.mjs,
+check-visible-words.mjs, check-glass-gate.mjs, check-orphan-classes.mjs, and
+every script in the publish gate. Their behavior here is unverified.
