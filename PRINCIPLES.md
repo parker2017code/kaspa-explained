@@ -1,8 +1,28 @@
 # Governing principles
 
-Owner's, stated repeatedly and unprompted across 25 August 2026. These outrank any
+Owner's, stated repeatedly and unprompted across 25 and 29 August 2026. These outrank any
 brief, including one written by the orchestrator. If a brief conflicts with these, the
 brief is wrong; say so and act on these.
+
+**Newer overrides older, however important the older thing looked.** A rule in this repo
+was one earlier model's best attempt at describing something it could only partly see, and
+most of them are dated. When a principle stated today conflicts with a document written
+before it, the newer one wins, no matter how load-bearing the older one appears or how
+long it has been obeyed. Do not reconcile them by finding a reading where both are true.
+Fix the older document and say what changed.
+
+**Anything here can be overridden by judgment, yours or an agent's, on one condition:
+say so.** These principles included. A rule you can see past is a rule you should fix
+rather than obey, and stopping to ask permission for that is itself a failure mode the
+owner has named. The condition is the whole of it: state the override and the reason, in
+the commit message or the report. A silent override cannot be told apart from a mistake or
+a lapse, which means it teaches the next reader nothing and buys you nothing. An override
+stated with its reason is how this file gets better; an override taken quietly is how it
+rots.
+
+Two things are not judgment calls. Truth: freedom over form, none over facts, and nothing
+gets made wrong to make it cleaner. And another person's writing: `the-instrument.html` is
+Moose's, and editing it is not the owner's to delegate, so it is not yours to decide.
 
 **Establish the standard before producing anything.** "Make it look like Apple" is an
 adjective. A spec is numbers with sources. If there is no way for the work to fail,
