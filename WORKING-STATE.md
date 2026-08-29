@@ -111,6 +111,24 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
 - The social card was rebuilt wordless after looking at how Ciechanowski, Distill, OWID and
   Linear actually build theirs. None carries a headline plus subtitle plus URL.
 
+## Read log. What I have actually read, line by line, versus checked mechanically.
+
+    what-is-kaspa.html   ALL FOUR DEMOS READ. collision (fixed: DAG model, arrival timing,
+                         layout), ghostdag playground (core verified correct incl. the
+                         k-cluster recheck; sink mismatch found and fixed), mass calculator
+                         (verified clean under every extreme on every script type), live
+                         network feed (escaping unified; failure path verified correct).
+    index.html           demo script read and fixed; head, markup and CSS read to line 450.
+    everything else      mechanical coverage only: 42 sliders driven, 169 buttons clicked,
+                         154 disclosures opened, 53 anchors resolved, glass/orphan/html
+                         gates, dead-CSS render scan, page-height, typography measurement.
+
+Not yet read line by line: kaspa-mining (1576 JS), model-picker (1989), kips (477),
+kaspa-origin-story (478), build-on-kaspa (441), chain-comparer (411), why-kaspa-matters
+(375), search (196), utxo-vs-accounts (178), argent-explained (156), plus styles.css (7452)
+and scripts/ (17875). Agent 3 and 4 are still rewriting most of those, so read them after
+the workflow lands, not before.
+
 ## Tools built today, all in scripts/, none wired into the gate
 
     node scripts/shoot-pages.mjs <outdir> http://127.0.0.1:4196 "/,/page" "320,390,768,1024,1280,1600" "dark,light"
