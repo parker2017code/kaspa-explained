@@ -91,6 +91,23 @@ right-aligned and low contrast in a panel header.
 **Fix: one blue link on an all-teal page.** "How this works, and the sources" is the only
 blue element on the homepage.
 
+## The collision demo exists twice and the copies drifted
+
+`index.html` and `what-is-kaspa.html` each carry a full copy of the collision demo,
+roughly 200 lines of identical JavaScript. On 29 Aug 2026 both were found to contain the
+same correctness bug, and the copies had already drifted from each other: the homepage
+copy had gained an exponential arrival sampler that was never wired into its scheduler,
+while the what-is-kaspa copy still had that function dead. Fixing one did nothing for the
+other, and the bug had to be found twice.
+
+THE-BAR states the rule this breaks: one fact, one home, because a fact repeated on three
+pages goes stale on two. It cost a real correctness defect here, not just maintenance.
+Extract the demo to a single shared script both pages load, then delete both copies.
+Anything that has to be true in two places belongs in one.
+
+The same question should be asked of every other duplicated demo before deploy. Ground
+truth records 18 distinct demos across 19 instances, so at least one other pair exists.
+
 ## Outstanding: one commit bypassed the gate, deliberately
 
 `2ecbaac` (the homepage DAG rebuild) was committed with `--no-verify`. The gate was
