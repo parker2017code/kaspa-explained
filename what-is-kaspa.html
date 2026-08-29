@@ -1285,7 +1285,7 @@
 
     lastAncestors = ancestorsOf; lastDescendants = descendantsOf; lastPubIds = pub;
 
-    return {pub: pub, order: order, childOf: childOf};
+    return {pub: pub, order: order, childOf: childOf, virtualSink: virtual.selectedParent};
   }
 
   var COLW = 96, ROWH = 68, PAD = 40;
@@ -1308,21 +1308,17 @@
     return {gen: gen, lane: lane, maxGen: maxGen, laneCounts: laneCounts};
   }
 
-  function computeVirtualInfo(){
+  // The sink is whatever GHOSTDAG already chose as the virtual block's selected
+  // parent. This used to recompute it with a different measure (a raw count of
+  // blue ancestors instead of the accumulated blue score) and the opposite
+  // tiebreak (higher id instead of lower), so on a tie the caption named one
+  // tip while the spine was drawn through another. The caption tells the reader
+  // the sink is picked the same way any block picks its base, so it has to be
+  // the same value, not a second opinion.
+  function computeVirtualInfo(virtualSink){
     var tips = publishedTips();
     if (!tips.length) return null;
-    function score(id){
-      var s = (blocks[id].color === "blue") ? 1 : 0;
-      var anc = lastAncestors[id] || new Set();
-      anc.forEach(function(a){ if (blocks[a].color === "blue") s++; });
-      return s;
-    }
-    var sink = tips[0], sinkScore = score(tips[0]);
-    for (var i = 1; i < tips.length; i++){
-      var s = score(tips[i]);
-      if (s > sinkScore || (s === sinkScore && tips[i] > sink)){ sink = tips[i]; sinkScore = s; }
-    }
-    return {tips: tips, sink: sink};
+    return {tips: tips, sink: virtualSink};
   }
 
   function updateVirtualCaption(info){
@@ -1348,7 +1344,7 @@
     var result = recomputeAll();
     var pub = result.pub;
     var lay = layout(pub, result.childOf);
-    var virtualInfo = showVirtual ? computeVirtualInfo() : null;
+    var virtualInfo = showVirtual ? computeVirtualInfo(result.virtualSink) : null;
 
     var stage = document.getElementById("gp-stage");
     var svg = document.getElementById("gp-edge-svg");
