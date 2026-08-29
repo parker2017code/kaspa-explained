@@ -3,6 +3,38 @@
 Everything outstanding. Updated as work lands. The owner should never be
 the one to find an item for this list.
 
+## NEXT: the code sweep, granted 29 Aug 2026, not yet run
+
+The owner granted one agent beyond the five-agent site rebuild, with authority to make
+edits and improve anything it decides needs it. Its scope, in his words: it goes over
+every single line of code in the repo.
+
+Launch it only after the site rebuild has landed and committed. Running it concurrently
+would put two agents in `styles.css` and `scripts/` at once, and the rebuild agents are
+already rewriting the pages that load them.
+
+Its brief, so it does not have to be reconstructed:
+
+- Read `PRINCIPLES.md`, then `SITE-STANDARD.md`, then this file. The standard now covers
+  every line of code, not only reader-facing prose. That section names what to hunt.
+- Full authority to edit, delete and rewrite code. Same limit as everywhere: freedom over
+  form, none over truth, and `the-instrument.html` stays untouched.
+- Apply the deletion test to code, where it bites hardest. If nothing breaks when a rule,
+  branch, constant, script or comment is removed, remove it. If you cannot say what
+  breaks, you have not recovered why it exists, and that is the finding.
+- Known live targets: `styles.css` cascade debt where a selector is redefined at several
+  points and a rule can look load-bearing while being inert; `scripts/refresh-model-data.py`,
+  which is dead and must never run, sitting beside the live
+  `build-picker-data.py` into `emit-picker-blob.py` path; the two `MIN_METRICS` constants
+  with different values at different pipeline stages; and every gate that has never been
+  watched failing.
+- Make each gate fail on a deliberate violation before trusting it, and say which ones you
+  could not make fail. A check that cannot fail is decoration and should be deleted or
+  repaired, not left to buy confidence it did not earn.
+- Work alone. Do not spawn subagents.
+- Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
+  commit, do not push.
+
 ## Rules that apply to every item
 
 - Verified at 390, 768, and 1280, in both light and dark themes.
