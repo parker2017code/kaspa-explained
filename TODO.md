@@ -107,10 +107,27 @@ Order, after the code sweep commits:
    inspected. Reading the markup does not count, and neither does a screenshot: both prove
    the thing exists, not that it works.
 
-   Every demo driven through its full range rather than poked once: every control, first
-   touch, both extremes, the empty state, the reset. A control that produces no legible
-   change is a defect. A demo that needs scrolling to be understood has not been designed
-   yet.
+   Every demo hand-driven through its full range rather than poked once: every control,
+   first touch, both extremes, the empty state, the reset. A control that produces no
+   legible change is a defect. A demo that needs scrolling to be understood has not been
+   designed yet.
+
+   Drive each one as a newcomer, not as someone who already knows what it proves. The bar
+   is the four questions, answered unaided, with nothing read outside the demo itself:
+   what am I looking at, what do I touch, what just happened, why does this matter. A
+   longer caption does not rescue a demo that fails them, and being correct does not
+   either. Where one fails, change it: relabel, redesign the controls, change what it
+   displays, rebuild it, or cut it and leave the page without one. That authority is
+   granted in SITE-STANDARD.md and clarity to a newcomer outranks every other property a
+   demo has. The only thing off limits is making it say something untrue.
+
+   Eighteen distinct demos, nineteen instances. Count them off rather than trusting a
+   sweep: what-is-kaspa 4, kaspa-mining 4, kips 2, kaspa-origin-story 2, utxo-vs-accounts
+   2, build-on-kaspa 2, why-kaspa-matters 1, argent-explained 1, index 1, that last being a
+   second copy of the collision demo. `chain-comparer` and `model-picker` are interactive
+   tools held to the same bar but counted separately. `skeptical-case.html #attack-cost-demo`
+   is not a demo at all: it is a section with a demo-shaped id, zero controls and a link
+   out, and it should either become one or stop looking like one.
 
    Every link clicked and the destination confirmed: header nav on every page, footer nav
    on every page, the logo and the home button, breadcrumbs, back-to-top, in-page anchors,
