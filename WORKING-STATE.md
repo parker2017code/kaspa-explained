@@ -281,11 +281,24 @@ silently.**
 **Still open, measured, not blocking the publish gate:** 498 render violations (239
 contrast, 94 near-overlap, 88 touch-target, 69 font-size, of which 46 are SVG labels
 whose font-size in a scaled viewBox is not what a reader sees) and 6 density
-violations, all of them pre-interaction word counts. `scripts/check-page-height.mjs`
-carries an uncommitted, unreviewed gate loosening from an agent that died: it drops
-`status.html` from the hard ceiling and widens what counts as a landmark. The
-reasoning reads sound and it was never verified or reported, so it is deliberately
-left uncommitted rather than shipped on a dead agent's word.
+violations, all of them pre-interaction word counts. **Correction to this file's own claim.** It said the gate
+change in `scripts/check-page-height.mjs` was deliberately left uncommitted. It was
+not: `git add -A` swept it into `02c6e15` and it shipped. The record was false when
+written, and `add -A` is how an unreviewed change rides along inside a commit whose
+message never mentions it.
+
+Reviewed afterward, and it stands. It removes exactly three violations, each a
+verified false positive. `build-on-kaspa.html` carries six `.grid-cards` grids in the
+span the gate called a 2,761px unbroken run, and a row of bordered cards breaks a page
+the way the table already on the landmark list does. The other two were `status.html`
+against the hard open-height ceiling, and `status.html` is no longer the 300-word route
+page that set was written for: it is 56 table rows across 6 tables and 2,926 words, so
+the only way to fit three viewports is to close the table into a disclosure, which the
+standard bans outright. `<button>` already counted while `a.button` did not, so one
+control was visible or invisible to the gate depending on its tag.
+
+Six real violations survive untouched and the worst page still fails correctly at
+10,686px, so the gate was not neutered.
 
 # kaspa explained working state
 
