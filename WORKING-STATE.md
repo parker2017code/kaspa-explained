@@ -300,6 +300,73 @@ control was visible or invisible to the gate depending on its tag.
 Six real violations survive untouched and the worst page still fails correctly at
 10,686px, so the gate was not neutered.
 
+## HANDOFF, 29 Aug 2026, ~23:00. Stopped for a model switch. Read this first.
+
+Everything is pushed and live. `origin/main` and local both at the commit below,
+working tree clean. The site is deployed, the publish gate is green, and the two
+defects the owner found by looking at the live page are fixed.
+
+### The single most useful thing to know before touching the render gate
+
+**Its violation count is not reproducible, and chasing the total will waste a day.**
+`what-is-kaspa`'s live-network demo renders real blocks fetched from `api.kaspa.org`,
+so the number of block cards differs every run. Across three runs of *identical code*
+its contrast violations came in at 14, 39 and 24. Excluding it, the count was exactly
+232 every time.
+
+So: measure with the feed excluded, or the signal is buried in noise. A large share of
+the 94 near-overlap violations are the same source, block cards reporting 2.0px gaps.
+Filter on `block-card|ln-feed|block-time|block-sub|empty-word|content-word`.
+
+An early claim here that a token change "fixed 8 light-theme violations" was noise. The
+real figure, measured properly, was 12, and it came from a different fix.
+
+### The gate is more careful than you are. Verify it before overriding it.
+
+Three times I measured a violation, computed a passing ratio, and was wrong:
+
+- It composites the ENTIRE ancestor chain for the effective background. A demo label
+  sits on white body, then `--panel`, then a 4% blue frame tint, giving
+  `rgb(233,235,234)`. Compositing one layer gives 4.82:1 and looks fine; compositing all
+  three gives 4.42:1 and fails. The gate was right.
+- It folds cumulative ancestor `opacity` into the text alpha. Block cards measured
+  6.04:1 until `opacity: .82` on the card was included, which is what made them 4.49:1.
+  The gate was right.
+- Both times the instinct to distrust the checker was the wrong instinct.
+
+### The structural defect, now demonstrated rather than latent
+
+`TODO.md` recorded 296 design-token values copied into page-local `<style>` blocks and
+called it a hazard that would read as fine "right up until someone changes the palette
+and six demos quietly keep the old one." That happened. Changing `--faint` in
+`styles.css` moved nothing on screen, because seventeen page blocks hardcoded the old
+`#706b61` as `--cr-faint`, `--cvb-faint`, `--zkb-faint` and others. Those seventeen are
+now updated, but the other ~279 copies are still there and the next palette change will
+do the same thing. The real fix is having the demos inherit the tokens.
+
+### Where the numbers stand
+
+    render total        509 -> 500
+    stable contrast     232 -> 220   (light 127 -> 115, dark 105 unchanged)
+    density              37 -> 6
+    page length           9 -> 6
+    publish gate        GREEN, clean-clone verified
+
+Remaining, worst first: contrast at 1.75:1 and 1.97:1 in `argent-explained`'s own
+pipeline palette (`span.layer-name`, `span.sep`, `span.layer-tag`), then 4.40 and 4.11
+clusters, 88 touch-target, 94 near-overlap (much of it feed noise), 70 font-size of
+which 46 are SVG labels where font-size in a scaled viewBox is not what a reader sees.
+
+### Not done, stated plainly
+
+**~17,900 lines under `scripts/` were never read.** Only the gate scripts were, and
+every gate defect found came from them, so the method works and the rest is unexamined:
+`emit-picker-blob.py` (3,528), `check-render.mjs` (1,166),
+`measure-dial-discrimination.py` (954), `build-picker-data.py` (926), and 55 more.
+
+The demos were judged against the four newcomer questions and eight were fixed, but by
+the agent that then fixed them. That pass has not been independently re-judged.
+
 # kaspa explained working state
 
 
