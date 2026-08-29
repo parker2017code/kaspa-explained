@@ -196,7 +196,18 @@
   // alone and lands short once the sticky header and late images settle. Snap
   // on load and on hash change using the same re-snap schedule as a click.
   const snapToHash = () => {
-    const id = decodeURIComponent(window.location.hash.slice(1));
+    // decodeURIComponent throws URIError on a malformed escape, and a stray "%"
+    // in a URL is enough. Unguarded this threw on every page, on both the load
+    // and hashchange paths, because this file is loaded sitewide. A hash that
+    // cannot be decoded is still a usable literal id, so fall back to the raw
+    // text rather than giving up.
+    const raw = window.location.hash.slice(1);
+    let id;
+    try {
+      id = decodeURIComponent(raw);
+    } catch (error) {
+      id = raw;
+    }
     if (!id || !document.getElementById(id)) return;
     snapToId(id);
     requestAnimationFrame(() => {
