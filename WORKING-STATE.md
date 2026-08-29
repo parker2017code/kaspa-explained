@@ -90,6 +90,9 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
   open. The affordance is CSS-only so nothing could ever update it. Attribute removed;
   `aria-describedby` kept. The nav button and chain-comparer's two are real disclosures and
   were left alone after checking each.
+- **A stray `%` in any URL no longer throws on every page.** `nav.js` decoded the fragment
+  unguarded, so `URIError: URI malformed` fired on both the load and hashchange paths,
+  sitewide. Falls back to the raw id now.
 - **Live block feed now escapes API strings by one rule.** The title attribute escaped only
   quotes while the text beside it used escapeHtml, and the miner address reached a code
   element unescaped. Not exploitable, but two standards for untrusted data in one function.
