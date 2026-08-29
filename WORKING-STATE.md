@@ -90,6 +90,9 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
   open. The affordance is CSS-only so nothing could ever update it. Attribute removed;
   `aria-describedby` kept. The nav button and chain-comparer's two are real disclosures and
   were left alone after checking each.
+- **Live block feed now escapes API strings by one rule.** The title attribute escaped only
+  quotes while the text beside it used escapeHtml, and the miner address reached a code
+  element unescaped. Not exploitable, but two standards for untrusted data in one function.
 - **`slotX` removed from two files**, orphaned when both collision panels moved to a shared
   time axis.
 
