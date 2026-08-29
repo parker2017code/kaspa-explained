@@ -214,7 +214,25 @@ Also found and unresolved: 8 inline `style="...color..."` attributes across 5 pa
 `why-kaspa-matters`). Inline color bypasses the token system entirely and no gate looks at
 it. Check each during the code read.
 
-## FIRST PHASE OF THE CODE SWEEP: measure real references, then judge us against them
+## The code sweep is NOT an agent's job any more. It is mine.
+
+Owner, 29 Aug 2026, after the rebuild workflow: once the workflow is done it is either me
+or one agent at a time, and only if I absolutely must.
+
+I should not. The sweep agent had two jobs and neither survives that constraint. Measuring
+references is already done, by hand, and is in `data/reference-metrics-2026-08-29.json`.
+Reading every line is the owner's explicit instruction to me, so an agent reading it first
+produces a report I would then have to check against the code anyway. A judge holding a
+description rubber-stamps; the read only counts when the person who did not write the code
+does it.
+
+So: read it myself. Spawn one agent only for something genuinely large and separable, and
+never more than one alive.
+
+The reference-measurement phase below stays as the record of how the numbers were taken,
+not as a task for anyone.
+
+## How the reference numbers were taken (done, kept for method)
 
 Owner, 29 Aug 2026: writing, text spacing, sizing, page method, spacing and density all
 get compared against competent examples. This runs before any editing, because a standard
