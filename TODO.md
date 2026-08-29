@@ -146,8 +146,21 @@ Order, after the code sweep commits:
    still carry the old page's description. Confirm the image dimensions match what the tags
    declare, and that the claims on the card are still true after the rewrite.
 7. Fix everything found, in place, then rerun the affected checks.
-8. `bash scripts/check-site.sh` must print `Site checks passed.` Never push past a failing
-   gate.
+8. Run the FULL gate, not the half the commit hook runs. The pre-commit hook sets
+   `SKIP_RENDER_CHECKS=1`, which skips check-glass-gate, check-heading-link-color and
+   check-visible-sections entirely, and five more checks are advisory by default. So
+   "gate passed against the staged tree" on a commit means the structural half passed and
+   nothing was rendered. Before pushing, run it with the rendering on and every advisory
+   flag flipped to blocking:
+
+   ```
+   VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true \
+   PAGE_HEIGHT_BLOCKING=true DEMO_SURFACE_BLOCKING=true \
+   bash scripts/check-site.sh
+   ```
+
+   It must print `Site checks passed.` Never push past a failing gate, and never report a
+   pre-commit pass as if it were this.
 9. Push, then confirm the exact changed strings from served bytes on kaspaexplained.com
    with a cache-busting URL. A successful push is not a live check.
 10. Say plainly what could not be verified. Silence reads as completion.
