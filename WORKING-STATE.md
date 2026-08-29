@@ -367,6 +367,37 @@ every gate defect found came from them, so the method works and the rest is unex
 The demos were judged against the four newcomer questions and eight were fixed, but by
 the agent that then fixed them. That pass has not been independently re-judged.
 
+## SHUTDOWN, 29 Aug 2026, ~23:20. Laptop closing. Read this first.
+
+Model switched to Sonnet mid-session, all standing rules held. Owner then raised the
+concurrency cap: up to two Sonnet agents alive at once (not one), still no subagent
+spawning, still Sonnet does not push, the orchestrator does after its own gate check.
+
+Two agents were launched in isolated worktrees on that basis:
+
+- **Contrast agent**, targeting `argent-explained`'s 1.75:1 floor and the rest of the 220
+  stable violations. Owner then said to close everything down; it was stopped mid-task,
+  before it ran the gate even once. It had made one unverified edit, 21 insertions and 4
+  deletions to `argent-explained.html`, touching the `span.layer-name` / `span.sep` /
+  `span.layer-tag` colors it was told to go find. That edit is **not gated, not
+  browser-checked, not reviewed**, and was preserved rather than lost: committed on its
+  own branch, `worktree-agent-a9063f1eb1a09a3b4`, commit `0106d70`, worktree still at
+  `.claude/worktrees/agent-a9063f1eb1a09a3b4`. Treat it as a draft. Review the diff
+  against `styles.css` before trusting it, then either continue that branch or discard it
+  and start clean, whichever the diff earns.
+- **Sizing agent**, targeting the 88 touch-target, 94 near-overlap and 70 font-size
+  violations. Stopped before it edited a single file, still on its baseline gate run. Its
+  worktree held no changes and was auto-removed. There is nothing to resume here; this is
+  a clean restart.
+
+`main` was never touched by either agent. HEAD is still `f1839dd`, clean, matching
+`origin/main`. Nothing new is pushed.
+
+**Next session, in order:** review and land (or discard) the contrast agent's draft,
+relaunch the sizing work from scratch, then continue down the list two above: read the
+~17,900 unread lines under `scripts/`, and independently re-judge the demos that were
+found-and-fixed by the same agent that built them.
+
 # kaspa explained working state
 
 
