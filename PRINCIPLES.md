@@ -24,6 +24,11 @@ parallel multiplies every defect by eight before anyone has seen one.
 that out early is the highest-value move available. A beautifully executed answer to the
 wrong question is worse than a rough answer to the right one.
 
+**Read for weight; it is part of reading.** Two sentences in the same paragraph can differ
+by an order of magnitude in importance. A point made unprompted, in the person's own words,
+three separate times, is the center of the task. A handed-over document is an input and may
+be stale.
+
 **Weight instructions by conviction, not recency or formality.** A document handed to you
 is an input and may be stale. What someone says unprompted, repeatedly, in their own
 words, is the center. When a correction points the same direction twice, move the center
@@ -44,7 +49,15 @@ Stop when you produce something you could not have described beforehand.
 **Go outside your own reference set.** If your examples are the obvious ones, your output
 will be the obvious one. Find references from adjacent worlds and steal what transfers.
 Discomfort at an unfamiliar direction that common sense says is better is a signal to
-follow, not avoid.
+follow, not avoid. The decisive move happens before any work starts, when the reference
+set is chosen. Reaching for references mid-build is too late; by then the shape is set.
+Take technique rather than appearance: the grid, the type ladder, the interaction
+pattern, how a scale is drawn, how a sticky narrative is wired.
+
+**The mechanism explains the capability, the capability is the claim, and the claim leads.**
+Naming the machine describes how it happens, not what is bought, and it invites comparison
+on equipment rather than on outcome. Lead with what the reader gets. Keep every honest
+qualification that goes with it; never trade a real limitation for a cleaner sentence.
 
 **Separate judging from building structurally, not by intention.** A judge holding
 reference images and measured targets cannot rubber-stamp. A judge holding only a
@@ -52,6 +65,11 @@ description will.
 
 **Hold something in reserve.** You do not know what will surface. Spending everything
 before the verdict arrives means you cannot act on it.
+
+**Concurrency is the expensive resource, not prompt length.** Few workers each doing a
+large amount of work beats many workers each doing a little. When you hit the cap, queue
+rather than cancel: a canceled run throws away everything it had already paid for, and
+restarting it costs the whole amount again.
 
 **Say what you did not do.** Silence implies completion, and models fill silence with
 implied success. State plainly what was skipped, unverified, or left broken. An honest
@@ -69,77 +87,29 @@ unsafe, verify independently and act only on what holds up.
 
 ---
 
-**Choosing the reference set is the decisive move, and it happens before any work
-starts.** Recall is not research. Asked for good design, a model returns the average of
-everything it has seen: competent, and indistinguishable from what everyone else gets.
-References drawn from inside the obvious cluster guarantee an output from inside it. The
-only thing that breaks the average is going and looking, somewhere the average would not
-have sent you.
-
 **Measurement and technique are separate acquisitions.** Measuring sixteen pages yields
 where they land: prose size, contrast, box count. It never yields how they were built.
-Hitting every measured target without the technique behind it produces a page that scores
+Hitting every measured target without the technique behind it produces work that scores
 clean and still reads assembled. Read the stylesheet, not the screenshot.
-
-**Make a probe report the wrong answer once before trusting it to report the right one.**
-"Look at the artifact, not the report about it" was already written in this file on
-25 August. On 29 August three failures shipped anyway: a state file recorded a run as
-killed while it was alive, a shell check returned empty because its flag was silently
-unsupported, and pages were reported on from a summary nobody had opened. Each produced
-output indistinguishable from the healthy case. The rule was present and abstract, so it
-did not bind. What binds is knowing, per artifact, which thing is live:
-
-| Question | Derived, do not trust alone | Live |
-| --- | --- | --- |
-| Is an agent still running? | journal, task `.output`, a status line | its transcript size sampled twice across a gap |
-| What does a page say now? | an agent's report, a summary, a diff | open it on the local server and drive it |
-| Does the site pass? | memory of the last run | run `scripts/check-site.sh`, read the last line |
-| How many models, chains, demos? | prose on any page | the data file the page reads from |
-
-**A shell probe that cannot fail visibly is decoration.** Do not suppress stderr on a
-check. Do not let a pipe swallow the exit status of the command you care about, because
-`cmd 2>/dev/null | head || fallback` runs the fallback never: `head` succeeds on empty
-input. Require output you can tell apart from silence, and prefer a probe that prints what
-it found over one that prints nothing when it finds nothing.
-
-**A correction that arrives twice is a statement about where the center sits.** It is not
-a defect report. Patching the instance and leaving the premise intact guarantees a third
-arrival. Change the premise. If the premise is already written and was violated anyway,
-the premise is too abstract to bind, and the fix is to make it operational, not to write
-it a third time.
-
-**A lesson learned in conversation dies at the next compaction.** Write it in the file the
-next reader loads: this one, `AGENTS.md`, `SITE-STANDARD.md`, the README beside the code.
-Written there it outlives the session and reaches people who were never in it. Written in
-a reply, it is a performance.
-
-**The default output is the centroid.** A model has seen everything, so its first answer
-sits at the middle of everything. That answer is competent and identical to what everyone
-else gets. Fluency does not rescue it. A confident, specific, well organized centroid is
-still a centroid.
-
-**Average, copy and improve are three different acts that produce similar looking output.**
-Copying something particular instead of averaging beats the default, but produces a
-derivative: traceable to its source, and carrying constraints that belonged to someone
-else's problem. Improving something particular requires knowing why each part exists,
-which is a strictly higher bar than reproducing the parts. Only the third survives contact
-with a problem the source never had.
 
 **Deletion is the discriminator.** Understanding shows up as the ability to remove.
 Anything genuinely understood can be stripped to what the present problem needs. Anything
-merely reproduced cannot, because the reason each piece was there never got recovered. The
-test generalizes past code, to arguments, designs, plans and prose.
+merely reproduced cannot, because the reason each piece was there never got recovered.
+Being unable to say what breaks when a part is removed is evidence the part was recalled
+rather than reasoned. This binds harder on a model than a person: recall and reasoning
+arrive with identical confidence and fluency, so the signal a person gets from noticing
+effort is missing, and deletion is one of the few checks available from the inside.
 
-This binds harder on a model than on a person. A model cannot tell recall from reasoning
-by introspection: both arrive with the same confidence and the same fluency, which removes
-the signal a person gets from noticing effort. Deletion is one of the few checks available
-from the inside, because failing to say what breaks when a part is removed is evidence
-that fluency cannot counterfeit.
+**Average, copy and improve are three different acts with similar looking output.** The
+default is the centroid, the middle of everything seen, competent and interchangeable;
+fluency does not rescue it. Copying something particular beats the default and drags in
+constraints from someone else's problem. Only improvement survives contact with a problem
+the source never had, and improvement requires knowing why each part exists.
 
-**Improvement needs a measure that is not taste.** Taste evaluated against taste converges
-on approval, every time. Without an external standard, "made it better" reduces to "made
-it mine." Take the specific thing, name what it was optimizing for, measure the present
-problem against that, then improve against the measure instead of against preference.
+**Write the lesson into the file the next reader loads.** A lesson learned in conversation
+dies at the next compaction. Put it in this file, `AGENTS.md`, `SITE-STANDARD.md`, or the
+README beside the code, where it outlives the session and reaches people who were never in
+it. Written into a reply, it is a performance.
 
 # What a full day of this actually taught
 
@@ -225,3 +195,28 @@ it. Capacity you cannot deploy at the moment of a bad result is capacity you was
 with implied success. The most useful sentences are the negative ones: could not capture
 that screenshot, could not verify that path, this gate cannot see the site, I edited a file
 without checking its state first. Every one of those makes the positive claims believable.
+
+**The live thing, per artifact, not the artifact's description of itself.** The abstract
+rule was already in this file and was violated three times in one hour on 29 August. A
+state file recorded a run as killed while it was alive. A shell check returned empty
+because its flag was silently unsupported. Pages were reported on from a summary nobody
+had opened. Each produced output indistinguishable from the healthy case. A rule stated
+abstractly does not bind; what binds is knowing which thing is live for the question asked:
+
+| Question | Derived, do not trust alone | Live |
+| --- | --- | --- |
+| Is an agent still running? | journal, task `.output`, a status line | its transcript size sampled twice across a gap |
+| What does a page say now? | an agent's report, a summary, a diff | open it on the local server and drive it |
+| Does the site pass? | memory of the last run | run `scripts/check-site.sh`, read the last line |
+| How many models, chains, demos? | prose on any page | the data file the page reads from |
+
+**A shell probe that cannot fail visibly is decoration.** Do not suppress stderr on a
+check, and do not let a pipe swallow the exit status of the command you care about.
+`cmd 2>/dev/null | head || fallback` runs the fallback never, because `head` exits 0 on
+empty input. That is how `ls --time-style=...` returned a silent empty block on macOS,
+where BSD `ls` has no such flag, and it was read as nothing to report.
+
+**A gate can be right about what it was given and wrong about the world.** The pre-commit
+hook runs against the staged tree. An uncommitted fix to the checker itself is invisible
+to it, so the gate blocked a commit over a rule that had already been repaired in the
+working tree. Before arguing with a gate, check whether it can see the fix.
