@@ -238,6 +238,55 @@ text rather than widening the roster, the 35 hidden density violations, the six 
 still over the 800px cap, the four remaining typography targets, and the roughly 17,900
 lines under `scripts/` the first pass did not read.
 
+## DEPLOYED AND VERIFIED LIVE, 29 August 2026.
+
+`3e03f91 -> 02c6e15`, 73 commits, live on kaspaexplained.com. Verified in a real
+browser against the live domain with cache busting, not by curl and not from any
+agent's report.
+
+- Publish gate green and clean-clone safe at the pushed commit.
+- og card resolves: 200, image/png, 28,470 bytes, at the new filename.
+- The three live-fetch panels genuinely fetch. `api.kaspa.org/info/blockdag` and three
+  `/blocks/<hash>` calls all returned 200 on `what-is-kaspa`, and `kips` pulled the KIP
+  README from raw.githubusercontent, both with zero page errors. curl cannot prove this;
+  a browser can, and a false "read live" claim shipped here once because someone used
+  curl.
+- `model-picker-method` resolves 200. Redirect stubs land correctly: `/glossary` to
+  `/what-is-kaspa`, `/toccata-explained` to `/what-is-kaspa#covenants`.
+- 390px, both themes, computed backgrounds genuinely distinct, no horizontal scroll.
+  The homepage demo responds: moving the slider takes the readout from "10.0 a second"
+  to "1 every 2 minutes", which is plain language with units rather than a bare number.
+
+**Two defects the process missed and the owner caught, both now fixed.**
+
+The right-hand slider label fell out of the demo panel on the homepage. Both copies
+positioned it two ways at once: the stylesheet set `right:0` on
+`.marks span:last-child` while the markup set `left:100%` inline. An absolutely
+positioned box with both anchors set is squeezed to zero width at the container edge,
+and `translateX(-100%)` of a zero-width box shifts nothing, so the text rendered
+outside the panel. Measured at 1440: left 1025, right 1025. Now 145px and inside the
+container at 390, 768, 1280 and 1600. Fixed in both copies together, since the demo
+exists twice and fixing one copy is how this class of defect survived before. No gate
+caught it: the render matrix measures overflow against the parent, and the parent was
+wider than the visible panel.
+
+`styles.css` changed by 211 insertions and 495 deletions, and `nav.js` by 66, while
+both were still served under `v=20260825-102122`. Every returning visitor would have
+kept the old stylesheet under an unchanged URL, so the entire reader-text floor raise
+would have been invisible to exactly the people who had been here before. Key bumped
+across all 20 pages. **A cache-key bump belongs in the same commit as any change to
+`styles.css` or `nav.js`; nothing in the gate enforces this and it nearly shipped
+silently.**
+
+**Still open, measured, not blocking the publish gate:** 498 render violations (239
+contrast, 94 near-overlap, 88 touch-target, 69 font-size, of which 46 are SVG labels
+whose font-size in a scaled viewBox is not what a reader sees) and 6 density
+violations, all of them pre-interaction word counts. `scripts/check-page-height.mjs`
+carries an uncommitted, unreviewed gate loosening from an agent that died: it drops
+`status.html` from the hard ceiling and widens what counts as a landmark. The
+reasoning reads sound and it was never verified or reported, so it is deliberately
+left uncommitted rather than shipped on a dead agent's word.
+
 # kaspa explained working state
 
 
