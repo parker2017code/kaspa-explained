@@ -82,6 +82,17 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
 
 ## Fixed today. Do not undo any of this.
 
+- **The GHOSTDAG demo named a different sink than it drew.** `computeVirtualInfo` scored
+  tips by a raw count of blue ancestors with the opposite tiebreak, so the caption said
+  Block 16 while the chain ended at Block 15. It now uses the virtual block's selected
+  parent. Verified over 80 states, 61 multi-tip, zero mismatches.
+- **36 tooltips declared `aria-expanded="false"` permanently** while their panels were
+  open. The affordance is CSS-only so nothing could ever update it. Attribute removed;
+  `aria-describedby` kept. The nav button and chain-comparer's two are real disclosures and
+  were left alone after checking each.
+- **`slotX` removed from two files**, orphaned when both collision panels moved to a shared
+  time axis.
+
 - **Both copies of the collision demo now draw a real DAG.** One line let every block
   reference a parent it could not have seen, so 100% of blocks had exactly one parent and
   the panel labeled BlockDAG drew a chain, on the homepage and on the page that exists to
