@@ -84,10 +84,17 @@ const WIDTHS = [390, 1280];
 const THEMES = ['dark', 'light'];
 const THEME_KEY = 'kaspa-explained-theme';
 
-// 404.html is in the manifest deliberately but is not a destination -- the
-// same exclusion scripts/check-site.sh, build-sitemap.py,
-// apply-related-links.py and check-redirect-stubs.sh carry.
-const NOT_A_DESTINATION = new Set(['404.html']);
+// This gate used to exclude 404.html, copying the exclusion that
+// scripts/check-site.sh, build-sitemap.py, apply-related-links.py and
+// check-redirect-stubs.sh carry. Those four are right and this one was not:
+// their concern is inbound (does it belong in the sitemap, does it need a
+// next-step block, does a stub resolve to it), and 404.html fails all three.
+// This gate's concern is outbound, whether the links on a page go anywhere,
+// and there the reasoning inverts. 404.html exists only to send a lost reader
+// somewhere else; its fifteen outgoing links are the entire page. Verified
+// 2026-08-29 by planting a dead link on it and watching this gate stay green.
+// Nothing is excluded now.
+const NOT_A_DESTINATION = new Set();
 
 const isRedirectStub = (rel) => {
   try {

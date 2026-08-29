@@ -584,13 +584,13 @@ h2 {
   text-shadow: none;
 }
 
-.app-page h1 {
-  font-size: 3rem;
-}
-
-.app-page h2 {
-  font-size: 2.2rem;
-}
+/* .app-page h1 and .app-page h2 carried their own font sizes until 29 August
+   2026. The h1 rule was already dead: both pages using .app-page also carry
+   .sources-hero, whose h1 rule has the same specificity and comes later. The
+   h2 rule was live and was the only section-heading size on the site that did
+   not respond to viewport width, so build-on-kaspa and argent-explained
+   rendered h2 smaller than every other page at 1280px and larger at 390px.
+   Both removed; those pages now use the site h2. */
 
 h3 {
   margin-bottom: 8px;
@@ -948,7 +948,6 @@ li,
 
 .home-page h2 {
   margin-bottom: 12px;
-  font-size: clamp(1.7rem, 3vw, 2.35rem);
 }
 
 .home-page .lead {
@@ -1242,13 +1241,17 @@ blockquote {
   border-top: 1px solid var(--line);
 }
 
+/* Sentence case, not uppercase. The site reserves uppercase for short labels:
+   eyebrows and demo panel titles, five to twenty characters. These summaries
+   run to full sentences ("Sutton's numbers, and the claim that overshoots
+   them"), and setting a 50-character sentence in 12px all-caps is the same
+   device used against the thing it was chosen for. Changed 29 August 2026. */
 .cell-detail summary {
   cursor: pointer;
   color: var(--faint);
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .04em;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .01em;
 }
 
 .cell-detail summary::marker {
@@ -1348,9 +1351,15 @@ blockquote {
   background: rgba(255, 255, 255, .04);
 }
 
-.api-command-card h3 {
+/* Card titles are one size across every card grid on the site. Until 29 August
+   2026 this component rendered its title at 21px on build-on-kaspa (marked up
+   h3) and 17px on kaspa-mining (marked up h4), and .cycle-grid ran a third size
+   at 23px, none of which tracked anything a reader could perceive. The tag is
+   matched loosely here because the correct heading level differs by where the
+   card sits in each page's outline; only the size is shared. */
+.api-command-card :is(h3, h4, h5) {
   margin: 10px 0 8px;
-  font-size: clamp(18px, 2vw, 21px);
+  font-size: 19px;
 }
 
 .api-command-card p {
@@ -2249,7 +2258,7 @@ blockquote {
 
 .cycle-grid h3 {
   margin: 0 0 8px;
-  font-size: clamp(18px, 2vw, 23px);
+  font-size: 19px;
   line-height: 1.14;
 }
 
@@ -2951,11 +2960,6 @@ blockquote {
     overflow-wrap: break-word;
   }
 
-  .reality-page .reality-hero h1 {
-    font-size: 1.72rem;
-    line-height: 1.08;
-    overflow-wrap: break-word;
-  }
 
   
 
@@ -2974,7 +2978,6 @@ blockquote {
   }
 
   h2 {
-    font-size: clamp(1.38rem, 7vw, 1.6rem);
     overflow-wrap: anywhere;
   }
 
@@ -4520,7 +4523,6 @@ html {
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 10vw, 2.55rem);
     line-height: 1.08;
   }
 
@@ -4991,7 +4993,7 @@ body::after {
    data-theme toggle. See design/house-style.md and demos/index.html for the
    card-title application. */
 h1 {
-  font-size: clamp(1.9rem, calc(clamp(2.9rem, 6.2vw, 4.6rem) - max(var(--len, 12) - 28, 0) * 0.034rem), 4.6rem);
+  font-size: clamp(1.9rem, calc(clamp(2.45rem, 5vw, 4.25rem) - max(var(--len, 12) - 28, 0) * 0.034rem), 4.25rem);
   font-weight: 700;
   letter-spacing: -.017em;
   line-height: 1.04;
@@ -5233,8 +5235,20 @@ code {
     box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
   }
 
+  /* One h1 size and one h2 size per width, sitewide. Before 29 August 2026
+     a page hero rendered h1 at 31.2px if its wrapper carried a named hero
+     class and 35.2px if it did not, 39px on the homepage, and 27.52px on
+     crypto-from-scratch: four sizes for one role, none of them chosen. The h2
+     value here is the one the pre-Apple-layer stylesheet already used; it was
+     shadowed rather than replaced, which left h2 at 30.4px against an h1 of
+     31.2px, so a phone reader could not tell a page title from a section
+     heading. */
   h1 {
-    font-size: clamp(2.2rem, 9vw, 2.9rem);
+    font-size: clamp(1.72rem, 8vw, 1.95rem);
+  }
+
+  h2 {
+    font-size: clamp(1.38rem, 7vw, 1.6rem);
   }
 }
 

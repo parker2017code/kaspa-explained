@@ -37,11 +37,11 @@ NEXT_STEP = {
     ),
     "crypto-from-scratch.html": (
         "/what-is-kaspa#collision-sim",
-        "Watch two miners solve blocks seconds apart, then see Kaspa keep both instead of throwing one away.",
+        "Turn up how fast blocks are found, and watch a single chain throw away what a blockDAG keeps.",
     ),
     "what-is-kaspa.html": (
         "/kips#parameterless-demo",
-        "Watch DAGKnight move a consensus constant, with no fork required.",
+        "Set the network's real delay by hand, and watch a security margin fixed in advance fall behind one that tracks it.",
     ),
     "kips.html": (
         "/kaspa-origin-story#dag-time-demo",
@@ -49,7 +49,7 @@ NEXT_STEP = {
     ),
     "kaspa-origin-story.html": (
         "/why-kaspa-matters#confirmation-risk-demo",
-        "Set what a payment is worth and watch how long it actually needs before it's safe to trust.",
+        "Set how much mining power an attacker holds, then read how long Bitcoin, Litecoin, and Kaspa each need before a payment is safe.",
     ),
     "why-kaspa-matters.html": (
         "/utxo-vs-accounts",
@@ -57,7 +57,7 @@ NEXT_STEP = {
     ),
     "utxo-vs-accounts.html": (
         "/status",
-        "See what's actually live on mainnet right now, read straight from the chain, not a snapshot.",
+        "Every feature and repeated claim, labeled live, testnet, roadmap, research, or wrong, with the source behind each label.",
     ),
     "status.html": (
         "/skeptical-case",
@@ -65,7 +65,7 @@ NEXT_STEP = {
     ),
     "skeptical-case.html": (
         "/kaspa-mining#attack-cost",
-        "Price what a 51% attack on Kaspa would really cost, in dollars per hour, against five other chains.",
+        "Price a 51% attack on Kaspa against five other chains, and watch which half of the bill grows when it runs longer.",
     ),
     "kaspa-mining.html": (
         "/build-on-kaspa#covenant-breaker-demo",

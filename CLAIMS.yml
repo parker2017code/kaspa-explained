@@ -1,5 +1,5 @@
-last_checked: 2026-08-24
-recheck_after: 2026-08-31
+last_checked: 2026-08-29
+recheck_after: 2026-09-05
 claims:
   proof_of_work:
     status: live
@@ -20,30 +20,33 @@ claims:
     forbidden_copy:
       - 10 BPS gives automatic 10x finality
       - Kaspa mainnet payments are instantly final
-  l1_status_snapshot_2026_08_20:
+  l1_status_snapshot:
     status: measurement_sensitive
-    recheck_after: 2026-08-31
+    recheck_after: 2026-09-05
     summary: >
-      An August 24, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward, and
-      /info/coinsupply) showed virtual DAA score 521,476,468 (above the Toccata activation score and still
-      inside the 504,909,000-531,207,000 emission step), a 2.31246515 KAS block reward matching that step,
-      and about 27.659 billion KAS from the public supply endpoint (2,765,882,916,490,627,112 sompi). Max
-      supply read 2,870,403,560,500,000,000 sompi, about 28.704 billion KAS. Supersedes the August 20, 2026
-      reading: DAA 517,984,766 and about 27.651 billion KAS, same node version, same reward; the ~7.8
-      million KAS gained over 4 days matches the block-reward math (2.31246515 KAS/block * 864,000
-      blocks/day at 10 BPS is about 1,997,970 KAS/day). Supersedes the August 8, 2026 reading in turn: DAA
-      507,631,731 and about 27.627 billion KAS, same node version, same reward. These are time-stamped
-      network readings. They are unsuitable as timeless constants. Do not quote blockCount or headerCount
-      from this endpoint: it load-balances across backend nodes with different pruning states, two reads a
-      minute apart on August 8 returned 1,488,846 and 26,573,222, the August 20 read returned 1,116,061,
-      below both, and the August 24 read returned 1,149,564, inside neither the August 8 nor the August 20
-      range, further evidence this field is not a stable network-wide count.
+      An August 29, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward,
+      /info/coinsupply and /info/kaspad) showed virtual DAA score 526,073,404, about 27.669 billion KAS
+      from the public supply endpoint (2,766,945,898,446,211,632 sompi), a 2.31246515 KAS block reward,
+      and serverVersion 2.0.1 with isSynced true. Max supply read 2,870,403,560,500,000,000 sompi, about
+      28.704 billion KAS. The score sits above the Toccata activation score and still inside the
+      504,909,000-531,207,000 emission step, which the reward matches. Supersedes the August 24 reading
+      (DAA 521,476,468, about 27.659 billion KAS), the August 20 reading (517,984,766, 27.651 billion),
+      and the August 8 reading (507,631,731, 27.627 billion), all at the same node version and reward.
+      The supply gained between the August 24 and August 29 reads matches the block-reward math:
+      2.31246515 KAS/block times 864,000 blocks/day at ten blocks a second is about 1,997,970 KAS/day.
+      These are time-stamped network readings. They are unsuitable as timeless constants. Do not quote
+      blockCount or headerCount from this endpoint: it load-balances across backend nodes with different
+      pruning states, and reads have returned 1,488,846, 26,573,222, 1,116,061 and 1,149,564 across
+      August, none of which is a network-wide count. The key carried a 2026_08_20 suffix until August 29,
+      2026, when it was dropped: this entry always holds the newest reading, so a date in its name is a
+      constant left behind by the data.
     source: https://api.kaspa.org/info/blockdag
     forbidden_copy:
       - August 8 snapshot values are permanent
       - August 20 snapshot values are permanent
       - api.kaspa.org blockCount is a network-wide block total
       - A public REST API reading is stronger than node or release evidence
+
   emission_schedule_may_2026:
     status: live_design
     summary: >

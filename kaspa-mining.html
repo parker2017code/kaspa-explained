@@ -284,7 +284,7 @@
     <p>For roughly the first six months after mainnet (Nov 2021), the reward held flat at 500 KAS per block, a bootstrap period, not part of the halving schedule. Verified in rusty-kaspa's <code>consensus/core/src/config/params.rs</code>: <code>pre_deflationary_phase_base_subsidy</code> is 500 KAS, active until <code>deflationary_phase_daa_score</code> 15,519,600. After that, the monthly-halving schedule took over, starting at 440 KAS per block-second, per the <code>SUBSIDY_BY_MONTH_TABLE</code> in <code>consensus/src/processes/coinbase.rs</code>.</p>
     <p>On 5 May 2025, the Crescendo hard fork moved Kaspa from 1 block per second to 10 (DAA score 110,165,000, per the v1.0.0 release notes).</p>
       <p>That split the same monthly reward across ten times as many blocks; it did not change how much is issued per month. That's why a reward chart drawn before and after Crescendo looks continuous instead of jumping.</p>
-    <p>The reward right now, the total mined to date, and Kaspa's maximum supply all come from a live read of <code>api.kaspa.org/info/blockdag</code> and <code>api.kaspa.org/info/coinsupply</code>. If that fails, the page falls back to a reading captured 2026&#8209;08&#8209;29: DAA score 525,951,308, reward 2.31246515 KAS per block, 27.669 billion KAS mined of a 28.704 billion KAS maximum.</p>
+    <p>The reward right now, the total mined to date, and Kaspa's maximum supply all come from a live read of <code>api.kaspa.org/info/blockdag</code> and <code>api.kaspa.org/info/coinsupply</code>. If that fails, the page falls back to a reading captured 2026&#8209;08&#8209;29: DAA score 526,073,404, reward 2.31246515 KAS per block, 27.669 billion KAS mined of a 28.704 billion KAS maximum.</p>
     <p>Exact formula: reward(n) = 23.12465141 &times; 2<sup>&minus;n/12</sup> KAS per second, where n = 0 begins at DAA score 504,909,000 and each step advances the DAA score by 26,298,000 (one month at 10 blocks per second). Divide by the current blocks-per-second to get KAS per block. Verified against <code>SUBSIDY_BY_MONTH_TABLE</code> and <code>SECONDS_PER_MONTH = 2,629,800</code> in rusty-kaspa's <code>consensus/src/processes/coinbase.rs</code>.</p>
     <p>Today's own total supply is a measured figure, read live from the network. Every other point the slider can visit, a past date or a future one, is this page's own model of the schedule above, scaled to match that live reading.</p>
       <p>Treat past points as close estimates of the real historical curve and future points as projection, since nothing has mined those blocks yet.</p>
@@ -405,8 +405,8 @@
   var T1_MONTHS = DEFLATIONARY_DAA / MONTH_SECONDS;               // ~5.90 months
   var CRESCENDO_MONTHS = CRESCENDO_DAA / MONTH_SECONDS;           // ~41.9 months
 
-  var FALLBACK_DAA = 525951308;           // api.kaspa.org/info/blockdag, 2026-08-29
-  var FALLBACK_CIRCULATING = 27669177023;   // KAS, api.kaspa.org/info/coinsupply, 2026-08-29
+  var FALLBACK_DAA = 526073404;           // api.kaspa.org/info/blockdag, 2026-08-29, the reading /status carries
+  var FALLBACK_CIRCULATING = 27669458984;   // KAS, api.kaspa.org/info/coinsupply, 2026-08-29, same read
   var FALLBACK_MAX_SUPPLY = 28704035605;    // KAS, api.kaspa.org/info/coinsupply, 2026-08-29
   var FALLBACK_ASOF = '2026-08-29';
 
@@ -1533,7 +1533,7 @@
 
   <div class="layout">
     <div class="panel">
-      <h5>Load this block</h5>
+      <h4>Load this block</h4>
 
       <div class="chip-scroll-wrap">
       <div class="chipset" role="group" aria-label="Traffic scenarios" id="volumeChips">
@@ -1601,7 +1601,7 @@
     </div>
 
     <div class="panel">
-      <h5>What happens</h5>
+      <h4>What happens</h4>
 
       <div class="stat-row">
         <div class="stat"><div class="num" id="capacityOut">307</div><div class="cap">tx fit per block</div></div>
@@ -1611,10 +1611,10 @@
       <div class="bar-track"><div class="bar-fill" id="fillBar"></div></div>
       <p class="bar-caption" id="fillCaption">Under 1 of 307 slots wanted per block (0.029% of capacity).</p>
 
-      <p class="payoff" id="blockPayoff">Every transaction fits, yours included, at 0.89 tx/s against 10 blocks/sec.</p>
+      <p class="payoff" id="blockPayoff">Every transaction fits, yours included, at 0.89 tx/s against ten blocks a second.</p>
 
       <div class="block-frame">
-        <h6 class="grid-note" id="gridScaleLabel">This block, to scale</h6>
+        <p class="grid-note" id="gridScaleLabel">This block, to scale</p>
         <p class="you-note" id="gridDotHint">Each dot is one transaction.</p>
         <p class="you-note" id="gridNote" style="color:var(--faint);font-size:1.067rem;">Nothing else is competing for this block.</p>
         <div class="block-grid" id="blockGrid" role="img" aria-label="Transactions competing for this block"></div>
@@ -1735,7 +1735,7 @@ feerate = fee_sompi / mass_grams</span>
 .fm-demo .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 @media (max-width: 720px) {.fm-demo .layout { grid-template-columns: minmax(0, 1fr); }}
 .fm-demo .panel { background: var(--card-bg); border-radius: 18px; box-shadow: var(--shadow-card); padding: 16px; }
-.fm-demo .panel h5 { font-size: .9rem; margin: 0 0 14px; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
+.fm-demo .panel h4 { font-size: .85rem; margin: 0 0 14px; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
 .fm-demo .chipset { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .fm-demo .chip-scroll-wrap { position: relative; }
 @media (max-width: 640px) {.fm-demo .chipset { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
@@ -1844,7 +1844,7 @@ feerate = fee_sompi / mass_grams</span>
 .fm-demo summary::marker { color: var(--green); }
 .fm-demo details[open] summary::before { content: "\2212"; }
 .fm-demo .formula-body { margin-top: 12px; color: var(--muted); font-size: 1.067rem; }
-.fm-demo .formula-body h3 { font-size: .8rem; color: var(--faint); margin: 16px 0 4px; text-transform: uppercase; letter-spacing: .03em; }
+.fm-demo .formula-body h3 { font-size: .85rem; color: var(--faint); margin: 16px 0 4px; text-transform: uppercase; letter-spacing: .03em; }
 .fm-demo .formula-body h3:first-child { margin-top: 0; }
 .fm-demo .formula-body p { margin: 6px 0; }
 .fm-demo code, .fm-demo .code-block { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; }
@@ -2473,7 +2473,7 @@ feerate = fee_sompi / mass_grams</span>
   <p class="lead">Disk space by chain, and why Kaspa holds near 50 GB no matter how long it's run.</p>
 
   <div class="panel">
-    <h5>Node storage</h5>
+    <h4>Node storage</h4>
     <div class="chips" id="chipRow" role="group" aria-label="Toggle chains to compare"></div>
     <div class="zoom-row">
       <button type="button" class="zoom-btn" id="zoomBtn" aria-pressed="false">Zoom into the small end</button>
@@ -2483,7 +2483,7 @@ feerate = fee_sompi / mass_grams</span>
   </div>
 
   <div class="panel " id="guessPanel">
-    <h5>Guess before you look</h5>
+    <h4>Guess before you look</h4>
     <p class="prose">Run this same node five more years. Does the line stay flat, or climb like every other chain's?</p>
     <div class="guess-row">
       <button type="button" class="chip" id="guessFlat">Stays flat</button>
@@ -2499,7 +2499,7 @@ feerate = fee_sompi / mass_grams</span>
   <details class="deep-dive">
     <summary>How the 50 GB stays flat: finality, pruning, and the discard window</summary>
     <div class="nc-mechanism-body">
-    <h5>Why 10 blocks per second doesn't balloon the disk</h5>
+    <h4>Why 10 blocks per second doesn't balloon the disk</h4>
     <p class="prose">A pruned Kaspa node, not run with <code>--archival</code> (below), and not another chain.</p>
     <div class="window-controls">
       <label for="nc-hoursSlider">Hours since a block</label>
@@ -2532,7 +2532,7 @@ feerate = fee_sompi / mass_grams</span>
   </details>
 
   <div class="panel ">
-    <h5>Full vs. archival</h5>
+    <h4>Full vs. archival</h4>
     <p class="prose">Pruning is two passes, backed by a specific proof.</p>
     <details>
       <summary>Archival mode, second-order pruning, and MuHash</summary>
@@ -2557,8 +2557,8 @@ feerate = fee_sompi / mass_grams</span>
   <details >
     <summary>The unpruned arithmetic</summary>
     <div class="formula">
-      <p><strong>Block count since genesis.</strong> Kaspa's mainnet genesis is timestamped November 22, 2021 (rusty-kaspa <code>genesis.rs</code>). The Crescendo hard fork moved the network from 1 block/second to 10 blocks/second on May 5, 2025, mainnet DAA score 110,165,000 (rusty-kaspa v1.0.0 release notes).</p>
-      <p>That gives two eras: about 1,260 days at 1 block/sec (108,864,000 blocks), then about 474 days at 10 blocks/sec through today, August 22, 2026 (409,536,000 blocks). Total: about 518,400,000 blocks ever produced. This part is measured, not estimated, aside from ordinary day-rounding.</p>
+      <p><strong>Block count since genesis.</strong> Kaspa's mainnet genesis is timestamped November 22, 2021 (rusty-kaspa <code>genesis.rs</code>). The Crescendo hard fork moved the network from one block a second to ten blocks a second on May 5, 2025, mainnet DAA score 110,165,000 (rusty-kaspa v1.0.0 release notes).</p>
+      <p>That gives two eras: about 1,260 days at one block a second (108,864,000 blocks), then about 474 days at ten blocks a second through today, August 22, 2026 (409,536,000 blocks). Total: about 518,400,000 blocks ever produced. This part is measured, not estimated, aside from ordinary day-rounding.</p>
       <p><strong>Bytes per coinbase transaction.</strong> Every block carries exactly one coinbase transaction, a structural fact, not an estimate. Its size is modeled here as a transaction header (94 bytes) plus one output (52 bytes), so 146 bytes in total, using the same byte-level constants this site's own <a href="/what-is-kaspa#mass-calculator">mass calculator</a> sources from rusty-kaspa's transaction serialization code (<code>consensus/core/src/mass/mod.rs</code>, <code>constants.rs</code>).</p>
       <p>This is an ESTIMATE: real coinbase transactions can carry extra payload (miner tags and similar), which this model does not include, so 146 bytes is a floor, not a measurement.</p>
       <p><strong>The multiplication.</strong> 518,400,000 blocks &times; 146 bytes &asymp; 75,700,000,000 bytes &asymp; 76 GB. This counts only the mandatory coinbase transaction in every block.</p>
@@ -2567,7 +2567,7 @@ feerate = fee_sompi / mass_grams</span>
       <p>It does not show a growth curve over time, a total including user transactions, or a true unpruned figure, because those inputs are not sourced anywhere this site can check.</p>
       <p>No number here is invented; where an input is a genuine measurement it is labeled as such above, and where it is a model built from real but incomplete constants, it is labeled ESTIMATE.</p>
       <p>Finality and pruning depth: rusty-kaspa <code>consensus/core/src/config/{params.rs,bps.rs,constants.rs}</code>. <code>FINALITY_DURATION</code> is 43,200 seconds (12 hours); <code>PRUNING_DURATION</code> is 108,000 seconds (30 hours).</p>
-      <p>At mainnet's 10 blocks per second, <code>finality_depth()</code> = 432,000 blocks and <code>pruning_depth()</code> takes the larger of a formula (finality depth plus safety terms for merge depth and anticone/mergeset size, referencing the project's <a href="https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf">Prunality analysis</a>) and the flat 108,000-second floor. At 10 blocks per second the flat floor wins, giving 1,080,000 blocks.</p>
+      <p>At mainnet's ten blocks a second, <code>finality_depth()</code> = 432,000 blocks and <code>pruning_depth()</code> takes the larger of a formula (finality depth plus safety terms for merge depth and anticone/mergeset size, referencing the project's <a href="https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf">Prunality analysis</a>) and the flat 108,000-second floor. At ten blocks a second the flat floor wins, giving 1,080,000 blocks.</p>
       <p>No source found explains why 30 hours specifically, rather than a different round number, was chosen for that floor; it reads as a margin the protocol's authors judged sufficient rather than a value derived from a unique calculation.</p>
       <p>KIP-15 independently states the same figure in its own words: a node "prunes the transaction and header data after c. 52 hours (30 hours post-Crescendo)."</p>
       <p>Archival mode: rusty-kaspa <code>kaspad</code> CLI, <code>--archival</code> flag, help text "Run as an archival node: avoids deleting old block data when moving the pruning point (Warning: heavy disk usage)," plus <code>--retention-period-days</code> for partial retention.</p>
@@ -2629,7 +2629,7 @@ feerate = fee_sompi / mass_grams</span>
 .nc-demo h4 {
     font-size:1.3rem; font-weight:700; letter-spacing:-.014em; line-height:1.2; margin:0 0 6px;
   }
-.nc-demo h5 {font-family:var(--display-font); font-weight:650; letter-spacing:-.008em; font-size:1.2rem; margin:0 0 10px;}
+.nc-demo h4 {font-family:var(--display-font); font-weight:650; letter-spacing:-.008em; font-size:19px; margin:0 0 10px;}
 .nc-demo .lead {color:var(--muted); font-weight:420; font-size:1.14rem; line-height:1.5; margin:0 0 20px; max-width:60ch;}
 .nc-demo .payoff {
     font-size:.98rem; font-weight:600; color:var(--text); background:var(--accent-soft);
