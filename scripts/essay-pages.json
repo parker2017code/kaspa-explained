@@ -22,16 +22,12 @@
       "reason": "Interactive tool. Twenty chains ranked by the reader's own dials. Capping visible rows for a prose ceiling defeats the page."
     },
     {
-      "file": "argent-explained.html",
-      "extended_word_limit": false,
-      "reason": "Reference page carrying a live repository table and an embedded demo."
-    },
-    {
       "file": "index.html",
       "extended_word_limit": false,
       "reason": "Routing page carrying one claim, one action, and the collision-sim demo inline. Rebuilt 24 August 2026 to the Apple test: the status block, the live API panel and the keep-reading row were cut, leaving hero and demo. It now measures 122 visible words against the general 300 ceiling, so it needs no raised budget. The previous 340 budget existed for three demo cards that no longer exist."
     }
   ],
+  "_essays_removed_2026_08_29": "argent-explained.html was listed here and on per_section_pages at once, with the same one-line reason on both: \"Reference page carrying a live repository table and an embedded demo.\" That is a per-section reason, not an essay reason. This list exempts a page from the 60-word paragraph cap because continuous prose is the product and a deliberate run-on is voice; a reference page a reader consults for a repo table is not that, and the exemption was hiding one 90-word paragraph. Removed from essays, kept on per_section_pages, paragraph shortened. It never had extended_word_limit, so audit-content-flow.mjs is unaffected, and check-visible-words.mjs skips per_section_pages outright, so its whole-page budget is unchanged too.",
   "_per_section_pages_comment": "Which pages hold the 300-word ceiling from design/STANDARD.md's 'The 300-word surface' at the whole-page level (checked by scripts/check-visible-words.mjs, the default for every page not listed here or in essays above) versus at the per-section level (checked by scripts/check-visible-sections.mjs: no unbroken run of prose over 300 words between structural breaks). Decision recorded in HANDOFF.md, 'Decisions taken this session,' 2026-08-23: the whole-page cap fits a demo, the homepage, or a routing page, where the entire page is the surface. It does not fit a long-form guide or a reference page, where length is the content and structure (headings, tables, figures, details, lists, card/grid components) already breaks it into scannable pieces -- applying the literal cap there would hide most of the page, which is the inverted disclosure design/STANDARD.md itself bans. Every page below was judged on what it actually is (a taught guide or a lookup reference with real headings and card/table structure throughout), not carried over automatically from any other page-type list in this repo: design/density-budget.md's 'Answer and status pages' category answers a different question (how many words sit before the first interactive element) and does not determine this one. Demos, index.html, and routing pages are not listed here and keep the hard whole-page ceiling by default; three of the pages currently over that ceiling (demos/node-cost.html, demos/parameterless.html, demos/fair-launch.html) are deliberately not listed here even though they are over budget, because they are hard-ceiling pages owned by a different concurrent pass and belong on the whole-page rule once fixed, not on this list.",
   "per_section_pages": [
     {
@@ -81,6 +77,10 @@
     {
       "file": "chain-comparer.html",
       "reason": "Interactive tool. Twenty chains ranked by the reader's own dials. Capping visible rows for a prose ceiling defeats the page."
+    },
+    {
+      "file": "utxo-vs-accounts.html",
+      "reason": "Rewritten 2026-08-29. Its surface is a two-panel demo with ten labeled result rows, a three-row status table, and two short headed prose sections: 493 visible words, of which 177 are prose and the rest are the demo's own controls and readouts plus the table. design/STANDARD.md's own 'A demo's surface budget' says a demo's controls and primary readouts are never surface words to be reduced, and its '300-word surface' section says to cut long primary content rather than bury it; the previous version passed the whole-page ceiling at 269 words only by holding 1,845 words inside two closed panels, which is the inverted disclosure that section bans. Same shape as argent-explained.html above: a taught page carrying a table and an embedded demo, structured throughout, so the per-section rule is the one that measures it."
     },
     {
       "file": "argent-explained.html",

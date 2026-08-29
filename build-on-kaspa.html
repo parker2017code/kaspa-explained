@@ -30,7 +30,7 @@
   <meta property="og:description" content="Three ways to build on Kaspa, and how to work out which one your idea needs.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/build-on-kaspa">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,15 +38,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Build on Kaspa: Toccata App Ideas and Builder Paths">
   <meta name="twitter:description" content="Three ways to build on Kaspa, and how to work out which one your idea needs.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-22">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="dateModified" content="2026-08-29">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Build on Kaspa: Toccata App Ideas and Builder Paths",
     "url": "https://kaspaexplained.com/build-on-kaspa",
-    "dateModified": "2026-08-22",
+    "dateModified": "2026-08-29",
     "description": "A guide for Kaspa builders: live payment paths, Toccata app ideas, infrastructure readiness, and where to start.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
@@ -96,7 +96,7 @@
     <section class="sources-hero section">
       <p class="eyebrow">Build on Kaspa</p>
       <h1>Build Kaspa apps</h1>
-      <p class="lead">Toccata activated at DAA 474,165,565. Spend limits, escrow paths, asset rules, and proof checks are now in L1 script, readable before funds move.</p>
+      <p class="lead">Spend limits, escrow paths, asset rules, and proof checks now live in Kaspa's own script, where anyone can read them before money moves. Toccata put them on mainnet at DAA score 474,165,565.</p>
       <details class="source-more">
         <summary>Status, and where to check a product claim before pitching it</summary>
         <p class="fit-note"><strong>Status:</strong> read <a href="/what-is-kaspa#covenants">how covenants work</a> for the plain-language version of what activated, and <a href="#covenant-breaker-demo">try breaking one</a> below.</p>
@@ -143,7 +143,7 @@
               <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td>Based app or replay path</td><td>The app proves or replays its own state without needing cross-app atomicity.</td></tr>
               <tr><td>Each action needs its own proof, privacy check, or custom validity rule</td><td>Inline ZK</td><td>It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
               <tr><td>The claim depends on another chain, an oracle, a price, or a real-world event</td><td>Name the anchor first</td><td>Source root, finality certificate, oracle, or challenge process. Pick one before writing proof code.</td></tr>
-              <tr><td>Many users mutate the same app state at once</td><td><a href="/status#status-snapshot">Future full vProgs</a></td><td>Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only. What vProgs would add on top is shared mutable state, which ICC does not provide.</span></span> already shows separate covenant apps acting as one, so far only in unaudited offline demos.</td></tr>
+              <tr><td>Many users mutate the same app state at once</td><td><a href="/status#status-snapshot">Future full vProgs</a></td><td>Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction.</span></span> already runs separate covenant apps as one, in unaudited offline demos.</td></tr>
             </tbody>
           </table>
         </div>
@@ -153,7 +153,8 @@
       <details class="deep-dive">
         <summary>Why there's no shared-state read, and who's already hit it</summary>
         <p>Reading shared on-chain state, a price, a pool balance, consumes it in the same breath. Kaspa has no reference-input equivalent to Cardano, Ergo, or CKB.</p>
-        <p>A builder raised the gap in the Kaspa Core R&amp;D Telegram group on July 18, 2026, sketching a covenant DEX that needs a shared price board: six reactions, no reply, and no <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-buildon">KIP<span class="term-def__panel" id="kip-def-buildon" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span> yet says whether the fix belongs at L1 or in a future vProg.</p>
+        <p>A builder raised the gap in the Kaspa Core R&amp;D Telegram group on 18 July 2026, sketching a covenant DEX that needs a shared price board. Six reactions, no reply.</p>
+        <p>No <span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-buildon">KIP<span class="term-def__panel" id="kip-def-buildon" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span> yet says whether the fix belongs at L1 or in a future vProg.</p>
       </details>
     </section>
 
@@ -161,23 +162,16 @@
       <p class="eyebrow">Try it</p>
       <h2 id="covenant-breaker-demo-title">Attack a covenant vault</h2>
       <p>Before writing spend-rule code, see what a covenant actually blocks.</p>
-      <details class="guide-detail" data-fragment-demo>
-        <summary>
-          <span class="eyebrow">Demo</span>
-          <h3>Covenant breaker: try to break the vault</h3>
-          <span class="guide-detail-preview">Four rules, five attack presets, and the one that actually works.</span>
-        </summary>
-        <div class="guide-detail-body">
       <div class="cvb-demo" id="covenant-breaker-widget">
         <p class="cvb-fictional-note">A worked example. Nothing here is on a real blockchain.</p>
         <p class="cvb-intro">This vault holds 10,000 KAS behind four rules. Get any of it to an address you control without satisfying all four.</p>
         <p class="cvb-status-line">Status: the enforcement is live on mainnet; the rule's own notation is illustrative.
           <span class="info-affordance" id="cvb-status-info">
-            <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="cvb-status-info-panel">
+            <button class="info-affordance__trigger" type="button" aria-describedby="cvb-status-info-panel">
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
               <span class="sr-only">Which parts are live and which are notation only</span>
             </button>
-            <span class="info-affordance__panel" id="cvb-status-info-panel" role="tooltip">The cap, destination, and delay below run on Kaspa mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule is written in <a href="/argent-explained">Argent's</a> syntax, still research and not released; only the notation is illustrative, the enforcement it describes is live.</span>
+            <span class="info-affordance__panel" id="cvb-status-info-panel" role="tooltip">The cap, destination and delay run on mainnet via <a href="/kips">KIP-17</a> and <a href="/kips">KIP-20</a>. The rule below is written in <a href="/argent-explained">Argent's</a> syntax, which is still research.</span>
           </span>
         </p>
 
@@ -263,9 +257,9 @@
             <h4>What the covenant enforces</h4>
             <ul class="cvb-rules-list">
               <li><b>Who can sign</b><span>A withdrawal needs the owner's signature. Recovery needs the recovery key instead. No other key works.</span></li>
-              <li><b>Where it can go</b><span>A withdrawal may pay only the vault's fixed payout address, at most 500 KAS in this one transaction. Recovery may pay only the fixed recovery address, and always empties the vault.</span></li>
+              <li><b>What can leave</b><span>A withdrawal moves at most 500 KAS, and only to the vault's fixed payout address. Recovery empties the vault instead, and only to the fixed recovery address.</span></li>
               <li><b>What comes next</b><span>Every withdrawal must recreate the vault with the same KIP-20 covenant ID and the updated balance and last-spend score. A transaction that doesn't is spending a lookalike, not the vault.</span></li>
-              <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks/second) before it is valid again.</span></li>
+              <li><b>How soon again</b><span>A withdrawal must wait 36,000 DAA score since the vault's last spend (roughly one hour at 10 blocks per second) before it is valid again.</span></li>
             </ul>
           </section>
         </div>
@@ -289,7 +283,7 @@
         require(blake2b(owner_pk) == owner_pk_hash);
         require(checkSig(owner_sig, owner_pk));
 
-        <i>// where it can go: fixed cap, fixed destination</i>
+        <i>// what can leave: fixed cap, fixed destination</i>
         require(amount &lt;= 500 &amp;&amp; amount &lt;= balance);
         require(tx.outputSpkHash(0) == payout_spk_hash);
         require(tx.outputAmount(0) == amount);
@@ -320,11 +314,12 @@
         <i>// no `become`: this covenant's lineage ends here</i>
     }
 }</pre>
-          <p class="cvb-sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research and not yet released; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's actual status. Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>. Both KIP-17 and its continuation-identity companion, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, are live on Kaspa mainnet as of the Toccata upgrade: a spend either carries the same <code>covenant_id</code> as the <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-buildon">UTXO<span class="term-def__panel" id="utxo-def-buildon" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> it consumes, or proves a fresh one through the genesis hash, so a forged lookalike UTXO cannot claim an existing covenant's identity.</p>
+          <p class="cvb-sources">Pseudocode in Argent's actor/entry/require/become style, a proposed Kaspa contract language still in research; see <a href="/argent-explained">Argent and Silverscript, explained</a> for that project's status.</p>
+          <p class="cvb-sources">Introspection opcodes named against the primitives <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> actually defines: <code>OpTxOutputAmount</code>, <code>OpTxOutputSpk</code>, <code>OpTxInputDaaScore</code>, <code>OpTxLockTime</code>.</p>
+          <p class="cvb-sources">KIP-17 and its continuation-identity companion <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> are both live on mainnet as of Toccata.</p>
+          <p class="cvb-sources">A spend either carries the same <code>covenant_id</code> as the <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-buildon">UTXO<span class="term-def__panel" id="utxo-def-buildon" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> it consumes, or proves a fresh one through the genesis hash, so a forged lookalike cannot claim an existing covenant's identity.</p>
         </details>
       </div>
-        </div>
-      </details>
       <style>
         .cvb-demo {
           --cvb-bg-2: #1c1a17; --cvb-card-bg: #322f2a;
@@ -445,7 +440,7 @@
         var DELAY = 36000;
         var START_BALANCE = 10000;
 
-        var vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+        var vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false, spends: 0 };
         var txCount = 0;
 
         var statsEl = document.getElementById('cvb-stats');
@@ -464,9 +459,19 @@
         function daaToMinutes(daa) {
           return Math.round(daa / 10 / 60);
         }
+        // The field takes any number, so the hint has to stay readable at the top of the
+        // range. Minutes stop meaning anything around a day: 999,999,999 read as
+        // "1666667 minutes" before this scaled the unit.
+        function daaToWords(daa) {
+          var mins = daaToMinutes(daa);
+          if (mins < 90) { return mins.toLocaleString('en-US') + ' minutes'; }
+          var hours = mins / 60;
+          if (hours < 48) { return (Math.round(hours * 10) / 10) + ' hours'; }
+          return Math.round(hours / 24).toLocaleString('en-US') + ' days';
+        }
         function updateElapsedHint() {
           var v = Math.max(0, parseInt(elapsedInput.value, 10) || 0);
-          elapsedHint.textContent = '≈ ' + daaToMinutes(v) + ' minutes';
+          elapsedHint.textContent = '≈ ' + daaToWords(v);
         }
         elapsedInput.addEventListener('input', updateElapsedHint);
 
@@ -480,8 +485,8 @@
             '<div class="cvb-stat' + deadClass + '"><span>Balance</span><b>' + vault.balance.toLocaleString() + ' KAS</b></div>' +
             '<div class="cvb-stat"><span>Per-tx cap</span><b>' + CAP + ' KAS</b></div>' +
             '<div class="cvb-stat"><span>Required delay</span><b>~' + daaToMinutes(DELAY) + ' min</b></div>' +
-            '<div class="cvb-stat"><span>Last spend, ago</span><b>~' + daaToMinutes(vault.lastSpendDaa) + ' min mark</b></div>' +
-            '<div class="cvb-stat"><span>Status</span><b>' + (vault.ended ? 'Ended (recovered)' : 'Live') + '</b></div>';
+            '<div class="cvb-stat"><span>Withdrawals so far</span><b>' + vault.spends + '</b></div>' +
+            '<div class="cvb-stat"><span>Vault</span><b>' + (vault.ended ? 'Closed by recovery' : 'Open') + '</b></div>';
         }
 
         function updateFieldVisibility() {
@@ -499,7 +504,7 @@
           txCount++;
           var row = document.createElement('tr');
           row.className = ok ? 'pass-row' : 'fail-row';
-          row.innerHTML = '<td>' + txCount + '</td><td>' + pathLabel(entry) + '</td><td>' + amount + '</td><td>' + destLbl + '</td>' +
+          row.innerHTML = '<td>' + txCount + '</td><td>' + pathLabel(entry) + '</td><td>' + amount.toLocaleString('en-US') + '</td><td>' + destLbl + '</td>' +
             '<td class="result">' + (ok ? 'sent through' : 'blocked: ' + category) + '</td>';
           ledgerBody.appendChild(row);
           ledgerPanel.hidden = false;
@@ -515,18 +520,18 @@
           }
           if (entry === 'recover') {
             if (dest !== 'recovery') {
-              return { ok: false, category: 'where it can go', sentence: 'Blocked: recovery can only ever pay the vault’s own recovery address, no matter whose key signs it.', ref: 'require(tx.outputSpkHash(0) == recovery_spk_hash)' };
+              return { ok: false, category: 'what can leave', sentence: 'Blocked: recovery can only ever pay the vault’s own recovery address, no matter whose key signs it.', ref: 'require(tx.outputSpkHash(0) == recovery_spk_hash)' };
             }
             return { ok: true, category: null, sentence: 'Sent: the full balance reached the recovery address. The vault is gone for good, on purpose.', ref: 'no `become`: lineage ends here', terminal: true };
           }
           if (amount > CAP) {
-            return { ok: false, category: 'where it can go', sentence: 'Blocked: a single withdrawal can move at most 500 KAS, and this one asks for more.', ref: 'require(amount &lt;= 500)' };
+            return { ok: false, category: 'what can leave', sentence: 'Blocked: a single withdrawal can move at most 500 KAS, and this one asks for more.', ref: 'require(amount &lt;= 500)' };
           }
           if (amount > vault.balance) {
-            return { ok: false, category: 'where it can go', sentence: 'Blocked: the vault doesn’t have this much left to give.', ref: 'require(amount &lt;= balance)' };
+            return { ok: false, category: 'what can leave', sentence: 'Blocked: the vault doesn’t have this much left to give.', ref: 'require(amount &lt;= balance)' };
           }
           if (dest !== 'payout') {
-            return { ok: false, category: 'where it can go', sentence: 'Blocked: a normal withdrawal can only pay the vault’s one payout address, never anywhere else.', ref: 'require(tx.outputSpkHash(0) == payout_spk_hash)' };
+            return { ok: false, category: 'what can leave', sentence: 'Blocked: a normal withdrawal can only pay the vault’s one payout address, never anywhere else.', ref: 'require(tx.outputSpkHash(0) == payout_spk_hash)' };
           }
           if (elapsed < DELAY) {
             var mins = Math.round(elapsed / 10 / 60);
@@ -546,6 +551,7 @@
               vault.balance -= amount;
               vault.currentDaa += elapsed;
               vault.lastSpendDaa = vault.currentDaa;
+              vault.spends += 1;
             }
           }
           renderStats();
@@ -569,14 +575,21 @@
           showVerdict(result);
         });
 
-        document.getElementById('cvb-reset').addEventListener('click', function () {
-          vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false };
+        function resetAll() {
+          vault = { balance: START_BALANCE, lastSpendDaa: 0, currentDaa: 0, ended: false, spends: 0 };
           txCount = 0;
           ledgerBody.innerHTML = '';
           ledgerPanel.hidden = true;
           verdictEl.innerHTML = '';
+          document.querySelector('input[name=cvb-entry][value=withdraw]').checked = true;
+          amountInput.value = CAP;
+          destSelect.value = 'payout';
+          elapsedInput.value = DELAY;
+          updateFieldVisibility();
+          updateElapsedHint();
           renderStats();
-        });
+        }
+        document.getElementById('cvb-reset').addEventListener('click', resetAll);
 
         document.querySelectorAll('input[name=cvb-entry]').forEach(function (r) {
           r.addEventListener('change', updateFieldVisibility);
@@ -625,8 +638,8 @@
           var totalHours = Math.round((vault.currentDaa / 10 / 3600) * 10) / 10;
           var box = document.createElement('div');
           box.className = 'cvb-verdict-box pass';
-          box.innerHTML = '<strong>' + guard + ' withdrawals, spaced an hour apart, emptied the vault in about ' + totalHours + ' hours, and every single one obeyed the cap, the destination, and the delay.</strong>' +
-            'The rules bound one transaction at a time. Nothing in the covenant counts a running total or limits how many times withdraw() gets called, so they never bounded the vault itself, and it was gone before the end of the day.';
+          box.innerHTML = '<strong>Every one of those ' + guard + ' withdrawals obeyed the cap, the destination and the delay, and the vault was empty in ' + totalHours + ' hours.</strong>' +
+            'Each rule binds one transaction. Nothing in the covenant counts a running total or limits how often withdraw() is called, so the rules never bounded the vault itself.';
           verdictEl.innerHTML = '';
           verdictEl.appendChild(box);
         }
@@ -634,6 +647,9 @@
         updateFieldVisibility();
         updateElapsedHint();
         renderStats();
+        // Land on the blunt attack, already answered: the reader sees a refusal and the
+        // rule that produced it before touching anything.
+        document.querySelector('.cvb-attack[data-preset="drain"]').click();
 
         var tabAttempt = document.getElementById('cvb-tab-attempt');
         var tabDetails = document.getElementById('cvb-tab-details');
@@ -657,10 +673,7 @@
     <section id="covenant-adoption" class="section">
       <p class="eyebrow">Evidence</p>
       <h2>How much of this is actually running</h2>
-      <p>A third-party indexer counts thousands of covenants created on mainnet, hundreds still active. Numbers and use-case status below.</p>
-      <details class="deep-dive">
-        <summary>Covenant counts, and use cases by status</summary>
-        <p>A third-party indexer counts <span id="cov-created">28,125</span> covenants ever created on mainnet, <span id="cov-active">519</span> still active, holding about <span id="cov-value">1,530,721</span> KAS. Testnet-10 carries far more test activity, about <span id="cov-testnet">81,835</span> active.</p>
+      <p>A third-party indexer counts <span id="cov-created">28,125</span> covenants ever created on mainnet, <span id="cov-active">519</span> still active, holding about <span id="cov-value">1,530,721</span> KAS. Testnet-10 carries far more test activity, about <span id="cov-testnet">81,835</span> active.</p>
         <div class="table-wrap">
           <table class="reality-table">
             <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
@@ -678,7 +691,6 @@
         <p class="source-inline" id="cov-stamp">Baseline written into this page August 24, 2026.</p>
         <p class="fit-note">The rule for assurance funding runs live today. A shipped coordination-market product does not: that's still a research direction, and a covenant can't see an outside price or event without a named oracle.</p>
         <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17 covenants</a> and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20 covenant IDs</a>. Raw text, all reading <code>Status: Active</code>: <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0016.md">KIP-16</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0017.md">KIP-17</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0020.md">KIP-20</a>, <a href="https://raw.githubusercontent.com/kaspanet/kips/master/kip-0021.md">KIP-21</a>.</p>
-      </details>
       <script>
       (function () {
         var stamp = document.getElementById('cov-stamp');
@@ -705,14 +717,6 @@
       <p class="eyebrow">Try it</p>
       <h2 id="zk-boundary-demo-title">What a proof can and can't verify</h2>
       <p>KIP-16's proof check confirms a proof is valid. It says nothing about where its inputs came from, and that gap is where a real integration goes wrong.</p>
-      <details class="guide-detail" data-fragment-demo>
-        <summary>
-          <span class="eyebrow">Demo</span>
-          <h3>Build a claim, then watch it pass or fail</h3>
-          <span class="guide-detail-preview">A proof succeeds on a chosen computation, then fails to establish an outside fact with no named anchor.</span>
-        </summary>
-        <div class="guide-detail-body">
-      <div class="live-demo-frame">
         <div class="zkb-demo" id="zk-boundary-demo-widget">
           <div class="zkb-segmented" role="group" aria-label="What to prove" id="zkb-segmented">
             <button type="button" data-claim="secret" aria-pressed="true">A secret number</button>
@@ -721,7 +725,7 @@
           </div>
           <p class="zkb-claim-text" id="zkb-claimText"></p>
           <div class="zkb-steps" id="zkb-steps"></div>
-          <button class="zkb-action-btn" id="zkb-runBtn" type="button">Generate proof</button>
+          <button class="zkb-action-btn" id="zkb-runBtn" type="button">Run the checks again</button>
           <p class="zkb-caption" id="zkb-caption"></p>
           <div class="zkb-consequence" id="zkb-consequence" aria-live="polite">
             <div class="zkb-cmp-row">
@@ -740,16 +744,20 @@
             <summary>Why this happens, and how it maps to Kaspa</summary>
             <div class="zkb-quotes-body">
               <p>Kaspa's Toccata hard fork added <code>OpZkPrecompile</code> (KIP-16, Status: Active), an opcode that checks a proof against a chosen proof system, initially Groth16 and RISC0-Succinct. The opcode confirms a proof verifies against a given verifying key and public inputs. It says nothing about where those public inputs came from.</p>
-              <p>Proving "I know a secret number" is exactly that kind of self-contained check: everything the proof needs is already in its own inputs. Proving "the real price of BTC right now" asks the proof to vouch for a fact about the outside world, something no arithmetic check can do by itself. That gap needs an external anchor instead, such as a light client, a finality certificate, or a reporter set with something to lose.</p>
-              <p>The reason this beats asking a server for the same yes/no answer: a server's answer is only as good as your trust in that server, and checking it means either taking its word or getting access to whatever private data it based the answer on. A verified proof is checked against Kaspa's own public ledger, by anyone, using only the verifying key and the public inputs already on that ledger. Nothing about the app's private internal state has to be exposed for the check to work. One public ledger, many apps, and each app's own state stays its own.</p>
-              <p>So how does a real fact from outside the chain, a price, a bridge event, a sports score, ever get into a proof's public inputs? Someone has to attest to it: sign a statement saying "this is the value," and hand the app that signature instead of the raw fact. The proof can then check the signature the same way it checks any other public input. That's an oracle. It's not a cryptographic trick that removes the trust problem, it's a trust decision: pick a signer, and believe them.</p>
-              <p>Kaspa's L1 does not ship an oracle system. KIP-16 (Status: Active) added the verifier opcode, wired to Groth16 and RISC0-Succinct. What an app builds on top, which oracle to trust, how many signers to require, what happens when they disagree, is an application-level choice, not something the protocol decides for you. Whether that arrangement is trustworthy is a question about the signer, never a question the on-chain math can answer.</p>
-              <p>Kaspa's 10 blocks per second means a signed attestation can land on-chain and start accumulating proof-of-work in about a second, instead of waiting on a slower chain's block time. That's a real property: it shortens how long an app has to sit on stale data before acting on it. It does not touch who you're trusting. A faster chain gets you a wrong price faster, exactly as easily as a right one.</p>
+              <p>Proving "I know a secret number" is exactly that kind of self-contained check: everything the proof needs is already in its own inputs.</p>
+              <p>Proving "the real price of BTC right now" asks the proof to vouch for a fact about the outside world, which no arithmetic check can do by itself. That needs an external anchor: a light client, a finality certificate, or a reporter set with something to lose.</p>
+              <p>The reason this beats asking a server the same yes/no question: a server's answer is only as good as your trust in that server, and checking it means taking its word or getting access to the private data behind it.</p>
+              <p>A verified proof is checked against Kaspa's own public ledger, by anyone, using only the verifying key and the public inputs already on that ledger. Nothing about the app's private state has to be exposed for the check to work.</p>
+              <p>So how does a fact from outside the chain, a price, a bridge event, a sports score, get into a proof's public inputs? Someone has to attest to it: sign a statement saying "this is the value," and hand the app that signature instead of the raw fact.</p>
+              <p>The proof then checks the signature the way it checks any other public input. That is an oracle. It is not a cryptographic trick that removes the trust problem; it is a trust decision: pick a signer, and believe them.</p>
+              <p>Kaspa's L1 does not ship an oracle system. KIP-16 (Status: Active) added the verifier opcode, wired to Groth16 and RISC0-Succinct.</p>
+              <p>Which oracle to trust, how many signers to require, and what happens when they disagree are application choices, not protocol ones. Whether that arrangement is trustworthy is a question about the signer, never one the on-chain math can answer.</p>
+              <p>Kaspa's 10 blocks per second means a signed attestation lands on-chain and starts accumulating proof-of-work in about a second, rather than waiting on a slower chain's block time. That shortens how long an app sits on stale data.</p>
+              <p>It does not touch who you are trusting. A faster chain gets you a wrong price faster, exactly as easily as a right one.</p>
               <p>Sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16, OpZkPrecompile</a>, <a href="https://docs.kaspa.org/programmability" target="_blank" rel="noopener">docs.kaspa.org/programmability</a>. No proof is actually computed here; this toy names what a proof would and would not cover, and no network requests are made.</p>
             </div>
           </details>
         </div>
-      </div>
       <style>
         .zkb-demo {
           --zkb-bg: #100e0c; --zkb-bg-2: #1c1a17; --zkb-card-bg: #322f2a;
@@ -757,7 +765,6 @@
           --zkb-green: #66d1c1; --zkb-cyan: #2997ff; --zkb-red: #ff6961; --zkb-ink: #06201b;
           --zkb-control-bg: #2c2c2e; --zkb-control-hover: #3a3a3c;
           --zkb-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
-          --zkb-brand-gradient: linear-gradient(135deg, var(--zkb-green), color-mix(in srgb, var(--zkb-green) 55%, white));
           background: var(--zkb-card-bg); color: var(--zkb-text); border-radius: 18px; padding: 22px 16px;
           max-width: 640px; margin: 0 auto; font-size: 17px; line-height: 1.5;
         }
@@ -767,7 +774,6 @@
           --zkb-green: #0e7c6b; --zkb-cyan: #0071e3; --zkb-red: #c0342a; --zkb-ink: #ffffff;
           --zkb-control-bg: #e8e8ed; --zkb-control-hover: #dededf;
           --zkb-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
-          --zkb-brand-gradient: linear-gradient(135deg, var(--zkb-green), color-mix(in srgb, var(--zkb-green) 65%, black));
         }
         .zkb-demo .zkb-segmented { display: flex; flex-wrap: wrap; justify-content: center; background: var(--zkb-bg-2); border-radius: 22px; padding: 4px; gap: 4px; max-width: 100%; margin: 0 0 18px; }
         .zkb-demo .zkb-segmented button {
@@ -795,7 +801,7 @@
         .zkb-demo .zkb-action-btn {
           display: block; margin: 0 auto;
           min-height: 48px; border: 0; border-radius: 980px; padding: 12px 28px; font: inherit; font-size: 1rem;
-          font-weight: 650; cursor: pointer; background: var(--zkb-brand-gradient); color: var(--zkb-ink);
+          font-weight: 650; cursor: pointer; background: var(--zkb-green); color: var(--zkb-ink);
         }
         .zkb-demo .zkb-action-btn:hover { filter: brightness(1.05); }
         .zkb-demo .zkb-action-btn:disabled { opacity: .5; cursor: default; filter: none; }
@@ -803,8 +809,8 @@
         .zkb-demo .zkb-caption b { color: var(--zkb-text); }
         .zkb-demo .zkb-caption.fail-msg b { color: var(--zkb-red); }
         .zkb-demo .zkb-caption.pass-msg b { color: var(--zkb-green); }
-        .zkb-demo .zkb-consequence { width: 100%; max-width: 460px; max-height: 0; overflow: hidden; opacity: 0; margin: 0 auto; transition: max-height .45s ease, opacity .4s ease; }
-        .zkb-demo .zkb-consequence.shown { max-height: 320px; opacity: 1; margin-top: 14px; }
+        .zkb-demo .zkb-consequence { width: 100%; max-width: 460px; height: 0; overflow: hidden; visibility: hidden; opacity: 0; margin: 0 auto; transition: opacity .4s ease; }
+        .zkb-demo .zkb-consequence.shown { height: auto; overflow: visible; visibility: visible; opacity: 1; margin-top: 14px; }
         @media (prefers-reduced-motion: reduce) { .zkb-demo .zkb-consequence { transition: none; } }
         .zkb-demo .zkb-cmp-row { display: flex; flex-wrap: wrap; gap: 10px; }
         .zkb-demo .zkb-cmp-col { flex: 1 1 160px; background: var(--zkb-bg-2); border-radius: 14px; padding: 12px 14px; }
@@ -846,7 +852,7 @@
               { label: "Is that number actually true right now?", result: "fail" }
             ],
             final: 'fail',
-            caption: '<b>Refused at the last step.</b> The proof correctly checked its own arithmetic. It has no way to check whether $61,240 is the real, current price. That needs an outside anchor, a proof over inputs no one verified is a proof over the wrong thing.',
+            caption: '<b>Refused at the last step.</b> The proof correctly checked its own arithmetic. It has no way to check whether $61,240 is the real, current price. That needs an outside anchor. A proof over inputs no one verified is a proof over the wrong thing.',
             server: 'A price feed actually could tell you BTC’s real price right now, if you trust that feed.',
             proof: 'This proof can only check its own math. It has no way to see the outside world, trusted or not.',
             payoff: 'The point isn’t that proofs beat servers at everything. A proof only replaces trust for a claim entirely inside its own inputs, like the secret number above, not for a fact about the world outside them.'
@@ -862,7 +868,7 @@
             caption: '<b>Refused again, on the same step.</b> The proof now checks something real: that this specific oracle signed this specific number. It still cannot check whether $61,240 is the real price. A lying or mistaken oracle produces the exact same passing signature check.',
             server: 'Trust the oracle’s report directly, the same way you’d trust any price feed. Wrong or not, the proof can’t tell you.',
             proof: 'Verify only that this key signed this number. Whether the number is true is on the oracle, not the math.',
-            payoff: 'An oracle turns an unprovable fact into a provable signature, and that’s genuinely useful. But the trust question didn’t go away, it moved from "is this true" to "do I trust whoever signed it."'
+            payoff: 'An oracle turns an unprovable fact into a provable signature, and that’s genuinely useful. The trust question did not go away. It moved from "is this true" to "do I trust whoever signed it."'
           }
         };
 
@@ -890,10 +896,28 @@
             stepsEl.appendChild(el);
           });
           caption.className = "zkb-caption";
-          caption.textContent = "Click to run the proof.";
+          caption.textContent = "";
           runBtn.disabled = false;
-          runBtn.textContent = "Generate proof";
           consequence.classList.remove("shown");
+        }
+
+        function finish(c) {
+          caption.className = "zkb-caption " + (c.final === "pass" ? "pass-msg" : "fail-msg");
+          caption.innerHTML = c.caption;
+          serverText.textContent = c.server;
+          proofText.textContent = c.proof;
+          payoff.textContent = c.payoff;
+          consequence.classList.add("shown");
+        }
+
+        function settle() {
+          var c = CLAIMS[current];
+          Array.prototype.forEach.call(stepsEl.children, function (el, i) {
+            var st = c.steps[i];
+            el.className = "zkb-step active " + st.result;
+            el.querySelector(".zkb-mark").textContent = st.result === "pass" ? "\u2713" : "\u2715";
+          });
+          finish(c);
         }
 
         function run() {
@@ -903,14 +927,10 @@
           var c = CLAIMS[current];
           var stepEls = stepsEl.children;
           var i = 0;
+          var beat = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
           function next() {
             if (i >= stepEls.length) {
-              caption.className = "zkb-caption " + (c.final === "pass" ? "pass-msg" : "fail-msg");
-              caption.innerHTML = c.caption;
-              serverText.textContent = c.server;
-              proofText.textContent = c.proof;
-              payoff.textContent = c.payoff;
-              consequence.classList.add("shown");
+              finish(c);
               runBtn.disabled = false;
               busy = false;
               return;
@@ -920,7 +940,7 @@
             el.className = "zkb-step active " + st.result;
             el.querySelector(".zkb-mark").textContent = st.result === "pass" ? "✓" : "✕";
             i++;
-            setTimeout(next, 420);
+            setTimeout(next, beat);
           }
           next();
         }
@@ -933,23 +953,24 @@
             b.setAttribute("aria-pressed", b === btn ? "true" : "false");
           });
           renderIdle();
+          run();
         });
 
         runBtn.addEventListener("click", run);
 
+        // Open on the first claim already checked. An unrun demo showed three grey dots and
+        // said nothing about what a proof does or does not cover.
         renderIdle();
+        settle();
       })();
       </script>
-        </div>
-      </details>
     </section>
 
     <section id="build" class="section">
       <p class="eyebrow">What to build</p>
       <h2>Products, sorted by what they need</h2>
-      <p>Six families need nothing but the live network. They already have users.</p>
-      <details class="deep-dive">
-        <summary>The six live-network families: receipts, self-custody tools, support helpers, monitors, proof pages, dashboards</summary>
+      <h3>Six that need only the live network</h3>
+      <p>They already have users.</p>
         <div class="reference-grid grid-cards">
           <article><h3>Receipts and checkout</h3><p>Invoices, tips, and withdrawals showing inclusion, confidence, and risk as three separate facts.</p></article>
           <article><h3>Self-custody tools</h3><p>Address books, payment requests, and accounting exports for keys people hold themselves.</p></article>
@@ -958,10 +979,9 @@
           <article><h3>Proof pages</h3><p>One page carrying user action, txid, source, status label, and current blocker.</p></article>
           <article><h3>Activity dashboards</h3><p>Payments, mining, and spam pulled apart, so one raw count stops passing for a signal.</p></article>
         </div>
-      </details>
-      <p>Six more open up once a spend rule does the work. The hard part is the gap between a good UI and a rule the network enforces: address generation, a synced node, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-buildon">Silverscript<span class="term-def__panel" id="silverscript-def-buildon" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span> compilation, and explorer-visible outputs all have to work first. No <code>getUtxosByCovenantId</code> RPC exists yet, so every covenant project ships its own indexer.</p>
-      <details class="deep-dive">
-        <summary>The six covenant families: vault policies, assurance funding, escrow, controlled assets, market primitives, games</summary>
+      <p>The hard part is the gap between a good interface and a rule the network enforces: address generation, a synced node, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-buildon">Silverscript<span class="term-def__panel" id="silverscript-def-buildon" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span> compilation, and explorer-visible outputs all have to work first.</p>
+      <p>No <code>getUtxosByCovenantId</code> RPC exists yet, so every covenant project ships its own indexer.</p>
+      <h3>Six more that need a spend rule</h3>
         <div class="reference-grid grid-cards">
           <article><h3>Vault policies</h3><p>Spend caps, delayed withdrawal, and a recovery key, enforced by the spend script itself.</p></article>
           <article><h3>Assurance funding</h3><p>Funds release only once enough backers commit by the deadline. Miss it and refunds fire on their own.</p></article>
@@ -970,8 +990,8 @@
           <article><h3>Atomic market primitives</h3><p>Swaps, auctions, and OTC flows, with script behavior staying bounded.</p></article>
           <article><h3>Games and state machines</h3><p>Turn-based apps where player state, move routing, and settlement are separate steps.</p></article>
         </div>
-      </details>
-      <p>Attach a user job to every build: a budget nobody can drain at once, an asset that moves only under a controller rule. Small covenant-shaped products come first, and based-app paths only once the product needs shared state; a product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider, not one hosted API.</p>
+      <p>Attach a user job to every build: a budget nobody can drain at once, an asset that moves only under a controller rule. Small covenant-shaped products come first, and based-app paths only once the product needs shared state.</p>
+      <p>A product that signs transactions, holds funds, or promises uptime needs a node, an indexer, and a backup provider, not one hosted API.</p>
       <details class="source-more" data-audience="specialist">
         <summary>Advanced state-transition proof note</summary>
         <p>State-transition proof models follow one pattern: selected-parent root plus current root plus leaf write witnesses. That keeps validation local to the single transition. Clients never have to maintain the whole incremental SMT.</p>
@@ -1082,8 +1102,6 @@ amount: "31112708372"</code></pre>
       </div>
       </details>
       <h3>Checks that catch the expensive mistakes</h3>
-      <details class="deep-dive">
-        <summary>Five checks: network choice, node build, sync and index, UI versus consensus, submit logging</summary>
         <ol class="learning-steps grid-cards">
           <li><strong>Pick network first.</strong> <span>Mainnet uses <code>kaspa:</code>, TN12 uses <code>kaspatest:</code>, and reusing test keys for mainnet is how funds get lost.</span></li>
           <li><strong>Use the right node.</strong> <span>Testnet covenant work needs a build for that testnet. Mainnet builders run the released mainnet node.</span></li>
@@ -1091,7 +1109,6 @@ amount: "31112708372"</code></pre>
           <li><strong>Separate UI policy from consensus rules.</strong> <span>A wallet warning is not an enforced covenant. The chain doesn't know the UI exists.</span></li>
           <li><strong>Record exact submit details.</strong> <span>Log SDK version, node version, network id, endpoint, encoding, and tx version every time.</span></li>
         </ol>
-      </details>
       <p>After submit, fetch accepted state and diff it against what the app claims happened. If they don't match, that's the bug report. Three results get read as the same result and are not: a transaction the network accepted, a local reject inside one machine's script engine, and a wallet-policy refusal the network never saw.</p>
       <details class="source-more" data-audience="specialist">
         <summary>Open verification checklist</summary>

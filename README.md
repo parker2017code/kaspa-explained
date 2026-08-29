@@ -1,7 +1,7 @@
 # Kaspa Explained
 
 [kaspaexplained.com](https://kaspaexplained.com) is a plain-English guide to
-Kaspa built around twenty demos you can push on. Move a slider and watch a
+Kaspa built around demos you can push on. Move a slider and watch a
 blockDAG keep the blocks a single chain throws away. Price a 51% attack at
 today's hash rate. Watch a covenant refuse a spend that breaks its own rule.
 
@@ -29,10 +29,9 @@ maintainer; fork it, lift a demo, argue with a number.
 
 ## What is where
 
-`site-manifest.json`, `sitemap.xml`, and `llms.txt` are the checked inventory:
-19 live pages. Every other `.html` file in the root or under `/demos/` is a
-`noindex` redirect stub pointing at one of those 19, usually to a specific
-anchor.
+`site-manifest.json`, `sitemap.xml`, and `llms.txt` are the checked inventory.
+Every other `.html` file in the root or under `/demos/` is a `noindex` redirect
+stub pointing at one of the listed pages, usually to a specific anchor.
 
 - `index.html` routes by audience, and carries the collision demo inline.
 - `start-here.html` sends a true beginner to `crypto-from-scratch.html` first.
@@ -50,8 +49,8 @@ anchor.
 - `build-on-kaspa.html` takes a builder from an idea to a build path.
 - `argent-explained.html` covers the actor-based language compiling to
   Silverscript covenants.
-- `utxo-vs-accounts.html` is two demos: spend a UTXO, then watch shared state
-  fail the way an account model does.
+- `utxo-vs-accounts.html` runs five payments at once against a coin ledger and a
+  balance ledger, then prices what the missing shared slot costs Kaspa apps.
 - `kaspa-origin-story.html` is the sourced fair-launch history.
 - `chain-comparer.html` and `model-picker.html` are dial-driven tools.
 - `sources.html` ranks what settles a claim.

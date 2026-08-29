@@ -42,6 +42,36 @@ def main():
                 if k not in dials:
                     bad.append(("preset", k))
 
+    # Every default weight has to name a live dial, and no default may take
+    # more than a fifth of the total. The page throws on both, but the throw
+    # happens in a browser and this runs in the gate.
+    defaults = re.search(r"var DEFAULTS = \{(.*?)\n  \};", src, re.S)
+    if defaults:
+        pairs = re.findall(r"(\w+):\s*(\d+)", defaults.group(1))
+        total = sum(int(v) for _, v in pairs) or 1
+        for k, v in pairs:
+            if k not in dials:
+                bad.append(("default weight", k))
+            elif int(v) / total > 0.20:
+                bad.append(("default weight over the 20% ceiling", k))
+        for k in dials:
+            if k not in [p[0] for p in pairs]:
+                bad.append(("dial with no default weight", k))
+
+    # CLOSE_DIAL and CAT_DIAL route the unscored component tasks to a dial by
+    # key. A key that no longer exists drops those tasks from the closeness
+    # readout and from the natural-scale score, silently and with no visible
+    # change to the page. That shipped once, when the dial set went from ten to
+    # six and 'Language' still pointed at a dial called 'write'.
+    for name in ("CLOSE_DIAL", "CAT_DIAL"):
+        block = re.search(r"var %s = \{(.*?)\n  \};" % name, src, re.S)
+        if not block:
+            bad.append((name, "map not found"))
+            continue
+        for target in re.findall(r":\s*'([^']+)'", block.group(1)):
+            if target not in dials:
+                bad.append((name, target))
+
     if bad:
         for owner, metric in bad:
             print(f"  {owner} references unknown key {metric!r}")

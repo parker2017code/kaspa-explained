@@ -30,7 +30,7 @@
   <meta property="og:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/kips">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,8 +38,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained">
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-22">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="dateModified" content="2026-08-29">
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
   <style>
@@ -141,10 +141,6 @@
     .kip-parameterless-demo .gauge .fill{ transition:width .4s ease, background-color .4s ease; }
     .kip-parameterless-demo .block{ transition:background-color .25s ease, border-color .25s ease; }
   }
-  .kip-parameterless-demo .blockstrip{ display:flex; gap:5px; flex-wrap:wrap; margin:.4rem 0 .6rem; }
-  .kip-parameterless-demo .block{ width:20px; height:20px; border-radius:8px; border:1px solid var(--field-line); background:var(--field-bg); display:flex; align-items:center; justify-content:center; font-size:.6rem; color:var(--faint); }
-  .kip-parameterless-demo .block.ok{ background:color-mix(in srgb, var(--cyan) 28%, var(--field-bg)); border-color:var(--cyan); color:var(--cyan); }
-  .kip-parameterless-demo .block.over{ background:color-mix(in srgb, var(--pink) 32%, var(--field-bg)); border-color:var(--pink); color:var(--pink); }
   .kip-parameterless-demo .verdict{ font-size:1rem; border-left:3px solid var(--cyan); border-radius:0 8px 8px 0; padding:.5rem .6rem; margin-top:.2rem; background:rgba(var(--cyan-rgb),.06); color:var(--text); }
   .kip-parameterless-demo .verdict.safe{ border-left-color:var(--green); background:rgba(var(--green-rgb),.1); color:var(--green); }
   .kip-parameterless-demo .verdict.unsafe{ border-left-color:var(--pink); background:rgba(var(--pink-rgb),.1); color:var(--pink); }
@@ -177,7 +173,6 @@
     --control-bg:#2c2c2e; --control-hover:#3a3a3c;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
     --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 55%, white));
     font-family:var(--body-font); font-size:15px; line-height:1.5; color:var(--text);
   }
   :root[data-theme="light"] .kip-supply-split-demo{
@@ -189,7 +184,6 @@
     --red:#c0342a; --ink:#ffffff;
     --control-bg:#e8e8ed; --control-hover:#dededf;
     --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
-    --brand-gradient:linear-gradient(135deg, var(--green), color-mix(in srgb, var(--green) 65%, black));
   }
   .kip-supply-split-demo .lead{ font-size:1.02rem; color:var(--muted); margin:0 0 22px; max-width:60ch; }
   .kip-supply-split-demo .stage{
@@ -197,6 +191,13 @@
     display:flex; flex-direction:column; align-items:center; gap:18px;
   }
   .kip-supply-split-demo .scene{ display:flex; align-items:center; justify-content:center; gap:14px; width:100%; flex-wrap:wrap; }
+  /* Wrapping left the between-wallets glyph beside the first wallet instead of
+     between the two. Below 520px the scene is a column, so the order reads
+     You, link, Sam. */
+  @media (max-width: 520px){
+    .kip-supply-split-demo .scene{ flex-direction:column; flex-wrap:nowrap; gap:10px; }
+    .kip-supply-split-demo .link-glyph{ transform:rotate(90deg); }
+  }
   .kip-supply-split-demo .wallet{ display:flex; flex-direction:column; align-items:center; gap:8px; min-width:128px; }
   .kip-supply-split-demo .wallet-label{ font-size:.84rem; font-weight:650; color:var(--text); }
   .kip-supply-split-demo .coin-row{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:132px; min-height:40px; }
@@ -223,7 +224,7 @@
   .kip-supply-split-demo .supply-line b{ color:var(--text); }
   .kip-supply-split-demo .action-btn{
     min-height:48px; border:0; border-radius:980px; padding:12px 28px; font:inherit; font-size:1rem;
-    font-weight:650; cursor:pointer; background:var(--brand-gradient); color:var(--ink);
+    font-weight:650; cursor:pointer; background:var(--green); color:var(--ink);
   }
   .kip-supply-split-demo .action-btn:hover{ filter:brightness(1.05); }
   .kip-supply-split-demo .action-btn:disabled{ opacity:.5; cursor:default; filter:none; }
@@ -273,23 +274,79 @@
       <p class="eyebrow">Proposal tracker</p>
       <h1><span class="term-def" tabindex="0" role="button" aria-describedby="kip-def-kips">KIP<span class="term-def__panel" id="kip-def-kips" role="tooltip">Kaspa Improvement Proposal: the process that specifies, reviews, and merges a protocol change. Nothing on this site counts as shipped without a merged KIP and a release tag.</span></span>s and KCCs</h1>
       <p class="lead">Two separate processes decide what Kaspa becomes. One changes the protocol, one does not.</p>
-      <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API, and ships when implemented and activated. A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change. The KCC README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior." A merged KIP marked Active is protocol law; an open KCC pull request is a draft people are still arguing about.</p>
+      <p>A Kaspa Improvement Proposal changes consensus, node behavior, or a client API, and ships when implemented and activated.</p>
+      <p>A Kaspa Call for Conventions is the opposite: an agreement between builders about how to encode a token, name a field, or shape an ABI, with no consensus change. Its README draws the line itself: "KCCs do not propose changes to Kaspa consensus or core-node behavior."</p>
+      <p>A merged KIP marked Active is protocol law. An open KCC pull request is a draft people are still arguing about.</p>
       <h2 id="kip" style="margin-top:1.4rem;">Kaspa Improvement Proposals</h2>
       <p>15 proposals total, 11 marked Active, read live from the KIP repository and grouped below by number. Implemented means running; Active means merged and adopted; Proposed and Draft mean the argument is still open; Rejected means considered and turned down.</p>
-      <p class="fit-note">KIP-2 proposes replacing GHOSTDAG's fixed margin with one that adapts to actual latency. Try it below.</p>
-      <details class="deep-dive" id="parameterless-demo">
-        <summary>Try it: fixed margin (GHOSTDAG) versus adjustable margin (DAGKnight, KIP-2)</summary>
-        <div class="kip-parameterless-demo">
-          <p class="lede">GHOSTDAG fixes its worst-case delay assumption in advance. DAGKnight tracks the delay actually happening instead. Push the sliders and watch the <span class="term-def" tabindex="0" role="button" aria-describedby="par-margin-def">margin<span class="term-def__panel" id="par-margin-def" role="tooltip">How many concurrent blocks a side tolerates before calling one an attack, written k.</span></span> each needs, and how long each guarantees confirmation will take.</p>
+      <p class="fit-note">KIP-2 proposes replacing GHOSTDAG's fixed margin with one that adapts to actual latency. <a href="#parameterless-demo">Try it below.</a></p>
+      <div id="kip-groups">
+        <details class="deep-dive" open>
+          <summary>KIP 1&ndash;6, the foundational batch (2 of 6 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Rewriting the full node in Rust</td><td>Consensus, Node</td><td>Implemented</td></tr>
+                <tr><td>2</td><td>Upgrade consensus to follow DAGKNIGHT</td><td>Consensus, API/RPC</td><td>Proposed</td></tr>
+                <tr><td>3</td><td>Block sampling for efficient DAA with high BPS</td><td>Consensus</td><td>Rejected</td></tr>
+                <tr><td>4</td><td>Sparse difficulty windows</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>5</td><td>Message signing</td><td>Applications</td><td>Active</td></tr>
+                <tr><td>6</td><td>Proof of Chain Membership</td><td>Consensus, Applications</td><td>Draft</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary>KIP 9&ndash;15, consensus and script-engine expansion (5 of 5 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>9</td><td>Extended mass formula for mitigating state bloat</td><td>Consensus, Mempool, P2P</td><td>Active</td></tr>
+                <tr><td>10</td><td>New transaction opcodes for enhanced script functionality</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>13</td><td>Transient storage handling</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>14</td><td>The <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-kips">Crescendo<span class="term-def__panel" id="crescendo-def-kips" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span> hardfork</td><td>Consensus</td><td>Active</td></tr>
+                <tr><td>15</td><td>Canonical transaction ordering and sequencing commitments</td><td>Consensus</td><td>Active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <details class="deep-dive">
+          <summary>KIP 16&ndash;21, the Toccata batch (4 of 4 active)</summary>
+          <div class="table-wrap">
+            <table class="reality-table">
+              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>17</td><td><span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">Covenants<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span> and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
+                <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+      <p class="live-footnote" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
+            <p>KIPs 16, 17, 20 and 21 went Active on 15 July 2026, when Toccata reached mainnet, via the pull requests that first proposed each: <a href="https://github.com/kaspanet/kips/pull/31">KIP-16</a>, <a href="https://github.com/kaspanet/kips/pull/32">KIP-17</a>, <a href="https://github.com/kaspanet/kips/pull/35">KIP-20</a>, <a href="https://github.com/kaspanet/kips/pull/36">KIP-21</a>.</p>
+      <p>KIP-2, the <a href="#parameterless-demo">DAGKnight</a> upgrade, has stayed Proposed for years: devnet only, no testnet, no date.</p>
+      <p>Eleven more KIPs sit open as pull requests, among them 7, 8, 11, 12, 18, 19, and 22 through 25, which is why the tables skip 6 to 9 and 10 to 13. KIP-7 (finality rules) and KIP-8 (headers-proof replacement) are two of those, not withdrawn or reserved. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
+    </section>
+
+    <section class="section" aria-labelledby="parameterless-heading">
+      <p class="eyebrow">Try it</p>
+      <h2 id="parameterless-heading">A margin fixed in advance, against one that tracks the network</h2>
+        <div class="kip-parameterless-demo" id="parameterless-demo">
+          <p class="lede">A <span class="term-def" tabindex="0" role="button" aria-describedby="par-margin-def">margin<span class="term-def__panel" id="par-margin-def" role="tooltip">How many blocks arriving at once a side tolerates before treating one of them as an attack. The DAG KNIGHT paper writes it k.</span></span> is how many blocks arriving at once a network will tolerate before one of them looks like an attack. Set it too low and honest blocks get rejected. Set it too high and the worst-case wait gets longer.</p>
 
           <div class="panel">
             <div class="row bps-block">
               <div class="field">
-                <label for="par-bps-slider">Block rate (blocks/sec)</label>
+                <label for="par-bps-slider">Block rate, in blocks per second</label>
                 <input type="range" class="primary" id="par-bps-slider" min="1" max="100" step="1" value="10" aria-describedby="par-bps-out par-bps-hint">
-                <span class="valline" id="par-bps-out">10 blocks/sec (Kaspa mainnet's Crescendo-era rate)</span>
+                <span class="valline" id="par-bps-out">10 blocks per second (Kaspa mainnet's Crescendo-era rate)</span>
                 <span class="valline info-affordance" id="par-bps-hint">Runs past mainnet's rate on purpose.
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-bps-hint-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-bps-hint-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Why the range goes to 100</span>
                   </button>
@@ -299,11 +356,11 @@
             </div>
             <div class="row">
               <div class="field">
-                <label for="par-d-slider">Worst-case latency GHOSTDAG assumes in advance (D)</label>
+                <label for="par-d-slider">Worst-case latency GHOSTDAG assumes in advance</label>
                 <input type="range" id="par-d-slider" min="0.5" max="15" step="0.5" value="5" aria-describedby="par-d-out">
                 <span class="valline info-affordance">
-                  <span id="par-d-out">D = 5.0 s, mainnet's real setting &rarr; margin (k) = 124, mainnet's real margin</span>
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-d-out-panel">
+                  <span id="par-d-out">Assumed worst case: 5.0 s (mainnet's real setting) &rarr; margin needed: 124 (mainnet's real margin)</span>
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-d-out-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Where 5 seconds and 124 come from</span>
                   </button>
@@ -315,9 +372,9 @@
               <div class="field">
                 <label id="par-l-label" for="par-l-slider">Actual latency</label>
                 <input type="range" id="par-l-slider" min="0.5" max="20" step="0.5" value="0.5" aria-labelledby="par-l-label" aria-describedby="par-l-out par-l-hint">
-                <span class="valline" id="par-l-out">0.5 s (margin (k) this actually needs: 18)</span>
+                <span class="valline" id="par-l-out">0.5 s (margin this actually needs: 18)</span>
                 <span class="valline info-affordance" id="par-l-hint">Not a measured figure.
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-l-hint-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-l-hint-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Why 0.5 seconds, and what this dial does not claim</span>
                   </button>
@@ -336,8 +393,8 @@
                 <label for="par-alpha-slider">Hypothetical attacker's mining share</label>
                 <input type="range" id="par-alpha-slider" min="1" max="49" step="1" value="10" aria-describedby="par-alpha-out par-alpha-hint">
                 <span class="valline"><span id="par-alpha-out">10%</span></span>
-                <span class="valline info-affordance" id="par-alpha-hint">Hypothetical, not observed. Both formulas below barely move until this gets close to 50%, then rise fast.
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-alpha-hint-panel">
+                <span class="valline info-affordance" id="par-alpha-hint">Hypothetical, not observed.
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-alpha-hint-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Why 10%, and what this dial imagines</span>
                   </button>
@@ -349,63 +406,68 @@
           <div class="cmp">
             <div class="side" id="par-side-fixed">
               <h3>GHOSTDAG <span class="status-pill live">Live</span> &middot; fixed margin <span class="info-affordance" id="par-fixed-sub-info">
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-fixed-sub-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-fixed-sub-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">What this side is</span>
                   </button>
                   <span class="info-affordance__panel" id="par-fixed-sub-panel" role="tooltip">Mainnet computes this margin from a fixed table; nothing exists past 32 blocks/sec.</span>
                 </span></h3>
-              <div class="gauge-row"><span>configured margin (k)</span><output id="par-fixed-k-out">124</output></div>
-              <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:3%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap"></div></div>
+              <div class="gauge-row"><span>margin it is configured for</span><output id="par-fixed-k-out">124</output></div>
+              <div class="gauge-row"><span>margin these conditions need</span><output id="par-fixed-req-out">18</output></div>
+              <div class="gauge"><div class="fill" id="par-fixed-fill" style="width:11%; background:var(--cyan);"></div><div class="cap" id="par-fixed-cap" style="left:80%;"></div></div>
               <p id="par-fixed-tableend" class="over-badge" hidden></p>
-              <div class="gauge-row"><span>margin size needed</span><output id="par-fixed-req-out">18</output></div>
               <p id="par-fixed-over" class="over-badge" hidden></p>
-              <div class="blockstrip" id="par-fixed-strip" aria-hidden="true"></div>
               <div class="gauge-row"><span class="info-affordance">Worst case, guaranteed
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-fixed-time-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-fixed-time-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">What this guarantee assumes</span>
                   </button>
                   <span class="info-affordance__panel" id="par-fixed-time-panel" role="tooltip">The DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), computed at a stated 1% error tolerance. Uses D<sub>max</sub>, the assumed delay set by the D slider above, held fixed regardless of what the network is actually doing.</span>
                 </span><output id="par-fixed-time-out">4.3 min</output></div>
-              <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Anticones stay inside k; nothing looks like an attack.</div>
+              <div class="verdict safe" id="par-fixed-verdict" role="status">Within the cap. Concurrent blocks stay inside the fixed margin; nothing reads as an attack.</div>
             </div>
             <div class="side" id="par-side-adaptive">
               <h3>DAGKnight <span class="status-pill research">Research</span> &middot; adjustable margin <span class="info-affordance" id="par-adapt-sub-info">
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-adapt-sub-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-adapt-sub-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">What this side is</span>
                   </button>
                   <span class="info-affordance__panel" id="par-adapt-sub-panel" role="tooltip">No table to run out of: margin tracks the latency actually happening.</span>
                 </span></h3>
-              <div class="gauge-row"><span>effective margin (k) right now</span><output id="par-adapt-k-out">18</output></div>
-              <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:3%; background:var(--green);"></div></div>
-              <div class="gauge-row"><span>cost: wider merge sets</span><output id="par-adapt-cost-out">low</output></div>
-              <div class="blockstrip" id="par-adapt-strip" aria-hidden="true"></div>
+              <div class="gauge-row"><span>margin it is running right now</span><output id="par-adapt-k-out">18</output></div>
+              <div class="gauge"><div class="fill" id="par-adapt-fill" style="width:11%; background:var(--green);"></div></div>
               <div class="gauge-row"><span class="info-affordance">Worst case, guaranteed
-                  <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-adapt-time-panel">
+                  <button class="info-affordance__trigger" type="button" aria-describedby="par-adapt-time-panel">
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">What this guarantee assumes</span>
                   </button>
                   <span class="info-affordance__panel" id="par-adapt-time-panel" role="tooltip">The same DAG KNIGHT no-visible-attack bound (&sect;1.5.2) as GHOSTDAG's, at the same 1% error tolerance. Uses D<sub>t</sub>, the actual-latency slider above, tracked instead of assumed in advance.</span>
                 </span><output id="par-adapt-time-out">3.7 s</output></div>
-              <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed. It operates at the size current conditions require, and relaxes again once they calm, never retuned by a person.</div>
+              <div class="verdict adaptive" id="par-adapt-verdict" role="status">No cap to exceed, and no person to retune it.</div>
             </div>
           </div>
 
-          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">What you'd notice using it: a transaction is typically included in a block within about 1 second at mainnet's real rate. That's not either guarantee above <span class="info-affordance">
-              <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="par-observed-panel">
+          <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Neither number above is
+            what a payment waits for. Both bound the worst case against a delay chosen in advance.</p>
+          <p class="sub" style="max-width:74ch; margin:.2rem auto 0; text-align:center;">A transaction is typically
+            <em>included</em> in a block in about a second.
+            <span class="info-affordance">
+              <button class="info-affordance__trigger" type="button" aria-describedby="par-observed-panel">
                 <i class="info-affordance__glyph" aria-hidden="true">i</i>
-                <span class="sr-only">Source and why this differs from the two guarantees</span>
+                <span class="sr-only">Inclusion against confirmation, and where the figure comes from</span>
               </button>
-              <span class="info-affordance__panel" id="par-observed-panel" role="tooltip">About 1 s is this site's own figure for mainnet inclusion at 10 blocks/sec, on <a href="/what-is-kaspa">What is Kaspa?</a>, not a DAG KNIGHT bound and not independently republished here. Inclusion is a block landing a transaction; it is not the same as confirmation, which is how long before a recipient trusts a reversal won't happen. Both guarantees above bound that worst case against a delay chosen in advance, GHOSTDAG's fixed at D<sub>max</sub> forever, DAGKnight's tracked at whatever D<sub>t</sub> is set on this page; neither is what a payment actually waits for day to day. A transaction confirms in practice once nobody is attacking it and the odds of a reversal have fallen far enough for the recipient's own comfort, which the <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation-risk demo</a> models directly from the Bitcoin whitepaper's double-spend race, not from this page's DAG KNIGHT bound. Read the two pages together and the shape is this: GHOSTDAG's guarantee sits in the minutes because it must always budget for a five-second worst case that rarely happens; DAGKnight's guarantee moves down to track the delay actually happening instead, which is the argument KIP-2 is making.</span>
-            </span>.</p>
+              <span class="info-affordance__panel" id="par-observed-panel" role="tooltip">Inclusion is a block
+                landing a transaction; confirmation is how long before a reversal stops being a risk, modeled in
+                the <a href="/why-kaspa-matters#confirmation-risk-demo">confirmation-risk demo</a>. The
+                one-second figure is this site's own, on <a href="/what-is-kaspa">What is Kaspa?</a></span>
+            </span></p>
 
           <p class="payoff-line" id="par-payoff-line" role="status"></p>
 
           <details>
             <summary>Where these numbers come from</summary>
-            <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Both rows above are guarantees, not observations: each is the DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), which carries no unspecified constant, computed at a stated 1% error tolerance (&epsilon;&#8201;=&#8201;0.01). At a fixed 2&nbsp;s delay the same formula gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s (6.7&nbsp;min) at 100, a 9.3&times; increase that lines up with Sompolinsky's own account, "confirmation of transactions will take tens of seconds at least, about 8x long." The paper's separate, far rougher worst-case bound for a visible attack, whose constant the paper leaves unstated, sits one click down.</p>
+            <p class="sub" style="max-width:74ch; margin:.6rem auto 0; text-align:center;">Both rows are guarantees, not observations. Each is the DAG KNIGHT paper's own no-visible-attack bound (&sect;1.5.2), computed at a stated 1% error tolerance (&epsilon;&#8201;=&#8201;0.01). It carries no unspecified constant.</p>
+            <p class="sub" style="max-width:74ch; margin:.4rem auto 0; text-align:center;">At a fixed 2&nbsp;s delay it gives 12&nbsp;s at 1&nbsp;block/sec, 43&nbsp;s at 10, and 402&nbsp;s at 100, a 9.3&times; increase that lines up with Sompolinsky's "tens of seconds at least, about 8x long."</p>
           </details>
 
           <details>
@@ -450,53 +512,38 @@
           <details>
             <summary>Model, formula, and citations</summary>
             <div class="model-body">
-              <p>GHOSTDAG's k comes from rusty-kaspa's own derivation, reproduced exactly for this page:
+              <p>GHOSTDAG's k comes from rusty-kaspa's own derivation, reproduced exactly here:
               <code>k = min k̂ such that P(anticone &gt; k̂) &lt; δ</code>, computed from <code>x = 2·D·λ</code>
-              (D = assumed max delay in seconds, λ = blocks/second) via a Poisson-tail sum, with mainnet's
-              constants <code>NETWORK_DELAY_BOUND = 5s</code> and <code>GHOSTDAG_TAIL_DELTA = 0.01</code>
-              (<code>consensus/core/src/config/{constants,bps}.rs</code>). At λ = 10 blocks/s, D = 5 s gives
-              k = 124, matching the compiled table in <code>bps.rs</code> exactly (verified: 1 bps → 18,
-              2 → 31, 5 → 67, 10 → 124). This page's block-rate slider moves λ directly through that same
-              formula; the D and actual-latency sliders move the two delay terms.</p>
-              <table>
-                <tr><th>bps</th><td>1</td><td>2</td><td>5</td><td>10</td></tr>
-                <tr><th>k (D = 5 s)</th><td>18</td><td>31</td><td>67</td><td>124</td></tr>
-              </table>
-              <p><strong>Does raising the block rate under GHOSTDAG lengthen confirmation? Checked against the
-              DAG KNIGHT paper directly, not assumed.</strong> Verified, direct quote (§1.2): "many blocks are
-              created in parallel, blocks suffer from larger anticones, and transactions take longer to confirm.
-              This scenario represents either a slow down in the network, or a system intentionally parameterized
-              with a high block rate, e.g., λ = 10 blocks per second," the same section adding "Kaspa's convergence
-              time remains in the order of tens of seconds even when its latency is way below 10 seconds." Also
-              verified, direct quote (§1.5.2): the paper's own optimistic (no visible attack) confirmation-time
-              bound is O((ln(1/ε)/λ + D)/(1−2α) + D²λ), which grows both from the additive D term and from the
-              D²λ term as λ rises, for fixed D. That formula, not a k/λ approximation and not the paper's separate
-              worst-case bound, is what the "guarantee" readouts above compute directly: the fixed side
-              uses D<sub>max</sub>, this widget's D slider, held fixed regardless of what the network is actually
-              doing; the adaptive side uses D<sub>t</sub>, the actual-latency slider, tracked instead. Swapping one
-              delay term for the other is the entire difference between the two readouts, the same PHANTOM-versus-
-              KNIGHT split the paper draws in Table 1 below. ε is fixed at 0.01 (1% error tolerance, stated on the
-              widget) rather than exposed as a fifth slider, and the shared attacker-share slider above supplies α
-              to both sides. Unlike the paper's pessimistic (visible-attack) bound one click down, this formula
-              carries no unspecified constant, so every digit it prints is a real number the paper commits to, not
-              an illustrative placeholder, and it never needs log-space formatting to avoid overflow.</p>
-              <p><strong>Sompolinsky's "about 8x" figure, reproduced twice, neither time by inventing a
-              constant.</strong> Bitcoin Takeover, S17 E36 (31:06), on moving from 10 to 100 blocks a second under
-              GHOSTDAG: "you will need to hardcode in the hard fork a change of the parameter K in the network in
-              the consensus, which would imply that confirmation of transactions will take tens of seconds at
-              least, about 8x long." Both halves of that sentence come straight out of the optimistic formula
-              above: at a fixed 2 s delay it gives 43 s at 10 blocks/sec, his "tens of seconds," and 402 s (6.7
-              min) at 100, a 9.3× increase, his "about 8x," with no constant chosen to make it land, stated on
-              screen next to the widget above. A second, independent check gives a close second number: the
-              margin formula, fully verified against rusty-kaspa's own <code>bps.rs</code> table and also carrying
-              no unspecified constant, has the required margin k climb from 124 blocks at 10 bps to 1,074 blocks
-              at 100 bps holding D fixed at 5 s, an 8.66× increase. The reading behind that second check: 10× more
-              blocks per second would buy 10× faster confirmation only if the margin could stay fixed; because
-              GHOSTDAG's own security proof forces k to grow with λ at fixed D, the actual speedup is far smaller,
-              which is what "about 8x" is describing. The paper's separate worst-case (visible-attack) bound, one
-              click down, tells the same directional story, unbounded growth in λ at fixed D, but its constant c
-              is left unspecified by the paper (§1.5.2), so it cannot be tuned to hit a specific multiple without
-              inventing a value this page has no basis for, and neither of the two checks above uses it.</p>
+              (D = assumed max delay in seconds, λ = blocks/second) via a Poisson-tail sum.</p>
+              <p>Mainnet's constants are <code>NETWORK_DELAY_BOUND = 5s</code> and
+              <code>GHOSTDAG_TAIL_DELTA = 0.01</code> (<code>consensus/core/src/config/{constants,bps}.rs</code>).
+              At λ = 10 blocks/s and D = 5 s that gives k = 124, matching the compiled table in
+              <code>bps.rs</code> exactly: 1 bps → 18, 2 → 31, 5 → 67, 10 → 124.</p>
+              <div class="table-wrap">
+                <table>
+                  <tr><th>bps</th><td>1</td><td>2</td><td>5</td><td>10</td></tr>
+                  <tr><th>k (D = 5 s)</th><td>18</td><td>31</td><td>67</td><td>124</td></tr>
+                </table>
+              </div>
+              <p><strong>Does raising the block rate lengthen confirmation under GHOSTDAG?</strong> The paper
+              says so directly (&sect;1.2): "many blocks are created in parallel, blocks suffer from larger
+              anticones, and transactions take longer to confirm," adding that "Kaspa's convergence time remains
+              in the order of tens of seconds even when its latency is way below 10 seconds."</p>
+              <p>The guarantee readouts compute the paper's own no-visible-attack bound (&sect;1.5.2),
+              O((ln(1/&epsilon;)/&lambda; + D)/(1&minus;2&alpha;) + D&sup2;&lambda;), at &epsilon; = 0.01. It grows
+              with &lambda; at fixed D.</p>
+              <p>The fixed side substitutes D<sub>max</sub>, the D slider. The adaptive side substitutes
+              D<sub>t</sub>, the actual-latency slider. That substitution is the whole difference between the
+              two readouts.</p>
+              <p><strong>Sompolinsky's "about 8x," reproduced twice without inventing a constant.</strong> On
+              moving from 10 to 100 blocks a second under GHOSTDAG (Bitcoin Takeover S17 E36, 31:06):
+              "confirmation of transactions will take tens of seconds at least, about 8x long."</p>
+              <p>At a fixed 2 s delay the bound above gives 43 s at 10 blocks/sec, his "tens of seconds," and
+              402 s at 100, a 9.3&times; increase.</p>
+              <p>A second, independent check: the margin formula, verified against <code>bps.rs</code>, takes k
+              from 124 blocks at 10 bps to 1,074 at 100 bps with D fixed at 5 s, an 8.66&times; increase. Ten
+              times the blocks buys ten times the speed only if k can stay fixed, and GHOSTDAG's own proof
+              forces k up with &lambda;.</p>
               <p><strong>Table 1, transcribed.</strong> The paper directly compares four ordering rules' asymptotic
               convergence time, in blocks (multiply by λ⁻¹ for seconds, per the paper's own note under the table).
               D<sub>max</sub> is an a priori worst-case latency bound fixed in advance; D<sub>t</sub> is a bound on
@@ -519,80 +566,25 @@
               </table>
               </div>
               <ul>
-                <li>SPECTRE converges slightly faster than KNIGHT when no attack is visible, the same expression
-                minus KNIGHT's extra (D<sub>t</sub>λ)² term, but SPECTRE does not guarantee convergence once an
-                attack is visible: it solves only "weak liveness," securing payments whose ordering among honest
-                users is commutative, not the general consensus problem KNIGHT solves (§1, closing paragraph, citing [19]).</li>
-                <li>Nakamoto Consensus's tolerable attacker share shrinks toward zero as D·λ grows: the table's own
-                denominator, max{0, (1−α)/(1+D<sub>t</sub>λ) − α}, heads to zero as D<sub>t</sub>λ
-                increases, which §3.1-3.2 calls "not scalable, since its security threshold deteriorates as the
-                block creation rate λ grows."</li>
+                <li>SPECTRE's "does not converge" cell is why it is not a candidate: it solves only "weak
+                liveness," not the general consensus problem KNIGHT solves (§1, closing paragraph).</li>
                 <li>PHANTOM converges only in terms of D<sub>max</sub>, a worst-case latency chosen in advance,
                 rather than the current D<sub>t</sub> that KNIGHT and SPECTRE track (§4: PHANTOM "converges in
                 terms of D<sub>max</sub> = D only").</li>
               </ul>
-              <p><strong>What this widget shows and does not show.</strong> The margin gauges (configured k,
-              margin needed, in blocks) come straight from GHOSTDAG's own anticone-tolerance formula, verified
-              exactly against rusty-kaspa's compiled table; k is a real protocol quantity, but this page does not
-              simulate DAGKnight's actual k-cluster selection algorithm or vote count, a fair reading of the
-              paper's qualitative Figure 4 (parameterized protocols hold a flat, hardcoded confirmation bound and
-              can fail past it; parameterless ones track the current latency bound and stay safe, only slower),
-              not a reproduction of it. The "guarantee" readouts, by contrast, are computed directly from
-              the paper's own Table 1 and §1.5.2 optimistic (no-visible-attack) formula, the
-              D<sub>max</sub>-versus-D<sub>t</sub> substitution described above; that formula has no unspecified
-              constant, so those readouts are real numbers the paper commits to. The paper's separate, far rougher
-              worst-case (visible-attack) bound, whose constant c the paper leaves unstated, sits one click down,
-              labeled as a rough shape rather than a precise prediction, the same caveat the paper gives that
-              bound past the point it calls "far from tight." The paper's own worked example (Figure 3, at
-              λ = 3.75 bps, adversary share α = 0.2, confidence ε = 0.05) reports D = 2 s → k = 4, confirmation
-              ≈ 12 s; D = 1 s → k = 1, confirmation ≈ 6 s; D = 0.1 s → k = 0, confirmation ≈ 1.2 s. Those three
-              points use the paper's own tuned parameters, cited here for reference rather than wired into the
-              sliders.</p>
-              <p><strong>Where the efficiency question is actually being worked: kaspanet's own branch, plus one contributor's personal fork and wiki.</strong>
-              kaspanet/rusty-kaspa's own <code>dagknight</code> branch is active: latest commit
-              <a href="https://github.com/kaspanet/rusty-kaspa/commit/956c82fd764d6f412d715a4b0706e6c34e12a49c">"Merge branch 'dk-umc-proposed' into dagknight"</a>,
-              August 14, 2026, preceded by a run of <code>[DK::UMC]</code> and <code>[DK::CZM]</code> commits from
-              August 12 to 14, 2026 (verified against the GitHub API commit log, checked 2026-08-22). Both
-              coderofstuff (40 commits to the official repo) and freshair18 (9 commits) are credited
-              contributors there, not outside parties. Separately,
-              <a href="https://github.com/coderofstuff/rusty-kaspa">coderofstuff/rusty-kaspa</a> is a personal
-              fork carrying branches <code>dagknight</code> (last commit Jul 26, 2026), <code>dkoder</code>,
-              <code>dk-shortcut</code>, <code>dk-umc-proposed</code> (last commit Aug 14, 2026, the same commit
-              that merged into kaspanet's branch), and <code>dk-with-tcp</code> (last commit Aug 20, 2026). Its
-              companion <a href="https://github.com/coderofstuff/dk-wiki">dk-wiki</a>, unofficial and separate
-              from kaspanet's own docs, states in
-              <a href="https://github.com/coderofstuff/dk-wiki/blob/main/08-umc-voting.md">08-umc-voting.md</a>
-              (last edited Jul 24, 2026): "the paper's recursive algorithm as written still has worst-case
-              O(n²) complexity, because in the worst case every block's vote must be computed and the
-              recursion tree can be quadratic," and "If UMC voting is O(n²), the total rank search becomes
-              O(n² &times; max_k), which is expensive." It proposes an incremental replacement it puts at
-              "O(n &times; K) amortized." A related page, <a href="https://github.com/coderofstuff/dk-wiki/blob/main/06-rank.md">06-rank.md</a>
-              (last edited Jul 31, 2026), describes a separate change that "reduces the number of
-              k-colouring + UMC voting calls from O(max_k) to O(log(max_k))." A commit titled
-              "[DK::bench] Add benchmarks for tie breaking" (<code>73e3079</code>, May 28, 2026) adds a real
-              criterion benchmark harness and fixture data testing tie-breaking at k = 4, 9, 16, 25, 36, and 53,
-              but no measured output is committed anywhere: it is unrun benchmarking infrastructure, not a
-              published number. The code itself has landed on kaspanet's own experimental branch; the analysis
-              explaining why it matters has not. None of it is peer-reviewed, merged to master, or adopted as
-              Kaspa's shipped algorithm.</p>
-              <p>Sources: Sompolinsky, <a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast">Bitcoin Takeover Podcast</a>,
-              S17 E36 (31:06), on the K-parameter/confirmation-time tradeoff going from 10 to 100 blocks/sec
-              (citation supplied directly by this page's editor from the episode; the individual episode page
-              was not independently located as of 2026-08-24, so the show's own listing is linked instead) &middot;
-              Sompolinsky &amp; Sutton, <a href="https://eprint.iacr.org/2022/1494">"The DAG KNIGHT Protocol: A Parameterless Generalization of Nakamoto Consensus,"</a>
-              IACR ePrint 2022/1494 (esp. §1.2, §1.3, §1.4, §1.5.2, Theorem 14, Figures 3 to 4), last revised Feb 24,
-              2023 (<a href="https://eprint.iacr.org/archive/versions/2022/1494">version history</a>) &middot;
-              <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, Status: Proposed,
-              no technical revision since Nov 30, 2022, only a metadata commit in Jul 2025 &middot;
-              rusty-kaspa <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/bps.rs">bps.rs</a>,
-              <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params.rs</a>,
-              <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/constants.rs">constants.rs</a>
-              (checked 2026-08-22) &middot; kaspanet/rusty-kaspa
-              <a href="https://api.github.com/repos/kaspanet/rusty-kaspa/commits?sha=dagknight">dagknight branch commit log</a>
-              (checked 2026-08-22, via GitHub API) &middot; unofficial: <a href="https://github.com/coderofstuff/rusty-kaspa/tree/dagknight">coderofstuff/rusty-kaspa</a>
-              and <a href="https://github.com/coderofstuff/dk-wiki">dk-wiki</a> (checked 2026-08-22) &middot;
-              this site's <a href="/what-is-kaspa#ghostdag">What is Kaspa</a> and
-              <a href="/status">Status</a>.</p>
+              <p><strong>What the gauges are.</strong> The margin gauges come from GHOSTDAG's own
+              anticone-tolerance formula, verified against rusty-kaspa's compiled table.</p>
+              <p>This page does not simulate DAGKnight's k-cluster selection or its vote count: it reads the
+              paper's Figure 4 shape rather than reproducing the algorithm. The worst-case bound one click
+              down leaves its constant c unstated in the paper, so that side is a rough shape.</p>
+              <ul class="source-list">
+                <li>Sompolinsky &amp; Sutton, <a href="https://eprint.iacr.org/2022/1494">"The DAG KNIGHT Protocol: A Parameterless Generalization of Nakamoto Consensus"</a>, IACR ePrint 2022/1494, last revised 24 Feb 2023 (<a href="https://eprint.iacr.org/archive/versions/2022/1494">version history</a>). Sections 1.2, 1.3, 1.4, 1.5.2, Theorem 14, Figures 3 to 4.</li>
+                <li>Sompolinsky on <a href="https://podscan.fm/podcasts/bitcoin-takeover-podcast">Bitcoin Takeover</a> S17 E36 (31:06), on the k-versus-confirmation-time tradeoff from 10 to 100 blocks/sec. Quoted from the episode by this page's editor; the individual episode page could not be located as of 24 Aug 2026, so the show's own listing is linked instead.</li>
+                <li><a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, Status: Proposed. No technical revision since 30 Nov 2022, one metadata commit in July 2025.</li>
+                <li>rusty-kaspa <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/bps.rs">bps.rs</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params.rs</a> and <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/constants.rs">constants.rs</a>, checked 2026-08-22: the k table and the two constants behind it.</li>
+                <li>kaspanet/rusty-kaspa's <a href="https://api.github.com/repos/kaspanet/rusty-kaspa/commits?sha=dagknight">dagknight branch commit log</a>, checked 2026-08-22 via the GitHub API.</li>
+                <li>Unofficial, and marked as such above: <a href="https://github.com/coderofstuff/rusty-kaspa/tree/dagknight">coderofstuff/rusty-kaspa</a> and <a href="https://github.com/coderofstuff/dk-wiki">dk-wiki</a>, checked 2026-08-22.</li>
+              </ul>
             </div>
           </details>
 
@@ -619,7 +611,6 @@
           var BPS_TABLE_MAX = 32;   // rusty-kaspa's Bps<BPS>::ghostdag_k() match arms stop here; the fallback arm panics above it
           var BPS_SLIDER_MAX = 100; // exploratory range on this slider only; not a confirmed network target, see honesty note above
           var L_SLIDER_MAX = 20;
-          var SHARED_SCALE = ghostdagK(2 * L_SLIDER_MAX * BPS_SLIDER_MAX, DELTA) * 1.05;
 
           var bpsSlider = document.getElementById("par-bps-slider");
           var dSlider = document.getElementById("par-d-slider");
@@ -634,14 +625,11 @@
           var fixedCap = document.getElementById("par-fixed-cap");
           var fixedTableEnd = document.getElementById("par-fixed-tableend");
           var fixedOver = document.getElementById("par-fixed-over");
-          var fixedStrip = document.getElementById("par-fixed-strip");
           var fixedTimeOut = document.getElementById("par-fixed-time-out");
           var fixedVerdict = document.getElementById("par-fixed-verdict");
 
           var adaptKOut = document.getElementById("par-adapt-k-out");
-          var adaptCostOut = document.getElementById("par-adapt-cost-out");
           var adaptFill = document.getElementById("par-adapt-fill");
-          var adaptStrip = document.getElementById("par-adapt-strip");
           var adaptTimeOut = document.getElementById("par-adapt-time-out");
           var adaptVerdict = document.getElementById("par-adapt-verdict");
           var payoffLine = document.getElementById("par-payoff-line");
@@ -736,15 +724,6 @@
             regimePayoffLine.textContent = "Calm: " + fmtSecondsHuman(optSeconds) + ". Under attack: " + pessLabel + ".";
           }
 
-          function makeStrip(el, count, colorClassFn){
-            el.innerHTML = "";
-            for (var i = 0; i < count; i++){
-              var b = document.createElement("span");
-              b.className = "block " + colorClassFn(i);
-              el.appendChild(b);
-            }
-          }
-
           function render(){
             var BPS = parseFloat(bpsSlider.value);
             var D = parseFloat(dSlider.value);
@@ -772,14 +751,14 @@
             fixedKOut.textContent = configuredK;
             fixedReqOut.textContent = requiredK;
             var over = requiredK > configuredK;
-            var capPct = Math.min(96, (configuredK / SHARED_SCALE) * 100);
-            fixedCap.style.left = capPct + "%";
-            fixedFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
+            var scale = Math.max(configuredK, requiredK) * 1.25;
+            fixedCap.style.left = ((configuredK / scale) * 100) + "%";
+            fixedFill.style.width = ((requiredK / scale) * 100) + "%";
             fixedFill.style.background = over ? "var(--pink)" : "var(--cyan)";
 
             if (beyondTable){
               fixedTableEnd.hidden = false;
-              fixedTableEnd.textContent = "Past the shipped table. This margin comes from the same formula, and picking it on mainnet means a hard fork.";
+              fixedTableEnd.textContent = "Past the shipped table";
             } else {
               fixedTableEnd.hidden = true;
             }
@@ -792,13 +771,6 @@
               fixedOver.hidden = true;
             }
 
-            var stripCount = 10;
-            makeStrip(fixedStrip, stripCount, function(i){
-              var jitter = ((i * 37) % 11) - 5;
-              var sample = Math.max(0, requiredK + jitter);
-              return sample > configuredK ? "over" : "ok";
-            });
-
             // The paper's own optimistic (no visible attack) confirmation-time formula
             // (Table 1, section 1.5.2), not the k/BPS proxy above and not the pessimistic
             // worst-case bound one click down: PHANTOM (this side) uses D_max, the assumed
@@ -809,21 +781,17 @@
 
             if (beyondTable){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Past the shipped table: a margin of " + configuredK + " is what the formula gives, but running it means hard-forking that constant in ahead of time, the a-priori choice DAGKnight removes.";
+              fixedVerdict.textContent = "rusty-kaspa has no table entry at this rate. Running this margin on mainnet means hard-forking the constant in ahead of time, the a-priori choice DAGKnight removes.";
             } else if (over){
               fixedVerdict.className = "verdict unsafe";
-              fixedVerdict.textContent = "Cap exceeded: needs a margin of " + requiredK + ", fixed at " + configuredK + ".";
+              fixedVerdict.textContent = "Cap exceeded. Honest blocks now fall outside the fixed margin and read as an attack.";
             } else {
               fixedVerdict.className = "verdict safe";
-              fixedVerdict.textContent = "Within the cap: this latency needs a margin of " + requiredK + "; the fixed " + configuredK + " covers it.";
+              fixedVerdict.textContent = "Within the cap. Concurrent blocks stay inside the fixed margin; nothing reads as an attack.";
             }
 
             adaptKOut.textContent = requiredK;
-            adaptFill.style.width = Math.min(100, (requiredK / SHARED_SCALE) * 100) + "%";
-            var costLabel = requiredK < 40 ? "low" : requiredK < 150 ? "moderate" : requiredK < 600 ? "high" : "extreme";
-            adaptCostOut.textContent = costLabel;
-
-            makeStrip(adaptStrip, stripCount, function(){ return "ok"; });
+            adaptFill.style.width = ((requiredK / scale) * 100) + "%";
 
             // Same formula, same shared alpha and epsilon; KNIGHT (this side) uses D_t, the
             // tracked-latency slider, instead of D_max. That substitution is the only thing that
@@ -831,7 +799,7 @@
             var adaptOptSeconds = optimisticBoundSeconds(L, BPS, alpha);
             adaptTimeOut.textContent = fmtSecondsHuman(adaptOptSeconds);
 
-            adaptVerdict.textContent = "No cap: margin sits at " + requiredK + " right now, tracking latency, relaxing once calm.";
+            adaptVerdict.textContent = "No cap to exceed, and no person to retune it.";
 
             // Ratio between the two sides' bounds. This formula has no unspecified constant, so
             // this ratio, unlike the pessimistic one one click down, is a real number the paper
@@ -847,23 +815,19 @@
               (adaptOptSeconds / fixedOptSeconds).toFixed(1) + "×";
             var boundNote;
             if (fixedOptSeconds > adaptOptSeconds * 1.02) {
-              boundNote = "The paper's own no-visible-attack bound puts GHOSTDAG's guarantee at " +
-                fmtSecondsHuman(fixedOptSeconds) + ", " + ratioMultiple + " DAGKnight's " + fmtSecondsHuman(adaptOptSeconds) + ".";
+              boundNote = "GHOSTDAG's guarantee runs " + ratioMultiple + " as long as DAGKnight's here, because the actual latency set above is better than its fixed assumption.";
             } else if (adaptOptSeconds > fixedOptSeconds * 1.02) {
-              boundNote = "The paper's own no-visible-attack bound puts DAGKnight's guarantee at " +
-                fmtSecondsHuman(adaptOptSeconds) + ", " + ratioMultiple + " GHOSTDAG's " + fmtSecondsHuman(fixedOptSeconds) +
-                ", because the actual latency set above is worse than GHOSTDAG's fixed assumption.";
+              boundNote = "DAGKnight's guarantee runs " + ratioMultiple + " as long as GHOSTDAG's here, because the actual latency set above is worse than GHOSTDAG's fixed assumption.";
             } else {
-              boundNote = "The paper's own no-visible-attack bound puts both guarantees at about the same point: " +
-                fmtSecondsHuman(fixedOptSeconds) + " for GHOSTDAG, " + fmtSecondsHuman(adaptOptSeconds) + " for DAGKnight.";
+              boundNote = "Both guarantees land at about the same point right now.";
             }
 
             if (beyondTable){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG has no table entry left; its margin formula alone would need a margin of " + requiredK + ". " + boundNote + " That gap is the whole “parameterless” claim.";
+              payoffLine.textContent = boundNote + " That gap is the whole “parameterless” claim.";
             } else if (over){
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " honest blocks now read as an attack to GHOSTDAG, fixed at " + D.toFixed(1) + " s of delay; it would need to widen to a margin of " + requiredK + ". " + boundNote;
+              payoffLine.textContent = "Honest blocks now read as an attack to GHOSTDAG, which is fixed at " + D.toFixed(1) + " s of assumed delay. " + boundNote;
             } else {
-              payoffLine.textContent = "At " + BPS + (BPS === 1 ? " block/sec," : " blocks/sec,") + " GHOSTDAG's margin sits at " + configuredK + " against DAGKnight's " + requiredK + ". " + boundNote;
+              payoffLine.textContent = boundNote + " GHOSTDAG budgets for the delay it was told to assume; DAGKnight budgets for the one it measures.";
             }
 
             var live = document.getElementById("par-live-region");
@@ -894,56 +858,6 @@
           render();
         })();
         </script>
-      </details>
-      <div id="kip-groups">
-        <details class="deep-dive" open>
-          <summary>KIP 1&ndash;6, the foundational batch (2 of 6 active)</summary>
-          <div class="table-wrap">
-            <table class="reality-table">
-              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>Rewriting the full node in Rust</td><td>Consensus, Node</td><td>Implemented</td></tr>
-                <tr><td>2</td><td>Upgrade consensus to follow DAGKNIGHT</td><td>Consensus, API/RPC</td><td>Proposed</td></tr>
-                <tr><td>3</td><td>Block sampling for efficient DAA with high BPS</td><td>Consensus</td><td>Rejected</td></tr>
-                <tr><td>4</td><td>Sparse difficulty windows</td><td>Consensus</td><td>Active</td></tr>
-                <tr><td>5</td><td>Message signing</td><td>Applications</td><td>Active</td></tr>
-                <tr><td>6</td><td>Proof of Chain Membership</td><td>Consensus, Applications</td><td>Draft</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </details>
-        <details class="deep-dive">
-          <summary>KIP 9&ndash;15, consensus and script-engine expansion (5 of 5 active)</summary>
-          <div class="table-wrap">
-            <table class="reality-table">
-              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>9</td><td>Extended mass formula for mitigating state bloat</td><td>Consensus, Mempool, P2P</td><td>Active</td></tr>
-                <tr><td>10</td><td>New transaction opcodes for enhanced script functionality</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-                <tr><td>13</td><td>Transient storage handling</td><td>Consensus</td><td>Active</td></tr>
-                <tr><td>14</td><td>The <span class="term-def" tabindex="0" role="button" aria-describedby="crescendo-def-kips">Crescendo<span class="term-def__panel" id="crescendo-def-kips" role="tooltip">The May 2025 upgrade that sped Kaspa's mainnet from one block a second to ten.</span></span> hardfork</td><td>Consensus</td><td>Active</td></tr>
-                <tr><td>15</td><td>Canonical transaction ordering and sequencing commitments</td><td>Consensus</td><td>Active</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </details>
-        <details class="deep-dive">
-          <summary>KIP 16&ndash;21, the Toccata batch (4 of 4 active)</summary>
-          <div class="table-wrap">
-            <table class="reality-table">
-              <thead><tr><th>KIP</th><th>Title</th><th>Layer</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>16</td><td>ZK precompile opcode</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-                <tr><td>17</td><td><span class="term-def" tabindex="0" role="button" aria-describedby="covenant-def-kips">Covenants<span class="term-def__panel" id="covenant-def-kips" role="tooltip">A rule attached to a coin that the network itself checks on every spend, not a server's promise.</span></span> and improved scripting capabilities</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-                <tr><td>20</td><td>Covenant IDs</td><td>Consensus, Script Engine</td><td>Active</td></tr>
-                <tr><td>21</td><td>Partitioned sequencing commitment with O(activity) proving</td><td>Consensus, Chain-Block UTXO Validation</td><td>Active</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </details>
-      </div>
-      <p class="live-footnote" id="kip-stamp">Baseline read from the KIP repository on August 22, 2026. This table refreshes from the repository when the page loads.</p>
-      <p>KIPs 16, 17, 20, and 21 went Active July 15, 2026, when Toccata reached mainnet, via the pull requests that first proposed each: <a href="https://github.com/kaspanet/kips/pull/31">KIP-16</a>, <a href="https://github.com/kaspanet/kips/pull/32">KIP-17</a>, <a href="https://github.com/kaspanet/kips/pull/35">KIP-20</a>, <a href="https://github.com/kaspanet/kips/pull/36">KIP-21</a>. KIP-2, the <a href="#parameterless-demo">DAGKnight</a> upgrade, has stayed Proposed for years: devnet only, no testnet, no date. Eleven more KIPs sit open as pull requests, among them 7, 8, 11, 12, 18, 19, and 22 through 25, why the tables skip 6 to 9 and 10 to 13. KIP-7 (finality rules) and KIP-8 (headers-proof replacement) are two of those open pull requests, not withdrawn or reserved. <a href="https://github.com/kaspanet/kips">Read the repository</a> for full text.</p>
     </section>
 
     <section class="section">
@@ -992,10 +906,11 @@
       </div>
       <p class="live-footnote" id="kcc-stamp">Baseline read from the KCC repository on August 22, 2026. This table refreshes from the repository when the page loads; the live fetch below only lists currently open pull requests, so the three merged drafts and the closed proposals stay as this baseline describes them.</p>
       <p class="fit-note">KCC-0001 defines the byte layout for a covenant, a rule attached to a coin. The <a href="/demos/covenant-breaker">covenant breaker demo</a> attacks a vault covenant with an early withdrawal, a skipped recovery key, and a forged lookalike, and shows the exact rule that stops each one.</p>
-      <p>KCC-0020 is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant, normal before acceptance, not acceptance itself. A token issued against it today inherits three known defects: a permanent supply-split consequence its co-authors partly defend and partly call a wrong pattern still needing a spec fix, one production deployment that admits partial conformance, and a launchpad already on its fourth incompatible template.</p>
-      <details class="deep-dive" id="supply-split-demo">
-        <summary>Try it: update one holder's tokens and watch a payment to the other get refused for good</summary>
-        <div class="kip-supply-split-demo">
+      <p>KCC-0020 is the most argued-over thread on the builder forum, and its shape has already leaked into working code: the Argent compiler ships a <code>kcc20_asset.ag</code> example defining a transferable asset covenant. That is normal before acceptance, not acceptance itself.</p>
+      <p>A token issued against the draft today inherits five known defects.</p>
+      <p class="eyebrow">Try it</p>
+      <h3>Update one holder, then try to pay the other</h3>
+      <div class="kip-supply-split-demo" id="supply-split-demo">
           <p class="lead">You and Sam hold the same token. Right now any coin of yours equals any coin of Sam's. Update just one of you, and that stops being true, for good.</p>
           <p class="fictional-note">A made-up token, used as an example. The standard is real; this token is not.</p>
 
@@ -1019,12 +934,13 @@
             <p class="caption" id="sup-caption">Either of you could pay the other any amount. A coin is a coin.</p>
           </div>
 
-          <p class="consequence">A price, a balance, an exchange listing: anything that assumed one supply of this token now has to track two.</p>
+          <p class="consequence" id="sup-consequence" role="status" aria-live="polite" hidden>A price, a balance, an exchange listing: anything that assumed one supply of this token now has to track two.</p>
 
           <details>
             <summary>What the spec's own authors said about this</summary>
             <div class="quotes-body">
-              <p class="note">This demo is a simplified stand-in for KCC-0020, a draft Kaspa token rule that lets an issuer update the state of some holders and not others. Issue #14, opened by Knitser on kaspanet/kccs, August 21, 2026, reports that this same mechanism permanently splits a token's supply once triggered. Two KCC-0020 co-authors replied. This is not a universal bug: one pattern below is defended as intended, a different one is conceded as a wrong pattern the standard does not yet handle. Knitser said on August 23, 2026 that the co-authors' explanation clears up his original concern; a pull request tightening the spec's wording is open but not merged.</p>
+              <p class="note">This is a simplified stand-in for KCC-0020, a draft token rule that lets an issuer update some holders' cells and not others.</p>
+              <p class="note">It is not a universal bug. One pattern is defended as intended; a different one its own co-authors call wrong, and the standard does not yet handle it. The table below carries both, with the thread.</p>
               <blockquote>
                 &ldquo;My view is that the combination of extended state, alongside token-specific entry points, allows for various use cases which are not only write-once, nor only for a singleton token. The standard transfer function, though, is meant to transfer fungible tokens, hence, it assumes that inputs and outputs state (excluding ownership and amount) must be identical (or else could not be treated as fungible)&rdquo;
                 <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
@@ -1058,6 +974,7 @@
           var btn = document.getElementById("sup-actionBtn");
           var resetBtn = document.getElementById("sup-resetBtn");
           var caption = document.getElementById("sup-caption");
+          var consequence = document.getElementById("sup-consequence");
 
           function buildRow(container, count, flagged) {
             container.innerHTML = "";
@@ -1089,6 +1006,7 @@
             linkGlyph.classList.add("blocked");
             caption.className = "caption refuse-msg";
             caption.innerHTML = "<b>Refused.</b> Your coins and Sam's just became two separate, permanently unmergeable supplies of the same named token, because KCC-0020 let an issuer update Sam's holders without updating yours.";
+            consequence.hidden = false;
             btn.disabled = true;
             step = "refused";
           }
@@ -1101,6 +1019,7 @@
             supplyLine.innerHTML = TOTAL + " coins. <b>One shared supply.</b>";
             caption.className = "caption";
             caption.innerHTML = "Either of you could pay the other any amount. A coin is a coin.";
+            consequence.hidden = true;
             btn.disabled = false;
             btn.textContent = "Update Sam's coins";
             step = "start";
@@ -1115,22 +1034,60 @@
           resetDemo();
         })();
         </script>
-      </details>
-      <details class="deep-dive" id="supply-split">
-        <summary>The supply-split consequence, defended in part, conceded in part</summary>
-        <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened August 21, 2026 by Knitser and still open, shows that KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can only be authorized by each cell's own holder, not the issuer, so there is no way to move every holder's cell to a new commitment at once. Update some cells and not others and the token's supply splits into groups that can never consolidate again, permanently. Co-authors Manyfestation and Michael Sutton defend one version of this as intended: Sutton's own stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible." But Sutton then flagged a second pattern, extended state used for ephemeral, receipt-like data that mutates without affecting fungibility, as "a wrong pattern," and both co-authors agreed it should either be defined in the standard or moved out of state entirely. A fourth commenter, ShawnPearce, added on August 23, 2026 that the standard's other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is signature-bound and transaction-scoped rather than per-cell, and under this spec's borrowed receive, a borrower who signs the transaction controls the payload the owner's cell gets recreated with. Knitser replied on August 23, 2026 that the co-authors' explanation "clears it up": an entrypoint that changes extended state makes a different type of token out of those specific cells rather than updating the original, so neither of his two originally proposed fixes was right. He then asked the spec text to say this more plainly in four places: the commitment wording, how balances display across commitment values, which entrypoints may change a commitment and under what authority, and how to handle receipt-like data. Manyfestation opened a pull request the same day, "Clarify KCC20 extended state fungibility semantics" (<a href="https://github.com/kaspanet/kccs/pull/16">#16</a>), to cover it. The issue is still open and the pull request has not merged.</p>
-      </details>
+      <div class="table-wrap" id="supply-split">
+        <table class="reality-table">
+          <thead><tr><th>Known defect</th><th>What it does to a token</th><th>Where it stands</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Supply split</td>
+              <td>Only a cell's own holder can authorize a state update, so an issuer cannot move every holder at once. Updated and un-updated cells never consolidate again.</td>
+              <td><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a> open; <a href="https://github.com/kaspanet/kccs/pull/16">PR #16</a> not merged</td>
+            </tr>
+            <tr>
+              <td>Partial conformance</td>
+              <td>The only production implementer calls its deployed KCC20V2 "partially aligned, not fully conforming."</td>
+              <td><a href="https://github.com/kaspanet/kccs/issues/11">Issue #11</a>, closed by its author 22 Aug 2026, statement not withdrawn</td>
+            </tr>
+            <tr>
+              <td>Forking templates</td>
+              <td>One launchpad's 74 live tokens span four template generations with no migration path, only burn and reissue.</td>
+              <td>kas-smiths.org, 0xKnitser, 15 Aug 2026</td>
+            </tr>
+            <tr>
+              <td>No on-chain metadata</td>
+              <td>Name, ticker and image live off-chain. Of 19 logos on one launchpad, 5 were dead within days and 3 more served HTML.</td>
+              <td>KCC-0021 is an open, unmerged pull request</td>
+            </tr>
+            <tr>
+              <td>Borrowed receive</td>
+              <td>Anyone can change your coin's outpoint, which invalidates a pre-signed spend and forces a rebuild.</td>
+              <td>kas-smiths.org, Shawn, 10 Jul 2026; no fix merged</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <details class="deep-dive">
-        <summary>The one production implementer's own conformance admission</summary>
-        <p><a href="https://github.com/kaspanet/kccs/issues/11">Issue #11</a>, opened July 26, 2026 by KaspaCom, is the only production implementer of a KCC token standard stating its own conformance level in writing: KaspaCom's deployed KCC20V2 "should be described as partially aligned, not fully conforming" with KCC-0001, 0002, 0020, and 0021. KaspaCom closed the issue itself on August 22, 2026, after the KCC-0021 author explained that its metadata layer is deliberately behavior-independent and does not require byte-for-byte KCC-0020 conformance to adopt. That answers KaspaCom's question; it does not withdraw the partial-conformance statement on the record above.</p>
-      </details>
-      <details class="deep-dive">
-        <summary>Two more gaps: a forking launchpad template, and dead metadata links</summary>
-        <p>The standard's own template shape is already fragmenting on mainnet: one launchpad's 74 live tokens span four separate template generations, with no migration path between them, only opt-in burn and reissue, according to a kas-smiths.org post from 0xKnitser on August 15, 2026. Covenant tokens have no metadata standard on mainnet without KCC-0021, which stays an open, unmerged pull request, so name, ticker, and image all live off-chain today: the same 0xKnitser post cross-checked one live launchpad's logos and found 5 of 19 dead within days, 3 more serving HTML instead of an image.</p>
-      </details>
-      <details class="deep-dive">
-        <summary>A second open gap in the same spec: borrowed receive</summary>
-        <p>Shawn described it on the kas-smiths.org forum, July 10, 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs pre-signed, outpoint bound transactions." Borrowing a token into a UTXO before a pre-signed spend lands invalidates the transaction and forces a rebuild, with no signature-level fix. A month later Shawn explained why: "the v1 sighash folds the spent input's own outpoint into the signed message unconditionally," and AnyoneCanPay "only zeroes the other inputs' outpoints, never the signed input's own." Authorization has to move to something the covenant checks against its own state, not the transaction signature; nothing has merged.</p>
+        <summary>The full thread behind each of the five</summary>
+        <h3>Supply split</h3>
+        <p><a href="https://github.com/kaspanet/kccs/issues/14">Issue #14</a>, opened 21 August 2026 by Knitser and still open. KCC-0020's transfer consolidation rule requires every input to carry the same extended-state commitment, but its state-update entrypoint can be authorized only by each cell's own holder.</p>
+        <p>Update some cells and not others and the supply splits into groups that can never consolidate again, permanently.</p>
+        <p>Co-authors Manyfestation and Michael Sutton defend one version as intended: Sutton's stablecoin-blacklist example, where a frozen flag deliberately "renders the token as temporarily non fungible."</p>
+        <p>Sutton then flagged a second pattern, extended state holding ephemeral receipt-like data that mutates without affecting fungibility, as "a wrong pattern." Both co-authors agreed it should be defined in the standard or moved out of state entirely.</p>
+        <p>ShawnPearce added on 23 August 2026 that the other candidate home for that data, the transaction payload, has its own catch: the v1 sighash commits the payload unconditionally, so it is transaction-scoped rather than per-cell. Under borrowed receive, a borrower who signs the transaction controls the payload the owner's cell is recreated with.</p>
+        <p>Knitser replied the same day that the explanation "clears it up," so neither of his two proposed fixes was right, and asked the spec to say so plainly in four places. Manyfestation opened <a href="https://github.com/kaspanet/kccs/pull/16">PR #16</a>, "Clarify KCC20 extended state fungibility semantics," that day. The issue is open and the pull request has not merged.</p>
+
+        <h3>Partial conformance</h3>
+        <p><a href="https://github.com/kaspanet/kccs/issues/11">Issue #11</a>, opened 26 July 2026 by KaspaCom, is the only production implementer of a KCC token standard stating its own conformance level in writing: its deployed KCC20V2 "should be described as partially aligned, not fully conforming" with KCC-0001, 0002, 0020 and 0021.</p>
+        <p>KaspaCom closed the issue itself on 22 August 2026, after the KCC-0021 author explained that its metadata layer is deliberately behavior-independent. That answers KaspaCom's question. It does not withdraw the partial-conformance statement.</p>
+
+        <h3>Forking templates, and metadata</h3>
+        <p>One launchpad's 74 live tokens span four separate template generations with no migration path between them, only opt-in burn and reissue, per a kas-smiths.org post from 0xKnitser on 15 August 2026.</p>
+        <p>Covenant tokens have no metadata standard on mainnet without KCC-0021, which stays an open, unmerged pull request, so name, ticker and image all live off-chain. The same post cross-checked one launchpad's logos: 5 of 19 were dead within days, 3 more served HTML instead of an image.</p>
+
+        <h3>Borrowed receive</h3>
+        <p>Shawn, on the kas-smiths.org forum, 10 July 2026: "borrowed receive lets anyone change your UTXO's outpoint, which griefs pre-signed, outpoint bound transactions." Borrowing a token into a UTXO before a pre-signed spend lands invalidates the transaction and forces a rebuild.</p>
+        <p>A month later he explained why: "the v1 sighash folds the spent input's own outpoint into the signed message unconditionally," and AnyoneCanPay "only zeroes the other inputs' outpoints, never the signed input's own." Authorization has to move to something the covenant checks against its own state. Nothing has merged.</p>
       </details>
       <p><a href="https://github.com/kaspanet/kccs">Read the KCC repository</a>, or follow the discussion on <a href="https://kas-smiths.org/">kas-smiths.org</a>. A status word here marks where something sits in this process, never that it works; for what is actually running, use the <a href="/status">live status page</a>.</p>
     </section>
@@ -1243,12 +1200,31 @@
   })();
   </script>
   <script>
+  // The panel is centered on its trigger (left:50% + translateX(-50%)). A trigger
+  // near the right edge of a 390px screen therefore puts part of the panel off
+  // screen, where it cannot be read and cannot be scrolled to, because the page
+  // body does not scroll horizontally. Measured on this page at 390px: two panels
+  // ran to x=420 and x=425. Nudge an open panel back inside the viewport.
+  function clampPanel(el) {
+    var panel = el.querySelector('.info-affordance__panel');
+    if (!panel) return;
+    panel.style.marginLeft = '0px';
+    var r = panel.getBoundingClientRect();
+    var pad = 10;
+    var nudge = 0;
+    if (r.right > window.innerWidth - pad) nudge = (window.innerWidth - pad) - r.right;
+    else if (r.left < pad) nudge = pad - r.left;
+    if (nudge) panel.style.marginLeft = Math.round(nudge) + 'px';
+  }
   document.querySelectorAll('.info-affordance').forEach(function (el) {
     var trigger = el.querySelector('.info-affordance__trigger');
     trigger.addEventListener('click', function () {
       var open = el.classList.toggle('is-open');
       trigger.setAttribute('aria-expanded', String(open));
+      if (open) clampPanel(el);
     });
+    el.addEventListener('mouseenter', function () { clampPanel(el); });
+    el.addEventListener('focusin', function () { clampPanel(el); });
   });
   document.addEventListener('click', function (e) {
     document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {

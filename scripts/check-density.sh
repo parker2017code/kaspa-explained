@@ -66,7 +66,20 @@ SKIP_TAGS = {"script", "style", "svg", "nav", "header", "footer"}
 MEASURED_TAGS = {"p": "paragraph", "td": "cell", "th": "cell"}
 
 
+# design/density-budget.md defines the pre-interaction limit as "everything above
+# the fold's first <details> OR INTERACTIVE ELEMENT." This script only ever counted
+# <details>, so a page whose first interaction is a slider or a button was measured
+# as if that control were not there: on 2026-08-29 kaspa-mining.html reported 423
+# pre-interaction words while its first slider sits about 160 words in, because
+# opening its four demos moved the first *closed* disclosure further down the page.
+# A rule that counts a closed panel as an interaction and a live control as prose
+# rewards re-hiding the demos, which is the defect the whole budget exists to catch.
+INTERACTIVE_TAGS = {"button", "input", "select", "textarea"}
+
+
 def is_boundary(tag, attrs):
+    if tag in INTERACTIVE_TAGS:
+        return True
     if tag != "details" and attrs.get("data-collapsed") != "true":
         return False
     if tag == "details" and "open" in attrs:
@@ -103,6 +116,8 @@ class DensityParser(HTMLParser):
             self.skip_stack.append(tag)
             return
         if tag in VOID_TAGS:
+            if not self.skip_stack and tag in INTERACTIVE_TAGS:
+                self.reached_boundary = True
             return
         if self.skip_stack:
             return

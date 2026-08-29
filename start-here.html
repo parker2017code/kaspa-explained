@@ -30,7 +30,7 @@
   <meta property="og:description" content="New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kaspaexplained.com/start-here">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,8 +38,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Start Here | Kaspa Explained">
   <meta name="twitter:description" content="New to all of this? Start here. Crypto from scratch first, then where Kaspa fits into it.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-01">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="dateModified" content="2026-08-29">
   <link rel="stylesheet" href="styles.css?v=20260825-102122">
   <script defer src="nav.js?v=20260825-102122"></script>
 </head>
@@ -66,20 +66,120 @@
   <main id="top" tabindex="-1" class="knowledge-page">
     <section class="knowledge-hero section">
       <h1>Start here</h1>
-      <p class="lead">Two doors. Pick the one that matches what you already know, and move on.</p>
+      <p class="lead">Two doors, and six words decide which one saves you time.</p>
+
+      <style>
+        .vocab-chips {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          margin: 14px 0 0;
+          padding: 0;
+        }
+        .vocab-chip {
+          min-height: 44px;
+          padding: 0 16px;
+          border: 1px solid var(--line);
+          border-radius: 22px;
+          background: var(--control-bg);
+          color: var(--text);
+          font: inherit;
+          font-size: 16px;
+          cursor: pointer;
+        }
+        .vocab-chip:hover { background: var(--control-hover); }
+        .vocab-chip[aria-pressed="true"] {
+          border-color: var(--green);
+          background: var(--accent-soft);
+          color: var(--green-pill);
+          font-weight: 600;
+        }
+        .vocab-chip:focus-visible {
+          outline: 3px solid var(--cyan);
+          outline-offset: 3px;
+        }
+        .vocab-prompt {
+          margin: 0;
+          color: var(--muted);
+        }
+        .vocab-readout {
+          margin: 16px 0 0;
+          font-size: 19px;
+          color: var(--text);
+        }
+        /* Dimming the other card was tried and measured: at opacity .5 its
+           body text fell to 2.95:1 in dark and 2.16:1 in light, under the
+           4.5:1 floor. The ring carries the answer on its own. */
+        .path-grid a { transition: box-shadow .18s ease; }
+        /* Scoped under .knowledge-page so it outranks the light-theme card
+           rule in styles.css, which sets box-shadow at (0,2,2). */
+        .knowledge-page .path-grid a.is-suggested {
+          box-shadow: inset 0 0 0 2px var(--green), 0 1px 2px rgba(0, 0, 0, .05), 0 6px 16px rgba(0, 0, 0, .04);
+        }
+      </style>
+
+      <p class="vocab-prompt" id="vocab-prompt">Tap every word you could already explain to someone else.</p>
+      <div class="vocab-chips" role="group" aria-labelledby="vocab-prompt">
+        <button type="button" class="vocab-chip" aria-pressed="false">private key</button>
+        <button type="button" class="vocab-chip" aria-pressed="false">mining</button>
+        <button type="button" class="vocab-chip" aria-pressed="false">proof of work</button>
+        <button type="button" class="vocab-chip" aria-pressed="false">block</button>
+        <button type="button" class="vocab-chip" aria-pressed="false">UTXO</button>
+        <button type="button" class="vocab-chip" aria-pressed="false">GHOSTDAG</button>
+      </div>
+      <p class="vocab-readout" id="vocab-readout" aria-live="polite"></p>
+
       <div class="path-grid grid-cards">
-        <a href="/crypto-from-scratch">
+        <a href="/crypto-from-scratch" id="door-one">
           <span>Door one</span>
           <strong>New to crypto</strong>
-          <p>What a coin is, why it needs keys and mining instead of a bank, and why it has a price at all. Start from zero.</p>
+          <p>What a coin is, why it needs keys and mining instead of a bank, and why it has a price at all.</p>
+          <span class="sr-only" data-suggested-note></span>
         </a>
-        <a href="/what-is-kaspa">
+        <a href="/what-is-kaspa" id="door-two">
           <span>Door two</span>
           <strong>Already know crypto</strong>
-          <p>Kaspa keeps Bitcoin-style mining but orders every block with GHOSTDAG instead of discarding the losers. Live at 10 blocks a second.</p>
+          <p>Kaspa keeps Bitcoin-style mining but orders every block with GHOSTDAG instead of discarding the losers.</p>
+          <span class="sr-only" data-suggested-note></span>
         </a>
       </div>
-      <p class="fit-note">Not sure which: if "private key" and "mining" are already familiar, take door two.</p>
+
+      <script>
+      (function () {
+        var chips = Array.prototype.slice.call(document.querySelectorAll('.vocab-chip'));
+        var out = document.getElementById('vocab-readout');
+        var doors = [document.getElementById('door-one'), document.getElementById('door-two')];
+        var names = ['None', 'One', 'Two', 'Three', 'Four', 'Five', 'All six'];
+        // The sentence gives the reason; the card that lights up gives the
+        // answer. Naming the door in both would print the same routing twice.
+        function render() {
+          var n = chips.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; }).length;
+          var head = n === 6 ? 'All six words.' : names[n] + ' of six.';
+          var tail = n < 3
+            ? ' Too few to skip the basics.'
+            : n < 6
+              ? ' Enough to start at Kaspa itself.'
+              : ' Nothing here left to build up first.';
+          out.textContent = head + tail;
+          var pick = n < 3 ? 0 : 1;
+          doors.forEach(function (d, i) {
+            if (!d) { return; }
+            var on = i === pick;
+            d.classList.toggle('is-suggested', on);
+            if (on) { d.setAttribute('aria-current', 'true'); } else { d.removeAttribute('aria-current'); }
+            d.querySelector('[data-suggested-note]').textContent = on ? 'Suggested by your answers.' : '';
+          });
+        }
+        chips.forEach(function (c) {
+          c.addEventListener('click', function () {
+            c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+            render();
+          });
+        });
+        render();
+      })();
+      </script>
     </section>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">

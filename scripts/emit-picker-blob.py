@@ -26,9 +26,10 @@ ARENA = ROOT / "data" / "arena-deep-text-vision-2026-08-20.md"
 PAGE = ROOT / "model-picker.html"
 
 # Metric order is dial order, so the blob reads the way the page does.
-# 25 figures across 10 dials: Artificial Analysis 13, LiveBench 7, LM Arena 5.
-# Every dial carries two or three figures. No dial carries one: a control built
-# on a single number is that number's leaderboard with a slider on it.
+# 10 scored figures: Artificial Analysis 4, LiveBench 4, LM Arena 1, ARC Prize 1.
+# The page groups them into six dials, and the grouping lives in the page's own
+# DIALS array rather than here, because it is a reader-facing decision and not a
+# data one. scripts/check-model-picker.py fails the build when the two disagree.
 # Raw values the page needs even though no dial scores them any more.
 #
 # Cost per task is the horizontal axis of the value chart and the most checked
@@ -3369,11 +3370,12 @@ def main():
             print(f"  {_m}: {_detail} (held-out r2={_fit.get('r2_loo', 0):.3f})")
 
     note = (
-        f"Artificial Analysis, LiveBench 2026-06-25, LM Arena and ARC Prize, read 20 and "
-        f"21 August 2026. {len(METRICS)} figures across ten dials, kept or cut on whether they "
-        "still tell the leading models apart rather than on how well known they are. Every "
-        "dial carries two of them, weighted the same. Each model appears once, at the effort "
-        "setting that buys the most "
+        f"Artificial Analysis, LiveBench 2026-06-25, LM Arena and ARC Prize, all read "
+        f"25 August 2026; the effort ladders come from the 20 August full-status capture "
+        f"of Artificial Analysis. {len(METRICS)} scored figures, kept or cut on whether they "
+        "still tell the leading models apart rather than on how well known they are. The page "
+        "groups them into dials and weights the figures inside a dial the same. Each model "
+        "appears once, at the effort setting that buys the most "
         "capability per dollar rather than the setting that scores highest, because the top "
         "rung on these ladders often costs three times as much for a difference the figures "
         "cannot see. Price, latency and throughput always come from that setting. When a model "
