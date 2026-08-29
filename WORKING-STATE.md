@@ -90,6 +90,12 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
   open. The affordance is CSS-only so nothing could ever update it. Attribute removed;
   `aria-describedby` kept. The nav button and chain-comparer's two are real disclosures and
   were left alone after checking each.
+- **The image viewer was completely broken and now works.** `.image-viewer` was
+  display:none in every state because `cccdfba` removed its display rule during a
+  stylesheet cut: a dead-CSS scanner never opens a dialog, so the rule read as unmatched.
+  Expand loaded the image and showed a 0x0 element. Also made it a real modal: focus into
+  the dialog, Tab trapped, background inert, focus restored on close. **This proves the
+  hazard behind refusing to bulk-remove the 238 dead-or-inert rules.**
 - **A stray `%` in any URL no longer throws on every page.** `nav.js` decoded the fragment
   unguarded, so `URIError: URI malformed` fired on both the load and hashchange paths,
   sitewide. Falls back to the raw id now.

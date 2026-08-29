@@ -129,13 +129,21 @@ Full report in `data/dead-css-scan-2026-08-29.json`.
 nothing, and it is the same debt the duplicate-selector count describes from the other
 side.
 
-**Do not bulk-remove on this evidence.** Two limits, both real:
+**A previous dead-CSS pass already broke a feature this way.** `cccdfba` removed
+`.image-viewer`'s display rule because the scanner never opens the viewer, so a rule that
+only applies while a dialog is open read as unmatched. Expand on `kaspa-mining` then did
+nothing visible for months: it loaded the image, set `aria-hidden="false"`, and showed a
+0x0 element. Fixed 29 Aug. This is no longer a theoretical risk.
+
+**Do not bulk-remove on this evidence.** Three limits, all real:
 
 - The scan rendered 390px and 1280px only. A rule that only applies at a tablet breakpoint
   reads as dead here and is not.
 - No interaction state was exercised. 18 of the 75 dead rules involve `:hover`, `:focus`,
   `[open]` or `[data-state]`, so the scanner could not have matched them whether they work
   or not.
+- Nothing that is only visible inside an opened dialog, menu or viewer can be seen at all.
+  That is exactly what `cccdfba` deleted.
 
 The remaining ~57 name components that no longer exist and are the honest candidates:
 `.status-lane-grid`, `.live-kaspa-panel`, `.hero-signal-grid span`, `.next-step > .button`,
