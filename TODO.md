@@ -35,6 +35,32 @@ Its brief, so it does not have to be reconstructed:
 - Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
   commit, do not push.
 
+## MUST FIX BEFORE DEPLOY: page density got worse during the rebuild
+
+Measured 29 Aug 2026 against the live working tree with `PAGE_HEIGHT_BLOCKING=true node
+scripts/check-page-height.mjs`. Ten pages exceed the 800px undifferentiated-run limit,
+against six in the committed tree, so the rebuild is losing ground on this metric rather
+than gaining it. The gate is advisory by default, which is why no agent noticed.
+
+    kaspa-origin-story   4016px   agent 4, not started when measured
+    kaspa-mining         3416px   agent 3, in flight
+    build-on-kaspa       1810px   agent 3, improved from 3187
+    crypto-from-scratch  1407px   agent 2 FINISHED, and this failure is new
+    argent-explained     1209px   agent 3, worse than the 854 it started at
+    why-kaspa-matters    1149px   agent 2 finished, improved from 1716, still over
+    what-is-kaspa         992px   agent 2 FINISHED, and this failure is new
+    status                967px   agent 4
+    sources               964px   agent 4
+    kips                  817px   agent 3, marginal
+
+An undifferentiated run is a stretch of page with no heading, figure, demo or other
+break. 3416px is roughly four screens of unbroken content. Fix by cutting or by putting a
+real mechanism in the gap, never by collapsing the primary explanation into a disclosure,
+which just moves the words somewhere a gate cannot see them.
+
+The gate stays advisory for agent 5 so the run can commit. It is blocking in the
+pre-deploy run below, so none of this ships.
+
 ## Gate audit, run 29 Aug 2026 against a clean clone of HEAD
 
 Every gate below was made to fail on a planted violation before being trusted to pass,
