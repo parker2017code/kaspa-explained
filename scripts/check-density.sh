@@ -30,8 +30,12 @@ set -euo pipefail
 # rewrite these limits are written for has not landed yet. A gate that fails
 # the build on day one gets disabled, and a disabled gate is worse than none.
 #
-# >>> BLOCKING SWITCH: flip to "true" once the density rebuild lands. <<<
-DENSITY_GATE_BLOCKING=false
+# >>> BLOCKING SWITCH: flip the default to "true" once the density rebuild
+# lands. An exported DENSITY_GATE_BLOCKING wins over this default; before
+# 2026-08-29 this line assigned unconditionally, so the environment variable
+# this gate documents was silently discarded and the gate could not be turned
+# on from outside. <<<
+DENSITY_GATE_BLOCKING="${DENSITY_GATE_BLOCKING:-false}"
 
 DENSITY_GATE_BLOCKING="$DENSITY_GATE_BLOCKING" python3 - <<'PY'
 import json
@@ -60,6 +64,13 @@ REFERENCE_FILES = {
     "sources.html",
     "glossary.html",
     "kips.html",
+    # The picker's methodology. Reached only from model-picker's own "how this
+    # scores" link, by a reader who has already seen the ranking and wants to
+    # check how it was built -- the criterion this set is named for. It is not
+    # exempt from the paragraph or cell limits, and it is still held to the
+    # page-height gate's undifferentiated-run cap, which is the measure that
+    # actually catches an unbroken wall of prose.
+    "model-picker-method.html",
 }
 
 SKIP_TAGS = {"script", "style", "svg", "nav", "header", "footer"}
@@ -96,10 +107,26 @@ VOID_TAGS = {
 }
 
 
+def is_hidden_panel(tag, attrs):
+    """Text that exists in the markup but is off screen until a reader asks.
+
+    The inline glossary term and the information affordance both put their
+    explanation in a span inside the host sentence, styled hidden until hover
+    or focus. Screen-reader-only text is the same shape. Counting any of it
+    against a paragraph measures a sentence the reader never sees at once.
+    """
+    if attrs.get("role") == "tooltip":
+        return True
+    cls = (attrs.get("class") or "").split()
+    return bool({"sr-only", "term-def__panel", "info-affordance__panel"} & set(cls))
+
+
 class DensityParser(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.skip_stack = []
+        self.hidden_depth = 0
+        self.hidden_stack = []
         self.stack = []  # [{"tag":..., "collapsed": bool}]
         self.reached_boundary = False
         self.pre_interaction_words = 0
@@ -129,6 +156,11 @@ class DensityParser(HTMLParser):
         self.stack.append({"tag": tag, "collapsed": collapsed})
         if boundary:
             self.reached_boundary = True
+        if is_hidden_panel(tag, attrs):
+            self.hidden_depth += 1
+            self.hidden_stack.append(tag)
+        elif self.hidden_depth:
+            self.hidden_stack.append(None)
         if tag in MEASURED_TAGS:
             self.measure_stack.append({"tag": tag, "words": [], "collapsed": collapsed})
 
@@ -152,6 +184,10 @@ class DensityParser(HTMLParser):
                 self.paragraphs.append((len(words), item["collapsed"], preview))
             else:
                 self.cells.append((len(words), item["collapsed"], preview))
+        if self.hidden_stack:
+            top = self.hidden_stack.pop()
+            if top is not None:
+                self.hidden_depth -= 1
         if self.stack and self.stack[-1]["tag"] == tag:
             self.stack.pop()
 
@@ -163,6 +199,10 @@ class DensityParser(HTMLParser):
             return
         self.total_words += len(words)
         self.full_text_words.extend(words)
+        if self.hidden_depth:
+            # On screen only on hover or focus. Counted in the advisory totals
+            # above, never against the intro, paragraph, or cell limits.
+            return
         if self.measure_stack:
             self.measure_stack[-1]["words"].extend(words)
         if not self.reached_boundary:

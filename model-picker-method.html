@@ -122,10 +122,35 @@
     <section class="section" id="sources">
       <h2>The sources, the dials, and the ten figures</h2>
       <ol class="mm-list">
-        <li><p><b>Four sources, six dials, ten figures.</b> Artificial Analysis and LiveBench 2026-06-25, both read 25 August 2026; LM Arena, read the same day; and ARC Prize, read the same day. Four figures come from Artificial Analysis, four from LiveBench, one from LM Arena and one, ARC-AGI-2, from ARC Prize.</p><p>Twenty-three models are ranked across nine labs, so the grid holds 230 cells.</p></li>
+        <li><p><b>Four sources, six dials, ten figures.</b> Twenty-three models across nine labs, so the grid holds 230 cells. Every source was read on 25 August 2026.</p>
+          <div class="table-wrap">
+            <table class="reality-table" aria-label="Where the ten scored figures come from">
+              <thead><tr><th>Source</th><th>Figures it supplies</th><th>Read</th></tr></thead>
+              <tbody>
+                <tr><td>Artificial Analysis</td><td>4</td><td>25 August 2026, board dated 2026-06-25</td></tr>
+                <tr><td>LiveBench</td><td>4</td><td>25 August 2026, board dated 2026-06-25</td></tr>
+                <tr><td>LM Arena</td><td>1</td><td>25 August 2026</td></tr>
+                <tr><td>ARC Prize</td><td>1, ARC-AGI-2</td><td>25 August 2026</td></tr>
+              </tbody>
+            </table>
+          </div></li>
         <li><p><b>Where the numbers came from, and how they get refreshed.</b> Six reads, run at once, all live: one for Artificial Analysis, one for LiveBench, and four for LM Arena, which alone carries fifteen boards and the longest of them ranks 393 models. ARC Prize adds a seventh; its corpus is read directly, never fetched live.</p><p>The reads split by how much text each part holds. Source is not the variable, and no board is ever read in part. A rank means nothing against half a field. Every figure on the picker is derived from those files by script, so a refresh is a re-read and a rebuild, never an edit.</p></li>
         <li><p><b>Ten figures, chosen on how far apart the top five sit. Reputation had no vote.</b> Every figure on these boards was ranked by its own top-five spread on the honest scale, and the widest in each dial's territory is the one that ships.</p><p>No fixed table of those spreads is printed on the picker, because the number moves with the dials: the top five are the top five under your weights, so the spread is worked out again every time you move a slider. A figure the frontier has already maxed out cannot tell the leaders apart, however famous the name.</p></li>
-        <li><p><b>A benchmark earns its place by still telling the leaders apart. Fame alone does not qualify it.</b> Every figure was checked on its top-five gap: how far apart the five strongest models are on it. A test the best models have already maxed out cannot rank them.</p><p>That cut GPQA Diamond, which spans two points across the top five, and with it the AA Intelligence Index, LiveBench reasoning, AA-LCR, Terminal-Bench v2.1, MMMU Pro and LiveBench overall. CritPt was checked against the same test and kept, because its top five stay far enough apart to rank.</p></li>
+        <li><p><b>A benchmark earns its place by still telling the leaders apart. Fame alone does not qualify it.</b> Every figure was checked on its top-five gap: how far apart the five strongest models are on it. A test the best models have already maxed out cannot rank them.</p><div class="table-wrap">
+            <table class="reality-table" aria-label="Benchmarks put through the top-five spread test">
+              <thead><tr><th>Benchmark</th><th>Result</th></tr></thead>
+              <tbody>
+                <tr><td>GPQA Diamond</td><td>Cut. Two points separate the whole top five.</td></tr>
+                <tr><td>AA Intelligence Index</td><td>Cut</td></tr>
+                <tr><td>LiveBench reasoning</td><td>Cut</td></tr>
+                <tr><td>LiveBench overall</td><td>Cut</td></tr>
+                <tr><td>AA-LCR</td><td>Cut</td></tr>
+                <tr><td>Terminal-Bench v2.1</td><td>Cut</td></tr>
+                <tr><td>MMMU Pro</td><td>Cut</td></tr>
+                <tr><td>CritPt</td><td>Kept. Its top five stay far enough apart to rank.</td></tr>
+              </tbody>
+            </table>
+          </div></li>
         <li><p><b>Nothing is counted twice.</b> Each figure feeds exactly one dial. No board's own overall score feeds anything, because those are blends of figures already scored here. Input price is not loaded either: it tracks output price at 0.98, so one price figure does the work of both.</p></li>
         <li><p><b>No figure sits on more than one dial, and inside a dial the figures are weighted the same.</b> Three dials carry one figure each; three carry two or three.</p><p>Averaging inside a dial is only right if its figures track each other in a straight line over the range these models cover, so that was checked rather than assumed: on each merged pair, a straight line beats a curve on four of five and loses the fifth by 2 percent.</p><p>Not making things up stays alone whatever else merges. It runs against six of the other nine figures, and nothing on the page predicts it: the best anchor, held out, reaches an r squared of 0.058. That is why a model's row is left unfilled there. Estimating it would overclaim.</p></li>
         <li><p><b>A figure counts for how far apart it can still tell the leaders.</b> Every figure carries the spread among the top five under your own weights, measured from the loaded data rather than asserted.</p><p>A figure the frontier has already maxed out is ranking noise with a decimal point on it, so that spread scales how much it is allowed to count. Blended across the dials you turned up, the same number decides whether the ranking says the top few are tied.</p></li>
@@ -138,8 +163,28 @@
         <li><p><b>This was ten dials until 29 August 2026, and ten was more than the evidence supports.</b> Across the ten figures, the first principal component carries 42.8 percent of the variance and the effective dimensionality is 5.26 of 10.</p><p>Predicting each figure from the other nine, holding out one model at a time, lands at a median r-squared of 0.35, and one figure, LiveBench coding, comes out worse than simply guessing the average. So the ten figures are worth about five or six questions, not ten.</p><p>The dials now match that: six, grouped by clustering the page's own correlations rather than by counting benchmarks.</p></li>
         <li><p><b>The board overalls agree with each other far more than their own benchmarks agree with one another.</b> Artificial Analysis's intelligence index and LiveBench Overall move together at r = 0.930 across 38 models. LiveBench Overall and ARC-AGI-2 move together at r = 0.868 across 20.</p><p>Pick two single benchmarks instead of two overalls and the agreement drops well below that. An overall averages away each benchmark's own noise and keeps only the shared skill underneath. Two overalls agreeing is not proof that their own benchmarks measure the same thing.</p></li>
         <li><p><b>LiveBench Overall is not independent evidence. It is arithmetic.</b> It is the plain average of its seven category scores, weighted equally. Checked across all 44 published rows, the biggest gap between that average and the published number is 0.057.</p><p>So predicting a LiveBench category from LiveBench Overall is partly predicting a number from itself: the arithmetic alone produces an r squared near 0.143, before any real link between the two is measured.</p></li>
-        <li><p><b>On a shortlist this size, most links between benchmarks cannot be resolved at all.</b> There are 45 pairs across the ten figures.</p><p>Correcting for testing all 45 at once, <b>12</b> reach significance, and only <b>3</b> also have a 95 percent interval clear of r = 0.5, which is the bar for calling a link strong rather than merely present. Twenty-three models is not enough to measure a correlation matrix over ten figures, and no method fixes that.</p><p>The three that hold up are Humanity's Last Exam with CritPt at <b>+0.813</b>, LiveBench agentic coding with LM Arena WebDev at <b>+0.806</b>, and Humanity's Last Exam with omniscience accuracy at <b>+0.803</b>.</p><p>Every one of those pairs sat on two different dials before 29 August, so a reader raising both was weighting one measurement twice while the page said they were weighting two abilities. All three now sit inside one dial.</p></li>
-        <li><p><b>Consolidating was expected to cost expressiveness and it did the opposite.</b> Over 6,000 random dial settings, the ten-dial version could put only <b>7</b> of the 23 models in first place and produced 23 different top-three sets.</p><p>Six dials put <b>10</b> models in first place and produce 52 different top-three sets, and the distance between two readers' rankings roughly doubles. Five dials pointing at one general ability were averaging each other out.</p><p>Checked against four different patterns of slider use, the six-dial version keeps at worst 82 percent of what ten could do, against a floor of 80 percent set before the check was run. Five dials was tried too and falls to 73 percent, so six is the smallest grouping that holds up.</p></li>
+        <li><p><b>On a shortlist this size, most links between benchmarks cannot be resolved at all.</b> There are 45 pairs across the ten figures.</p><p>Correcting for testing all 45 at once, <b>12</b> reach significance, and only <b>3</b> also have a 95 percent interval clear of r = 0.5, which is the bar for calling a link strong rather than merely present. Twenty-three models is not enough to measure a correlation matrix over ten figures, and no method fixes that.</p><div class="table-wrap">
+            <table class="reality-table" aria-label="The three benchmark pairs whose link survived correction across 45 tests">
+              <thead><tr><th>Benchmark</th><th>Benchmark</th><th>Correlation</th></tr></thead>
+              <tbody>
+                <tr><td>Humanity's Last Exam</td><td>CritPt</td><td>+0.813</td></tr>
+                <tr><td>LiveBench agentic coding</td><td>LM Arena WebDev</td><td>+0.806</td></tr>
+                <tr><td>Humanity's Last Exam</td><td>Omniscience accuracy</td><td>+0.803</td></tr>
+              </tbody>
+            </table>
+          </div><p>Every one of those pairs sat on two different dials before 29 August, so a reader raising both was weighting one measurement twice while the page said they were weighting two abilities. All three now sit inside one dial.</p></li>
+        <li><p><b>Consolidating was expected to cost expressiveness and it did the opposite.</b> Over 6,000 random dial settings, five dials pointing at one general ability were averaging each other out. Six is the smallest grouping that holds up: five falls below the 80 percent floor set before the check was run.</p>
+          <div class="table-wrap">
+            <table class="reality-table" aria-label="What each dial count could express, over 6,000 random dial settings">
+              <thead><tr><th>Dials</th><th>Models that can reach first place</th><th>Distinct top-three sets</th><th>Share of ten dials' range kept</th></tr></thead>
+              <tbody>
+                <tr><td>Ten</td><td>7 of 23</td><td>23</td><td>100%, by definition</td></tr>
+                <tr><td><b>Six</b></td><td><b>10 of 23</b></td><td><b>52</b></td><td><b>82% at worst</b></td></tr>
+                <tr><td>Five</td><td>not reported</td><td>not reported</td><td>73%, below the floor</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The share column is the worst of four different patterns of slider use, not an average across them.</p></li>
       </ol>
     </section>
 
