@@ -380,5 +380,30 @@ def main():
     print("carried across untouched: " + ", ".join(sorted(KEEP)))
 
 
+# This file is kept for the reasoning in its docstring, not for running. Left
+# executable it is exactly the trap SITE-STANDARD.md describes: a dead script
+# sitting beside a live one, and WORKING-STATE.md was still handing readers a
+# command line that invoked it. Refusing to run keeps the history and removes
+# the hazard. If you genuinely need the old behaviour, read the docstring first
+# and understand that it drops twenty metrics and every confidence interval.
+def _refuse():
+    import sys
+    sys.stderr.write(
+        "refresh-model-data.py is retired and will not run.\n"
+        "It was written for a 19-metric page. The page now carries 39 metrics\n"
+        "and a confidence interval per figure, so this would silently drop\n"
+        "twenty metrics and every ci array, and check-model-picker.py would\n"
+        "then fail on dials naming metrics no longer in the data.\n"
+        "\n"
+        "The live path is:\n"
+        "  python3 scripts/build-picker-data.py    # sources -> data/picker-data.json\n"
+        "  python3 scripts/emit-picker-blob.py     # json -> the blob in model-picker.html\n"
+    )
+    raise SystemExit(2)
+
+
 if __name__ == "__main__":
+    _refuse()
+
+if False:  # original entry point, retained unreachable for reference
     main()

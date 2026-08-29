@@ -749,10 +749,17 @@ bash scripts/check-links.sh             # when a source URL changes
 After changing picker data:
 
 ```bash
-python3 scripts/refresh-model-data.py data/leaderboards-2026-08-07.json
+python3 scripts/build-picker-data.py
+python3 scripts/emit-picker-blob.py
 ```
 
-It prints what it dropped and asserts zero gaps. Then serve and drive the page.
+The first reads the dated source transcriptions and writes `data/picker-data.json`. The
+second turns that into the `window.__MP__` blob and rewrites the one line in
+`model-picker.html` that carries it. Then serve and drive the page.
+
+**Do not run `scripts/refresh-model-data.py`.** This file used to name it here, which
+handed readers a command that would silently drop twenty metrics and every confidence
+interval. It now refuses to run and explains why.
 
 ## What ships and how
 
