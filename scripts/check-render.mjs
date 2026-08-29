@@ -489,14 +489,36 @@ function collectChecks(width) {
     for (const el of controls) {
       if (!isVisible(el) || underAriaHidden(el) || inSvg(el)) continue;
 
-      if (el.tagName === 'A') {
+      // WCAG SC 2.5.8's "Inline" exception reads: "The target is in a sentence
+      // or its size is otherwise constrained by the line-height of non-target
+      // text." It is about sitting inline in prose, not about being an anchor.
+      // This test applied it to <a> only, by tag name, which left 92 of the
+      // 248 remaining violations on span.term-def: an inline dotted-underline
+      // glossary term with role="button" and tabindex="0", sitting mid-sentence
+      // inside a paragraph. Structurally the same target as an inline link,
+      // and covered by the same clause. Widened to any control whose computed
+      // display is inline or inline-block and which has sibling text in its
+      // parent. term-def computes to inline-block: a 45x26 box whose height is
+      // set by the line-height of the sentence around it, which is the
+      // condition the clause names.
+      //
+      // The <a> branch is left exactly as it was, deliberately. Gating it on
+      // computed display instead took touch-target violations from 248 to 782,
+      // because roughly 600 anchors on this site are not inline -- nav links,
+      // footer links, whole-card links -- and were being waived by an <a>
+      // clause broader than the WCAG exception it cites. That is a real and
+      // separate finding, recorded rather than fixed here: narrowing it is a
+      // 600-violation change that belongs in its own pass, not smuggled in
+      // beside a widening.
+      const disp = getComputedStyle(el).display;
+      if (el.tagName === 'A' || disp === 'inline' || disp === 'inline-block') {
         const parent = el.parentElement;
         if (parent) {
           const siblingText = [...parent.childNodes]
             .filter((n) => n !== el)
             .map((n) => n.textContent.trim())
             .join('');
-          if (siblingText.length > 0) continue; // inline prose link, WCAG SC 2.5.8 exception
+          if (siblingText.length > 0) continue;
         }
       }
 
@@ -657,12 +679,55 @@ function collectChecks(width) {
   // element can never appear on screen at the same time as anything else,
   // so it structurally cannot overlap or crowd another element a reader
   // actually sees.
-  const overlapCandidates = textElements.filter((t) => t.rect.bottom > 0 && t.rect.right > 0);
+  const EPS = 0.5; // sub-pixel rounding tolerance, not a design threshold
+
+  // Defect found 2026-08-29 by the judging pass, after this assertion reported
+  // sixteen overlaps on what-is-kaspa that a screenshot at the same width shows
+  // are not there. #livenet-demo .feed is `max-height: 420px; overflow-y: auto`
+  // and accumulates up to eighteen block cards. getBoundingClientRect on a card
+  // scrolled past that 420px still returns the card's unclipped position, so
+  // every card below the fold reported a rect sitting on top of whatever
+  // follows the feed in the document. Nothing was ever painted there.
+  //
+  // The same shape produced an earlier false flag on this site: a table
+  // scrolling correctly inside its own container, reported as broken.
+  //
+  // Every fragment is now intersected with the client rect of each ancestor
+  // that clips (any computed overflow-x/y other than `visible`). A fragment
+  // with nothing left after clipping was not painted and cannot overlap
+  // anything; an element with no fragments left drops out of the pool. This
+  // narrows the assertion to what a reader can actually see at this scroll
+  // position. It does not exempt any element by name.
+  function clipRects(el, frags) {
+    const clips = [];
+    for (let n = el.parentElement; n; n = n.parentElement) {
+      const cs = getComputedStyle(n);
+      if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') clips.push(n.getBoundingClientRect());
+    }
+    if (!clips.length) return frags;
+    const out = [];
+    for (const f of frags) {
+      let { left, right, top, bottom } = f;
+      for (const c of clips) {
+        left = Math.max(left, c.left); right = Math.min(right, c.right);
+        top = Math.max(top, c.top); bottom = Math.min(bottom, c.bottom);
+      }
+      if (right - left > EPS && bottom - top > EPS) out.push({ left, right, top, bottom });
+    }
+    return out;
+  }
+
+  const overlapCandidates = textElements
+    .filter((t) => t.rect.bottom > 0 && t.rect.right > 0)
+    .map((t) => {
+      const frags = clipRects(t.el, t.fragments.length ? t.fragments : [t.rect]);
+      return { ...t, fragments: frags };
+    })
+    .filter((t) => t.fragments.length > 0);
 
   // Shared by assertions 7 and 8: rect-pair helpers operating on individual
   // line fragments (see lineFragments above), not on the inflated bounding
   // box of a wrapped inline element.
-  const EPS = 0.5; // sub-pixel rounding tolerance, not a design threshold
   function fragsIntersect(ra, rb) {
     return ra.left < rb.right - EPS && ra.right > rb.left + EPS && ra.top < rb.bottom - EPS && ra.bottom > rb.top + EPS;
   }
@@ -684,12 +749,12 @@ function collectChecks(width) {
     for (let i = 0; i < overlapCandidates.length; i++) {
       const a = overlapCandidates[i];
       if (exemptFromOverlap(a.el)) continue;
-      const aFrags = a.fragments.length ? a.fragments : [a.rect];
+      const aFrags = a.fragments;
       for (let j = i + 1; j < overlapCandidates.length; j++) {
         const b = overlapCandidates[j];
         if (exemptFromOverlap(b.el)) continue;
         if (a.el.contains(b.el) || b.el.contains(a.el)) continue; // ancestor/descendant, not independent
-        const bFrags = b.fragments.length ? b.fragments : [b.rect];
+        const bFrags = b.fragments;
         let intersects = false;
         outer: for (const ra of aFrags) {
           for (const rb of bFrags) {
@@ -714,12 +779,12 @@ function collectChecks(width) {
     for (let i = 0; i < overlapCandidates.length; i++) {
       const a = overlapCandidates[i];
       if (exemptFromOverlap(a.el)) continue;
-      const aFrags = a.fragments.length ? a.fragments : [a.rect];
+      const aFrags = a.fragments;
       for (let j = i + 1; j < overlapCandidates.length; j++) {
         const b = overlapCandidates[j];
         if (exemptFromOverlap(b.el)) continue;
         if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
-        const bFrags = b.fragments.length ? b.fragments : [b.rect];
+        const bFrags = b.fragments;
 
         // minimum gap across every fragment pair; a pair that already
         // overlaps (assertion 7's job, not this one) contributes no gap

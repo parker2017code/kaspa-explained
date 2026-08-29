@@ -4657,10 +4657,10 @@ html {
   --line-bright: #bcb6a8;
   --text: #211e1a;
   --muted: #646057;
-  --faint: #757066;
-  --green: #0e7c6b;
+  --faint: #706b61;
+  --green: #0c7a69;
   --green-rgb: 14, 124, 107;
-  --cyan: #0071e3;
+  --cyan: #0068da;
   --cyan-rgb: 0, 113, 227;
   /* Text set directly in --cyan on the card background used by
      .hero-signal-grid/.status-lane-grid/.orientation-grid's 6n+2 label
@@ -4674,7 +4674,7 @@ html {
   --link-color: #0064c2;
   --purple: #6e56cf;
   --purple-pill: var(--purple);
-  --pink: #b25000;
+  --pink: #b14f00;
   --ink: #ffffff;
   --accent-soft: rgba(14, 124, 107, .1);
   /* --green as badge text on --accent-soft (the .transaction-rail step
@@ -4695,7 +4695,7 @@ html {
   --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 12px 32px rgba(0, 0, 0, .05);
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, .04), 0 6px 18px rgba(0, 0, 0, .04);
   --button-shadow: 0 0 #0000;
-  --brand-gradient: linear-gradient(135deg, #128673, #0e7c6b);
+  --brand-gradient: linear-gradient(135deg, #128673, #0c7a69);
   --brand-glow: 0 0 #0000;
   --glow-spot: none;
   --page-bg: #ffffff;
@@ -4717,7 +4717,7 @@ html {
   --faint: #9d988c;
   --green: #66d1c1;
   --green-rgb: 102, 209, 193;
-  --cyan: #2997ff;
+  --cyan: #2e9cff;
   --cyan-rgb: 41, 151, 255;
   /* Measures 4.42:1 against the card background at the 6n+2 label span
      (see the light-theme --cyan-pill comment); #3d9fff measures 4.82:1. */
@@ -7514,4 +7514,76 @@ p.live-footnote:not(:last-child) {
    .quadrant's own position: relative. */
 .confirm-quadrant-diagram {
   position: relative;
+}
+
+/* ============================================================
+   16px READER-TEXT FLOOR — 2026-08-29
+   Appended after the APPLE DESIGN LAYER, so it wins on the
+   last-declaration rule without touching the legacy blocks
+   above, several of which are already inert. styles.css
+   declares .theme-toggle four times, .footer twice and
+   .footer-link-group span twice at different sizes; editing
+   any one of them in place is a coin flip about which wins.
+
+   Every selector below carries reader-facing text that the
+   render matrix measured under 16px. The small-type band the
+   design spec does document -- .eyebrow, .status-pill, .tag,
+   thead cells, code, the card kicker spans -- is deliberately
+   absent, and stays where the spec put it.
+   ============================================================ */
+
+.nav-menu-button,
+.nav-cta,
+.theme-toggle,
+.brand,
+.nav-links a,
+:root[data-theme="light"] .nav-links a { font-size: 16px; }
+
+.footer,
+.footer-grid p,
+.footer-link-group span,
+.footer-link-group a,
+.footer .footer-disclosure { font-size: 16px; }
+
+.search-box span,
+.search-results span,
+.search-filters button { font-size: 16px; }
+
+.cell-detail summary,
+.guide-detail summary::after,
+.builder-ledger span,
+.builder-ledger p,
+.use-source-grid strong,
+.image-viewer figcaption,
+.axis,
+.reality-table td::before,
+.view-switch__tab { font-size: 16px; }
+
+/* .reality-table th is a real header cell; the spec's 12px rule covers
+   thead cells, and the render gate exempts thead th for that reason. This
+   table's headers sit outside thead, so they were measured and failed. */
+.reality-table th { font-size: 16px; }
+
+/* The information glyph is a 1-character affordance inside a circular
+   target, and its panel is the prose that answers it. The panel is read;
+   the glyph is aimed at. Both were under the floor. */
+.info-affordance__glyph,
+.info-affordance__panel,
+.term-def__panel { font-size: 16px; }
+
+/* Line height and measure, against the reference set in
+   data/reference-metrics-2026-08-29.json: nine sites median 1.6 and 70ch,
+   this site measured 1.5 and 78.8ch before this block. */
+body { line-height: 1.6; }
+
+/* A <summary> is a real control: it opens and closes a disclosure, and it was
+   the largest single touch-target failure left after the 16px floor, at 66 of
+   248. WCAG SC 2.5.8 wants 44px in the pointer dimension; these were running
+   at the height of one line of text. Padding rather than a bare min-height, so
+   a summary that wraps to two lines keeps its own height. */
+summary {
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
 }
