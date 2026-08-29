@@ -17,13 +17,52 @@ Colors come from the dark palette in the APPLE DESIGN LAYER of styles.css,
 which is the site's default theme. They are duplicated here because an SVG
 cannot read CSS custom properties; check-og-card.py fails if they drift.
 
-Sizes are set for how a feed actually renders this. X shows the card about
-500px wide, so a 1200px-wide card is displayed at roughly 42%. Nothing below
-34px survives that, which is why there is no small print.
+There is no text on the card, and that is the finding rather than a shortcut.
+Four competent references were fetched and looked at on 29 Aug 2026:
+ciechanow.ski and distill.pub carry no text at all, just the artifact full
+bleed; ourworldindata.org carries two lines, topic and publisher; linear.app
+carries a logo. None of them carries a headline plus a subtitle plus a URL.
+
+The reason is mechanical. An unfurl already renders og:title and og:description
+as real text beside the image, so a sentence baked into the image is shown
+twice, and the baked copy is the one that cannot be selected, translated, or
+read aloud by a screen reader. index.html's og:description already says
+"Watch a blockDAG keep the blocks a single chain throws away", which is exactly
+what this diagram shows. The words are the description's job. The picture is
+this file's job.
+
+Keeping the card wordless also removes the legibility floor: at the 320px an
+unfurl can shrink to, there is no small print left to lose.
+
+Writes the SVG and rasterizes it to PNG at exactly 1200x630 with headless
+Chrome, which is the same renderer a browser uses, so what ships is what was
+reviewed. There is no SVG rasterizer library on this machine and qlmanage pads
+to a square, so Chrome is the path.
 
 Run: python3 scripts/build-og-card.py
 """
 import os
+import shutil
+import subprocess
+
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+PNG_NAME = "og-kaspa-explained-20260829.png"
+
+
+def rasterize(root, svg_path):
+    if not os.path.exists(CHROME):
+        print("skip PNG: Chrome not found at", CHROME)
+        return None
+    out = os.path.join(root, PNG_NAME)
+    tmp = os.path.join(root, ".og-shot.png")
+    subprocess.run([
+        CHROME, "--headless", "--disable-gpu", "--hide-scrollbars",
+        f"--screenshot={tmp}", f"--window-size={W},{H}",
+        "file://" + svg_path,
+    ], check=True, capture_output=True)
+    shutil.move(tmp, out)
+    print("wrote", out)
+    return out
 
 BG      = "#100e0c"   # --bg
 TEXT    = "#f8f5ef"   # --text
@@ -50,9 +89,9 @@ EDGES = {
 }
 
 W, H = 1200, 630
-BW, BH, R = 62, 44, 10          # block width, height, corner radius
-X0, XSTEP = 96, 208             # first column, column pitch
-YMID, YSTEP = 452, 86           # vertical center of the DAG, row pitch
+BW, BH, R = 104, 74, 18         # block width, height, corner radius
+X0, XSTEP = 132, 234            # first column, column pitch
+YMID, YSTEP = 328, 158          # vertical center of the DAG, row pitch
 
 
 def positions():
@@ -91,14 +130,14 @@ def build():
                 f'{mid:.0f} {y2:.0f} {x2:.0f} {y2:.0f}')
 
     red_ids = {b for g in GENS for b, _, r in g if r}
-    out.append(f'<g stroke="{LINE}" stroke-width="3" fill="none">')
+    out.append(f'<g stroke="{LINE}" stroke-width="5" fill="none">')
     for child, parents in EDGES.items():
         for p in parents:
             if child in red_ids or p in red_ids:
                 continue
             out.append(f'<path d="{edge_path(child, p)}"/>')
     out.append('</g>')
-    out.append(f'<g stroke="{RED}" stroke-width="5" fill="none">')
+    out.append(f'<g stroke="{RED}" stroke-width="9" fill="none">')
     for child, parents in EDGES.items():
         for p in parents:
             if child in red_ids or p in red_ids:
@@ -113,34 +152,6 @@ def build():
             f'height="{BH}" rx="{R}" fill="{RED if red else GREEN}"/>'
         )
 
-    # Text block.
-    f = 'font-family="Aptos, Segoe UI, Helvetica, Arial, sans-serif"'
-    out.append(f'<g {f}>')
-    # The headline has to stand alone. In a feed the eye takes it before the
-    # diagram, so a pronoun with no antecedent ("It still counts") reads as
-    # nothing. Two short sentences carry the whole idea unaided.
-    out.append(
-        f'<text x="96" y="132" fill="{TEXT}" font-size="70" '
-        f'font-weight="800" letter-spacing="-.02em">Marked red.</text>'
-    )
-    out.append(
-        f'<text x="96" y="210" fill="{RED}" font-size="70" '
-        f'font-weight="800" letter-spacing="-.02em">Still counted.</text>'
-    )
-    out.append(
-        f'<text x="96" y="266" fill="{MUTED}" font-size="34" '
-        f'font-weight="500">A single chain would discard this block. Kaspa'
-        f'</text>'
-    )
-    out.append(
-        f'<text x="96" y="308" fill="{MUTED}" font-size="34" '
-        f'font-weight="500">keeps it, its parents, and its transactions.</text>'
-    )
-    out.append(
-        f'<text x="{W - 96}" y="{H - 46}" fill="{FAINT}" font-size="28" '
-        f'text-anchor="end">kaspaexplained.com</text>'
-    )
-    out.append('</g>')
     out.append('</svg>')
     return "\n".join(out) + "\n"
 
@@ -151,3 +162,4 @@ if __name__ == "__main__":
     with open(dest, "w", encoding="utf-8") as fh:
         fh.write(build())
     print("wrote", dest)
+    rasterize(root, dest)

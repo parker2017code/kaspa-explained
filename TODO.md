@@ -77,8 +77,16 @@ calibration, not imitation.
 
 ## THEN: the pre-deploy pass, owner's instruction 29 Aug 2026
 
-Not delegable. This is the only step in the run where the verifier is not the producer,
-which is the whole reason it exists. Fix what it finds; do not hand back a list.
+Not delegable, and the owner said so twice. This is the only step in the run where the
+verifier is not the producer, which is the whole reason it exists. Fix what it finds; do
+not hand back a list.
+
+It covers the code as well as the pages. The sweep agent reads every line first, but its
+report is a claim and the code is the evidence, so the same lines get read again here by
+someone who did not write them. That means `styles.css` end to end, everything under
+`scripts/`, every inline script in every page, and the data files. Reading a diff is not
+reading the code: a diff shows what moved, not what is now wrong beside it, which is this
+repo's whole recurring defect.
 
 Order, after the code sweep commits:
 
