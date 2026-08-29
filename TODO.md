@@ -91,6 +91,30 @@ right-aligned and low contrast in a panel header.
 **Fix: one blue link on an all-teal page.** "How this works, and the sources" is the only
 blue element on the homepage.
 
+## Two agents died mid-run and were auto-restarted; their pages need a second look
+
+29 Aug 2026. Agent 2 died at 13:48 after about 50 minutes and was replaced. Agent 3 died
+at 16:18 after about 80 minutes and 20.5MB of transcript and was replaced at 16:24. In
+both cases the harness restarted the same slot automatically, so the run is still five
+agents, but each replacement inherited a half-edited worktree with no record of what its
+predecessor was in the middle of.
+
+That matters more for agent 3 than agent 2. Its last recorded actions were splitting long
+paragraphs for the density problem, then detecting that its own splitter had damaged
+inline scripts, then redoing the split with scripts masked. It died somewhere around that
+repair.
+
+Checked immediately after the death, and nothing is broken: kaspa-mining, build-on-kaspa,
+argent-explained, kips and utxo-vs-accounts all load and run with no JavaScript errors.
+The only console errors are GitHub API 403s from an unauthenticated rate limit, and both
+affected pages correctly say the live read failed rather than showing stale numbers as
+current, with no leftover dashes, spinners, undefined or NaN. That failure path was
+verified under a real API failure rather than a simulated one.
+
+Still worth a specific pass: any paragraph on those five pages that reads as if it was
+split by a machine mid-thought, and any inline script that lost a line to the splitter.
+A page that loads without errors can still have prose cut in half.
+
 ## The collision demo exists twice and the copies drifted
 
 `index.html` and `what-is-kaspa.html` each carry a full copy of the collision demo,
