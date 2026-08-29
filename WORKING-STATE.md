@@ -102,6 +102,47 @@ it draws. 36 tooltips no longer tell screen readers they are collapsed while ope
 `%` in a URL no longer throws sitewide. The image viewer opens and is a real modal. 44 CSS
 rules whose classes appear in no HTML anywhere are gone. `refresh-model-data.py` refuses to
 run and prints the live path.
+## Doc read, complete, 29 August 2026 18:30
+
+Every operating, standard, audit, plan, method and content document in this repo
+read end to end in one pass, not grepped: `CLAUDE.md`, `AGENTS.md`,
+`PRINCIPLES.md`, `WORKING-STATE.md`, `SITE-STANDARD.md`, `TODO.md`,
+`PROSE_STANDARD.md`, `COPY_STYLE.md`, `CONTENT_BRIEF.md`, `MAINTENANCE.md`,
+`HANDOFF.md`, `README.md`, `CONTRIBUTING.md`, `LICENSE.md`, `FACTS.md`,
+`PROGRESS.md`, `SOURCE_AUDIT.md`, `DESIGN_AUDIT_MATRIX.md`, `CLI_FROM_ZERO.md`,
+all thirteen `AUDIT-*.md`, `COLD-READ`, `CROSS-READ`, `CROSS-READ-2`, `MISREAD`,
+`CHECK-2`, `BREAK`, `BREAK-2`, `LIVE-SWEEP`, `PLAN-REDESIGN`, `PLAN-DEMO-MERGE`,
+`PLAN-2026-08-22`, `RESEARCH-2026-08-22`, `SPEC-PICKER-2026-08-25`, all eight
+under `design/`, all four under `.github/notes/`, `demos/README.md`,
+`data/REFRESH.md`, `data/chain-methodology-2026-08-22.md`,
+`data/model-analysis-2026-08-25.md`, `data/metric-screening-2026-08-20.md`,
+`data/tier-audit-2026-08-20.md`, and all four `kaspa-x-posts-*.md`. About 21,000
+lines.
+
+**Not read, stated plainly:** the fourteen raw leaderboard transcriptions under
+`data/` (`arena-text-raw-dumps-2026-08-20.md` alone is 30,827 lines; about 48,000
+lines total). Those are scraped board tables, the input `build-picker-data.py`
+consumes, not documents about how anything works. Reading them costs roughly
+600,000 tokens and yields no rule, method or decision. If a picker number is ever
+disputed, the specific board file that carries it gets read then.
+
+## State at 18:32, 29 August 2026
+
+**60 commits ahead of `origin/main`. Nothing pushed.** Working tree carries agent
+3's four in-flight pages (`argent-explained`, `build-on-kaspa`, `kaspa-mining`,
+`kips`) plus `styles.css`, and four untracked files from the picker analysis.
+
+**Agent 3 is alive on attempt 5**, started 17:07, transcript
+`agent-ac36940072e21c0f6.jsonl` at 10.4MB and written within the last minute.
+Sampled twice across a gap; it is running, not hung. Four earlier attempts died to
+wifi. Agents 4 and 5 have not started, so the workflow is still 2 of 5.
+
+The 40-minute bound recorded earlier has passed. It is not being enforced, and the
+reason is stated rather than left silent: PRINCIPLES.md says queue rather than
+cancel, because a killed run throws away everything already paid for, and agent 3
+is the single agent the owner allows. It keeps its five pages. My own work does not
+touch them.
+
 # kaspa explained working state
 
 
