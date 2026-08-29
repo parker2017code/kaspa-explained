@@ -118,6 +118,11 @@ Width harness on 4291, social-card preview on 4288, both scratchpad-served.
                          k-cluster recheck; sink mismatch found and fixed), mass calculator
                          (verified clean under every extreme on every script type), live
                          network feed (escaping unified; failure path verified correct).
+    why-kaspa-matters    confirmation-risk script READ and VERIFIED. reversalProb is
+                         Satoshi 2008 section 11, in log space with a Lanczos logGamma,
+                         truncated at 12 sigma, and the truncation errs conservative.
+                         Checked against all 20 published table rows: zero mismatches to
+                         seven decimals. Do not "simplify" this; it is correct.
     index.html           demo script read and fixed; head, markup and CSS read to line 450.
     everything else      mechanical coverage only: 42 sliders driven, 169 buttons clicked,
                          154 disclosures opened, 53 anchors resolved, glass/orphan/html
