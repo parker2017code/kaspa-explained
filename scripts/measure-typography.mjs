@@ -74,6 +74,14 @@ const EXTRACT = () => {
 };
 
 const [out, ...urls] = process.argv.slice(2);
+// Run with no arguments this fell through to writeFileSync(undefined, ...) and
+// died on an ERR_INVALID_ARG_TYPE stack trace 90 lines later, which reads like
+// a broken tool rather than a missing argument.
+if (!out || urls.length === 0) {
+  console.error('Usage: node scripts/measure-typography.mjs out.json url [url...]');
+  console.error('Writes measured type metrics for each url to out.json.');
+  process.exit(2);
+}
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const results = {};
