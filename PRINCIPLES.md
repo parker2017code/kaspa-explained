@@ -14,7 +14,12 @@ Fix the older document and say what changed.
 **Anything here can be overridden by judgment, yours or an agent's, on one condition:
 say so.** These principles included. A rule you can see past is a rule you should fix
 rather than obey, and stopping to ask permission for that is itself a failure mode the
-owner has named. The condition is the whole of it: state the override and the reason, in
+owner has named. The test is the good of the site, not whether a rule allows it. Owner,
+29 August: rules are meant to be broken if it is for the good of the site. Twice that day
+a gate blocked a correct change and the gate was what needed fixing: a spell checker
+rewrote the plural of "analysis" into a verb, and a pre-commit hook judged a repaired
+checker by its unrepaired committed copy. In both cases obeying would have made the site
+worse. The condition is the whole of it: state the override and the reason, in
 the commit message or the report. A silent override cannot be told apart from a mistake or
 a lapse, which means it teaches the next reader nothing and buys you nothing. An override
 stated with its reason is how this file gets better; an override taken quietly is how it
