@@ -1,17 +1,50 @@
 # kaspa explained working state
 
 
-## STOP. Read this first, 21 August 2026, end of session.
+## STALE. Read this before the section below, 29 August 2026.
+
+**The "21 August" state block below is out of date and will mislead you.** It says 21
+models and 10 dials of one figure each. Both are wrong as of 29 August 2026:
+
+- The picker holds **23 models**, not 21.
+- It has **6 dials**, not 10, after a consolidation that was measured rather than
+  asserted. Five of the ten dials pointed at one general factor and were averaging each
+  other out. Six dials produce 10 distinct leaders and 52 distinct top-three sets over
+  23 models, against 7 and 23 for the ten-dial version.
+- `sh.f` is not 0.40. It ranges 0.00 to 1.00 per model. **0.40 is `TARGET_F`**, the
+  destination, which is a different thing. The guard on TARGET_F still stands.
+- Placement stays on the price axis. Moving it to response time was built and measured
+  and is **worse**: leave-one-family-out RMSE 0.167 for price against 0.260 for response
+  time, because four of twenty ladders are degenerate on the clock.
+
+**This file is itself instance seven of the bug class it documents below**: a value
+written against one shape of the data, left behind when the shape moved. Treat every
+figure in the block below as unverified until you have checked it against the data.
+
+Ground truth lives in the artifacts, never here: the roster is `window.__MP__` inside
+`model-picker.html`, the chains are `data/l1-chains.json`, the pages are
+`site-manifest.json`. Count from those.
+
+Also read, and they outrank this file: `PRINCIPLES.md` for how to work, and
+`SITE-STANDARD.md` for what good means in numbers and what authority you have.
+
+---
+
+## STOP. Read this first, 21 August 2026, end of session. STALE, SEE ABOVE.
 
 **Everything is committed, pushed, deployed and verified live.** HEAD is
 `8534d5a`. The gate passes on a CLEAN CHECKOUT of that commit, which is the
 check that matters. Working tree is clean apart from two files that are
 intentionally never committed.
 
-Live state, confirmed by fetching kaspaexplained.com with a cache buster:
-10 scored figures, 21 models, 10 dials of ONE figure each, four sources
-(Artificial Analysis 4, LiveBench 4, LM Arena 1, ARC Prize 1), every model
-carries a price.
+Live state as of 21 August 2026, confirmed then by fetching kaspaexplained.com
+with a cache buster: 10 scored figures, 21 models, 10 dials of ONE figure each,
+four sources (Artificial Analysis 4, LiveBench 4, LM Arena 1, ARC Prize 1),
+every model carries a price. **Superseded on 29 August: 23 models, 9 labs, 6
+dials. See `data/ground-truth-2026-08-29.json`, counted from repo data.** The
+sample sizes quoted further down (n=21, n=38, n=20) are the sizes those analyzes
+actually ran on and stay as written; they are not roster counts and must not be
+"corrected" to today's roster.
 
 ### The structure now
 
