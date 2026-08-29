@@ -35,6 +35,37 @@ Its brief, so it does not have to be reconstructed:
 - Run `bash scripts/check-site.sh` until it prints `Site checks passed.`, quote that line,
   commit, do not push.
 
+## Gate audit, run 29 Aug 2026 against a clean clone of HEAD
+
+Every gate below was made to fail on a planted violation before being trusted to pass,
+which is the only thing that distinguishes a gate from decoration.
+
+Verified: fails on a plant, passes clean.
+
+- `check-glass-gate.mjs`. Spins its own server, renders 38 pages x 2 themes. Caught a
+  planted translucent-white fill and rgba-white border, exit 1. Correctly treats the two
+  brand-gradient buttons under `demos/` as the sanctioned exception, advisory not blocking.
+- `check-html.py`. Caught a planted duplicate id.
+- `check-orphan-classes.mjs`. Caught a class no stylesheet defines.
+- `check-label-colors.py`. Caught a raw `background` and `color` on a `.tag` selector.
+- `check-prose.py`. Caught planted em dashes and hype vocabulary, 4 hits.
+- `check-american-english.py`. Caught `analyse` and `analysed` after its own false rule
+  for `analyses` was removed.
+
+Blind spot, real: **`check-label-colors.py` never reads `styles.css`.** It scans page-local
+`<style>` blocks only, so a raw color on a `.tag` rule in the main stylesheet passes. That
+may be deliberate, since styles.css is where the token system is defined, but nothing
+states it and nothing catches it.
+
+Not a defect, worth knowing: `check-copy-quality.py` is 35 lines checking one narrow thing,
+stale public copy patterns. It is not a general copy linter and should not be relied on as
+one. Em dashes and hype words are caught by `check-prose.py`, not by it.
+
+Also found and unresolved: 8 inline `style="...color..."` attributes across 5 pages
+(`what-is-kaspa` 4, plus `chain-comparer`, `kaspa-mining`, `kaspa-origin-story`,
+`why-kaspa-matters`). Inline color bypasses the token system entirely and no gate looks at
+it. Check each during the code read.
+
 ## FIRST PHASE OF THE CODE SWEEP: measure real references, then judge us against them
 
 Owner, 29 Aug 2026: writing, text spacing, sizing, page method, spacing and density all
