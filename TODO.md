@@ -115,6 +115,37 @@ Still worth a specific pass: any paragraph on those five pages that reads as if 
 split by a machine mid-thought, and any inline script that lost a line to the splitter.
 A page that loads without errors can still have prose cut in half.
 
+## A third of styles.css does nothing, measured 29 Aug 2026
+
+`node scripts/dead-css-scan.mjs . styles.css`, 88 renders across 22 pages in both themes.
+Full report in `data/dead-css-scan-2026-08-29.json`.
+
+    749 rules total
+     75 dead        match no element on any page
+    163 overridden  match, but every declaration loses the cascade
+    511 live        (337 of them in the legacy region)
+
+238 of 749, 32%, are dead or inert. That is why an edit to this stylesheet can silently do
+nothing, and it is the same debt the duplicate-selector count describes from the other
+side.
+
+**Do not bulk-remove on this evidence.** Two limits, both real:
+
+- The scan rendered 390px and 1280px only. A rule that only applies at a tablet breakpoint
+  reads as dead here and is not.
+- No interaction state was exercised. 18 of the 75 dead rules involve `:hover`, `:focus`,
+  `[open]` or `[data-state]`, so the scanner could not have matched them whether they work
+  or not.
+
+The remaining ~57 name components that no longer exist and are the honest candidates:
+`.status-lane-grid`, `.live-kaspa-panel`, `.hero-signal-grid span`, `.next-step > .button`,
+`.status-workbench`, `.verification-workflow`, `.build-path-console`.
+
+Removing them is its own piece of work with its own verification, not something to fold
+into a deploy pass. Re-run the scan across all six widths and with states driven before
+trusting any deletion, and remember that dead CSS costs a reader nothing; this is a
+maintenance win, not a reader-facing one.
+
 ## Cascade debt in styles.css, measured 29 Aug 2026
 
 229 of 941 selectors in `styles.css` are declared three or more times. `h2` is declared
