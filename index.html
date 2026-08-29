@@ -14,7 +14,7 @@
     })();
   </script>
   <title>Kaspa Explained: What KAS Is, How GHOSTDAG Works, and What Is Live Now</title>
-  <meta name="description" content="Twenty demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
+  <meta name="description" content="Demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
   <link rel="canonical" href="https://kaspaexplained.com/">
   <link rel="icon" href="kaspa-favicon.svg?v=20260512-real-k" type="image/svg+xml">
@@ -27,19 +27,19 @@
   <meta name="apple-mobile-web-app-title" content="Kaspa Explained">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="Kaspa Explained: Play With the blockDAG">
-  <meta property="og:description" content="Twenty demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
+  <meta property="og:description" content="Demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kaspaexplained.com/">
-  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
+  <meta property="og:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Kaspa Explained - proof-of-work blockDAG guide">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kaspa Explained: Play With the blockDAG">
-  <meta name="twitter:description" content="Twenty demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
-  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260514-logo-clearance">
-  <meta name="dateModified" content="2026-08-22">
+  <meta name="twitter:description" content="Demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
+  <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained-20260514.png?v=20260829-demo-count">
+  <meta name="dateModified" content="2026-08-29">
   <!-- Toccata activation publish nudge: 2026-06-30 -->
   <script type="application/ld+json">
   {
@@ -47,7 +47,7 @@
     "@type": "WebPage",
     "name": "Kaspa Explained",
     "url": "https://kaspaexplained.com/",
-    "description": "Twenty demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.",
+    "description": "Demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.",
     "about": [
       "Kaspa",
       "Proof of Work",
@@ -94,7 +94,7 @@
       <div class="hero-copy">
         <p class="eyebrow">Independent explainer</p>
         <h1>Kaspa, explained.</h1>
-        <p class="lead">Kaspa is <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home" role="tooltip">Miners spend real computing work to make blocks.</span></span>, the same mechanism as Bitcoin, but its miners don't compete for one slot in one chain. Every miner who finds a valid block keeps it, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home" role="tooltip">Kaspa's live rule for ordering the blockDAG so parallel work counts.</span></span> orders every honest block those miners produce into one history the whole network agrees on. Drag the slider below and watch what a single chain throws away that a blockDAG keeps.</p>
+        <p class="lead">Kaspa is <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home" role="tooltip">Miners spend real computing work to make blocks.</span></span>, the same mechanism as Bitcoin, but its miners don't race for one slot. Every miner who finds a valid block keeps it, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home" role="tooltip">Kaspa's live rule for ordering blocks that arrive at once, so none get thrown away.</span></span> orders every honest block into one history the whole network agrees on.</p>
         <div class="actions">
           <a class="button primary" href="/start-here">Start Here</a>
         </div>
@@ -102,7 +102,8 @@
     </section>
 
     <section id="demos" class="section prose-section" aria-labelledby="demos-title">
-      <h2 id="demos-title">Watch a blockDAG keep what a chain would drop</h2>
+      <p class="eyebrow">Try it</p>
+      <h2 id="demos-title">The same blocks, under two rules</h2>
       <style>
         #home-collision-demo{
           --bg:#100e0c;
@@ -199,7 +200,10 @@
         #home-collision-demo .marks span { position: absolute; top: 0; white-space: nowrap; }
         #home-collision-demo .marks span:first-child { left: 0; }
         #home-collision-demo .marks span:last-child { right: 0; }
-        @media (max-width: 480px) {
+        /* Positioned marks collide before they run out of room: at 560px the
+           "Kaspa mainnet, 10/s" label printed straight over "32/s". Below 800px
+           they stack as a plain legend of the slider's range instead. */
+        @media (max-width: 800px) {
           #home-collision-demo .marks {
             display: flex;
             flex-direction: column;
@@ -338,21 +342,21 @@
 
       <div id="home-collision-demo">
         <div class="primary-control">
-          <label for="home-cs-rate">Block rate: <span class="big-readout" id="home-cs-rateVal"></span> <span class="info-affordance" id="home-cs-rate-info">
+          <label for="home-cs-rate">How fast blocks are found: <span class="big-readout" id="home-cs-rateVal"></span> <span class="info-affordance" id="home-cs-rate-info">
               <button class="info-affordance__trigger" type="button" aria-expanded="false" aria-describedby="home-cs-rate-panel">
                 <i class="info-affordance__glyph" aria-hidden="true">i</i>
                 <span class="sr-only">Why the range stops at 32</span>
               </button>
-              <span class="info-affordance__panel" id="home-cs-rate-panel" role="tooltip">10 a second is Kaspa mainnet's real rate today. Bitcoin marks the low end for comparison, another network, not a Kaspa setting. 32 a second is the top of the slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
+              <span class="info-affordance__panel" id="home-cs-rate-panel" role="tooltip">32 a second is the top of this slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
             </span></label>
-          <input type="range" id="home-cs-rate" value="882" min="0" max="1000" step="1" aria-label="Block rate">
-          <div class="marks"><span>Bitcoin</span><span>Kaspa mainnet</span></div>
+          <input type="range" id="home-cs-rate" value="882" min="0" max="1000" step="1" aria-label="How fast blocks are found">
+          <div class="marks"><span>Bitcoin, 1 every 10 min</span><span style="left:88.2%; transform:translateX(-50%)">Kaspa mainnet, 10/s</span><span>32/s</span></div>
         </div>
         <p class="honesty-note" id="home-cs-honestyNote"></p>
 
         <div class="secondary-control" hidden>
           <label for="home-cs-delay">Network delay: <b id="home-cs-delayVal"></b></label>
-          <input type="range" id="home-cs-delay" value="350" min="0" max="1000" step="1" aria-label="Propagation delay">
+          <input type="range" id="home-cs-delay" value="349.485" min="0" max="1000" step="0.001" aria-label="How long a block takes to reach other miners">
         </div>
 
         <p class="result-line"><span id="home-cs-resultLine"></span> <span class="info-affordance" id="home-cs-assumption-info">
@@ -363,23 +367,23 @@
             <span class="info-affordance__panel" id="home-cs-assumption-panel" role="tooltip">Modeled with network delay fixed at 250 ms, inside a live-data bracket, not a direct Kaspa measurement of propagation. Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, 24 August 2026) found a single-chain-equivalent delay between roughly 204 ms and 666 ms; 250 ms sits inside that bracket. The full demo's slider tops out at 5 s, rusty-kaspa's own one-way <code>NETWORK_DELAY_BOUND</code> worst case, a protocol constant, not a typical delay. The share is a running sample that drifts toward the modeled figure as more blocks accumulate, not a fixed reading.</span>
           </span></p>
 
-        <p class="model-caption">Both panels run at the rate above. Single chain is a model of what a longest-chain rule would lose at that rate, not Bitcoin today. Losing that fight also makes a single chain less secure as the rate climbs.</p>
+        <p class="model-caption">Single chain is a model, not a picture of Bitcoin today.</p>
 
         <div class="panel">
-          <p class="panel-title">Single chain <span class="stat" id="home-cs-chainStat">0 kept, 0 dropped so far</span></p>
+          <p class="panel-title">Single chain <span class="stat" id="home-cs-chainStat">so far: 0 kept, 0 thrown away</span></p>
           <canvas id="home-cs-chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
           <div class="legend"><span><i style="background:var(--green)"></i>kept</span><span><i style="background:var(--pink)"></i>thrown away</span></div>
         </div>
 
         <div class="panel dag">
-          <p class="panel-title">BlockDAG <span class="stat">every block kept</span></p>
+          <p class="panel-title">BlockDAG <span class="stat" id="home-cs-dagStat">so far: 0 kept, 0 thrown away</span></p>
           <canvas id="home-cs-dagCanvas" role="img" aria-label="BlockDAG of the same recent blocks, all kept and ordered by parent references instead of being discarded."></canvas>
-          <div class="legend"><span><i style="background:var(--green)"></i>kept</span></div>
+          <div class="legend"><span><i style="background:var(--green)"></i>kept, ordered by parents</span></div>
         </div>
 
         <button id="home-cs-step" hidden>Step one block</button>
 
-        <p class="live-footnote"><a href="/what-is-kaspa#collision-sim">Full math and sources</a></p>
+        <p class="live-footnote"><a href="/what-is-kaspa#collision-sim">How this works, and the sources</a></p>
       </div>
 
       <script>
@@ -443,7 +447,14 @@
         let autoTimer = null;
         let rafId = null;
 
-        function nextInterArrivalReal() { return -Math.log(Math.random()) * meanIntervalReal(); }
+        // Blocks are found by a Poisson process, so the gap between them is
+        // exponentially distributed, never constant. This was written once and
+        // left unwired while the scheduler used a fixed timer, so the tally was
+        // sampling correctly underneath while the screen showed a metronome,
+        // which teaches the opposite of how mining works.
+        // 1 - Math.random() keeps the argument in (0, 1]; Math.random() can
+        // return 0 and log(0) is -Infinity.
+        function nextWaitMs() { return -Math.log(1 - Math.random()) * playbackInterval() * 1000; }
 
         function resetSim() {
           virtualClock = 0; total = 0; discarded = 0;
@@ -479,14 +490,24 @@
           updateStats();
         }
 
+        // A share under 10% rounded to whole percent reads as "about 0%" at
+        // Bitcoin's block rate, which is a real number turned into a wrong one.
+        function fmtPct(v) {
+          if (v >= 10) return v.toFixed(0);
+          if (v >= 1) return v.toFixed(1);
+          return v.toFixed(2);
+        }
+
         function updateStats() {
           const kept = total - discarded;
           const ld = lambda() * delay();
           const predictedDiscardPct = (ld / (1 + ld)) * 100;
           document.getElementById('home-cs-chainStat').textContent =
-            kept + ' kept, ' + discarded + ' dropped so far';
+            'so far: ' + kept.toLocaleString() + ' kept, ' + discarded.toLocaleString() + ' thrown away';
+          document.getElementById('home-cs-dagStat').textContent =
+            'so far: ' + total.toLocaleString() + ' kept, 0 thrown away';
           document.getElementById('home-cs-resultLine').innerHTML =
-            'A single chain throws away about <b>' + predictedDiscardPct.toFixed(0) + '%</b> of its blocks. The blockDAG keeps them all.';
+            'A single chain throws away about <b>' + fmtPct(predictedDiscardPct) + '%</b> of its blocks at this rate.';
         }
 
         function fitCanvas(c) {
@@ -600,7 +621,7 @@
 
         function scheduleNext() {
           if (reducedMotion) return;
-          const waitMs = playbackInterval() * 1000;
+          const waitMs = nextWaitMs();
           autoTimer = setTimeout(() => { generateEvent(); requestRender(); scheduleNext(); }, waitMs);
         }
 
@@ -639,7 +660,6 @@
         window.addEventListener('resize', requestRender);
 
         rateInput.value = Math.round(T_KASPA * 1000);
-        delayInput.value = 350;
         onSliderChange();
 
         if (reducedMotion) {
