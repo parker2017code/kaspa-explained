@@ -95,9 +95,33 @@ Order, after the code sweep commits:
    Check touch targets stay at least 44px at every width, that nothing clips or overlaps,
    and that no page scrolls horizontally. Wide content scrolls inside its own container,
    never the body.
-3. Drive every demo rather than looking at it. Every control, first touch, both extremes,
-   the empty state, the reset. A control that produces no legible change is a defect. A
-   demo that needs scrolling to be understood has not been designed yet.
+3. Use the site the way a person uses it. Everything gets seen, touched and clicked, not
+   inspected. Reading the markup does not count, and neither does a screenshot: both prove
+   the thing exists, not that it works.
+
+   Every demo driven through its full range rather than poked once: every control, first
+   touch, both extremes, the empty state, the reset. A control that produces no legible
+   change is a defect. A demo that needs scrolling to be understood has not been designed
+   yet.
+
+   Every link clicked and the destination confirmed: header nav on every page, footer nav
+   on every page, the logo and the home button, breadcrumbs, back-to-top, in-page anchors,
+   every card on the demos index and the search page, every source link, and 404.html
+   itself. At narrow widths the nav collapses into a different control, so the collapsed
+   menu gets opened and every item inside it clicked too. A link that 404s, lands on the
+   wrong anchor, or points at a page that got deleted is a defect.
+
+   Every disclosure opened and read to the end. Every tooltip and term definition focused
+   and dismissed. Every theme toggle flipped both ways on a page that has one.
+
+   Keyboard as well as mouse: tab through each page, confirm focus is visible at every
+   stop, confirm the order matches the visual order, and confirm Enter and Space work on
+   anything custom that behaves like a button. A control reachable only by mouse is a
+   defect.
+
+   Check the states nobody looks at: default, mid-range, both extremes, empty, error, and
+   prefers-reduced-motion. Nothing blank, NaN, Infinity, undefined, or a bare dash, in any
+   of them.
 4. Run both harnesses in `_preview-site/measure.html` to clean: the alignment measurer over
    every direct child of every centered hero, and the glass inventory over computed styles
    in both themes. Eyeballing missed that class three times. Cache-bust each iframe load or
