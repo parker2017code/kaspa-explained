@@ -115,6 +115,27 @@ Still worth a specific pass: any paragraph on those five pages that reads as if 
 split by a machine mid-thought, and any inline script that lost a line to the splitter.
 A page that loads without errors can still have prose cut in half.
 
+## Cascade debt in styles.css, measured 29 Aug 2026
+
+229 of 941 selectors in `styles.css` are declared three or more times. `h2` is declared
+11 times. `.quick-grid article` 13 times, spread from line 490 to line 3452. A rule can
+therefore look load-bearing and be inert, which is what CLAUDE.md warns about and what
+makes CSS edits here fail silently.
+
+This is the root of a measured symptom: `kaspa-mining.html` renders 16 distinct font sizes
+and `what-is-kaspa.html` 15, against Linear's 6 for an entire marketing site. Sixteen sizes
+is not a hierarchy, and it is not a design decision either; it is a dozen selectors
+disagreeing.
+
+`scripts/dead-css-scan.mjs` answers the useful question, by rendering rather than reading:
+for every rule, does it match anything, and where it matches, does it win the cascade or
+is it fully overridden. It takes a site root as its first argument, which no caller
+documents, so it crashes with a type error when run bare. Run it as
+`node scripts/dead-css-scan.mjs . styles.css --out=<file>`.
+
+Fix the rules that match nothing or never win first. Do not restyle anything that is not
+broken.
+
 ## The collision demo exists twice and the copies drifted
 
 `index.html` and `what-is-kaspa.html` each carry a full copy of the collision demo,
