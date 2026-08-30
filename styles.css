@@ -3154,6 +3154,18 @@ blockquote {
     overflow-wrap: anywhere;
   }
 
+  /* A reality-table row becomes a stacked card below 700px (see the shared
+     block above: thead hidden, tr/td forced to display:block). Without a
+     label a reader sees an unlabeled stack of values with no way to tell
+     which column each one came from. content: attr(data-label) reads the
+     data-label attribute every reality-table <td> across the site carries
+     (added 2026-08-30; before that only .status-snapshot's four columns had
+     labels, hardcoded per nth-child, and that hardcoding was wrong for
+     #stClaims, a three-column table sharing the .status-snapshot class with
+     the four-column #stFeatures -- nth-child(1) printed "Item" over a claim
+     and nth-child(4)'s "Source" label pointed at nothing on a row that had
+     no fourth cell). A <td> with no data-label (a table not yet covered)
+     renders an empty label rather than breaking. */
   .reality-table td::before {
     display: block;
     margin-bottom: 2px;
@@ -3163,34 +3175,8 @@ blockquote {
     letter-spacing: .08em;
     line-height: 1.25;
     text-transform: uppercase;
+    content: attr(data-label);
   }
-
-  .status-snapshot td:nth-child(1)::before {
-    content: "Item";
-  }
-
-  .status-snapshot td:nth-child(2)::before {
-    content: "Status";
-  }
-
-  .status-snapshot td:nth-child(3)::before {
-    content: "Meaning";
-  }
-
-  .status-snapshot td:nth-child(4)::before {
-    content: "Source";
-  }
-
-  
-
-  
-
-  
-
-  
-
-  
-
 }
 
 /*

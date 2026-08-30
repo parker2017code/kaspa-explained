@@ -69,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -132,18 +132,18 @@
           <table class="reality-table">
             <thead><tr><th>What the app needs</th><th>Route</th><th>Why that one</th></tr></thead>
             <tbody>
-              <tr><td>Payment, receipt, balance, withdrawal, or support evidence</td><td><a href="/status">Live network work</a></td><td>Current wallets, APIs, and accepted-transaction checks already handle this.</td></tr>
-              <tr><td>Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td><a href="#covenant-breaker-demo">Toccata covenants</a></td><td>
+              <tr><td data-label="What the app needs">Payment, receipt, balance, withdrawal, or support evidence</td><td data-label="Route"><a href="/status">Live network work</a></td><td data-label="Why that one">Current wallets, APIs, and accepted-transaction checks already handle this.</td></tr>
+              <tr><td data-label="What the app needs">Vault, escrow, spend cap, asset rule, release, refund, or timeout</td><td data-label="Route"><a href="#covenant-breaker-demo">Toccata covenants</a></td><td data-label="Why that one">
                 A bounded spend rule is simpler to build and audit than a full app runtime.
                 <details class="cell-detail">
                   <summary>When to split into more than one covenant</summary>
                   <p>If the product splits into states that never touch, use one covenant per state and the parallel work comes free.</p>
                 </details>
               </td></tr>
-              <tr><td>One app keeps its own richer state from accepted Kaspa transactions</td><td>Based app or replay path</td><td>The app proves or replays its own state without needing cross-app atomicity.</td></tr>
-              <tr><td>Each action needs its own proof, privacy check, or custom validity rule</td><td><a href="#zk-boundary-demo">Inline ZK</a></td><td>It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
-              <tr><td>The claim depends on another chain, an oracle, a price, or a real-world event</td><td><a href="#zk-boundary-demo">Inline ZK, plus an anchor</a></td><td>A proof checks its own inputs, never the world. Name the anchor first: source root, finality certificate, oracle, or challenge process.</td></tr>
-              <tr><td>Many users mutate the same app state at once</td><td><a href="/status#status-snapshot">Future full vProgs</a></td><td>Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction.</span></span> already runs separate covenant apps as one, in unaudited offline demos.</td></tr>
+              <tr><td data-label="What the app needs">One app keeps its own richer state from accepted Kaspa transactions</td><td data-label="Route">Based app or replay path</td><td data-label="Why that one">The app proves or replays its own state without needing cross-app atomicity.</td></tr>
+              <tr><td data-label="What the app needs">Each action needs its own proof, privacy check, or custom validity rule</td><td data-label="Route"><a href="#zk-boundary-demo">Inline ZK</a></td><td data-label="Why that one">It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
+              <tr><td data-label="What the app needs">The claim depends on another chain, an oracle, a price, or a real-world event</td><td data-label="Route"><a href="#zk-boundary-demo">Inline ZK, plus an anchor</a></td><td data-label="Why that one">A proof checks its own inputs, never the world. Name the anchor first: source root, finality certificate, oracle, or challenge process.</td></tr>
+              <tr><td data-label="What the app needs">Many users mutate the same app state at once</td><td data-label="Route"><a href="/status#status-snapshot">Future full vProgs</a></td><td data-label="Why that one">Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction.</span></span> already runs separate covenant apps as one, in unaudited offline demos.</td></tr>
             </tbody>
           </table>
         </div>
@@ -692,13 +692,13 @@
           <table class="reality-table">
             <thead><tr><th>Use case</th><th>What the rule controls</th><th>Status</th></tr></thead>
             <tbody>
-              <tr><td>Vault</td><td>Withdrawal delay, recovery key, spend cap, or escape path.</td><td><span class="status-pill live">Live</span></td></tr>
-              <tr><td>Escrow</td><td>Release, refund, timeout, or dispute transition.</td><td><span class="status-pill live">Live</span></td></tr>
-              <tr><td>Assurance funding</td><td>Payout only after enough matching commitments arrive before a deadline.</td><td><span class="status-pill live">Live</span></td></tr>
-              <tr><td>Controlled assets</td><td>Transfer rules, controller input, or issuer rule.</td><td><span class="status-pill live">Live</span></td></tr>
-              <tr><td>ZK proof checks</td><td>A claim about chosen public inputs.</td><td><span class="status-pill live">Live</span></td></tr>
-              <tr><td>Cross-app composition</td><td>Several app states succeed or fail together in one transaction.</td><td><span class="status-pill research">Demos only</span></td></tr>
-              <tr><td>Shared mutable state</td><td>Many users mutating one app state at once.</td><td><span class="status-pill roadmap">Roadmap</span></td></tr>
+              <tr><td data-label="Use case">Vault</td><td data-label="What the rule controls">Withdrawal delay, recovery key, spend cap, or escape path.</td><td data-label="Status"><span class="status-pill live">Live</span></td></tr>
+              <tr><td data-label="Use case">Escrow</td><td data-label="What the rule controls">Release, refund, timeout, or dispute transition.</td><td data-label="Status"><span class="status-pill live">Live</span></td></tr>
+              <tr><td data-label="Use case">Assurance funding</td><td data-label="What the rule controls">Payout only after enough matching commitments arrive before a deadline.</td><td data-label="Status"><span class="status-pill live">Live</span></td></tr>
+              <tr><td data-label="Use case">Controlled assets</td><td data-label="What the rule controls">Transfer rules, controller input, or issuer rule.</td><td data-label="Status"><span class="status-pill live">Live</span></td></tr>
+              <tr><td data-label="Use case">ZK proof checks</td><td data-label="What the rule controls">A claim about chosen public inputs.</td><td data-label="Status"><span class="status-pill live">Live</span></td></tr>
+              <tr><td data-label="Use case">Cross-app composition</td><td data-label="What the rule controls">Several app states succeed or fail together in one transaction.</td><td data-label="Status"><span class="status-pill research">Demos only</span></td></tr>
+              <tr><td data-label="Use case">Shared mutable state</td><td data-label="What the rule controls">Many users mutating one app state at once.</td><td data-label="Status"><span class="status-pill roadmap">Roadmap</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -1138,24 +1138,24 @@ amount: "31112708372"</code></pre>
             </thead>
             <tbody>
               <tr>
-                <td>Fetch accepted state after submit</td>
-                <td>Local construction proves a transaction was built. It doesn't prove the network accepted it.</td>
-                <td>Record <code>is_accepted</code>, accepting block data, output script type, address, and amount.</td>
+                <td data-label="Builder habit">Fetch accepted state after submit</td>
+                <td data-label="Consequence">Local construction proves a transaction was built. It doesn't prove the network accepted it.</td>
+                <td data-label="Check">Record <code>is_accepted</code>, accepting block data, output script type, address, and amount.</td>
               </tr>
               <tr>
-                <td>Pin the submit surface</td>
-                <td>REST, JSON wRPC, Borsh wRPC, SDK versions, and testnet branches can each hand back a different transaction shape for the same request.</td>
-                <td>Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</td>
+                <td data-label="Builder habit">Pin the submit surface</td>
+                <td data-label="Consequence">REST, JSON wRPC, Borsh wRPC, SDK versions, and testnet branches can each hand back a different transaction shape for the same request.</td>
+                <td data-label="Check">Log SDK version, node version, network id, endpoint, encoding, tx version, and input budget fields.</td>
               </tr>
               <tr>
-                <td>Compare with a known working spend</td>
-                <td>Witness order, signature preimage, redeem-script shape, and constructor keys are far easier to debug against a sibling transaction that already worked than in isolation.</td>
-                <td>Diff the failing path against an accepted release, refund, or simple payment path before blaming protocol rules.</td>
+                <td data-label="Builder habit">Compare with a known working spend</td>
+                <td data-label="Consequence">Witness order, signature preimage, redeem-script shape, and constructor keys are far easier to debug against a sibling transaction that already worked than in isolation.</td>
+                <td data-label="Check">Diff the failing path against an accepted release, refund, or simple payment path before blaming protocol rules.</td>
               </tr>
               <tr>
-                <td>Label failed attempts narrowly</td>
-                <td>A tooling failure and a consensus failure look identical from the outside. They need different labels or the next builder repeats your mistake.</td>
-                <td>Keep the artifact, but mark it as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.</td>
+                <td data-label="Builder habit">Label failed attempts narrowly</td>
+                <td data-label="Consequence">A tooling failure and a consensus failure look identical from the outside. They need different labels or the next builder repeats your mistake.</td>
+                <td data-label="Check">Keep the artifact, but mark it as bad config, stale tooling, submit mismatch, or confirmed consensus rejection.</td>
               </tr>
             </tbody>
           </table>

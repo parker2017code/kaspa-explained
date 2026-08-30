@@ -87,10 +87,17 @@ NEXT_STEP = {
         "/the-instrument",
         "A 279-page argument for judging every monetary system, Kaspa included, by its physical cost floor.",
     ),
-    # Added 2026-08-29 with the page itself. A reader arrives here from the
-    # picker to check how the score is built, so the step that follows is
-    # going back and using it with that in hand.
+    # Added 2026-08-29 with the page itself, rerouted 2026-08-30 through the
+    # full table rather than straight back to the tool: a reader who just
+    # read that every estimated cell is marked on its row is the reader most
+    # likely to want to see those marks before going back to using it.
     "model-picker-method.html": (
+        "/model-picker-data",
+        "Every one of the 230 cells behind the ranking, with the ones this page just described as measured, sibling-carried, or imputed marked on its own row.",
+    ),
+    # Added 2026-08-30 with the page itself. Its own job is done once a
+    # reader has seen the row they came for; the tool is what they came from.
+    "model-picker-data.html": (
         "/model-picker",
         "Take the numbers back to the tool: move the six dials and watch the ranking reorder against them.",
     ),

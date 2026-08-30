@@ -68,8 +68,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -1792,10 +1792,10 @@
               <tr><th>Workload</th><th>Answer</th><th>Why the number changes</th></tr>
             </thead>
             <tbody>
-              <tr><td>Simple L1 payments</td><td>About 2,450 TPS for a payment with change, 3,070 without.</td><td>Set by the block rate and block-mass limits against simple transaction mass.</td></tr>
-              <tr><td>Covenant or programmable L1 transactions</td><td>Job by job, usually below simple-payment TPS.</td><td>Covenants add script work, state rules, covenant IDs, extra outputs, and storage effects.</td></tr>
-              <tr><td><span class="term-def" tabindex="0" role="button" aria-describedby="zk-def-wik">ZK<span class="term-def__panel" id="zk-def-wik" role="tooltip">Zero-knowledge: a proof that a statement is true without revealing the data behind it, so a script can accept a claim about work done elsewhere without seeing that work.</span></span> proof or settlement transactions</td><td>Fewer, heavier L1 transactions. One proof or settlement transaction can carry many off-chain app actions.</td><td>Set by the proof system, proof size, check cost, batch size, proving time, and settlement design.</td></tr>
-              <tr><td>Effective ZK app or future vProg throughput</td><td>App by app, and it can beat raw L1 transaction TPS.</td><td>Count app actions per proof batch or settlement cycle. State access and prover work are the real limits.</td></tr>
+              <tr><td data-label="Workload">Simple L1 payments</td><td data-label="Answer">About 2,450 TPS for a payment with change, 3,070 without.</td><td data-label="Why the number changes">Set by the block rate and block-mass limits against simple transaction mass.</td></tr>
+              <tr><td data-label="Workload">Covenant or programmable L1 transactions</td><td data-label="Answer">Job by job, usually below simple-payment TPS.</td><td data-label="Why the number changes">Covenants add script work, state rules, covenant IDs, extra outputs, and storage effects.</td></tr>
+              <tr><td data-label="Workload"><span class="term-def" tabindex="0" role="button" aria-describedby="zk-def-wik">ZK<span class="term-def__panel" id="zk-def-wik" role="tooltip">Zero-knowledge: a proof that a statement is true without revealing the data behind it, so a script can accept a claim about work done elsewhere without seeing that work.</span></span> proof or settlement transactions</td><td data-label="Answer">Fewer, heavier L1 transactions. One proof or settlement transaction can carry many off-chain app actions.</td><td data-label="Why the number changes">Set by the proof system, proof size, check cost, batch size, proving time, and settlement design.</td></tr>
+              <tr><td data-label="Workload">Effective ZK app or future vProg throughput</td><td data-label="Answer">App by app, and it can beat raw L1 transaction TPS.</td><td data-label="Why the number changes">Count app actions per proof batch or settlement cycle. State access and prover work are the real limits.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2462,10 +2462,10 @@ TPS = tx_per_block × 10 blocks/second</span>
               <tr><th>Piece</th><th>What it adds</th><th>TPS implication</th></tr>
             </thead>
             <tbody>
-              <tr><td>KIP-17 covenants</td><td>Transaction introspection and script tools for stateful UTXO rules.</td><td>More expressive transactions run heavier than simple payments.</td></tr>
-              <tr><td>KIP-20 covenant IDs</td><td>A 32-byte covenant identifier that gives covenant state a lineage.</td><td>Backs asset rules, at the cost of extra data and checking work.</td></tr>
-              <tr><td>KIP-16 ZK precompile</td><td><code>OpZkPrecompile</code> for proof paths such as Groth16 and RISC0-Succinct.</td><td>Proof transactions spend L1 room on checking work. Little of that room goes to moving coins.</td></tr>
-              <tr><td>KIP-21 sequencing commitments</td><td>Partitioned lane commitments.</td><td>Cuts app proving cost. It is not itself an end-user TPS number.</td></tr>
+              <tr><td data-label="Piece">KIP-17 covenants</td><td data-label="What it adds">Transaction introspection and script tools for stateful UTXO rules.</td><td data-label="TPS implication">More expressive transactions run heavier than simple payments.</td></tr>
+              <tr><td data-label="Piece">KIP-20 covenant IDs</td><td data-label="What it adds">A 32-byte covenant identifier that gives covenant state a lineage.</td><td data-label="TPS implication">Backs asset rules, at the cost of extra data and checking work.</td></tr>
+              <tr><td data-label="Piece">KIP-16 ZK precompile</td><td data-label="What it adds"><code>OpZkPrecompile</code> for proof paths such as Groth16 and RISC0-Succinct.</td><td data-label="TPS implication">Proof transactions spend L1 room on checking work. Little of that room goes to moving coins.</td></tr>
+              <tr><td data-label="Piece">KIP-21 sequencing commitments</td><td data-label="What it adds">Partitioned lane commitments.</td><td data-label="TPS implication">Cuts app proving cost. It is not itself an end-user TPS number.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2503,12 +2503,12 @@ TPS = tx_per_block × 10 blocks/second</span>
           <table class="reality-table">
             <thead><tr><th>Claim</th><th>Status</th><th>Safer wording</th></tr></thead>
             <tbody>
-              <tr><td>Kaspa is proof of work at ten blocks a second, ordered by GHOSTDAG</td><td><span class="status-pill live">Live</span></td><td>All three describe current mainnet in the Crescendo era.</td></tr>
-              <tr><td>Toccata has activated on mainnet</td><td><span class="status-pill live">Activated</span></td><td>Toccata crossed its mainnet activation score. That protocol switch is live; app, wallet, explorer, and SDK support still need their own checks.</td></tr>
-              <tr><td>July 2026 is a sudden emission cliff</td><td><span class="status-pill wrong">Misleading</span></td><td>Emission steps down once a month, keyed to DAA score. The calendar has nothing to do with it. July 2026 sits inside one of those scheduled steps.</td></tr>
-              <tr><td>GHOSTDAG is DAGKnight, or DAGKnight is current mainnet consensus</td><td><span class="status-pill research">Research</span></td><td>DAGKnight is a separate, later consensus design, still research and implementation work. Current mainnet consensus runs GHOSTDAG.</td></tr>
-              <tr><td>Ten blocks a second means payments are final immediately</td><td><span class="status-pill wrong">No</span></td><td>The block rate is live and speeds up inclusion. Reversal risk falls as proof-of-work stacks up, so a recipient waits for the depth the amount at stake deserves.</td></tr>
-              <tr><td>The blockDAG means unlimited TPS</td><td><span class="status-pill wrong">No</span></td><td>Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>
+              <tr><td data-label="Claim">Kaspa is proof of work at ten blocks a second, ordered by GHOSTDAG</td><td data-label="Status"><span class="status-pill live">Live</span></td><td data-label="Safer wording">All three describe current mainnet in the Crescendo era.</td></tr>
+              <tr><td data-label="Claim">Toccata has activated on mainnet</td><td data-label="Status"><span class="status-pill live">Activated</span></td><td data-label="Safer wording">Toccata crossed its mainnet activation score. That protocol switch is live; app, wallet, explorer, and SDK support still need their own checks.</td></tr>
+              <tr><td data-label="Claim">July 2026 is a sudden emission cliff</td><td data-label="Status"><span class="status-pill wrong">Misleading</span></td><td data-label="Safer wording">Emission steps down once a month, keyed to DAA score. The calendar has nothing to do with it. July 2026 sits inside one of those scheduled steps.</td></tr>
+              <tr><td data-label="Claim">GHOSTDAG is DAGKnight, or DAGKnight is current mainnet consensus</td><td data-label="Status"><span class="status-pill research">Research</span></td><td data-label="Safer wording">DAGKnight is a separate, later consensus design, still research and implementation work. Current mainnet consensus runs GHOSTDAG.</td></tr>
+              <tr><td data-label="Claim">Ten blocks a second means payments are final immediately</td><td data-label="Status"><span class="status-pill wrong">No</span></td><td data-label="Safer wording">The block rate is live and speeds up inclusion. Reversal risk falls as proof-of-work stacks up, so a recipient waits for the depth the amount at stake deserves.</td></tr>
+              <tr><td data-label="Claim">The blockDAG means unlimited TPS</td><td data-label="Status"><span class="status-pill wrong">No</span></td><td data-label="Safer wording">Throughput is bounded by block capacity, mempool policy, fees, and demand.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2575,7 +2575,7 @@ TPS = tx_per_block × 10 blocks/second</span>
   #livenet-demo .feed-wrap { border-top: 1px solid var(--line); padding-top: 14px; }
   #livenet-demo .feed { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
   #livenet-demo .block-card { display: flex; align-items: center; gap: 10px; background: var(--bg-2); border-radius: 8px; padding: 10px 12px; }
-  #livenet-demo .block-card.is-empty { opacity: .86; } /* was .82: dimmed its own text to 4.49:1, under the 4.5 floor. .86 keeps the card visibly quieter and clears it. */
+  #livenet-demo .block-card.is-empty { opacity: .96; } /* was .82, then .86: cleared dark theme's 4.5:1 floor but not light theme's, which measured 3.80:1 at .86 against its own panel background. .96 clears both (light theme's own worst case needs at least .95). */
   @media (prefers-reduced-motion: no-preference) {
     #livenet-demo .block-card.just-arrived { animation: ln-cardIn .4s cubic-bezier(.2,.8,.2,1); }
   }
@@ -2586,7 +2586,7 @@ TPS = tx_per_block × 10 blocks/second</span>
   #livenet-demo .content-word.empty-word { color: var(--faint); }
   #livenet-demo .content-word.has-tx { color: var(--green); }
   #livenet-demo .block-time { color: var(--faint); font-size: 16px; margin-left: auto; flex: none; }
-  #livenet-demo .block-sub { font-size: 16px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  #livenet-demo .block-sub { font-size: 16px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 6px; }
   #livenet-demo .block-sub code { font-family: var(--mono-font); }
   #livenet-demo .tag-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
   #livenet-demo .tag { display: inline-flex; align-items: center; gap: 3px; font-size: .7rem; font-weight: 650; padding: 2px 8px; border-radius: 999px; }

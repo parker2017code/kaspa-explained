@@ -51,8 +51,8 @@
     "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -87,7 +87,7 @@
       <h2>What the network is doing</h2>
       <div class="summary-grid grid-cards">
         <article><span>KAS price</span><p>Kaspa API: <strong id="snap-price">$0.02784831</strong> per KAS. Coinbase all-time high: <strong>$0.2075</strong>.</p></article>
-        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">328.1 PH/s</strong>, about <strong id="snap-hash-mult">656</strong> times the 500 TH/s the Kaspa wiki records for November 29, 2022.</p></article>
+        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">328.1 PH/s</strong>, about <strong id="snap-hash-mult">656</strong>x<span class="info-affordance" id="hash-info"><button class="info-affordance__trigger" type="button" aria-describedby="hash-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this comparison</span></button><span class="info-affordance__panel" id="hash-info-panel" role="tooltip">Compared against the 500 TH/s the Kaspa wiki records for November 29, 2022.</span></span></p></article>
         <article><span>Supply</span><p>Kaspa API: <strong id="snap-circ">27.669B KAS</strong> mined of a <strong>28.704B KAS</strong> maximum.</p></article>
         <article><span>Block reward</span><p>Kaspa API: <strong id="snap-reward">2.31246515 KAS</strong> per block, the emission step that began at DAA score 504,909,000.</p></article>
       </div>
@@ -713,7 +713,6 @@
     <div id="assumptionsBody"></div>
   </details>
 
-  <p class="demo-footnote ">Hash rates and prices update from a live read on load; figures that stay dated are labeled as such above and in the assumptions. Sources are listed above.</p>
 </div>
 
         <h3>The same friction concentrates ordinary mining too</h3>
@@ -1483,11 +1482,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>Price down</td><td>The market lost interest.</td><td>Lost demand, miner selling, early-holder profit-taking, broad market weakness, and leverage unwinds can all produce the same line, separately or together.</td></tr>
-              <tr><td>Hash rate down</td><td>The network is failing.</td><td>Weaker security is one explanation. Inefficient miners leaving after an overheated ASIC cycle is another. Compare against long-term history and attack cost before picking one.</td></tr>
-              <tr><td>Hash rate up while price falls</td><td>Security is fine, ignore price.</td><td>Delayed ASIC orders can be arriving into a weak market, raising difficulty and squeezing every miner's margin at once.</td></tr>
-              <tr><td>ASIC prices fall</td><td>Mining is dead.</td><td>Used-machine oversupply after manufacturers and miners overbuilt into a hot phase produces the same price drop.</td></tr>
-              <tr><td>Fees rise</td><td>Higher fees are automatically good.</td><td>Fees from repeat use people value help miners. Spam and one-off bursts push the number up without meaning the same thing.</td></tr>
+              <tr><td data-label="Signal">Price down</td><td data-label="Too-fast reading">The market lost interest.</td><td data-label="Slower reading">Lost demand, miner selling, early-holder profit-taking, broad market weakness, and leverage unwinds can all produce the same line, separately or together.</td></tr>
+              <tr><td data-label="Signal">Hash rate down</td><td data-label="Too-fast reading">The network is failing.</td><td data-label="Slower reading">Weaker security is one explanation. Inefficient miners leaving after an overheated ASIC cycle is another. Compare against long-term history and attack cost before picking one.</td></tr>
+              <tr><td data-label="Signal">Hash rate up while price falls</td><td data-label="Too-fast reading">Security is fine, ignore price.</td><td data-label="Slower reading">Delayed ASIC orders can be arriving into a weak market, raising difficulty and squeezing every miner's margin at once.</td></tr>
+              <tr><td data-label="Signal">ASIC prices fall</td><td data-label="Too-fast reading">Mining is dead.</td><td data-label="Slower reading">Used-machine oversupply after manufacturers and miners overbuilt into a hot phase produces the same price drop.</td></tr>
+              <tr><td data-label="Signal">Fees rise</td><td data-label="Too-fast reading">Higher fees are automatically good.</td><td data-label="Slower reading">Fees from repeat use people value help miners. Spam and one-off bursts push the number up without meaning the same thing.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1630,22 +1629,25 @@
       </div>
       <button class="redraw-btn" id="redrawBtn" type="button">Redraw this block</button>
 
-      <div class="stat-row" style="margin-top:20px;">
-        <div class="stat"><div class="num" id="feeRevOut">$4.86/day</div><div class="cap">fees per day</div></div>
-        <div class="stat"><div class="num" id="subsidyOut">$58,631/day</div><div class="cap">subsidy per day</div></div>
-      </div>
-      <p class="payoff" id="revenuePayoff">At this volume and fee, fees run about <b>12,054×</b> below the subsidy, on 22 Aug 2026.</p>
+      <details class="deep-dive" id="revenueDetail">
+        <summary>Fees against the block subsidy</summary>
+        <div class="stat-row" style="margin-top:20px;">
+          <div class="stat"><div class="num" id="feeRevOut">$4.86/day</div><div class="cap">fees per day</div></div>
+          <div class="stat"><div class="num" id="subsidyOut">$58,631/day</div><div class="cap">subsidy per day</div></div>
+        </div>
+        <p class="payoff" id="revenuePayoff">At this volume and fee, fees run about <b>12,054×</b> below the subsidy, on 22 Aug 2026.</p>
+      </details>
     </div>
   </div>
 
   <div class="honesty ">
-    <p style="margin:0;">New coins pay for nearly all of mining today, and that payment halves every twelve months. Fees are what has to replace it. <b>None of this is happening yet.</b>
+    <p style="margin:0;">New coins pay for nearly all of mining today, and that payment halves every twelve months. Fees are what has to replace it.
       <span class="info-affordance" id="honesty-info">
         <button class="info-affordance__trigger" type="button" aria-describedby="honesty-info-panel">
           <i class="info-affordance__glyph" aria-hidden="true">i</i>
           <span class="sr-only">What would close the gap</span>
         </button>
-        <span class="info-affordance__panel" id="honesty-info-panel" role="tooltip">Real traffic runs about 0.894 tx/s; every other scenario here is hypothetical. Fees run 12,054&times; below the subsidy; closing that gap takes more throughput, higher fees, price appreciation, or the halving schedule.</span>
+        <span class="info-affordance__panel" id="honesty-info-panel" role="tooltip">None of this is happening yet: real traffic runs about 0.894 tx/s, and every other scenario here is hypothetical. Fees run 12,054&times; below the subsidy; closing that gap takes more throughput, higher fees, price appreciation, or the halving schedule.</span>
       </span>
     </p>
   </div>
@@ -3003,9 +3005,9 @@ feerate = fee_sompi / mass_grams</span>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Windows</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-win64.zip"><code>rusty-kaspa-v2.0.1-win64.zip</code></a></td></tr>
-            <tr><td>macOS</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-osx.zip"><code>rusty-kaspa-v2.0.1-osx.zip</code></a></td></tr>
-            <tr><td>Linux, 64-bit Intel/AMD</td><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-linux-amd64.zip"><code>rusty-kaspa-v2.0.1-linux-amd64.zip</code></a></td></tr>
+            <tr><td data-label="Computer">Windows</td><td data-label="Release asset"><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-win64.zip"><code>rusty-kaspa-v2.0.1-win64.zip</code></a></td></tr>
+            <tr><td data-label="Computer">macOS</td><td data-label="Release asset"><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-osx.zip"><code>rusty-kaspa-v2.0.1-osx.zip</code></a></td></tr>
+            <tr><td data-label="Computer">Linux, 64-bit Intel/AMD</td><td data-label="Release asset"><a href="https://github.com/kaspanet/rusty-kaspa/releases/download/v2.0.1/rusty-kaspa-v2.0.1-linux-amd64.zip"><code>rusty-kaspa-v2.0.1-linux-amd64.zip</code></a></td></tr>
           </tbody>
         </table>
       </div>
@@ -3030,10 +3032,10 @@ feerate = fee_sompi / mass_grams</span>
             </tr>
           </thead>
           <tbody>
-            <tr><td>A synced node already runs on this computer</td><td>Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
-            <tr><td>Rusty Kaspa is downloaded but the node hasn't started yet</td><td>Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
-            <tr><td>The bridge should start its own node</td><td>Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
-            <tr><td>The node runs on another computer</td><td>Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
+            <tr><td data-label="Your setup">A synced node already runs on this computer</td><td data-label="Use this route">Skip to the bridge command for your operating system in external-node mode, then point the ASIC at this computer's local IP.</td></tr>
+            <tr><td data-label="Your setup">Rusty Kaspa is downloaded but the node hasn't started yet</td><td data-label="Use this route">Start <code>kaspad</code> first, wait for sync, then start the bridge.</td></tr>
+            <tr><td data-label="Your setup">The bridge should start its own node</td><td data-label="Use this route">Use in-process mode from the official bridge docs. The beginner route below uses external-node mode, which assumes a node already running.</td></tr>
+            <tr><td data-label="Your setup">The node runs on another computer</td><td data-label="Use this route">Keep the first attempt on one machine if possible. If the node stays remote, edit the bridge config so <code>kaspad_address</code> points to that node's RPC address.</td></tr>
           </tbody>
         </table>
       </div>
@@ -3177,19 +3179,19 @@ feerate = fee_sompi / mass_grams</span>
           </thead>
           <tbody>
             <tr>
-              <td>Pool URL</td>
-              <td><code>&lt;node-computer-ip&gt;:5555</code></td>
-              <td><code>192.168.1.10:5555</code></td>
+              <td data-label="Miner field">Pool URL</td>
+              <td data-label="Put this in"><code>&lt;node-computer-ip&gt;:5555</code></td>
+              <td data-label="Example"><code>192.168.1.10:5555</code></td>
             </tr>
             <tr>
-              <td>Username / worker</td>
-              <td><code>kaspa:YOUR_WALLET_ADDRESS.WORKERNAME</code></td>
-              <td><code>kaspa:kaspa:qq...abcd.ks0</code></td>
+              <td data-label="Miner field">Username / worker</td>
+              <td data-label="Put this in"><code>kaspa:YOUR_WALLET_ADDRESS.WORKERNAME</code></td>
+              <td data-label="Example"><code>kaspa:kaspa:qq...abcd.ks0</code></td>
             </tr>
             <tr>
-              <td>Password</td>
-              <td>Use the miner UI default if it requires a value.</td>
-              <td><code>x</code> is common in miner UIs, but the Rusty Kaspa bridge docs define only pool URL and username.</td>
+              <td data-label="Miner field">Password</td>
+              <td data-label="Put this in">Use the miner UI default if it requires a value.</td>
+              <td data-label="Example"><code>x</code> is common in miner UIs, but the Rusty Kaspa bridge docs define only pool URL and username.</td>
             </tr>
           </tbody>
         </table>
@@ -3249,11 +3251,11 @@ feerate = fee_sompi / mass_grams</span>
               </tr>
             </thead>
             <tbody>
-              <tr><td><code>5559</code></td><td>Low-difficulty workers.</td></tr>
-              <tr><td><code>5560</code></td><td>Low-difficulty workers.</td></tr>
-              <tr><td><code>5561</code></td><td>Medium-difficulty workers.</td></tr>
-              <tr><td><code>5555</code></td><td>Higher-difficulty workers. Start here for a normal ASIC setup.</td></tr>
-              <tr><td><code>5556</code>, <code>5557</code>, <code>5558</code></td><td>Higher difficulty ports.</td></tr>
+              <tr><td data-label="Port"><code>5559</code></td><td data-label="Sample config purpose">Low-difficulty workers.</td></tr>
+              <tr><td data-label="Port"><code>5560</code></td><td data-label="Sample config purpose">Low-difficulty workers.</td></tr>
+              <tr><td data-label="Port"><code>5561</code></td><td data-label="Sample config purpose">Medium-difficulty workers.</td></tr>
+              <tr><td data-label="Port"><code>5555</code></td><td data-label="Sample config purpose">Higher-difficulty workers. Start here for a normal ASIC setup.</td></tr>
+              <tr><td data-label="Port"><code>5556</code>, <code>5557</code>, <code>5558</code></td><td data-label="Sample config purpose">Higher difficulty ports.</td></tr>
             </tbody>
           </table>
         </div>
@@ -3294,12 +3296,12 @@ feerate = fee_sompi / mass_grams</span>
               </tr>
             </thead>
             <tbody>
-              <tr><td>Miner says pool dead</td><td>Use the node computer's local IP address. <code>127.0.0.1</code> points the miner back at itself.</td></tr>
-              <tr><td>Dashboard is empty</td><td>Check the bridge is still running, the miner is on the same network, and the pool URL uses a port from the sample config.</td></tr>
-              <tr><td>Bridge cannot reach node</td><td>Confirm the node is running with RPC at <code>127.0.0.1:16110</code>, or update the bridge config to the node's actual RPC address.</td></tr>
-              <tr><td>Firewall blocks connection</td><td>Allow the Stratum port on the node computer for the local network.</td></tr>
-              <tr><td>No rewards</td><td>Check shares first. Rewards need a solved block, and solo variance can leave a working rig without one for a long time.</td></tr>
-              <tr><td>Toccata activation day</td><td>Recheck versions and logs. Past the activation score, a block that strips new fields is invalid.</td></tr>
+              <tr><td data-label="Symptom">Miner says pool dead</td><td data-label="Check">Use the node computer's local IP address. <code>127.0.0.1</code> points the miner back at itself.</td></tr>
+              <tr><td data-label="Symptom">Dashboard is empty</td><td data-label="Check">Check the bridge is still running, the miner is on the same network, and the pool URL uses a port from the sample config.</td></tr>
+              <tr><td data-label="Symptom">Bridge cannot reach node</td><td data-label="Check">Confirm the node is running with RPC at <code>127.0.0.1:16110</code>, or update the bridge config to the node's actual RPC address.</td></tr>
+              <tr><td data-label="Symptom">Firewall blocks connection</td><td data-label="Check">Allow the Stratum port on the node computer for the local network.</td></tr>
+              <tr><td data-label="Symptom">No rewards</td><td data-label="Check">Check shares first. Rewards need a solved block, and solo variance can leave a working rig without one for a long time.</td></tr>
+              <tr><td data-label="Symptom">Toccata activation day</td><td data-label="Check">Recheck versions and logs. Past the activation score, a block that strips new fields is invalid.</td></tr>
             </tbody>
           </table>
         </div>
@@ -3331,18 +3333,18 @@ feerate = fee_sompi / mass_grams</span>
             </tr>
           </thead>
           <tbody>
-            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a></td><td>Beta status, external-node mode, in-process mode, dashboard, ports, miner setup, and username format.</td></tr>
-            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a></td><td>The file to download, since the release archives do not carry one. It sets the dashboard port, the Stratum ports, and the node RPC address.</td></tr>
-            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a></td><td>v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</td></tr>
-            <tr><td><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a></td><td>The Windows, macOS, and Linux archives used in this guide.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td>The mainnet DAA and network read behind the snapshot above.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td>The supply and reward figures in the snapshot above.</td></tr>
-            <tr><td><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td>The hash-rate reading in the snapshot above.</td></tr>
-            <tr><td><a href="https://wiki.kaspa.org/en/timeline">Kaspa wiki timeline</a></td><td>Early hash-rate milestones: 60 MH/s in November 2021, 10 TH/s in June 2022, 50 TH/s in August 2022, and 500 TH/s in November 2022.</td></tr>
-            <tr><td><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa wiki tokenomics</a></td><td>Fair-launch and no-premine context.</td></tr>
-            <tr><td><a href="https://www.coinbase.com/price/kaspa">Coinbase Kaspa price page</a></td><td>All-time-high reference and market-data context.</td></tr>
-            <tr><td><a href="https://www.coingecko.com/en/coins/kaspa">CoinGecko Kaspa page</a> and CoinGecko API</td><td>Dated current price read.</td></tr>
-            <tr><td><a href="/status">Kaspa Explained status page</a></td><td>Activation tracked separately from the setup instructions.</td></tr>
+            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a></td><td data-label="Used for">Beta status, external-node mode, in-process mode, dashboard, ports, miner setup, and username format.</td></tr>
+            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a></td><td data-label="Used for">The file to download, since the release archives do not carry one. It sets the dashboard port, the Stratum ports, and the node RPC address.</td></tr>
+            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a></td><td data-label="Used for">v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</td></tr>
+            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a></td><td data-label="Used for">The Windows, macOS, and Linux archives used in this guide.</td></tr>
+            <tr><td data-label="Source"><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td data-label="Used for">The mainnet DAA and network read behind the snapshot above.</td></tr>
+            <tr><td data-label="Source"><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td data-label="Used for">The supply and reward figures in the snapshot above.</td></tr>
+            <tr><td data-label="Source"><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td data-label="Used for">The hash-rate reading in the snapshot above.</td></tr>
+            <tr><td data-label="Source"><a href="https://wiki.kaspa.org/en/timeline">Kaspa wiki timeline</a></td><td data-label="Used for">Early hash-rate milestones: 60 MH/s in November 2021, 10 TH/s in June 2022, 50 TH/s in August 2022, and 500 TH/s in November 2022.</td></tr>
+            <tr><td data-label="Source"><a href="https://wiki.kaspa.org/en/tokenomics">Kaspa wiki tokenomics</a></td><td data-label="Used for">Fair-launch and no-premine context.</td></tr>
+            <tr><td data-label="Source"><a href="https://www.coinbase.com/price/kaspa">Coinbase Kaspa price page</a></td><td data-label="Used for">All-time-high reference and market-data context.</td></tr>
+            <tr><td data-label="Source"><a href="https://www.coingecko.com/en/coins/kaspa">CoinGecko Kaspa page</a> and CoinGecko API</td><td data-label="Used for">Dated current price read.</td></tr>
+            <tr><td data-label="Source"><a href="/status">Kaspa Explained status page</a></td><td data-label="Used for">Activation tracked separately from the setup instructions.</td></tr>
           </tbody>
         </table>
       </div>

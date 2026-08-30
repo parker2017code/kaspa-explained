@@ -79,8 +79,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
   <style>
     /* Filter above the two status tables. The tables are the page; the
        filter is one control over both, so it sits between them rather than
@@ -179,24 +179,6 @@
         <p class="eyebrow">Not built yet</p>
         <p>DAGKnight is <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>, still Proposed. GHOSTDAG runs consensus today. vProgs have not reached testnet. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-status">inter-covenant communication<span class="term-def__panel" id="icc-def-status" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction, so either every part lands or none does. It works on Toccata today, in unaudited offline demos only.</span></span> already composes covenant apps atomically on Toccata, in unaudited offline demos. What vProgs would add on top is shared mutable state, the case where many users change one app's state at once.</p>
       </div>
-      <div class="table-wrap">
-        <table class="reality-table" aria-label="What each status label means">
-          <thead><tr><th>Label</th><th>What it means here</th></tr></thead>
-          <tbody>
-            <tr><td><span class="status-pill live">Live</span></td><td>Running on Kaspa mainnet right now, backed by code, a release, or protocol docs.</td></tr>
-            <tr><td><span class="status-pill target">Testnet only</span></td><td>Proved on a test network. That is not evidence of mainnet behavior.</td></tr>
-            <tr><td><span class="status-pill roadmap">Roadmap</span></td><td>Planned work with no committed activation date.</td></tr>
-            <tr><td><span class="status-pill research">Research</span></td><td>Design or architecture work with no live or testnet proof yet.</td></tr>
-            <tr><td><span class="status-pill wrong">Wrong</span></td><td>A claim people repeat that the sources contradict.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="status-details" class="section">
-      <p class="eyebrow">Status</p>
-      <h2 id="status-snapshot">What Kaspa has, and what it does not</h2>
-
       <div class="st-filter">
         <label for="stQ">Find a feature or a claim</label>
         <input id="stQ" type="search" autocomplete="off" placeholder="Toccata, DAGKnight, finality, 100 BPS, emission...">
@@ -209,6 +191,27 @@
           <button type="button" data-status="wrong" aria-pressed="false">Wrong</button>
         </div>
         <p class="st-count" id="stCount" aria-live="polite"></p>
+      </div>
+      <details class="deep-dive">
+        <summary>What each status label means</summary>
+        <div class="table-wrap">
+          <table class="reality-table" aria-label="What each status label means">
+            <thead><tr><th>Label</th><th>What it means here</th></tr></thead>
+            <tbody>
+              <tr><td data-label="Label"><span class="status-pill live">Live</span></td><td data-label="What it means here">Running on Kaspa mainnet right now, backed by code, a release, or protocol docs.</td></tr>
+              <tr><td data-label="Label"><span class="status-pill target">Testnet only</span></td><td data-label="What it means here">Proved on a test network. That is not evidence of mainnet behavior.</td></tr>
+              <tr><td data-label="Label"><span class="status-pill roadmap">Roadmap</span></td><td data-label="What it means here">Planned work with no committed activation date.</td></tr>
+              <tr><td data-label="Label"><span class="status-pill research">Research</span></td><td data-label="What it means here">Design or architecture work with no live or testnet proof yet.</td></tr>
+              <tr><td data-label="Label"><span class="status-pill wrong">Wrong</span></td><td data-label="What it means here">A claim people repeat that the sources contradict.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <section id="status-details" class="section">
+      <p class="eyebrow">Status</p>
+      <h2 id="status-snapshot">What Kaspa has, and what it does not</h2>
       </div>
       <p class="fit-note">Checked 22 August 2026 against release tags, raw KIP and KCC files, and project READMEs. The L1 snapshot row was re-read from the network on 29 August 2026.</p>
 
@@ -437,8 +440,8 @@
             <thead><tr><th>Track</th><th>What exists in public</th><th>How to read it</th></tr></thead>
             <tbody>
               <tr>
-                <td>Toccata and Silverscript</td>
-                <td>
+                <td data-label="Track">Toccata and Silverscript</td>
+                <td data-label="What exists in public">
                   <ul>
                     <li><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0</a> set the mainnet activation score; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a> followed.</li>
                     <li>The <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">node setup guide</a> covers upgrades, fee policy, and changed API fields.</li>
@@ -446,42 +449,42 @@
                     <li>Testing ran on <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2">tn10-toc2</a> and <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3">tn10-toc3</a>, with covenant opcodes on TN12 separately.</li>
                   </ul>
                 </td>
-                <td>Activation is settled. The open checks after it are wallets, explorers, worked examples, and accepted mainnet transactions.</td>
+                <td data-label="How to read it">Activation is settled. The open checks after it are wallets, explorers, worked examples, and accepted mainnet transactions.</td>
               </tr>
               <tr>
-                <td>Toccata KIPs</td>
-                <td>All four read <code>Status: Active</code> in their raw files: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a> (opcodes for verifiable computation), <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> (covenants and scripting), <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> (covenant IDs), <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a> (partitioned sequencing commitment). They moved together in <a href="https://github.com/kaspanet/kips/commit/e4ae2332117b">one commit</a> on 15 July 2026.</td>
-                <td>The spec repo has caught up with the activation record instead of trailing it.</td>
+                <td data-label="Track">Toccata KIPs</td>
+                <td data-label="What exists in public">All four read <code>Status: Active</code> in their raw files: <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a> (opcodes for verifiable computation), <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a> (covenants and scripting), <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> (covenant IDs), <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a> (partitioned sequencing commitment). They moved together in <a href="https://github.com/kaspanet/kips/commit/e4ae2332117b">one commit</a> on 15 July 2026.</td>
+                <td data-label="How to read it">The spec repo has caught up with the activation record instead of trailing it.</td>
               </tr>
               <tr>
-                <td>Open KIP pull requests</td>
-                <td><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> covers transaction version 1 fields and hashing. <a href="https://github.com/kaspanet/kips/pull/42">KIP-25</a> covers a compute budget on script execution. <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> proposes a Merkle-root pay-to-script form that hides public keys until spend time.</td>
-                <td>Version 1 transactions and <code>computeBudget</code> already run on mainnet while the KIPs specifying them are open, so cite the operator guide or the node for those two. KIP-22 has no implementation behind it.</td>
+                <td data-label="Track">Open KIP pull requests</td>
+                <td data-label="What exists in public"><a href="https://github.com/kaspanet/kips/pull/41">KIP-24</a> covers transaction version 1 fields and hashing. <a href="https://github.com/kaspanet/kips/pull/42">KIP-25</a> covers a compute budget on script execution. <a href="https://github.com/kaspanet/kips/pull/37">KIP-22</a> proposes a Merkle-root pay-to-script form that hides public keys until spend time.</td>
+                <td data-label="How to read it">Version 1 transactions and <code>computeBudget</code> already run on mainnet while the KIPs specifying them are open, so cite the operator guide or the node for those two. KIP-22 has no implementation behind it.</td>
               </tr>
               <tr>
-                <td>Argent</td>
-                <td><a href="https://github.com/argent-lang/argent">argent-lang/argent</a> is an actor-based language and compiler for covenant apps on UTXO rails. It compiles <code>.ag</code> source to Silverscript and portable artifacts that <code>argent-runtime</code> turns into transactions. Two sibling repos appeared in July: <a href="https://github.com/argent-lang/argent-playground">argent-playground</a> and <a href="https://github.com/argent-lang/argent-template">argent-template</a>.</td>
-                <td>Compiler and runtime exist. No release, no tag, no crates.io publish, no audit, and nothing on mainnet. The playground demos run offline against fixtures, so none of them is a deployment.</td>
+                <td data-label="Track">Argent</td>
+                <td data-label="What exists in public"><a href="https://github.com/argent-lang/argent">argent-lang/argent</a> is an actor-based language and compiler for covenant apps on UTXO rails. It compiles <code>.ag</code> source to Silverscript and portable artifacts that <code>argent-runtime</code> turns into transactions. Two sibling repos appeared in July: <a href="https://github.com/argent-lang/argent-playground">argent-playground</a> and <a href="https://github.com/argent-lang/argent-template">argent-template</a>.</td>
+                <td data-label="How to read it">Compiler and runtime exist. No release, no tag, no crates.io publish, no audit, and nothing on mainnet. The playground demos run offline against fixtures, so none of them is a deployment.</td>
               </tr>
               <tr>
-                <td>vProgs</td>
-                <td>The <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> README describes an early-development Rust framework for based computation, with core, storage, state, scheduling, runtime, and node layers. A <a href="https://github.com/kaspanet/vprogs/pull/36">June merge</a> gathered settlement covenants, batch and aggregation provers, sparse Merkle tree support, and a <a href="https://github.com/kaspanet/vprogs/commit/57039db09ea958689aee2ae89f81ba40c8cc3e6d">RISC Zero backend</a> into master.</td>
-                <td>Implementation progress on a roadmap item. Builders can study it now. Production app paths still need their own shipped evidence.</td>
+                <td data-label="Track">vProgs</td>
+                <td data-label="What exists in public">The <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> README describes an early-development Rust framework for based computation, with core, storage, state, scheduling, runtime, and node layers. A <a href="https://github.com/kaspanet/vprogs/pull/36">June merge</a> gathered settlement covenants, batch and aggregation provers, sparse Merkle tree support, and a <a href="https://github.com/kaspanet/vprogs/commit/57039db09ea958689aee2ae89f81ba40c8cc3e6d">RISC Zero backend</a> into master.</td>
+                <td data-label="How to read it">Implementation progress on a roadmap item. Builders can study it now. Production app paths still need their own shipped evidence.</td>
               </tr>
               <tr>
-                <td>DAGKnight</td>
-                <td>The public <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, most recently promoting Universal Merge Consensus work on 14 August 2026, on top of conflict-zone and lock-removal commits from 13 August.</td>
-                <td>Research and prototype evidence. Mainnet still runs GHOSTDAG, and higher block-rate claims need their own activation record.</td>
+                <td data-label="Track">DAGKnight</td>
+                <td data-label="What exists in public">The public <a href="https://github.com/kaspanet/rusty-kaspa/tree/dagknight">dagknight branch</a> is active, most recently promoting Universal Merge Consensus work on 14 August 2026, on top of conflict-zone and lock-removal commits from 13 August.</td>
+                <td data-label="How to read it">Research and prototype evidence. Mainnet still runs GHOSTDAG, and higher block-rate claims need their own activation record.</td>
               </tr>
               <tr>
-                <td>Builder tooling</td>
-                <td><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspa-python-sdk</a> is a standalone public repo. <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.0">v2.0.0</a> added Toccata-aligned support and the managed-wallet API for Python; <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">v2.0.1</a> added <code>get_seq_commit_lane_proof</code>, sync progress events, and covenant-binding fixes. It ships on <a href="https://pypi.org/project/kaspa/2.0.1/">PyPI</a>.</td>
-                <td>Developer tooling, not protocol status. Upgrade claims still come from node, KIP, and activation evidence.</td>
+                <td data-label="Track">Builder tooling</td>
+                <td data-label="What exists in public"><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspa-python-sdk</a> is a standalone public repo. <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.0">v2.0.0</a> added Toccata-aligned support and the managed-wallet API for Python; <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">v2.0.1</a> added <code>get_seq_commit_lane_proof</code>, sync progress events, and covenant-binding fixes. It ships on <a href="https://pypi.org/project/kaspa/2.0.1/">PyPI</a>.</td>
+                <td data-label="How to read it">Developer tooling, not protocol status. Upgrade claims still come from node, KIP, and activation evidence.</td>
               </tr>
               <tr>
-                <td>Indexing</td>
-                <td><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">PR #860</a> is open for review. It proposes an optional <code>--txindex</code>, a GetTransaction RPC path, inclusion and acceptance metadata, live updates, and pruning tied to retention-root changes. A separate <a href="https://github.com/kaspanet/rusty-kaspa/pull/930">relay draft</a> explores propagating indexed data.</td>
-                <td>Open, not merged. It would help wallets, explorers, and indexers once it lands.</td>
+                <td data-label="Track">Indexing</td>
+                <td data-label="What exists in public"><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">PR #860</a> is open for review. It proposes an optional <code>--txindex</code>, a GetTransaction RPC path, inclusion and acceptance metadata, live updates, and pruning tied to retention-root changes. A separate <a href="https://github.com/kaspanet/rusty-kaspa/pull/930">relay draft</a> explores propagating indexed data.</td>
+                <td data-label="How to read it">Open, not merged. It would help wallets, explorers, and indexers once it lands.</td>
               </tr>
             </tbody>
           </table>
@@ -509,9 +512,9 @@
         <table class="reality-table">
           <thead><tr><th></th><th>KIP</th><th>KCC</th></tr></thead>
           <tbody>
-            <tr><td>Decides</td><td>Consensus and core-node behavior</td><td>Conventions between independent implementations</td></tr>
-            <tr><td>Binding on</td><td>Every node that wants to stay on the network</td><td>Whoever chooses to converge</td></tr>
-            <tr><td>Adopted so far</td><td>KIP-16, 17, 20 and 21 active; KIP-2 still proposed</td><td>KCC-0001, KCC-0002 and KCC-0020 merged, each still <code>Status: Draft</code>. None accepted.</td></tr>
+            <tr><td data-label="Aspect">Decides</td><td data-label="KIP">Consensus and core-node behavior</td><td data-label="KCC">Conventions between independent implementations</td></tr>
+            <tr><td data-label="Aspect">Binding on</td><td data-label="KIP">Every node that wants to stay on the network</td><td data-label="KCC">Whoever chooses to converge</td></tr>
+            <tr><td data-label="Aspect">Adopted so far</td><td data-label="KIP">KIP-16, 17, 20 and 21 active; KIP-2 still proposed</td><td data-label="KCC">KCC-0001, KCC-0002 and KCC-0020 merged, each still <code>Status: Draft</code>. None accepted.</td></tr>
           </tbody>
         </table>
       </div>
@@ -528,11 +531,11 @@
           <table class="reality-table">
             <thead><tr><th>Pitch</th><th>Real signal</th><th>Weak signal</th><th>Ask this</th></tr></thead>
             <tbody>
-              <tr><td>Launchpad</td><td>Issuance, a wallet flow, a liquidity path, visible holders, abuse controls.</td><td>A token button and a roadmap.</td><td>What can launch today, and where does the liquidity come from?</td></tr>
-              <tr><td>DeFi</td><td>Risk parameters, an oracle model, a liquidation path, an audit trail, working transactions.</td><td>The word DeFi stapled to a token page.</td><td>Is this mainnet, testnet evidence, or an idea riding on Toccata's name?</td></tr>
-              <tr><td>AI agent</td><td>The agent signs, pays, receives, proves work, or triggers a bounded workflow on-chain.</td><td>Chatbot copy wrapped around a token.</td><td>What action happens on Kaspa, and who can verify it?</td></tr>
-              <tr><td>Wallet</td><td>Clear signing, recovery, balances, history, error states, source verification.</td><td>Nice screens with no transaction handling underneath.</td><td>Does a normal user know what they are signing?</td></tr>
-              <tr><td>Institutional use</td><td>Custody, compliance, reporting, settlement, liquidity, support.</td><td>One vague partnership post.</td><td>Which institution, which requirement, and what is the evidence?</td></tr>
+              <tr><td data-label="Pitch">Launchpad</td><td data-label="Real signal">Issuance, a wallet flow, a liquidity path, visible holders, abuse controls.</td><td data-label="Weak signal">A token button and a roadmap.</td><td data-label="Ask this">What can launch today, and where does the liquidity come from?</td></tr>
+              <tr><td data-label="Pitch">DeFi</td><td data-label="Real signal">Risk parameters, an oracle model, a liquidation path, an audit trail, working transactions.</td><td data-label="Weak signal">The word DeFi stapled to a token page.</td><td data-label="Ask this">Is this mainnet, testnet evidence, or an idea riding on Toccata's name?</td></tr>
+              <tr><td data-label="Pitch">AI agent</td><td data-label="Real signal">The agent signs, pays, receives, proves work, or triggers a bounded workflow on-chain.</td><td data-label="Weak signal">Chatbot copy wrapped around a token.</td><td data-label="Ask this">What action happens on Kaspa, and who can verify it?</td></tr>
+              <tr><td data-label="Pitch">Wallet</td><td data-label="Real signal">Clear signing, recovery, balances, history, error states, source verification.</td><td data-label="Weak signal">Nice screens with no transaction handling underneath.</td><td data-label="Ask this">Does a normal user know what they are signing?</td></tr>
+              <tr><td data-label="Pitch">Institutional use</td><td data-label="Real signal">Custody, compliance, reporting, settlement, liquidity, support.</td><td data-label="Weak signal">One vague partnership post.</td><td data-label="Ask this">Which institution, which requirement, and what is the evidence?</td></tr>
             </tbody>
           </table>
         </div>

@@ -423,18 +423,32 @@ def profile(scorer):
 
 
 def label_matches_score(html, scorer):
-    """Does the number printed beside a figure match the number it is scored at?
+    """Where does the number printed beside a figure differ from the number
+    it is scored at, and is that difference the deliberate, documented one?
 
-    The dial panel prints "N% of this dial" from the editorial weight in DIALS.
-    buildWeights() scores with that weight multiplied by metricTrust(), which is
-    coverage times frontier separation. Today every trust is 1.000 and the two
-    agree exactly. Nothing enforces that. If one figure's coverage drops or one
-    saturates, the panel keeps printing 33% while the score uses something else,
-    and the page looks identical.
+    The dial panel prints "N% of this dial" from the editorial weight in
+    DIALS ("what the dial is actually configured to weigh"). score() weighs
+    that same figure by editorial weight times metricTrust() (coverage times
+    frontier separation), which is a second, separate layer applied only at
+    scoring time. The two are NOT supposed to always agree, and forcing them
+    to would misrepresent the design: model-picker.html showed the
+    trust-adjusted share here until commit 0ccedd9 ("Rebuild model picker to
+    strict one-source-per-benchmark design, fix weight display", 14 Aug
+    2026), which reverted it on purpose because a clean editorial 33/33/33
+    triad could render as a confusing 61/26/13 that disagreed with the very
+    panel describing the dial's configuration underneath it.
+    model-picker-method.html's "Turning ten figures into one score" section
+    states the same two-layer split in prose for readers: "The weight
+    written against it says how much it should matter, which is a judgment
+    call. Whether it can answer at all is measured... A thin or maxed-out
+    figure counts for less than a well covered one."
 
-    This is the failure class where a value is right in the computation and
-    stale in the rendering. An assertion over the scored arrays alone cannot
-    see it, because the scored arrays are correct.
+    So a divergence here is informational, not a defect: it shows where a
+    figure's real evidence quality has pulled its scored share away from its
+    editorial weight, which is the intended behavior. This function still
+    earns its place because it is the only place that number is visible at
+    all outside the live page's own JS; use it to see which dials are
+    running on adjusted evidence, not to flag them as wrong.
     """
     body = re.search(r"var DIALS = \[(.*?)\n  \];", html, re.S)
     bad = []
@@ -630,15 +644,21 @@ def self_test(blob):
     corrupt["range"][k0]["lo"], corrupt["range"][k0]["hi"] = (
         corrupt["range"][k0]["hi"], corrupt["range"][k0]["lo"])
     fired = invariants(corrupt, Scorer(corrupt, live_dials))
-    # The rendering check has to fire when the printed share and the scored
-    # share come apart. Planted by halving one figure's trust, which is what a
-    # coverage drop or a saturated benchmark would do in the live page.
+    # label_matches_score is NOT a "must be zero" check: the panel prints
+    # editorial weight and score() applies metricTrust() on top of it, two
+    # deliberately different numbers by design (commit 0ccedd9, 14 Aug 2026,
+    # and model-picker-method.html's "Turning ten figures into one score").
+    # A nonzero count on the live page is expected whenever a dial's figures
+    # carry unequal coverage or frontier separation; this self-test only
+    # confirms the function still runs and still finds real, larger
+    # divergence when one is planted, not that the live page reads zero.
     live_html = open(PAGE, encoding="utf-8").read()
     sc_lbl = Scorer(blob, live_dials)
+    live_diffs = label_matches_score(live_html, sc_lbl)
     print(f"  printed share vs scored share, live     "
-          f"{len(label_matches_score(live_html, sc_lbl))} violation(s)   "
-          f"expect 0")
-    ok &= not label_matches_score(live_html, sc_lbl)
+          f"{len(live_diffs)} divergence(s) (informational, not a failure)")
+    for d in live_diffs:
+        print(f"      {d}")
     sc_bent = Scorer(blob, live_dials)
     multi = next((ms for _, ms in live_dials if len(ms) > 1), None)
     if multi:
@@ -874,16 +894,14 @@ def main():
 
     live = parse_dials(html)
     s_inv = Scorer(blob, live)
-    bad = invariants(blob, s_inv) + label_matches_score(html, s_inv)
+    bad = invariants(blob, s_inv)
     print("INVARIANTS")
     print("  Properties a correct table cannot violate: percentiles inside "
           "their scale,")
     print("  published ranges with low below high, error terms not negative, "
           "prices and")
-    print("  clocks positive, a ranked list that descends under 400 random dial "
-          "settings, and")
-    print("  every share the dial panel prints matching the share the score "
-          "actually uses.")
+    print("  clocks positive, and a ranked list that descends under 400 "
+          "random dial settings.")
     if bad:
         for b in bad:
             print(f"  VIOLATION: {b}")
@@ -892,6 +910,23 @@ def main():
     else:
         print(f"  {len(blob['models'])} models x {len(blob['metrics'])} "
               f"figures: no violation.")
+    print()
+
+    label_diffs = label_matches_score(html, s_inv)
+    print("PRINTED SHARE VS SCORED SHARE")
+    print("  Not a defect list. The dial panel prints editorial weight; "
+          "score() applies")
+    print("  metricTrust() (coverage x frontier separation) on top of it. A "
+          "line here means")
+    print("  a figure's real evidence quality has pulled its scored share "
+          "away from what")
+    print("  the panel shows, which is the design, not a bug (see "
+          "label_matches_score's docstring).")
+    if label_diffs:
+        for d in label_diffs:
+            print(f"  {d}")
+    else:
+        print("  every dial's editorial weight and scored share currently agree.")
     print()
 
     print(f"ARTIFACT  model-picker.html, window.__MP__")

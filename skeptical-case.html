@@ -63,8 +63,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
   <style>
     /* Second paragraph of a risk cell: the answer to "what would settle
        this?", which used to sit behind a per-row <details> summary reading
@@ -75,6 +75,21 @@
        the pair needs its own separation here. */
     .risk-settle { margin-top: 12px !important; }
     .risk-settle b { color: var(--text); }
+
+    /* Filter box above the risk table, same shape as status.html's #stQ so
+       a reader who has already used one recognizes the other. Real search:
+       it hides non-matching rows rather than just decorating the page, and
+       its own input is the page's first interactive control, ahead of the
+       seven-row table below. */
+    .risk-filter { margin: 0 0 14px; }
+    .risk-filter label {
+      display: block; font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px;
+    }
+    .risk-filter input[type="search"] {
+      width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--panel); color: var(--text); font: inherit; font-size: 16px; padding: 0 14px;
+    }
+    .risk-count { margin: 10px 0 0; font-size: 16px; color: var(--faint); }
 
     /* Security-budget demo. Uses the site's own tokens rather than
        redeclaring a palette, so it follows the theme toggle by itself. */
@@ -262,7 +277,12 @@
 
     <section class="section deep-dive-plain">
       <h2>Seven risks, and what would settle each one</h2>
-      <table class="risk-table">
+      <div class="risk-filter">
+        <label for="riskQ">Search the seven risks</label>
+        <input id="riskQ" type="search" autocomplete="off" placeholder="Liquidity, mining, roadmap, security budget...">
+        <p class="risk-count" id="riskCount" aria-live="polite"></p>
+      </div>
+      <table class="risk-table" id="riskTable">
         <tbody>
         <tr>
           <td>Verification cost</td>
@@ -550,6 +570,36 @@
       render();
     });
     render();
+  })();
+  </script>
+
+  <script>
+  (function () {
+    // Filters the seven-row risk table in place. Row count comes from the
+    // DOM, not a hardcoded "seven," so it cannot go stale if a row is ever
+    // added or removed.
+    var q = document.getElementById('riskQ');
+    var table = document.getElementById('riskTable');
+    var count = document.getElementById('riskCount');
+    if (!q || !table || !count) { return; }
+    var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+    var total = rows.length;
+    rows.forEach(function (r) { r._hay = r.textContent.toLowerCase().replace(/\s+/g, ' '); });
+
+    function apply() {
+      var term = q.value.trim().toLowerCase();
+      var shown = 0;
+      rows.forEach(function (r) {
+        var ok = !term || r._hay.indexOf(term) > -1;
+        r.hidden = !ok;
+        if (ok) { shown++; }
+      });
+      count.textContent = shown === total
+        ? 'Showing all ' + total + ' risks.'
+        : shown + ' of ' + total + ' risks match.';
+    }
+    q.addEventListener('input', apply);
+    apply();
   })();
   </script>
 </body>

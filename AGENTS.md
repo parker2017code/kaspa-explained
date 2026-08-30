@@ -78,6 +78,7 @@ Use these commands when relevant:
   site. Port 4187 has been wedged this way.
 - Rebuild agent index: `python3 scripts/build-agent-index.py`
 - Rebuild sitemap: `python3 scripts/build-sitemap.py`
+- Refresh model-picker-data.html's full table: `python3 scripts/build-model-data-page.py`, after `emit-picker-blob.py` changes `model-picker.html`'s `window.__MP__`
 - Copy lint: `npm run lint:copy`
 - Facing-copy audit: `npm run audit:copy`
 - Domain-term audit: `npm run audit:terms`

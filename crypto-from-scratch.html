@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="What crypto is good for, what it is bad at, and why a coin has a price at all. Start from the beginning.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-29">
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -74,29 +74,41 @@
       <p class="eyebrow">The primitive</p>
       <h2>A blockchain is a costly shared ledger</h2>
       <p>One list of who owns what, kept by thousands of strangers at once, with no company, bank, or state holding the copy that counts. Every holder checks every new entry against the same rules, and changing an old entry means redoing the work behind everything after it.</p>
-      <p>That checking is the cost. Where the strangers really do need a record none of them controls, nothing cheaper does the job. Where one of them could simply run the database, a blockchain is a slower and more expensive way to reach the same list.</p>
-      <details class="deep-dive">
-        <summary>NIST's definition, and why it's narrower than the marketing one</summary>
-        <p>NIST IR 8202 defines a blockchain by four properties: hard to alter, tamper-evident, replicated across many holders, and typically leaderless. Nothing in that definition requires a token, a mining reward, or decentralization beyond copy count. Bitcoin, stablecoins, NFTs, DeFi, and smart contracts are all apps layered on that one narrow structure, not defined by it.</p>
-      </details>
+      <div class="view-switch">
+        <input class="view-switch__input" type="radio" name="blockchain-def-view" id="blockchain-def-marketing" checked>
+        <input class="view-switch__input" type="radio" name="blockchain-def-view" id="blockchain-def-nist">
+        <div class="view-switch__tabs" role="radiogroup" aria-label="Which definition">
+          <label class="view-switch__tab" for="blockchain-def-marketing">The marketing version</label>
+          <label class="view-switch__tab" for="blockchain-def-nist">NIST's definition</label>
+        </div>
+        <div class="view-switch__panels">
+          <div class="view-switch__panel">
+            <p>Implies a token, a mining reward, and decentralization by default. Bitcoin, stablecoins, NFTs, DeFi, and smart contracts all get lumped in as if they were one thing.</p>
+          </div>
+          <div class="view-switch__panel">
+            <p>NIST IR 8202 defines a blockchain by four properties: hard to alter, tamper-evident, replicated across many holders, and typically leaderless. Nothing in that definition requires a token, a mining reward, or decentralization beyond copy count. Bitcoin, stablecoins, NFTs, DeFi, and smart contracts are all apps layered on that one narrow structure, not defined by it.</p>
+          </div>
+        </div>
+      </div>
       <details open class="deep-dive">
         <summary>Hide the eight eras</summary>
         <div class="table-wrap">
           <table class="reality-table">
             <thead><tr><th>Era</th><th>Fix</th><th>Mechanism</th></tr></thead>
             <tbody>
-              <tr><td>Before Bitcoin</td><td>Digital cash</td><td>Faked the scarcity atoms have free.</td></tr>
-              <tr><td>Bitcoin</td><td>Double-spending</td><td>PoW made rewriting payment history too costly to bother.</td></tr>
-              <tr><td>Early mining</td><td>Security market</td><td>CPUs became ASICs, solo miners became warehouse farms.</td></tr>
-              <tr><td>Litecoin and forks</td><td>Parameter experiments</td><td>Forked Bitcoin's code to change block time, algorithm, or scale.</td></tr>
-              <tr><td>Ethereum</td><td>Programmability</td><td>A ledger that runs code, not just balances.</td></tr>
-              <tr><td>2017</td><td>ICOs and scaling war</td><td>Fundraising outran products; Bitcoin split over how to scale.</td></tr>
-              <tr><td>DeFi and stablecoins</td><td>On-chain finance</td><td>Dollar tokens and market makers turned demos into habit.</td></tr>
-              <tr><td>Rollups and fast L1s</td><td>Scale and UX</td><td>Execution moved off the base chain into L2s and new L1s.</td></tr>
+              <tr><td data-label="Era">Before Bitcoin</td><td data-label="Fix">Digital cash</td><td data-label="Mechanism">Faked the scarcity atoms have free.</td></tr>
+              <tr><td data-label="Era">Bitcoin</td><td data-label="Fix">Double-spending</td><td data-label="Mechanism">PoW made rewriting payment history too costly to bother.</td></tr>
+              <tr><td data-label="Era">Early mining</td><td data-label="Fix">Security market</td><td data-label="Mechanism">CPUs became ASICs, solo miners became warehouse farms.</td></tr>
+              <tr><td data-label="Era">Litecoin and forks</td><td data-label="Fix">Parameter experiments</td><td data-label="Mechanism">Forked Bitcoin's code to change block time, algorithm, or scale.</td></tr>
+              <tr><td data-label="Era">Ethereum</td><td data-label="Fix">Programmability</td><td data-label="Mechanism">A ledger that runs code, not just balances.</td></tr>
+              <tr><td data-label="Era">2017</td><td data-label="Fix">ICOs and scaling war</td><td data-label="Mechanism">Fundraising outran products; Bitcoin split over how to scale.</td></tr>
+              <tr><td data-label="Era">DeFi and stablecoins</td><td data-label="Fix">On-chain finance</td><td data-label="Mechanism">Dollar tokens and market makers turned demos into habit.</td></tr>
+              <tr><td data-label="Era">Rollups and fast L1s</td><td data-label="Fix">Scale and UX</td><td data-label="Mechanism">Execution moved off the base chain into L2s and new L1s.</td></tr>
             </tbody>
           </table>
         </div>
       </details>
+      <p>That checking is the cost. Where the strangers really do need a record none of them controls, nothing cheaper does the job. Where one of them could simply run the database, a blockchain is a slower and more expensive way to reach the same list.</p>
       <p>Nobody can push an update to it either. Each operator running the software picks which rules to enforce, and a fork is what happens when they stop picking the same ones.</p>
       <details class="deep-dive">
         <summary>Soft forks, hard forks, and the bets other projects made</summary>
@@ -113,10 +125,10 @@
       <div class="table-wrap">
         <table class="reality-table">
           <tbody>
-            <tr><td>Bearer digital assets</td><td>Whoever holds the private key controls the asset; an exchange freeze cannot touch a self-held coin.</td></tr>
-            <tr><td>Cross-border settlement</td><td>Stablecoins are flawed dollar tokens, still one of crypto's clearest wins: paid abroad in minutes, not days.</td></tr>
-            <tr><td>Programmable escrow</td><td>Smart contracts hold up when the test is plain: both sides signed, a vesting date arrived.</td></tr>
-            <tr><td>Open-network incentives</td><td>Tokens pay the validators and storage hosts an open network runs on, with no one firm hiring all of them.</td></tr>
+            <tr><td data-label="Job">Bearer digital assets</td><td data-label="Why">Whoever holds the private key controls the asset; an exchange freeze cannot touch a self-held coin.</td></tr>
+            <tr><td data-label="Job">Cross-border settlement</td><td data-label="Why">Stablecoins are flawed dollar tokens, still one of crypto's clearest wins: paid abroad in minutes, not days.</td></tr>
+            <tr><td data-label="Job">Programmable escrow</td><td data-label="Why">Smart contracts hold up when the test is plain: both sides signed, a vesting date arrived.</td></tr>
+            <tr><td data-label="Job">Open-network incentives</td><td data-label="Why">Tokens pay the validators and storage hosts an open network runs on, with no one firm hiring all of them.</td></tr>
           </tbody>
         </table>
       </div>
@@ -124,10 +136,10 @@
       <div class="table-wrap">
         <table class="reality-table">
           <tbody>
-            <tr><td>Payments at home</td><td>Cards, Pix, UPI, SEPA, and Apple Pay beat crypto on refunds, fraud handling, and support.</td></tr>
-            <tr><td>Ordinary databases</td><td>If one owner already controls the users, data, and rules, a blockchain only adds cost to a solved problem.</td></tr>
-            <tr><td>Anything a court settles</td><td>Fraud, a wrong-address payment, a divorce, a stolen name: cases courts exist for, and code cannot reach them.</td></tr>
-            <tr><td>Facts from the physical world</td><td>A blockchain keeps whatever gets typed into it. Lie about where the tuna came from and the chain keeps the lie forever.</td></tr>
+            <tr><td data-label="Weak spot">Payments at home</td><td data-label="Why">Cards, Pix, UPI, SEPA, and Apple Pay beat crypto on refunds, fraud handling, and support.</td></tr>
+            <tr><td data-label="Weak spot">Ordinary databases</td><td data-label="Why">If one owner already controls the users, data, and rules, a blockchain only adds cost to a solved problem.</td></tr>
+            <tr><td data-label="Weak spot">Anything a court settles</td><td data-label="Why">Fraud, a wrong-address payment, a divorce, a stolen name: cases courts exist for, and code cannot reach them.</td></tr>
+            <tr><td data-label="Weak spot">Facts from the physical world</td><td data-label="Why">A blockchain keeps whatever gets typed into it. Lie about where the tuna came from and the chain keeps the lie forever.</td></tr>
           </tbody>
         </table>
       </div>
@@ -144,14 +156,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>Self-custody</td><td>You hold the keys yourself</td><td>Lose keys, lose funds</td></tr>
-              <tr><td>Irreversibility</td><td>Final settlement</td><td>Fraud is hard to undo</td></tr>
-              <tr><td>Public ledger</td><td>Transparency and auditability</td><td>Privacy leakage</td></tr>
-              <tr><td>Permissionless access</td><td>Anyone can participate</td><td>Scams and junk projects thrive</td></tr>
-              <tr><td>Programmability</td><td>Automated financial logic</td><td>Smart-contract and oracle risk</td></tr>
-              <tr><td>Decentralization</td><td>No single operator</td><td>Slower choices and worse UX</td></tr>
-              <tr><td>Token incentives</td><td>Bootstraps open networks</td><td>Price bets and rewards that misfire</td></tr>
-              <tr><td>Global settlement</td><td>Cross-border access</td><td>Rules differ in every country</td></tr>
+              <tr><td data-label="Property">Self-custody</td><td data-label="Benefit">You hold the keys yourself</td><td data-label="Cost">Lose keys, lose funds</td></tr>
+              <tr><td data-label="Property">Irreversibility</td><td data-label="Benefit">Final settlement</td><td data-label="Cost">Fraud is hard to undo</td></tr>
+              <tr><td data-label="Property">Public ledger</td><td data-label="Benefit">Transparency and auditability</td><td data-label="Cost">Privacy leakage</td></tr>
+              <tr><td data-label="Property">Permissionless access</td><td data-label="Benefit">Anyone can participate</td><td data-label="Cost">Scams and junk projects thrive</td></tr>
+              <tr><td data-label="Property">Programmability</td><td data-label="Benefit">Automated financial logic</td><td data-label="Cost">Smart-contract and oracle risk</td></tr>
+              <tr><td data-label="Property">Decentralization</td><td data-label="Benefit">No single operator</td><td data-label="Cost">Slower choices and worse UX</td></tr>
+              <tr><td data-label="Property">Token incentives</td><td data-label="Benefit">Bootstraps open networks</td><td data-label="Cost">Price bets and rewards that misfire</td></tr>
+              <tr><td data-label="Property">Global settlement</td><td data-label="Benefit">Cross-border access</td><td data-label="Cost">Rules differ in every country</td></tr>
             </tbody>
           </table>
         </div>
@@ -168,11 +180,11 @@
           <table class="reality-table">
             <thead><tr><th>Role</th><th>What it does</th><th>Beginner warning</th></tr></thead>
             <tbody>
-              <tr><td>Thing being tracked</td><td>The ledger defines and transfers the asset itself.</td><td>A token can exist without being useful outside speculation.</td></tr>
-              <tr><td>Fees</td><td>Users pay for scarce block space and spam resistance.</td><td>Low fees help UX but can weaken fee revenue or invite spam.</td></tr>
-              <tr><td>Security budget</td><td>Miners or validators need paying to defend the record.</td><td>Rewards may come from inflation, fees, or both.</td></tr>
-              <tr><td>Collateral</td><td>Some systems require staked tokens or bonded assets.</td><td>Stake-based security pools around big holders and custodians.</td></tr>
-              <tr><td>Governance</td><td>Some tokens vote on parameters, treasuries, or upgrades.</td><td>Governance rights can be weak, captured, or mostly symbolic.</td></tr>
+              <tr><td data-label="Role">Thing being tracked</td><td data-label="What it does">The ledger defines and transfers the asset itself.</td><td data-label="Beginner warning">A token can exist without being useful outside speculation.</td></tr>
+              <tr><td data-label="Role">Fees</td><td data-label="What it does">Users pay for scarce block space and spam resistance.</td><td data-label="Beginner warning">Low fees help UX but can weaken fee revenue or invite spam.</td></tr>
+              <tr><td data-label="Role">Security budget</td><td data-label="What it does">Miners or validators need paying to defend the record.</td><td data-label="Beginner warning">Rewards may come from inflation, fees, or both.</td></tr>
+              <tr><td data-label="Role">Collateral</td><td data-label="What it does">Some systems require staked tokens or bonded assets.</td><td data-label="Beginner warning">Stake-based security pools around big holders and custodians.</td></tr>
+              <tr><td data-label="Role">Governance</td><td data-label="What it does">Some tokens vote on parameters, treasuries, or upgrades.</td><td data-label="Beginner warning">Governance rights can be weak, captured, or mostly symbolic.</td></tr>
             </tbody>
           </table>
         </div>
@@ -193,11 +205,11 @@
           <table class="reality-table">
             <thead><tr><th>Launch model</th><th>What it improves</th><th>What it risks</th></tr></thead>
             <tbody>
-              <tr><td>Fair launch / mined launch</td><td>Lower official insider-allocation risk.</td><td>No built-in treasury, early-miner advantage, harder funding.</td></tr>
-              <tr><td>Premine</td><td>Funds development, legal work, grants, audits, and integrations.</td><td>Insider control, sell pressure, trust problems.</td></tr>
-              <tr><td>Public sale or ICO</td><td>Fast fundraising and broad early buyer base.</td><td>Legal risk, hype buying, sloppy product work.</td></tr>
-              <tr><td>VC allocation</td><td>Real funding and business support.</td><td>Unlock overhang and retail exit-liquidity risk.</td></tr>
-              <tr><td>Airdrop</td><td>Rewards users and spreads supply wider.</td><td>Farming, sybil attacks, instant sell pressure.</td></tr>
+              <tr><td data-label="Launch model">Fair launch / mined launch</td><td data-label="What it improves">Lower official insider-allocation risk.</td><td data-label="What it risks">No built-in treasury, early-miner advantage, harder funding.</td></tr>
+              <tr><td data-label="Launch model">Premine</td><td data-label="What it improves">Funds development, legal work, grants, audits, and integrations.</td><td data-label="What it risks">Insider control, sell pressure, trust problems.</td></tr>
+              <tr><td data-label="Launch model">Public sale or ICO</td><td data-label="What it improves">Fast fundraising and broad early buyer base.</td><td data-label="What it risks">Legal risk, hype buying, sloppy product work.</td></tr>
+              <tr><td data-label="Launch model">VC allocation</td><td data-label="What it improves">Real funding and business support.</td><td data-label="What it risks">Unlock overhang and retail exit-liquidity risk.</td></tr>
+              <tr><td data-label="Launch model">Airdrop</td><td data-label="What it improves">Rewards users and spreads supply wider.</td><td data-label="What it risks">Farming, sybil attacks, instant sell pressure.</td></tr>
             </tbody>
           </table>
         </div>

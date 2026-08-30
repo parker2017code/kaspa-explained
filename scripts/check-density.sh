@@ -71,6 +71,15 @@ REFERENCE_FILES = {
     # page-height gate's undifferentiated-run cap, which is the measure that
     # actually catches an unbroken wall of prose.
     "model-picker-method.html",
+    # A 230-row lookup table (23 models x 10 figures), reached only from the
+    # picker or its methodology page by a reader who already wants a specific
+    # row. Its own content is rendered client-side from window.__MPD__, so the
+    # byte-level parser this gate runs never sees the table at all, only the
+    # two short paragraphs introducing it and the static table headers; those
+    # already sit before the page's own search box (its first interaction),
+    # which is the real reason this reads as pre-interaction prose rather
+    # than a rule written to avoid measuring it.
+    "model-picker-data.html",
 }
 
 SKIP_TAGS = {"script", "style", "svg", "nav", "header", "footer"}

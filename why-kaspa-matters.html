@@ -73,8 +73,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260829-214500">
-  <script defer src="nav.js?v=20260829-214500"></script>
+  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -101,7 +101,7 @@
       <h1>Kaspa's design case</h1>
       <div class="answer-block">
         <p class="eyebrow">Answer</p>
-        <p>Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet is that Bitcoin-style <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-wkm">Proof-of-Work<span class="term-def__panel" id="pow-def-wkm" role="tooltip">Miners spend real computation to propose blocks.</span></span> security can run closer to real time. Censorship resistance comes with it, and neither is traded away for the speed.</p>
+        <p>Crypto earns its keep when people need one shared record and no single operator running it. Kaspa's bet: Bitcoin-style <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-wkm">Proof-of-Work<span class="term-def__panel" id="pow-def-wkm" role="tooltip">Miners spend real computation to propose blocks.</span></span> security can run closer to real time, without trading away censorship resistance for the speed.</p>
       </div>
     </section>
 
@@ -111,20 +111,27 @@
         <table class="reality-table">
           <thead>
             <tr>
-              <th>Crypto job</th>
-              <th>Kaspa angle</th>
+              <th>Job</th>
+              <th>Angle</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Self-custodied money</td><td>Fair-launched Proof-of-Work <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wkm">UTXO<span class="term-def__panel" id="utxo-def-wkm" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> asset with direct wallet control.</td><td>Live</td></tr>
-            <tr><td>Fast payment feel</td><td>Ten blocks a second, in a <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wkm">blockDAG<span class="term-def__panel" id="blockdag-def-wkm" role="tooltip">A graph where multiple honest blocks exist in parallel instead of a single forced line.</span></span>, gets a payment into a block faster than slow PoW chains.</td><td>Live, with confirmation tradeoffs</td></tr>
-            <tr><td>One shared record</td><td>GHOSTDAG orders parallel honest blocks in a DAG.</td><td>Live</td></tr>
-            <tr><td>Assets with rules</td><td>Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork into L1.</td><td>Covenant rules live on L1; wallet and app evidence next. See <a href="#kaspa-apps">Programmability, below</a>, for what builders get today.</td></tr>
-            <tr><td>Group commitments</td><td>Base Real-Time Decentralization (RTD) today. RTD-derived attestations, oracles, and <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-wkm">TangVM<span class="term-def__panel" id="tangvm-def-wkm" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span> come later.</td><td>Base idea live; app systems still future work</td></tr>
+            <tr><td data-label="Job">Self-custodied money</td><td data-label="Angle">Fair-launched Proof-of-Work <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wkm">UTXO<span class="term-def__panel" id="utxo-def-wkm" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> asset with wallet control.</td><td data-label="Status">Live</td></tr>
+            <tr><td data-label="Job">Fast payment feel</td><td data-label="Angle">Ten blocks a second, in a <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wkm">blockDAG<span class="term-def__panel" id="blockdag-def-wkm" role="tooltip">A graph where multiple honest blocks exist in parallel instead of a single forced line.</span></span>, beats a single-chain PoW block time.</td><td data-label="Status">Live, with confirmation tradeoffs</td></tr>
+            <tr><td data-label="Job">One shared record</td><td data-label="Angle">GHOSTDAG orders parallel honest blocks in a DAG.</td><td data-label="Status">Live</td></tr>
+            <tr><td data-label="Job">Assets with rules</td><td data-label="Angle">Toccata put spend rules, ZK hooks, sequencing commitments, and vProgs groundwork on-chain.</td><td data-label="Status">Covenant rules live on L1; wallet and app evidence next. See <a href="#kaspa-apps">Programmability, below</a>.</td></tr>
+            <tr><td data-label="Job">Group commitments</td><td data-label="Angle">Base Real-Time Decentralization (RTD) today; <span class="term-def" tabindex="0" role="button" aria-describedby="tangvm-def-wkm">TangVM<span class="term-def__panel" id="tangvm-def-wkm" role="tooltip">A proposed add-on, not yet built, that would let a smart contract watch outside data and trigger itself instead of waiting for someone to trigger it by hand.</span></span> and attestations later.</td><td data-label="Status">Base idea live; app systems still future work</td></tr>
           </tbody>
         </table>
       </div>
+      <details class="deep-dive">
+        <summary>Why a public chain can't just be Visa-fast</summary>
+        <p>Visa settles fast because nobody outside Visa has to check its work: banks, contracts, one company's servers, and a fraud team handle that internally, and Visa can undo errors, block users, and change the rules at will.</p>
+        <p>A public chain asks thousands of strangers to check the same rules, with no one in charge, so independent nodes can throw out bad history without asking anyone. That is the slow part. The app layer can be Visa-fast; a base layer anyone can check cannot.</p>
+        <p>Concentration arrives by a different door in each model. ASIC cost gathers around whoever has the capital, the cheap power, and the chips. Proof of stake skips the hardware, so holding the token buys the say instead.</p>
+        <p>Every one of those costs still lands on Kaspa. The bet it makes against them is narrow, and it starts with keeping the blocks that lose the race.</p>
+      </details>
     </section>
 
     <section id="compare" class="section">
@@ -142,21 +149,14 @@
         <table class="reality-table">
           <thead><tr><th>Goal</th><th>Why people want it</th><th>What it costs</th></tr></thead>
           <tbody>
-            <tr><td>Decentralization</td><td>No easy single control point.</td><td>Harder upgrades, worse UX, slower agreement, more on you.</td></tr>
-            <tr><td>Security</td><td>Hard-to-fake history and valid supply.</td><td>Fees, power bills, staked capital, and a security budget that holds up.</td></tr>
-            <tr><td>Speed</td><td>Fast inclusion and better user feedback.</td><td>Blocks clash more, nodes get heavier, checks thin out, control narrows.</td></tr>
-            <tr><td>Privacy</td><td>Less watching. Every coin spends the same.</td><td>Heavier math, bigger data, harder to audit, fewer exchanges.</td></tr>
-            <tr><td>Self-custody</td><td>You hold the keys. No company account.</td><td>No password reset, no chargeback, no support line.</td></tr>
+            <tr><td data-label="Goal">Decentralization</td><td data-label="Why people want it">No easy single control point.</td><td data-label="What it costs">Harder upgrades, worse UX, slower agreement, more on you.</td></tr>
+            <tr><td data-label="Goal">Security</td><td data-label="Why people want it">Hard-to-fake history and valid supply.</td><td data-label="What it costs">Fees, power bills, staked capital, and a security budget that holds up.</td></tr>
+            <tr><td data-label="Goal">Speed</td><td data-label="Why people want it">Fast inclusion and better user feedback.</td><td data-label="What it costs">Blocks clash more, nodes get heavier, checks thin out, control narrows.</td></tr>
+            <tr><td data-label="Goal">Privacy</td><td data-label="Why people want it">Less watching. Every coin spends the same.</td><td data-label="What it costs">Heavier math, bigger data, harder to audit, fewer exchanges.</td></tr>
+            <tr><td data-label="Goal">Self-custody</td><td data-label="Why people want it">You hold the keys. No company account.</td><td data-label="What it costs">No password reset, no chargeback, no support line.</td></tr>
           </tbody>
         </table>
       </div>
-      <details class="deep-dive">
-        <summary>Why a public chain can't just be Visa-fast</summary>
-        <p>Visa settles fast because nobody outside Visa has to check its work: banks, contracts, one company's servers, and a fraud team handle that internally, and Visa can undo errors, block users, and change the rules at will.</p>
-        <p>A public chain asks thousands of strangers to check the same rules, with no one in charge, so independent nodes can throw out bad history without asking anyone. That is the slow part. The app layer can be Visa-fast; a base layer anyone can check cannot.</p>
-        <p>Concentration arrives by a different door in each model. ASIC cost gathers around whoever has the capital, the cheap power, and the chips. Proof of stake skips the hardware, so holding the token buys the say instead.</p>
-        <p>Every one of those costs still lands on Kaspa. The bet it makes against them is narrow, and it starts with keeping the blocks that lose the race.</p>
-      </details>
     </section>
 
     <section class="section prose-section">
