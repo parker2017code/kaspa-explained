@@ -116,6 +116,12 @@
               --text: #211e1a; --muted: #646057; --faint: #6b6659;
               --green: #0c7a69; --cyan: #0068da; --purple: #6e56cf; --pink: #b14f00;
               --ink: #ffffff; --accent-soft: rgba(14, 124, 107, .1);
+              /* Same --green/--accent-soft pair styles.css's own --green-pill
+                 fixes (text set in --green on --accent-soft); this page's
+                 local copy of both values matches that one exactly, so the
+                 same vetted #0a6a5c (5.45:1) applies to .fair-note h3 and
+                 .kaspa-badge b. */
+              --green-pill: #0a6a5c;
               --control-bg: #e8e8ed; --control-hover: #dededf;
               --field-bg: #ffffff; --field-line: #d2d2d7;
             }
@@ -165,14 +171,14 @@
             .fl-demo .fair-note {
               border-left: 3px solid var(--green); border-radius: 0 14px 14px 0; padding: 14px 16px; margin-bottom: 18px; background: var(--accent-soft);
             }
-            .fl-demo .fair-note h3 { color: var(--green); }
+            .fl-demo .fair-note h3 { color: var(--green-pill, var(--green)); }
             .fl-demo .fair-note p { font-size: 16px; color: var(--muted); margin: 6px 0; }
             .fl-demo .kaspa-badge {
               display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; background: var(--accent-soft);
               border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); border-radius: 12px; padding: 10px 14px;
               font-size: 16px; color: var(--muted); margin: 2px 0 14px;
             }
-            .fl-demo .kaspa-badge b { color: var(--green); font-size: 1.05em; }
+            .fl-demo .kaspa-badge b { color: var(--green-pill, var(--green)); font-size: 1.05em; }
             .fl-demo .why-note { font-size: 16px; color: var(--faint); margin: -4px 0 14px; max-width: 62ch; }
             .fl-demo .launch-history p { font-size: 16px; color: var(--muted); margin: 6px 0; }
             .fl-demo .launch-history .gap { color: var(--pink); }

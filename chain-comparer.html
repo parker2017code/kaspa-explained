@@ -135,7 +135,12 @@
     .cc-preset-why { margin: 10px 0 0; font-size: 1rem; color: var(--muted); line-height: 1.5; }
     .cc-preset { font: inherit; font-size: 16px; color: var(--muted); background: var(--control-bg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer; }
     .cc-preset:hover { color: var(--text); border-color: var(--line-bright); }
-    .cc-preset[aria-pressed="true"] { color: #06251f; background: var(--green); border-color: var(--green); font-weight: 600; }
+    /* color was a hardcoded #06251f, a near-copy of dark theme's --ink
+       (#06201b) that never switched for light theme, where --ink is white.
+       On light theme's --green (#0c7a69) that measured 3.10:1. var(--ink)
+       already carries the correct dark/light pairing for text on --green
+       elsewhere on the site (e.g. .demo-uva button.run). */
+    .cc-preset[aria-pressed="true"] { color: var(--ink); background: var(--green); border-color: var(--green); font-weight: 600; }
     .cc-dial { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 10px; margin-bottom: 13px; }
     .cc-dial > span { font-size: 16px; color: var(--text); display: inline-flex; align-items: center; gap: 3px; }
     .cc-dial > output { font-size: 16px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -178,7 +183,10 @@
     .cc-name { font-size: 16px; color: var(--text); font-weight: 600; }
     .cc-tier { font-size: 16px; font-weight: 700; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; flex: none; }
     .cc-meta { display: block; font-size: 16px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; line-height: 1.45; }
-    .cc-meta .sep { opacity: .45; margin: 0 6px; }
+    /* opacity: .45 on the separator dimmed it below 4.5:1 against .cc-meta's
+       own --muted text color, in both themes. Full opacity here since the
+       glyph is a bare middot with no text of its own to out-compete. */
+    .cc-meta .sep { margin: 0 6px; }
     .cc-bar { display: block; height: 4px; border-radius: 2px; background: var(--line-bright); margin-top: 8px; overflow: hidden; }
     .cc-bar > i { display: block; height: 100%; border-radius: 2px; background: var(--green); }
     .cc-score { font-size: 1.02rem; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }

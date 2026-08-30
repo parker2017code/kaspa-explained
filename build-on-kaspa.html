@@ -325,6 +325,12 @@
           --cvb-bg-2: #1c1a17; --cvb-card-bg: #322f2a;
           --cvb-line: #4a453d; --cvb-text: #f8f5ef; --cvb-muted: #b6b0a7; --cvb-faint: #9d988c;
           --cvb-green: #66d1c1; --cvb-cyan: #2e9cff; --cvb-purple: #bf5af2; --cvb-pink: #ff9f0a;
+          /* --cvb-faint on the .fail verdict box's pink-tinted background
+             (color-mix(--cvb-pink 12%, transparent) over --cvb-card-bg)
+             measures 3.69:1 in dark theme, under the 4.5:1 floor; the same
+             --cvb-faint on the .pass box's green tint already clears it.
+             Dedicated lighter variant for this one background only. */
+          --cvb-faint-fail: #afaaa1;
           --cvb-ink: #06201b; --cvb-control-bg: #2c2c2e; --cvb-control-hover: #3a3a3c;
           --cvb-field-bg: #221f1c; --cvb-field-line: #4a453d;
           --cvb-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
@@ -335,6 +341,12 @@
           --cvb-bg-2: #f3f0ea; --cvb-card-bg: #fbfaf6;
           --cvb-line: #d8d4cb; --cvb-text: #211e1a; --cvb-muted: #646057; --cvb-faint: #6b6659;
           --cvb-green: #0c7a69; --cvb-cyan: #0068da; --cvb-purple: #6e56cf; --cvb-pink: #b14f00;
+          /* Reset back to --cvb-faint: the dark-only lighter variant above
+             would otherwise leak through, since custom properties not
+             redefined in this override block keep their base-block value
+             rather than resetting. Light theme's plain --cvb-faint already
+             clears 4.5:1 on the .fail box's pink tint. */
+          --cvb-faint-fail: var(--cvb-faint);
           --cvb-ink: #ffffff; --cvb-control-bg: #e8e8ed; --cvb-control-hover: #dededf;
           --cvb-field-bg: #ffffff; --cvb-field-line: #d2d2d7;
           --cvb-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
@@ -409,6 +421,7 @@
         .cvb-demo .cvb-verdict-box.fail { background: color-mix(in srgb, var(--cvb-pink) 12%, transparent); }
         .cvb-demo .cvb-verdict-box strong { display: block; margin-bottom: 3px; }
         .cvb-demo .cvb-verdict-box .cvb-rule-ref { display: block; margin-top: 6px; font-size: 16px; color: var(--cvb-faint); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+        .cvb-demo .cvb-verdict-box.fail .cvb-rule-ref { color: var(--cvb-faint-fail, var(--cvb-faint)); }
         .cvb-demo .cvb-table-wrap { overflow-x: auto; background: var(--cvb-card-bg); border-radius: 18px; box-shadow: var(--cvb-shadow); }
         .cvb-demo table { width: 100%; border-collapse: collapse; font-size: 16px; }
         .cvb-demo th, .cvb-demo td { text-align: left; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--cvb-line) 55%, transparent); white-space: nowrap; }
