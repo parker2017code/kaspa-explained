@@ -95,18 +95,17 @@
     <section class="sources-hero section">
       <p class="eyebrow">Beginner answer</p>
       <h1>What is Kaspa?</h1>
-      <p class="lead">Kaspa is a live proof-of-work <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wik">blockDAG<span class="term-def__panel" id="blockdag-def-wik" role="tooltip">Blocks arrive in parallel and all of them are kept, so the record is a graph rather than a single line.</span></span> network. Its native coin is KAS. The network keeps Bitcoin-style mining and <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wik">UTXO<span class="term-def__panel" id="utxo-def-wik" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> ownership, and GHOSTDAG orders parallel blocks into one payment history.</p>
-      <p class="fit-note">Limits get their own page: <a href="/skeptical-case">Risks and Open Questions</a> covers adoption, node load, and security budget.</p>
+      <p class="lead">Kaspa is a live proof-of-work <span class="term-def" tabindex="0" role="button" aria-describedby="blockdag-def-wik">blockDAG<span class="term-def__panel" id="blockdag-def-wik" role="tooltip">Blocks arrive in parallel, all kept: a graph, not a line.</span></span> network, coin KAS: Bitcoin-style mining, <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-wik">UTXO<span class="term-def__panel" id="utxo-def-wik" role="tooltip">A coin spent whole, replaced by change.</span></span>, GHOSTDAG order.</p>
+      <p class="fit-note">Limits get their own page: <a href="/skeptical-case">Risks and Open Questions</a>.</p>
     </section>
 
     <section id="collision-sim" class="section prose-section">
       <p class="eyebrow">The core move</p>
       <h2>Parallel blocks are the whole design</h2>
-      <p>A block takes time to reach the rest of the world. When blocks outrun that propagation, miners build on stale information and produce competing blocks a single chain can only keep one of. Bitcoin's answer is to make blocks rare, roughly one every ten minutes, so collisions stay rare too.</p>
+      <p>A block takes time to reach the rest of the world; outrunning that produces competing blocks a single chain keeps only one of. Bitcoin's fix: rare blocks.</p>
       <details class="deep-dive">
         <summary>Why rare blocks are the fix, and what it costs</summary>
-        <p>At a ten-minute interval, propagation delay is small next to the interval itself. Most blocks finish spreading before the next one is found, so a collision is a rare accident rather than routine, and Bitcoin never needed a rule for keeping both sides of one: discarding the loser is cheap enough.</p>
-        <p>The cost lands on confirmation time instead. A payment needs several block intervals to be safe, which is why it settles at the pace it does rather than in seconds.</p>
+        <p>At a ten-minute interval, propagation delay is small, so collisions are rare and cheap to discard; the cost lands on confirmation time.</p>
       </details>
       <style>
         #collision-demo{
@@ -359,7 +358,7 @@
                 <i class="info-affordance__glyph" aria-hidden="true">i</i>
                 <span class="sr-only">Why the range stops at 32</span>
               </button>
-              <span class="info-affordance__panel" id="cs-rate-panel" role="tooltip">32 a second is the top of this slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
+              <span class="info-affordance__panel" id="cs-rate-panel" role="tooltip">32/s is the top of this slider: rusty-kaspa's own k table stops there and panics above it.</span>
             </span></label>
           <input type="range" id="cs-rate" value="882" min="0" max="1000" step="1" aria-label="How fast blocks are found">
           <div class="marks"><span>Bitcoin, 1 every 10 min</span><span>Kaspa mainnet, 10/s</span></div>
@@ -372,7 +371,7 @@
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
               <span class="sr-only">Why 250 ms, and what the slider's top end means</span>
             </button>
-            <span class="info-affordance__panel" id="cs-latency-panel" role="tooltip">The 250 ms default is bracketed, not measured directly. Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, 24 August 2026) found 86.9% were concurrent blocks a strict one-winner chain would have discarded. Inverting that share on this model gives a single-chain-equivalent delay of roughly 204 ms to 666 ms, and 250 ms sits inside that range. A DAG's parallelism inflates the discard share past what a true single chain would show, so the range brackets the number without settling it. The slider's top end, 5 seconds, is <code>NETWORK_DELAY_BOUND</code>, rusty-kaspa's own one-way worst-case assumption, a protocol constant rather than a typical delay.</span>
+            <span class="info-affordance__panel" id="cs-latency-panel" role="tooltip">Bracketed: 1,399 chain blocks found 86.9% concurrent, implying roughly 204&ndash;666 ms; 250 ms sits inside that. The slider's top, 5 s, is rusty-kaspa's worst-case delay bound.</span>
           </span></label>
           <input type="range" id="cs-delay" value="349.485" min="0" max="1000" step="0.001" aria-label="How long a block takes to reach other miners">
         </div>
@@ -382,11 +381,11 @@
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
               <span class="sr-only">What this model is and how it was checked</span>
             </button>
-            <span class="info-affordance__panel" id="cs-model-panel" role="tooltip">A Poisson single-chain race model, not an observation of any running network. Checked against real data: Decker &amp; Wattenhofer measured Bitcoin's stale rate at 1.69%, with a mean propagation delay of 12.6 s. Solving this model backward for that stale rate gives about 10.3 s, the same order of magnitude as the measured figure, within roughly 1.5 to 2x. Not an exact match. The tally in the panel below is a running sample: it reads differently early on and drifts toward that figure as more blocks are produced.</span>
+            <span class="info-affordance__panel" id="cs-model-panel" role="tooltip">Checks against Decker &amp; Wattenhofer's stale rate (1.69%): 10.3 s.</span>
           </span></p>
 
-        <p class="result-line">Each thrown-away block cost a miner real electricity and bought nothing.</p>
-        <p class="model-caption">Single chain is a model, not a picture of Bitcoin today.</p>
+        <p class="result-line">Each thrown-away block cost real electricity and bought nothing.</p>
+        <p class="model-caption">A model, not Bitcoin today.</p>
 
         <div class="panel">
           <p class="panel-title">Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></p>
@@ -404,16 +403,9 @@
       
         <details data-audience="specialist">
           <summary>How this works, and the sources</summary>
-          <p>Blocks arrive at random, a Poisson process with rate &lambda;. A block collides with the one before it when the next block is found before the first has finished spreading, which takes time d. The chance of at least one collision is:</p>
-          <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay)</div>
-          <p>That is not the share this demo reports. A single chain that has already kept a block rejects anything mined before that block finished spreading, so a run of collisions keeps only the first, the way a non-paralyzable dead-time counter drops events inside its recovery window. Working that through gives a lower share:</p>
-          <div class="formula">discarded share = &lambda;d &divide; (1 + &lambda;d) &nbsp;&nbsp; kept share = 1 &divide; (1 + &lambda;d)</div>
-          <p><b>Inferred</b> from the identity above, matching this simulator's own discard rule rather than quoted from a source. At the opening settings &lambda;d = 2.51, so p works out to about 92% while the discarded share is about 72%. The running tally converges toward that second figure.</p>
-          <p>A single chain can only keep one block per collision, so the loser's work is wasted. A blockDAG references every block a miner could see when it started working, so both survive and get ordered instead.</p>
-          <p><b>Where this comes from.</b> Poisson block creation at rate &lambda;, with propagation delay as the cause of concurrent blocks, is the model in Sompolinsky, Wyborski and Zohar's PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>): "Block creation follows a Poisson process with parameter &lambda;," bounded by a network delay diameter D. <b>Verified</b> against that primary source.</p>
-          <p>p = 1 &minus; e<sup>&minus;&lambda;d</sup> is the simpler building block underneath the paper's own anticone bound: standard Poisson math, P(0 arrivals in time d) = e<sup>&minus;&lambda;d</sup>, and the same collision mechanism the Bitcoin fork-rate literature uses (Decker &amp; Wattenhofer, <i>Information Propagation in the Bitcoin Network</i>, IEEE P2P 2013).</p>
-          <p><b>Inferred</b> from that identity, not quoted from either paper. This demo also tests only the immediately preceding block, not the full anticone GHOSTDAG resolves.</p>
-          <p>Below one block a second the display runs faster than real time, by the factor named under the slider. From one block a second up it is real time. The collision math always uses the real rate and delay, never the playback speed.</p>
+          <p>Blocks arrive at random, a Poisson process with rate &lambda;, colliding when the next is found before the first finishes spreading:</p>
+          <div class="formula">p = 1 &minus; e<sup>&minus;&lambda;d</sup> &nbsp; (&lambda; = block rate, d = propagation delay); discarded share = &lambda;d &divide; (1 + &lambda;d)</div>
+          <p>At &lambda;d = 2.51, discarded share is about 72% (<b>inferred</b>). <b>Verified</b> against the PHANTOM/GHOSTDAG paper (<a href="https://eprint.iacr.org/2018/104" target="_blank" rel="noopener">eprint.iacr.org/2018/104</a>).</p>
         </details>
       </div>
       
@@ -764,9 +756,7 @@
       })();
       </script>
       
-      <p>Kaspa keeps the fast blocks and fixes the order instead. A block points at every tip its miner could see, so two blocks found a moment apart both land in the record as parents of whatever gets mined next.</p>
-      <p>The word blockDAG names that shape. <a href="#ghostdag">GHOSTDAG</a> reads the resulting graph and derives the order. <a href="/kaspa-origin-story">Kaspa's origin story</a> covers how that research reached mainnet.</p>
-      <p>What you feel above is inclusion speed: mainnet makes ten blocks a second, so a broadcast transaction usually lands in a block within about a second. Inclusion is not settlement; the gap between them is what <a href="#finality">confirmations</a> measure. Supply itself is capped on a fixed emission schedule with no premine.</p>
+      <p>Kaspa keeps the fast blocks and fixes the order instead: a block points at every tip its miner could see, and <a href="#ghostdag">GHOSTDAG</a> orders them.</p>
     </section>
 
     <section id="ghostdag" class="section">
@@ -775,19 +765,19 @@
       <div class="summary-grid grid-cards">
         <article>
           <span>Parents</span>
-          <p>Every block names the tips its miner could see when it started hashing. Those references are the whole data structure.</p>
+          <p>Every block names the tips its miner could see: those references are the data structure.</p>
         </article>
         <article>
           <span>Coloring</span>
-          <p>The k cap below decides color. Blocks that stay inside it join the <span class="term-def" tabindex="0" role="button" aria-describedby="blue-red-def-wik">blue set<span class="term-def__panel" id="blue-red-def-wik" role="tooltip">GHOSTDAG marks well-connected blocks blue and less-compatible ones red, for ordering and security accounting.</span></span>; the rest are marked red and keep their place, their parents, and their transactions.</p>
+          <p>The k cap decides <span class="term-def" tabindex="0" role="button" aria-describedby="blue-red-def-wik">color<span class="term-def__panel" id="blue-red-def-wik" role="tooltip">Well-connected blocks are blue, less-compatible ones red.</span></span>.</p>
         </article>
         <article>
           <span>Spine</span>
-          <p>Each block picks the parent carrying the most <span class="term-def" tabindex="0" role="button" aria-describedby="blue-work-def-wik">blue work<span class="term-def__panel" id="blue-work-def-wik" role="tooltip">Accumulated proof-of-work weight carried by blue blocks. It's how Kaspa compares competing DAG histories.</span></span> as its <span class="term-def" tabindex="0" role="button" aria-describedby="selected-parent-def-wik">selected parent<span class="term-def__panel" id="selected-parent-def-wik" role="tooltip">The parent block that defines the main ordering path through the DAG. Not the same thing as Bitcoin's longest chain.</span></span>. Chain those picks together and you get the closest thing Kaspa has to Bitcoin's longest chain.</p>
+          <p>Each block picks the parent with the most <span class="term-def" tabindex="0" role="button" aria-describedby="blue-work-def-wik">blue work<span class="term-def__panel" id="blue-work-def-wik" role="tooltip">Accumulated PoW of blue blocks.</span></span> as its selected parent.</p>
         </article>
         <article>
           <span>One order</span>
-          <p>Walk that spine from genesis to the current tip, absorbing each <span class="term-def" tabindex="0" role="button" aria-describedby="mergeset-def-wik">mergeset<span class="term-def__panel" id="mergeset-def-wik" role="tooltip">The set of past blocks a new block pulls into view: how parallel work gets folded into the ordering.</span></span> in turn with blue blocks ahead of red ones, and every block in the graph ends up in a single line.</p>
+          <p>Walk that spine, absorbing each <span class="term-def" tabindex="0" role="button" aria-describedby="mergeset-def-wik">mergeset<span class="term-def__panel" id="mergeset-def-wik" role="tooltip">Past blocks a new block pulls in.</span></span> blue-first.</p>
         </article>
       </div>
 <style>
@@ -992,8 +982,7 @@
 <div id="ghostdag-demo">
 <div class="demo-main">
   <p class="fit-note" style="margin:0 0 1rem;">
-    Miners don't take turns: independent miners publish blocks whenever they find them, so more than
-    one can arrive at once.
+    Miners don't take turns: they publish whenever they find a block, so more than one can arrive at once.
   </p>
 
   <div class="panel">
@@ -1017,8 +1006,7 @@
     <details class="advanced">
       <summary>Advanced: hide blocks, then release them</summary>
       <p class="detail-copy">
-        Publish nothing for a while and mine on your own, then bring your blocks back. The rest of the
-        network doesn't wait for you. See what happens when it already moved on without you.
+        Mine secretly, then release: see what the network did.
       </p>
       <div class="toolbar toolbar-primary">
         <button class="btn" id="gp-btn-hidden-toggle" type="button" aria-pressed="false">Hide blocks</button>
@@ -1036,9 +1024,7 @@
     <details class="advanced">
       <summary>Advanced: how forgiving the network is</summary>
       <p class="detail-copy">
-        Every block can have some other blocks beside it that it never saw. This caps how many of those
-        are still allowed to count. Lower it, and blocks get locked out sooner. Raise it, and more blocks
-        keep counting even when a lot of them arrive at once.
+        Caps unseen neighbors still counted: lower locks out sooner, raise counts more.
       </p>
       <label class="klabel">Uncounted neighbors allowed (k): <output id="gp-k-out">3</output>
         <input type="range" id="gp-k-slider" min="0" max="8" value="3" step="1" aria-label="k, how many unrelated blocks a block can have beside it and still count">
@@ -1069,41 +1055,16 @@
 
   <div class="panel">
     <h3>Linear order</h3>
-    <p style="color:var(--muted); font-size:16px; margin-top:0;">The one ordering every node agrees on. <span class="info-affordance" id="gp-order-info">
-        <button class="info-affordance__trigger" type="button" aria-describedby="gp-order-panel">
-          <i class="info-affordance__glyph" aria-hidden="true">i</i>
-          <span class="sr-only">How this order is built</span>
-        </button>
-        <span class="info-affordance__panel" id="gp-order-panel" role="tooltip">Walk the main chain, and slot each block's counted neighbors in before its locked-out ones.</span>
-      </span></p>
+    <p style="color:var(--muted); font-size:16px; margin-top:0;">The one order every node agrees on.</p>
     <ol class="order-list" id="gp-order-list" aria-live="polite"></ol>
-    <p class="gp-why">Without one order every node agrees on, two people can each be told a different owner for the same coin.</p>
+    <p class="gp-why">Without it, two people could be told different owners for the same coin.</p>
   </div>
 
   <details class="panel">
     <summary style="cursor:pointer; font-weight:600;">How the colors get decided</summary>
     <p style="color:var(--muted); font-size:.85rem;">
-      Every block names the tips its miner could see when it was made, and those references are the whole
-      data structure. A block's past is everything behind it, its future is everything built on top of it,
-      and its anticone is everyone else: blocks that neither saw it nor were seen by it.
-    </p>
-    <p style="color:var(--muted); font-size:.85rem;">
-      Each block picks the parent with the most accumulated work as its selected parent, chaining block to
-      block into a main chain. A block counts (blue) if the number of already-counted blocks in its anticone
-      stays under the cap, k. Over the cap, it is locked out (red) instead.
-    </p>
-    <p style="color:var(--muted); font-size:.85rem;">
-      The DAG has no single "now": blocks keep arriving in parallel, with no one moment everyone agrees on.
-      Kaspa's answer is the virtual block, a conceptual block that is never mined and never sent to anyone.
-    </p>
-    <p style="color:var(--muted); font-size:.85rem;">
-      It exists only on each node's own machine, standing in for everything that node has seen, and its
-      parents, the virtual parents, are that node's current tips.
-    </p>
-    <p style="color:var(--muted); font-size:.85rem;">
-      Among those tips, the one with the most already-counted blocks behind it becomes the virtual selected
-      parent, better known as the sink. That is the same rule an ordinary block uses to pick its own selected
-      parent, applied one level up: to the node's whole view rather than to a single mined block.
+      The DAG has no single "now," so Kaspa's answer is the virtual block: never mined, standing in
+      for what a node saw.
     </p>
   </details>
 </div>
@@ -1746,44 +1707,31 @@
 })();
 </script>
 
-      <p>A block's <span class="term-def" tabindex="0" role="button" aria-describedby="anticone-def-wik">anticone<span class="term-def__panel" id="anticone-def-wik" role="tooltip">Blocks that sit in neither a block's past nor its future. Nodes need an anticone rule to order these consistently.</span></span> is everything neither behind it nor built on it. A single chain has no way to rank an anticone, so it discards one side. GHOSTDAG ranks it instead, by one behavioral tell: an honest miner publishes a block the instant it is found, and a miner building a secret history does the opposite.</p>
-      <details class="deep-dive">
-        <summary>Why honest and hidden miners produce different anticones</summary>
-        <p>Within a propagation delay, everyone else sees an honest miner's block and starts referencing it, so its anticone stays small by construction. Nobody can reference blocks they were never shown, so a hidden miner's withheld blocks surface later carrying wide anticones.</p>
-      </details>
-      <p>An attacker's red blocks buy no weight in the accepted history, so the electricity behind them is wasted. Honest parallel blocks are kept instead of discarded, so running the block rate up does not burn the security budget on orphans the way it would on a single chain.</p>
+      <p>A single chain can't rank an <span class="term-def" tabindex="0" role="button" aria-describedby="anticone-def-wik">anticone<span class="term-def__panel" id="anticone-def-wik" role="tooltip">Blocks in neither a block's past nor its future.</span></span>, so it discards one side. GHOSTDAG ranks it: honest miners publish instantly, hidden ones surface late.</p>
+      <p>An attacker's red blocks buy no weight; a higher block rate doesn't burn security budget like a single chain would.</p>
     </section>
 
     <section id="finality" class="section">
       <p class="eyebrow">Confirmations</p>
       <h2>Fast is not final</h2>
       <div class="transaction-rail step-diagram grid-cards" aria-label="Simplified Kaspa transaction confidence path">
-        <article><span>1</span><strong>Seen</strong><p>Your wallet broadcasts the transaction and nodes pick it up.</p></article>
-        <article><span>2</span><strong>Included</strong><p>A miner mines it into a proof-of-work block.</p></article>
-        <article><span>3</span><strong>Ordered</strong><p>GHOSTDAG places it against the blocks mined in parallel.</p></article>
-        <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under Kaspa's consensus rules.</p></article>
-        <article><span>5</span><strong>Confidence</strong><p>Reversal risk keeps falling as more blocks stack proof-of-work on top of it.</p></article>
+        <article><span>1</span><strong>Seen</strong><p>Your wallet broadcasts it; nodes pick it up.</p></article>
+        <article><span>2</span><strong>Included</strong><p>A miner mines it into a block.</p></article>
+        <article><span>3</span><strong>Ordered</strong><p>GHOSTDAG places it against parallel blocks.</p></article>
+        <article><span>4</span><strong>Accepted</strong><p>Nodes accept it under consensus rules.</p></article>
+        <article><span>5</span><strong>Confidence</strong><p>Reversal risk falls as blocks stack on top of it.</p></article>
       </div>
-      <p>Kaspa has no single stack to count. Your block sits in a graph, and what piles up on it is blue work: the proof-of-work carried by every later blue block whose history includes yours.</p>
-      <p>Reversal risk falls as that weight builds, which is why Kaspa publishes no universal confirmation count. <a href="/why-kaspa-matters#confirmation-risk-demo">How long before a payment is safe to trust</a> prices the wait against an attacker of any size.</p>
+      <p>Kaspa has no single stack to count, so it publishes no universal count. <a href="/why-kaspa-matters#confirmation-risk-demo">This prices the wait</a>.</p>
       <details class="deep-dive">
         <summary>What actually sets a safe wait, and how finality depth differs</summary>
-        <p>Undoing a payment means producing a competing set of blocks heavy enough to outweigh the one the network already accepted, and every new block referencing your transaction raises that bill. Wallets and explorers report the result as a confirmation count.</p>
-        <p>At ten <span class="term-def" tabindex="0" role="button" aria-describedby="bps-def-wik">blocks a second<span class="term-def__panel" id="bps-def-wik" role="tooltip">Written 10 BPS in Kaspa's own documentation. Kaspa ran at one block a second until the Crescendo activation, DAA score 110,165,000, and has run at ten since.</span></span> those references arrive quickly, so the risk curve drops steeply in the first seconds. Steeply is not vertically.</p>
-        <p>Three things set the honest wait: the value at stake, hash rate now and how much it swings, and whether the payment can be undone outside the protocol. A shipping hold takes a thinner wait than handing over a good nobody can claw back.</p>
-        <p>Exchanges and payment firms publish their own deposit rules, and those are the numbers a user meets.</p>
-        <p><span class="term-def" tabindex="0" role="button" aria-describedby="finality-depth-def-wik">Finality depth<span class="term-def__panel" id="finality-depth-def-wik" role="tooltip">The threshold past which old history counts as settled.</span></span> is a different, deeper question: how far back the protocol will let anyone rewrite. It sits far past any payment wait, and once history is buried past it nodes reject a reorganization outright, which is also what makes pruning safe.</p>
-        <details class="cell-detail">
-          <summary>Does pruning make Kaspa private?</summary>
-          <p>No. Pruning and missing explorer history are not privacy guarantees. UTXO state remains the consensus object, and a broadcast transaction can still be observed or archived by others before a node prunes it.</p>
-        </details>
+        <p>At ten <span class="term-def" tabindex="0" role="button" aria-describedby="bps-def-wik">blocks a second<span class="term-def__panel" id="bps-def-wik" role="tooltip">Written 10 BPS. Kaspa ran at one block a second until Crescendo, DAA score 110,165,000.</span></span>, risk drops steeply. <span class="term-def" tabindex="0" role="button" aria-describedby="finality-depth-def-wik">Finality depth<span class="term-def__panel" id="finality-depth-def-wik" role="tooltip">The threshold past which old history counts as settled.</span></span> goes deeper.</p>
       </details>
     </section>
 
     <section id="throughput" class="section">
       <p class="eyebrow">Throughput</p>
       <h2>Ask "TPS of what?"</h2>
-      <p>TPS is not one number. Kaspa mainnet makes ten blocks a second, and what fits in those blocks depends on what each transaction asks the network to do. A plain payment is cheap. A covenant or a proof is not.</p>
+      <p>TPS is not one number: it depends on the transaction, cheap for payment, costly for proof.</p>
       <details class="deep-dive">
         <summary>Four workload types, and why the TPS number moves</summary>
         <div class="table-wrap">
@@ -1800,7 +1748,7 @@
           </table>
         </div>
       </details>
-      <p>None of that makes throughput unlimited. A proof proves a statement about chosen inputs, so outside facts still need an anchor: a light client, finality certificate, reporter set, oracle, or challenge process.</p>
+      <p>None of that makes throughput unlimited: outside facts still need an anchor.</p>
       <details id="mass-calculator" open>
         <summary>Build a transaction and see which mass dimension gets charged</summary>
 <style>
@@ -2067,8 +2015,7 @@
 <div id="masscalc-demo">
   <p class="intro">
     Kaspa charges a transaction for the room it takes, counted as
-    <span class="term-def" tabindex="0" role="button" aria-describedby="mass-def-masscalc">mass<span class="term-def__panel" id="mass-def-masscalc" role="tooltip">Kaspa's own unit for how much block space a transaction uses. Not bytes, not KAS: the network charges a transaction for whichever kind of work costs it most, and only that one.</span></span>,
-    not bytes.
+    <span class="term-def" tabindex="0" role="button" aria-describedby="mass-def-masscalc">mass<span class="term-def__panel" id="mass-def-masscalc" role="tooltip">Costliest work, only that.</span></span>.
   </p>
 
   <div class="presets" role="group" aria-label="Transaction presets">
@@ -2096,7 +2043,7 @@
       <div class="field">
         <label for="mc-amount">Amount per output (KAS) <b id="mc-amountVal">1,000</b></label>
         <input type="range" id="mc-amount" min="0" max="6" step="0.02" value="3">
-        <p class="field-hint" id="mc-amountHint" hidden>This shape frees at least as much stored state as it creates, so its storage mass is 0 at any amount.</p>
+        <p class="field-hint" id="mc-amountHint" hidden>This frees as much state as it creates, so storage mass is 0.</p>
       </div>
 
       <div class="field">
@@ -2127,9 +2074,9 @@
         <div class="sub" id="mc-tpsLine"><span id="mc-tpsOut">0</span> transactions per second at ten blocks a second, if every block were full of this shape.</div>
       </div>
 
-      <p class="intro" style="margin-top:10px;">Change the shape and the count changes with it, which is why a headline transactions-per-second figure says nothing until someone names the transaction it counted.</p>
+      <p class="intro" style="margin-top:10px;">Change the shape, and the count changes: a TPS figure means nothing without the transaction it counted.</p>
 
-      <p class="intro" style="margin-top:10px;">Three limits, each with its own budget. Fill a block with this transaction and they run down like this. The one that empties first sets the count above.</p>
+      <p class="intro" style="margin-top:10px;">Three limits, each its own budget; whichever empties first sets the count.</p>
 
         <div class="bar-row" id="mc-computeRow">
           <div class="bar-head">
@@ -2224,16 +2171,7 @@ tx_per_block = floor(500,000 / tx_mass)
 TPS = tx_per_block × 10 blocks/second</span>
 
       <p style="margin-top:10px;">
-        This models a standard Schnorr P2PK-style input/output shape and assumes value is
-        conserved with no fee. Real network TPS is lower once relay policy, fee markets, and
-        mempool behavior are added on top of this pure mass ceiling.
-      </p>
-      <p class="sources">
-        Formulas verified against
-        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>,
-        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">consensus params</a>, and
-        <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">core constants</a>.
-        Offline calculator, no network requests.
+        Models a standard shape with no fee; real TPS is lower once relay and mempool behavior apply. Verified against <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/constants.rs">constants</a>. Offline.
       </p>
     </div>
   </details>
@@ -2449,13 +2387,7 @@ TPS = tx_per_block × 10 blocks/second</span>
       </details>
       <details class="deep-dive" data-audience="specialist">
         <summary>Where the payment numbers come from</summary>
-        <p>Kaspa mainnet makes ten blocks a second. Current mainnet params cap compute and storage block mass at 500,000, which gives a budget of 5,000,000 transaction mass per second before policy, fees, relay, storage shape, and real mempool behavior come in.</p>
-<p>A signed plain P2PK-style 1-input, 1-output payment costs roughly 1.6k mass by the code's careful math; add a change output and a 1-input, 2-output payment runs closer to 2.0k mass.</p>
-<p>Divide the block budget by those shapes and the count lands around 250 to 300 simple transactions per block, about 2,450 to 3,070 per second at ten blocks a second. Leaner shapes and rounding push the top end to the often-quoted 3.4k TPS.</p>
-<p>Benchmarks built on fake minimum-size transactions score higher than that, and what they measure is a lab ceiling.</p>
-<p>Anything that makes a transaction bigger, from extra outputs to covenant metadata to proof bytes, crowds out the simple transfers competing for the same budget. Kaspa's docs put the payload ceiling around 25 KB when payload data dominates a standard transaction, because the standard transaction mass ceiling and transient byte accounting still apply on top of it.</p>
-        <p><a href="#covenants">Toccata</a> leaves the payment limit alone. Transient mass rises from 500,000 to 1,000,000 at activation while the compute and storage reference limit holds at 500,000, and the Toccata guide ties that rise to fitting STARK-sized proofs.</p>
-        <p>Toccata also adds v1 transaction fields such as output covenant data and input compute commitments, and raises the standard minimum relay fee. It is mostly an upgrade to what L1 transactions can say and check.</p>
+        <p>Mainnet caps block mass at 500,000: 5,000,000 mass/second before fees. A plain payment costs roughly 1.6k mass, 2.0k with change: 250&ndash;300 per block, 2,450&ndash;3,070 per second (quoted 3.4k TPS at leaner shapes; payload ceiling about 25 KB). <a href="#covenants">Toccata</a>'s transient mass rises to 1,000,000.</p>
         <div class="table-wrap">
           <table class="reality-table">
             <thead>
@@ -2469,28 +2401,25 @@ TPS = tx_per_block × 10 blocks/second</span>
             </tbody>
           </table>
         </div>
-        <p>vProgs remain roadmap architecture. Toccata ships the parts vProg-style systems need without shipping vProgs. KIP-21 stops every prover from having to follow the whole DAG for every app: its partitioned commitment design targets O(activity) proving, so a prover for one app lane tracks only that lane.</p>
-<p>Current params cap user-lane churn at 50 non-coinbase lanes per block and 1,000,000,000 gas per lane, which at ten blocks a second is a worst-case 500 user-lane updates per second. User transaction throughput still needs its own transaction-shape math on top.</p>
-        <p>The public <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a> repo shows where the build is headed. <span class="term-def" tabindex="0" role="button" aria-describedby="sutton-def-wik">Michael Sutton<span class="term-def__panel" id="sutton-def-wik" role="tooltip">A core Kaspa developer who led the Rust rewrite and much of 2026's covenant and scripting work, including Argent and Silverscript.</span></span>'s <a href="https://github.com/argent-lang/argent">Argent</a> is an actor-based language and compiler that already builds multi-contract covenant apps into <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-wik">Silverscript<span class="term-def__panel" id="silverscript-def-wik" role="tooltip">A higher-level language that compiles down to Kaspa script, so a covenant can be written as readable rules instead of hand-assembled opcodes.</span></span>, with an audit as the gate its README sets before real use.</p>
+        <p><a href="https://github.com/kaspanet/vprogs">vProgs</a> remain roadmap: 50 lanes/block, 1,000,000,000 gas/lane, worst-case 500 updates/second.</p>
       </details>
     </section>
 
     <section id="covenants" class="section">
       <p class="eyebrow">Covenants</p>
       <h2>A coin that can carry its own rule</h2>
-      <p>Since Toccata went live at DAA score 474,165,565, a Kaspa coin can carry a rule about how it may move next. The network checks that rule the same way it checks a signature: a vault can ask for a delay and a backup key, an escrow a release or a refund.</p>
-      <details class="deep-dive">
+      <p>Since Toccata activated at DAA score 474,165,565, a coin can carry a rule checked like a signature.</p>
+      <details class="deep-dive" open>
         <summary>What Toccata turned on, KIP by KIP</summary>
         <div class="summary-grid grid-cards">
-          <article><span>KIP-17</span><p>A UTXO can read the transaction spending it and require a matching next output: vaults, escrow, spend caps, refunds.</p></article>
-          <article><span>KIP-20</span><p>Covenant IDs give covenant state a lineage consensus tracks, blocking fake lookalikes.</p></article>
-          <article><span>KIP-16</span><p>A script checks a proof from a chosen proof system, initially Groth16 and RISC0-Succinct, instead of L1 running every app step itself.</p></article>
-          <article><span>KIP-21</span><p>Sequencing commitments let an app prove its own lane instead of almost the whole DAG.</p></article>
-          <article><span>vProgs</span><p>Not part of what activated. Full vProgs, for shared app state many users mutate at once, are still roadmap architecture. See <a href="/status#status-snapshot">status</a>.</p></article>
-          <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering and settle proofs back to it, with no separate sequencer.</p></article>
+          <article><span>KIP-17</span><p>A UTXO can require a matching next output: vaults, escrow, refunds.</p></article>
+          <article><span>KIP-20</span><p>Covenant IDs give state a tracked lineage, blocking fake lookalikes.</p></article>
+          <article><span>KIP-16</span><p>A script checks a chosen proof instead of L1 running every step.</p></article>
+          <article><span>KIP-21</span><p>Sequencing commitments let an app prove its lane, not the whole DAG.</p></article>
+          <article><span>vProgs</span><p>Shared state many users mutate: still roadmap. See <a href="/status#status-snapshot">status</a>.</p></article>
+          <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering, no separate sequencer.</p></article>
         </div>
-        <p>No virtual machine, no accounts, no global shared state. App logic lives in bounded UTXO steps or proofs. A live demo that tries to break a covenant vault is on <a href="/build-on-kaspa#covenant-breaker-demo">build on Kaspa</a>.</p>
-        <p class="source-inline">Primary sources: <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, and <a href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">Michael Sutton's Toccata hard-fork outlook</a>.</p>
+        <p>No virtual machine, no accounts, no global state. Demo: <a href="/build-on-kaspa#covenant-breaker-demo">build on Kaspa</a>. <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">20</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">16</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">21</a>, <a href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">Sutton</a>.</p>
       </details>
     </section>
 
@@ -2513,13 +2442,13 @@ TPS = tx_per_block × 10 blocks/second</span>
           </table>
         </div>
       </details>
-      <p class="fit-note">Anything not listed here goes through the <a href="/status#claim-fact-check">claim fact-check</a>, which sorts a claim into live, testnet, targeted, roadmap, research, wrong, unsupported, or out of scope.</p>
+      <p class="fit-note">Anything not listed here goes through the <a href="/status#claim-fact-check">claim fact-check</a>.</p>
     </section>
 
     <section class="next-step section">
       <p class="eyebrow">Sources</p>
       <h2>Check it yourself</h2>
-      <p>Kaspa Research carries the protocol lineage; Rusty Kaspa is the code that runs it, including k and the rest of the consensus parameters. <a href="https://kaspa.com/learn-kaspa">Kaspa.com's Learn Kaspa</a> has term-by-term references for anticone, mergeset, and blue work: vocabulary and mechanics, not protocol status.</p>
+      <p>Kaspa Research carries the lineage; Rusty Kaspa is the code. <a href="https://kaspa.com/learn-kaspa">Kaspa.com's Learn Kaspa</a> has glossaries.</p>
       <details id="live-network" open>
         <summary>Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
 <style>
@@ -2630,13 +2559,13 @@ TPS = tx_per_block × 10 blocks/second</span>
 </style>
 
 <div id="livenet-demo">
-  <p style="color:var(--muted); margin:0 0 14px;">Real blocks, read live from Kaspa's own public API.
+  <p style="color:var(--muted); margin:0 0 14px;">Real blocks, live from Kaspa's public API.
     <span class="info-affordance" id="ln-intro-info">
       <button class="info-affordance__trigger" type="button" aria-describedby="ln-intro-info-panel">
         <i class="info-affordance__glyph" aria-hidden="true">i</i>
         <span class="sr-only">How often this reads, and what happens if it fails</span>
       </button>
-      <span class="info-affordance__panel" id="ln-intro-info-panel" role="tooltip">Kaspa makes about ten blocks a second; this checks in every 9 seconds and shows what it actually fetched, not a simulation of the rest. If the API can't be reached, it says so instead of faking it.</span>
+      <span class="info-affordance__panel" id="ln-intro-info-panel" role="tooltip">Checks every 9s.</span>
     </span>
   </p>
 
@@ -2668,40 +2597,20 @@ TPS = tx_per_block × 10 blocks/second</span>
           <i class="info-affordance__glyph" aria-hidden="true">i</i>
           <span class="sr-only">How this compares to Kaspa's measured baseline</span>
         </button>
-        <span class="info-affordance__panel" id="ln-baseline-info-panel" role="tooltip">Kaspa's own measured baseline runs the same way: about 0.9 transactions per second, and 88.3% of its raw transaction count is coinbase, one per block (site data, read from api.kaspa.org, 2026&#8209;08&#8209;22).</span>
+        <span class="info-affordance__panel" id="ln-baseline-info-panel" role="tooltip">Kaspa's measured baseline: about 0.9 TPS, 88.3% of raw transaction count coinbase (site data, api.kaspa.org, 2026&#8209;08&#8209;22).</span>
       </span>
     </div>
   </div>
 
-  <p class="payoff">An empty block is not a fault. The network makes room for ten a second whether anyone fills it or not, and most of that room goes unused.</p>
+  <p class="payoff">An empty block is not a fault; the network makes room for ten a second.</p>
 
   <details>
     <summary>What this page shows, what it can't, and why</summary>
     <div class="deep-body">
-      <h3>What the count is</h3>
-      <p>The tip count at the top is <code>tipHashes</code> from a live read of <code>api.kaspa.org/info/blockdag</code>: how many block tips the network is holding open right now. Each new tip is then fetched from <code>api.kaspa.org/blocks/{blockId}</code>.</p>
+      <h3>What this shows, and what it can't</h3>
+      <p><code>tipHashes</code> from <code>api.kaspa.org/info/blockdag</code>, every 9 seconds. <span class="tag red-block">Red</span>: too late. <span class="content-word empty-word">Empty</span>: only a coinbase. <span class="tag covenant">covenant</span>: a verified <code>covenantId</code>. One API read per visit.</p>
 
-      <h3>A sample, not the whole feed</h3>
-      <p>The API sits behind an 8-second edge cache, so this page checks every 9 seconds. Kaspa makes roughly ten blocks a second in that gap, so each check catches a handful of them, not all. The line above the feed states both numbers.</p>
-
-      <h3>Miner names are self-reported</h3>
-      <p>The payout address and miner tag come from the block's own coinbase data (<code>extra.minerAddress</code> and <code>extra.minerInfo</code>). Neither is a verified identity: a pool can rotate addresses, and the tag is a plain string the miner chose to write.</p>
-
-      <h3>Red blocks are real blocks</h3>
-      <p>A block tagged <span class="tag red-block">red</span> was mined honestly but arrived too late in its local ordering to count in the accepted history. Keeping the block and deciding whether it counts is GHOSTDAG's job.</p>
-
-      <h3>Empty blocks are real usage</h3>
-      <p>A block carrying only its own coinbase transaction is marked <span class="content-word empty-word">Empty</span>, and most arrive that way. That is Kaspa's current usage, not a failed read.</p>
-
-      <h3>Tags are read, never inferred</h3>
-      <p>A <span class="tag covenant">covenant</span> tag means the API returned a network-verified <code>covenantId</code>; <a href="/build-on-kaspa#covenant-adoption">build-on-kaspa</a> counts how many are running. An <span class="tag app">app: ciph_msg</span> pill means the payload literally starts with that string.</p>
-      <p>Anything else stays unlabeled rather than guessed. A ZK opcode call is not shown at all, because the REST API returns transaction scripts as opaque hex rather than decoded opcodes.</p>
-
-      <h3>What an explorer has that this does not</h3>
-      <p>Miner leaderboards, address balances and historical charts need a database of stored history. This page has one API read per visit, so it shows what that read contains.</p>
-
-      <p class="evidence-note">Endpoints: <code>api.kaspa.org/info/blockdag</code> (tip hashes and <code>blockCount</code>, polled every 9 seconds) and <code>api.kaspa.org/blocks/{blockId}</code> (one call per newly seen tip, capped at 16 per check). API surface: <a href="https://api.kaspa.org/openapi.json" target="_blank" rel="noopener">api.kaspa.org/openapi.json</a>. Baseline throughput and coinbase-share figures: this site's <code>data/l1-chains.json</code>, cross-checked against live reads on 2026-08-22.</p>
-      <p class="demo-footnote">Independent read of Kaspa's public API. Runs entirely in your browser; nothing is stored or sent anywhere.</p>
+      <p class="evidence-note"><code>api.kaspa.org/info/blockdag</code> (every 9s), <code>api.kaspa.org/blocks/{blockId}</code> (capped at 16). Baseline: <code>data/l1-chains.json</code>, 2026-08-22. Nothing stored or sent elsewhere.</p>
     </div>
   </details>
 </div>
@@ -3001,7 +2910,7 @@ TPS = tx_per_block × 10 blocks/second</span>
 </script>
 
       </details>
-      <p class="source-inline">Primary implementation and protocol references: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">rusty-kaspa params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">rusty-kaspa mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/wallet/core/src/tx/mass.rs">wallet mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0 activation release</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1 maintenance release</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">KIP-21</a>, <a href="https://docs.kaspa.org/programmability">Kaspa programmability docs</a>, <a href="https://docs.kaspa.org/integrate/transaction-payload">transaction payload docs</a>, <a href="https://github.com/kaspanet/vprogs">kaspanet/vprogs</a>, and <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
+      <p class="source-inline"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0</a>/<a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">17</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">20</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">21</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
