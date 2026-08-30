@@ -72,14 +72,27 @@ function read(page) {
 
 function visibleText(html) {
   return html
-    .replace(/<details\b(?![^>]*\bopen\b)[^>]*>([\s\S]*?)<\/details>/gi, (_match, body) => {
-      const summary = /<summary\b[^>]*>([\s\S]*?)<\/summary>/i.exec(body);
-      return summary?.[0] ?? "\n";
-    })
+    // <script>, <style>, <svg> and HTML comments have to come off BEFORE the
+    // closed-<details> stripping below, not after. A CSS comment or JS string
+    // can contain literal text that looks like a <details> tag with no real
+    // closing tag nearby (e.g. styles.css's own code comments describing a
+    // <details> pattern in prose). Run details-stripping first and that
+    // phantom opening tag sends the lazy [\s\S]*? body match hunting for the
+    // next REAL </details> anywhere later in the document, which on a page
+    // with any real <details> elements swallows everything in between --
+    // all of <style>, all of <script>, and any real body text before the
+    // first real disclosure -- into one wrongly-collapsed span. Confirmed on
+    // chain-comparer.html, whose styles.css-style code comment ("<details>
+    // matching .cc-method's shape") pushed the counted word total from a
+    // true ~195 to 1546 before this reordering.
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "\n")
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "\n")
     .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, "\n")
     .replace(/<!--[\s\S]*?-->/g, "\n")
+    .replace(/<details\b(?![^>]*\bopen\b)[^>]*>([\s\S]*?)<\/details>/gi, (_match, body) => {
+      const summary = /<summary\b[^>]*>([\s\S]*?)<\/summary>/i.exec(body);
+      return summary?.[0] ?? "\n";
+    })
     .replace(/<[^>]+>/g, "\n")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")

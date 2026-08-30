@@ -206,11 +206,22 @@ def check_page_constants(html):
 class Scorer:
     """model-picker.html's scoring path, reproduced exactly.
 
-    metricTrust() is memoized on first use, and the page's first use happens
-    inside the loop that builds the dial controls, one dial at a time, with
-    later dials' state still unset. buildWeights() skips a dial whose state is
-    unset, so a dial's own metrics are always measured with that dial off.
-    That order is reproduced here rather than idealized away.
+    metricTrust() sets a reentrancy guard (inMetricTrust in the page) before
+    calling frontierSpread(), and that guard forces buildWeights() to report
+    any=false for the whole nested call -- on every metricTrust invocation,
+    not only a genuinely recursive one (see the page's own comment on
+    inMetricTrust, dated 29 August 2026, for why the guard exists and why it
+    reproduces the tool's prior, accidental behavior on purpose).
+    frontierSpread's "rank by the reader's current frontier" branch is
+    therefore dead code from metricTrust's own call site; only the v0 fallback (each
+    figure's own top-N leader spread) ever runs there, regardless of which
+    dials are otherwise on. An earlier version of this scorer instead warmed
+    trust dial-by-dial with prior dials left "on" in self.state, which does
+    not match: any_on was true for every dial but the first, so those
+    metrics were trusted off the reader's ranked frontier instead of the
+    fallback the page actually uses. metric_trust() below reproduces the
+    real guard directly, by always scoring frontier_spread against an empty
+    state.
     """
 
     def __init__(self, blob, dials):
@@ -225,13 +236,9 @@ class Scorer:
         self.trust = {}
         self.state = {}
         self.field_med = self._field_medians()
-        # Warm the cache the way the page does: dial by dial, each with its
-        # own slider not yet registered.
-        for k, ms in self.dials:
+        for _, ms in self.dials:
             for mk in ms:
                 self.metric_trust(mk)
-            self.state[k] = 1
-        self.state = {}
 
     def _field_medians(self):
         out = []
@@ -246,13 +253,16 @@ class Scorer:
             return self.trust[k]
         i = self.ix[k]
         n = sum(1 for m in self.models if m["a"][i])
-        sep = max(SEP_FLOOR, min(1.0, self.frontier_spread(k) / SEP_FULL))
+        # Always empty state here, matching the page's inMetricTrust guard:
+        # see the class docstring above.
+        spread = self.frontier_spread(k, state={})
+        sep = max(SEP_FLOOR, min(1.0, spread / SEP_FULL))
         self.trust[k] = (n / len(self.models)) * sep
         return self.trust[k]
 
-    def frontier_spread(self, key):
+    def frontier_spread(self, key, state=None):
         i = self.ix[key]
-        W, tot, any_on = self.build_weights()
+        W, tot, any_on = self.build_weights(state)
         lead = []
         if any_on:
             rows = [(self.score(m, W, tot), m) for m in self.models]
