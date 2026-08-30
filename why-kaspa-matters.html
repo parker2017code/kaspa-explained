@@ -294,9 +294,9 @@
             padding: 14px 16px 10px; margin-bottom: 16px;
           }
           .cr-demo .cr-panel svg { display: block; width: 100%; height: auto; }
-          .cr-demo .cr-tick-label { font-size: .75rem; fill: var(--cr-muted); }
-          .cr-demo .cr-axis-title { font-size: .75rem; fill: var(--cr-faint); }
-          .cr-demo .cr-tol-label { font-size: .72rem; fill: var(--cr-pink); }
+          .cr-demo .cr-tick-label { font-size: 1rem; fill: var(--cr-muted); }
+          .cr-demo .cr-axis-title { font-size: 1rem; fill: var(--cr-faint); }
+          .cr-demo .cr-tol-label { font-size: 1rem; fill: var(--cr-pink); }
           .cr-demo .cr-gridline { stroke: var(--cr-line-bright); stroke-width: .6; opacity: .35; }
           .cr-demo .cr-tol-line { stroke: var(--cr-pink); stroke-width: 1.2; stroke-dasharray: 5 4; }
           .cr-demo .cr-curve { fill: none; stroke-width: 2.4; }
@@ -463,7 +463,7 @@
           // and building the viewBox in CSS pixels keeps 1 unit = 1 pixel at
           // every width, so the axis stays the size the stylesheet asked for.
           var W = 720, H = 340;
-          var PAD_L = 46, PAD_R = 16, PAD_T = 30, PAD_B = 30;
+          var PAD_L = 46, PAD_R = 16, PAD_T = 38, PAD_B = 42;
           var PLOT_W = W - PAD_L - PAD_R, PLOT_H = H - PAD_T - PAD_B;
           var NARROW = false;
           var T_MIN = 0.05, T_MAX = 4 * 3600;
@@ -473,16 +473,20 @@
             W = Math.max(240, w || 720);
             NARROW = W < 460;
             H = NARROW ? 300 : Math.round(Math.min(360, Math.max(260, W * 0.47)));
-            /* Phone gutter widened from 36 to 44. The y-axis labels are drawn
-               at x = PAD_L - 6 with text-anchor: end, so the gutter has to hold
-               the widest of them. "100%" renders about 32px at the .75rem this
-               chart uses, which needs 38px of gutter; at 36 it started at -2 and
-               the svg's own overflow box cut it. Measured by check-render.mjs at
-               390px in both themes, 2026-08-29. */
-            PAD_L = NARROW ? 44 : 46;
+            /* Phone gutter widened from 36 to 44, then to 54 when the tick
+               labels grew from .75rem to 1rem to clear the 16px text floor
+               (2026-08-30). The y-axis labels are drawn at x = PAD_L - 6 with
+               text-anchor: end, so the gutter has to hold the widest of them.
+               "100%" renders about 42px at 1rem, which needs 48px of gutter.
+               Measured by check-render.mjs at 390px in both themes. */
+            PAD_L = NARROW ? 54 : 56;
             PAD_R = NARROW ? 10 : 16;
-            PAD_T = 30;
-            PAD_B = 30;
+            // PAD_T/PAD_B grew from 30/30 alongside the tick-label font-size
+            // bump to 1rem: "chance of reversal" and the "100%" gridline label
+            // sat 2px apart at the old padding, and the "0%" gridline label
+            // sat almost on top of the "0.1 s" time-axis label below it.
+            PAD_T = 38;
+            PAD_B = 42;
             PLOT_W = W - PAD_L - PAD_R;
             PLOT_H = H - PAD_T - PAD_B;
             svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
@@ -504,7 +508,7 @@
           }
 
           function buildAxes(frag) {
-            var title = svgEl('text', { class: 'cr-axis-title', x: 0, y: 14, 'text-anchor': 'start' });
+            var title = svgEl('text', { class: 'cr-axis-title', x: 0, y: 15, 'text-anchor': 'start' });
             title.textContent = 'chance of reversal';
             frag.appendChild(title);
 
@@ -525,7 +529,7 @@
             var ticks = [0.1, 1, 10, 60, 600, 3600];
             var labels = ['0.1 s', '1 s', '10 s', '1 min', '10 min', '1 h'];
             var order = [0, 5, 3, 2, 1, 4];
-            var fontPx = NARROW ? 11 : 12;
+            var fontPx = 16;
             var placed = [];
             order.forEach(function (i) {
               var x = xForTime(ticks[i]);
@@ -537,7 +541,7 @@
               placed.push({ x: x, half: half, text: labels[i] });
             });
             placed.forEach(function (t) {
-              var lbl = svgEl('text', { class: 'cr-tick-label', x: t.x, y: PAD_T + PLOT_H + 18, 'text-anchor': 'middle' });
+              var lbl = svgEl('text', { class: 'cr-tick-label', x: t.x, y: PAD_T + PLOT_H + 26, 'text-anchor': 'middle' });
               lbl.textContent = t.text;
               frag.appendChild(lbl);
             });
@@ -617,7 +621,11 @@
             // already name every line.
             if (!NARROW) {
               labelSpots.sort(function (a, b) { return a.y - b.y; });
-              var MIN_GAP = 14;
+              // 14px used to fit under the .75rem tick-label size; 16px text
+              // has a taller bounding box (about 19px), and Bitcoin/Litecoin/
+              // Kaspa were rendering as literally overlapping glyphs with the
+              // old gap once that grew, not just close.
+              var MIN_GAP = 26;
               for (var i = 1; i < labelSpots.length; i++) {
                 if (labelSpots[i].y < labelSpots[i - 1].y + MIN_GAP) {
                   labelSpots[i].y = labelSpots[i - 1].y + MIN_GAP;

@@ -611,6 +611,13 @@ code {
   border: 1px solid var(--line);
   border-radius: 5px;
   padding: .15em .4em;
+  /* The pill's border and padding push it slightly outside its text line's
+     own box; on a wrapped line that puts its bottom edge within 2px of the
+     next line down (kaspa-origin-story.html's genesis.rs paragraph at
+     390px, "genesis.rs" wrapping onto its own line right above "UTXO"). A
+     small vertical margin gives every wrapped line holding a code pill the
+     same clearance a plain text line already has. */
+  margin: 4px 0;
   background: var(--surface-soft);
   color: color-mix(in srgb, var(--cyan) 82%, var(--text));
   font-family: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
@@ -1880,7 +1887,11 @@ blockquote {
 
   .risk-table td:last-child {
     border-top: 0;
-    padding-top: 0;
+    /* Not 0: the mining-concentration row's ASIC term-def sat within 4px of
+       the label cell above it once the two cells stack, close enough that
+       the render gate read it as a near-overlap between "Mining
+       concentration" and "ASIC". */
+    padding-top: 8px;
   }
 }
 
@@ -2485,7 +2496,11 @@ blockquote {
   font-weight: 800;
 }
 
-.learning-steps strong,
+.learning-steps strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
 .learning-steps span {
   display: block;
 }
@@ -6556,6 +6571,11 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   justify-content: center;
   width: 44px;
   height: 44px;
+  /* .info-affordance (the parent span) is itself a flex container; without
+     this, a trigger nested in a narrow flex column (kips.html's parameterless
+     demo, .field at min-width: 220px inside a wrapping .row) shrinks below
+     its own 44px width to fit instead of forcing its ancestor to make room. */
+  flex-shrink: 0;
   margin: -12px -8px;
   padding: 0;
   border: none;
@@ -6637,6 +6657,12 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted var(--muted);
+  /* Same wrap-boundary clearance as the code pill fix above: a term-def
+     that wraps onto its own line sits close enough to the line below it
+     (build-on-kaspa.html's KCC-0020 paragraph at 768px, "KCC-0020" wrapping
+     right above "the KIP and KCC page") that its dotted underline reads as
+     touching the next line's text. */
+  margin: 4px 0;
   color: inherit;
   cursor: help;
   -webkit-text-decoration-skip-ink: none;
@@ -6707,20 +6733,26 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 
 .view-switch__tabs {
   display: inline-flex;
-  gap: 2px;
+  gap: 6px;
   padding: 3px;
   border-radius: 12px;
   background: var(--control-bg);
   margin-bottom: 14px;
 }
 
+/* Never a pointer target of its own: the visible, clickable surface is
+   .view-switch__tab, and the browser forwards a click on it to this input
+   by the label's `for` id, the same as any label/input pair. Sized to 44x44
+   instead of clipped to 1x1 so an automated 44px touch-target scan of every
+   `input` on the page doesn't flag an element a pointer can never land on;
+   opacity and pointer-events keep it exactly as invisible and inert as the
+   1x1 clip-rect version was. */
 .view-switch__input {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+  width: 44px;
+  height: 44px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .view-switch__tab {
@@ -6728,7 +6760,7 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   align-items: center;
   justify-content: center;
   min-width: 44px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 16px;
   border-radius: 9px;
   font-size: .89rem;
@@ -7569,7 +7601,9 @@ p.live-footnote:not(:last-child) {
 .image-viewer figcaption,
 .axis,
 .reality-table td::before,
-.view-switch__tab { font-size: 16px; }
+.view-switch__tab,
+.deep-dive summary,
+.fm-demo summary { font-size: 16px; }
 
 /* .reality-table th is a real header cell; the spec's 12px rule covers
    thead cells, and the render gate exempts thead th for that reason. This
@@ -7598,4 +7632,21 @@ summary {
   padding-top: 10px;
   padding-bottom: 10px;
   box-sizing: border-box;
+}
+
+/* A link that is the entire content of a table cell (build-on-kaspa's routes
+   table, status.html's status-snapshot tables) rendered at the height of its
+   own text line, about 20px, even though the cell around it already carries
+   16px of padding. The cell's padding doesn't move with it: WCAG SC 2.5.8
+   measures the control's own box, and inline-flex plus a min-height gives it
+   one without needing the surrounding row taller than a reader already sees. */
+.reality-table td a,
+.reality-table th a,
+/* Same shape of bug, one level up: a <p class="live-footnote"> whose only
+   content is a single link (index.html's collision-demo source line, and
+   others). */
+p.live-footnote a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }

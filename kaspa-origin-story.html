@@ -146,7 +146,7 @@
             .fl-demo .swatch.shape-diamond { border-radius: 2px; transform: rotate(45deg); width: 8px; height: 8px; }
             .fl-demo svg { display: block; width: 100%; height: auto; }
             .fl-demo .chart-caption { font-size: 16px; color: var(--faint); margin: 8px 0 0; }
-            .fl-demo .axis-label { fill: var(--faint); font-size: 10px; }
+            .fl-demo .axis-label { fill: var(--faint); font-size: 16px; }
             .fl-demo .switch-label { font-size: 16px; font-weight: 600; }
             .fl-demo .gridline { stroke: var(--line); stroke-width: 1; }
             .fl-demo .today-mark { stroke-dasharray: 3 3; }
@@ -322,9 +322,34 @@
             };
 
             var svg = document.getElementById('fl-chart');
-            var W = 640, H = 300, padL = 40, padR = 12, padT = 14, padB = 28;
+            var W = 640, H = 300, padL = 54, padR = 12, padT = 20, padB = 36;
             var plotW = W - padL - padR, plotH = H - padT - padB;
             var maxYear = 14;
+            var NARROW = false;
+            var YEAR_TICKS_WIDE = [0, 2, 4, 6, 8, 10, 12, 14];
+            var YEAR_TICKS_NARROW = [0, 7, 14];
+
+            /* The viewBox used to stay fixed at 640x300 while the svg's own CSS
+               (width: 100%; height: auto) shrank the box on phones, so every
+               user-unit, including axis-label's 10px font-size, got scaled down
+               again on top of its already-small value: as low as 3.4px true
+               rendered size at 390px wide. Measuring the box and setting the
+               viewBox to match keeps 1 user-unit equal to 1 real pixel at every
+               width, the same fix crChart in why-kaspa-matters.html already uses.
+               Height stays fixed once the box goes narrow, same as crChart's
+               NARROW case: scaling it down with width crushed the 5-row percent
+               axis into less than 15px between gridlines, not enough room for
+               16px labels (the floor every axis-label now has to clear) without
+               them overlapping each other. */
+            function measureChart() {
+              var w = Math.round(svg.getBoundingClientRect().width);
+              W = Math.max(200, w || 640);
+              NARROW = W < 460;
+              H = NARROW ? 220 : Math.round(W * (300 / 640));
+              plotW = W - padL - padR;
+              plotH = H - padT - padB;
+              svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+            }
 
             function xForYear(y) { return padL + (y / maxYear) * plotW; }
             function yForPct(p) { return padT + (1 - p / 100) * plotH; }
@@ -365,6 +390,7 @@
 
             function buildSVG() {
               var ns = 'http://www.w3.org/2000/svg';
+              measureChart();
               while (svg.firstChild) svg.removeChild(svg.firstChild);
 
               [0, 25, 50, 75, 100].forEach(function(p) {
@@ -380,11 +406,21 @@
                 lbl.textContent = p + '%';
                 svg.appendChild(lbl);
               });
-              [0, 2, 4, 6, 8, 10, 12, 14].forEach(function(yr) {
+              /* Below 460px wide, all 8 year ticks at the 16px floor don't fit
+                 the plot without adjacent labels running into each other; drop
+                 to every 4 years plus the endpoint, the same trade the crChart
+                 time axis makes by dropping ticks that don't fit. */
+              var yearTicks = NARROW ? YEAR_TICKS_NARROW : YEAR_TICKS_WIDE;
+              yearTicks.forEach(function(yr) {
                 var x = xForYear(yr);
                 var lbl = document.createElementNS(ns, 'text');
-                lbl.setAttribute('x', x); lbl.setAttribute('y', H - padB + 16);
-                lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('class', 'axis-label');
+                lbl.setAttribute('x', x); lbl.setAttribute('y', H - padB + 26);
+                // The last tick sits at x = W - padR; centered text there runs
+                // half its width past the svg's own right edge and clips. Only
+                // the last tick needs this: every earlier one has plot space on
+                // both sides.
+                lbl.setAttribute('text-anchor', yr === yearTicks[yearTicks.length - 1] ? 'end' : 'middle');
+                lbl.setAttribute('class', 'axis-label');
                 lbl.textContent = 'Y' + yr;
                 svg.appendChild(lbl);
               });
@@ -411,12 +447,18 @@
 
                 drawMarker(ns, pts[0][0], pts[0][1], chain.shape, chain.color);
 
-                if (key === 'kaspa') {
+                // At 16px (the font-size floor every axis label now has to
+                // clear) this callout runs about 160 user-units wide, wider
+                // than the whole plot at narrow widths. The legend already
+                // names Kaspa and its thicker flat line at 0% is visually
+                // distinct without it, so it's dropped instead of clipped,
+                // the same trade buildAxes makes for crChart's curve labels.
+                if (key === 'kaspa' && !NARROW) {
                   var kLabel = document.createElementNS(ns, 'text');
                   kLabel.setAttribute('x', xForYear(2));
                   kLabel.setAttribute('y', yForPct(0) - 7);
                   kLabel.setAttribute('fill', chain.color);
-                  kLabel.setAttribute('font-size', '12.5');
+                  kLabel.setAttribute('font-size', '16');
                   kLabel.setAttribute('font-weight', '700');
                   kLabel.textContent = 'Kaspa: 0%, always';
                   svg.appendChild(kLabel);
@@ -798,7 +840,7 @@
             .dt-demo .boundary-label { position: absolute; top: 28px; transform: translateX(-50%); font-size: 16px; color: var(--pink); white-space: nowrap; font-weight: 600; }
             .dt-demo .payoff-main {
               font-size: clamp(1.5rem, calc(2.5rem - max(var(--len, 9) - 9, 0) * 0.11rem), 2.5rem);
-              font-weight: 700; letter-spacing: -.015em; color: var(--green); margin: 4px 0 2px;
+              font-weight: 700; letter-spacing: -.015em; color: var(--green); margin: 4px 0 6px;
               font-variant-numeric: tabular-nums; line-height: 1.12;
             }
             .dt-demo .payoff-sub { font-size: 16px; color: var(--text); margin: 0 0 6px; min-height: 44px; }

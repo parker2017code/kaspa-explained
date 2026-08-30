@@ -347,9 +347,11 @@
 .es-demo .marks span { position:absolute; transform:translateX(-50%); white-space:nowrap; }
 .es-demo .marks span:first-child { transform:none; }
 .es-demo .marks span:last-child { transform:translateX(-100%); }
-/* At 390px "today" at 0% and "1 year" at 10% collided into "todayyear". The readout above
+/* "today" at 0% and "1 year" at 10% collide into "todayyear" whenever the panel this sits
+   in is narrow, which the 768px render check caught inside this page's own two-column grid
+   even though the viewport itself is wider than the old 600px cutoff. The readout above
    always names the exact point, so the tightest tick steps out on a narrow screen. */
-@media (max-width: 600px) { .es-demo .marks span.tight { display:none; } }
+@media (max-width: 820px) { .es-demo .marks span.tight { display:none; } }
 .es-demo .result-line { font-size:1.05rem; margin:20px 0 8px; }
 .es-demo .result-line b { color:var(--green); }
 .es-demo .supply-line { font-size:16px; color:var(--muted); margin:0 0 20px; }
@@ -1829,7 +1831,7 @@ feerate = fee_sompi / mass_grams</span>
   }
 .fm-demo .you-note { font-size: 1.067rem; color: var(--text); margin: 0; }
 .fm-demo .you-note b { color: var(--cyan); }
-.fm-demo .grid-note { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.fm-demo .grid-note { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
 .fm-demo .redraw-btn {
     min-height: 44px; background: var(--control-bg); border: 0; color: var(--muted); border-radius: 8px;
     padding: 0 12px; font-size: 16px; cursor: pointer; margin-top: 4px;
