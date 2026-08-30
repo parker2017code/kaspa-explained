@@ -67,7 +67,7 @@
     <section class="section">
       <p class="eyebrow">Two ledger models</p>
       <h1>Why parallel spends don't collide</h1>
-      <p class="lead">An account balance is one number every payment has to take a turn writing. A <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-uva">UTXO<span class="term-def__panel" id="utxo-def-uva" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> wallet holds separate coins, so nobody takes a turn.</p>
+      <p class="lead">An account balance is one number every payment takes a turn writing. A <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-uva">UTXO<span class="term-def__panel" id="utxo-def-uva" role="tooltip">Unspent transaction output: a coin spent whole, replaced by change.</span></span> wallet holds separate coins, so nobody waits.</p>
     </section>
 
     <section class="section" id="parallel-check">
@@ -183,19 +183,15 @@
         </div>
       </div>
 
-      <p>Kaspa targets ten blocks a second, so those five payments can land in five different blocks, in any order. Separate coins make the order irrelevant. One shared balance has to pick one, and four payments wait.</p>
+      <p>At ten blocks a second, the five payments can land in any order across five blocks. Separate coins make order irrelevant; one shared balance forces four to wait.</p>
 
       <details class="deep-dive">
         <summary>Which spend wins, and who decides</summary>
-        <p>Nothing stops a wallet signing two spends of one coin and broadcasting both. The network does not refuse them at broadcast; it refuses to keep both.</p>
-        <p>A single block cannot carry two spends of the same coin: rusty-kaspa turns that block down outright. The usual race is between two blocks landing at once.</p>
-        <p>GHOSTDAG puts every block in one order first, then replays each block's spends against the running set of unspent coins. Whichever spend comes earlier in that order takes the coin. The later one fails and is never kept, while the block carrying it stays in the DAG and stays valid.</p>
-        <p>Every node runs that rule over the same DAG and reaches the same answer, with no voting round.</p>
+        <p>A wallet can sign two spends of one coin and broadcast both, but rusty-kaspa refuses any block that carries both, so the real race is between two blocks landing at once. GHOSTDAG orders every block first, then replays its spends against the unspent set: whichever spend lands earlier takes the coin, the later one fails, and every node reaches the same answer.</p>
         <ul class="source-list">
-          <li>Whole coin in, change coin out: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/tx.rs" target="_blank" rel="noopener">rusty-kaspa, <code>consensus/core/src/tx.rs</code></a>. An input names a whole prior output; an output carries a value and an optional covenant binding.</li>
-          <li>One block cannot double-spend: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block body validation</a>.</li>
-          <li>Order first, then replay: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">the mergeset acceptance loop</a>.</li>
-          <li>The demo models outpoint contention and account sequencing. It does not model mempool spread, block timing, or fee markets.</li>
+          <li>Coin structure: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/tx.rs" target="_blank" rel="noopener">rusty-kaspa, <code>consensus/core/src/tx.rs</code></a>. An input names a whole prior output; an output carries a value and an optional covenant binding.</li>
+          <li>One block, one spend per coin: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block body validation</a>.</li>
+          <li>Order first, replay after: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">the mergeset acceptance loop</a>.</li>
         </ul>
       </details>
 
@@ -374,8 +370,8 @@
     <section class="section" id="shared-state">
       <p class="eyebrow">The cost</p>
       <h2>Nothing is locked because nothing is shared</h2>
-      <p>That cuts both ways. A Kaspa script reads the spend it sits in and nothing else. It cannot call another app's live state the way one contract calls another on an account chain, which is why broad contract platforms grew up on the account model first.</p>
-      <p>So Kaspa's app layer is <span class="term-def" tabindex="0" role="button" aria-describedby="cov-def-uva">covenants<span class="term-def__panel" id="cov-def-uva" role="tooltip">A rule attached to a coin, checked by the network on every spend, about how that coin and the coins it makes are allowed to move.</span></span>, not an account-based virtual machine. Three rungs, and only the first is running:</p>
+      <p>That isolation cuts both ways: a Kaspa script reads only the spend it sits in, and cannot call another app's live state the way one contract calls another.</p>
+      <p>So Kaspa's app layer is <span class="term-def" tabindex="0" role="button" aria-describedby="cov-def-uva">covenants<span class="term-def__panel" id="cov-def-uva" role="tooltip">A rule attached to a coin, checked on every spend, governing how it moves.</span></span>, not an account-based virtual machine. Three rungs, only the first running:</p>
 
       <div class="table-wrap">
         <table class="reality-table">
@@ -403,18 +399,14 @@
 
       <details class="deep-dive">
         <summary>What each of the three rungs actually is</summary>
-        <p><b>KIP-17</b> gives a script check opcodes over the spend it sits in: that spend's own inputs, outputs and payload, not another spend's.</p>
-        <p><b>KIP-20</b> adds covenant IDs, a lineage tag consensus tracks. An output can carry one only by continuing a covenant or starting a fresh one, so a covenant's record cannot be forged.</p>
-        <p><b>KIP-16</b> adds an opcode that checks a zero-knowledge proof inside a spend, so a script can accept a claim about work done elsewhere without replaying it.</p>
-        <p>None of the three lets a script read another covenant's live state.</p>
-        <p>Argent's Inter-Covenant Communication composes apps by putting both apps' state in one spend's inputs and outputs, so one app's actor can authorize another's. Its own README calls the project "still under active development and is not yet release-ready."</p>
-        <p>vProgs targets the case the other two do not reach, many users mutating one app's state. Its README opens: "This repository is in early development / prototype phase." Zero releases, zero tags. Michael Sutton frames the design choice as "losing synchronous composability or losing sovereignty."</p>
+        <p><b>KIP-17</b> lets a script check only the spend it sits in. <b>KIP-20</b> adds covenant IDs, a lineage tag consensus tracks, so a covenant's record cannot be forged. <b>KIP-16</b> checks a zero-knowledge proof inside a spend, without replaying the work. None reads another covenant's live state.</p>
+        <p>Argent's Inter-Covenant Communication joins two apps' state into one spend. Its README: "still under active development and is not yet release-ready."</p>
+        <p>vProgs targets many users mutating one app's state, the case the other two miss. Its README: "early development / prototype phase," zero releases, zero tags.</p>
         <ul class="source-list">
-          <li><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17, covenants and scripting</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20, covenant IDs</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16, the ZK verifier opcode</a>, all Active on <a href="/kips">this site's KIP tracker</a>.</li>
+          <li><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a>: all Active on <a href="/kips">the KIP tracker</a>.</li>
           <li>Toccata activation: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0" target="_blank" rel="noopener">rusty-kaspa v2.0.0</a>.</li>
           <li><a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, and <a href="/argent-explained">what the compiler does</a>.</li>
           <li><a href="https://github.com/kaspanet/vprogs" target="_blank" rel="noopener">kaspanet/vprogs</a> and <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1" target="_blank" rel="noopener">Michael Sutton's design notes</a>.</li>
-          <li>Status labels on this site are checked against mainnet and releases: <a href="/status#claim-fact-check">the claim fact-check</a>.</li>
         </ul>
       </details>
     </section>
