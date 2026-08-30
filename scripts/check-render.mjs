@@ -522,6 +522,24 @@ function collectChecks(width) {
         }
       }
 
+      // WCAG 2.5.8's Understanding doc addresses a checkbox/radio wrapped in
+      // its own <label> directly (not by a separate for= reference): the
+      // clickable area is the label, because activating the control anywhere
+      // inside it -- the input's own small native box, an icon, the text --
+      // fires the same toggle. A 13x13 native checkbox sitting inside an
+      // already-44px-tall label is not a smaller target than the label; it
+      // is the same target, drawn small. Only wrapping counts here, not a
+      // same-page for= reference elsewhere, since only wrapping guarantees
+      // every point inside the label boundary is also inside the control's
+      // own clickable area.
+      if (el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio')) {
+        const wrappingLabel = el.closest('label');
+        if (wrappingLabel) {
+          const labelRect = wrappingLabel.getBoundingClientRect();
+          if (labelRect.width >= 44 && labelRect.height >= 44) continue;
+        }
+      }
+
       const rect = el.getBoundingClientRect();
       if (rect.width === 0 && rect.height === 0) continue; // not actually rendered
       if (rect.width < 44 || rect.height < 44) {
