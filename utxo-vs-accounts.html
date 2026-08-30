@@ -82,6 +82,13 @@
             --uva-line: #4a463f; --uva-line-bright: #746e60;
             --uva-text: #f8f5ef; --uva-muted: #b6b0a7; --uva-faint: #9d988c;
             --uva-green: #66d1c1; --uva-cyan: #2e9cff; --uva-red: #ff6961; --uva-ink: #06201b;
+            /* --uva-cyan is also the fill behind white .idx badge text (line
+               ~123). #2e9cff with white text there measures 2.87:1, under the
+               4.5:1 floor; #0060c0, already dark theme's --uva-cyan value in
+               light theme, measures well clear of it. Kept separate from
+               --uva-cyan itself, which stays #2e9cff for its non-text uses
+               (accent line, focus outline, model-color dot). */
+            --uva-cyan-badge: #0060c0;
             --uva-control-bg: #2c2c2e; --uva-control-hover: #3a3a3c;
             --uva-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
             font-size: 16px; line-height: 1.5;
@@ -91,6 +98,7 @@
             --uva-line: #d8d3c7; --uva-line-bright: #bcb6a8;
             --uva-text: #211e1a; --uva-muted: #5d594f; --uva-faint: #6f6a5f;
             --uva-green: #0c7a69; --uva-cyan: #0060c0; --uva-red: #b52d24; --uva-ink: #ffffff;
+            --uva-cyan-badge: #0060c0;
             --uva-control-bg: #e8e8ed; --uva-control-hover: #dededf;
             --uva-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
           }
@@ -120,7 +128,7 @@
           .demo-uva ol.rows li:last-child { border-bottom: 0; }
           .demo-uva .idx { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; background: var(--uva-card-bg); border: 1px solid var(--uva-line-bright); color: var(--uva-faint); transition: background-color .3s, border-color .3s, color .3s; flex: none; }
           .demo-uva li.done .idx { background: var(--uva-green); border-color: var(--uva-green); color: var(--uva-ink); }
-          .demo-uva .panel.acct li.done .idx { background: var(--uva-cyan); border-color: var(--uva-cyan); color: #fff; }
+          .demo-uva .panel.acct li.done .idx { background: var(--uva-cyan-badge); border-color: var(--uva-cyan-badge); color: #fff; }
           .demo-uva li.killed .idx { background: transparent; border-color: var(--uva-red); color: var(--uva-red); }
           .demo-uva li.running .idx { animation: uva-blink .5s steps(2, start) infinite; }
           @keyframes uva-blink { 50% { opacity: .35; } }

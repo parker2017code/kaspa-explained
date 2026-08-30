@@ -62,6 +62,14 @@
     --bg:#100e0c; --bg-2:#1c1a17; --panel-strong:#221f1c; --card-bg:#322f2a;
     --line:#4a453d; --line-bright:#746e60;
     --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
+    /* --faint doubles as both the tag text and its own 22%-tint fill on
+       .layer-tag.unpub; composited together that measured 3.95:1, under
+       the 4.5:1 floor, even though --faint alone against a flat panel
+       passes. Same fix as styles.css's --cyan-pill/--green-pill/--purple-pill:
+       a dedicated lighter variant for text-on-own-tint use, verified at
+       5.55:1 with the gate's own compositing math, not --faint itself
+       (still correct for its other, flat-background uses on this page). */
+    --faint-tag:#c7c2b6;
     --green:#66d1c1; --cyan:#2e9cff; --purple:#bf5af2; --pink:#ff9f0a;
     --red:#ff6961; --ink:#06201b;
     --control-bg:#2c2c2e; --control-hover:#3a3a3c;
@@ -77,6 +85,7 @@
     --bg:#fbfaf6; --bg-2:#f3f0ea; --panel-strong:#fbfaf6; --card-bg:#fbfaf6;
     --line:#d8d4cb; --line-bright:#bcb6a8;
     --text:#211e1a; --muted:#646057; --faint:#6b6659;
+    --faint-tag:#524d42; /* darker text-on-own-tint variant, see dark-theme comment above; 5.67:1 */
     --green:#0c7a69; --cyan:#0068da; --purple:#6e56cf; --pink:#b14f00;
     --red:#c0342a; --ink:#ffffff;
     --control-bg:#e8e8ed; --control-hover:#dededf;
@@ -107,17 +116,25 @@
   .argent-pipeline-demo .pipeline{ display:flex; flex-direction:column; gap:0; }
   .argent-pipeline-demo .layer{
     background:var(--panel-strong); border:1px solid var(--line); border-radius:14px;
-    padding:9px 14px; opacity:0; transform:translateY(6px);
+    padding:9px 14px; transform:translateY(6px);
     animation:ap-layer-in .38s ease-out forwards;
   }
-  .argent-pipeline-demo .layer + .arrow-down{ animation:ap-layer-in .38s ease-out forwards; opacity:0; }
-  @keyframes ap-layer-in{ to{ opacity:1; transform:translateY(0); } }
+  /* Text inside .layer used to fade in from opacity:0 alongside the slide.
+     The render gate's contrast check samples ~100ms after load, mid-fade,
+     and folds that transient opacity into the text's alpha (see
+     scripts/check-render.mjs's ancestor-opacity note): every color here
+     measured a fraction of its resting contrast purely from being caught
+     mid-animation, not from the color values themselves. Slide only; the
+     text is never below full opacity, at any point a reader (or the gate)
+     can see it. */
+  .argent-pipeline-demo .layer + .arrow-down{ animation:ap-layer-in .38s ease-out forwards; }
+  @keyframes ap-layer-in{ to{ transform:translateY(0); } }
   .argent-pipeline-demo .layer-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
   .argent-pipeline-demo .layer-name{ font-size:16px; font-weight:700; letter-spacing:.03em; color:var(--faint); text-transform:uppercase; }
   .argent-pipeline-demo .layer-tag{ font-size:16px; font-weight:700; padding:2px 8px; border-radius:980px; }
   .argent-pipeline-demo .layer-tag.new{ background:color-mix(in srgb, var(--pink) 22%, transparent); color:var(--pink); }
   .argent-pipeline-demo .layer-tag.empty{ display:none; }
-  .argent-pipeline-demo .layer-tag.unpub{ background:color-mix(in srgb, var(--faint) 22%, transparent); color:var(--faint); }
+  .argent-pipeline-demo .layer-tag.unpub{ background:color-mix(in srgb, var(--faint-tag) 22%, transparent); color:var(--faint-tag); }
   .argent-pipeline-demo .layer-code{
     display:block; background:var(--code-bg); border-radius:10px; padding:10px 12px;
     font-family:var(--mono-font); font-size:16px; line-height:1.45; color:var(--text);

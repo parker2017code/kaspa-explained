@@ -234,7 +234,6 @@
       
         #collision-demo .secondary-control {
           margin: 0 0 22px;
-          opacity: .82;
         }
         #collision-demo .secondary-control label {
           display: flex;
@@ -799,6 +798,13 @@
     --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
     --green:#66d1c1; --green-rgb:102,209,193; --cyan:#2e9cff; --cyan-rgb:41,151,255;
     --purple:#bf5af2; --pink:#ff9f0a; --pink-rgb:255,159,10; --ink:#06201b;
+    /* .node.blue/.node.red set text color to --cyan/--pink directly, on a
+       background that is itself a 30% tint of that same color mixed into
+       --panel-strong. Self-tinted text-on-own-background measured 3.50:1
+       (blue) and 4.22:1 (red), under the 4.5:1 floor; a dedicated lighter
+       node-label variant, not a change to --cyan/--pink (still correct for
+       the border and legend swatch uses on this page). */
+    --cyan-node:#63b5ff; --pink-node:#ffab29;
     --accent-soft:rgba(102,209,193,.12);
     --control-bg:#2c2c2e; --control-hover:#3a3a3c;
     --field-bg:#221f1c; --field-line:#4a453d;
@@ -814,6 +820,12 @@
     --text:#211e1a; --muted:#646057; --faint:#6b6659;
     --green:#0c7a69; --green-rgb:14,124,107; --cyan:#0068da; --cyan-rgb:0,113,227;
     --purple:#6e56cf; --pink:#b14f00; --pink-rgb:178,80,0; --ink:#ffffff;
+    --cyan-node:#0052ac; --pink-node:#8d3f00; /* darker node-label variant, see dark-theme comment above */
+    /* Same --green/--accent-soft pair styles.css's own --green-pill fixes
+       (text set in --green on --accent-soft); this page's local copy of
+       both values matches that one exactly, so the same vetted #0a6a5c
+       (5.45:1) applies to .toolbar-primary button.btn. */
+    --green-pill:#0a6a5c;
     --accent-soft:rgba(14,124,107,.1);
     --control-bg:#e8e8ed; --control-hover:#dededf;
     --field-bg:#ffffff; --field-line:#d2d2d7;
@@ -838,7 +850,7 @@
 
   #ghostdag-demo .primary-caption{margin:0 0 .6rem; font-size:16px; color:var(--text); font-weight:600;}
   #ghostdag-demo .toolbar-primary{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center;}
-  #ghostdag-demo .toolbar-primary button.btn{background:var(--accent-soft); color:var(--green); font-weight:600;}
+  #ghostdag-demo .toolbar-primary button.btn{background:var(--accent-soft); color:var(--green-pill, var(--green)); font-weight:600;}
   #ghostdag-demo .toolbar-primary button.btn:hover{background:color-mix(in srgb, var(--green) 20%, transparent);}
   #ghostdag-demo .toolbar-primary button.btn:disabled{background:var(--control-bg); color:var(--text); opacity:.4;}
   #ghostdag-demo .toolbar-secondary{
@@ -909,10 +921,10 @@
     #ghostdag-demo .node{transition:left .35s ease, top .35s ease, background .25s ease, border-color .25s ease, opacity .25s ease;}
     #ghostdag-demo line{transition:opacity .25s ease;}
   }
-  #ghostdag-demo .node.blue{border-radius:50%; background:color-mix(in srgb, var(--cyan) 30%, var(--panel-strong)); border-color:var(--cyan); color:var(--cyan);}
+  #ghostdag-demo .node.blue{border-radius:50%; background:color-mix(in srgb, var(--cyan) 30%, var(--panel-strong)); border-color:var(--cyan); color:var(--cyan-node);}
   #ghostdag-demo .node.red{
     border-radius:8px; transform:translate(-50%,-50%) rotate(45deg);
-    background:color-mix(in srgb, var(--pink) 30%, var(--panel-strong)); border-color:var(--pink); color:var(--pink);
+    background:color-mix(in srgb, var(--pink) 30%, var(--panel-strong)); border-color:var(--pink); color:var(--pink-node);
   }
   #ghostdag-demo .node.red .node-label{transform:rotate(-45deg); display:block;}
   #ghostdag-demo .node.onspine{box-shadow:0 0 0 3px color-mix(in srgb, var(--green) 55%, transparent);}
@@ -1834,6 +1846,11 @@
     --pink: #b14f00;
     --ink: #ffffff;
     --accent-soft: rgba(14, 124, 107, .1);
+    /* Same --green/--accent-soft pair styles.css's own --green-pill fixes
+       (text set in --green on --accent-soft measures 4.28:1 there); this
+       page's local copy of both values matches that one exactly, so the
+       same vetted #0a6a5c (5.45:1) applies. */
+    --green-pill: #0a6a5c;
     --control-bg: #e8e8ed;
     --control-hover: #dededf;
     --field-bg: #ffffff;
@@ -1880,7 +1897,7 @@
   #masscalc-demo .presets button:hover { background: var(--control-hover); }
   #masscalc-demo .presets button[aria-pressed="true"] {
     background: var(--accent-soft);
-    color: var(--green);
+    color: var(--green-pill, var(--green));
   }
   #masscalc-demo .layout {
     display: grid;

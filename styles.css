@@ -2139,7 +2139,11 @@ blockquote {
 .clock-lane span {
   display: block;
   margin-bottom: 6px;
-  color: var(--green);
+  /* Plain --green on .clock-lane's own rgba(--cyan-rgb,.045) tinted
+     background measured 4.36:1 in light theme, under the 4.5:1 floor.
+     --green-pill already exists for this exact self-tint shape (see its
+     definition above); reused rather than adding a page-local duplicate. */
+  color: var(--green-pill, var(--green));
   font-size: 12px;
   font-weight: 850;
   text-transform: uppercase;
@@ -6854,15 +6858,23 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 
 :root {
   --red: #d70015;
+  --red-pill: var(--red);
 }
 
 :root[data-theme="dark"],
 :root:not([data-theme="light"]) {
   --red: #ff453a;
+  /* .status-pill's own formula (color: color-mix(--status-color 78%, --text),
+     background: color-mix(--status-color 14%, transparent)) measures 4.11:1
+     with plain --red in dark theme, the same shape of failure --purple-pill
+     already fixes for .status-pill.roadmap below. #ff6d64 measures 4.75:1
+     in that same self-referential composite. Light theme's --red already
+     clears 4.5:1 there, so --red-pill stays equal to --red above. */
+  --red-pill: #ff6d64;
 }
 
 .status-pill.wrong {
-  --status-color: var(--red);
+  --status-color: var(--red-pill);
 }
 
 /* live-network.html and emission-schedule.html tag their data
