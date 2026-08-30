@@ -2508,7 +2508,11 @@ TPS = tx_per_block × 10 blocks/second</span>
   @media (prefers-reduced-motion: no-preference) {
     #livenet-demo .block-card.just-arrived { animation: ln-cardIn .4s cubic-bezier(.2,.8,.2,1); }
   }
-  @keyframes ln-cardIn { 0% { transform: translateY(-8px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+  /* Slide only, no opacity leg: the render gate samples about 100ms after load,
+     mid-animation, and folded the fading alpha into every contrast reading inside
+     the card, reporting four failures as low as 1.73:1 on text that rests well
+     above the floor. The motion reads the same without it. */
+  @keyframes ln-cardIn { 0% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
   #livenet-demo .block-main { flex: 1 1 auto; min-width: 0; }
   #livenet-demo .block-top { display: flex; align-items: center; gap: 8px; font-size: 16px; }
   #livenet-demo .block-top .content-word { font-weight: 650; }
@@ -2910,7 +2914,7 @@ TPS = tx_per_block × 10 blocks/second</span>
 </script>
 
       </details>
-      <p class="source-inline"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0</a>/<a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">17</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">20</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">21</a>.</p>
+      <p class="source-inline"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/config/params.rs">params</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/mass/mod.rs">mass code</a>, <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a>, <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0</a>/<a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">KIP-16</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">17</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">20</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">21</a>, <a href="https://github.com/argent-lang/argent">argent-lang/argent</a>.</p>
       <div class="actions">
         <a class="button primary" href="https://research.kas.pa/">Kaspa Research</a>
         <a class="button" href="https://github.com/kaspanet/rusty-kaspa">Rusty Kaspa</a>
