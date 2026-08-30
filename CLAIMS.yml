@@ -1,5 +1,5 @@
-last_checked: 2026-08-29
-recheck_after: 2026-09-05
+last_checked: 2026-08-30
+recheck_after: 2026-09-06
 claims:
   proof_of_work:
     status: live
@@ -22,17 +22,18 @@ claims:
       - Kaspa mainnet payments are instantly final
   l1_status_snapshot:
     status: measurement_sensitive
-    recheck_after: 2026-09-05
+    recheck_after: 2026-09-06
     summary: >
-      An August 29, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward,
-      /info/coinsupply and /info/kaspad) showed virtual DAA score 526,073,404, about 27.669 billion KAS
-      from the public supply endpoint (2,766,945,898,446,211,632 sompi), a 2.31246515 KAS block reward,
+      An August 30, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward,
+      /info/coinsupply and /info/kaspad) showed virtual DAA score 527,035,672, about 27.672 billion KAS
+      from the public supply endpoint (2,767,168,450,784,286,777 sompi), a 2.31246515 KAS block reward,
       and serverVersion 2.0.1 with isSynced true. Max supply read 2,870,403,560,500,000,000 sompi, about
       28.704 billion KAS. The score sits above the Toccata activation score and still inside the
-      504,909,000-531,207,000 emission step, which the reward matches. Supersedes the August 24 reading
-      (DAA 521,476,468, about 27.659 billion KAS), the August 20 reading (517,984,766, 27.651 billion),
-      and the August 8 reading (507,631,731, 27.627 billion), all at the same node version and reward.
-      The supply gained between the August 24 and August 29 reads matches the block-reward math:
+      504,909,000-531,207,000 emission step, which the reward matches. Supersedes the August 29 reading
+      (DAA 526,073,404, about 27.669 billion KAS), the August 24 reading (521,476,468, 27.659 billion),
+      the August 20 reading (517,984,766, 27.651 billion), and the August 8 reading (507,631,731,
+      27.627 billion), all at the same node version and reward.
+      The supply gained between the August 29 and August 30 reads matches the block-reward math:
       2.31246515 KAS/block times 864,000 blocks/day at ten blocks a second is about 1,997,970 KAS/day.
       These are time-stamped network readings. They are unsuitable as timeless constants. Do not quote
       blockCount or headerCount from this endpoint: it load-balances across backend nodes with different
@@ -283,7 +284,7 @@ claims:
       - vProgs are live
   argent:
     status: research
-    recheck_after: 2026-08-31
+    recheck_after: 2026-09-13
     summary: >
       Argent is an actor-based language and compiler for stateful multi-contract applications on
       covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable
@@ -307,8 +308,8 @@ claims:
       changes. This corrects an earlier version of this claim, which read the repo as having gone quiet
       since August 2; that was true as of the check that wrote it but is no longer current.
       The project has its own argent-lang organization, and github.com/michaelsutton/argent returns HTTP
-      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, now 80
-      commits, up from 78 on August 23 and 77 on August 14; the per-author breakdown was not rerun at the
+      301 to github.com/argent-lang/argent. Three repos, all ISC licensed: argent (created June 16, now 83
+      commits as of August 30, up from 80 on August 24, 78 on August 23 and 77 on August 14; the per-author breakdown was not rerun at the
       new count, but Sutton held 73 of the prior 77, with a19q3, Manyfestation, and WolfieOC holding the
       other four), argent-playground (created July 9, multi-actor and DEX demos, last checked latest July
       29), and argent-template (created July 24, last checked latest July 29; both playground and template
@@ -316,11 +317,19 @@ claims:
       Rechecked August 24, 2026: two more commits landed August 23, PR #47 ("Sync hashing and entry
       dispatch with latest Silverscript") and PR #48 ("support temporal values across Argent"), both
       continuing the same pattern as the August 17 sync commit, tracking Silverscript's own churn rather
-      than adding new unrelated surface area. The audit gate is independently visible upstream:
-      kaspanet/silverscript also has zero releases and zero tags (confirmed again August 24, releases/latest
-      still redirects to the empty releases page), and stayed active through the check window: still
-      "Experimental," still recommending testnet-10-only use ahead of a first stable v1, with commits as
-      recent as August 24, 2026, so the release Argent waits on still has not happened. The template's Scope
+      than adding new unrelated surface area. The audit gate is independently visible upstream, and it
+      moved for the first time on August 30, 2026: kaspanet/silverscript published v1-rc1, its first
+      release ever, marked pre-release, by someone235 at 12:05 UTC. The notes call it "the first release
+      candidate for Silverscript v1, following an extensive review, testing, and standardization process"
+      and say "unless substantial issues are discovered, v1 will be released for mainnet use one week
+      after this release candidate." Read that precisely: review, testing and standardization are not a
+      security audit, and the notes name no audit, so the audit Argent's own README waits on has still not
+      been evidenced. Every earlier version of this claim said silverscript carried zero releases and zero
+      tags; that was true through the August 24 check and is now false. The repo itself is otherwise
+      unchanged: 49 stars, 26 forks, 176 commits, README still "Status: Experimental, the project is
+      unstable and may introduce breaking changes without notice," still recommending the bytecode
+      artifact be used "only on testnet-10 for now, at least until first stable release (v1)."
+      Argent's own three repos still carry zero releases and zero tags. The template's Scope
       section says it "does not
       connect to a Kaspa network, manage a wallet, or submit transactions," and its VS Code extension for
       .ag files is linked out of the Argent checkout rather than shipped by the template. An
