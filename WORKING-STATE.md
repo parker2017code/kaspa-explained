@@ -398,6 +398,77 @@ relaunch the sizing work from scratch, then continue down the list two above: re
 ~17,900 unread lines under `scripts/`, and independently re-judge the demos that were
 found-and-fixed by the same agent that built them.
 
+## PUSHED, 30 Aug 2026. Sonnet session, four agents merged and deployed.
+
+`origin/main` and local both at `43ddef9`, clean-clone verified. Everything from the
+HANDOFF above is now closed:
+
+    stable contrast (feed-excluded)   220 -> 0
+    touch-target                       88 -> 0
+    near-overlap (stable)              86 -> 0
+    overlap (real intersection)         8 -> 0
+    font-size                          70 -> 0
+
+Four Sonnet agents ran in isolated worktrees (2 concurrent max), each required to prove
+its own work with the real blocking gate and real browser screenshots, then merged by
+hand and re-verified against the merged tree before push, not trusted individually:
+
+- **Contrast**: kept and verified a prior interrupted agent's diagnosis (a fade
+  animation was sampled mid-fade by the gate, at ~100ms, reading every color inside it
+  at a fraction of resting contrast) rather than redoing the work. Real per-page fixes
+  followed the existing `--cyan-pill`/`--green-pill` precedent: a dedicated darker
+  variant for text-on-own-tint, never a change to the shared base token. Self-caught
+  a light-theme regression from an unscoped dark-default custom property.
+- **Sizing**: two of the font-size violations were real rendering bugs, not threshold
+  nitpicks. `kaspa-origin-story.html`'s chart had a fixed viewBox against a shrinking
+  container: true rendered text was 3.4px at 390px wide, not the 10px the source
+  suggested. Fixed with the same dynamic-viewBox pattern another chart already used.
+- **Coverage-control bug, found live, not from the gate**: the owner spotted the
+  model picker's "Coverage" dropdown reading the same model count at every threshold,
+  0% through 100%. Traced to `scripts/emit-picker-blob.py`: the per-model `a`
+  (attempted) flag is set to 1 whenever a metric has *any* value, including
+  sibling-carried or imputed ones, not only genuine measurements, and by roster-
+  inclusion time nearly every model clears that bar on all ten dial metrics. Fixed in
+  `model-picker.html`'s `score()`, which now keys coverage off the existing `e`
+  (estimated) flag instead. Verified live: the dropdown now reads 6 to 21 models per
+  threshold, and the results list itself responds when the bar moves.
+- **Scripts audit** (~2,700 of the ~17,900 unread lines, everything actually wired
+  into `check-site.sh`; ~4,500 lines of one-off/manual scripts remain unread): found
+  and fixed two more silent-wrong-answer bugs. `measure-dial-discrimination.py`
+  computed metric trust with a stale, partially-filled state where the live page's
+  own `inMetricTrust` reentrancy guard forces an empty one; `omniAccuracy`'s trust
+  came out `1.000` under the bug versus the correct `0.813`. `audit-content-flow.mjs`
+  stripped `<details>` blocks before stripping `<style>`/`<script>`, so a CSS comment
+  containing the literal text "details" could make the regex hunt for the next real
+  closing tag far later in the document and silently swallow real content in between;
+  proven by planting 2,300 extra words that the old ordering still missed and the
+  fixed ordering correctly caught. Also surfaced, not fixed (out of script-audit
+  scope): `model-picker.html`'s "know" dial panel prints 50%/50% but the real blend
+  is 45%/55%. Filed as `task_5ad7f33a`.
+
+**Confirmed pre-existing, not caused by tonight's work** (present at `0570da9`, the
+commit before any of this landed, and flagged independently by three separate agents):
+6 density-budget pre-interaction-word violations (`skeptical-case.html` 446,
+`why-kaspa-matters.html` 386, `kaspa-mining.html` 177, `status.html` 172,
+`crypto-from-scratch.html` 157, `kaspa-origin-story.html` 154, all against a 150 limit)
+and 4 demo-surface word-budget violations (`kaspa-mining.html .fm-demo` 143,
+`kaspa-origin-story.html #dag-time-demo` 134, `kaspa-mining.html .ac-demo` 132,
+`kips.html #parameterless-demo` 126, all against a 120 limit). Both gates are
+non-blocking by default (`DENSITY_GATE_BLOCKING`/demo-surface are advisory unless
+explicitly forced), so `git push`'s pre-push hook passes; only the manually-invoked
+5-flag full blocking form fails on them. Not touched this pass. Real editorial trims,
+not gate-script fixes.
+
+**Not done, stated plainly:** the 8 demos fixed earlier this session were judged and
+then fixed by the same agent that built them, still never independently re-judged by
+a fresh reviewer. ~4,500 lines of one-off scripts under `scripts/` still unread. The
+raw per-model, per-figure data (all 23 models, real vs. estimated marked per cell) is
+already embedded in `model-picker.html`'s page source and readable by anyone, and the
+picker's own rows already show a live "X% estimated" figure, but there is no page on
+the site presenting the full 23x10 table in one place; a reader has to read the
+embedded JS by hand to get that granularity. A prototype of that table was built as a
+one-off artifact outside the repo, not shipped to the site.
+
 # kaspa explained working state
 
 
