@@ -1127,12 +1127,14 @@
         if (fm !== null && fm !== undefined) { num += W[j] * fm; den += W[j]; }
         continue;
       }
-      covw += W[j];
-      num += W[j] * vec[j]; den += W[j];
       // An estimated figure still scores, and still has to be counted apart
       // from a measured one, or a row filled in from its own max-effort twin
-      // would read as fully measured.
-      if (m.e && m.e[j]) estw += W[j];
+      // would read as fully measured. Coverage weight only takes figures that
+      // were not filled in this way: an estimate is not something the model
+      // was actually measured on, so it cannot count toward how much of the
+      // question got a real answer.
+      if (m.e && m.e[j]) { estw += W[j]; } else { covw += W[j]; }
+      num += W[j] * vec[j]; den += W[j];
     }
     // No coverage floor by default: the roster is every model these boards
     // publish, not an auto-derived pool that needed a floor to keep weak
