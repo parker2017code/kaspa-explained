@@ -14,11 +14,6 @@ carry.
   of lines it looks like: needs polling, rate limiting, a visible failure
   path (a silent fallback showing stale numbers as current is worse than
   an error), and a loading-state decision. Its own piece of work.
-- **Three thin disclosure panels.** `what-is-kaspa.html` "Why Bitcoin
-  chose the opposite trade-off", `why-kaspa-matters.html` "Why evidence
-  next", `crypto-from-scratch.html` "NIST's definition" open onto
-  one-sentence restatements. A disclosure that opens onto a restatement
-  teaches a reader not to open the next one: carry real depth or inline.
 - **The adversarial pass, never run to completion.** Break it,
   misunderstand it, check it, cross-read it; by agents that built none of
   it; every finding fixed and re-checked by a different agent than the one
