@@ -16,8 +16,9 @@ He gives standing instructions and expects them held without re-asking. The ones
   the record. Update it as work completes, not at the end.
 - **Do not burn tokens.** Exploring is fine. Redundant verification loops and long
   restatements are not.
-- **Maximum two agents, one alive at a time, Opus, and no agent may spawn subagents.**
-  Verified zero subagent spawns across seven agent instances so far.
+- **Agent limits are whatever he last said, not a fixed number.** They have moved
+  several times (two total, then five, then three concurrent, model changing from
+  Opus to Sonnet to Fable). No agent may spawn subagents; that part has never moved.
 - **Never touch or resize his Chrome.** Use playwright with its own viewport or the
   fixed-width iframe harness. His wifi drops, which is what keeps killing agents; that is
   environmental, not a fault in their work.
