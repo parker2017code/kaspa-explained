@@ -513,3 +513,70 @@
     });
   });
 })();
+
+/* Floating info and definition panels: keep them inside the viewport.
+   `.info-affordance__panel` and `.term-def__panel` are absolutely positioned
+   and centered on their trigger (`left: 50%` plus a `translate(-50%, ...)`),
+   so a trigger near the right edge pushes the panel past the viewport. `html`
+   and `body` both carry `overflow-x: hidden`, so the excess is not scrollable,
+   it is clipped: the last words of the definition are unreachable at every
+   input method. Measured before this ran, at the default dark theme:
+   `#cs-latency-panel` on what-is-kaspa.html rendered right=405 against a
+   390px viewport and right=324 against 320px, and
+   `#home-cs-assumption-panel` on index.html overflowed at 320px.
+   styles.css has been patched three times against this by shrinking
+   `max-width` (see its "Defect 2" note, which records the remaining overflow
+   as positioning rather than width and says the fix has to happen elsewhere).
+   Width is the wrong lever: a panel centered on a trigger 20px from the edge
+   overflows at any width. This shifts the panel instead.
+   The shift goes on the `translate` property, not `transform`, because the
+   two are independent: `translate` is applied first and composes with
+   whatever `transform` the cascade already set, so no CSS rule has to change
+   and the page's own scoped demo CSS (`.fm-demo` sets `right: 0` rather than
+   centering) is corrected by the same measurement.
+   Panels are `visibility: hidden` when closed, which still produces a real
+   layout box, so the load pass can measure a panel nobody has opened yet. */
+(function () {
+  const SELECTOR = ".info-affordance__panel, .term-def__panel";
+  const GUTTER = 8;
+
+  function clamp(panel) {
+    if (!panel) return;
+    panel.style.translate = "";
+    const viewport = document.documentElement.clientWidth;
+    const box = panel.getBoundingClientRect();
+    if (box.width === 0) return;
+    let shift = 0;
+    if (box.right > viewport - GUTTER) shift = viewport - GUTTER - box.right;
+    if (box.left + shift < GUTTER) shift = GUTTER - box.left;
+    if (Math.abs(shift) >= 0.5) panel.style.translate = Math.round(shift) + "px";
+  }
+
+  function clampAll() {
+    document.querySelectorAll(SELECTOR).forEach(clamp);
+  }
+
+  let queued = false;
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; clampAll(); });
+  }
+
+  // Re-measure the one panel about to appear: a demo that re-lays out its own
+  // readout between page load and the hover moves the trigger, and a shift
+  // computed at load would then be stale.
+  function clampFrom(target) {
+    if (!target || !target.closest) return;
+    const host = target.closest(".info-affordance, .term-def");
+    if (host) clamp(host.querySelector(SELECTOR));
+  }
+
+  document.addEventListener("pointerover", (event) => clampFrom(event.target), true);
+  document.addEventListener("focusin", (event) => clampFrom(event.target), true);
+  document.addEventListener("click", (event) => clampFrom(event.target), true);
+  window.addEventListener("resize", schedule);
+  window.addEventListener("load", schedule);
+  if (document.readyState === "complete" || document.readyState === "interactive") schedule();
+  else document.addEventListener("DOMContentLoaded", schedule);
+})();
