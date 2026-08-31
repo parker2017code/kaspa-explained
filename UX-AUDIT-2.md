@@ -253,3 +253,267 @@ sounding zero in a state where it had measured nothing.
 as opposed to focus visibility. Light theme measured separately. Coarse-pointer
 behavior. Every demo driven into its disabled, loading, and empty states
 deliberately rather than only where a page enters them on its own.
+
+---
+
+# Third pass, 31 August 2026: the five gaps the section above names
+
+The closing section above lists what neither of the first two passes covered:
+post-interaction overflow at 320px, tab order as opposed to focus visibility,
+light theme measured separately, coarse-pointer behavior, and every demo
+driven into its states deliberately. That list is what this pass measured.
+Nine defects found, nine fixed, in five classes.
+
+Every harness below was run against a planted defect and watched go red before
+its clean result was believed. Two were wrong on the first try and the planted
+defect is what caught it; both are recorded where they happened.
+
+## The check that could not fail
+
+`html` and `body` both set `overflow-x: hidden` (styles.css:101, 128).
+`document.scrollWidth` therefore can never exceed `clientWidth`, so every
+overflow assertion written against that comparison, including
+`scripts/check-render.mjs` assertion 1 and both prior passes' "zero horizontal
+overflow at 390px", is a check that cannot go red. Content wider than the
+viewport is not scrolled to. It is clipped, which is worse than a scrollbar:
+unreachable by mouse, keyboard and touch alike, with nothing to hint it exists.
+
+Measuring elements rather than the document, and counting one only when
+nothing between it and `<body>` can be scrolled to reveal it, found real
+clipping that the document-level assertion had reported as zero for two passes.
+
+## 1. Tab order
+
+Walked with real `Tab` presses on all 22 pages at 1280px, recording the
+focused element's document position at every stop, then comparing the tab
+sequence against visual order. A multi-column link list is read column by
+column, not row by row, so a pair counts as out of order only when the two
+controls overlap horizontally, which is to say sit in the same column.
+`position: fixed` and `position: sticky` controls are excluded: their document
+y is a viewport offset, not a place in the reading order.
+
+**Clean, and the check can fail.** 1,105 tab stops across 22 pages. Zero
+controls out of order, zero positive `tabindex`, zero focus traps, zero
+focusable elements that should not be: nothing `aria-hidden`, nothing without
+an accessible name, nothing zero-area. The negative control plants a positive
+`tabindex`, an `aria-hidden` focusable, and one control moved to the top of the
+page without moving in the tab sequence, and the detector reports all three.
+
+The first version of that detector had its inversion comparison backwards and
+returned "clean" on every page for a reason that had nothing to do with the
+site. The planted defect is what exposed it.
+
+## 2. Post-interaction overflow, 390px and 320px
+
+Every `<details>` opened, every button and `[role="button"]` and `summary`
+clicked one at a time, every slider driven to both ends, every text input
+filled with a 200-character string and then emptied and submitted, with a
+measurement after each action. Both themes.
+
+Three defects, all at 320px, all fixed:
+
+| Page | Control | Trigger | Measured |
+| --- | --- | --- | --- |
+| why-kaspa-matters.html | confirmation-risk readout row | merchant-share slider at 60 | row ran to x=328 against a 320px viewport |
+| build-on-kaspa.html | covenant-breaker vault rule | opening "Vault details and rules" | rule text ran to x=333 |
+| kips.html | KCC-0020 quote citation | cold load | bare-URL link text 280px wide in a 237px box, 9px past the viewport, cutting the issue number |
+
+Two classes. The first two are `min-width: auto`, the default for a grid or
+flex item, which refuses to shrink below the content's min-content width;
+`min-width: 0` on the row and on its text column fixes both. The third is a URL
+with no break opportunity in an element whose `overflow-wrap` is `normal`.
+
+After: zero clipped elements at either width, in either theme, after every
+action above.
+
+The detector missed the third shape on its first run. An unbreakable token in a
+block overflows the box without the element's own rect moving, so a
+box-geometry test cannot see it. The planted defect caught that too. The
+element-content test it needed then produced two false positives, both
+`.info-affordance` wrappers whose `scrollWidth` counts an absolutely positioned
+panel, which is why the final predicate skips elements with out-of-flow
+descendants.
+
+## 3. Floating panels clipped at the viewport edge
+
+`.info-affordance__panel` and `.term-def__panel` are absolutely positioned and
+centered on their trigger, so a trigger near either edge pushes the panel
+outside the viewport, where the `overflow-x: hidden` above clips it.
+
+Measured with nav.js blanked, over all 22 pages at 390px and 320px: **15 panels
+outside the viewport across 7 pages**, 10 past the right edge (worst
+`#tps-info-panel` on kaspa-mining.html at right=435 against 390) and 5 past the
+left edge (worst `#ln-intro-info-panel` on what-is-kaspa.html at left=-14).
+Left-edge clipping had never been looked for.
+
+Three of the fifteen are the fee-market demo panels that styles.css's own
+"Defect 2" note records as unfixed, having correctly diagnosed the remaining
+overflow as positioning rather than width and said the fix had to happen
+outside that rule. Width was the wrong lever and had already been tried three
+times: a panel centered on a trigger 20px from the edge overflows at any width.
+nav.js now measures the rendered box and shifts it back inside with an 8px
+gutter, on the `translate` property rather than `transform` so it composes with
+whatever the cascade already set and no CSS rule has to change.
+
+After: 0 panels outside the viewport, both themes.
+
+## 4. Light theme, measured separately
+
+Two findings the dark-theme passes could not have seen, and one correction to
+this document's own method.
+
+**The entry doors, light only.** `#door-one` and `#door-two` on
+start-here.html changed zero computed properties on hover in light and changed
+their background in dark. styles.css:5660 carries a
+`:root[data-theme="light"] .path-grid a:hover` reset at specificity (0,3,1),
+which outranks the (0,2,1) fix at styles.css:7700 in light only. A fix the
+previous pass verified in dark was silently reverted in the other theme, which
+is exactly the defect shape that pass named and could not measure, one theme
+further on.
+
+**Eighty of ninety-two `<summary>` elements, both themes.** Screenshotted at
+rest and hovered and compared byte for byte, 80 of the site's 92 summaries were
+identical on hover, across 14 pages. styles.css defined no `summary:hover` at
+all. The 12 that do respond are covered by six page-scoped rules in
+model-picker.html and chain-comparer.html, and those are the measure this is
+judged against: the site already treats a disclosure trigger as something that
+answers the pointer, and most of them were missed. Fixed with an inset shadow
+rather than a background, because many of these summaries carry a background
+already and a background would replace it. After: 0 of 92 identical, both
+themes.
+
+**Computed style is not enough for a slider, and a signature sweep says so
+wrongly.** A computed-style sweep reported 9 range sliders as having no hover
+or press response in either theme. That is false. `getComputedStyle` cannot
+read `::-webkit-slider-thumb`, because Chromium does not expose UA shadow
+pseudo-elements, and the thumb is where the feedback lives. Screenshotting each
+slider at rest, hovered and pressed shows all 42 responding in both themes.
+Recorded because it is the mirror image of the false positive the second pass
+recorded for `.term-def`: there the change sat on a descendant the sweep did
+not walk, here on a pseudo-element no sweep can walk.
+
+**The four nav links reported dead are correct as they stand.** On each page,
+the nav link for that page carries `aria-current="page"` and already renders in
+the emphasized state hover would move it to. The state reaches assistive
+technology through the attribute, not through color alone.
+
+## 5. Coarse pointer
+
+All 22 pages in a touch context reporting `(pointer: coarse)` and
+`(hover: none)`, with every `.term-def` and `.info-affordance` tapped using
+real touch input.
+
+**Clean.** 0 affordances that a tap did not open, 0 hover-only reveal rules
+without a click or focus equivalent anywhere in the stylesheet, 0 pages where
+the media query reported the wrong pointer type. `.info-affordance` carries an
+explicit click toggle. `.term-def` has no click handler at all and relies on
+`:focus-within`, which a tap on its `tabindex="0"` host satisfies: measured
+directly, after a tap `focus-within` matches, the activeElement is the
+`.term-def` span, and the panel goes visible.
+
+The site has **zero** `@media (hover: hover)` guards and needs none on this
+evidence, because every hover reveal has a focus or click path beside it.
+
+Removing `tabindex` alone does not make these panels unreachable: Chromium's
+touch emulation produces a sticky `:hover` after a tap exactly as a real phone
+browser does. The negative control therefore deletes the `:hover` reveal rule
+as well, and with both paths gone all 7 panels on the test page go unreachable,
+which is what makes the clean result mean anything.
+
+## 6. Demos driven into their states deliberately
+
+Every live-fetching page loaded five times with its external requests
+intercepted: aborted, HTTP 500, HTTP 403 with a rate-limit body, HTTP 200 with
+an empty body, and never resolving at all.
+
+**Two defects in the same shape, both fixed.** argent-explained.html and
+kips.html each ask the GitHub rate-limit endpoint before spending quota, and
+each read the answer as
+`limits && limits.resources && limits.resources.core ? remaining : 0`. That
+turns "could not ask" into "asked, and the answer was zero".
+argent-explained.html printed "GitHub's public quota for this network is used
+up" on HTTP 500, on HTTP 403, and on an empty 200 body, three states in which
+it held no quota reading at all. Only the abort case, which throws into the
+catch, said the read had failed. kips.html carries a `quotaLeft` flag for
+exactly this distinction and the flag was false in all three of the same
+states. Both now require a real numeric reading before the quota sentence is
+allowed. No new strings: each page already carried the "live read failed"
+wording.
+
+kips.html separately treated a 200 that parses to zero KIP rows as a quiet
+success and returned without restamping, leaving its caption saying the table
+"refreshes live on load" when nothing had refreshed. Now a failure like any
+other. The adjacent KCC pull-request list keeps its quiet return on purpose,
+because a zero-length list there is a real answer rather than a broken read.
+
+After, across all five states on all six live surfaces: every caption names the
+cause it actually observed, no table renders empty, no readout is left on a
+placeholder, and no numeric field shows a non-number.
+
+**One thing found and deliberately not changed.** what-is-kaspa.html's livenet
+section keeps the standing line "a live read of Kaspa's own public API, not a
+simulation" in every failure state, including the one where the request never
+resolves. The demo's own readout restamps correctly; the prose above it does
+not, and the reader meets the prose first. Left alone because this pass was
+scoped out of changing prose and claim text. It is the same defect class as the
+zero the second pass found this demo printing, one layer up, and it wants an
+owner decision rather than an agent's rewrite.
+
+## 7. Screen-reader semantics, disclosure state, print
+
+**Custom `[role="button"]` controls: clean.** 61 non-button elements carry
+`role="button"`. All 61 are focusable and all 61 have an accessible name.
+Driven with real input rather than synthesized keyboard events, the GHOSTDAG
+playground's blocks produce identical results from a mouse click, an Enter
+press and a Space press. An earlier sweep reported 15 of them as answering
+neither key; that was the harness, because a synthesized keyboard event does
+not trigger the browser's activation behavior and focusing the element had
+already opened the panels being compared.
+
+**Live regions: clean.** 32 `aria-live` regions. The two a first sweep reported
+as permanently empty, `#gp-mine-caption` and `#gp-focus-caption`, both fill on
+the actions they report on; the sweep had clicked the demo's own reset
+afterwards.
+
+**Disclosure state across navigation: clean.** Every in-page anchor whose
+target sits inside a closed `<details>`, on all 22 pages, opens that disclosure
+and lands the target in the viewport. nav.js's ancestor reveal needed nothing.
+
+**Print: one defect, fixed.** styles.css carried no `@media print` block. The
+fixed pill header printed on 22 of 22 pages, over the top of the first page,
+with its backdrop strip and the footer link list, and nothing inside a closed
+`<details>` printed at all. Counting the words `innerText` renders under print
+media, the block adds **12,377 words** across the site: 5,032 on
+what-is-kaspa.html, 1,650 on kips.html, 1,392 on model-picker.html, 1,310 on
+kaspa-mining.html.
+
+Revealing that content takes two rules rather than one. Chromium hides a closed
+disclosure's contents through
+`::details-content { content-visibility: hidden }`, which a `display` rule on
+the children cannot reach: with the `display` rule alone the sweep gained 3,172
+words, almost all of them on a single page.
+
+## Cache keys, found while bumping them
+
+`demos/index.html` was pinned to the 25 August stylesheet and nav script while
+the 21 root pages were six days ahead, and `design/patterns.html` and
+`design/page-template.html` were a week behind on the stylesheet. Every key now
+matches across all 24 files. The previous pass's note about shipping CSS
+without a bump describes the failure; this is the same failure standing in
+three files nobody swept.
+
+## Coverage I did not achieve
+
+- The hover, press and focus sweep drives one control at a time and cannot see
+  a state that needs two controls in a particular combination.
+- Demos were driven into their fetch-failure, loading and empty states. Their
+  `:disabled` states were exercised only where a control disables itself under
+  some input. I did not force `disabled` onto controls that never set it, so a
+  disabled style that exists in CSS and is never reached is unmeasured here.
+- Tab order was measured at 1280px only. A layout that reflows at 390px could
+  reorder columns against a sequence that is correct at desktop width.
+- Print was measured as rendered word count and chrome suppression under
+  emulated print media, not as a paginated PDF. Column breaks, orphans and page
+  break placement are unmeasured.
+- The livenet prose on what-is-kaspa.html, named above, is a real finding left
+  unfixed by scope.
