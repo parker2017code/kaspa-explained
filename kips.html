@@ -265,7 +265,12 @@
   .kip-supply-split-demo .quotes-body{ margin-top:12px; }
   .kip-supply-split-demo blockquote{ margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid var(--cyan); font-size:16px; line-height:1.5; }
   .kip-supply-split-demo cite{ display:block; font-style:normal; font-size:16px; color:var(--faint); margin-top:4px; }
-  .kip-supply-split-demo cite a{ color:var(--faint); }
+  /* The citation's link text is a bare URL, which carries no break
+     opportunity, so at 320px it rendered 280px wide inside a 237px box and
+     ran 9px past the viewport, where html/body overflow-x:hidden clipped the
+     issue number rather than letting it scroll. */
+  .kip-supply-split-demo cite{ overflow-wrap:anywhere; }
+  .kip-supply-split-demo cite a{ color:var(--faint); overflow-wrap:anywhere; }
   .kip-supply-split-demo .note{ font-size:16px; color:var(--faint); margin-top:10px; }
   .kip-supply-split-demo a:focus-visible,
   .kip-supply-split-demo button:focus-visible{

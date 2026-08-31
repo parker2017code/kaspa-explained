@@ -282,14 +282,19 @@
           .cr-demo .cr-curve { fill: none; stroke-width: 2.4; }
           .cr-demo .cr-curve-label { font-size: 16px; font-weight: 600; }
           .cr-demo .cr-readout { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; margin-bottom: 16px; }
+          /* min-width: 0 on the row and on its 1fr message column: a grid
+             item defaults to min-width: auto and refuses to shrink below its
+             content's min-content width, so at 320px the row ran to x=328
+             against a 320px viewport and html/body overflow-x:hidden clipped
+             the tail instead of letting it scroll. */
           .cr-demo .cr-readout li {
             display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 10px;
             padding: 10px 12px; border-radius: 14px; background: var(--cr-card-bg); font-size: 16px;
-            box-shadow: var(--cr-shadow-card);
+            box-shadow: var(--cr-shadow-card); min-width: 0;
           }
           .cr-demo .cr-readout .cr-swatch { width: 10px; height: 10px; border-radius: 3px; }
           .cr-demo .cr-readout b { color: var(--cr-text); }
-          .cr-demo .cr-readout .cr-msg { color: var(--cr-muted); }
+          .cr-demo .cr-readout .cr-msg { color: var(--cr-muted); min-width: 0; overflow-wrap: anywhere; }
           .cr-demo .cr-readout .cr-wait { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--cr-text); text-align: right; white-space: nowrap; }
           .cr-demo .cr-readout .cr-wait.cr-pulse { animation: cr-wait-pulse 260ms ease-out; }
           @keyframes cr-wait-pulse { from { color: var(--cr-green); } to { color: var(--cr-text); } }
