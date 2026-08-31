@@ -148,7 +148,6 @@
           return { w, h };
         }
 
-        function laneY(h, miner) { return 20 + miner * (h - 40) / 3; }
 
         // These are blocks, so they are drawn as blocks. A circle reads as a
         // data point; a rounded rectangle reads as the thing being described.
@@ -228,7 +227,7 @@
           chainCtx.clearRect(0, 0, cs.w, cs.h);
           const style = getComputedStyle(document.getElementById(rootId));
           const green = style.getPropertyValue('--green').trim();
-          const pink = style.getPropertyValue('--pink').trim();
+          const pink = style.getPropertyValue('--orange').trim();
           const line = style.getPropertyValue('--line-bright').trim();
 
           chainCtx.strokeStyle = line;

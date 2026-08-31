@@ -117,7 +117,7 @@
           --faint:#9d988c;
           --cyan:#2e9cff;
           --green:#66d1c1;
-          --pink:#ff9f0a;
+          --orange:#ff9f0a;
           --control-bg:#2c2c2e;
           --control-hover:#3a3a3c;
           --field-bg:#221f1c;
@@ -134,7 +134,7 @@
           --faint:#6b6659;
           --cyan:#0068da;
           --green:#0c7a69;
-          --pink:#b14f00;
+          --orange:#b14f00;
           --control-bg:#e8e8ed;
           --control-hover:#dededf;
           --field-bg:#ffffff;
@@ -268,7 +268,7 @@
           color: var(--muted);
           font-variant-numeric: tabular-nums;
         }
-        #collision-demo .panel .panel-title .stat b { color: var(--pink); }
+        #collision-demo .panel .panel-title .stat b { color: var(--orange); }
         #collision-demo .panel.dag .panel-title .stat b { color: var(--green); }
         #collision-demo .legend i.blk {
           width: 15px; height: 11px; border-radius: 3px; display: inline-block;
@@ -390,7 +390,7 @@
         <div class="panel">
           <p class="panel-title">Single chain <span class="stat" id="cs-chainStat">so far: 0 kept, 0 thrown away</span></p>
           <canvas id="cs-chainCanvas" role="img" aria-label="Single chain of recent blocks, colored by whether each was kept or discarded."></canvas>
-          <div class="legend"><span><i class="blk" style="background:var(--green)"></i>kept, on the chain</span><span><i class="blk hollow" style="border-color:var(--pink)"></i>thrown away, off it</span></div>
+          <div class="legend"><span><i class="blk" style="background:var(--green)"></i>kept, on the chain</span><span><i class="blk hollow" style="border-color:var(--orange)"></i>thrown away, off it</span></div>
         </div>
       
         <div class="panel dag">
@@ -442,14 +442,14 @@
     --line:#4a453d; --line-bright:#746e60;
     --text:#f8f5ef; --muted:#b6b0a7; --faint:#9d988c;
     --green:#66d1c1; --green-rgb:102,209,193; --cyan:#2e9cff; --cyan-rgb:41,151,255;
-    --purple:#bf5af2; --pink:#ff9f0a; --pink-rgb:255,159,10; --ink:#06201b;
-    /* .node.blue/.node.red set text color to --cyan/--pink directly, on a
+    --purple:#bf5af2; --orange:#ff9f0a; --orange-rgb:255,159,10; --ink:#06201b;
+    /* .node.blue/.node.red set text color to --cyan/--orange directly, on a
        background that is itself a 30% tint of that same color mixed into
        --panel-strong. Self-tinted text-on-own-background measured 3.50:1
        (blue) and 4.22:1 (red), under the 4.5:1 floor; a dedicated lighter
-       node-label variant, not a change to --cyan/--pink (still correct for
+       node-label variant, not a change to --cyan/--orange (still correct for
        the border and legend swatch uses on this page). */
-    --cyan-node:#63b5ff; --pink-node:#ffab29;
+    --cyan-node:#63b5ff; --orange-node:#ffab29;
     --accent-soft:rgba(102,209,193,.12);
     --control-bg:#2c2c2e; --control-hover:#3a3a3c;
     --field-bg:#221f1c; --field-line:#4a453d;
@@ -464,8 +464,8 @@
     --line:#d8d4cb; --line-bright:#bcb6a8;
     --text:#211e1a; --muted:#646057; --faint:#6b6659;
     --green:#0c7a69; --green-rgb:14,124,107; --cyan:#0068da; --cyan-rgb:0,113,227;
-    --purple:#6e56cf; --pink:#b14f00; --pink-rgb:178,80,0; --ink:#ffffff;
-    --cyan-node:#0052ac; --pink-node:#8d3f00; /* darker node-label variant, see dark-theme comment above */
+    --purple:#6e56cf; --orange:#b14f00; --orange-rgb:178,80,0; --ink:#ffffff;
+    --cyan-node:#0052ac; --orange-node:#8d3f00; /* darker node-label variant, see dark-theme comment above */
     /* Same --green/--accent-soft pair styles.css's own --green-pill fixes
        (text set in --green on --accent-soft); this page's local copy of
        both values matches that one exactly, so the same vetted #0a6a5c
@@ -520,7 +520,7 @@
     outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
     outline-offset:3px;
   }
-  #ghostdag-demo button.btn[aria-pressed="true"]{background:var(--accent-soft); color:var(--pink);}
+  #ghostdag-demo button.btn[aria-pressed="true"]{background:var(--accent-soft); color:var(--orange);}
   #ghostdag-demo button.btn:disabled{opacity:.4; cursor:not-allowed;}
   #ghostdag-demo label.klabel{font-size:16px; display:flex; gap:.5rem; align-items:center; color:var(--muted);}
   #ghostdag-demo input[type=range]{
@@ -569,7 +569,7 @@
   #ghostdag-demo .node.blue{border-radius:50%; background:color-mix(in srgb, var(--cyan) 30%, var(--panel-strong)); border-color:var(--cyan); color:var(--cyan-node);}
   #ghostdag-demo .node.red{
     border-radius:8px; transform:translate(-50%,-50%) rotate(45deg);
-    background:color-mix(in srgb, var(--pink) 30%, var(--panel-strong)); border-color:var(--pink); color:var(--pink-node);
+    background:color-mix(in srgb, var(--orange) 30%, var(--panel-strong)); border-color:var(--orange); color:var(--orange-node);
   }
   #ghostdag-demo .node.red .node-label{transform:rotate(-45deg); display:block;}
   #ghostdag-demo .node.onspine{box-shadow:0 0 0 3px color-mix(in srgb, var(--green) 55%, transparent);}
@@ -578,7 +578,7 @@
   }
   #ghostdag-demo .node.hl-self{outline:3px solid var(--text); outline-offset:2px;}
   #ghostdag-demo .node.hl-past{box-shadow:0 0 0 4px color-mix(in srgb, var(--cyan) 65%, transparent);}
-  #ghostdag-demo .node.hl-future{box-shadow:0 0 0 4px color-mix(in srgb, var(--pink) 65%, transparent);}
+  #ghostdag-demo .node.hl-future{box-shadow:0 0 0 4px color-mix(in srgb, var(--orange) 65%, transparent);}
   #ghostdag-demo .node.hl-anticone{box-shadow:0 0 0 4px color-mix(in srgb, var(--purple) 75%, transparent); }
   #ghostdag-demo .stage.has-focus .node.hl-dim{opacity:.28;}
   #ghostdag-demo .stage.has-focus line.hl-dim{opacity:.15;}
@@ -586,7 +586,7 @@
   #ghostdag-demo .legend{display:flex; flex-wrap:wrap; gap:1rem; font-size:16px; color:var(--muted); margin-top:.75rem;}
   #ghostdag-demo .legend span.swatch{display:inline-block; width:12px; height:12px; margin-right:.35rem; vertical-align:-1px;}
   #ghostdag-demo .legend .sw-blue{border-radius:50%; background:var(--cyan);}
-  #ghostdag-demo .legend .sw-red{background:var(--pink); transform:rotate(45deg);}
+  #ghostdag-demo .legend .sw-red{background:var(--orange); transform:rotate(45deg);}
   #ghostdag-demo .hover-hint{font-size:16px; color:var(--faint); margin:.4rem 0 0;}
   #ghostdag-demo .focus-caption{
     font-size:16px; color:var(--text); background:var(--field-bg); border:1px solid var(--field-line);
@@ -609,7 +609,7 @@
   #ghostdag-demo .node.sink-tip{box-shadow:0 0 0 4px color-mix(in srgb, var(--purple) 55%, transparent);}
 
   #ghostdag-demo .verdict-box{border-radius:14px; padding:.9rem 1rem; margin-top:1rem; font-size:16px;}
-  #ghostdag-demo .verdict-box.fail{background:color-mix(in srgb, var(--pink) 12%, transparent);}
+  #ghostdag-demo .verdict-box.fail{background:color-mix(in srgb, var(--orange) 12%, transparent);}
   #ghostdag-demo .verdict-box.pass{background:color-mix(in srgb, var(--green) 12%, transparent);}
   #ghostdag-demo .verdict-box strong{display:block; margin-bottom:.25rem;}
 
@@ -624,7 +624,7 @@
   }
   #ghostdag-demo ol.order-list li .mk{width:10px; height:10px; display:inline-block;}
   #ghostdag-demo ol.order-list li.o-blue .mk{border-radius:50%; background:var(--cyan);}
-  #ghostdag-demo ol.order-list li.o-red .mk{background:var(--pink); transform:rotate(45deg);}
+  #ghostdag-demo ol.order-list li.o-red .mk{background:var(--orange); transform:rotate(45deg);}
   #ghostdag-demo ol.order-list li.o-spine{border-color:var(--green);}
 
   #ghostdag-demo h2{font-family:var(--display-font); font-size:1.15rem; margin:1.5rem 0 .5rem;}
@@ -1421,7 +1421,7 @@
     --green: #66d1c1;
     --cyan: #2e9cff;
     --purple: #bf5af2;
-    --pink: #ff9f0a;
+    --orange: #ff9f0a;
     --ink: #06201b;
     --accent-soft: rgba(102, 209, 193, .12);
     --control-bg: #2c2c2e;
@@ -1446,7 +1446,7 @@
     --green: #0c7a69;
     --cyan: #0068da;
     --purple: #6e56cf;
-    --pink: #b14f00;
+    --orange: #b14f00;
     --ink: #ffffff;
     --accent-soft: rgba(14, 124, 107, .1);
     /* Same --green/--accent-soft pair styles.css's own --green-pill fixes
@@ -1595,8 +1595,8 @@
     background: var(--green);
     transition: width .15s ease;
   }
-  #masscalc-demo .bar-row.binding .bar-fill { background: var(--pink); }
-  #masscalc-demo .bar-row.binding .bar-head .name { color: var(--pink); }
+  #masscalc-demo .bar-row.binding .bar-fill { background: var(--orange); }
+  #masscalc-demo .bar-row.binding .bar-head .name { color: var(--orange); }
 
   #masscalc-demo .result {
     margin-top: 16px;
@@ -2111,7 +2111,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
     --line: #4a453d; --line-bright: #746e60;
     --text: #f8f5ef; --muted: #b6b0a7; --faint: #9d988c;
-    --green: #66d1c1; --cyan: #2e9cff; --purple: #bf5af2; --pink: #ff9f0a;
+    --green: #66d1c1; --cyan: #2e9cff; --purple: #bf5af2; --orange: #ff9f0a;
     --red: #ff6961; --ink: #06201b;
     --control-bg: #2c2c2e; --control-hover: #3a3a3c;
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
@@ -2123,7 +2123,7 @@ TPS = tx_per_block × 10 blocks/second</span>
     --bg: #fbfaf6; --bg-2: #f3f0ea; --panel-strong: #fbfaf6; --card-bg: #fbfaf6;
     --line: #d8d4cb; --line-bright: #bcb6a8;
     --text: #211e1a; --muted: #646057; --faint: #6b6659;
-    --green: #0c7a69; --cyan: #0068da; --purple: #6e56cf; --pink: #b14f00;
+    --green: #0c7a69; --cyan: #0068da; --purple: #6e56cf; --orange: #b14f00;
     --red: #c0342a; --ink: #ffffff;
     --control-bg: #e8e8ed; --control-hover: #dededf;
     --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
@@ -2134,7 +2134,7 @@ TPS = tx_per_block × 10 blocks/second</span>
   #livenet-demo .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex: none; }
   #livenet-demo .status-dot[data-state="ok"] { background: var(--green); }
   #livenet-demo .status-dot[data-state="error"] { background: var(--red); }
-  #livenet-demo .status-dot[data-state="paused"] { background: var(--pink); }
+  #livenet-demo .status-dot[data-state="paused"] { background: var(--orange); }
   #livenet-demo .status-row strong { color: var(--text); font-weight: 600; }
 
   #livenet-demo .fail-banner { display: none; background: color-mix(in srgb, var(--red) 12%, var(--card-bg)); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; font-size: 16px; }

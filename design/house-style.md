@@ -42,8 +42,8 @@ inline script and toggled by a button (`nav.js`), persisted to
 | `--cyan` | secondary accent (focus ring, info notes) | `#2997ff` | `#0071e3` |
 | `--purple` | tertiary accent, used sparingly | `#bf5af2` | `#6e56cf` |
 | `--purple-pill` | roadmap status-pill color only; brighter than `--purple` in dark so the pill clears AA (see Status pills) | `#ce80f5` | `#6e56cf` (= `--purple`) |
-| `--pink` | quaternary accent, used sparingly | `#ff9f0a` | `#b25000` |
-| `--amber` | testnet status-pill and `.tag.tool`, distinct from `--pink`/research and `--cyan`/target | `#ffd60a` | `#a86800` |
+| `--orange` | quaternary accent, used sparingly | `#ff9f0a` | `#b25000` |
+| `--amber` | testnet status-pill and `.tag.tool`, distinct from `--orange`/research and `--cyan`/target | `#ffd60a` | `#a86800` |
 | `--red` | wrong-claim status-pill and `.tag.red-block`, the one label state that means "checked and false" | `#ff453a` | `#d70015` |
 | `--ink` | text color placed on a solid accent fill | `#06201b` | `#ffffff` |
 | `--accent-soft` | green tint at 10-12% for soft highlight fills | rgba(102,209,193,.12) | rgba(14,124,107,.1) |
@@ -52,7 +52,7 @@ inline script and toggled by a button (`nav.js`), persisted to
 | `--field-bg` | text input / code block background | `#221f1c` | `#ffffff` |
 | `--field-line` | text input / code block border | `#4a453d` | `#d2d2d7` |
 
-Four accent colors exist (`--green`, `--cyan`, `--purple`, `--pink`) and each
+Four accent colors exist (`--green`, `--cyan`, `--purple`, `--orange`) and each
 has a job: green is the brand color and the default call to action, cyan
 marks focus and informational asides, purple and pink are used only where a
 fourth or fifth categorical color is genuinely needed (a chart legend, a
@@ -174,7 +174,7 @@ always ships with the color.
 | Testnet | `.status-pill.testnet` | `--amber` | `#ffd60a` | `#a86800` | Running on a test network, not mainnet. |
 | Targeted | `.status-pill.target` | `--cyan` | `#2997ff` | `#0071e3` | A specific near-term milestone, not yet true. |
 | Roadmap | `.status-pill.roadmap` | `--purple-pill` | `#ce80f5` | `#6e56cf` | Planned architecture, further out than a target. |
-| Research | `.status-pill.research` | `--pink` | `#ff9f0a` | `#b25000` | An open question or proposal stage, not a commitment. |
+| Research | `.status-pill.research` | `--orange` | `#ff9f0a` | `#b25000` | An open question or proposal stage, not a commitment. |
 | Wrong | `.status-pill.wrong` | `--red` | `#ff453a` | `#d70015` | The claim is actively false, not merely unshipped. |
 | Not live / unsupported | `.status-pill.not-live` | `--muted` | `#b6b0a7` | `#646057` | True absence: missing, not yet built, no evidence either way. |
 

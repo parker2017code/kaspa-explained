@@ -116,7 +116,7 @@ def main():
         print(
             "One or more pages style a .status-pill or .tag state directly instead "
             "of through --status-color. Fix: set --status-color to an existing "
-            "token (var(--green), var(--cyan), var(--purple-pill), var(--pink), "
+            "token (var(--green), var(--cyan), var(--purple-pill), var(--orange), "
             "var(--amber), var(--red), var(--muted)) and let the shared base rule "
             "in styles.css derive border, text, background, and dot. See "
             "design/house-style.md, 'Label color system'."

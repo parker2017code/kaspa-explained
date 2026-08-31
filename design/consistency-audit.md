@@ -100,7 +100,7 @@ it isn't mistaken for a missing component on 14 pages.
 `styles.css` defines exactly five status-pill modifiers —
 `.live` (green), `.target` (cyan), `.roadmap` (purple), `.research`, and
 `.not-live` (muted) — matching the five-state system `house-style.md`
-describes. But `.research` doesn't reuse `--purple` or `--pink`; it hardcodes
+describes. But `.research` doesn't reuse `--purple` or `--orange`; it hardcodes
 its own hex pair (`#a44fc9` light / `#f0abfc` dark, `styles.css` lines
 3573 and 6905-6910). That's a sixth accent color, invented solely for one
 status word, directly against house-style's explicit rules ("Reach for green
@@ -109,7 +109,7 @@ color traces back to a token in the Palette table"). It renders on every page
 that labels a claim "research": kaspa-claims-checker, kaspa-developments,
 status, toccata-explained, toccata-status, what-is-kaspa (6 pages, 8 pill
 instances). Visible every time: it's a distinct magenta the reader has not
-seen used for anything else on the site. Fix: remap to `--pink` (roadmap
+seen used for anything else on the site. Fix: remap to `--orange` (roadmap
 already owns purple), or if a sixth semantic color is genuinely wanted for
 "research," add it to the Palette table in `house-style.md` rather than
 letting it live only as an undocumented literal in the stylesheet.
