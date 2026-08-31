@@ -369,30 +369,13 @@ function auditCodeBlocks() {
 }
 
 function auditNextStepButtons() {
-  const nextStepButtonBlock = declarationBlock(/\n\.next-step > \.button\s*\{([\s\S]*?)\n\}/, "next-step direct button spacing");
-  const blockStart = numberFromCssValue(declarationValue(nextStepButtonBlock, "margin-block-start"));
-  const inlineEnd = numberFromCssValue(declarationValue(nextStepButtonBlock, "margin-inline-end"));
-  if (!Number.isFinite(blockStart) || blockStart < 8) {
-    fail(".next-step direct buttons need top spacing before and between wrapped rows");
-  }
-  if (!Number.isFinite(inlineEnd) || inlineEnd < 8) {
-    fail(".next-step direct buttons need horizontal spacing");
-  }
-
-  const nextStepLastButtonBlock = declarationBlock(
-    /\n\.next-step > \.button:last-of-type\s*\{([\s\S]*?)\n\}/,
-    "next-step last direct button spacing reset",
-  );
-  if (declarationValue(nextStepLastButtonBlock, "margin-inline-end") !== "0") {
-    fail(".next-step final direct button should reset trailing margin");
-  }
-
+  // RETIRED (2026-08-31): no .next-step section has a direct .button child on
+  // any page in any driven state (menu open, details open, dialogs open, 390
+  // and 1280); the CSS rules this asserted were deleted as unmatched. The
+  // homepage CTA group this defended lives under .actions, asserted below.
   const home = readFile("index.html");
-  // The homepage restructure replaced the .next-step section wrapper with the
-  // shared .actions group. The thing being guarded is unchanged: a primary
-  // call-to-action group must survive on the homepage for spacing coverage.
   if (!/class="actions"[\s\S]{0,400}?<a class="button primary"/.test(home)) {
-    fail("index.html should keep a next-step button group for spacing audit coverage");
+    fail("index.html should keep a primary call-to-action button group");
   }
 }
 
