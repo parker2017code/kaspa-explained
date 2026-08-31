@@ -7755,3 +7755,45 @@ label:has(> input[type="checkbox"]):hover {
     transform: none;
   }
 }
+
+/* Second UX pass, 31 August 2026. Both defects below were invisible to the
+   first pass because it measured one theme and read computed style on the
+   control itself. These were measured by screenshotting each control at rest
+   and hovered, in both themes, and comparing the pixels. */
+
+/* D7. Eighty of the site's ninety-two <summary> elements were pixel-identical
+   on hover, in dark and in light alike. Six page-scoped rules
+   (model-picker.html's `.mp-method`, `.mp-prov`, chain-comparer.html's
+   `.cc-method`, `.cc-gap-panel`, `.cc-notes`) do define one, which is what the
+   other eighty were measured against: the site already treats a disclosure
+   trigger as something that answers the pointer, and styles.css defined no
+   `summary:hover` at all. An inset shadow rather than a background, because
+   many of these summaries already carry one and a background would replace
+   it; an inset shadow tints whatever is underneath and respects the corner
+   radius. The six page-scoped rules set `color` at higher specificity and
+   still win where they apply, so this adds to them rather than fighting
+   them. */
+summary {
+  transition: box-shadow .18s ease-out;
+}
+
+summary:hover {
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+summary:active {
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--text) 11%, transparent);
+}
+
+/* D8. The two entry doors on start-here.html had a hover response in dark and
+   none at all in light: measured, the light-theme hover changed zero computed
+   properties across the card and its children, while dark changed the
+   background. styles.css:5660 carries a
+   `:root[data-theme="light"] .path-grid a:hover` reset at specificity (0,3,1),
+   which outranks the (0,2,1) fix at styles.css:7700 in light only, so the fix
+   the first pass verified in dark was silently reverted in the other theme.
+   Matching that selector here, later in source order, lets the fix apply in
+   both. */
+:root[data-theme="light"] .path-grid a:hover {
+  background: color-mix(in srgb, var(--text) 6%, var(--card-bg));
+}
