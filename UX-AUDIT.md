@@ -65,6 +65,36 @@ both filter correctly at 375px now, visible rows still render as cards, and
 `document.documentElement.scrollWidth` stays equal to `clientWidth` (no new
 overflow introduced).
 
+## Second defect found and fixed: no press/touch state anywhere on the site
+
+Grepped `styles.css` (7,600+ lines) and every page's inline CSS for `:active`:
+zero button, chip, link, or disclosure rules existed (one unrelated
+`mask-image:active` rule on `model-picker.html`). `aria-pressed` covers a
+toggle control's own persistent look once pressed, but the momentary feedback
+between touch-down and release, on any control including non-toggling ones,
+was entirely absent site-wide. This is most visible on touch devices, which
+never fire `:hover` at all: a tap produced no visible response until whatever
+the tap triggered had already finished happening. Violates STANDARD.md
+directly: "Touch produces change in the same frame."
+
+Fix: one rule appended at the end of `styles.css` (`transform: scale(0.97)`
+on `:active` for native buttons, `.button`, `a.btn`, non-disabled
+`[role="button"]`, and `summary`), with a `prefers-reduced-motion: reduce`
+variant that swaps the scale for an opacity dip. Appended last so it wins the
+cascade without needing to touch any of the ~15 demo-scoped `<style>` blocks
+individually, since none of them defined their own `:active` to out-specify
+it.
+
+Verified with real mouse-down/mouse-up sequences (not `.matches(':active')`,
+which reported false in this environment even when the computed style had
+genuinely changed) and Chrome DevTools Protocol's `CSS.forcePseudoState`
+against `CSS.getMatchedStylesForNode`, reading `getComputedStyle(...).transform`
+after the CSS transition settles. Confirmed working on: a demo-scoped native
+button (`#gp-btn-advance` inside `#ghostdag-demo`), the sitewide primary CTA
+link (`a.button.primary` on `index.html`), a `[role="button"]` term-def glyph,
+and a `<summary>` disclosure trigger. Re-ran both sitewide automated scans
+(overflow at 390px, focus-visible ring) after this change: zero regressions.
+
 ## Page and demo surfaces
 
 Columns after Page/Surface are the five scope items in brief order: component

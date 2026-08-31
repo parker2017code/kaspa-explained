@@ -7649,3 +7649,36 @@ p.live-footnote a {
   align-items: center;
   min-height: 44px;
 }
+
+/* No interactive control on the site had a press/touch state: grepping this
+   file and every page's inline CSS for :active found zero button, chip, or
+   link rules (one unrelated mask-image :active on model-picker.html, not a
+   press state). STANDARD.md: "Touch produces change in the same frame." A
+   toggling control's aria-pressed covers its own persistent look, but the
+   momentary feedback between touch-down and release, on any button
+   including non-toggling ones, was entirely absent. That is most visible on
+   touch devices, which never fire :hover at all, so a tap produced no
+   visible response until the resulting state change landed. One rule,
+   appended last so it wins the cascade, covers every native button, link
+   pill, custom [role=button] control (info affordances, term-def glyphs,
+   the GHOSTDAG demo's graph nodes), and disclosure trigger on the site,
+   including every demo's self-scoped CSS, since none of them define their
+   own :active to out-specify it. */
+button:not(:disabled):active,
+.button:active,
+a.btn:active,
+[role="button"]:not([aria-disabled="true"]):active,
+summary:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active,
+  .button:active,
+  a.btn:active,
+  [role="button"]:not([aria-disabled="true"]):active,
+  summary:active {
+    transform: none;
+    opacity: 0.8;
+  }
+}
