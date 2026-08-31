@@ -2106,7 +2106,7 @@ TPS = tx_per_block × 10 blocks/second</span>
       <h2>Check it yourself</h2>
       <p>Kaspa Research carries the lineage; Rusty Kaspa is the code. <a href="https://kaspa.com/learn-kaspa">Kaspa.com's Learn Kaspa</a> has glossaries.</p>
       <details id="live-network" open>
-        <summary>Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
+        <summary id="livenet-summary">Watch the network: a live read of Kaspa's own public API, not a simulation</summary>
 <style>
   #livenet-demo {
     --bg: #100e0c; --bg-2: #1c1a17; --panel-strong: #221f1c; --card-bg: #322f2a;
@@ -2447,6 +2447,15 @@ TPS = tx_per_block × 10 blocks/second</span>
     } else {
       tipLabelEl.textContent = tipLabelNoReadText;
       tipCountEl.hidden = true;
+    }
+    // The summary is the first thing a reader meets, and until one read has
+    // succeeded it must not claim a live read happened. Same rule the readout
+    // below already follows; the prose was the last surface still overclaiming.
+    var summaryEl = document.getElementById("livenet-summary");
+    if (summaryEl) {
+      summaryEl.textContent = hadLiveRead
+        ? "Watch the network: a live read of Kaspa's own public API, not a simulation"
+        : "Watch the network: waiting on the first read from Kaspa's public API";
     }
     tipCountEl.classList.toggle("is-stale", !live);
     feedEl.classList.toggle("is-stale", !live);
