@@ -7797,3 +7797,87 @@ summary:active {
 :root[data-theme="light"] .path-grid a:hover {
   background: color-mix(in srgb, var(--text) 6%, var(--card-bg));
 }
+
+/* D9. Printing. styles.css carried no `@media print` block at all, so a
+   printed page kept the fixed pill header and its backdrop strip over the top
+   of the first page, kept the 76-word footer link list, kept dark surfaces
+   that a printer renders as solid ink, and dropped everything inside a closed
+   <details>: measured, 1,679 words on model-picker.html, 1,623 on kips.html,
+   1,421 on kaspa-mining.html. A disclosure is a screen affordance for
+   managing length; paper has no affordance to open one, so on paper the
+   content simply ceases to exist.
+   Colors are flattened with a universal rule rather than by restating the
+   light token set, which would be a second copy of it to keep in sync. */
+@media print {
+  :root {
+    --site-header-clearance: 0px;
+  }
+
+  .site-header,
+  .skip-link,
+  .theme-toggle,
+  .nav-menu-button,
+  .footer nav,
+  .site-related-grid,
+  body::after {
+    display: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  * {
+    border-color: #999 !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  main {
+    max-width: none;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  /* Reveal what a disclosure hides. Chromium hides a closed details' contents
+     through `::details-content { content-visibility: hidden }`, which a
+     `display` rule on the children cannot reach, so both are needed. nav.js
+     also leaves an inline `height` and `overflow: hidden` behind after its
+     close animation, which would clamp the revealed content to the summary's
+     height, so those are cleared too. */
+  details::details-content {
+    content-visibility: visible !important;
+    block-size: auto !important;
+  }
+
+  details {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  details > *:not(summary) {
+    display: block !important;
+  }
+
+  details,
+  section,
+  figure,
+  table,
+  li {
+    break-inside: avoid;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+}
