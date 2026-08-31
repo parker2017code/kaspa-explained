@@ -449,8 +449,19 @@ app Tickets {
     fetch('https://api.github.com/rate_limit', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (limits) {
-        var left = limits && limits.resources && limits.resources.core
-          ? limits.resources.core.remaining : 0;
+        // Not being able to ask what the quota is, and asking and being told
+        // it is gone, are different facts. Collapsing them into `: 0` made
+        // the page name a cause it had not observed: driven deliberately into
+        // an HTTP 500, an HTTP 403, and an empty 200 body, it reported
+        // "GitHub's public quota for this network is used up" in all three.
+        // Only the abort case, which throws and lands in .catch, said the
+        // read failed. The quota sentence now needs a quota reading.
+        var core = limits && limits.resources && limits.resources.core;
+        if (!core || typeof core.remaining !== 'number') {
+          stamp.textContent = 'The live read from GitHub failed. ' + BASELINE;
+          return null;
+        }
+        var left = core.remaining;
         if (left < repos.length * 2 + 1) {
           stamp.textContent = "GitHub's public quota for this network is used up. " + BASELINE;
           return null;
