@@ -148,6 +148,30 @@ consistency. "n/a" where a page-level row has no demo-specific four-question axi
 | 404.html | Page shell | PASS (covered by sitewide scans) | PASS | n/a | n/a | PASS | E |
 | demos/index.html | Every-demo index | PASS: link-card list to every demo's anchor, no controls of its own | PASS | PASS | n/a | PASS | E |
 
+## Additional spot checks
+
+- `kaspa-mining.html`'s "Clocks / Full loop" view switch (`#two-markets`) uses
+  radio inputs wrapped in `<label class="view-switch__tab">`, not buttons.
+  Clicking the label correctly expands the six-stage full-loop breakdown.
+  Initially misread as broken because a `button` query found nothing; the
+  label-wrapped-radio pattern is a valid, keyboard-accessible tab
+  alternative and works correctly.
+- `kaspa-mining.html`'s emission-schedule "Around today / All time, since
+  genesis" zoom toggle switches the control set correctly (the "how far in
+  the future" slider is replaced by a "point in [time]" control).
+- `build-on-kaspa.html`'s covenant-breaker "Attempt / Vault details & rules"
+  tab switch renders the vault's rule text correctly on the second tab.
+- The shared `.info-affordance` component (the `i` glyph used for "why the
+  range goes to 100," "what this dial imagines," etc. across `kaspa-mining.html`,
+  `kips.html`, `chain-comparer.html`, and others) uses a real `<button>` with
+  `aria-describedby` and a `sr-only` label that is unique per instance
+  ("More about this comparison" etc.), not a generic "info" label repeated
+  everywhere. Consistent pattern, no defect.
+- `argent-explained.html`'s repository-pulse table was watched load live
+  (not just read from source): it replaced its baseline rows with real
+  GitHub data (`argent`, `argent-playground`, `argent-template`, real commit
+  dates) within about two seconds of page load.
+
 ## Reset-button naming, checked as a class
 
 Grepped every page's Reset/Start-over control. All demos use "Reset" except
@@ -155,6 +179,22 @@ Grepped every page's Reset/Start-over control. All demos use "Reset" except
 deliberate, not inconsistent: that control clears an attempt log (a narrative
 history), not slider values, so a different verb communicates a different action.
 Not changed.
+
+## Full gate result
+
+`VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true PAGE_HEIGHT_BLOCKING=true
+DEMO_SURFACE_BLOCKING=true DENSITY_GATE_BLOCKING=true bash scripts/check-site.sh`
+against the working tree with both fixes: "Site checks passed," exit code 0.
+Every category printed "no violations": glass/gradient (44 renders), visible-word
+surface, render-matrix (126 renders), page-length (21 pages, both the hard
+open-height ceiling on route pages and the 800px undifferentiated-run ceiling
+sitewide), demo-surface (19 demos, worst case 118 of a 120-word budget on
+`kaspa-mining.html`'s fee-market demo), and broken-and-blank (88 renders, 22
+pages). The four pre-existing page-length violations the brief named on
+`what-is-kaspa.html`, `kaspa-mining.html`, `argent-explained.html`, and
+`model-picker-method.html` did not reproduce on this run; page-length printed
+zero violations for all 21 pages. Stating this plainly rather than reporting
+violations that were not observed.
 
 ## Not rendered or not keyboard-tested
 
