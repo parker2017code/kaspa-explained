@@ -84,6 +84,58 @@ frames). The part-pruning variant of that cleanup, deleting dead parts from mixe
 comma selectors, BROKE the light theme sitewide and was reverted before commit; do
 not retry it without the pixel harness.
 
+Added 31 Aug 2026, second session, the technical-backlog pass:
+
+- **The proof instrument for CSS edits is `scripts/computed-style-snapshot.mjs`,
+  now hardened.** Raw screenshots are timing-unstable here (two identical trees
+  differed on 85 of 88 shots); the computed-style hash is the instrument, and it
+  needed four fixes to reach a true empty diff on identical trees: sort
+  properties before hashing (custom-property enumeration order varies per
+  browser launch), serve on a fixed port (a random port serializes into
+  `background-image` URLs and changed the brand-mark hash every run), abort all
+  external requests (live GitHub/kascov fetches rewrite tables differently every
+  run), and wait for the DOM to settle after the aborts. It was watched failing
+  on a planted 0.02px change before being trusted. `scripts/driven-style-snapshot.mjs`
+  is the same hash taken with the menu clicked open, every details opened and
+  every dialog shown; its noise floor is the two live collision demos.
+- **styles.css 7,496 -> 6,735 lines, every cut proven.** 445 page-local token
+  copies now inherit the shared tokens (55 var() rewrites, 390 deletions;
+  deliberate divergences carry a one-line audit comment per style block). 260
+  declarations shadowed by a later identical-selector rule in the same context
+  deleted by cascade algebra. Dead-rule triage of the 238 scanner flags:
+  52 already gone, 158 "overridden" KEPT (they match; cold-load evidence is the
+  `cccdfba` trap), 6 generated `.grid-cards:has()` rules kept as uncertain,
+  15 kept after matching in driven states (`.cell-detail[open]` matched only on
+  the design/ pages, which the first state-check missed), 7 deleted after
+  matching nothing in any driven state.
+- **Two cleverer passes were built and thrown away**: part-level shadowing
+  (deleting a declaration when every comma part reappears in later rules)
+  produced real sitewide regressions the snapshot caught, and block merging
+  tripped its own parser; neither is sound as written. The conservative passes
+  above are idempotent and re-runnable.
+- **Tab order at 390 found one real inversion** (the 1280-only check missed
+  it): skeptical-case's security-budget demo floats the readout above the
+  controls at <=759px (`order:-1`) while Reset sat last in DOM; Reset now ends
+  the controls panel. The GHOSTDAG diagram's block-number focus order scatters
+  vertically by DAG layout at both widths and is correct as is.
+- **Picker data verified deeper than asked**: `emit-picker-blob.py` regenerates
+  the shipped `window.__MP__` byte-identically from `data/picker-data.json`,
+  and 15 randomly sampled cells (seed 20260831) all traced through
+  picker-data.json to their exact raw lines in the `data/*-2026-08-25.md`
+  dumps, including the two derived-looking ones (ARC figures are attached at
+  blob build time; webdev 44.42 is the win probability of elo 1518 against the
+  roster mean). Zero defects.
+- **check-page-height.mjs was failing the blocking gate on origin/main
+  already** (search.html, 843px "undifferentiated" run that a screenshot shows
+  as a column of elevated result cards). `.search-results` joined the landmark
+  list, the same under-named-class fix as the two 29 Aug additions.
+- **audit-visual-guardrails.mjs asserted the FIRST definition of a selector**,
+  which after consolidation is the overridden relic, not the rendered value; it
+  reads the cascaded last-wins value across identical-selector blocks, and
+  three stale expectations (72px nav, 14px mobile padding, body::before
+  opacity caps on an element the final layer hides) were retired to the
+  winning values.
+
 ### CIRCULARITY, found twice, fixed twice, look for a third
 
 LiveBench Overall is the EXACT unweighted mean of its seven categories, max

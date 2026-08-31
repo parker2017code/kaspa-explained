@@ -64,7 +64,10 @@ function startStaticServer(root) {
         res.end('not found: ' + urlPath);
       }
     });
-    server.listen(0, '127.0.0.1', () => resolve(server));
+    // Fixed port: a random port leaks into computed background-image URLs
+    // (they serialize absolute), which made every run's brand-mark hash
+    // unique and the empty-diff proof unattainable.
+    server.listen(4499, '127.0.0.1', () => resolve(server));
   });
 }
 
@@ -122,6 +125,11 @@ async function main() {
         const key = `${file}|${width}|${theme}`;
         const page = await browser.newPage();
         await page.setViewportSize({ width, height: 1000 });
+        // No external network: live GitHub/kascov fetches rewrite tables with
+        // whatever the network returns, which differs run to run. Blocked,
+        // every live-fetch page settles to its baked baseline.
+        await page.route('**/*', (route) =>
+          route.request().url().startsWith(baseUrl) ? route.continue() : route.abort());
         try {
           await page.goto(baseUrl + '/' + file + '?theme=' + theme, { waitUntil: 'load', timeout: 20000 });
           // Freeze CSS transitions/animations before capture. Without this,
@@ -136,7 +144,15 @@ async function main() {
             content: '*, *::before, *::after { transition: none !important; animation: none !important; }',
           });
           await page.evaluate(() => document.fonts && document.fonts.ready);
-          await page.waitForTimeout(150);
+          await page.waitForTimeout(500);
+          // Settle async error-path DOM rewrites from the aborted fetches:
+          // two samples 250ms apart must agree, up to 3s.
+          await page.waitForFunction(() => new Promise((res) => {
+            const count = document.querySelectorAll('*').length;
+            const html = document.body.innerHTML.length;
+            setTimeout(() => res(document.querySelectorAll('*').length === count &&
+                                document.body.innerHTML.length === html), 250);
+          }), { timeout: 3000 }).catch(() => {});
         } catch (e) {
           snapshot[key] = { error: e.message };
           await page.close();
@@ -154,12 +170,15 @@ async function main() {
           }
           function sig(el, pseudo) {
             const cs = getComputedStyle(el, pseudo || undefined);
-            let s = '';
+            const parts = [];
             for (let i = 0; i < cs.length; i++) {
               const p = cs[i];
-              s += p + ':' + cs.getPropertyValue(p) + ';';
+              parts.push(p + ':' + cs.getPropertyValue(p) + ';');
             }
-            return s;
+            // Custom-property enumeration order varies per browser launch;
+            // sort so the hash reflects values, not hash-map order.
+            parts.sort();
+            return parts.join('');
           }
           const all = Array.from(document.querySelectorAll('*'));
           const hashes = all.map((el) => {

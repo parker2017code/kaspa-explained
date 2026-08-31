@@ -208,7 +208,13 @@ function computeLongestGap() {
   const SEL =
     'table,img,svg,figure,canvas,' +
     '[class*="demo"],[class*="diagram"],[class*="chart"],' +
-    '.grid-cards,a.button,.actions a,' +
+    // .search-results added 31 August 2026, same false-positive class as the
+    // two 29 August additions: its articles render as elevated cards
+    // (background + shadow, .search-results article rules), visually the same
+    // landmark as a .grid-cards row, but under a class this list did not name.
+    // search.html read as an 843px undifferentiated run that a screenshot
+    // shows as a column of bordered result cards.
+    '.grid-cards,.search-results,a.button,.actions a,' +
     'button,input,select,textarea';
   const root = document.querySelector('main') || document.body;
   const footer = root.querySelector('.site-related');

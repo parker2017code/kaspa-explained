@@ -23,25 +23,23 @@ carry.
 
 ## Open, maintenance
 
-- **Cascade debt in styles.css.** 229 of 941 selectors declared three or
-  more times (`.quick-grid article` 13 times across 3,000 lines);
-  `kaspa-mining.html` renders 16 distinct font sizes against Linear's 6.
-  Target: under 6,000 lines (7,370 as of 31 Aug 2026 after two orphan-rule
-  cuts). The remaining dead/inert rules from
-  `data/dead-css-scan-2026-08-29.json` need a state-driven re-scan (all
-  six widths, dialogs opened, hover/focus driven) before any deletion:
-  that scan's "dead" class includes rules that only apply inside opened
-  dialogs, which is exactly what `cccdfba` broke once already. 31 Aug: the
-  zero-reference-class rules are gone (33 removed, pixel-verified);
-  pruning dead PARTS from mixed comma selectors broke the light theme
-  sitewide and was reverted, so do not retry that without the pixel
-  harness.
-- **296 design-token values copied into page-local style blocks** across
-  six demo pages (`--bg`, `--green`, `--orange`, ...). Checked 29 Aug:
-  nothing has drifted yet, which is the trap; a palette change will
-  silently miss six demos. Fix by inheriting tokens rather than restating
-  them; needs its own both-theme verification, same shape as the
-  collision-demo duplication that hid a real bug.
+- **Cascade debt in styles.css, remaining half.** 6,735 lines as of 31 Aug
+  2026 (from 7,496: 260 identical-selector shadowed declarations removed by
+  cascade algebra, 7 driven-state-proven dead rules, whitespace collapse;
+  every cut verified by an empty computed-style diff, 96 combos x 41,584
+  elements). Target under 6,000 still open. What remains is the hard half:
+  158 scanner-"overridden" rules that DO match (deleting them on cold-load
+  evidence is the `cccdfba` mistake; each needs a per-rule rendered proof
+  across driven states), the six generated `.grid-cards:has(8|31-child)`
+  rules (unmatched today, kept because the family is systematic and a
+  future 8-card grid would regress), and merging split selector blocks
+  (order-tied against ~280 equal-specificity intervening declarations; a
+  conservative merge pass and a part-level shadowing pass were both built,
+  both vetoed by the snapshot instrument, and abandoned). The instrument
+  that makes further cuts provable: the hardened computed-style snapshot
+  (sorted properties, fixed server port, external fetches blocked, DOM
+  settle wait) plus the driven-state variant (menu clicked open, details
+  opened, dialogs shown); the un-hardened script reads noisy.
 - **`check-label-colors.py` never reads `styles.css`.** It scans
   page-local `<style>` blocks only, so a raw color on a `.tag` rule in the
   main stylesheet passes silently. Either state that as deliberate where
