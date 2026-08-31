@@ -40,8 +40,8 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-08-29">
-  <link rel="stylesheet" href="styles.css?v=20260831b-000000">
-  <script defer src="nav.js?v=20260830-000000"></script>
+  <link rel="stylesheet" href="styles.css?v=20260831c-000000">
+  <script defer src="nav.js?v=20260831c-000000"></script>
   <style>
   /* Scoped styles for the two demos inlined below (formerly demos/parameterless.html
      and demos/supply-split.html). Every custom property and selector is scoped under
@@ -265,7 +265,12 @@
   .kip-supply-split-demo .quotes-body{ margin-top:12px; }
   .kip-supply-split-demo blockquote{ margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid var(--cyan); font-size:16px; line-height:1.5; }
   .kip-supply-split-demo cite{ display:block; font-style:normal; font-size:16px; color:var(--faint); margin-top:4px; }
-  .kip-supply-split-demo cite a{ color:var(--faint); }
+  /* The citation's link text is a bare URL, which carries no break
+     opportunity, so at 320px it rendered 280px wide inside a 237px box and
+     ran 9px past the viewport, where html/body overflow-x:hidden clipped the
+     issue number rather than letting it scroll. */
+  .kip-supply-split-demo cite{ overflow-wrap:anywhere; }
+  .kip-supply-split-demo cite a{ color:var(--faint); overflow-wrap:anywhere; }
   .kip-supply-split-demo .note{ font-size:16px; color:var(--faint); margin-top:10px; }
   .kip-supply-split-demo a:focus-visible,
   .kip-supply-split-demo button:focus-visible{
@@ -1110,7 +1115,11 @@
           var m = line.match(/^\|\s*\[(\d+)\]\([^)]*\)\s*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|/);
           if (m) rows.push({ n: parseInt(m[1], 10), layer: m[2].trim(), title: m[3].trim(), status: m[5].trim() });
         });
-        if (!rows.length) return;
+        // A 200 that parses to no rows is a failed read, not a quiet success.
+        // Returning here left the caption saying the table "refreshes live on
+        // load" when nothing had refreshed, measured by serving an empty body
+        // deliberately. The baseline still stands; only the claim changes.
+        if (!rows.length) { throw new Error('kips empty'); }
         rows.sort(function (a, b) { return a.n - b.n; });
         var groups = [[], [], []];
         rows.forEach(function (r) { groups[kipBucket(r.n)].push(r); });
@@ -1174,15 +1183,26 @@
     fetch('https://api.github.com/rate_limit', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (limits) {
-        var left = limits && limits.resources && limits.resources.core
-          ? limits.resources.core.remaining : 0;
-        if (left < 2) { throw new Error('quota'); }
+        // Same distinction as argent-explained.html: a rate_limit request
+        // that fails tells you nothing about the quota. Reading that as zero
+        // remaining made the catch below blame an exhausted quota for an
+        // HTTP 500, an HTTP 403, and an empty 200 body alike. quotaLeft now
+        // stays false only when a real reading says the quota is gone.
+        var core = limits && limits.resources && limits.resources.core;
+        if (!core || typeof core.remaining !== 'number') {
+          quotaLeft = true;
+          throw new Error('rate_limit unreadable');
+        }
+        if (core.remaining < 2) { throw new Error('quota'); }
         quotaLeft = true;
         return fetch('https://api.github.com/repos/kaspanet/kccs/pulls?state=open&per_page=30', { cache: 'no-store' })
           .then(function (r) { if (!r.ok) throw new Error('kccs ' + r.status); return r.json(); });
       })
       .then(function (prs) {
-        if (!Array.isArray(prs) || !prs.length) return;
+        // A zero-length list here is a real answer (no open pull requests),
+        // unlike the KIP README above, so this one stays a quiet return.
+        if (!Array.isArray(prs)) { throw new Error('kccs unreadable'); }
+        if (!prs.length) return;
         prs.sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
         document.getElementById('kcc-body').innerHTML = prs.map(function (p) {
           var t = String(p.title).replace(/[<>&]/g, '');

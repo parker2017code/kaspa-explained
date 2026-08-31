@@ -69,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260831b-000000">
-  <script defer src="nav.js?v=20260830-000000"></script>
+  <link rel="stylesheet" href="styles.css?v=20260831c-000000">
+  <script defer src="nav.js?v=20260831c-000000"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -339,15 +339,21 @@
         .cvb-demo .cvb-stat b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
         .cvb-demo .cvb-stat.dead b { color: var(--cvb-pink); }
         .cvb-demo .cvb-rules-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+        /* min-width: 0 on both the row and the text: a grid or flex item
+           defaults to min-width: auto, which refuses to shrink below its
+           content's min-content width. Measured at 320px before this, with
+           the vault rules open, the rule text ran to x=333 against a 320px
+           viewport, and html/body overflow-x:hidden clipped the tail rather
+           than letting it scroll. */
         .cvb-demo .cvb-rules-list li {
           display: flex; gap: 8px; align-items: baseline; background: var(--cvb-field-bg); border: 1px solid var(--cvb-field-line);
-          border-radius: 8px; padding: 8px 10px; font-size: 1rem;
+          border-radius: 8px; padding: 8px 10px; font-size: 1rem; min-width: 0;
         }
         .cvb-demo .cvb-rules-list b {
           flex: 0 0 auto; font-size: 16px; color: var(--cvb-green); background: color-mix(in srgb, var(--cvb-green) 12%, transparent);
           border: 0; border-radius: 980px; padding: 2px 9px; text-transform: uppercase; letter-spacing: .03em;
         }
-        .cvb-demo .cvb-rules-list span { color: var(--cvb-muted); }
+        .cvb-demo .cvb-rules-list span { color: var(--cvb-muted); min-width: 0; overflow-wrap: anywhere; }
         .cvb-demo .cvb-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 700px) { .cvb-demo .cvb-layout { grid-template-columns: 1fr; } }
         .cvb-demo .cvb-field { margin-bottom: 12px; }
