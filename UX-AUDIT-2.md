@@ -206,3 +206,50 @@ problem, and the next person running this harness should expect it.
 - Hover was measured at 1280px. A coarse-pointer pass was not run.
 - Light theme was not measured separately; all figures above are dark theme,
   the site default.
+
+## Against `UX-AUDIT.md`, read only after the above was written
+
+**Agreement.** Zero horizontal overflow at 390px, zero focusable elements
+without a visible ring, and a pass on the four newcomer questions for every
+demo. Two independent methods, same verdicts.
+
+**Where the first pass is stronger, and this one should not be read as
+replacing it.** Its overflow sweep ran twice, once cold and once after opening
+every `<details>` and clicking every button. Mine ran cold only, so on
+post-interaction overflow its evidence is better than mine and my 390px "pass"
+is the weaker of the two. Its focus check was a real `Tab` traversal of 950
+elements, which proves tab order reaches everything; mine measured computed
+style on every visible interactive element, which proves an indicator exists
+but says nothing about order. It also drove each demo's primary control with a
+real event and read the readout back, where I read the rendered container and
+operated only some controls, so its four-question verdicts rest on more than
+mine do. Its two fixes, the `.reality-table tr[hidden]` bug below 700px and the
+absent `:active` state sitewide, were both real class defects and both landed
+before this pass began.
+
+**Where it was wrong, and it says so itself.** Its closing section states:
+"Hover states were not independently screenshotted per control; verified by
+reading each component's CSS for a `:hover` rule... A hover state that is
+defined in CSS but visually wrong (e.g. same color as default) would not be
+caught by this method." That is precisely the defect class, and all seven
+hover defects here sit inside it. The problem is that the table above that
+admission records PASS on component states for `start-here.html`,
+`build-on-kaspa.html`'s covenant-breaker, and `why-kaspa-matters.html`'s
+confirmation-risk demo, the three surfaces measured here at literally zero
+hover response, and one row reads "hover/disabled/focus-visible/aria-pressed
+all defined and rendered correctly" when hover was not rendered-verified
+anywhere. A method's known blind spot has to reach the verdicts, not only the
+caveats section. Reading the rule is not measuring the result: three of the
+seven defects here are a rule that exists and loses, one of them to an
+`!important` that nothing can beat.
+
+**Where it declined to check and inference happened to hold.** It did not force
+the live-data failure paths, reasoning from the `catch` code and the documented
+pattern instead. Forcing all six confirms the inference and finds one thing
+reading could not: `what-is-kaspa.html`'s livenet demo printed a measured-
+sounding zero in a state where it had measured nothing.
+
+**What neither pass covered.** Post-interaction overflow at 320px. Tab order
+as opposed to focus visibility. Light theme measured separately. Coarse-pointer
+behavior. Every demo driven into its disabled, loading, and empty states
+deliberately rather than only where a page enters them on its own.
