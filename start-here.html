@@ -100,11 +100,16 @@
           outline-offset: 3px;
         }
         .vocab-prompt {
-          margin: 0;
+          /* The prose max-width is inherited and differs from .vocab-readout's,
+             so with margin 0 each paragraph centered its text inside a
+             different-width box: measured 491px, 541px and 640px at a 1280px
+             viewport, against a chip row that centers on the full column.
+             margin-inline auto puts all three on one axis. */
+          margin: 0 auto;
           color: var(--muted);
         }
         .vocab-readout {
-          margin: 16px 0 0;
+          margin: 16px auto 0;
           font-size: 19px;
           color: var(--text);
         }
