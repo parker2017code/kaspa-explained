@@ -298,6 +298,34 @@ async function main() {
   await validationPage.close();
 
   if (!browserSelectors) throw new Error('Could not find the stylesheet in document.styleSheets.');
+
+  // A rendering engine silently DROPS any rule whose selector it cannot parse,
+  // so a stylesheet carrying another engine's vendor pseudo-elements makes the
+  // two lists differ by exactly those rules and the old equal-count assert
+  // aborted the whole scan. Chrome rejects ::-moz-range-thumb; the three rules
+  // carrying it (added 31 Aug for slider hover and press states) are correct
+  // Firefox CSS and must stay. Drop them from the Node list before aligning,
+  // and say which ones, so a genuine parser drift still fails loudly.
+  const dropped = [];
+  if (browserSelectors.length !== nodeRules.length) {
+    const validity = await (async () => {
+      const vp = await browser.newPage();
+      await vp.goto('about:blank');
+      const res = await vp.evaluate(
+        (list) => list.map((sel) => { try { document.querySelector(sel); return true; } catch { return false; } }),
+        nodeRules.map((r) => r.selectorText)
+      );
+      await vp.close();
+      return res;
+    })();
+    for (let i = nodeRules.length - 1; i >= 0; i--) {
+      if (!validity[i]) { dropped.push(nodeRules[i].selectorText); nodeRules.splice(i, 1); }
+    }
+    if (dropped.length) {
+      console.error(`Dropped ${dropped.length} rule(s) this engine cannot parse (kept in the file, excluded from classification):`);
+      dropped.forEach((s) => console.error(`  ${s.replace(/\s+/g, ' ').slice(0, 120)}`));
+    }
+  }
   if (browserSelectors.length !== nodeRules.length) {
     throw new Error(
       `ALIGNMENT FAILURE: Node parser found ${nodeRules.length} rules, browser CSSOM found ${browserSelectors.length}. Aborting rather than risk misaligned classification.`

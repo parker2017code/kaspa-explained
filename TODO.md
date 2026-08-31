@@ -23,6 +23,28 @@ carry.
 
 ## Open, maintenance
 
+- **The bulk "overridden" cut is dead, measured 31 Aug 2026.** Deleting all
+  146 rules the scanner classifies as overridden changed the rendered
+  computed style on **88 of 96** page/width/theme combos. The instrument's
+  own noise floor is 1 of 96 (index.html at 1280 light, the live collision
+  demo), so 88 is signal, not drift. "Overridden on cold load" does not mean
+  removable: something in a state the cold render does not enter puts those
+  declarations back in charge. Do not retry the bulk cut. Any further cut
+  needs the per-rule proof this file already asked for, and the line count
+  is not worth the regression risk without it.
+- **`driven-style-snapshot.mjs` hangs and cannot be used as written.** It
+  does not block external requests the way the hardened cold snapshot does,
+  so the pages with live API reads never settle; observed 29 CPU-minutes
+  with no output before being killed. The hardened cold snapshot completes
+  the same 96 combos in about 90 seconds. Fix the fetch blocking before
+  anyone relies on the driven variant for a deletion proof.
+- **`dead-css-scan.mjs` was dead on arrival and is fixed.** It aborted every
+  run: its parser counted 672 rules against the browser CSSOM's 669, because
+  Chrome discards the three `::-moz-range-thumb` rules added 31 Aug for
+  slider hover and press states. Correct Firefox CSS, unparseable here, so
+  the counts could never agree and every future CSS cleanup was silently
+  blocked. The scanner now drops rules the engine cannot parse, names them,
+  and still fails loudly on genuine parser drift.
 - **Cascade debt in styles.css, remaining half.** 6,735 lines as of 31 Aug
   2026 (from 7,496: 260 identical-selector shadowed declarations removed by
   cascade algebra, 7 driven-state-proven dead rules, whitespace collapse;
@@ -40,6 +62,15 @@ carry.
   (sorted properties, fixed server port, external fetches blocked, DOM
   settle wait) plus the driven-state variant (menu clicked open, details
   opened, dialogs shown); the un-hardened script reads noisy.
+- **RESOLVED 31 Aug: the raw leaderboard dumps are verified, not read.**
+  `scripts/verify-picker-sources.py` proves all 1,223 raw cells in
+  `data/picker-data.json` appear on their own model's real row in their own
+  source board file, matched through `build-picker-data.py`'s ALIASES table.
+  1,223 of 1,223. Reading 48,000 lines would not have proved this; a
+  fabricated or mistyped number cannot pass it. Re-run after any `data/`
+  refresh. Note the boards disagree on names: LiveBench calls Claude Opus 5
+  "Claude 5 Opus Thinking Max Effort", and a checker matching on the picker's
+  own display name reports 19 false misses, every one an alias spelling.
 - **`check-label-colors.py` never reads `styles.css`.** It scans
   page-local `<style>` blocks only, so a raw color on a `.tag` rule in the
   main stylesheet passes silently. Either state that as deliberate where
