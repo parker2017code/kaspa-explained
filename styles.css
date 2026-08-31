@@ -3134,10 +3134,23 @@ blockquote {
 
   .reality-table,
   .reality-table tbody,
-  .reality-table tr,
+  .reality-table tr:not([hidden]),
   .reality-table td {
     display: block;
     width: 100%;
+  }
+
+  /* A row a filter hides via the native `hidden` attribute must stay hidden
+     here too. The stacked-card rule above sets `.reality-table tr` to
+     display:block by class selector, which outranks the UA [hidden]{display:
+     none} rule by specificity, so a filtered-out row on any reality-table
+     (model-picker-data.html's search, and any other page that hides rows by
+     setting el.hidden) rendered anyway below 700px even though its count
+     readout said it was excluded. Confirmed by rendering model-picker-data.html
+     at 375px and 1280px: hidden rows showed display:block at the former,
+     display:none at the latter. */
+  .reality-table tr[hidden] {
+    display: none;
   }
 
   .reality-table tr {
