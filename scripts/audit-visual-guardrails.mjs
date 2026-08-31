@@ -63,12 +63,19 @@ function numberFromCssValue(value) {
 }
 
 function declarationBlock(selectorPattern, label) {
-  const match = selectorPattern.exec(css);
-  if (!match) {
+  // Concatenate every matching block in file order. Identical selectors
+  // cascade last-wins, and declarationValue reads the last occurrence, so
+  // the assertion tests the value that actually renders rather than
+  // whichever definition happens to appear first in the file.
+  const global = new RegExp(selectorPattern.source, "g");
+  const bodies = [];
+  let match;
+  while ((match = global.exec(css)) !== null) bodies.push(match[1]);
+  if (bodies.length === 0) {
     fail(`styles.css missing ${label}`);
     return "";
   }
-  return match[1];
+  return bodies.join("\n");
 }
 
 function mediaRuleBlock(maxWidth, selector, label) {
@@ -101,20 +108,41 @@ function mediaRuleBlock(maxWidth, selector, label) {
     return "";
   }
 
-  const mediaBody = css.slice(openIndex + 1, closeIndex);
+  // Concatenate the selector's body from EVERY same-max-width media block,
+  // in file order, for the same last-wins reason as declarationBlock.
+  const bodies = [];
+  let searchFrom = 0;
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`\\n\\s*${escapedSelector}\\s*\\{([\\s\\S]*?)\\n\\s*\\}`).exec(mediaBody);
-  if (!match) {
+  while (true) {
+    const mi = css.indexOf(mediaNeedle, searchFrom);
+    if (mi < 0) break;
+    const oi = css.indexOf("{", mi);
+    let d = 0;
+    let ci = -1;
+    for (let index = oi; index < css.length; index += 1) {
+      if (css[index] === "{") d += 1;
+      if (css[index] === "}") d -= 1;
+      if (d === 0) { ci = index; break; }
+    }
+    if (ci < 0) break;
+    const body = css.slice(oi + 1, ci);
+    const re = new RegExp(`\\n\\s*${escapedSelector}\\s*\\{([\\s\\S]*?)\\n\\s*\\}`, "g");
+    let m;
+    while ((m = re.exec(body)) !== null) bodies.push(m[1]);
+    searchFrom = ci + 1;
+  }
+  if (bodies.length === 0) {
     fail(`styles.css missing ${label}`);
     return "";
   }
-  return match[1];
+  return bodies.join("\n");
 }
 
 function declarationValue(block, property) {
+  // Last occurrence wins, matching the cascade for identical selectors.
   const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`${escaped}\\s*:\\s*([^;]+);`).exec(block);
-  return match?.[1]?.trim() ?? "";
+  const matches = [...block.matchAll(new RegExp(`(?<![-a-zA-Z])${escaped}\\s*:\\s*([^;]+);`, "g"))];
+  return matches.length ? matches[matches.length - 1][1].trim() : "";
 }
 
 function assertOpacityAtMost(block, propertyName, max) {
@@ -157,7 +185,14 @@ function auditKaspaSurfaceTreatment() {
   // RETIRED (pre-2026-07-08 glass design): assertCssIncludes( "background:\n linear-gradient(132deg, rgba(var(--green-rgb), .068), transparent 30%, rgba(var(--cyan-rgb), .035) 65%, transparent 88%),", "dark Kaspa background wash", );
   // RETIRED: .hero-visual appears on zero pages, so this asserted styling for a
   // component that nothing renders.
-  assertCssIncludes("text-transform: uppercase;\n  letter-spacing: .065em;", "technical eyebrow label treatment");
+  // The eyebrow's winning form is split across its base block (uppercase)
+  // and the final design layer (letter-spacing), so assert the cascaded
+  // values instead of one byte snippet.
+  const eyebrowBlock = declarationBlock(/\n\.eyebrow\s*\{([\s\S]*?)\n\}/, "technical eyebrow label treatment");
+  if (declarationValue(eyebrowBlock, "text-transform") !== "uppercase" ||
+      !declarationValue(eyebrowBlock, "letter-spacing")) {
+    fail("styles.css missing technical eyebrow label treatment");
+  }
 }
 
 function auditIntegratedGlassPolish() {
@@ -216,14 +251,14 @@ function auditGlowAndContrastDefaults() {
     fail("styles.css should not use broad 0 0 glow shadows");
   }
 
-  const darkBodyBefore = declarationBlock(/\nbody::before\s*\{([\s\S]*?)\n\}/, "body::before");
-  assertOpacityAtMost(darkBodyBefore, "opacity", 0.14);
-
-  const lightBodyBefore = declarationBlock(
-    /\n:root\[data-theme="light"\]\s+body::before\s*\{([\s\S]*?)\n\}/,
-    "light body::before",
-  );
-  assertOpacityAtMost(lightBodyBefore, "opacity", 0.06);
+  // RETIRED (2026-08-31 cascade cleanup): the body::before texture layer is
+  // display:none in the final design layer ("body::before, body::after {
+  // display: none; }"), so its opacity renders nowhere. Guard the hiding
+  // rule instead: if the texture ever comes back, the opacity caps come
+  // back with it.
+  if (!/body::before,\s*\nbody::after\s*\{\s*\n\s*display:\s*none;/.test(css)) {
+    fail("final design layer should keep body::before/::after hidden (or restore the opacity caps this replaced)");
+  }
 
   const lightHeadingBlock = declarationBlock(
     /\n:root\[data-theme="light"\]\s+h1,\s*\n:root\[data-theme="light"\]\s+h2\s*\{([\s\S]*?)\n\}/,
@@ -364,7 +399,9 @@ function auditNextStepButtons() {
 function auditHeaderControls() {
   const navBlock = declarationBlock(/\n\.nav\s*\{([\s\S]*?)\n\}/, "base nav");
   const navMinHeight = numberFromCssValue(declarationValue(navBlock, "min-height"));
-  if (!Number.isFinite(navMinHeight) || navMinHeight < 72) {
+  // 56px is the winning apple-layer value (earlier 72px blocks are legacy,
+  // overridden since 2026-07-08); assert the rendered height, not the relic.
+  if (!Number.isFinite(navMinHeight) || navMinHeight < 56) {
     fail(".nav should keep a stable desktop header height");
   }
 
@@ -383,7 +420,9 @@ function auditHeaderControls() {
   }
 
   const mobileNavBlock = mediaRuleBlock(700, ".nav", "mobile nav spacing");
-  if (declarationValue(mobileNavBlock, "padding") !== "14px 0") {
+  // "8px 0" is the winning apple-layer mobile padding; the "14px 0" this
+  // guarded was the overridden legacy block.
+  if (declarationValue(mobileNavBlock, "padding") !== "8px 0") {
     fail("mobile .nav should keep vertical padding");
   }
 
