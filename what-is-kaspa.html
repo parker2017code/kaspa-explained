@@ -68,7 +68,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <link rel="stylesheet" href="styles.css?v=20260831-000000">
   <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
@@ -2633,6 +2633,11 @@ TPS = tx_per_block × 10 blocks/second</span>
   var tipLabelEl = document.getElementById("ln-tipLabel");
   var tipLabelLiveText = tipLabelEl.textContent;
   var tipLabelStaleText = "blocks were racing for that spot when this page last reached the network. That count is not current; see the banner above.";
+  // Before the first successful read there is no count to be stale about, and
+  // printing the placeholder zero told the reader that no blocks race here,
+  // which is the opposite of what this page exists to show. UX-AUDIT-2.md D7.
+  var tipLabelNoReadText = "No read from the network yet. The banner above says why.";
+  var hadLiveRead = false;
   var tipDotsEl = document.getElementById("ln-tipDots");
   var sampleLineEl = document.getElementById("ln-sampleLine");
   var statusLineEl = document.getElementById("ln-statusLine");
@@ -2778,11 +2783,21 @@ TPS = tx_per_block × 10 blocks/second</span>
   }
 
   function setLiveState(live) {
-    tipLabelEl.textContent = live ? tipLabelLiveText : tipLabelStaleText;
+    if (live && hadLiveRead) {
+      tipLabelEl.textContent = tipLabelLiveText;
+      tipCountEl.hidden = false;
+    } else if (hadLiveRead) {
+      tipLabelEl.textContent = tipLabelStaleText;
+    } else {
+      tipLabelEl.textContent = tipLabelNoReadText;
+      tipCountEl.hidden = true;
+    }
     tipCountEl.classList.toggle("is-stale", !live);
     feedEl.classList.toggle("is-stale", !live);
     if (!live) {
-      sampleLineEl.innerHTML = "No live read since the connection dropped. Everything below is frozen at the last confirmed check, not current.";
+      sampleLineEl.innerHTML = hadLiveRead
+        ? "No live read since the connection dropped. Everything below is frozen at the last confirmed check, not current."
+        : "Nothing has been read from the network yet, so there is nothing below to show.";
     }
   }
 
@@ -2822,6 +2837,7 @@ TPS = tx_per_block × 10 blocks/second</span>
       .then(function (r) { if (!r.ok) throw new Error("bad status " + r.status); return r.json(); })
       .then(function (dag) {
         var tips = dag.tipHashes || [];
+        hadLiveRead = true;
         tipCountEl.textContent = tips.length;
         document.getElementById("ln-parallelRow").hidden = false;
         renderTipDots(tips.length);

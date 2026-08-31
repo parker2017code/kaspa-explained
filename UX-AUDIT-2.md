@@ -39,8 +39,8 @@ Legend: `pass`, or a one-line defect. Perspective in brackets: `[E]` expert,
 | Surface | 1 states | 2 overflow 390/320 | 3 label clarity | 4 newcomer Qs | 5 consistency | 6 failure path |
 |---|---|---|---|---|---|---|
 | index.html | pass | pass | pass | n/a | pass | n/a |
-| start-here.html | **D1** path-grid doors: zero hover response [N] | pass | pass | pass | **D1** every other card grid lifts on hover; these two do not [E] | n/a |
-| crypto-from-scratch.html | **D5** checkboxes: no hover [E] | pass | pass | n/a | pass | n/a |
+| start-here.html | **D1** path-grid doors: zero hover response [N] | pass | pass | pass | pass, and see D1's note: no card grid on this site lifts on hover [E] | n/a |
+| crypto-from-scratch.html | **D5b** nine checkbox rows: no hover [N] | pass | pass | n/a | **D5b** same gap on four more checkbox controls, three other pages [E] | n/a |
 | what-is-kaspa.html | **D4** slider thumbs: no hover [E] | pass | pass | pass | pass | **D7** livenet fallback prints "0 blocks were racing" before any read [N] |
 | kips.html | **D4** slider thumbs [E] | pass | pass | pass | pass | pass, baseline stands and caption restamps |
 | kaspa-origin-story.html | **D4** sliders; **D6** view-switch Chart/Table: no hover [E] | pass | pass | pass | **D6** same view-switch, three pages, no hover on any [E] | n/a |
@@ -101,13 +101,23 @@ That is the strongest part of the site and no copy change is warranted.
 
 **D1. `.path-grid a` has no hover state at all.** `styles.css:5657` neutralizes
 `.path-grid a:hover` to `border: 0; background: var(--card-bg)`, byte-identical
-to the default state, and the `translateY(-2px)` lift the site's other card
-grids get at `styles.css:4980` never lists `.path-grid a`. Measured across all
-13 properties including `transform`: no change. These are the two doors the
-site's own start page asks you to choose between. Severity: high. Class also
-covers `.toccata-evidence-map a` and `.toccata-builder-grid a`.
-Fixed: added `.path-grid a`, `.toccata-evidence-map a`, and
-`.toccata-builder-grid a` to the site's existing card-lift hover treatment.
+to the default state. Measured across all 13 properties including `transform`:
+no change. These are the two doors the site's own start page asks you to choose
+between. Severity: high.
+
+My first read of this said the fix was to add `.path-grid a` to the
+`translateY(-2px)` card lift at `styles.css:4980`. That was wrong, and the
+measurement caught it: `styles.css:4369` sets `transform: none !important` on
+hover for a 35-selector list that includes `.path-grid a`, so no card grid on
+this site lifts on hover and nothing can out-specify an `!important`. The rule's
+stated reason, backdrop-filter cards flickering while they move, died with the
+de-glassing. Two further facts about that list, since they bear on any later
+cleanup: only `.path-grid` and `.check-grid` of its 35 selectors appear in any
+page at all, and the lift at `styles.css:4980` it overrides is therefore dead
+code in its entirety. Removing either is a separate job with a much wider blast
+radius than this pass.
+Fixed: a background step on `.path-grid a:hover`, which is the Apple idiom
+`design/STANDARD.md` names first anyway, and which no `!important` blocks.
 
 **D2. Five `.cvb-attack` buttons dead on hover.** `build-on-kaspa.html:374`
 sets the attack buttons' background at the same specificity as
@@ -130,10 +140,18 @@ Fixed: one global rule in `styles.css` scaling the thumb on hover and on
 press, chosen because no per-page rule sets `transform` on the thumb and so
 no specificity fight is possible.
 
-**D5. Native form controls have no hover.** Checkboxes, radios, selects,
-number inputs, and search inputs give no pointer feedback on any page.
-Severity: low. Fixed for the text-entry controls, which carry a visible
-border that can take a tint.
+**D5. Native form controls have no hover.** Selects, number inputs, and search
+inputs give no pointer feedback on any page. Severity: low. Fixed with a border
+tint, plus a page-scoped rule on `build-on-kaspa.html` where `.cvb-field`'s own
+border-color out-specifies the global one.
+
+**D5b. Nine checkbox rows on `crypto-from-scratch.html`, plus five more across
+three other pages, have no hover.** A bare checkbox cannot take a background,
+but the label wrapping it is the real click target and the real control, and it
+was inert. Severity: medium on `crypto-from-scratch.html`, where the nine rows
+are the page's only interactive element. Fixed with a background step on
+`label:has(> input[type="checkbox"])`, mixed over `--card-bg` rather than
+transparent so the card rows stay opaque.
 
 **D6. `.view-switch` Chart/Table toggle has no hover**, on all three pages
 carrying it. Severity: low. Fixed with the same background step the site's
@@ -166,6 +184,14 @@ distinguish three cases in the caption text, not two: a live read, a rate-limit
 ("GitHub's public quota for this network is used up"), and a hard failure
 ("The live read from GitHub failed"). `model-picker-data.html` makes no
 external request at all. Nothing here needed fixing except D7.
+
+**Term tooltips work, and the coarse sweep was wrong about them.** The
+per-signature sweep flagged `.term-def` on nine pages as having no hover. It
+does: `styles.css:6707` reveals the definition panel, measured going from
+`opacity 0 / hidden` to `opacity 1 / visible` on hover. What does not change is
+the span's own computed style, which is all the sweep was reading. Recorded
+here because it is the same false-positive shape as the closed-`<details>`
+problem, and the next person running this harness should expect it.
 
 **Demo copy: the site's strongest surface.** See the per-demo table.
 

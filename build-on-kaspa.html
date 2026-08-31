@@ -69,7 +69,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260830-000000">
+  <link rel="stylesheet" href="styles.css?v=20260831-000000">
   <script defer src="nav.js?v=20260830-000000"></script>
 </head>
 <body>
@@ -354,6 +354,11 @@
         .cvb-demo .cvb-field:last-child { margin-bottom: 0; }
         .cvb-demo .cvb-field label { display: block; font-size: 16px; color: var(--cvb-muted); margin-bottom: 4px; }
         .cvb-demo .cvb-field-hint { margin: 4px 0 0; font-size: 16px; color: var(--cvb-faint); }
+        /* Out-specifies the global input hover in styles.css, which .cvb-field's
+           own border-color rule below would otherwise win against. */
+        .cvb-demo .cvb-field input[type=number]:hover, .cvb-demo .cvb-field select:hover {
+          border-color: color-mix(in srgb, var(--cvb-green) 45%, var(--cvb-field-line));
+        }
         .cvb-demo .cvb-field input[type=number], .cvb-demo .cvb-field select {
           width: 100%; min-height: 44px; background: var(--cvb-field-bg); border: 1px solid var(--cvb-field-line);
           color: var(--cvb-text); border-radius: 8px; padding: 7px 10px; font: inherit; box-sizing: border-box;
@@ -373,6 +378,11 @@
         .cvb-demo button.cvb-primary:hover { background: color-mix(in srgb, var(--cvb-green) 85%, black); }
         .cvb-demo button.cvb-attack { background: color-mix(in srgb, var(--cvb-pink) 16%, var(--cvb-control-bg)); }
         .cvb-demo button.cvb-attack.repeat { background: color-mix(in srgb, var(--cvb-purple) 20%, var(--cvb-control-bg)); font-weight: 600; }
+        /* These two out-specify .cvb-demo button:hover above, which is why the
+           five attack buttons, the demo's primary controls, were dead to the
+           pointer until 2026-08-31. See UX-AUDIT-2.md D2. */
+        .cvb-demo button.cvb-attack:hover { background: color-mix(in srgb, var(--cvb-pink) 30%, var(--cvb-control-bg)); }
+        .cvb-demo button.cvb-attack.repeat:hover { background: color-mix(in srgb, var(--cvb-purple) 34%, var(--cvb-control-bg)); }
         .cvb-demo button:disabled { opacity: .45; cursor: not-allowed; }
         .cvb-demo .cvb-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         .cvb-demo .cvb-presets button { font-size: 16px; min-height: 44px; line-height: 1.25; }

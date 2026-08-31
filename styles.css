@@ -7682,3 +7682,76 @@ summary:active {
     opacity: 0.8;
   }
 }
+
+/* Hover-state defect class (2026-08-31, UX-AUDIT-2.md D1, D4, D5, D6).
+   Four groups of controls responded to focus and to press but not to hover.
+   Measured by diffing 13 computed properties in default against :hover on
+   every visible interactive element on every page, which is how a defined
+   rule that another rule silently outranks gets caught. */
+
+/* D1. styles.css:5657 resets .path-grid a:hover to the default border and
+   background, so the site's two entry doors had no hover response of any kind.
+   A background step rather than the translateY at styles.css:4980, because the
+   glass-era rule at styles.css:4369 kills every card-grid hover transform with
+   !important and nothing can out-specify that. That rule's stated reason,
+   backdrop-filter cards flickering while they move, died with the de-glassing;
+   removing it is a separate job, and only .path-grid and .check-grid of its 35
+   selectors still appear in any page. */
+.path-grid a:hover {
+  background: color-mix(in srgb, var(--text) 6%, var(--card-bg));
+}
+
+/* D4. Ten pages define ::-webkit-slider-thumb, none defined a hover or press
+   state, so the primary control of eleven demos was inert to the pointer.
+   Scoped to the thumb's transform because no per-page rule sets one, which
+   is what keeps this out of a specificity fight with all ten of them. */
+input[type="range"]:not(:disabled):hover::-webkit-slider-thumb {
+  transform: scale(1.18);
+}
+
+input[type="range"]:not(:disabled):active::-webkit-slider-thumb {
+  transform: scale(1.08);
+}
+
+input[type="range"]:not(:disabled):hover::-moz-range-thumb {
+  transform: scale(1.18);
+}
+
+input[type="range"]:not(:disabled):active::-moz-range-thumb {
+  transform: scale(1.08);
+}
+
+/* D5. Text-entry controls carry a visible border that can take a tint. */
+input[type="search"]:not(:disabled):hover,
+input[type="number"]:not(:disabled):hover,
+input[type="text"]:not(:disabled):hover,
+select:not(:disabled):hover,
+textarea:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--green) 40%, var(--line-bright));
+}
+
+/* D5b. A label wrapping a checkbox is the real click target and the real
+   control, so it takes the pointer feedback the bare input cannot. The radius
+   is invisible at rest, where there is no background to round. */
+label:has(> input[type="checkbox"]):hover {
+  background: color-mix(in srgb, var(--text) 6%, var(--card-bg));
+  border-radius: 8px;
+}
+
+/* D6. The Chart/Table toggle on three pages. The label is the visible
+   control; its input is an offscreen 44px box. */
+.view-switch__tab:hover {
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  input[type="range"]:not(:disabled):hover::-webkit-slider-thumb,
+  input[type="range"]:not(:disabled):active::-webkit-slider-thumb {
+    transform: none;
+  }
+
+  input[type="range"]:not(:disabled):hover::-moz-range-thumb,
+  input[type="range"]:not(:disabled):active::-moz-range-thumb {
+    transform: none;
+  }
+}
