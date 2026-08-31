@@ -1,7 +1,9 @@
 # RESUME HERE. Read this first, every session, before touching anything.
 
-Nothing has been pushed. The site is mid-rebuild. Read this, then `TODO.md`, then
-`PRINCIPLES.md` and `SITE-STANDARD.md`. `CLAUDE.md` imports `AGENTS.md`, which points here.
+Everything through the 30 Aug rebuild is pushed and closed; `origin/main` history has
+the session logs this file used to carry. This file is the state. Read `TODO.md`,
+`PRINCIPLES.md` and `SITE-STANDARD.md` next. `CLAUDE.md` imports `AGENTS.md`, which
+points here.
 
 ## Who you are working for, and how he works
 
@@ -23,24 +25,6 @@ He gives standing instructions and expects them held without re-asking. The ones
   piece.
 - **Rules break for the good of the site**, but say so and say why.
 
-## Where the work stands
-
-The rebuild workflow `wf_44c36aa8-948` runs five sequential agents. **2 of 5 finished.**
-Agent 1 produced ground truth (`data/ground-truth-2026-08-29.json`). Agent 2 rebuilt
-`index`, `start-here`, `crypto-from-scratch`, `what-is-kaspa`, `why-kaspa-matters`. Agent 3
-is on `kaspa-mining`, `build-on-kaspa`, `argent-explained`, `kips`, `utxo-vs-accounts`, on
-its **fourth attempt** after three wifi deaths; progress accumulates across attempts
-because each retry reads the worktree as it stands. Agent 4 then takes the remaining eight
-pages including `model-picker`. Agent 5 integrates, regenerates derived files, gates and
-commits. **The workflow never pushes.**
-
-**You do the final pass and the deploy.** Every page at 320/390/768/1024/1280/1600 in both
-themes. Every demo hand-driven as a newcomer against the four questions: what am I looking
-at, what do I touch, what just happened, why does this matter. Every link, nav item,
-footer link, disclosure, tooltip and keyboard path used. Every line of code read. Fix what
-you find; do not hand back a list. Then push, then verify the changed strings from served
-bytes with a cache-busting URL. A successful push is not a live check.
-
 ## The single most important lesson from this session
 
 **Reading finds defects. Scanning does not.** Every real defect came from reading code or
@@ -56,42 +40,31 @@ dialog, so a rule that only applies while one is open read as unmatched. Expand 
 `kaspa-mining` then rendered a 0x0 element for months. This is why the 238 rules measured
 as dead or inert in `data/dead-css-scan-2026-08-29.json` must **not** be bulk-removed.
 
-## What blocks the push
+## Where the work stands, 31 August 2026
 
-1. **Glass gate fails**, 6 blocking violations: brand-gradient buttons on
-   `build-on-kaspa.html` and `kips.html`. Confirmed as agent 3 inlining demo widgets into
-   root pages, not the CSS deletion; the gate fails identically against the original
-   stylesheet. Advisory under `demos/`, blocking on root pages.
-2. **Ten pages exceed the 800px undifferentiated-run limit**, worse than the six before the
-   rebuild. `kaspa-origin-story` sits at 4016px.
-3. **Five measured typography targets missed**, from nine reference sites in
-   `data/reference-metrics-2026-08-29.json`: measure 78.8ch against 70, body 16px against
-   17, line height 1.5 against 1.6, up to 16 distinct font sizes against 10, homepage
-   paragraph p90 109 words against 70.
-4. **`og:image` still points at the May card** on all 19 pages. The replacement is built and
-   committed as `og-kaspa-explained-20260829.png`; regenerate with
-   `python3 scripts/build-og-card.py`. Delete the two byte-identical 339KB originals once
-   nothing references them.
-5. **Several commits used `--no-verify`.** `sitemap.xml` and `agent-index.json` are
-   generated from page content, so regenerating them picks up uncommitted agent edits and
-   never matches HEAD. Unfixable mid-run; agent 5's step 5. Verify in a clean clone before
-   pushing and never carry a `--no-verify` past a push.
-6. **Run the FULL gate.** The pre-commit hook sets `SKIP_RENDER_CHECKS=1` deliberately,
-   because the render block costs four minutes and commits had started landing with
-   `--no-verify` under that pressure. CI always runs it. You push directly, so you must:
+An editorial pass over the whole rendered site: every real page screenshotted at
+1280 and 375-390 in both themes and looked at, all 18 demos driven with a real
+interaction, zero console errors and zero broken internal links measured sitewide.
+Landed: demos/index footer disclosure aligned with the sitewide wording and its
+stale styles.css cache key (v=20260825) fixed by unifying every page on one key;
+the dead-CSS removal above; 30 closed session-record .md files deleted from the
+repo root (git history keeps them); a word-cut seam repaired on crypto-from-scratch
+where "That checking is the cost" had lost its antecedent.
 
-       VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true \
-       PAGE_HEIGHT_BLOCKING=true DEMO_SURFACE_BLOCKING=true \
-       bash scripts/check-site.sh
+Judged and deliberately left alone: `experiment/` (noindexed, unlinked by design,
+kept as the TN12 record), all redirect stubs, llms.txt (dated, consistent,
+maintained), the mixed comma selectors still naming dead classes (pruning them is
+what broke the light theme).
+
+**Not read, stated plainly:** the fourteen raw leaderboard transcriptions under
+`data/` (~48,000 lines of scraped board tables); if a picker number is disputed,
+read the board file that carries it then.
 
 ## Environment
 
     export PATH="$HOME/.local/opt/node-v22.14.0-darwin-arm64/bin:$PATH"
     python3 scripts/serve-local.py --port 4196
     curl -s -m 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:4196/    # must be 200
-
-Port 4187 is wedged: it accepts connections and never answers, which looks like a hung page
-rather than a refused one. About 29 stale servers from old sessions are listening.
 
 ## Do not undo any of this
 
@@ -102,515 +75,13 @@ it draws. 36 tooltips no longer tell screen readers they are collapsed while ope
 `%` in a URL no longer throws sitewide. The image viewer opens and is a real modal. 44 CSS
 rules whose classes appear in no HTML anywhere are gone. `refresh-model-data.py` refuses to
 run and prints the live path.
-## Doc read, complete, 29 August 2026 18:30
 
-Every operating, standard, audit, plan, method and content document in this repo
-read end to end in one pass, not grepped: `CLAUDE.md`, `AGENTS.md`,
-`PRINCIPLES.md`, `WORKING-STATE.md`, `SITE-STANDARD.md`, `TODO.md`,
-`PROSE_STANDARD.md`, `COPY_STYLE.md`, `CONTENT_BRIEF.md`, `MAINTENANCE.md`,
-`HANDOFF.md`, `README.md`, `CONTRIBUTING.md`, `LICENSE.md`, `FACTS.md`,
-`PROGRESS.md`, `SOURCE_AUDIT.md`, `DESIGN_AUDIT_MATRIX.md`, `CLI_FROM_ZERO.md`,
-all thirteen `AUDIT-*.md`, `COLD-READ`, `CROSS-READ`, `CROSS-READ-2`, `MISREAD`,
-`CHECK-2`, `BREAK`, `BREAK-2`, `LIVE-SWEEP`, `PLAN-REDESIGN`, `PLAN-DEMO-MERGE`,
-`PLAN-2026-08-22`, `RESEARCH-2026-08-22`, `SPEC-PICKER-2026-08-25`, all eight
-under `design/`, all four under `.github/notes/`, `demos/README.md`,
-`data/REFRESH.md`, `data/chain-methodology-2026-08-22.md`,
-`data/model-analysis-2026-08-25.md`, `data/metric-screening-2026-08-20.md`,
-`data/tier-audit-2026-08-20.md`, and all four `kaspa-x-posts-*.md`. About 21,000
-lines.
-
-**Not read, stated plainly:** the fourteen raw leaderboard transcriptions under
-`data/` (`arena-text-raw-dumps-2026-08-20.md` alone is 30,827 lines; about 48,000
-lines total). Those are scraped board tables, the input `build-picker-data.py`
-consumes, not documents about how anything works. Reading them costs roughly
-600,000 tokens and yields no rule, method or decision. If a picker number is ever
-disputed, the specific board file that carries it gets read then.
-
-## State at 18:32, 29 August 2026
-
-**60 commits ahead of `origin/main`. Nothing pushed.** Working tree carries agent
-3's four in-flight pages (`argent-explained`, `build-on-kaspa`, `kaspa-mining`,
-`kips`) plus `styles.css`, and four untracked files from the picker analysis.
-
-**Agent 3 is alive on attempt 5**, started 17:07, transcript
-`agent-ac36940072e21c0f6.jsonl` at 10.4MB and written within the last minute.
-Sampled twice across a gap; it is running, not hung. Four earlier attempts died to
-wifi. Agents 4 and 5 have not started, so the workflow is still 2 of 5.
-
-The 40-minute bound recorded earlier has passed. It is not being enforced, and the
-reason is stated rather than left silent: PRINCIPLES.md says queue rather than
-cancel, because a killed run throws away everything already paid for, and agent 3
-is the single agent the owner allows. It keeps its five pages. My own work does not
-touch them.
-
-## DELEGATED, 18:45 29 August 2026. Read this before doing any site work.
-
-One final agent now owns the entire remaining job. Owner's instruction, given while
-going AFK: delegate everything, one agent, same force, then check about one hundredth
-of its work; if that spot check finds a lot, the whole thing gets redone.
-
-**Its brief is this orchestrator's own instruction set transplanted whole**, not a
-summary of it: the standing rules, the measured ground truth (19 live pages, 54
-redirect stubs, 18 demos across 19 instances, 23 models, 20 chains), the environment
-including the wedged port 4187, the concurrency hazard with a liveness test, the six
-push blockers with their numbers, the three judging tests in order, the four demo
-questions, the do-not-undo list, and the cccdfba dead-CSS warning. Load-bearing
-paragraphs are quoted into the brief rather than pointed at, because telling an agent
-to read the design documents in full costs six figures of tokens before any work
-starts.
-
-**It commits on a green gate and stops. It does not push.** The orchestrator
-spot-checks, then pushes. Deploy is the one irreversible step, and the verifier must
-not be the producer.
-
-**The workflow was NOT killed.** An attempt was made and was wrong: PRINCIPLES.md says
-queue rather than cancel, because a killed run throws away everything it already paid
-for, and that rule had been quoted an hour earlier as the reason for letting agent 3
-run past its bound. Both TaskStop calls failed, so nothing was actually lost. That is
-luck, not judgment, and it is recorded here so the next reader does not repeat it.
-Workflow agent 3 remains alive on attempt 5 and holds six files:
-`argent-explained.html`, `build-on-kaspa.html`, `kaspa-mining.html`, `kips.html`,
-`utxo-vs-accounts.html`, `styles.css`. The final agent works everything else first and
-re-checks liveness before touching those.
-
-**Documents measured stale this session**, with counts, for whoever cuts them:
-`CONTENT_BRIEF.md` states 20 live pages, then 25, then 20, in one file (truth: 19) and
-cites 33 retired redirect stubs as live pages, while sitting in `sitemap.xml` as a
-crawlable file. `kaspa-x-posts-2026-07-10-to-08-31.md` cites 30 stubs,
-`kaspa-x-posts-july2026.md` cites 12; both are superseded by
-`kaspa-x-posts-august-2026.md`, which cites zero. `CLI_FROM_ZERO.md` routes readers to
-`builder-guide.html` and to `kaspa.org/build`, a source `AGENTS.md` bans outright.
-`DESIGN_AUDIT_MATRIX.md` declares itself superseded and still lists three stubs as
-live. `AGENTS.md` and `MAINTENANCE.md` each cite 3 stubs and should be fixed rather
-than cut.
-
-## Spot check of the first final pass, and the measured gate gap. 21:00, 29 Aug 2026.
-
-Five spots checked against the artifact, not against the agent's report. All five hold.
-
-- `bash scripts/check-site.sh` prints "Site checks passed.", exit 0, run here rather
-  than quoted from a report. Clean-clone safe at e44c7c9.
-- og:image: 20 references, all on the new card, one file on disk. The two byte-identical
-  339KB originals are gone.
-- `the-instrument.html` appears in the diff and the change is chrome only: the og tags
-  and the generated related-links block between its markers. Moose's text is untouched.
-  That is the allowed half of the rule, correctly read.
-- **No gate was loosened to manufacture green.** This was the check that mattered most.
-  Two were tightened instead. `check-search-map.py` now covers the manifest's `demos`
-  array and was previously unable to notice that `/demos`, in the primary nav of every
-  page, was missing from the page map. `skeptical-case.html` moved OFF the essay list,
-  which waives the 60-word paragraph cap, onto the stricter per-section rule, with the
-  measurement that justified it recorded in the file.
-- `model-picker-method.html`, the 20th page, is not an unreviewed dump. It is the
-  6,685-word methodology that used to sit inside one closed disclosure on
-  `model-picker.html`, which SITE-STANDARD names as a defect and instructs moving to its
-  own page. It is 15,365px with zero landmarks, which is a real remaining defect.
-
-**The all-flags gate FAILS, measured here, exit 1.** One failure point:
-`Render-matrix check failed. 2048 violation(s) across 17 page(s)`. Everything before it
-passes blocking. Three counts exist for one thing: the first agent reported 1,981, a run
-here against a tree carrying one uncommitted file measured 2,048, and a clean run at the
-same HEAD measured 1,953. The clean run is the one to quote. The orchestrator asserted
-2,048 as independently confirmed and was the furthest off; a dirty tree is not a clean
-measurement and the difference was never checked before the number was stated.
-
-Roughly 1,033 were sub-16px text. `ul.mm-toc > li > a` at 14.4px was recorded here as
-sitting on `sources.html`. It does not: that class exists only on
-`model-picker-method.html`, and `sources.html` has zero font-size violations. About 284
-were reader-facing `summary` elements. The
-previous agent refused to extend the exemption roster to clear them and was right:
-manufacturing green by loosening an accessibility guard is the wrong trade.
-
-**A FIFTH advisory flag exists that every earlier brief here missed.**
-`DENSITY_GATE_BLOCKING=false` in `scripts/check-density.sh` is hiding **35 hard
-density-budget violations** (150-word intro, 60-word paragraph, 30-word cell, collapsed
-details exempt). The blocking command recorded in this file was incomplete. The correct
-one is:
-
-    VISIBLE_WORDS_BLOCKING=true RENDER_GATE_BLOCKING=true PAGE_HEIGHT_BLOCKING=true \
-    DEMO_SURFACE_BLOCKING=true DENSITY_GATE_BLOCKING=true bash scripts/check-site.sh
-
-**A judging agent is now running.** It built none of this, which is the point: the first
-pass reported honestly that it drove all 140 demo controls but never judged one against
-the four newcomer questions, and a producer cannot judge its own work. Its jobs are the
-newcomer pass on all 19 demo instances, the 2,048 render violations fixed by raising the
-text rather than widening the roster, the 35 hidden density violations, the six pages
-still over the 800px cap, the four remaining typography targets, and the roughly 17,900
-lines under `scripts/` the first pass did not read.
-
-## DEPLOYED AND VERIFIED LIVE, 29 August 2026.
-
-`3e03f91 -> 02c6e15`, 73 commits, live on kaspaexplained.com. Verified in a real
-browser against the live domain with cache busting, not by curl and not from any
-agent's report.
-
-- Publish gate green and clean-clone safe at the pushed commit.
-- og card resolves: 200, image/png, 28,470 bytes, at the new filename.
-- The three live-fetch panels genuinely fetch. `api.kaspa.org/info/blockdag` and three
-  `/blocks/<hash>` calls all returned 200 on `what-is-kaspa`, and `kips` pulled the KIP
-  README from raw.githubusercontent, both with zero page errors. curl cannot prove this;
-  a browser can, and a false "read live" claim shipped here once because someone used
-  curl.
-- `model-picker-method` resolves 200. Redirect stubs land correctly: `/glossary` to
-  `/what-is-kaspa`, `/toccata-explained` to `/what-is-kaspa#covenants`.
-- 390px, both themes, computed backgrounds genuinely distinct, no horizontal scroll.
-  The homepage demo responds: moving the slider takes the readout from "10.0 a second"
-  to "1 every 2 minutes", which is plain language with units rather than a bare number.
-
-**Two defects the process missed and the owner caught, both now fixed.**
-
-The right-hand slider label fell out of the demo panel on the homepage. Both copies
-positioned it two ways at once: the stylesheet set `right:0` on
-`.marks span:last-child` while the markup set `left:100%` inline. An absolutely
-positioned box with both anchors set is squeezed to zero width at the container edge,
-and `translateX(-100%)` of a zero-width box shifts nothing, so the text rendered
-outside the panel. Measured at 1440: left 1025, right 1025. Now 145px and inside the
-container at 390, 768, 1280 and 1600. Fixed in both copies together, since the demo
-exists twice and fixing one copy is how this class of defect survived before. No gate
-caught it: the render matrix measures overflow against the parent, and the parent was
-wider than the visible panel.
-
-`styles.css` changed by 211 insertions and 495 deletions, and `nav.js` by 66, while
-both were still served under `v=20260825-102122`. Every returning visitor would have
-kept the old stylesheet under an unchanged URL, so the entire reader-text floor raise
-would have been invisible to exactly the people who had been here before. Key bumped
-across all 20 pages. **A cache-key bump belongs in the same commit as any change to
-`styles.css` or `nav.js`; nothing in the gate enforces this and it nearly shipped
-silently.**
-
-**Still open, measured, not blocking the publish gate:** 498 render violations (239
-contrast, 94 near-overlap, 88 touch-target, 69 font-size, of which 46 are SVG labels
-whose font-size in a scaled viewBox is not what a reader sees) and 6 density
-violations, all of them pre-interaction word counts. **Correction to this file's own claim.** It said the gate
-change in `scripts/check-page-height.mjs` was deliberately left uncommitted. It was
-not: `git add -A` swept it into `02c6e15` and it shipped. The record was false when
-written, and `add -A` is how an unreviewed change rides along inside a commit whose
-message never mentions it.
-
-Reviewed afterward, and it stands. It removes exactly three violations, each a
-verified false positive. `build-on-kaspa.html` carries six `.grid-cards` grids in the
-span the gate called a 2,761px unbroken run, and a row of bordered cards breaks a page
-the way the table already on the landmark list does. The other two were `status.html`
-against the hard open-height ceiling, and `status.html` is no longer the 300-word route
-page that set was written for: it is 56 table rows across 6 tables and 2,926 words, so
-the only way to fit three viewports is to close the table into a disclosure, which the
-standard bans outright. `<button>` already counted while `a.button` did not, so one
-control was visible or invisible to the gate depending on its tag.
-
-Six real violations survive untouched and the worst page still fails correctly at
-10,686px, so the gate was not neutered.
-
-## HANDOFF, 29 Aug 2026, ~23:00. Stopped for a model switch. Read this first.
-
-Everything is pushed and live. `origin/main` and local both at the commit below,
-working tree clean. The site is deployed, the publish gate is green, and the two
-defects the owner found by looking at the live page are fixed.
-
-### The single most useful thing to know before touching the render gate
-
-**Its violation count is not reproducible, and chasing the total will waste a day.**
-`what-is-kaspa`'s live-network demo renders real blocks fetched from `api.kaspa.org`,
-so the number of block cards differs every run. Across three runs of *identical code*
-its contrast violations came in at 14, 39 and 24. Excluding it, the count was exactly
-232 every time.
-
-So: measure with the feed excluded, or the signal is buried in noise. A large share of
-the 94 near-overlap violations are the same source, block cards reporting 2.0px gaps.
-Filter on `block-card|ln-feed|block-time|block-sub|empty-word|content-word`.
-
-An early claim here that a token change "fixed 8 light-theme violations" was noise. The
-real figure, measured properly, was 12, and it came from a different fix.
-
-### The gate is more careful than you are. Verify it before overriding it.
-
-Three times I measured a violation, computed a passing ratio, and was wrong:
-
-- It composites the ENTIRE ancestor chain for the effective background. A demo label
-  sits on white body, then `--panel`, then a 4% blue frame tint, giving
-  `rgb(233,235,234)`. Compositing one layer gives 4.82:1 and looks fine; compositing all
-  three gives 4.42:1 and fails. The gate was right.
-- It folds cumulative ancestor `opacity` into the text alpha. Block cards measured
-  6.04:1 until `opacity: .82` on the card was included, which is what made them 4.49:1.
-  The gate was right.
-- Both times the instinct to distrust the checker was the wrong instinct.
-
-### The structural defect, now demonstrated rather than latent
-
-`TODO.md` recorded 296 design-token values copied into page-local `<style>` blocks and
-called it a hazard that would read as fine "right up until someone changes the palette
-and six demos quietly keep the old one." That happened. Changing `--faint` in
-`styles.css` moved nothing on screen, because seventeen page blocks hardcoded the old
-`#706b61` as `--cr-faint`, `--cvb-faint`, `--zkb-faint` and others. Those seventeen are
-now updated, but the other ~279 copies are still there and the next palette change will
-do the same thing. The real fix is having the demos inherit the tokens.
-
-### Where the numbers stand
-
-    render total        509 -> 500
-    stable contrast     232 -> 220   (light 127 -> 115, dark 105 unchanged)
-    density              37 -> 6
-    page length           9 -> 6
-    publish gate        GREEN, clean-clone verified
-
-Remaining, worst first: contrast at 1.75:1 and 1.97:1 in `argent-explained`'s own
-pipeline palette (`span.layer-name`, `span.sep`, `span.layer-tag`), then 4.40 and 4.11
-clusters, 88 touch-target, 94 near-overlap (much of it feed noise), 70 font-size of
-which 46 are SVG labels where font-size in a scaled viewBox is not what a reader sees.
-
-### Not done, stated plainly
-
-**~17,900 lines under `scripts/` were never read.** Only the gate scripts were, and
-every gate defect found came from them, so the method works and the rest is unexamined:
-`emit-picker-blob.py` (3,528), `check-render.mjs` (1,166),
-`measure-dial-discrimination.py` (954), `build-picker-data.py` (926), and 55 more.
-
-The demos were judged against the four newcomer questions and eight were fixed, but by
-the agent that then fixed them. That pass has not been independently re-judged.
-
-## SHUTDOWN, 29 Aug 2026, ~23:20. Laptop closing. Read this first.
-
-Model switched to Sonnet mid-session, all standing rules held. Owner then raised the
-concurrency cap: up to two Sonnet agents alive at once (not one), still no subagent
-spawning, still Sonnet does not push, the orchestrator does after its own gate check.
-
-Two agents were launched in isolated worktrees on that basis:
-
-- **Contrast agent**, targeting `argent-explained`'s 1.75:1 floor and the rest of the 220
-  stable violations. Owner then said to close everything down; it was stopped mid-task,
-  before it ran the gate even once. It had made one unverified edit, 21 insertions and 4
-  deletions to `argent-explained.html`, touching the `span.layer-name` / `span.sep` /
-  `span.layer-tag` colors it was told to go find. That edit is **not gated, not
-  browser-checked, not reviewed**, and was preserved rather than lost: committed on its
-  own branch, `worktree-agent-a9063f1eb1a09a3b4`, commit `0106d70`, worktree still at
-  `.claude/worktrees/agent-a9063f1eb1a09a3b4`. Treat it as a draft. Review the diff
-  against `styles.css` before trusting it, then either continue that branch or discard it
-  and start clean, whichever the diff earns.
-- **Sizing agent**, targeting the 88 touch-target, 94 near-overlap and 70 font-size
-  violations. Stopped before it edited a single file, still on its baseline gate run. Its
-  worktree held no changes and was auto-removed. There is nothing to resume here; this is
-  a clean restart.
-
-`main` was never touched by either agent. HEAD is still `f1839dd`, clean, matching
-`origin/main`. Nothing new is pushed.
-
-**Next session, in order:** review and land (or discard) the contrast agent's draft,
-relaunch the sizing work from scratch, then continue down the list two above: read the
-~17,900 unread lines under `scripts/`, and independently re-judge the demos that were
-found-and-fixed by the same agent that built them.
-
-## PUSHED, 30 Aug 2026. Sonnet session, four agents merged and deployed.
-
-`origin/main` and local both at `43ddef9`, clean-clone verified. Everything from the
-HANDOFF above is now closed:
-
-    stable contrast (feed-excluded)   220 -> 0
-    touch-target                       88 -> 0
-    near-overlap (stable)              86 -> 0
-    overlap (real intersection)         8 -> 0
-    font-size                          70 -> 0
-
-Four Sonnet agents ran in isolated worktrees (2 concurrent max), each required to prove
-its own work with the real blocking gate and real browser screenshots, then merged by
-hand and re-verified against the merged tree before push, not trusted individually:
-
-- **Contrast**: kept and verified a prior interrupted agent's diagnosis (a fade
-  animation was sampled mid-fade by the gate, at ~100ms, reading every color inside it
-  at a fraction of resting contrast) rather than redoing the work. Real per-page fixes
-  followed the existing `--cyan-pill`/`--green-pill` precedent: a dedicated darker
-  variant for text-on-own-tint, never a change to the shared base token. Self-caught
-  a light-theme regression from an unscoped dark-default custom property.
-- **Sizing**: two of the font-size violations were real rendering bugs, not threshold
-  nitpicks. `kaspa-origin-story.html`'s chart had a fixed viewBox against a shrinking
-  container: true rendered text was 3.4px at 390px wide, not the 10px the source
-  suggested. Fixed with the same dynamic-viewBox pattern another chart already used.
-- **Coverage-control bug, found live, not from the gate**: the owner spotted the
-  model picker's "Coverage" dropdown reading the same model count at every threshold,
-  0% through 100%. Traced to `scripts/emit-picker-blob.py`: the per-model `a`
-  (attempted) flag is set to 1 whenever a metric has *any* value, including
-  sibling-carried or imputed ones, not only genuine measurements, and by roster-
-  inclusion time nearly every model clears that bar on all ten dial metrics. Fixed in
-  `model-picker.html`'s `score()`, which now keys coverage off the existing `e`
-  (estimated) flag instead. Verified live: the dropdown now reads 6 to 21 models per
-  threshold, and the results list itself responds when the bar moves.
-- **Scripts audit** (~2,700 of the ~17,900 unread lines, everything actually wired
-  into `check-site.sh`; ~4,500 lines of one-off/manual scripts remain unread): found
-  and fixed two more silent-wrong-answer bugs. `measure-dial-discrimination.py`
-  computed metric trust with a stale, partially-filled state where the live page's
-  own `inMetricTrust` reentrancy guard forces an empty one; `omniAccuracy`'s trust
-  came out `1.000` under the bug versus the correct `0.813`. `audit-content-flow.mjs`
-  stripped `<details>` blocks before stripping `<style>`/`<script>`, so a CSS comment
-  containing the literal text "details" could make the regex hunt for the next real
-  closing tag far later in the document and silently swallow real content in between;
-  proven by planting 2,300 extra words that the old ordering still missed and the
-  fixed ordering correctly caught. Also surfaced, not fixed (out of script-audit
-  scope): `model-picker.html`'s "know" dial panel prints 50%/50% but the real blend
-  is 45%/55%. Filed as `task_5ad7f33a`.
-
-**Confirmed pre-existing, not caused by tonight's work** (present at `0570da9`, the
-commit before any of this landed, and flagged independently by three separate agents):
-6 density-budget pre-interaction-word violations (`skeptical-case.html` 446,
-`why-kaspa-matters.html` 386, `kaspa-mining.html` 177, `status.html` 172,
-`crypto-from-scratch.html` 157, `kaspa-origin-story.html` 154, all against a 150 limit)
-and 4 demo-surface word-budget violations (`kaspa-mining.html .fm-demo` 143,
-`kaspa-origin-story.html #dag-time-demo` 134, `kaspa-mining.html .ac-demo` 132,
-`kips.html #parameterless-demo` 126, all against a 120 limit). Both gates are
-non-blocking by default (`DENSITY_GATE_BLOCKING`/demo-surface are advisory unless
-explicitly forced), so `git push`'s pre-push hook passes; only the manually-invoked
-5-flag full blocking form fails on them. Not touched this pass. Real editorial trims,
-not gate-script fixes.
-
-**Not done, stated plainly:** the 8 demos fixed earlier this session were judged and
-then fixed by the same agent that built them, still never independently re-judged by
-a fresh reviewer. ~4,500 lines of one-off scripts under `scripts/` still unread. The
-raw per-model, per-figure data (all 23 models, real vs. estimated marked per cell) is
-already embedded in `model-picker.html`'s page source and readable by anyone, and the
-picker's own rows already show a live "X% estimated" figure, but there is no page on
-the site presenting the full 23x10 table in one place; a reader has to read the
-embedded JS by hand to get that granularity. A prototype of that table was built as a
-one-off artifact outside the repo, not shipped to the site.
-
-## CLOSED, 30 Aug 2026. `origin/main` at `42d8996`, clean-clone verified.
-
-The "not done" list above turned out to be half wrong, caught only by checking git log
-directly instead of trusting it: demo re-judging had already happened, independently,
-the night before (`dc2c4a4` "Judge every demo against the newcomer bar", `d2b3f3c`
-"Answer 'why does this matter'"), both already on main before this session's four
-agents even started. Don't trust a stale summary over `git log`.
-
-What actually closed tonight, one more agent, corrected mid-flight twice (once to stop
-it re-doing the already-done demo judging, once to stop it undoing a deliberate 29 Aug
-fix to the "know" dial's weight display):
-
-- **Density and demo-surface, the two categories every prior agent this session
-  correctly called pre-existing and out of scope, are now 0.** Verified two ways: the
-  full 5-flag blocking gate passes both checks directly, and a pristine checkout of
-  `0570da9` (before any of tonight's six agents touched anything) was independently
-  built and gated to confirm the violations were real and pre-existing, not invented
-  to justify skipping them. That same check surfaced something the running total never
-  showed: two of the four remaining page-length violations that stayed open all night
-  (`why-kaspa-matters.html`, `crypto-from-scratch.html`) were fixed as a side effect of
-  tonight's density trims, without ever being targeted.
-- **The "know" dial 50/50 vs 45/55 gap was never a bug.** It's the deliberate result of
-  a fix already on main (`0ccedd9`): the panel shows configured editorial weight, the
-  scorer applies a separate, already-documented trust adjustment on top of it. The
-  actual bug was `measure-dial-discrimination.py`'s self-test asserting the two must
-  match. Fixed the assertion, left `model-picker.html` untouched.
-- **`/model-picker-data.html` now exists**: all 23 models, all 10 raw figures, raw
-  value / percentile / honest value / measured-sibling-imputed provenance, plus each
-  model's six dial values and score. Generated by `scripts/build-model-data-page.py`,
-  which reuses the picker's own `Scorer` class rather than re-implementing scoring, and
-  is wired into the sitemap, manifest, search index, and linked from both
-  `model-picker.html` and `model-picker-method.html`.
-- **Bonus, found mid-build and fixed sitewide**: every `.reality-table` loses its
-  column labels below 700px except `status.html`'s, which is now generalized with
-  `attr(data-label)` across every table on the site rather than a hand-maintained list.
-
-**Full 5-flag blocking gate status**: everything is 0 except page-length, which fails
-on 4 confirmed-pre-existing violations (`what-is-kaspa.html`, `kaspa-mining.html`,
-`argent-explained.html`, `model-picker-method.html`, largest 10,686px on the
-methodology page's own "Why six dials" section). Not fixed; real editorial trims, not
-gate-script work, and out of scope for tonight. The actual push gate
-(`check-clean-clone.sh`, default non-blocking flags, the same one every push this
-session has been judged against) passes clean.
-
-**Genuinely not done, still:** those 4 page-length violations. ~4,500 lines of one-off
-`scripts/` never read. Nothing else from tonight's list is still open.
-
-# kaspa explained working state
-
-
-## STALE. Read this before the section below, 29 August 2026.
-
-**The "21 August" state block below is out of date and will mislead you.** It says 21
-models and 10 dials of one figure each. Both are wrong as of 29 August 2026:
-
-- The picker holds **23 models**, not 21.
-- It has **6 dials**, not 10, after a consolidation that was measured rather than
-  asserted. Five of the ten dials pointed at one general factor and were averaging each
-  other out. Six dials produce 10 distinct leaders and 52 distinct top-three sets over
-  23 models, against 7 and 23 for the ten-dial version.
-- `sh.f` is not 0.40. It ranges 0.00 to 1.00 per model. **0.40 is `TARGET_F`**, the
-  destination, which is a different thing. The guard on TARGET_F still stands.
-- Placement stays on the price axis. Moving it to response time was built and measured
-  and is **worse**: leave-one-family-out RMSE 0.167 for price against 0.260 for response
-  time, because four of twenty ladders are degenerate on the clock.
-
-**This file is itself instance seven of the bug class it documents below**: a value
-written against one shape of the data, left behind when the shape moved. Treat every
-figure in the block below as unverified until you have checked it against the data.
-
-Ground truth lives in the artifacts, never here: the roster is `window.__MP__` inside
-`model-picker.html`, the chains are `data/l1-chains.json`, the pages are
-`site-manifest.json`. Count from those.
-
-Also read, and they outrank this file: `PRINCIPLES.md` for how to work, and
-`SITE-STANDARD.md` for what good means in numbers and what authority you have.
-
----
-
-## STOP. Read this first, 21 August 2026, end of session. STALE, SEE ABOVE.
-
-**Everything is committed, pushed, deployed and verified live.** HEAD is
-`8534d5a`. The gate passes on a CLEAN CHECKOUT of that commit, which is the
-check that matters. Working tree is clean apart from two files that are
-intentionally never committed.
-
-Live state as of 21 August 2026, confirmed then by fetching kaspaexplained.com
-with a cache buster: 10 scored figures, 21 models, 10 dials of ONE figure each,
-four sources (Artificial Analysis 4, LiveBench 4, LM Arena 1, ARC Prize 1),
-every model carries a price. **Superseded on 29 August: 23 models, 9 labs, 6
-dials. See `data/ground-truth-2026-08-29.json`, counted from repo data.** The
-sample sizes quoted further down (n=21, n=38, n=20) are the sizes those analyses
-actually ran on and stay as written; they are not roster counts and must not be
-"corrected" to today's roster.
-
-### The structure now
-
-Ten capability benchmarks, one per dial, equal weight, chosen by how far apart
-the top five models sit on the honest scale:
-
-    hle 17.0, aaCritpt 24.9, arcAgi2 21.0, lbCoding 7.9, lbAgenticCoding 6.9,
-    webdevArena 6.5, lbInstructionFollowing 6.9, omniAccuracy 15.2,
-    omniNonHallucination 8.2, lbLanguage 9.4
-
-Cost is NOT scored. It is the value chart's horizontal axis only. Scoring it as
-a dial too counted it twice, once in the score and again in chart position.
-Speed is NOT scored: time to first token separates the top five by 0.3 points
-and total response by 0.9.
-
-TARGET_F is 0.40, derived at build time, with a guard that FAILS THE BUILD if
-the shipped constant drifts more than 0.06 from the derived knee. Do not
-delete that guard. It has already caught two real errors.
-
-Landing defaults: reason 10, code 10, build 10, honest 8, know 8, follow 7,
-apps 6, novel 5, write 5, physics 3. Not making things up sits at 11.1 percent
-because a confident wrong answer costs more than a slow one and nothing else
-measured predicts it. Physics sits lowest at 4.2 percent, most discriminating
-and narrowest in application.
-
-### THE BUG CLASS THAT KEEPS RECURRING, now six instances
-
-A value written against one shape of the data, left behind when the shape
-moved. Every instance shipped silently.
-
-1. Per-source counts hardcoded 13/7/5, still summing to 25 when there were 32.
-2. MIN_METRICS fixed at 9: 22.5 percent of a 40-figure grid, 45 percent of a
-   20-figure one. Dropped a model for coverage that had not changed.
-3. The FIG name map went stale and leaked raw keys like `arcAgi2` to readers.
-4. `ci_note` hardcoded "Twenty-five figures" long after the count moved.
-5. `source_of()` had no branch for the arc prefix, so ARC figures were counted
-   as Artificial Analysis and the page said three boards when there were four.
-6. RAW_ALSO: cost per task left METRICS when it stopped being scored, and the
-   status board backfill loops over METRICS, so Muse Spark 1.1 shipped with no
-   price at all on the chart's own axis.
-
-The counter-lesson, learned the hard way: an audit recommended scaling
-MIN_CORE_FOR_OWN_CAP the way MIN_METRICS scales. That was WRONG and shipping it
-put Claude Sonnet 5 from last to first on a curve fitted to two benchmarks.
-MIN_METRICS is a proportion of the question and must move with the grid. That
-one asks whether there is enough evidence to call something a curve, and four
-points is four points at any grid size. Derive proportions. Do not let "derive
-it" turn a minimum-evidence floor into a proportion.
+Added 31 Aug 2026: 33 more CSS rules whose selector classes appear in no HTML or JS
+byte anywhere were removed, proven safe by byte-identical full-page screenshots on
+84 of 88 page/width/theme combos (the other 4 differ only in live-demo animation
+frames). The part-pruning variant of that cleanup, deleting dead parts from mixed
+comma selectors, BROKE the light theme sitewide and was reverted before commit; do
+not retry it without the pixel harness.
 
 ### CIRCULARITY, found twice, fixed twice, look for a third
 
@@ -642,12 +113,9 @@ It stays available for LiveBench, Arena and ARC targets.
 
 ### Open, in priority order
 
-1. Two red-team agents were dispatched at end of session and had not reported:
-   one auditing every number on the live page against the data, one driving the
-   live page adversarially. Read their findings first.
-2. POOLED_CURVE is still partly a hand table when fewer than six ladders are
+1. POOLED_CURVE is still partly a hand table when fewer than six ladders are
    usable. TARGET_F is derived but the fallback is not.
-3. The knee interval is 0.20 to 0.40 on six families. 0.40 ships at the top
+2. The knee interval is 0.20 to 0.40 on six families. 0.40 ships at the top
    of its own interval. That is thin. The page says so. It remains the
    weakest constant here.
 
@@ -687,20 +155,7 @@ Kaspa progress and must never stand in for it. Kaskad and Igra stay labeled
 ecosystem context, never adoption evidence. `kaspa-developments.html` says this
 in its own checked-line so a future reader cannot miss it.
 
-**PICK-UP BLOCK, 2026-08-22. MODEL PICKER REWRITE IN PROGRESS, UNCOMMITTED.**
-
-1. Verify before trusting anything here. `git status --short`, `git log --oneline -1` against origin. Both HEAD and origin/main sit at `7df640f` as of this write-up. Everything below in "The model picker, briefly" describes uncommitted working-tree state on top of that commit. It sits in the working tree only, awaiting a commit and a deploy. Read the date from the environment before writing any stamp.
-
-2. **WHAT CHANGED, IN ONE LINE.** Scored figures cut from 25 to 20, 2 per dial across 10 dials, no figure on 2 dials; ARC Prize wired in as a fourth data source, ARC-AGI-2 scored and ARC-AGI-1 kept only as ladder evidence; `MIN_METRICS` made proportional to the figure count instead of a fixed 9; both per-figure movement and blank-rung pricing now run on a model's own clocks with predictor sets chosen by leave-one-model-out r-squared instead of in-sample fit.
-
-3. Full numbers and derivations, including `TARGET_F` (now 0.43, re-derived with ARC included) and `MIN_CORE_FOR_OWN_CAP` (back to an absolute floor of 4 after a wrong attempt to scale it), are under "The model picker, briefly" below. Read that section before touching any constant in `scripts/emit-picker-blob.py`.
-
-4. `check-model-picker.py` passes on the working tree: 6 dials, all weights resolve. The full publish gate (`check-site.sh`) has not been run this pass; run it before committing.
-
-5. **TOP ITEM FOR NEXT SESSION.** Wire ARC Prize into the ladder machinery (`BOARD_LADDER`, `own_curve()`, the cost reconstruction fits): it is currently only used for its own scored/ladder-evidence figures, not for any of the effort-curve fitting, which still sees only the 6 Artificial Analysis families with 3+ priced rungs against ARC's 20. Then re-derive `TARGET_F` and `POOLED_CURVE` in code, with an assertion, instead of the hand-computed literal and hardcoded lookup table sitting there now. Rebuild the page copy last, once those numbers stop moving.
-
-6. Other files sitting modified this session and out of scope for the model-picker work: `data/arena-text-all-categories-2026-08-20.md`, `kaspa-x-posts-august-2026.md`. Leave them alone unless the task at hand covers them.
-
+**PICK-UP BLOCK:** none open. The 2026-08-22 model-picker pick-up block is closed; `model-picker-data.html` shipped and the gate owns the constants now.
 
 ## What this is for
 
@@ -990,7 +445,6 @@ every constant is a proportion in hiding: a minimum-evidence floor answers
 "is this enough to trust," not "what share of the total is this," and
 forcing the second shape onto the first question breaks it just as
 silently as leaving a stale number in place.
-
 
 ## Serving and rendering
 
