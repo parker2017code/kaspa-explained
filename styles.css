@@ -5454,6 +5454,10 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
      whatever selector it happens to be nested under. */
   position: relative;
   display: inline-flex !important;
+  /* The trigger is flex-shrink: 0 so it keeps its 44px hit target; the
+     price was that in a narrow field it poked past the row instead of
+     dropping down. Wrapping lets it drop. Measured 8px over on kips at 390px. */
+  flex-wrap: wrap;
   vertical-align: middle;
   margin: 0 !important;
 }
@@ -5469,7 +5473,10 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
      demo, .field at min-width: 220px inside a wrapping .row) shrinks below
      its own 44px width to fit instead of forcing its ancestor to make room. */
   flex-shrink: 0;
-  margin: -12px -8px;
+  /* Vertical only. A horizontal negative margin overlaps neighboring text
+     mid-line but escapes the container by that amount at the start of a
+     wrapped line, which is where this button now lands in narrow fields. */
+  margin: -12px 0;
   padding: 0;
   border: none;
   background: none;
@@ -6750,21 +6757,6 @@ summary:active {
     margin-inline: -16px;
     padding-inline: 16px;
     scroll-padding-inline: 16px;
-  }
-}
-
-/* A table is not prose and should not be held to the prose measure. Measured at
-   1280px: crypto-from-scratch's table needed 1,012px, was shown 732px, and
-   scrolled sideways while 1,240px of page sat unused beside it; four tables on
-   kaspa-origin-story did the same. The 860px section cap is right for reading
-   and wrong for a data grid, so tables step out of it to the width main
-   actually offers, and no further. Text keeps its measure. */
-@media (min-width: 900px) {
-  .prose-section .table-wrap,
-  .prose-section .cvb-table-wrap {
-    width: max-content;
-    max-width: min(1240px, calc(100vw - 40px));
-    margin-inline: auto;
   }
 }
 
