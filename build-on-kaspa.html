@@ -462,7 +462,11 @@
         elapsedInput.addEventListener('input', updateElapsedHint);
 
         function entryValue() {
-          return document.querySelector('input[name=cvb-entry]:checked').value;
+          // A radio group can only be left with nothing checked programmatically,
+          // never by a click, but the null deref took the whole demo down when it
+          // happened. Fall back to the markup default instead.
+          var picked = document.querySelector('input[name=cvb-entry]:checked');
+          return picked ? picked.value : 'withdraw';
         }
 
         function renderStats() {

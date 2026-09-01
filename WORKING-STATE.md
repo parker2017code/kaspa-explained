@@ -41,9 +41,39 @@ dialog, so a rule that only applies while one is open read as unmatched. Expand 
 `kaspa-mining` then rendered a 0x0 element for months. This is why the 238 rules measured
 as dead or inert in `data/dead-css-scan-2026-08-29.json` must **not** be bulk-removed.
 
-## Where the work stands, 31 August 2026
+## Where the work stands, 1 September 2026
 
-An editorial pass over the whole rendered site: every real page screenshotted at
+A freshness and consistency pass over every dated claim and every page baseline,
+re-read against primary sources rather than bumped. Three things had gone stale
+and are corrected in `dc7a075`: kaspanet/kccs merged a FOURTH KCC on 27 August
+(KCC-0, purpose, format, lifecycle and finalization criteria, PR #17), which the
+30 August pass missed and which three surfaces said was three; KCC-0020's spec
+moved twice (PR #16 on 27 August makes an identical `extension_commitment` a
+condition of fungibility for the standard transfer, PR #18 on 28 August is a
+second change) against a page that said no spec change had merged, with issue #14
+still open; and llms.txt still called the rusty-kaspa dagknight branch dormant
+since 22 March when its newest commit is 28 August, a phrase `CLAIMS.yml` already
+bans on HTML pages but cannot see in a .txt file.
+
+Baselines re-read and moved: kaspa-mining's network snapshot, build-on-kaspa's
+covenant adoption (84,196 created, 687 active, 1,561,431 KAS live value, 88,493
+active on TN10), argent-explained's repo table, status.html's L1 line (DAA
+528,309,833), and both kips.html stamps.
+
+**Verified unmoved against the source, not assumed:** the whole KIP index table,
+the five open KCC PRs, KIP-2 still Proposed with no mention of 100 BPS or
+netsplit, vprogs at 79 commits with zero releases and zero tags since 28 July,
+rusty-kaspa v2.0.1 still newest with #1101 still newest on master, the Toccata
+operator guide byte-for-byte, kaspa-python-sdk at 2.0.2rc1, and the TN10 submit
+schema still dropping compute_budget.
+
+**One real null-deref found by driving, not by scanning.** `entryValue()` in the
+covenant-breaker demo read `.value` off an unchecked-group querySelector result
+with no fallback. Not reachable by a click (a radio group cannot be emptied from
+the UI), but the throw took the whole demo down when it happened. It was watched
+throwing, then watched clean after the fallback. Hardened in place.
+
+The 30 August pass, for the record. An editorial pass over the whole rendered site: every real page screenshotted at
 1280 and 375-390 in both themes and looked at, all 18 demos driven with a real
 interaction, zero console errors and zero broken internal links measured sitewide.
 Landed: demos/index footer disclosure aligned with the sitewide wording and its
@@ -136,42 +166,6 @@ Added 31 Aug 2026, second session, the technical-backlog pass:
   opacity caps on an element the final layer hides) were retired to the
   winning values.
 
-### CIRCULARITY, found twice, fixed twice, look for a third
-
-LiveBench Overall is the EXACT unweighted mean of its seven categories, max
-deviation 0.057 over 44 rows. Anchoring a category on it predicts a number
-partly from itself. Weights are known, so the target is subtracted back out.
-
-The Artificial Analysis Intelligence Index is the same bug wearing a disguise.
-Against a plain average of eleven of its own components it correlates at
-r squared 0.975 over 68 rows. It publishes no weights, so there is nothing to
-subtract and it is simply refused as an anchor for any figure it contains.
-It stays available for LiveBench, Arena and ARC targets.
-
-### Measured facts worth not re-deriving
-
-- Board overalls agree far more than their benchmarks do. AA index and
-  LiveBench Overall r = 0.930 across 38 models. LiveBench Overall and
-  ARC-AGI-2 r = 0.868 across 20.
-- Predicting one figure from the other nine, held out by model: median
-  r squared 0.26 with all nine, but 0.43 with the single best predictor.
-  Nineteen predictors on 21 models destroys real signal. Keep models small.
-- PC1 carries 32.8 percent. Multi-axis field, not one capability.
-- Non-hallucination is the most independent figure measured: best anchor
-  reaches r squared 0.058. It is deliberately left unfilled, never estimated.
-- omniAccuracy and arcAgi2 correlate at r = 0.87, the tightest pair among the
-  ten, and each is the sole leg of its own dial. WATCH THIS.
-- ARC shows no diminishing returns across its published range. Its families
-  keep buying capability to the top rung.
-
-### Open, in priority order
-
-1. POOLED_CURVE is still partly a hand table when fewer than six ladders are
-   usable. TARGET_F is derived but the fallback is not.
-2. The knee interval is 0.20 to 0.40 on six families. 0.40 ships at the top
-   of its own interval. That is thin. The page says so. It remains the
-   weakest constant here.
-
 ## START HERE ON A FRESH SESSION
 
 The owner pastes this file in at the start of every session. Do these in order, before any building.
@@ -238,15 +232,18 @@ state. When they disagree about a fact, this one is authoritative.
 
 ## Where this stands
 
-**93 HTML files in the root and under `demos/`, 22 dated claims, 4 data files.**
+**91 HTML files in the root and under `demos/`, 36 claims and 27 dated recheck
+triggers, 4 data files.**
 `CLAIMS.yml` is executable: `check-status-freshness.py` fails the build when a
 `recheck_after` passes and when a `forbidden_copy` phrase appears in any page's
 visible text.
 
-**72 of the 93 are redirect stubs, leaving 21 live pages** (counted 29 August
-2026 by grepping every file in the root and `demos/` for a refresh meta tag; the
-figures this block used to carry, 72 public pages and 48 stubs, were both a pass
-behind). Pages get merged and the stub keeps
+**72 of the 91 are redirect stubs, leaving 19 live pages** (counted 1 September
+2026 by grepping every file in the root and `demos/` for a refresh meta tag; that
+is 18 in `site-manifest.json`, which includes `404.html`, plus `demos/index.html`,
+and it agrees with `sitemap.xml`, `agent-index.json` and llms.txt). The 21 this
+block carried was the count before the model picker came down, and it was already
+one high. Pages get merged and the stub keeps
 the URL alive. That is fine for readers and a trap for anything citing a page by
 slug: the citation returns 200 and lands somewhere else. Check a slug against
 the stub list, never against its status code.
@@ -262,243 +259,44 @@ Every stamp here is a claim about when a source was read: `CLAIMS.yml`
 `last_checked`, both `kips.html` baselines, `dateModified` on every touched page,
 and the "as of" line inside any dated post.
 
-## The model picker, briefly
+## The model picker: taken down 1 September 2026
 
-One page of the 21 live ones, and it carries more machinery than the rest
-combined, so it gets one section rather than a third of this document.
+Three pages (`model-picker.html`, `model-picker-method.html`,
+`model-picker-data.html`) were deleted on owner request. Git history holds them,
+`data/` and `scripts/emit-picker-blob.py` stay in the repo, and two gate checks
+that read those pages are commented out in `check-site.sh` with a restore note.
+The site is 19 live pages. Roughly 240 lines describing that tool's dials,
+figures, constants and roster used to sit here and were cut on 1 September; the
+commits that built it carry the detail. Two things from it are general and stay:
 
-**CORRECTED 29 AUGUST 2026, and the correction is the point.** The shape
-paragraphs below described ten dials over twenty scored figures for most of a
-day after the page had been rebuilt to six over ten, while this file's own
-header calls it authoritative on facts. Counted from the artifacts: `DIALS` in
-`model-picker.html` holds 6 entries, `window.__MP__.metrics` holds 10, and
-`window.__MP__.models` holds 23 across 9 labs. The methodology that used to sit
-inside one closed 6,685-word panel on that page now lives at
-`model-picker-method.html`, which is why the live-page count went from 20 to
-21.
-
-**State below describes the working tree. The last commit is behind it.** HEAD and
-origin/main both sit at `7df640f`. Everything in this section describes
-uncommitted changes on top of it. The emitter is finished and the blob is
-frozen for this pass. Run `git status --short` before assuming the live
-page matches this description.
-
-**SHAPE.** 6 dials over 10 scored figures, no figure repeated across dials.
-It was 10 dials over 10 figures until 29 August 2026; the paragraphs below
-about 20 figures and 25 candidates describe the 21 August pass and are kept as
-the record of how the figures were chosen, not as a description of what ships.
-Selection test: how far apart the
-top five models sit on a figure, on the honest scale (worst-ever to
-best-ever across every model ever measured on that board, not a percentile
-of this roster). A figure whose top five land within a point or two cannot
-separate the field and is cut from scoring; it can still appear as
-closeness evidence. Surviving spreads, top five: CritPt 30.2 points,
-ARC-AGI-2 21.2, HLE 18.8, Omniscience accuracy 12.6, tokens per second
-11.8, tau3-Banking 11.3. Cut: output price 0.4, time to first token 0.3,
-total response 0.9, cache hit price 1.4. `METRICS` in
-`scripts/emit-picker-blob.py`, `DIALS` in `model-picker.html`.
-
-Cost of the cut, stated because it is real: dropping figures the field
-agrees on makes the field look further apart than it actually is. Owner's
-call, made deliberately.
-
-Sources are FOUR boards, derived not hardcoded: `source_counts()` reads the
-split off `METRICS` via `source_of()` and asserts it sums to the total.
-Split as it ships, read off the page's own provenance panels 29 August 2026:
-Artificial Analysis 4 (Humanity's Last Exam, CritPt, Omniscience accuracy,
-Omniscience non-hallucination rate), LiveBench 4 (coding, agentic coding,
-instruction following, language), LM Arena 1 (WebDev), ARC Prize 1 (ARC-AGI-2),
-sum 10. The 9/7/3/1 split recorded here was the twenty-figure roster. `source_of()` had no branch for the `arc` prefix until this pass,
-so ARC figures were being filed under Artificial Analysis (AA read as 10,
-a fourth board invisible). Fixed: another instance of the bug class below.
-
-**ARC PRIZE IS A FOURTH SOURCE.** `data/arc-agi-2026-08-21.md`, pasted by
-the owner from arcprize.org, read 21 August. The only board here that
-publishes both a capability score and a cost per task at every effort rung
-a lab exposes, so one row is a point on a capability ladder and a price
-ladder at once.
-
-ARC-AGI-2 is one of the 10 scored figures, on the `reason` dial paired with
-HLE. ARC-AGI-1 is loaded and used but deliberately NOT scored: top five sit
-within 2.0 points, the same saturation that took GPQA Diamond out, and it
-correlates with ARC-AGI-2 at r = 0.920. It stays on the page as ladder
-evidence, kept because it is published at every rung with a price beside
-it, attached at each model's chosen rung by `load_arc()`.
-
-**TARGET_F = 0.43. The derivation changed on 21 August; the reasoning
-matters more than the number.** Every model is read at the same fraction
-along its own log-price effort ladder, not at the same labeled setting:
-labels are not comparable across labs (the word "high" sits at 0.00 of
-GPT-5.6 Terra's own ladder and 1.00 of Gemini 3.7 Flash's).
-
-The old test looked for where marginal capability per doubling of price
-goes flat, on the 6 Artificial Analysis families that publish 3 or more
-priced rungs. That test only works if a flat tail exists. On ARC Prize the
-returns keep falling all the way to the top rung and never flatten, so
-"the first point within a tenth of the tail" just returns the last data
-point on the curve, which is how an audit got 0.75 out of it.
-
-The test now is the knee itself: the point of maximum distance below the
-straight chord joining the cheapest rung to the dearest, on each family's
-own curve normalized 0-to-1 on both axes. That is defined whether or not a
-flat tail exists. Pooled over 26 families across both boards it gives 0.43.
-Artificial Analysis alone: 0.43. ARC Prize alone: 0.53. Per-family range
-0.01 to 0.99, median 0.48, which is the argument for one pooled position
-rather than 26 fitted ones. It sits between medium (0.30) and high (0.57),
-nearer medium than the old value was. Full derivation in
-`emit-picker-blob.py`, in the comment block directly above `TARGET_F`.
-
-This closes last session's open question about `TARGET_F` predating the
-ARC data: it has now been re-pooled with ARC included, and 0.43 is the
-re-derived answer, not the old one.
-
-**MIN_METRICS is now proportional**, `max(4, round(len(METRICS) * 0.225))`,
-currently 4. It was a fixed 9, which was 22.5 percent of a 40-figure grid
-and silently became a 45 percent floor the moment the scored set fell to
-20, dropping Qwen3.8 2.4T A95B for coverage that had not changed. Same
-failure as the hardcoded source counts; see "Bug class" below.
-
-**PER-FIGURE MOVEMENT RUNS ON A MODEL'S OWN CLOCKS.** Everything that
-answers to effort answers to how long the model thinks, and the clocks
-(`ttft`, `aaTotalResponse`, `tokensPerSec`) publish at more rungs than the
-benchmarks do. `CLOCK_SETS` nests 4 predictor sets, from 3 clocks up to 9
-columns (adding intelligence index, first-answer time, the P25/P75 latency
-spread, LiveBench overall, LiveBench cost per success task). Each figure
-takes the smallest set that survives leave-one-model-out r-squared, never
-the in-sample number: fitted on everything, tau3-Banking reads r2 0.944 and
-falls to 0.242 held out one model at a time. A figure clearing nothing
-keeps its old board-wide movement rule.
-
-**BLANK RUNGS ARE PRICED FROM A MODEL'S OWN CLOCKS TOO**, multivariate,
-tiered to whatever that model's rungs actually publish (`SCALED_RAW`: cost
-per task, LiveBench cost per success task, time to first token, total
-response, tokens per second). Drops to a smaller feature set rather than
-falling straight to a single-slope estimate the moment one column is
-missing.
-
-**SIMULATION ERROR BARS WERE ON THE WRONG SCALE, now fixed.** The panel
-draws each figure from a normal spread around its value and counts wins
-across `MC_RUNS = 4000` runs. The spread was being handed to it in
-percentile-scale points while the page scores on the honest scale, where
-this roster spans roughly 74 to 88 rather than 0 to 100. A percentile-width
-error is several times wider than the honest-scale gaps it was landing on,
-which scrambled the win-probability order: a model ranked third by score
-could win more simulated runs than the models ranked fourth and fifth.
-Every error width (`es`, the sibling-shift spread, the estimate spread) is
-now converted through the same `honest(unpctile(...))` transform the value
-itself takes, in `to_honest()` in the emitter.
-
-**ROSTER: 23 models across 9 labs**, counted from `window.__MP__.models` on
-29 August 2026. The 21 recorded here was the roster on 21 August.
-`check-model-picker.py` passes on the working tree: 6 dials, all weights resolve
-to a loaded figure.
-
-**`ci_note` is fixed, not outstanding.** It now derives its figure count
-from `len(METRICS)` and names all four boards, rather than a hardcoded
-sentence. Kept in the bug-class list below as a past instance, not a live
-one.
-
-**TRAPS CARRIED FORWARD, still true, do not re-litigate without
-re-measuring:**
-- LM Arena's Style Control marker reads backwards. A board captured WITH
-  the correction on prints "Default Leaderboard Plots"; WITHOUT it prints
-  "Remove Style Control". Never infer the setting from page furniture, ask.
-- `data/arena-style-controlled-scores-2026-08-20.md` is RETRACTED: its
-  Coding table has the plain and style-controlled columns swapped, caught
-  against a verified capture. Do not read numbers out of it.
-- REFUTED: style dependence predicts nothing else measured. 11 tests
-  against cost per task, price per unit of effort ladder, capability per
-  unit of ladder, tokens per second, time to first token, context, coverage,
-  open weights, board f, capability given up, and overall capability. 0
-  survive.
-- REFUTED: reconstructing cost per task from implied output tokens at the
-  posted output price. r = 0.385, median error 69 percent. The speed
-  columns are measured on a short standard prompt; cost per task is
-  measured across the full evaluation suite. Different workloads. Do not
-  retry.
-
-**OPEN, largest structural debt on this page: the effort model's two
-central constants are asserted in the source, not derived at runtime.**
-
-`TARGET_F = 0.43` is a hand-computed literal. The derivation is written out
-in the comment above it and the analysis was run in a scratch script, but
-no function in `emit-picker-blob.py` reproduces it. If the underlying
-boards change, nothing recomputes it and nothing fails. This is exactly how
-the old 0.47 came to be defended by a test that only worked on the 6
-families it was derived from and broke the moment 20 more arrived.
-
-`POOLED_CURVE` is worse: an 11-point lookup table, hardcoded, of capability
-fraction against ladder position, and `pooled_cap_frac()` interpolates that
-table at runtime. Every model without its own capability curve is moved
-along it. It is not fitted from `data/aa-all-status-2026-08-20.md` or
-`data/arc-agi-2026-08-21.md` when the script runs.
-
-Both are the same bug class below, in its most consequential form: a
-number written against one snapshot of the data and left behind when the
-data moved.
-
-**What did NOT get done, so it is not mistaken for finished.** ARC Prize is
-read for its scored figures and its ladder rows are loaded by `load_arc()`,
-but ARC is NOT yet wired into `BOARD_LADDER`, `own_curve()`, or the cost
-reconstruction fits. Those still see only the Artificial Analysis board's
-6 families with 3 or more priced rungs; ARC has 20. Wiring it in is the
-single highest-value change available to the effort model. Deliberately
-deferred, not attempted: every emitter change invalidates the numbers
-quoted in the page copy, and the copy was already being rewritten against
-a frozen blob.
-
-Suggested next-session order: wire ARC into the ladder machinery first,
-then re-derive `TARGET_F` and `POOLED_CURVE` in code with an assertion,
-then rebuild the page copy last, once the numbers stop moving.
+**CIRCULARITY.** Anchoring a figure on an index that contains it predicts the
+figure partly from itself. LiveBench Overall is the exact unweighted mean of its
+seven categories (max deviation 0.057 over 44 rows), so the target gets
+subtracted back out. The Artificial Analysis Intelligence Index is the same bug
+wearing a disguise: r squared 0.975 against a plain average of eleven of its own
+components over 68 rows, and it publishes no weights, so it was refused as an
+anchor rather than corrected. Look for a third instance anywhere a composite
+score is used to predict one of its own parts.
 
 ## Bug class: a constant sized to one grid, left behind when the grid moved
 
-Five instances, same shape every time: a number or rule written against
-the figure, source, or data-snapshot state at the moment it was written,
-left standing after that state changed.
+Six instances found, same shape every time: a number or rule written against the
+state of the data at the moment it was written, left standing after that state
+changed. Per-source figure counts hardcoded at 13/7/5 while the real count
+reached 32. A minimum-coverage floor fixed at 9, which was 22.5 percent of one
+grid and silently became 45 percent of a smaller one. A hand-maintained name map
+duplicating the table it should have read from. A hardcoded sentence describing a
+blob that had moved. A prefix dispatch with no branch for a whole fourth data source, so
+that source was invisible.
 
-1. Per-source figure counts hardcoded at 13, 7, 5. Summed to 25 once the
-   real figure count reached 32; the page printed "thirty-two figures" and
-   the stale 13/7/5 breakdown in the same sentence. Fixed: `source_counts()`
-   derives the split from `METRICS` and asserts the parts sum to the whole.
-2. `MIN_METRICS = 9`, a fixed count. Was 22.5 percent of a 40-figure grid,
-   became a 45 percent floor the moment the scored set fell to 20, and
-   silently dropped a model whose real coverage had not changed. Fixed:
-   `max(4, round(len(METRICS) * 0.225))`.
-3. `FIG`, a hand-maintained figure-name map duplicating `PROV`. Went stale
-   the moment 5 figures were added to `PROV` with no matching `FIG` entry;
-   raw metric keys ("aaTau2Telecom", "aaTbHard", "aaItbench") printed in the
-   dial summary instead of names. Fixed: `FIG` falls back to `PROV` for any
-   key it does not carry.
-4. `ci_note`, a hardcoded sentence describing the blob. Said "Twenty-five
-   figures" against a true 20 and described a placement rule (cost-optimal
-   effort setting) that `TARGET_F` had already replaced. Fixed: derives the
-   figure count and names the rule and boards live.
-5. `source_of()` had no branch for the `arc` prefix, so every ARC Prize
-   figure was counted as Artificial Analysis. AA read as 10 figures instead
-   of 9, and the page never disclosed a fourth board was in the mix at all.
-   Fixed: `source_of()` now returns "ARC Prize" for that prefix.
-
-**A sixth instance, the sharpest yet, and it cuts the other way: deriving
-a number is not always the fix.** An audit recommended scaling
-`MIN_CORE_FOR_OWN_CAP` with the grid the same way `MIN_METRICS` now scales.
-That recommendation was WRONG and was applied before being caught.
-`MIN_METRICS` asks what share of the question a model has been measured
-on, a proportion, so it has to move with the grid. `MIN_CORE_FOR_OWN_CAP`
-asks whether there is enough evidence to call something a curve, and 4
-points is 4 points at any grid size. Scaling it down to 2 put Claude
-Sonnet 5 from last place to first on a capability curve fitted to 2
-benchmarks. Reverted: `MIN_CORE_FOR_OWN_CAP = 4`, an absolute floor again.
-
-Lesson, stated once: derive a count or description from the thing it
-describes, and assert the derived value against what a human would say by
-hand. A hardcoded number is a snapshot standing in a formula's place, and
-nothing tells the two apart until the underlying count moves. But not
-every constant is a proportion in hiding: a minimum-evidence floor answers
-"is this enough to trust," not "what share of the total is this," and
-forcing the second shape onto the first question breaks it just as
-silently as leaving a stale number in place.
-
+**The sixth cuts the other way, and it is the one worth carrying.** An audit
+recommended scaling a minimum-evidence floor with the grid the way the coverage
+floor scales. That was wrong and shipped before it was caught: it fitted a
+capability curve to 2 benchmarks and moved a model from last to first. Derive a
+count or a description from the thing it describes. But a minimum-evidence floor
+answers "is this enough to trust," not "what share of the total is this," and
+forcing the second shape onto the first question breaks it just as silently as
+leaving a stale number in place.
 ## Serving and rendering
 
 **Local serving.** `python3 scripts/serve-local.py --port 4187`. A stale process
@@ -519,8 +317,10 @@ proves nothing about them.
 
 ## The claim registry rots on a cliff
 
-22 dated claims. They were all sitting on one date again and were staggered on 8
-August across 15 August to 12 September, soonest for whatever moves fastest.
+36 claims, 27 of them carrying a `recheck_after` trigger. They were all sitting
+on one date again and were staggered on 8 August across 15 August to 12
+September, soonest for whatever moves fastest. Restaggered 1 September across 8
+to 22 September.
 Keep them spread when moving a batch; 19 due on one morning is what turned a
 recheck into a blocked repo.
 
@@ -535,7 +335,7 @@ gate green and it silently converts a checked claim into an unchecked one.
 | `kaspanet/kips` README | KIP status | the index table is the status, not the KIP body |
 | `kaspanet/kccs` pull requests | whether a convention is ratified | one merged PR, the README. Nothing is a standard |
 | `kaspanet/vprogs` | vProgs maturity | zero releases and zero tags is the fact |
-| `kaspanet/silverscript` | the audit gate Argent waits on | zero releases, still renaming core syntax |
+| `kaspanet/silverscript` | the audit gate Argent waits on | v1-rc1, 30 Aug 2026, its first release ever, pre-release. Review and standardization, not a security audit, so the audit is still unevidenced |
 | `argent-lang/argent` README | Argent status | read both halves of Project status or misdescribe it |
 | api.kaspa.org | live DAA score | confirms activation is past, not just announced |
 | docs.kaspa.org | orientation | lags activation; trust the release tag over its prose |
