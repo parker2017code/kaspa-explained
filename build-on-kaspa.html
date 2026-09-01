@@ -69,7 +69,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260901-scroll">
+  <link rel="stylesheet" href="styles.css?v=20260901-tables">
   <script defer src="nav.js?v=20260831c-000000"></script>
 </head>
 <body>
@@ -399,6 +399,14 @@
         .cvb-demo table { width: 100%; border-collapse: collapse; font-size: 16px; }
         .cvb-demo th, .cvb-demo td { text-align: left; padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--cvb-line) 55%, transparent); white-space: nowrap; }
         .cvb-demo th { color: var(--cvb-faint); font-weight: 500; font-size: 16px; letter-spacing: .05em; border-bottom: 1px solid var(--cvb-line); }
+        /* Every cell was nowrap, which forced the ledger 613px wide and pushed
+           the attempt's own description off-screen when you scrolled to read its
+           result. On phones the text wraps instead, so the table fits and no row
+           loses the label that says what it is. */
+        @media (max-width: 700px) {
+          .cvb-demo th, .cvb-demo td { white-space: normal; padding: 8px 4px; }
+          .cvb-demo td:nth-child(4) { word-break: break-all; }
+        }
         .cvb-demo tr.fail-row td { color: var(--cvb-pink); }
         .cvb-demo tr.pass-row td.result { color: var(--cvb-green); }
         .cvb-demo .cvb-rule-details { background: var(--cvb-field-bg); border: 0; border-radius: 14px; padding: 10px 14px; }

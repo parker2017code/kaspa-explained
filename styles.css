@@ -6752,3 +6752,35 @@ summary:active {
     scroll-padding-inline: 16px;
   }
 }
+
+/* A table is not prose and should not be held to the prose measure. Measured at
+   1280px: crypto-from-scratch's table needed 1,012px, was shown 732px, and
+   scrolled sideways while 1,240px of page sat unused beside it; four tables on
+   kaspa-origin-story did the same. The 860px section cap is right for reading
+   and wrong for a data grid, so tables step out of it to the width main
+   actually offers, and no further. Text keeps its measure. */
+@media (min-width: 900px) {
+  .prose-section .table-wrap,
+  .prose-section .cvb-table-wrap {
+    width: max-content;
+    max-width: min(1240px, calc(100vw - 40px));
+    margin-inline: auto;
+  }
+}
+
+/* Scrolling a wide table sideways used to carry the row's own label off the
+   left edge, so you could be reading a number with nothing left on screen
+   saying which row it belonged to. The first cell of each row now stays put. */
+.table-wrap table tbody th:first-child,
+.table-wrap table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--card-bg);
+}
+.table-wrap table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--card-bg);
+}
