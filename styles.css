@@ -6733,3 +6733,22 @@ summary:active {
     break-after: avoid;
   }
 }
+
+/* Horizontal scrollers were reading through a peephole on phones. Measured at
+   390px: kaspa-mining's 20-chip row needs 1,871px and got a 250px window;
+   kaspa-origin-story's preset row needs 648px and got 222px. None of them
+   carried dead space, the content filled the scroll width exactly. The loss
+   was nested padding: section 20px, demo 16px, stage 16px, each pair stacking
+   until 43% of the screen was chrome beside a tiny slot. A scroller is the one
+   child that should reach the card edge, so it escapes its parent's inline
+   padding and re-adds it inside, keeping items off the edge while scrolling
+   the full width. Desktop is unchanged: these rows fit there and never scroll. */
+@media (max-width: 700px) {
+  .presets,
+  .chipset,
+  .chips {
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+}
