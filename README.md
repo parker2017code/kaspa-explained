@@ -52,7 +52,6 @@ stub pointing at one of the listed pages, usually to a specific anchor.
 - `utxo-vs-accounts.html` runs five payments at once against a coin ledger and a
   balance ledger, then prices what the missing shared slot costs Kaspa apps.
 - `kaspa-origin-story.html` is the sourced fair-launch history.
-- `chain-comparer.html` and `model-picker.html` are dial-driven tools.
 - `sources.html` ranks what settles a claim.
 - `demos/index.html` maps every demo to the page it lives on.
 

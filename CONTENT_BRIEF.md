@@ -119,7 +119,6 @@ Reader paths worth keeping visible:
 - The long-form monetary-cost argument: `the-instrument.html`, Moose's essay,
   hosted in full. His argument, not this site's claim set.
 - Language-model scoring, general-purpose rather than Kaspa-specific, still part
-  of the crawlable site: `model-picker.html`.
 
 Terms are defined inline where they are used, most densely on
 `what-is-kaspa.html`. Keep definitions short and plain.

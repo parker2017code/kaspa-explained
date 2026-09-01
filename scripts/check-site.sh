@@ -41,12 +41,10 @@ bash scripts/check-redirect-stubs.sh
 python3 scripts/build-agent-index.py --check
 python3 scripts/check-grid-spans.py
 python3 scripts/check-label-colors.py
-python3 scripts/check-model-picker.py
-python3 scripts/check-benchmark-agreement.py --check >/dev/null || {
-  python3 scripts/check-benchmark-agreement.py --check >&2
-  echo "benchmark agreement claims in model-picker.html no longer match the data" >&2
-  exit 1
-}
+# The model picker was taken down on 1 September 2026 (owner request): the three
+# model-picker*.html pages are gone, so the two checks that read them are not run.
+# The scripts and data/ stay in the repo; git history holds the pages. Restore
+# these two lines with the pages if the tool ever comes back.
 python3 scripts/check-prose.py --strict >/dev/null || { python3 scripts/check-prose.py >&2; echo "prose standard violations, see PROSE_STANDARD.md" >&2; exit 1; }
 
 # Reading grade, PROSE_STANDARD.md v2.0. Shared copy is held to grade 9; blocks
