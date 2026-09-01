@@ -39,7 +39,7 @@
   <meta name="twitter:title" content="KIP and KCC tracker: what is proposed, active, and shipped | Kaspa Explained">
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
-  <meta name="dateModified" content="2026-08-29">
+  <meta name="dateModified" content="2026-09-01">
   <link rel="stylesheet" href="styles.css?v=20260831cc-000000">
   <script defer src="nav.js?v=20260831c-000000"></script>
   <style>
@@ -329,7 +329,7 @@
           </div>
         </details>
       </div>
-      <p class="live-footnote" id="kip-stamp">Baseline: KIP repository, August 30, 2026; table refreshes live on load.</p>
+      <p class="live-footnote" id="kip-stamp">Baseline: KIP repository, September 1, 2026; table refreshes live on load.</p>
             <p>KIPs 16, 17, 20, 21 went Active 15 July 2026, at Toccata mainnet: <a href="https://github.com/kaspanet/kips/pull/31">KIP-16</a>, <a href="https://github.com/kaspanet/kips/pull/32">KIP-17</a>, <a href="https://github.com/kaspanet/kips/pull/35">KIP-20</a>, <a href="https://github.com/kaspanet/kips/pull/36">KIP-21</a>.</p>
       <p>KIP-2, the <a href="#parameterless-demo">DAGKnight</a> upgrade, has stayed Proposed for years: devnet only, no date; demo below runs it against GHOSTDAG. KIPs 7, 8, 11, 12, 18, 19, 22-25 are open PRs, hence the table gaps. <a href="https://github.com/kaspanet/kips">Repository</a>.</p>
     </section>
@@ -845,14 +845,15 @@
     <section class="section">
       <p class="eyebrow">Conventions</p>
       <h2 id="kcc">Kaspa Calls for Conventions</h2>
-      <p class="lead">Builder agreements on encoding. Three merged since July 15, 2026, all still <code>Status: Draft</code>; none cleared the README's acceptance bar.</p>
+      <p class="lead">Builder agreements on encoding. Four merged since July 15, 2026, all still <code>Status: Draft</code>; none cleared the acceptance bar KCC-0 now writes down.</p>
       <div id="kcc-groups">
         <details class="deep-dive" open>
-          <summary>Merged, Status: Draft (3)</summary>
+          <summary>Merged, Status: Draft (4)</summary>
           <div class="table-wrap">
             <table class="reality-table">
               <thead><tr><th>Proposal</th><th>Opened</th><th>State</th></tr></thead>
               <tbody>
+                <tr><td data-label="Proposal">KCC-0 KCC purpose, format, lifecycle and finalization criteria</td><td data-label="Opened">2026-08-25</td><td data-label="State">Merged, Status: Draft</td></tr>
                 <tr><td data-label="Proposal">KCC-0001 covenant definition, concepts, byte layout and ABI</td><td data-label="Opened">2026-07-15</td><td data-label="State">Merged, Status: Draft</td></tr>
                 <tr><td data-label="Proposal">KCC-0002 authority schemes for program ABIs</td><td data-label="Opened">2026-07-20</td><td data-label="State">Merged, Status: Draft</td></tr>
                 <tr><td data-label="Proposal">KCC-0020 fungible token covenant specification</td><td data-label="Opened">2026-07-15</td><td data-label="State">Merged, Status: Draft</td></tr>
@@ -889,7 +890,7 @@
           </div>
         </details>
       </div>
-      <p class="live-footnote" id="kcc-stamp">Baseline: KCC repository, August 30, 2026. Live fetch below refreshes only open PRs; merged/closed stay as described.</p>
+      <p class="live-footnote" id="kcc-stamp">Baseline: KCC repository, September 1, 2026. Live fetch below refreshes only open PRs; merged/closed stay as described.</p>
       <p class="fit-note">KCC-0001 defines a covenant's byte layout. <a href="/build-on-kaspa#covenant-breaker-demo">Covenant breaker demo</a>: attacks a vault, shows the stopping rule.</p>
       <p>KCC-0020 is the most argued-over forum thread; the Argent compiler already ships a <code>kcc20_asset.ag</code> example, normal before acceptance. A token issued against the draft today inherits five known defects.</p>
       <p class="eyebrow">Try it</p>
@@ -940,7 +941,7 @@
                 &ldquo;I agree that kind of pattern should either be defined in the standard or implemented in a non state storage (maybe the payload, as you once suggested).&rdquo;
                 <cite>Sivan Helfer (Manyfestation), KCC-0020 co-author &middot; <a href="https://github.com/kaspanet/kccs/issues/14" target="_blank" rel="noopener">github.com/kaspanet/kccs/issues/14</a></cite>
               </blockquote>
-              <p class="note">KCC-0020, Sivan Helfer, Michael Sutton, Romain Billot, Status: Draft, no spec change merged. Source: <a href="https://github.com/kaspanet/kccs/blob/main/kcc-0020.md" target="_blank" rel="noopener">kcc-0020.md</a>.</p>
+              <p class="note">KCC-0020, Sivan Helfer, Michael Sutton, Romain Billot, Status: Draft. The spec moved on 27 August 2026: <a href="https://github.com/kaspanet/kccs/pull/16" target="_blank" rel="noopener">PR #16</a> made an identical <code>extension_commitment</code> a condition of fungibility for the standard transfer, and issue #14 is still open. Source: <a href="https://github.com/kaspanet/kccs/blob/main/kcc-0020.md" target="_blank" rel="noopener">kcc-0020.md</a>.</p>
             </div>
           </details>
         </div>
@@ -1155,7 +1156,7 @@
       })
       .catch(function () {
         document.getElementById('kip-stamp').textContent =
-          'Live read failed. Showing the August 30, 2026 baseline written into this page, not current data.';
+          'Live read failed. Showing the September 1, 2026 baseline written into this page, not current data.';
       });
 
     var quotaLeft = false;
@@ -1195,7 +1196,7 @@
         document.getElementById('kcc-stamp').textContent = (quotaLeft
           ? 'The live read from GitHub failed. '
           : "GitHub's public quota for this network is used up. ") +
-          'Showing the August 30, 2026 baseline written into this page, not current data.';
+          'Showing the September 1, 2026 baseline written into this page, not current data.';
       });
   })();
   </script>

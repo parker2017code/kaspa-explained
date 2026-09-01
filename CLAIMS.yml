@@ -1,5 +1,5 @@
-last_checked: 2026-08-30
-recheck_after: 2026-09-06
+last_checked: 2026-09-01
+recheck_after: 2026-09-08
 claims:
   proof_of_work:
     status: live
@@ -22,17 +22,20 @@ claims:
       - Kaspa mainnet payments are instantly final
   l1_status_snapshot:
     status: measurement_sensitive
-    recheck_after: 2026-09-06
+    recheck_after: 2026-09-13
     summary: >
-      An August 30, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward,
-      /info/coinsupply and /info/kaspad) showed virtual DAA score 527,035,672, about 27.672 billion KAS
-      from the public supply endpoint (2,767,168,450,784,286,777 sompi), a 2.31246515 KAS block reward,
+      A September 1, 2026 L1 status check (via api.kaspa.org/info/blockdag, /info/blockreward,
+      /info/coinsupply and /info/kaspad) showed virtual DAA score 528,309,833, about 27.675 billion KAS
+      from the public supply endpoint (2,767,463,090,064,376,702 sompi), a 2.31246515 KAS block reward,
       and serverVersion 2.0.1 with isSynced true. Max supply read 2,870,403,560,500,000,000 sompi, about
       28.704 billion KAS. The score sits above the Toccata activation score and still inside the
-      504,909,000-531,207,000 emission step, which the reward matches. Supersedes the August 29 reading
-      (DAA 526,073,404, about 27.669 billion KAS), the August 24 reading (521,476,468, 27.659 billion),
-      the August 20 reading (517,984,766, 27.651 billion), and the August 8 reading (507,631,731,
-      27.627 billion), all at the same node version and reward.
+      504,909,000-531,207,000 emission step, which the reward matches; at ten blocks a second the
+      2,897,167 scores left to 531,207,000 are about 3.4 days, which puts the next step near
+      September 4, 2026 and matches the emission entry below. Supersedes the August 30 reading
+      (DAA 527,035,672, about 27.672 billion KAS), the August 29 reading (526,073,404, 27.669 billion),
+      the August 24 reading (521,476,468, 27.659 billion), the August 20 reading (517,984,766,
+      27.651 billion), and the August 8 reading (507,631,731, 27.627 billion), all at the same node
+      version and reward.
       The supply gained between the August 29 and August 30 reads matches the block-reward math:
       2.31246515 KAS/block times 864,000 blocks/day at ten blocks a second is about 1,997,970 KAS/day.
       These are time-stamped network readings. They are unsuitable as timeless constants. Do not quote
@@ -161,7 +164,7 @@ claims:
       - A wallet or frontend feature is protocol activation evidence
   toccata:
     status: daa_gated
-    recheck_after: 2026-09-07
+    recheck_after: 2026-09-14
     summary: >
       Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0
       was published on June 5, 2026 as the Mainnet Toccata Release; it set Toccata mainnet activation for
@@ -194,7 +197,10 @@ claims:
       unconditionally requests block bodies, and drop the now-unused HeaderFormat/Versioned<T>
       plumbing in favor of applying the v10 compressed-parent header format uniformly. This is
       cleanup of already-activated P2P behavior, not new activation, and v2.0.1 (June 15, 2026) is
-      still the newest tagged release; #1101 has not shipped in a tagged release either.
+      still the newest tagged release; #1101 has not shipped in a tagged release either. Rechecked
+      September 1, 2026 against the rusty-kaspa releases feed and the master commit feed: v2.0.1 is
+      still the newest tagged release, and #1101 (August 24) is still the newest commit on master, so
+      no eighth cleanup PR has landed.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -208,7 +214,7 @@ claims:
       - merged TN10 KIPs prove mainnet activation
   toccata_operator_readiness:
     status: daa_gated
-    recheck_after: 2026-09-09
+    recheck_after: 2026-09-16
     summary: >
       The Rusty Kaspa Toccata node setup guide says node operators should run v2.0.1 or newer; the node
       database upgrade is one-way without resync; direct RPC transaction submission uses the standard-fee
@@ -217,7 +223,10 @@ claims:
       covenant_id where relevant; exchanges, pools, miners, wallets, explorers, and indexers should test
       against Testnet-10 and mainnet behavior after activation. Rechecked August 24, 2026 directly against
       docs/toccata-guide.md on the rusty-kaspa master branch: text unchanged, including the fee-floor
-      formula and the one-way database upgrade warning.
+      formula and the one-way database upgrade warning. Rechecked September 1, 2026 against the same
+      raw file: still unchanged, still 12,264 bytes, still carrying the 100 sompi times max(compute
+      grams, 2 * transaction bytes) floor, the one-way upgrade warning, and the v2.0.1-or-newer SDK
+      line.
     source: https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md
     supporting_source: https://github.com/kaspanet/kaspad/releases/tag/v0.12.23
     forbidden_copy:
@@ -263,7 +272,7 @@ claims:
       - TN12 txids are mainnet txids
   vprogs:
     status: roadmap
-    recheck_after: 2026-09-07
+    recheck_after: 2026-09-14
     summary: >
       vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering,
       including later cross-app atomic composition. They are not a mature live app ecosystem. The public
@@ -273,7 +282,10 @@ claims:
       change since the August 23, August 14, or August 7 checks before it. Still 19 commits landed in July
       2026, the last on July 28 adding a program-agnostic daemon engine and a vprun CLI. Nothing has landed
       since; the branch has now gone almost four weeks with no commits, and there are still zero releases,
-      zero tags, and nothing on crates.io. Do not call the work pre-testnet.
+      zero tags, and nothing on crates.io. Do not call the work pre-testnet. Rechecked September 1, 2026
+      against the repository's own commit, release and tag feeds: unmoved. The July 28, 2026 vprogs-runner
+      commit is still the newest, the repository still totals 79 commits, and the releases and tags feeds
+      are both still empty. That is five weeks with no commits.
       examples/tn10-flow describes itself as "a proof-of-concept that runs the L2 flow against a remote
       testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
       against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
@@ -284,7 +296,7 @@ claims:
       - vProgs are live
   argent:
     status: research
-    recheck_after: 2026-09-13
+    recheck_after: 2026-09-20
     summary: >
       Argent is an actor-based language and compiler for stateful multi-contract applications on
       covenant-native UTXO rails, compiling .ag source to plain Silverscript contracts and portable
@@ -335,6 +347,16 @@ claims:
       .ag files is linked out of the Argent checkout rather than shipped by the template. An
       examples/icc/kcc20_asset.ag file prototypes a KCC-0020-style transferable asset covenant whose owner
       identifier can be a pubkey or a covenant ID.
+      Rechecked September 1, 2026 against the argent-lang organization's repository listing and each
+      repo's own commit, release and tag feeds. All three repos pushed on August 31, 2026, later than
+      the August 30, August 26 and August 25 pushes recorded above, and argent is now at 85 commits,
+      up from 83. The newest commits continue the upstream-tracking pattern rather than opening new
+      surface: PR #54 "Use upstream Sil ABI artifacts" (August 31), PR #44 "Add bounded ranges to entry
+      consumes and emits" (August 30), PR #52 "Use Sil AST APIs for checked source transformations"
+      (August 30). Stars are unchanged at 22, 7 and 8, and all three still carry zero releases and zero
+      tags. Upstream, silverscript is still at v1-rc1 as its only release and 176 commits, now 50 stars
+      rather than 49, so the v1 release its notes put one week out (about September 6, 2026) has not
+      landed and the audit Argent's README waits on still has no evidence.
     source: https://raw.githubusercontent.com/argent-lang/argent/master/README.md
     supporting_source: https://github.com/argent-lang/argent
     forbidden_copy:
@@ -469,7 +491,7 @@ claims:
       - Almost nobody is using them in production yet
   dagknight:
     status: research
-    recheck_after: 2026-09-07
+    recheck_after: 2026-09-14
     summary: >
       DAGKnight is the consensus upgrade that follows Toccata. Current mainnet behavior remains GHOSTDAG.
       The parameterless descriptor belongs to the DAGKnight paper itself, "The DAG KNIGHT Protocol: A
@@ -490,8 +512,14 @@ claims:
       is no longer current. Activation still needs a merged KIP and release/network confirmation: current
       mainnet behavior remains GHOSTDAG, and no rusty-kaspa release ships DAGKnight. Rechecked August 24,
       2026 directly against kip-0002.md and the dagknight branch's commit feed: KIP-2 still reads "Status:
-      Proposed" in its header block, and the dagknight branch's most recent commit is still the August 14,
-      2026 merge, no new commits landed in the ten days since.
+      Proposed" in its header block, and the dagknight branch's most recent commit was then the August 14,
+      2026 merge. Rechecked September 1, 2026 against the same two sources: KIP-2 still reads "Status:
+      Proposed", but the branch moved again. Its newest commit is an August 28, 2026 merge of
+      "dk-find-lkt-fix", on top of same-day conflict-zone-management work ("[DK::CZM] Color by subgroup",
+      "[DK::CZM] Loosen instrumentation check to match true requirements", "[DK::CZM] Replicate
+      instrumentation strictness", "[DK] Fix find_last_known_tips to scope to NCA"). This supersedes the
+      August 24 reading that called August 14 the newest commit. Nothing about activation changed: no
+      merged KIP, no release, and mainnet consensus is still GHOSTDAG.
     source: https://eprint.iacr.org/2022/1494
     supporting_source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
@@ -500,9 +528,10 @@ claims:
       - the dagknight branch has been dormant since March
       - the dagknight branch has not moved since March 22
       - the dagknight branch has not been touched since March 22
+      - the dagknight branch has not moved since August 14
   one_hundred_bps_partition_resilience:
     status: research
-    recheck_after: 2026-09-07
+    recheck_after: 2026-09-14
     summary: >
       Unverified. The 10 millisecond block / 100 BPS / netsplit-resilient figure traces only to
       kaspa.org's marketing pages, which this repo does not use as a source (see AGENTS.md). No
@@ -512,6 +541,8 @@ claims:
       Treat the 100 BPS / netsplit-resilience pairing as unconfirmed roadmap narrative until a KIP,
       release, or core-contributor source states it directly. Rechecked August 24, 2026 directly against
       kip-0002.md: still no mention of 100 BPS, netsplit, or partition-resilience anywhere in the document.
+      Rechecked September 1, 2026 against the same raw file: still zero matches for "100 BPS", "netsplit"
+      or "partition" anywhere in it, and KIP-2's header still reads Status: Proposed.
     source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - Kaspa is 100 BPS today
@@ -559,7 +590,7 @@ claims:
       - Kaspa oracle flows are live
   kcc_conventions:
     status: research_direction
-    recheck_after: 2026-09-10
+    recheck_after: 2026-09-17
     summary: >
       Kaspa Calls for Conventions (KCCs) are an ecosystem-standards process, separate from KIPs.
       Five states must stay distinct here and never get blurred into each other: a number used
@@ -663,6 +694,21 @@ claims:
       issue #11 is still Closed; PR #6 (KCC-0021) and PR #4 (KCC-0402) are still open, unmerged; the repo
       still carries exactly three merged KCC files on main (kcc-0001.md, kcc-0002.md, kcc-0020.md), no
       fourth has landed.
+      Rechecked September 1, 2026 against the repository README, the open-PR list and the merged
+      commit feed, and three things moved that the August 30 pass had already missed. A fourth KCC is
+      merged: KCC-0 ("KCC Purpose and Guidelines", Alexander Safstrom, Meta), PR #17 opened August 25,
+      2026 and merged August 27, 2026, and the README now indexes four documents, 0, 1, 2 and 20, all
+      still "Status: Draft". KCC-0 is the document that defines the KCC format, lifecycle and
+      finalization criteria, so the acceptance bar is now written down rather than implied. Two spec
+      changes to KCC-0020 also merged, which retires the "no spec change has merged" reading above:
+      PR #16 ("Clarify extended state fungibility semantics", merged August 27, 2026) rewrote Section 4
+      so extended state is part of token identity for fungibility, making an identical
+      extension_commitment a condition of the standard transfer rather than merely something the
+      transfer preserves, and PR #18 ("KCC-0020: prevent hash-chain borrow front-running", merged
+      August 28, 2026) is a second change to the same document. Issue #14 is still Open, so the change
+      is a spec revision in the direction the thread argued, not the reporter's concern being closed
+      out. Open PR count is unchanged at five (#4 KCC-0402, #6 KCC-0021, #20, #21, #22), and neither
+      KCC-0021 nor KCC-0402 has merged.
     source: https://github.com/kaspanet/kccs
     forbidden_copy:
       - KCC20 is a ratified Kaspa standard
@@ -674,6 +720,8 @@ claims:
       - a k402 mainnet deployment proves KCC-0402 is adopted
       - merged KCC drafts are accepted standards
       - KCC-0020's extended state bug has been fixed
+      - no spec change to KCC-0020 has ever merged
+      - three KCC documents are merged
       - KCC-0020's co-authors disagree about whether the supply-split behavior is intended
       - co-authors call intended design behavior
       - co-authors call intended behavior
@@ -698,7 +746,7 @@ claims:
 
   covenant_tooling_and_support:
     status: builder_guardrail
-    recheck_after: 2026-09-03
+    recheck_after: 2026-09-10
     summary: >
       Rechecked August 24, 2026 directly against kaspa-python-sdk's releases page and the tn10 REST API's
       live openapi.json: kaspa-python-sdk v2.0.2.rc1 is still the newest release, still a prerelease, still
@@ -721,7 +769,10 @@ claims:
       no date attached. A concrete design (a satellite index keyed by covenant_id, with
       getUtxosByCovenantId and getUtxosByOutpoints, bounded pagination, reads straight from the
       consensus UTXO set) was posted in post 8, August 4, 2026, and remains unanswered as of
-      August 22, 2026.
+      August 22, 2026. Rechecked September 1, 2026 against kaspa-python-sdk's releases feed and
+      rusty-kaspa's: unmoved. kaspa-python-sdk 2.0.2rc1 (July 23, 2026) is still the newest release and
+      still a prerelease, and rusty-kaspa v2.0.1 (June 15, 2026) is still the newest tagged release, so
+      no release has added a covenant-ID RPC.
     source: https://github.com/kaspanet/kaspa-python-sdk/releases
     forbidden_copy:
       - Kaspa wallets support covenant construction
@@ -730,7 +781,7 @@ claims:
 
   tn10_rest_submit_drops_compute_budget:
     status: builder_guardrail
-    recheck_after: 2026-09-07
+    recheck_after: 2026-09-14
     summary: >
       Rechecked August 24, 2026 directly against the live schema at api-tn10.kaspa.org/openapi.json:
       SubmitTxModel still carries only version, inputs, outputs, lockTime, and subnetworkId, and
@@ -747,7 +798,11 @@ claims:
       schemas already, just absent from this one endpoint. Reported by daniel, kas-smiths.org/t/108 post 1, July 24, 2026,
       23:08:04 UTC: "the compute_budget field is silently dropped in the REST to RPC mapping."
       IzioDev's only workaround, post 2, July 29, 2026, 12:01:34 UTC: submit directly to a kaspad
-      node instead of the REST API. Still open as of August 22, 2026.
+      node instead of the REST API. Still open as of August 22, 2026. Rechecked September 1, 2026
+      against the live schema: SubmitTxModel still carries only inputs, lockTime, outputs, subnetworkId
+      and version, SubmitTxInput still carries only previousOutpoint, sequence, sigOpCount and
+      signatureScript, and compute budget still appears only in the read-side schemas
+      (BlockTxInputModel, BlockTxVerboseDataModel, TxInput, TxMass).
     source: https://api-tn10.kaspa.org/openapi.json
     forbidden_copy:
       - the testnet-10 REST API forwards compute_budget correctly
