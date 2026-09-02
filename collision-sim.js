@@ -237,6 +237,24 @@
           // same block sits at the same x in both panels.
           const ct0 = chainBlocks[0].t;
           const ct1 = chainBlocks[chainBlocks.length - 1].t;
+          // The spine used to be drawn only between kept blocks inside the
+          // 20-block window. Raise latency and almost everything is orphaned, so
+          // the window holds no kept block and the chain vanished entirely:
+          // measured at max rate and max delay, zero line pixels and zero kept
+          // blocks painted, leaving orphans floating against nothing while the
+          // legend still read "kept, on the chain". The chain does not stop
+          // existing because this view happens to contain none of its blocks, so
+          // its line is drawn across the full width first, faintly, and the
+          // segments between kept blocks are drawn over it.
+          const spineY = clampY(chainY(cs.h, { orphaned: false }), cs.h, 9);
+          chainCtx.save();
+          chainCtx.globalAlpha = 0.35;
+          chainCtx.beginPath();
+          chainCtx.moveTo(0, spineY);
+          chainCtx.lineTo(cs.w, spineY);
+          chainCtx.stroke();
+          chainCtx.restore();
+
           let prevX = null, prevY = null;
           chainBlocks.forEach((b, i) => {
             const x = timeX(cs.w, b.t, ct0, ct1);
@@ -283,9 +301,18 @@
           dagBlocks.forEach((b, i) => {
             const x = dagPos[b.id].x;
             const y = dagPos[b.id].y;
+            // A parent older than the 20-block window used to drop its edge
+            // silently. At high latency every parent is outside the window, so
+            // the panel drew no edges at all while its own caption said each
+            // block points at the parents it saw: measured zero edge pixels at
+            // max rate and max delay. An off-window parent is still a parent, so
+            // the edge runs to the left border instead of disappearing. One stub
+            // per block, not one per missing parent, or the panel fills with
+            // overlapping lines to the same edge.
+            let offWindow = false;
             b.parents.forEach(pid => {
               const pi = idIndex[pid];
-              if (pi === undefined) return;
+              if (pi === undefined) { offWindow = true; return; }
               const pb = dagBlocks[pi];
               const px = dagPos[pb.id].x;
               const py = dagPos[pb.id].y;
@@ -294,6 +321,12 @@
               dagCtx.lineTo(x, y);
               dagCtx.stroke();
             });
+            if (offWindow) {
+              dagCtx.beginPath();
+              dagCtx.moveTo(0, y);
+              dagCtx.lineTo(x, y);
+              dagCtx.stroke();
+            }
           });
           dagBlocks.forEach((b, i) => {
             const x = dagPos[b.id].x;
