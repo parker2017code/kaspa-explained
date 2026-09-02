@@ -2952,7 +2952,11 @@ body::before {
 
 .brand-mark {
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(var(--green-rgb), .18);
+  /* A 24px green glow offset 8px under a 26px mark does not read as a glow at
+     that size. On the dark header it renders as a smudge below and left of the
+     logo, visible in every screenshot at 390px and 1280px. The mark is a solid
+     teal circle and needs no halo to separate from the bar. */
+  box-shadow: none;
 }
 
 .nav-links a,
@@ -6781,4 +6785,15 @@ summary:active {
   left: 0;
   z-index: 2;
   background: var(--card-bg);
+}
+
+/* An inline code chip carries .4em of right padding, which is correct against
+   a following word and wrong against a following comma or period: the chip's
+   own breathing room reads as a typed space, "genesis.rs , an empty genesis".
+   The chip gives back its right padding when a mark follows, rather than the
+   mark being pulled back over it: a negative margin overlapped the chip's box
+   and the render gate rejected it as intersecting text. Only marks that follow
+   a chip are wrapped, so ordinary punctuation is untouched. */
+code:has(+ .tuck) {
+  padding-right: 0.14em;
 }

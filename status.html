@@ -79,7 +79,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260902-rowhead">
+  <link rel="stylesheet" href="styles.css?v=20260902-tuck">
   <script defer src="nav.js?v=20260831c-000000"></script>
   <style>
     /* Filter above the two status tables. The tables are the page; the
@@ -274,7 +274,7 @@
               <td data-label="Feature">Toccata</td>
               <td data-label="Status"><span class="status-pill live">Live</span></td>
               <td data-label="Meaning">
-                L1 spend/asset rules, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-status">Silverscript<span class="term-def__panel" id="silverscript-def-status" role="tooltip">Compiles to Kaspa script, so a covenant reads as rules instead of hand-assembled opcodes.</span></span>, ZK proof checks, sequencing commitments. Activated DAA score 474,165,565 (~30 June 2026, v2.0.0); v2.0.1 followed 15 June 2026.
+                L1 spend/asset rules, <span class="term-def" tabindex="0" role="button" aria-describedby="silverscript-def-status">Silverscript<span class="term-def__panel" id="silverscript-def-status" role="tooltip">Compiles to Kaspa script, so a covenant reads as rules instead of hand-assembled opcodes.</span></span>, ZK proof checks, sequencing commitments. v2.0.0 set activation at DAA score 474,165,565; the score arrived about 30 June 2026. v2.0.1 shipped 15 June.
               </td>
               <td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">v2.0.1</a>; <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0">v2.0.0</a>; <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata guide</a></td>
             </tr>
@@ -393,12 +393,12 @@
               </tr>
               <tr>
                 <td data-label="Track">Builder tooling</td>
-                <td data-label="What exists in public"><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspa-python-sdk</a> is a standalone public repo. <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.0">v2.0.0</a> added Toccata-aligned support and the managed-wallet API for Python; <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">v2.0.1</a> added <code>get_seq_commit_lane_proof</code>, sync progress events, and covenant-binding fixes. It ships on <a href="https://pypi.org/project/kaspa/2.0.1/">PyPI</a>.</td>
+                <td data-label="What exists in public"><a href="https://github.com/kaspanet/kaspa-python-sdk">kaspa-python-sdk</a> is a standalone public repo. <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.0">v2.0.0</a> added Toccata-aligned support and the managed-wallet API for Python; <a href="https://github.com/kaspanet/kaspa-python-sdk/releases/tag/v2.0.1">v2.0.1</a> added <code>get_seq_commit_lane_proof</code><span class="tuck">,</span> sync progress events, and covenant-binding fixes. It ships on <a href="https://pypi.org/project/kaspa/2.0.1/">PyPI</a>.</td>
                 <td data-label="How to read it">Developer tooling, not protocol status. Upgrade claims still come from node, KIP, and activation evidence.</td>
               </tr>
               <tr>
                 <td data-label="Track">Indexing</td>
-                <td data-label="What exists in public"><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">PR #860</a> is open for review. It proposes an optional <code>--txindex</code>, a GetTransaction RPC path, inclusion and acceptance metadata, live updates, and pruning tied to retention-root changes. A separate <a href="https://github.com/kaspanet/rusty-kaspa/pull/930">relay draft</a> explores propagating indexed data.</td>
+                <td data-label="What exists in public"><a href="https://github.com/kaspanet/rusty-kaspa/pull/860">PR #860</a> is open for review. It proposes an optional <code>--txindex</code><span class="tuck">,</span> a GetTransaction RPC path, inclusion and acceptance metadata, live updates, and pruning tied to retention-root changes. A separate <a href="https://github.com/kaspanet/rusty-kaspa/pull/930">relay draft</a> explores propagating indexed data.</td>
                 <td data-label="How to read it">Open, not merged. It would help wallets, explorers, and indexers once it lands.</td>
               </tr>
             </tbody>
@@ -411,10 +411,10 @@
         <div class="summary-grid grid-cards">
           <article><span>Ordinary users</span><p>Nothing to do.</p></article>
           <article><span>Node operators</span><p>Run v2.0.1+; the DB upgrade is one-way, only path back is resync.</p></article>
-          <article><span>Wallets and submitters</span><p>Use fee estimation, or <code>100 sompi * max(compute grams, 2 * transaction bytes)</code>; binds relayed transactions too.</p></article>
-          <article><span>Exchanges and indexers</span><p>Update SDKs; handle tx version <code>1</code>, <code>storageMass</code>, <code>computeBudget</code>, output covenants, UTXO <code>covenant_id</code>.</p></article>
+          <article><span>Wallets and submitters</span><p>Use fee estimation, or <code>100 sompi * max(compute grams, 2 * transaction bytes)</code><span class="tuck">;</span> binds relayed transactions too.</p></article>
+          <article><span>Exchanges and indexers</span><p>Update SDKs; handle tx version <code>1</code><span class="tuck">,</span> <code>storageMass</code><span class="tuck">,</span> <code>computeBudget</code><span class="tuck">,</span> output covenants, UTXO <code>covenant_id</code><span class="tuck">.</span></p></article>
           <article><span>Miners and pools</span><p>Test block templates and <code>SubmitBlock</code> against Testnet-10; a block stripping post-Toccata fields can turn invalid.</p></article>
-          <article><span>Pool accounting</span><p>Check <code>GetBlockRewardInfo</code> and <code>GetSeqCommitLaneProof</code>: skipped, it breaks payouts.</p></article>
+          <article><span>Pool accounting</span><p>Check <code>GetBlockRewardInfo</code> and <code>GetSeqCommitLaneProof</code><span class="tuck">:</span> skipped, it breaks payouts.</p></article>
         </div>
         <p class="source-inline">References: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a> and <a href="https://github.com/kaspanet/kaspad/releases/tag/v0.12.23">Go Kaspad v0.12.23</a>.</p>
       </details>
@@ -429,7 +429,7 @@
           <tbody>
             <tr><td data-label="Aspect">Decides</td><td data-label="KIP">Consensus and core-node behavior</td><td data-label="KCC">Conventions between independent implementations</td></tr>
             <tr><td data-label="Aspect">Binding on</td><td data-label="KIP">Every node that wants to stay on the network</td><td data-label="KCC">Whoever chooses to converge</td></tr>
-            <tr><td data-label="Aspect">Adopted so far</td><td data-label="KIP">KIP-16, 17, 20 and 21 active; KIP-2 still proposed</td><td data-label="KCC">KCC-0, KCC-0001, KCC-0002 and KCC-0020 merged, each still <code>Status: Draft</code>. None accepted.</td></tr>
+            <tr><td data-label="Aspect">Adopted so far</td><td data-label="KIP">KIP-16, 17, 20 and 21 active; KIP-2 still proposed</td><td data-label="KCC">KCC-0, KCC-0001, KCC-0002 and KCC-0020 merged, each still <code>Status: Draft</code><span class="tuck">.</span> None accepted.</td></tr>
           </tbody>
         </table>
       </div>

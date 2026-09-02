@@ -40,7 +40,7 @@
   <meta name="twitter:description" content="A live tracker of Kaspa's change proposals. It reads the repositories direct, so it cannot go stale.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
   <meta name="dateModified" content="2026-09-01">
-  <link rel="stylesheet" href="styles.css?v=20260902-rowhead">
+  <link rel="stylesheet" href="styles.css?v=20260902-tuck">
   <script defer src="nav.js?v=20260831c-000000"></script>
   <style>
   /* Token audit 2026-08-31: literal token values below are deliberate divergences from styles.css (pinned palettes, demo-only colors, contrast variants); byte-identical copies were converted to var() references. */
@@ -365,7 +365,7 @@
                     <i class="info-affordance__glyph" aria-hidden="true">i</i>
                     <span class="sr-only">Where 5 seconds and 124 come from</span>
                   </button>
-                  <span class="info-affordance__panel" id="par-d-out-panel" role="tooltip">5 s is rusty-kaspa's own <code>NETWORK_DELAY_BOUND</code> constant (<code>consensus/core/src/config/constants.rs</code>, checked 2026-08-25). <a href="https://github.com/kaspanet/kips/blob/master/kip-0014.md">KIP-14</a>, the Crescendo hardfork, sets D = 5, &delta; = 0.01 and states the resulting margin is "recalculated to be 124." Neither number is a choice this page made; both are what mainnet runs today.</span>
+                  <span class="info-affordance__panel" id="par-d-out-panel" role="tooltip">5 s is rusty-kaspa's own <code>NETWORK_DELAY_BOUND</code> constant (<code>consensus/core/src/config/constants.rs</code><span class="tuck">,</span> checked 2026-08-25). <a href="https://github.com/kaspanet/kips/blob/master/kip-0014.md">KIP-14</a>, the Crescendo hardfork, sets D = 5, &delta; = 0.01 and states the resulting margin is "recalculated to be 124." Neither number is a choice this page made; both are what mainnet runs today.</span>
                 </span>
               </div>
             </div>
@@ -498,7 +498,7 @@
                     <tr><td data-label="Caveat">Not actually parameter-free</td><td data-label="Detail">The paper still requires a client-set bound D covering the latency an attacker could cause, not what the network currently shows (Pass-Shi, Theorem 14). A calm network doesn't license a low D.</td></tr>
                     <tr><td data-label="Caveat">A visible attack doesn't slow every payment</td><td data-label="Detail">A transaction with no visible conflicting spend still confirms on the optimistic timeline above even while the pessimistic case plays out elsewhere in the DAG (§4, footnote 14).</td></tr>
                     <tr><td data-label="Caveat">Efficiency is unsolved</td><td data-label="Detail">KIP-2 itself lists DAGKnight's pseudocode as "highly inefficient" and its rewrite unfinished, a stated reason this is still research four years on.</td></tr>
-                    <tr><td data-label="Caveat">The 32-BPS ceiling belongs to GHOSTDAG, not DAGKnight</td><td data-label="Detail">rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32; past that the fallback arm reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code>, checked 2026-08-22).</td></tr>
+                    <tr><td data-label="Caveat">The 32-BPS ceiling belongs to GHOSTDAG, not DAGKnight</td><td data-label="Detail">rusty-kaspa's <code>Bps&lt;BPS&gt;::ghostdag_k()</code> is a hardcoded match on precomputed values for 1 through 32; past that the fallback arm reads <code>panic!("see gen_ghostdag_table for currently supported values")</code> (<code>consensus/core/src/config/bps.rs</code><span class="tuck">,</span> checked 2026-08-22).</td></tr>
                     <tr><td data-label="Caveat">Which is why the slider keeps going</td><td data-label="Detail">GHOSTDAG needs a k chosen in advance for a given rate; past 32 means computing a new k and hard-forking. Removing that a priori k is <a href="https://github.com/kaspanet/kips/blob/master/kip-0002.md">KIP-2</a>'s whole premise, so DAGKnight has no table to run out of.</td></tr>
                     <tr><td data-label="Caveat">The upper range is not a target</td><td data-label="Detail">KIP-2 lists the optimal block rate as open research, no number recommended. The repeated "100 blocks/sec, netsplit-resilient" figure traces only to kaspa.org's marketing pages, unconfirmed by any KIP, release, or core-contributor statement.</td></tr>
                     <tr><td data-label="Caveat">No published cost figure, but real efficiency work</td><td data-label="Detail">Contributor coderofstuff (40 commits) builds the UMC-voting redesign on personal fork branches, then merges into kaspanet's own <code>dagknight</code> branch; <code>dk-umc-proposed</code> merged August 14, 2026.</td></tr>
@@ -517,7 +517,7 @@
                 <table class="reality-table">
                   <thead><tr><th>Topic</th><th>Explanation</th></tr></thead>
                   <tbody>
-                    <tr><td data-label="Topic">GHOSTDAG's k</td><td data-label="Explanation">rusty-kaspa's own derivation: <code>k = min k̂ such that P(anticone &gt; k̂) &lt; δ</code>, from <code>x = 2·D·λ</code> (D = assumed max delay, λ = blocks/second) via a Poisson-tail sum. Mainnet's constants are <code>NETWORK_DELAY_BOUND = 5s</code> and <code>GHOSTDAG_TAIL_DELTA = 0.01</code> (<code>consensus/core/src/config/{constants,bps}.rs</code>). At λ = 10, D = 5s, k = 124, matching <code>bps.rs</code>'s table (below).</td></tr>
+                    <tr><td data-label="Topic">GHOSTDAG's k</td><td data-label="Explanation">rusty-kaspa's own derivation: <code>k = min k̂ such that P(anticone &gt; k̂) &lt; δ</code><span class="tuck">,</span> from <code>x = 2·D·λ</code> (D = assumed max delay, λ = blocks/second) via a Poisson-tail sum. Mainnet's constants are <code>NETWORK_DELAY_BOUND = 5s</code> and <code>GHOSTDAG_TAIL_DELTA = 0.01</code> (<code>consensus/core/src/config/{constants,bps}.rs</code><span class="tuck">)</span>. At λ = 10, D = 5s, k = 124, matching <code>bps.rs</code>'s table (below).</td></tr>
                     <tr><td data-label="Topic">Does a higher block rate lengthen confirmation?</td><td data-label="Explanation">Yes, per the paper (&sect;1.2): "many blocks are created in parallel, blocks suffer from larger anticones, and transactions take longer to confirm," adding "Kaspa's convergence time remains in the order of tens of seconds even when its latency is way below 10 seconds."</td></tr>
                     <tr><td data-label="Topic">The guarantee readouts</td><td data-label="Explanation">Compute the paper's no-visible-attack bound (&sect;1.5.2), O((ln(1/&epsilon;)/&lambda; + D)/(1&minus;2&alpha;) + D&sup2;&lambda;), at &epsilon; = 0.01, growing with &lambda; at fixed D. The fixed side substitutes D<sub>max</sub> (the D slider); the adaptive side substitutes D<sub>t</sub> (the actual-latency slider): that's the whole difference between the two readouts.</td></tr>
                     <tr><td data-label="Topic">Sompolinsky's "about 8x," reproduced without inventing a constant</td><td data-label="Explanation">On moving from 10 to 100 blocks a second under GHOSTDAG (Bitcoin Takeover S17 E36, 31:06): "confirmation of transactions will take tens of seconds at least, about 8x long." At a fixed 2 s delay the bound above gives 43 s at ten blocks a second, his "tens of seconds," and 402 s at 100, a 9.3&times; increase.</td></tr>
@@ -845,7 +845,7 @@
     <section class="section">
       <p class="eyebrow">Conventions</p>
       <h2 id="kcc">Kaspa Calls for Conventions</h2>
-      <p class="lead">Builder agreements on encoding. Four merged since July 15, 2026, all still <code>Status: Draft</code>; none cleared the acceptance bar KCC-0 now writes down.</p>
+      <p class="lead">Builder agreements on encoding. Four merged since July 15, 2026, all still <code>Status: Draft</code><span class="tuck">;</span> none cleared the acceptance bar KCC-0 now writes down.</p>
       <div id="kcc-groups">
         <details class="deep-dive" open>
           <summary>Merged, Status: Draft (4)</summary>
