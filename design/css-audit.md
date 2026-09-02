@@ -48,7 +48,7 @@ Selectors defined **only** in the old region (not redefined by any exact selecto
 string in the new region): 127 classes, 2 ids.
 
 Cross-referenced against:
-- `class="..."` attributes in all 72 HTML files (25 live pages + 47 redirect stubs,
+- `class="..."` attributes in all 72 HTML files (17 live pages + 47 redirect stubs,
   which carry no classes and were excluded) and the 13 files in `demos/`.
 - `classList.add/toggle/remove/contains(...)` and `className = ...` / template-literal
   `class="..."` strings in every `.js` file (`nav.js`, `ask-ai.js`, `live-kaspa.js`,
@@ -141,7 +141,7 @@ Stage 0, now (safe, small, boring):
 1. Remove the 43 confirmed-dead rule blocks (the 34 classes + `#miner`) identified
    above. Nothing references them by any mechanism checked.
 2. Verification: re-run the same class/id extraction after the edit, confirm the
-   removed selectors produce zero matches, and do a visual diff of the 25 live pages
+   removed selectors produce zero matches, and do a visual diff of the 17 live pages
    before/after. Concretely, with the tools available in this session: serve the repo
    with a local static server (`python3 -m http.server`), open each of the 25 live
    pages (skip the 47 redirect stubs, none load `styles.css` or carry classes) via the
@@ -194,7 +194,7 @@ without a second stale-data problem.
   literal substring search, not by executing the scripts; a build-time or
   server-rendered concatenation this repo doesn't run locally would not surface.
 - `_preview-site/` and `experiment/*.html` were scanned for class usage but are not
-  counted among the 25 live pages or 47 stubs; if either is actually served in
+  counted among the 17 live pages or 47 stubs; if either is actually served in
   production, re-run the reference check against them explicitly.
 - The 215 partial-override selectors are a classification, not a verified list.
   See Task 3's "could not classify with full confidence" note.

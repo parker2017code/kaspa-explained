@@ -31,6 +31,21 @@ docs, public copy, code comments, commit messages, READMEs. They are consistent
 with `PROSE_STANDARD.md` and `COPY_STYLE.md` and do not replace either. Where
 they overlap, follow whichever is stricter.
 
+**Rule 0, which governs the rest: cut unnecessary prose, always, in everything.**
+Not as a task someone assigns when a page grows too long, and not only on the
+public pages. It applies to every artifact: page copy, this file, agent briefs,
+commit messages, code comments, handoff notes, and replies to the owner. The
+default action on a sentence that carries no number, mechanism, status, source
+or instruction is to delete it. Length is never the goal and never the defense:
+a shorter version that keeps every load-bearing fact is always the better one,
+and the burden is on a sentence to earn its place rather than on the editor to
+justify removing it. The owner has asked for this repeatedly and unprompted,
+which is the signal `PRINCIPLES.md` says to weight highest.
+
+The one thing that outranks it: never cut a number, a status label, a source, or
+an evidence boundary to make something shorter. Brevity that costs a receipt is
+not brevity, it is a different and worse document.
+
 1. **Say it literally.** If a literal phrase exists, use it. No metaphor standing
    in for a statement ("a dial worth turning" for "a parameter worth varying",
    "earns its keep" for "still matters"). Metaphor drags in connotations nobody

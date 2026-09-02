@@ -77,7 +77,7 @@ bash scripts/check-site.sh
 ```
 
 That is the publish gate, and `Site checks passed.` is the only line that
-counts. It runs about two dozen checks: HTML validity, claim consistency,
+counts. It runs sixteen checks: HTML validity, claim consistency,
 source bans, status freshness, nav synchronization, redirect stubs, reading
 grade, prose rules, American English, rendered layout at three widths in both
 themes, broken links and missing anchors, visible-word ceilings, page height,
