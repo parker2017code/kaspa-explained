@@ -44,6 +44,19 @@ outranks any word or character target, including the ones in this file.
 A `<summary>` is the entire contract with a reader deciding whether to click, so
 name what is inside it: "Assumptions, exact math, and sources", never "Learn more".
 
+**Fold prose and reference detail. Do not fold a table that answers its own
+section.** Learned 2 September 2026 by doing it wrong on six pages at once.
+`scripts/check-page-height.mjs` caps an undifferentiated vertical run at 800px and
+counts only what a reader can look at or touch: a demo, a control, an image, a
+table. A closed summary is a heading wearing different clothes and counts for
+nothing, so folding a table deletes a landmark and the run past it grows. Nine
+tables were folded and unfolded again for that reason. Leaving them as
+always-open disclosures is worse than not folding at all, because the summary
+line costs height and buys nothing; unwrap them back to plain tables. The test
+before folding anything: if the section's heading states a claim and this block
+is the evidence for that claim, it stays open. If the block is a caveat, a
+formula, a per-item note, a worked example or a source trail, it folds.
+
 ## Prose rules
 
 Added 2 September 2026. These bind every file written or edited in this repo:
