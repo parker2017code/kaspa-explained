@@ -46,6 +46,9 @@ python3 scripts/check-label-colors.py
 # The scripts and data/ stay in the repo; git history holds the pages. Restore
 # these two lines with the pages if the tool ever comes back.
 python3 scripts/check-prose.py --strict >/dev/null || { python3 scripts/check-prose.py >&2; echo "prose standard violations, see PROSE_STANDARD.md" >&2; exit 1; }
+# check-prose.py reads public HTML only. This reads the repo's own docs, comments
+# and scripts, which no gate opened until 68 em dashes had sat in design/ for months.
+python3 scripts/check-docs-prose.py >/dev/null || { python3 scripts/check-docs-prose.py >&2; echo "repo prose violations, see CLAUDE.md Prose rules" >&2; exit 1; }
 
 # Reading grade, PROSE_STANDARD.md v2.0. Shared copy is held to grade 9; blocks
 # marked data-audience="specialist" are measured separately and do not fail.
