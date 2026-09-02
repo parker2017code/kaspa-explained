@@ -955,6 +955,11 @@
     if (virtualInfo) width += COLW;
     var height = maxRows * ROWH + PAD * 2;
     stage.style.width = width + "px";
+    // The graph is content-sized, so at three generations it was 368px pinned to
+    // the left of a 928px scroller with the rest of the panel empty. Center it
+    // whenever it does not fill the scroller; once it does, this is a no-op and
+    // the scroller takes over as before.
+    stage.style.marginInline = "auto";
     stage.style.height = height + "px";
     svg.setAttribute("width", width);
     svg.setAttribute("height", height);
@@ -2538,6 +2543,7 @@ TPS = tx_per_block × 10 blocks/second</span>
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/moose">Moose's books</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
           <span>Verify</span>
