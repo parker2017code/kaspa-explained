@@ -2,17 +2,18 @@
 // link count of each. Those two numbers are the receipt test: a block dense with
 // figures and sources is evidence and is not cuttable to hit a length target; a
 // block with neither is prose that happens to be folded away.
-// Usage: node scripts/count-disclosures.mjs
+// Usage: node scripts/count-disclosures.mjs [baseUrl]
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
+const base = process.argv[2] || 'https://kaspaexplained.com';
 const pages = JSON.parse(readFileSync('site-manifest.json','utf8')).pages;
 const b = await chromium.launch();
 const p = await (await b.newContext({viewport:{width:1280,height:900}})).newPage();
 let C=0,W=0; const rows=[];
 for (const n of pages) {
-  await p.goto(`https://kaspaexplained.com/${n.replace('.html','')}?cb=${Date.now()}`,{waitUntil:'load'});
+  await p.goto(`${base}/${base.includes('127.0.0.1') ? n : n.replace('.html','')}?cb=${Date.now()}`,{waitUntil:'load'});
   await p.waitForTimeout(450);
   const r = await p.evaluate(() => {
     const drop=/block-card|ln-feed|block-time|block-sub|empty-word|content-word/;
@@ -48,7 +49,7 @@ for (const n of pages) {
 }
 rows.sort((a,b)=>b.chars-a.chars);
 console.log('largest closed disclosures:');
-for (const r of rows.slice(0,16))
+for (const r of rows.slice(0, Number(process.env.DISCLOSURE_ROWS || 16)))
   console.log(`${String(r.chars).padStart(5)}ch ${String(r.words).padStart(4)}w  digits=${String(r.digits).padStart(3)} links=${String(r.links).padStart(2)}  ${r.page.padEnd(20)} "${r.label}"`);
 console.log(`\n${rows.length} closed disclosures. TOTAL ${W} words, ${C} characters.`);
 console.log(`Against a 30,000-character ceiling: ${C>30000?('over by '+(C-30000)):'already under'}`);

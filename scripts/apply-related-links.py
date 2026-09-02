@@ -75,35 +75,26 @@ NEXT_STEP = {
         "/argent-explained#argent-pipeline",
         "Watch a real line of code compile from Argent through Silverscript to the Kaspa Script that runs on-chain.",
     ),
+    # Rerouted 2026-09-02: this pointed at /chain-comparer, deleted on 1 September.
+    # The page itself had been hand-corrected, so the dead link survived only in
+    # this map, where the next regeneration would have put it back on a live page.
     "argent-explained.html": (
-        "/chain-comparer",
-        "Move the dials yourself and see which of twenty layer-one chains actually fits what your app needs.",
-    ),
-    "chain-comparer.html": (
-        "/model-picker",
-        "A second dial tool, off-topic to Kaspa: rank language models against what your own work actually needs.",
-    ),
-    "model-picker.html": (
-        "/the-instrument",
-        "A 279-page argument for judging every monetary system, Kaspa included, by its physical cost floor.",
+        "/kips",
+        "Read the KIPs and KCCs the compiler targets, and see which are merged, which are drafts, and which are neither.",
     ),
     # Added 2026-08-29 with the page itself, rerouted 2026-08-30 through the
     # full table rather than straight back to the tool: a reader who just
     # read that every estimated cell is marked on its row is the reader most
     # likely to want to see those marks before going back to using it.
-    "model-picker-method.html": (
-        "/model-picker-data",
-        "Every one of the 230 cells behind the ranking, with the ones this page just described as measured, sibling-carried, or imputed marked on its own row.",
-    ),
     # Added 2026-08-30 with the page itself. Its own job is done once a
     # reader has seen the row they came for; the tool is what they came from.
-    "model-picker-data.html": (
-        "/model-picker",
-        "Take the numbers back to the tool: move the six dials and watch the ranking reorder against them.",
-    ),
     "the-instrument.html": (
         "/sources",
         "Check this argument the way every claim on this site gets checked: against the primary sources behind it.",
+    ),
+    "moose.html": (
+        "/sources",
+        "Check these arguments against the primary sources behind them.",
     ),
     "sources.html": (
         "/status",
@@ -168,14 +159,18 @@ def target_title(href):
     return compact("".join(parser.h1)) or page.replace("-", " ").title()
 
 
+# The destination's name used to sit in an sr-only heading, so a sighted reader
+# got the eyebrow "Next", a sentence of reasoning, and no idea which page it led
+# to. The name is the one thing a next-link has to show. It is the visible
+# heading now, and it carries the link; the reason follows as supporting text.
 def block_for(page):
     href, reason = NEXT_STEP[page]
     title = target_title(href)
     return f"""{START}
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Next</p>
-      <h2 id="related-links-title" class="sr-only">Next: {html.escape(title)}</h2>
-      <p class="site-next"><a href="{href}">{html.escape(reason)}</a></p>
+      <h2 id="related-links-title" class="site-next-title"><a href="{href}">{html.escape(title)}</a></h2>
+      <p class="site-next-reason">{html.escape(reason)}</p>
     </section>
 {END}"""
 

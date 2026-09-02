@@ -6797,3 +6797,39 @@ summary:active {
 code:has(+ .tuck) {
   padding-right: 0.14em;
 }
+
+/* The next-step block showed an eyebrow and a reason, with the destination's own
+   name hidden in an sr-only heading: a navigation card that never said where it
+   went, and read as a stray underlined sentence. The name leads now and carries
+   the link, the reason supports it, and the block is tighter than the 161px of
+   mostly empty card it used to occupy for one line of text. */
+.site-next-title {
+  margin: 0 0 2px;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+.site-next-title a {
+  color: var(--text);
+  text-decoration: none;
+  /* The heading's line box is 28px at phone width, under the 44px tap target the
+     render gate enforces. Padding rather than a taller line, so the type keeps
+     its own leading. */
+  display: inline-block;
+  /* 24px type gives a 27.59px line box, so 8px each side lands at 43.59 and the
+     gate reads it as a 44 that fails. 10px clears it with room for the clamp. */
+  padding-block: 10px;
+}
+.site-next-title a:hover {
+  color: var(--green);
+}
+.site-next-reason {
+  margin: 0;
+  max-width: 46em;
+  color: var(--muted);
+  font-size: clamp(16px, 1.3vw, 18px);
+  line-height: 1.5;
+}
+.section.site-related {
+  padding-block: 24px;
+}

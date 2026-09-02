@@ -24,6 +24,26 @@ the same verification commands before finalizing.
 - **"Glass" is more than white sheens and blur.** The first de-glass pass certified "clean" using a scanner that only matched white linear-gradients and backdrop-filter, and the owner immediately found survivors (the Beginner reading order list): cyan-tinted sheens, flat translucent-white fills (`rgba(255,255,255,.04)` backgrounds), and rgba-white borders are all glass too, and legacy `:nth-child` accent variants can outrank a flat override by specificity. The current inventory scanner in `_preview-site/measure.html` checks every element's computed backgroundImage (any gradient), backgroundColor (grayscale translucency), and border color (grayscale translucency) in BOTH themes; the one sanctioned exception is solid brand-gradient accents (green-to-cyan badges/buttons). When the owner says "I found one, there are probably more," enumerate the whole class from the CSS (grep the signature across every rule) rather than fixing the reported instance, and do not report clean until the inventory prints only sanctioned items.
 - **`AGENTS.md`'s Content Rules > Voice section (no em dashes ever, no AI-tell phrasing) applies to `experiment/` too**, not just the main public pages it was written for. Confirmed 2026-07-09: the owner explicitly asked for this after finding em dashes in `experiment/index.html` and `experiment/tipjar.html`, both in prose and in `—` used as an empty-value placeholder in `<code>`/`<strong>` elements (fixed by using `loading…` instead, since JS always replaces it on load). Before merging any new page under `experiment/` (including agent-built ones), grep it for `—` and the other tells this file's voice section names (seamless, robust, unlock, empower, leverage, utilize, "it's not just X, it's Y," rhetorical questions, "why this matters" bridges) and fix any hits before it ships.
 
+## The reading contract, 2 September 2026
+
+The owner's governing idea for the site, in his words: scrolling a page should
+never feel like being force-fed. Anything a reader might not want on screen goes
+under a disclosure, so they can click for more or scroll on to something more
+interesting.
+
+The default question for any block is not "can this be deleted" but "does a
+scrolling reader need this on screen". If the answer is no, fold it rather than
+delete it. The visible path carries the claim, the number that proves it, and its
+status label. Caveats, formulas, per-chain notes, worked examples and source
+trails belong behind a `<summary>`.
+
+Folded content is not a cost. A page carrying 3,000 characters of depth behind
+good summaries is better than one carrying 1,500 a reader must scroll past. This
+outranks any word or character target, including the ones in this file.
+
+A `<summary>` is the entire contract with a reader deciding whether to click, so
+name what is inside it: "Assumptions, exact math, and sources", never "Learn more".
+
 ## Prose rules
 
 Added 2 September 2026. These bind every file written or edited in this repo:
