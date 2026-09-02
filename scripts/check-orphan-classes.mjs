@@ -127,7 +127,7 @@ function candidatesFromScript(script) {
     for (const tok of m[2].split(/\s+/).filter(Boolean)) found.add(tok);
   }
 
-  // className = "literal" or className += "literal" — reject when the
+  // className = "literal" or className += "literal". Reject when the
   // literal is immediately followed by string concatenation, since that
   // means it is a prefix/fragment, not a complete class name.
   for (const m of script.matchAll(/\.className\s*\+?=\s*(['"`])([^'"`]*)\1\s*([;,)]|$)/g)) {
@@ -138,7 +138,7 @@ function candidatesFromScript(script) {
   // literal arguments count. toggle's second argument is a condition,
   // never a class, so literalOf() on it is never treated as a class
   // (it's only reached if it happens to itself be a quoted string, which
-  // would be a boolean-as-string bug elsewhere, not a class name here) —
+  // would be a boolean-as-string bug elsewhere, not a class name here).
   // to be safe, toggle only reads its first argument.
   for (const m of script.matchAll(/classList\.(add|toggle|remove)\(([^)]*)\)/g)) {
     const method = m[1];

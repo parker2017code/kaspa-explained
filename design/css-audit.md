@@ -9,7 +9,7 @@ repo, not from `design/house-style.md`'s prose description of the split.
 
 ## Task 1: the real boundary
 
-The comment `APPLE DESIGN LAYER — 2026-07-08` is at line 6389. `styles.css` is 8,406
+The comment `APPLE DESIGN LAYER, 2026-07-08` is at line 6389. `styles.css` is 8,406
 lines total.
 
 - Old ("glass") region: lines 1-6388 (6,388 lines, 135,125 bytes).
@@ -17,7 +17,7 @@ lines total.
 
 **The split is not "everything above is dead."** It is confirmed too tidy, exactly as
 flagged. The new layer's first rule is `:root[data-theme="light"]` (line 6395), and the
-bare `:root` / `:root[data-theme="dark"]` default block follows at line 6440 — both
+bare `:root` / `:root[data-theme="dark"]` default block follows at line 6440. Both are
 self-contained, no dependency on the old region for token values.
 
 But most component selectors that exist in both regions are **partial overrides, not
@@ -40,7 +40,7 @@ card layout).
 Practical reading: the old region is not a dead system sitting underneath a live one.
 It is the layout and structure layer for most components; the new region is a re-skin
 applied on top. Deleting the old region wholesale would strip layout from nearly every
-component that has any rule in both regions — not just recolor them.
+component that has any rule in both regions, not just recolor them.
 
 ## Task 2 and 3: classification
 
@@ -56,11 +56,11 @@ Cross-referenced against:
 
 Result, three-way:
 
-**Live (93 classes)** — old-region-only, and actually attached to markup today, so the
+**Live (93 classes).** Old-region-only, and actually attached to markup today, so the
 old region is their *sole* source of style, not a leftover. Concrete example that
 validates the "grep the HTML alone gives a confidently wrong answer" warning:
 `.image-viewer-open` / `.image-viewer-close` never appear in any HTML file's `class=`
-attribute. They are built by `nav.js` at runtime — `viewer.className = "image-viewer"`,
+attribute. They are built by `nav.js` at runtime: `viewer.className = "image-viewer"`,
 a template literal containing `class="image-viewer-close"`, and
 `document.body.classList.add("image-viewer-open")` (`nav.js` lines 97-126). A pure HTML
 grep would have called both dead.
@@ -76,17 +76,17 @@ on `kaspa-mining.html`; `.glossary-page`/`.related-terms` on `glossary.html`;
 `.status-page`/`.status-snapshot`/`.roadmap` across the status pages. Full list is
 reproducible from the `only_old_classes.txt` minus the dead list below.
 
-**Overridden but still applying (215 of the 227 shared selectors)** — see Task 1.
+**Overridden but still applying (215 of the 227 shared selectors).** See Task 1.
 Every one of these needs a computed-style check before its old-region rule is touched,
 because "shared selector" does not mean "safe to delete the old declaration": the new
 region typically only overrides a subset of properties.
 
-**Definitely dead (34 classes + 1 id, 35 selectors, 43 rule blocks)** — no `class=`
+**Definitely dead (34 classes + 1 id, 35 selectors, 43 rule blocks).** No `class=`
 attribute match in any of the 72 HTML files or 13 demo files, no `classList`/
 `className`/template-literal match in any `.js` file, and no plausible dynamic-prefix
 construction found (checked by grepping the bare string, not just the `class=` form,
 so a script that builds `"ai-" + suffix` would still have surfaced `ai-ask-panel` as a
-substring hit — none did):
+substring hit, and none did):
 
 ```
 ai-ask-layout, ai-ask-panel, ai-copy-status, ai-destination-grid, ai-preset-strip,
@@ -97,19 +97,19 @@ method-strip, one-screen-grid, pitch-ai-actions, pitch-ai-card, pitch-layout,
 pitch-score, route-card-grid, source-strip, source-tier, survey-layout,
 toccata-builder-party, toccata-status-copy, toccata-status-feature, visual-caption
 ```
-plus id `#miner` (`#demo-arrow` is live — it's an SVG marker id referenced from
+plus id `#miner` (`#demo-arrow` is live, an SVG marker id referenced from
 `index.html`'s inline `<svg>`, would have been misclassified as dead by a class-only
 grep). These read like remnants of a dropped "pitch an AI" / "ask AI" page concept and
-an earlier survey/builder-ledger layout — plausible orphans, not currently reachable
+an earlier survey/builder-ledger layout. Plausible orphans, not currently reachable
 from any shipped page or script.
 
 **Could not classify with full confidence:** the 215 "overridden but still applying"
 selectors are classified as a category, not individually verified property-by-property
-against rendered output — that would need the computed-style comparison in Task 5,
+against rendered output. That would need the computed-style comparison in Task 5,
 which was not run (no proposed diff exists yet to compare against). Static string
 extraction also does not resolve specificity conflicts (an old-region declaration
 inside a media query, or with a combinator, can lose to a same-region rule later in
-the cascade) — the property lists reported are "declared," not "winning at every
+the cascade). The property lists reported are "declared," not "winning at every
 viewport." Treat the 215 as "needs individual verification before touching," not as
 independently confirmed live rules.
 
@@ -127,12 +127,12 @@ The site is served from GitHub Pages behind a custom domain (`CNAME` =
 28,739-byte gzip figure is what a visitor's browser actually receives today, not
 186,309. Compression matters more than the raw split suggests: old and new regions
 overlap heavily in token names and property syntax, so gzip's shared dictionary means
-deleting the old region would not free 22,023 bytes of transfer — removing only the
+deleting the old region would not free 22,023 bytes of transfer. Removing only the
 confirmed-dead 5,790 raw bytes would free well under that in the compressed stream,
 plausibly a few hundred bytes, because that content is highly repetitive boilerplate
 (`.ai-*` micro-classes) that gzips very well already. The honest number requires
 gzipping the file with and without the removed blocks and diffing, not scaling the raw
-byte count — treat any percentage claim about "size win" as unscored until that
+byte count. Treat any percentage claim about "size win" as unscored until that
 diff is run.
 
 ## Task 5: staged removal plan
@@ -140,14 +140,14 @@ diff is run.
 Stage 0, now (safe, small, boring):
 1. Remove the 43 confirmed-dead rule blocks (the 34 classes + `#miner`) identified
    above. Nothing references them by any mechanism checked.
-2. Verification: re-run the same class/id extraction after the edit — confirm the
-   removed selectors produce zero matches — and do a visual diff of the 25 live pages
+2. Verification: re-run the same class/id extraction after the edit, confirm the
+   removed selectors produce zero matches, and do a visual diff of the 25 live pages
    before/after. Concretely, with the tools available in this session: serve the repo
    with a local static server (`python3 -m http.server`), open each of the 25 live
-   pages (skip the 47 redirect stubs — none load `styles.css` or carry classes) via the
+   pages (skip the 47 redirect stubs, none load `styles.css` or carry classes) via the
    Claude Browser tools, and dump `getComputedStyle` for every element on the page
    before and after the edit, diffed programmatically. This is mechanically feasible
-   here — no build step, plain static HTML — and avoids a human eyeballing 72 pages;
+   here, no build step and plain static HTML, and avoids a human eyeballing 72 pages;
    only the 25 real pages need a pass, and a script can flag any computed-style diff
    rather than requiring visual judgment.
 
@@ -156,7 +156,7 @@ Stage 1, after Stage 0 lands clean:
    diff the old-region declaration against the new-region declaration for the same
    selector and decide, per property, whether the old value is still the one rendering
    or whether the new region's later, more specific, or !important rule already wins.
-   This is not a bulk operation — a rule that supplies `display: grid` for a card
+   This is not a bulk operation. A rule that supplies `display: grid` for a card
    layout cannot be deleted just because its `border-color` line is dead weight.
 2. Verification: same computed-style diff as Stage 0, run per-page rather than
    site-wide, since a change to one shared selector can affect several pages that all
@@ -164,7 +164,7 @@ Stage 1, after Stage 0 lands clean:
 
 Stage 2, only after the page rebuild referenced in `PLAN-REDESIGN.md` rewrites markup:
 1. Re-run this entire audit against the rebuilt markup. The rebuild invalidates every
-   usage count above — a class alive today because `about.html` uses it is dead the
+   usage count above. A class alive today because `about.html` uses it is dead the
    moment `about.html` is rewritten without it.
 2. Delete whatever the old region has left after Stage 1 and the rebuild, since by
    then the new region should be the only styling surface a rebuilt page can reach.
@@ -173,7 +173,7 @@ Stage 2, only after the page rebuild referenced in `PLAN-REDESIGN.md` rewrites m
 
 Do Stage 0 before the rebuild. It is small (345 lines, no live dependency found by any
 method tried), independently safe, and gets a genuinely dead 5,790 bytes off the file
-regardless of what the rebuild does later — no reason to carry it forward.
+regardless of what the rebuild does later. No reason to carry it forward.
 
 Do not attempt Stage 1 (the 215 partial-override selectors) before the rebuild. The
 rebuild is explicitly going to rewrite most page markup, which is the cheaper moment to
@@ -183,8 +183,8 @@ requires per-property, per-page verification against markup that is about to be
 thrown away. Doing that verification work now is effort spent on soon-to-be-obsolete
 usage data.
 
-Do Stage 2 during or immediately after the rebuild, not as a separate later pass —
-the rebuild is the one moment old-region usage can be measured against final markup
+Do Stage 2 during or immediately after the rebuild, not as a separate later pass.
+The rebuild is the one moment old-region usage can be measured against final markup
 without a second stale-data problem.
 
 ## What was not checked
@@ -196,5 +196,5 @@ without a second stale-data problem.
 - `_preview-site/` and `experiment/*.html` were scanned for class usage but are not
   counted among the 25 live pages or 47 stubs; if either is actually served in
   production, re-run the reference check against them explicitly.
-- The 215 partial-override selectors are a classification, not a verified list —
-  see Task 3's "could not classify with full confidence" note.
+- The 215 partial-override selectors are a classification, not a verified list.
+  See Task 3's "could not classify with full confidence" note.

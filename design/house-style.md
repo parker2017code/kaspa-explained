@@ -279,7 +279,7 @@ visible-words.mjs` enforces the ceiling by rendering each page and reading
 computed visibility, so anything genuinely hidden behind one of these (closed
 by default) does not count against the budget; anything left open does.
 
-**Info affordance** (`.info-affordance`) — a small round `(i)` next to a
+**Info affordance** (`.info-affordance`) is a small round `(i)` next to a
 control or a line of text, for a short aside at the exact point a reader
 would want it: what a slider's unit means, why a default was chosen, a
 one-sentence caveat. Opens on hover or keyboard focus with no JS at all;
@@ -323,7 +323,7 @@ for: anything a reader needs to complete the page's primary task, or more
 than two or three sentences (reach for the view switch instead, so the extra
 text gets room to breathe rather than living in a cramped floating box).
 
-**Term-level definition reveal** (`.term-def`) — wraps one jargon word inline
+**Term-level definition reveal** (`.term-def`) wraps one jargon word inline
 in running prose; hover, focus, or tap reveals its plain-language meaning
 without leaving the sentence:
 
@@ -344,7 +344,7 @@ then use it" rule still applies; a term reveal only reminds, and the
 definition still needs a home elsewhere on the page). Keep instances spaced out in a paragraph: two
 `.term-def` spans sitting close together can overlap each other's tap area.
 
-**Secondary-view switch** (`.view-switch`) — a segmented control that swaps
+**Secondary-view switch** (`.view-switch`) is a segmented control that swaps
 one panel for another rather than expanding a panel below the fold. Use it
 when a page has two competing framings of the same content and only one
 belongs on the surface at a time: a simple readout versus the full formula,
@@ -369,7 +369,7 @@ position, so keep each switch's inputs and panels in the same order:
 Give every switch on a page its own `name` so two switches don't fight each
 other. Not for: more than three or four views (a control that wide stops
 reading as a single choice), or anything that should stay visible
-side-by-side for comparison — that's two panels in the layout, not a switch.
+side-by-side for comparison. That's two panels in the layout, not a switch.
 
 ## Light and dark
 
@@ -491,11 +491,11 @@ anything; that hack was tried once (the homepage manipulating the embedded
 collision simulator's DOM directly) and it broke silently the first time
 the demo's markup changed. The demo decides what it shows about itself.
 
-**1. FULL** — the demo's own page, loaded directly. Everything: every
+**1. FULL.** The demo's own page, loaded directly. Everything: every
 control, every caveat, the methodology `<details>`, the sources, the
 verdict prose. This is the only rendering with no attribute set.
 
-**2. PREVIEW** — embedded inline on a content page, backing a specific
+**2. PREVIEW.** Embedded inline on a content page, backing a specific
 claim (`kaspa-mining.html` embedding `fee-market`, for one). Detected the
 same way the chrome-hiding already worked: `window.self !== window.top` in
 a pre-paint script sets `document.documentElement.dataset.embedded =
@@ -523,7 +523,7 @@ read `document.body.innerText`. If what's left is more than a line or two
 of prose once the labels and live numbers are subtracted, something that
 should be `.embed-hide` isn't.
 
-**3. CARD** — a small preview sized for a grid (`demos/index.html`'s ranked
+**3. CARD.** A small preview sized for a grid (`demos/index.html`'s ranked
 list, or any other page listing several demos at once), so a reader sees
 what they'd get before clicking, not a title and a sentence describing it.
 Detected by a second flag, read from the iframe's own `src` query string so
