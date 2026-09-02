@@ -322,8 +322,14 @@
               dagCtx.stroke();
             });
             if (offWindow) {
+              // A short leader, not a line to the border. Running it to x=0 was
+              // correct about the parent being off-window and wrong about
+              // everything else: at high delay every block's parent is off-window,
+              // so every block drew a full-width rule and the panel read as ruled
+              // paper rather than a graph. A stub says the edge continues past the
+              // view without pretending to show where it lands.
               dagCtx.beginPath();
-              dagCtx.moveTo(0, y);
+              dagCtx.moveTo(Math.max(0, x - 16), y);
               dagCtx.lineTo(x, y);
               dagCtx.stroke();
             }
