@@ -124,24 +124,6 @@ neutral-sounding summary.
 Where a claim is contested, name who contests it. Anonymous consensus ("the
 community view is") is the vague-attribution ban wearing a hoodie.
 
-## xemx-materials.com
-
-Every technical noun and every capability phrase traces to one of two sources:
-the RUB/ZGH published base, or the prospect's own vocabulary. No invented
-capability language, no throughput or dose numbers that no paper supports. If
-Ludwig, Schuhmann or Banko published it, especially with Banko named, the site
-can claim it; absence from the customer one-pager is not absence of capability,
-so check the papers before narrowing.
-
-Numbers instead of adjectives. "342 compositions on a 100 mm wafer, 37 elements
-available, seven cathodes in one run" outperforms any sentence containing the
-word "advanced".
-
-Say what a customer gets, in the order they care about. What goes in, what comes
-out, how long, what it costs to find out. Keep the sentence structure plain
-around the technical nouns; the audience expects the nouns and resents the
-packaging.
-
 ## Check procedure
 
 Read the last five section endings back to back. If you can predict the sixth,

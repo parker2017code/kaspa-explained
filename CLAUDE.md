@@ -23,3 +23,46 @@ the same verification commands before finalizing.
 - **After any CSS change, rerun the two audit harnesses in `_preview-site/measure.html`** (gitignored, served by serve-local.py, same-origin so iframes are inspectable): the alignment measurer checks every direct child of every centered hero for horizontal skew, and the glass hunter checks every element's computed styles for sheen gradients and in-page backdrop blur. Both were built because eyeballing and h1-only probes missed a whole class of bugs three times (off-center search bar, the Risks page's 2/3-width hero, sheened classless article cards). Verify with the harness until it prints CLEAN/zero, not with screenshots of two pages. Gotchas: iframe URLs need a cache-buster per load or you re-measure stale CSS, and `text-align: center` does not center width-capped block children or flex rows; boxes need `margin-inline: auto` and flex rows need `justify-content: center`.
 - **"Glass" is more than white sheens and blur.** The first de-glass pass certified "clean" using a scanner that only matched white linear-gradients and backdrop-filter, and the owner immediately found survivors (the Beginner reading order list): cyan-tinted sheens, flat translucent-white fills (`rgba(255,255,255,.04)` backgrounds), and rgba-white borders are all glass too, and legacy `:nth-child` accent variants can outrank a flat override by specificity. The current inventory scanner in `_preview-site/measure.html` checks every element's computed backgroundImage (any gradient), backgroundColor (grayscale translucency), and border color (grayscale translucency) in BOTH themes; the one sanctioned exception is solid brand-gradient accents (green-to-cyan badges/buttons). When the owner says "I found one, there are probably more," enumerate the whole class from the CSS (grep the signature across every rule) rather than fixing the reported instance, and do not report clean until the inventory prints only sanctioned items.
 - **`AGENTS.md`'s Content Rules > Voice section (no em dashes ever, no AI-tell phrasing) applies to `experiment/` too**, not just the main public pages it was written for. Confirmed 2026-07-09: the owner explicitly asked for this after finding em dashes in `experiment/index.html` and `experiment/tipjar.html`, both in prose and in `—` used as an empty-value placeholder in `<code>`/`<strong>` elements (fixed by using `loading…` instead, since JS always replaces it on load). Before merging any new page under `experiment/` (including agent-built ones), grep it for `—` and the other tells this file's voice section names (seamless, robust, unlock, empower, leverage, utilize, "it's not just X, it's Y," rhetorical questions, "why this matters" bridges) and fix any hits before it ships.
+
+## Prose rules
+
+Added 2 September 2026. These bind every file written or edited in this repo:
+docs, public copy, code comments, commit messages, READMEs. They are consistent
+with `PROSE_STANDARD.md` and `COPY_STYLE.md` and do not replace either. Where
+they overlap, follow whichever is stricter.
+
+1. **Say it literally.** If a literal phrase exists, use it. No metaphor standing
+   in for a statement ("a dial worth turning" for "a parameter worth varying",
+   "earns its keep" for "still matters"). Metaphor drags in connotations nobody
+   chose.
+2. **Plain verbs.** Increases, decreases, depends on, is measured, forms,
+   becomes. Not climbs, unlocks, tips, collapses, gives out. Not leveraged,
+   decoupled, enabled, empowers, transforms. If the verb would look wrong in a
+   lab notebook, it is wrong.
+3. **No rhetorical structure.** No "not X, but Y". No "the question is not
+   whether, but how far". No inverted openings. No triads built for rhythm. One
+   fact per sentence, subject first, then stop.
+4. **No em dashes.** American spelling and American date and number conventions
+   throughout.
+5. **Delete on sight, do not soften:** unique, cutting edge, dramatically,
+   state-of-the-art, seamless, robust, powerful, comprehensive, crucial,
+   leverage, delve, landscape, realm, journey, testament, elevate, unlock.
+6. **Twelve-word test.** Any sentence over twelve words carrying no technical
+   term (a named mechanism, a number with units, a named phase, a real process
+   noun) is filler. Delete it. Do not rewrite it.
+7. **No hedging or permission-asking:** "I'd love to", "feel free to", "it's
+   worth noting", "it's important to note", "as we can see".
+8. **No paragraph restating what was just said.** No closing line promising
+   future work.
+9. **Never gloss a term the reader uses daily.** The absence of explanation is
+   the credential.
+10. **Read each sentence as the recipient.** If it could sit on a random SaaS
+    homepage with the nouns swapped, cut it. If it could sit in a run log, keep
+    it.
+
+Deletion beats rewriting. Deletion never introduces a new error. Once something
+is cut it stays cut; do not reintroduce its content in flatter wording.
+
+One exclusion: the attributed personal essays keep their author's voice.
+Fragments, blunt sentences, jokes, profanity and parenthetical asides in that
+prose are the author's and are not normalized. `AGENTS.md` states this already.
