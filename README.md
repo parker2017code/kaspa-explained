@@ -33,10 +33,13 @@ maintainer; fork it, lift a demo, argue with a number.
 Every other `.html` file in the root or under `/demos/` is a `noindex` redirect
 stub pointing at one of the listed pages, usually to a specific anchor.
 
-- `index.html` routes by audience, and carries the collision demo inline.
-- `start-here.html` sends a true beginner to `crypto-from-scratch.html` first.
+- `index.html` opens with a six-word vocabulary check that routes a reader to
+  `crypto-from-scratch.html` or straight to Kaspa, and carries the collision demo
+  inline.
 - `what-is-kaspa.html` is the core mechanism explainer: proof of work, UTXO
-  ownership, blockDAG, GHOSTDAG, covenants. Carries four demos.
+  ownership, blockDAG, GHOSTDAG, covenants. Carries five demos, including the
+  parallel-spends demo at `#utxo`: five payments at once against a coin ledger
+  and a balance ledger, and what the missing shared slot costs Kaspa apps.
 - `why-kaspa-matters.html` covers neutral money, self-custody, and the
   confirmation-risk curve.
 - `kips.html` tracks KIPs and KCCs live from GitHub, and carries the DAGKnight
@@ -46,11 +49,9 @@ stub pointing at one of the listed pages, usually to a specific anchor.
 - `skeptical-case.html` is the case against, in seven risks.
 - `kaspa-mining.html` covers price and hash-rate cycles plus solo mining, with
   four demos including attack cost and node cost.
-- `build-on-kaspa.html` takes a builder from an idea to a build path.
-- `argent-explained.html` covers the actor-based language compiling to
-  Silverscript covenants.
-- `utxo-vs-accounts.html` runs five payments at once against a coin ledger and a
-  balance ledger, then prices what the missing shared slot costs Kaspa apps.
+- `build-on-kaspa.html` takes a builder from an idea to a build path, and at
+  `#argent` covers the actor-based language compiling to Silverscript covenants,
+  with a repository table read live from GitHub.
 - `kaspa-origin-story.html` is the sourced fair-launch history.
 - `sources.html` ranks what settles a claim.
 - `demos/index.html` maps every demo to the page it lives on.

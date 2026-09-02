@@ -48,7 +48,8 @@ Every one of these goes stale on its own. Check each, every session.
 - `CLAIMS.yml` -> `last_checked`, and every `recheck_after`. Move a date only
   after re-reading the source. Never bump it to silence the gate.
 - The dated baselines in the live trackers: `kips.html` (both tables) and
-  `argent-explained.html` (its repository table). Each renders a hand-verified
+  `build-on-kaspa.html` (the Argent repository table at `#argent`, moved there on
+  2 September 2026 when `argent-explained.html` became a redirect stub). Each renders a hand-verified
   baseline first and repaints from GitHub, so a stale baseline is invisible to a
   visitor and still wrong in the file. `kaspa-vprogs-explained.html` carried a
   third one and is now a redirect stub into `/build-on-kaspa#routes` with no
@@ -56,7 +57,8 @@ Every one of these goes stale on its own. Check each, every session.
   which has no live-repaint path: a stale figure there is visible to nobody
   until someone reads it. Corrected 2026-08-29. This entry previously said
   `argent-explained.html` was also a stub and carried no table, which sent the
-  next maintainer past a baseline that does need refreshing.
+  next maintainer past a baseline that does need refreshing. The table itself is
+  unchanged; only its address moved.
 - Emission: the next step-down DAA score and its estimated date. Steps fire on
   score, so the score is exact and the date is an estimate. Say it that way.
 - Any mainnet snapshot: DAA score, supply, block reward, covenant counts.
@@ -115,8 +117,10 @@ Add one when **all** of these hold:
 - It will not be a near-duplicate of an existing page's second half.
 
 Do **not** add one when the material is a passing mention on five pages that
-would be better as one section. Merge instead. `/argent-explained` was worth
-adding because Argent appeared on fifteen pages and was explained on none.
+would be better as one section. Merge instead. Argent was worth
+explaining because it appeared on fifteen pages and was explained on none; it got
+its own page on 22 August 2026 and was folded into `/build-on-kaspa#argent` on
+2 September, once that page was the only route a builder took to reach it.
 
 Keeping two subjects on one page is right when the reader's actual confusion is
 the distinction between them. `/kips` holds KIPs and KCCs together for exactly

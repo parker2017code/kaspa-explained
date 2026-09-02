@@ -373,9 +373,17 @@ function auditNextStepButtons() {
   // any page in any driven state (menu open, details open, dialogs open, 390
   // and 1280); the CSS rules this asserted were deleted as unmatched. The
   // homepage CTA group this defended lives under .actions, asserted below.
+  // UPDATED (2026-09-02): the single "Start Here" button was replaced by the
+  // vocabulary router merged in from the retired /start-here page, which routes
+  // a reader to one of two destination cards and rings the suggested one. The
+  // rule this defended is that the homepage hero offers a primary route onward,
+  // not that the route is shaped like a button, so it accepts either form.
   const home = readFile("index.html");
-  if (!/class="actions"[\s\S]{0,400}?<a class="button primary"/.test(home)) {
-    fail("index.html should keep a primary call-to-action button group");
+  const hasButton = /class="actions"[\s\S]{0,400}?<a class="button primary"/.test(home);
+  const doorLinks = (home.match(/class="path-grid[^"]*"[\s\S]*?<\/div>/) || [""])[0]
+    .match(/<a href="\//g) || [];
+  if (!hasButton && doorLinks.length < 2) {
+    fail("index.html should keep a primary route out of the hero: a .button primary in .actions, or a .path-grid of at least two destinations");
   }
 }
 

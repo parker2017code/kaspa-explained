@@ -1991,10 +1991,305 @@ TPS = tx_per_block × 10 blocks/second</span>
       </details>
     </section>
 
+    <section class="section" id="utxo">
+      <p class="eyebrow">Two ledger models</p>
+      <h2>Why parallel spends don't collide</h2>
+      <p>An account balance is one number every payment takes a turn writing. A UTXO wallet holds separate coins, so nobody waits.</p>
+      <p>Same 1,650 KAS, same five payments, two ways of keeping the books.</p>
+
+      <div class="demo-uva" id="parallel-demo">
+        <style>
+          /* Token audit 2026-08-31: literal token values below are deliberate divergences from styles.css (pinned palettes, demo-only colors, contrast variants); byte-identical copies were converted to var() references. */
+          .demo-uva {
+            --uva-bg-2: var(--bg-2); --uva-panel-strong: var(--panel-strong); --uva-card-bg: var(--card-bg);
+            --uva-line: #4a463f; --uva-line-bright: var(--line-bright);
+            --uva-text: var(--text); --uva-muted: var(--muted); --uva-faint: var(--faint);
+            --uva-green: var(--green); --uva-cyan: var(--cyan); --uva-red: #ff6961; --uva-ink: var(--ink);
+            /* --uva-cyan is also the fill behind white .idx badge text (line
+               ~123). #2e9cff with white text there measures 2.87:1, under the
+               4.5:1 floor; #0060c0, already dark theme's --uva-cyan value in
+               light theme, measures well clear of it. Kept separate from
+               --uva-cyan itself, which stays #2e9cff for its non-text uses
+               (accent line, focus outline, model-color dot). */
+            --uva-cyan-badge: #0060c0;
+            --uva-control-bg: var(--control-bg); --uva-control-hover: var(--control-hover);
+            --uva-shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+            font-size: 16px; line-height: 1.5;
+          }
+          :root[data-theme="light"] .demo-uva {
+            --uva-line: #d8d3c7;--uva-muted: #5d594f; --uva-faint: #6f6a5f;
+--uva-cyan: #0060c0; --uva-red: #b52d24;            --uva-cyan-badge: #0060c0;
+            --uva-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+          }
+          .demo-uva, .demo-uva *, .demo-uva *::before, .demo-uva *::after { box-sizing: border-box; }
+          .demo-uva .stage { background: var(--uva-card-bg); border-radius: 18px; padding: 20px 16px; box-shadow: var(--uva-shadow); display: flex; flex-direction: column; gap: 18px; color: var(--uva-text); }
+          .demo-uva .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+          @media (max-width: 640px) { .demo-uva .panels { grid-template-columns: 1fr; } }
+          .demo-uva .panel { background: var(--uva-bg-2); border-radius: 14px; padding: 14px 12px; display: flex; flex-direction: column; gap: 10px; border-top: 3px solid var(--uva-model-color, var(--uva-line-bright)); }
+          .demo-uva .panel.acct { --uva-model-color: var(--uva-cyan); }
+          .demo-uva .panel.utxo { --uva-model-color: var(--uva-green); }
+          .demo-uva .panel-label { font-size: 16px; font-weight: 750; color: var(--uva-text); display: flex; align-items: center; gap: 6px; }
+          .demo-uva .panel-label .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--uva-model-color); flex: none; }
+
+          .demo-uva .holding { border-radius: 12px; background: var(--uva-panel-strong); padding: 12px; display: flex; flex-wrap: wrap; gap: 7px 12px; align-items: center; justify-content: center; min-height: 72px; }
+          .demo-uva .holding .big { font-size: 1.65rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+          .demo-uva .holding .unit { font-size: 16px; color: var(--uva-faint); width: 100%; text-align: center; }
+          .demo-uva .coin-row { display: flex; flex-wrap: wrap; gap: 7px 12px; align-items: center; justify-content: center; width: 100%; }
+          .demo-uva .slot { display: flex; align-items: center; gap: 5px; }
+          .demo-uva .slot .arrow { font-size: 16px; color: var(--uva-faint); }
+          .demo-uva .coin { min-width: 44px; height: 34px; padding: 0 11px; border-radius: 980px; display: flex; align-items: center; justify-content: center; background: var(--uva-card-bg); border: 2px solid var(--uva-line-bright); font-size: 16px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; transition: border-color .35s, opacity .35s, background-color .35s; }
+          .demo-uva .coin.spent { color: var(--uva-faint); border-style: dashed; border-color: var(--uva-line); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+          .demo-uva .coin.change { border-color: var(--uva-green); background: color-mix(in srgb, var(--uva-green) 14%, var(--uva-card-bg)); }
+          .demo-uva .coin.contested { border-color: var(--uva-red); }
+
+          .demo-uva ol.rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; position: relative; }
+          .demo-uva ol.rows li { position: relative; display: grid; grid-template-columns: 22px 1fr; align-items: center; gap: 9px; padding: 7px 0; border-bottom: 1px solid var(--uva-line); }
+          .demo-uva ol.rows li:last-child { border-bottom: 0; }
+          .demo-uva .idx { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; background: var(--uva-card-bg); border: 1px solid var(--uva-line-bright); color: var(--uva-faint); transition: background-color .3s, border-color .3s, color .3s; flex: none; }
+          .demo-uva li.done .idx { background: var(--uva-green); border-color: var(--uva-green); color: var(--uva-ink); }
+          .demo-uva .panel.acct li.done .idx { background: var(--uva-cyan-badge); border-color: var(--uva-cyan-badge); color: #fff; }
+          .demo-uva li.killed .idx { background: transparent; border-color: var(--uva-red); color: var(--uva-red); }
+          .demo-uva li.running .idx { animation: uva-blink .5s steps(2, start) infinite; }
+          @keyframes uva-blink { 50% { opacity: .35; } }
+          .demo-uva .what { display: block; font-size: 16px; color: var(--uva-muted); font-variant-numeric: tabular-nums; }
+          .demo-uva .what b { color: var(--uva-text); font-weight: 650; }
+          .demo-uva li.killed .what { color: var(--uva-red); }
+          .demo-uva li.waiting .what { opacity: .45; }
+
+          /* The chain of dependency: drawn only on the account side, where it exists. */
+          .demo-uva .panel.acct ol.rows li:not(:first-child)::before {
+            content: ""; position: absolute; left: 10px; top: -8px; width: 2px; height: 16px; background: var(--uva-cyan); opacity: .5;
+          }
+
+          .demo-uva .verdict { font-size: 16px; color: var(--uva-muted); margin: 0; min-height: 40px; }
+          .demo-uva .verdict b { color: var(--uva-text); }
+          .demo-uva .verdict .bad { color: var(--uva-red); font-weight: 650; }
+
+          .demo-uva .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; }
+          .demo-uva button.run { appearance: none; border: 0; border-radius: 980px; padding: 11px 22px; font: inherit; font-weight: 650; background: var(--uva-green); color: var(--uva-ink); cursor: pointer; }
+          .demo-uva button.run:hover { filter: brightness(1.06); }
+          .demo-uva button.run[disabled] { opacity: .5; cursor: default; }
+          .demo-uva label.clash { display: flex; align-items: center; gap: 9px; font-size: 16px; color: var(--uva-muted); cursor: pointer; background: var(--uva-control-bg); border-radius: 980px; padding: 9px 16px 9px 12px; }
+          .demo-uva label.clash:hover { background: var(--uva-control-hover); }
+          .demo-uva label.clash input { width: 17px; height: 17px; accent-color: var(--uva-red); cursor: pointer; }
+          .demo-uva :focus-visible { outline: 3px solid color-mix(in srgb, var(--uva-cyan) 40%, transparent); outline-offset: 3px; }
+          @media (prefers-reduced-motion: reduce) { .demo-uva * { animation: none !important; transition: none !important; } }
+        </style>
+
+        <div class="stage">
+          <div class="panels">
+            <div class="panel acct">
+              <span class="panel-label"><span class="dot"></span>Account model</span>
+              <div class="holding"><span class="big" id="uva-acctBal">1,650</span><span class="unit">one balance, in KAS</span></div>
+              <ol class="rows" id="uva-acctRows"></ol>
+              <p class="verdict" id="uva-acctVerdict" role="status" aria-live="polite"></p>
+            </div>
+            <div class="panel utxo">
+              <span class="panel-label"><span class="dot"></span>UTXO model (Kaspa)</span>
+              <div class="holding">
+                <div class="coin-row" id="uva-coins" role="list" aria-label="Coins in the UTXO wallet"></div>
+                <span class="unit" id="uva-coinTotal"></span>
+              </div>
+              <ol class="rows" id="uva-utxoRows"></ol>
+              <p class="verdict" id="uva-utxoVerdict" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="run" id="uva-run" type="button">Watch the five checks run</button>
+            <label class="clash"><input type="checkbox" id="uva-clash"> Aim payment 5 at the coin payment 1 spends</label>
+          </div>
+        </div>
+      </div>
+
+      <p>At ten blocks a second, the five payments can land in any order across five blocks. Separate coins make order irrelevant; one shared balance forces four to wait.</p>
+
+      <details class="deep-dive">
+        <summary>Which spend wins, and who decides</summary>
+        <p>A wallet can sign two spends of one coin and broadcast both, but rusty-kaspa refuses any block that carries both, so the real race is between two blocks landing at once. GHOSTDAG orders every block first, then replays its spends against the unspent set: whichever spend lands earlier takes the coin, the later one fails, and every node reaches the same answer.</p>
+        <ul class="source-list">
+          <li>Coin structure: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/core/src/tx.rs" target="_blank" rel="noopener">rusty-kaspa, <code>consensus/core/src/tx.rs</code></a>. An input names a whole prior output; an output carries a value and an optional covenant binding.</li>
+          <li>One block, one spend per coin: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">block body validation</a>.</li>
+          <li>Order first, replay after: <a href="https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">the mergeset acceptance loop</a>.</li>
+        </ul>
+      </details>
+
+      <script>
+      (function () {
+        "use strict";
+
+        var COINS = [500, 400, 300, 250, 200];
+        var START = 1650;
+        var PAYS = [320, 250, 180, 150, 120];
+        var REDUCE = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        var acctBal = document.getElementById("uva-acctBal");
+        var acctRows = document.getElementById("uva-acctRows");
+        var acctVerdict = document.getElementById("uva-acctVerdict");
+        var coinBox = document.getElementById("uva-coins");
+        var utxoRows = document.getElementById("uva-utxoRows");
+        var utxoVerdict = document.getElementById("uva-utxoVerdict");
+        var coinTotal = document.getElementById("uva-coinTotal");
+        var runBtn = document.getElementById("uva-run");
+        var clashBox = document.getElementById("uva-clash");
+        var timers = [];
+
+        function fmt(n) { return n.toLocaleString("en-US"); }
+        function clash() { return clashBox.checked; }
+
+        // Payment i spends coin i, except payment 5 under the clash switch,
+        // which is aimed at coin 1 instead.
+        function coinFor(i) { return (clash() && i === 4) ? 0 : i; }
+
+        // One slot per coin the wallet started with. A spent coin stays on
+        // screen, struck through, beside the change coin it produced, so the
+        // wallet's holdings always add up to what the rows say happened.
+        function buildCoins() {
+          coinBox.innerHTML = "";
+          COINS.forEach(function (v, i) {
+            var slot = document.createElement("span");
+            slot.className = "slot";
+            slot.setAttribute("role", "listitem");
+            slot.innerHTML =
+              '<span class="coin" id="uva-coin' + i + '">' + fmt(v) + ' KAS</span>' +
+              '<span class="arrow" id="uva-arrow' + i + '" aria-hidden="true">&rarr;</span>' +
+              '<span class="coin change" id="uva-change' + i + '"></span>';
+            coinBox.appendChild(slot);
+          });
+        }
+
+        function rowHTML(list, i, text, cls) {
+          var li = document.createElement("li");
+          li.className = cls;
+          li.innerHTML = '<span class="idx">' + (i + 1) + '</span><output class="what" aria-live="off">' + text + '</output>';
+          list.appendChild(li);
+        }
+
+        function acctText(i, state) {
+          var before = START - PAYS.slice(0, i).reduce(function (a, b) { return a + b; }, 0);
+          if (state === "done") return "Pays " + fmt(PAYS[i]) + " KAS &middot; <b>" + fmt(before) + " &rarr; " + fmt(before - PAYS[i]) + "</b>";
+          return "Pays " + fmt(PAYS[i]) + " KAS &middot; waiting for " + (i === 0 ? "the balance" : "payment " + i);
+        }
+
+        function utxoText(i, state) {
+          var c = coinFor(i);
+          var change = COINS[c] - PAYS[i];
+          if (state === "killed") return "Pays " + fmt(PAYS[i]) + " KAS &middot; <b>the " + fmt(COINS[c]) + " KAS coin is already spent</b>";
+          if (state === "done") return "Pays " + fmt(PAYS[i]) + " KAS &middot; <b>spends the " + fmt(COINS[c]) + ", makes " + fmt(change) + " change</b>";
+          return "Pays " + fmt(PAYS[i]) + " KAS &middot; takes the " + fmt(COINS[c]) + " KAS coin";
+        }
+
+        function render(states) {
+          acctRows.innerHTML = "";
+          utxoRows.innerHTML = "";
+          PAYS.forEach(function (p, i) {
+            rowHTML(acctRows, i, acctText(i, states.acct[i]), states.acct[i]);
+            rowHTML(utxoRows, i, utxoText(i, states.utxo[i]), states.utxo[i]);
+          });
+          var spentAcct = PAYS.slice(0, states.acct.filter(function (s) { return s === "done"; }).length)
+            .reduce(function (a, b) { return a + b; }, 0);
+          acctBal.textContent = fmt(START - spentAcct);
+          var held = 0, pieces = 0;
+          COINS.forEach(function (v, i) {
+            var el = document.getElementById("uva-coin" + i);
+            var arrow = document.getElementById("uva-arrow" + i);
+            var chg = document.getElementById("uva-change" + i);
+            if (!el || !arrow || !chg) return;
+            var payIdx = -1;
+            states.utxo.forEach(function (st, j) { if (st === "done" && coinFor(j) === i) { payIdx = j; } });
+            var used = payIdx >= 0;
+            el.className = "coin" + (used ? " spent" : "") + (clash() && i === 0 ? " contested" : "");
+            arrow.style.display = used ? "" : "none";
+            chg.style.display = used ? "" : "none";
+            if (used) {
+              var change = COINS[i] - PAYS[payIdx];
+              chg.textContent = fmt(change) + " KAS";
+              held += change;
+            } else {
+              chg.textContent = "";
+              held += v;
+            }
+            pieces += 1;
+          });
+          coinTotal.textContent = fmt(held) + " KAS, in " + pieces + " coins";
+        }
+
+        function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+        function settledStates() {
+          var acct = PAYS.map(function () { return "done"; });
+          var utxo = PAYS.map(function (p, i) { return (clash() && i === 4) ? "killed" : "done"; });
+          return { acct: acct, utxo: utxo };
+        }
+
+        function settledVerdicts() {
+          acctVerdict.innerHTML = "Five payments, checked one after another. Each read the number the one before it wrote.";
+          utxoVerdict.innerHTML = clash()
+            ? "Four kept, <span class=\"bad\">one rejected</span>. Payment 5 named a coin payment 1 had taken. It is thrown out, not queued."
+            : "Five payments, checked in the same pass. None of them read anything another one wrote.";
+        }
+
+        function settle() {
+          clearTimers();
+          render(settledStates());
+          settledVerdicts();
+          runBtn.disabled = false;
+        }
+
+        function run() {
+          clearTimers();
+          runBtn.disabled = true;
+          var states = { acct: PAYS.map(function () { return "waiting"; }), utxo: PAYS.map(function () { return "waiting"; }) };
+          render(states);
+          acctVerdict.textContent = "Checking, one at a time.";
+          utxoVerdict.textContent = "Checking, all at once.";
+
+          var step = REDUCE ? 0 : 420;
+
+          // UTXO: every check starts in the same beat and finishes in the same beat.
+          timers.push(setTimeout(function () {
+            states.utxo = states.utxo.map(function () { return "running"; });
+            render(states);
+          }, step));
+          timers.push(setTimeout(function () {
+            states.utxo = settledStates().utxo;
+            render(states);
+            utxoVerdict.innerHTML = clash()
+              ? "Four kept, <span class=\"bad\">one rejected</span>. Payment 5 named a coin payment 1 had taken. It is thrown out, not queued."
+              : "Five payments, checked in the same pass. None of them read anything another one wrote.";
+          }, step * 2));
+
+          // Account: each check waits for the one before it.
+          PAYS.forEach(function (p, i) {
+            timers.push(setTimeout(function () {
+              states.acct[i] = "running";
+              render(states);
+            }, step * (i + 1)));
+            timers.push(setTimeout(function () {
+              states.acct[i] = "done";
+              render(states);
+              if (i === PAYS.length - 1) {
+                acctVerdict.innerHTML = "Five payments, checked one after another. Each read the number the one before it wrote.";
+                runBtn.disabled = false;
+              }
+            }, step * (i + 2)));
+          });
+
+          if (REDUCE) { settle(); }
+        }
+
+        buildCoins();
+        settle();
+        runBtn.addEventListener("click", run);
+        clashBox.addEventListener("change", settle);
+      })();
+      </script>
+    </section>
+
     <section id="covenants" class="section">
       <p class="eyebrow">Covenants</p>
       <h2>A coin that can carry its own rule</h2>
-      <p>Since Toccata activated at DAA score 474,165,565, a coin can carry a rule checked like a signature.</p>
+      <p>That isolation cuts both ways. A Kaspa script reads only the spend it sits in, and cannot call another app's live state the way one contract calls another. Since Toccata activated at DAA score 474,165,565, a coin can instead carry its own rule, checked like a signature.</p>
       <details class="deep-dive" open>
         <summary>What Toccata turned on, KIP by KIP</summary>
         <div class="summary-grid grid-cards">
@@ -2006,6 +2301,47 @@ TPS = tx_per_block × 10 blocks/second</span>
           <article><span>Based apps</span><p>Apps anchor state to Kaspa ordering, no separate sequencer.</p></article>
         </div>
         <p>No virtual machine, no accounts, no global state. Demo: <a href="/build-on-kaspa#covenant-breaker-demo">build on Kaspa</a>. <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">20</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md">16</a>/<a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md">21</a>, <a href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">Sutton</a>.</p>
+      </details>
+      <details class="deep-dive">
+        <summary>Three rungs of app state, and which ones are live</summary>
+        <p>So Kaspa's app layer is <span class="term-def" tabindex="0" role="button" aria-describedby="cov-def-wik">covenants<span class="term-def__panel" id="cov-def-wik" role="tooltip">A rule attached to a coin, checked on every spend, governing how it moves.</span></span>, not an account-based virtual machine. Three rungs, only the first running:</p>
+
+        <div class="table-wrap">
+          <table class="reality-table">
+            <thead><tr><th>What it does</th><th>How far it reaches</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td data-label="What it does">Covenants, covenant IDs, ZK proof checks</td>
+                <td data-label="How far it reaches">Rules the network enforces on the one spend being checked.</td>
+                <td data-label="Status"><span class="status-pill live">Live</span> on mainnet since Toccata, at DAA score 474,165,565</td>
+              </tr>
+              <tr>
+                <td data-label="What it does">Two separately built apps in one transaction</td>
+                <td data-label="How far it reaches">Both apps are spent and remade together, so both land or neither does.</td>
+                <td data-label="Status"><span class="status-pill research">Demos only</span> unaudited and offline, in Argent</td>
+              </tr>
+              <tr>
+                <td data-label="What it does">Many users writing one app's state</td>
+                <td data-label="How far it reaches">An order book or a pool that everyone edits at once.</td>
+                <td data-label="Status"><span class="status-pill roadmap">Roadmap</span> vProgs, zero releases</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+        <details class="deep-dive">
+          <summary>What each of the three rungs actually is, with the KIP behind it</summary>
+          <p><b>KIP-17</b> lets a script check only the spend it sits in. <b>KIP-20</b> adds covenant IDs, a lineage tag consensus tracks, so a covenant's record cannot be forged. <b>KIP-16</b> checks a zero-knowledge proof inside a spend, without replaying the work. None reads another covenant's live state.</p>
+          <p>Argent's Inter-Covenant Communication joins two apps' state into one spend. Its README: "still under active development and is not yet release-ready."</p>
+          <p>vProgs targets many users mutating one app's state, the case the other two miss. Its README: "early development / prototype phase," zero releases, zero tags.</p>
+          <ul class="source-list">
+            <li><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a>, <a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a>: all Active on <a href="/kips">the KIP tracker</a>.</li>
+            <li>Toccata activation: <a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0" target="_blank" rel="noopener">rusty-kaspa v2.0.0</a>.</li>
+            <li><a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a>, and <a href="/build-on-kaspa#argent">what the compiler does</a>.</li>
+            <li><a href="https://github.com/kaspanet/vprogs" target="_blank" rel="noopener">kaspanet/vprogs</a> and <a href="https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1" target="_blank" rel="noopener">Michael Sutton's design notes</a>.</li>
+          </ul>
+        </details>
       </details>
     </section>
 
@@ -2537,10 +2873,10 @@ TPS = tx_per_block × 10 blocks/second</span>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
-          <a href="/start-here">Start here</a>
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/kaspa-origin-story">Origin story</a>
           <a href="/moose">Moose's books</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
@@ -2552,7 +2888,6 @@ TPS = tx_per_block × 10 blocks/second</span>
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/argent-explained">Argent and Silverscript</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>

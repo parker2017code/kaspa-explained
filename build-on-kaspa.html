@@ -276,7 +276,7 @@
         <i>// no `become`: this covenant's lineage ends here</i>
     }
 }</pre>
-          <p class="cvb-sources">Pseudocode uses Argent's research-stage syntax; see <a href="/argent-explained">Argent and Silverscript, explained</a>.</p>
+          <p class="cvb-sources">Pseudocode uses Argent's research-stage syntax; see <a href="#argent">Argent and Silverscript</a>.</p>
           <p class="cvb-sources">Opcodes match <a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md">KIP-17</a>: <code>OpTxOutputAmount</code><span class="tuck">,</span> <code>OpTxOutputSpk</code><span class="tuck">,</span> <code>OpTxInputDaaScore</code><span class="tuck">,</span> <code>OpTxLockTime</code><span class="tuck">;</span> both it and <a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a> are live.</p>
           <p class="cvb-sources">A spend must carry the same <code>covenant_id</code> as its UTXO, or prove a fresh one via genesis hash.</p>
         </details>
@@ -711,6 +711,342 @@
       </script>
     </section>
 
+    <section class="section" id="argent">
+      <p class="eyebrow">Application layer</p>
+      <h2>Argent and Silverscript</h2>
+      <p>Toccata made covenants enforceable. Argent, Sutton's compiler, turns a readable application into the Silverscript the network already checks. It is unaudited and pre-release: nothing built with it runs on Kaspa mainnet today.</p>
+      <style>
+      /* Token audit 2026-08-31: literal token values below are deliberate divergences from styles.css (pinned palettes, demo-only colors, contrast variants); byte-identical copies were converted to var() references. */
+      /* Scoped styles for the inlined argent-pipeline demo (formerly demos/argent-pipeline.html).
+         Every custom property and selector below is scoped under .argent-pipeline-demo so it cannot
+         leak onto the rest of this page; nothing here touches body, html, :root, or a bare element. */
+      .argent-pipeline-demo{
+        color-scheme:dark;
+        /* --faint doubles as both the tag text and its own 22%-tint fill on
+           .layer-tag.unpub; composited together that measured 3.95:1, under
+           the 4.5:1 floor, even though --faint alone against a flat panel
+           passes. Same fix as styles.css's --cyan-pill/--green-pill/--purple-pill:
+           a dedicated lighter variant for text-on-own-tint use, verified at
+           5.55:1 with the gate's own compositing math, not --faint itself
+           (still correct for its other, flat-background uses on this page). */
+        --faint-tag:#c7c2b6;
+        --red:#ff6961;    --code-bg:#1a1815;
+        --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35);
+        --body-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        --display-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        --mono-font:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+        font-family:var(--body-font);
+      }
+      :root[data-theme="light"] .argent-pipeline-demo{
+        color-scheme:light;
+        --faint-tag:#524d42; /* darker text-on-own-tint variant, see dark-theme comment above; 5.67:1 */
+        --red:#c0342a;    --code-bg:#f0ede5;
+        --shadow:0 1px 2px rgba(0,0,0,.05), 0 6px 16px rgba(0,0,0,.04);
+      }
+      .argent-pipeline-demo .stage{
+        background:var(--card-bg); border-radius:18px; padding:16px; box-shadow:var(--shadow);
+        display:flex; flex-direction:column; align-items:stretch; gap:10px;
+      }
+      .argent-pipeline-demo .ap-bar{ display:flex; gap:6px; width:100%; max-width:560px; margin-inline:auto; }
+      .argent-pipeline-demo .ap-bar__seg{
+        flex:1; min-height:52px; border:2px solid transparent; border-radius:14px; padding:8px 6px; cursor:pointer;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+        font:inherit; text-align:center; color:var(--text);
+        background:color-mix(in srgb, var(--faint) 14%, transparent);
+      }
+      /* The three buttons used to be colored green, green and pink, which told the
+         reader which line the compiler rewrites before they had pressed anything.
+         They are identical now; the two code blocks are the answer. */
+      .argent-pipeline-demo .ap-bar__seg:hover{ filter:brightness(1.1); }
+      .argent-pipeline-demo .ap-bar__seg[aria-pressed="true"]{ border-color:var(--text); background:color-mix(in srgb, var(--faint) 30%, transparent); }
+      .argent-pipeline-demo .ap-bar__label{ font-size:16px; font-weight:700; }
+      @media (max-width: 700px){
+        #argent-table td{ display:grid; grid-template-columns:9ch 1fr; gap:10px; align-items:baseline; }
+        #argent-table td::before{ content:attr(data-label); color:var(--muted); font-size:16px; }
+      }
+      .argent-pipeline-demo .pipeline{ display:flex; flex-direction:column; gap:0; }
+      .argent-pipeline-demo .layer{
+        background:var(--panel-strong); border:1px solid var(--line); border-radius:14px;
+        padding:9px 14px; transform:translateY(6px);
+        animation:ap-layer-in .38s ease-out forwards;
+      }
+      /* Text inside .layer used to fade in from opacity:0 alongside the slide.
+         The render gate's contrast check samples ~100ms after load, mid-fade,
+         and folds that transient opacity into the text's alpha (see
+         scripts/check-render.mjs's ancestor-opacity note): every color here
+         measured a fraction of its resting contrast purely from being caught
+         mid-animation, not from the color values themselves. Slide only; the
+         text is never below full opacity, at any point a reader (or the gate)
+         can see it. */
+      .argent-pipeline-demo .layer + .arrow-down{ animation:ap-layer-in .38s ease-out forwards; }
+      @keyframes ap-layer-in{ to{ transform:translateY(0); } }
+      .argent-pipeline-demo .layer-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+      .argent-pipeline-demo .layer-name{ font-size:16px; font-weight:700; letter-spacing:.03em; color:var(--faint); text-transform:uppercase; }
+      .argent-pipeline-demo .layer-tag{ font-size:16px; font-weight:700; padding:2px 8px; border-radius:980px; }
+      .argent-pipeline-demo .layer-tag.new{ background:color-mix(in srgb, var(--orange) 22%, transparent); color:var(--orange); }
+      .argent-pipeline-demo .layer-tag.empty{ display:none; }
+      .argent-pipeline-demo .layer-tag.unpub{ background:color-mix(in srgb, var(--faint-tag) 22%, transparent); color:var(--faint-tag); }
+      .argent-pipeline-demo .layer-code{
+        display:block; background:var(--code-bg); border-radius:10px; padding:10px 12px;
+        font-family:var(--mono-font); font-size:16px; line-height:1.45; color:var(--text);
+        overflow-x:auto; white-space:pre; margin:0 0 6px;
+      }
+      /* On a phone these lines ran past the box and the only way to read the end
+         was a horizontal drag inside a 300px window with no edge cue. Wrap them
+         instead: the comparison the demo makes is between two whole lines. */
+      @media (max-width: 700px){
+        .argent-pipeline-demo .layer-code{ white-space:pre-wrap; overflow-wrap:anywhere; }
+      }
+      .argent-pipeline-demo .layer-note{ font-size:16px; color:var(--muted); margin:0; }
+      /* A dashed border draws this connector instead of a repeating gradient.
+         The gradient was only ever painting dashes, and the glass gate bans
+         gradients outright because sheen is the thing it exists to catch. */
+      .argent-pipeline-demo .arrow-down{
+        align-self:center; width:0; height:12px; margin:0;
+        border-left:2px dashed var(--line-bright);
+        position:relative;
+      }
+      .argent-pipeline-demo .arrow-down.flow{ border-left-color:var(--purple); }
+      .argent-pipeline-demo .arrow-down::after{
+        content:""; position:absolute; left:50%; bottom:-3px; transform:translateX(-50%);
+        border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--line-bright);
+      }
+      .argent-pipeline-demo .arrow-down.flow::after{ border-top-color:var(--purple); }
+      @media (prefers-reduced-motion: reduce){
+        .argent-pipeline-demo .layer, .argent-pipeline-demo .arrow-down{ animation:none; opacity:1; transform:none; }
+      }
+      .argent-pipeline-demo .source-line{ font-size:16px; color:var(--faint); text-align:center; margin:10px auto 0; }
+      .argent-pipeline-demo .source-line a{ color:var(--faint); }
+      .argent-pipeline-demo details{ margin-top:20px; }
+      .argent-pipeline-demo summary{ cursor:pointer; font-size:16px; color:var(--muted); padding:4px 0; }
+      .argent-pipeline-demo .quotes-body{ margin-top:12px; font-size:16px; color:var(--muted); }
+      .argent-pipeline-demo .quotes-body p{ margin:0 0 10px; }
+      .argent-pipeline-demo .quotes-body a{ color:var(--faint); }
+      .argent-pipeline-demo .quotes-body pre{
+        background:var(--code-bg); border-radius:10px; padding:10px 12px; overflow-x:auto;
+        font-family:var(--mono-font); font-size:16px; line-height:1.45; color:var(--text);
+      }
+      .argent-pipeline-demo a:focus-visible,
+      .argent-pipeline-demo button:focus-visible{
+        outline:3px solid color-mix(in srgb, var(--cyan) 28%, transparent);
+        outline-offset:3px;
+      }
+      </style>
+    </section>
+
+    <section class="section" id="argent-pipeline">
+      <p class="eyebrow">Try it</p>
+      <h2>One line at a time, from Argent down to Kaspa Script</h2>
+      <p>Nothing reaches the network as Argent: every line ends up as script a node already checks. The Ticket example hands off a ticket in three lines.</p>
+      <div class="argent-pipeline-demo">
+        <div class="stage">
+          <div class="ap-bar" role="group" aria-label="Pick a line from the Ticket example">
+            <button class="ap-bar__seg" id="ap-stepOwnership" type="button" aria-pressed="true">
+              <span class="ap-bar__label">Ownership check</span>
+            </button>
+            <button class="ap-bar__seg" id="ap-stepSignature" type="button" aria-pressed="false">
+              <span class="ap-bar__label">Signature check</span>
+            </button>
+            <button class="ap-bar__seg" id="ap-stepBecome" type="button" aria-pressed="false">
+              <span class="ap-bar__label">Next coin</span>
+            </button>
+          </div>
+
+          <div class="pipeline">
+              <div class="layer" id="ap-layerArgent">
+                <div class="layer-head">
+                  <span class="layer-name">Argent &middot; .ag</span>
+                </div>
+                <code class="layer-code" id="ap-argentCode"></code>
+              </div>
+              <div class="arrow-down" id="ap-arrow1"></div>
+              <div class="layer" id="ap-layerSil">
+                <div class="layer-head">
+                  <span class="layer-name">Silverscript &middot; .sil</span>
+                  <span class="layer-tag" id="ap-silTag"></span>
+                </div>
+                <code class="layer-code" id="ap-silCode"></code>
+                <p class="layer-note" id="ap-silNote"></p>
+              </div>
+              <div class="arrow-down" id="ap-arrow2"></div>
+              <div class="layer" id="ap-layerKaspa">
+                <div class="layer-head">
+                  <span class="layer-name">Kaspa Script</span>
+                  <span class="layer-tag unpub">not published</span>
+                </div>
+                <p class="layer-note" id="ap-kaspaNote"></p>
+              </div>
+          </div>
+
+          <p class="source-line">Only the bottom row runs; it decides whether the money moves. <code>require</code><span class="tuck">,</span> <code>blake2b</code><span class="tuck">,</span> and <code>checkSig</code> rows are exact builtins; <code>become</code> is illustrative, since neither repo publishes Argent's real generated <code>.sil</code><span class="tuck">.</span> Lines from <a href="https://github.com/argent-lang/argent" target="_blank" rel="noopener">argent-lang/argent</a> and <a href="https://github.com/kaspanet/silverscript/blob/master/docs/TUTORIAL.md" target="_blank" rel="noopener">Silverscript</a>.</p>
+        </div>
+      </div>
+      <script>
+      (function () {
+        "use strict";
+
+        var STEPS = {
+          ownership: {
+            btn: "ap-stepOwnership",
+            argentCode: "require(blake2b(owner_pk) == owner);",
+            silCode: "require(blake2b(owner_pk) == owner);",
+            silTag: { text: "unchanged", cls: "same" },
+            silNote: "blake2b is a Silverscript builtin, called with the same arguments in both languages.",
+            kaspaNote: "The hash and the comparison become Kaspa Script opcodes. The build records them as a byte array, and neither repo publishes the opcode listing.",
+          },
+          signature: {
+            btn: "ap-stepSignature",
+            argentCode: "require(checkSig(owner_sig, owner_pk));",
+            silCode: "require(checkSig(owner_sig, owner_pk));",
+            silTag: { text: "unchanged", cls: "same" },
+            silNote: "checkSig is a Silverscript builtin too. It checks a signature against a public key.",
+            kaspaNote: "Becomes a signature-check opcode, recorded as bytes in the same artifact.",
+          },
+          become: {
+            btn: "ap-stepBecome",
+            argentCode: "become next <- Ticket(new_state);",
+            silCode: "validateOutputState(0, State { owner: next_owner, units: units });",
+            silTag: { text: "illustrative", cls: "new" },
+            silNote: "validateOutputState is Silverscript's documented builtin for continuing into the same template. Argent's real output for this contract is not published, so this line is written to show the shape.",
+            kaspaNote: "These opcodes also carry the new state bytes and the template check. That bookkeeping is the work Argent's README says it takes off a developer.",
+          }
+        };
+
+        var order = ["ownership", "signature", "become"];
+        var argentCodeEl = document.getElementById("ap-argentCode");
+        var silCodeEl = document.getElementById("ap-silCode");
+        var silTagEl = document.getElementById("ap-silTag");
+        var silNoteEl = document.getElementById("ap-silNote");
+        var kaspaNoteEl = document.getElementById("ap-kaspaNote");
+        var layerArgent = document.getElementById("ap-layerArgent");
+        var layerSil = document.getElementById("ap-layerSil");
+        var layerKaspa = document.getElementById("ap-layerKaspa");
+        var arrow1 = document.getElementById("ap-arrow1");
+        var arrow2 = document.getElementById("ap-arrow2");
+
+        function replay(el) {
+          el.style.animation = "none";
+          // eslint-disable-next-line no-unused-expressions
+          el.offsetHeight;
+          el.style.animation = "";
+        }
+
+        function setStep(id) {
+          var s = STEPS[id];
+          order.forEach(function (k) {
+            document.getElementById(STEPS[k].btn).setAttribute("aria-pressed", k === id ? "true" : "false");
+          });
+
+          argentCodeEl.textContent = s.argentCode;
+          silCodeEl.textContent = s.silCode;
+          silTagEl.textContent = s.silTag.cls === "new" ? s.silTag.text : "";
+          silTagEl.className = s.silTag.cls === "new" ? "layer-tag new" : "layer-tag empty";
+          silNoteEl.textContent = s.silNote;
+          kaspaNoteEl.textContent = s.kaspaNote;
+
+          [layerArgent, arrow1, layerSil, arrow2, layerKaspa].forEach(function (el, i) {
+            setTimeout(function () { replay(el); }, i * 70);
+          });
+          arrow1.classList.add("flow");
+          arrow2.classList.add("flow");
+          setTimeout(function () {
+            arrow1.classList.remove("flow");
+            arrow2.classList.remove("flow");
+          }, 900);
+        }
+
+        order.forEach(function (k) {
+          document.getElementById(STEPS[k].btn).addEventListener("click", function () { setStep(k); });
+        });
+
+        setStep("ownership");
+      })();
+      </script>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">The gap it fills</p>
+      <h2>A covenant is opcodes. An application is several agreeing.</h2>
+      <p>A covenant is <a href="/what-is-kaspa#covenants">a rule attached to a coin</a>, raw opcodes: readable alone, hard to audit once several agree. Argent, Sutton's unofficial compiler, takes an actor description and writes the script.</p>
+      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled apps joined into one all-or-nothing transaction.</span></span> lets one app's actor authorize another's, so two land together or not: second of <a href="/what-is-kaspa#covenants">three rungs on the What is Kaspa page</a>, the first not live.</p>
+      <details class="deep-dive" data-audience="specialist">
+        <summary>Open the language model and a worked example</summary>
+      <p>No contract address to call, only outputs. A <strong>state</strong> is a typed record, an <strong>actor</strong> owns one, an <strong>entry</strong> spends it, and <code>become</code> names the successor.</p>
+      <div class="table-wrap">
+        <pre><code>state TicketState {
+    byte[32] owner;
+    int units;
+}
+
+actor Ticket owns TicketState {
+    entry transfer(byte[32] next_owner, sig owner_sig, pubkey owner_pk) emits next: Ticket {
+        require(blake2b(owner_pk) == owner);
+        require(checkSig(owner_sig, owner_pk));
+        require(next.value == self.value);
+
+        TicketState new_state = {
+            owner: next_owner,
+            units: units,
+        };
+
+        become next &lt;- Ticket(new_state);
+    }
+}
+
+app Tickets {
+    actor Ticket;
+}</code></pre>
+      </div>
+      <p>A failed <code>require</code> invalidates the transaction: no revert, no gas refund, no program to interrupt. The compiler emits three inspectable outputs, plain <code>.sil</code> with no covenant macros, targeting KIP-20's covenant identities, the piece Toccata carried to mainnet.</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <p class="eyebrow">Repository signals</p>
+      <h2 id="argent-repo-heading">Three active repos, zero releases</h2>
+      <div class="table-wrap">
+          <table class="reality-table" id="argent-table">
+            <thead><tr><th>Repository</th><th>Created</th><th>Last push</th><th>Stars</th><th>Releases</th></tr></thead>
+            <tbody id="argent-body">
+              <tr><td data-label="Repository">argent</td><td data-label="Created">2026-06-16</td><td data-label="Last push">2026-08-31</td><td data-label="Stars">22</td><td data-label="Releases">None</td></tr>
+              <tr><td data-label="Repository">argent-playground</td><td data-label="Created">2026-07-09</td><td data-label="Last push">2026-08-31</td><td data-label="Stars">7</td><td data-label="Releases">None</td></tr>
+              <tr><td data-label="Repository">argent-template</td><td data-label="Created">2026-07-24</td><td data-label="Last push">2026-08-31</td><td data-label="Stars">8</td><td data-label="Releases">None</td></tr>
+            </tbody>
+          </table>
+        </div>
+      <p class="live-footnote" id="argent-stamp">Baseline read from GitHub on September 1, 2026.</p>
+    </section>
+
+    <section class="section" data-audience="specialist">
+      <p class="eyebrow">What's proven, what isn't</p>
+      <h2>Partitioned state works. Shared state is a design direction.</h2>
+      <div class="table-wrap">
+        <table class="reality-table">
+          <thead><tr><th>Shape of the state</th><th>What Argent has for it</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Shape of the state">One coin per thing</td><td data-label="What Argent has for it">Every published example: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position.</td></tr>
+            <tr><td data-label="Shape of the state">One state, many writers</td><td data-label="What Argent has for it">Nothing public. That shape is most of what people mean by DeFi.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Quoting the README's caution without its working-pieces list misdescribes it. Nothing built with Argent runs on Kaspa mainnet today.</p>
+      <details class="deep-dive">
+        <summary>Open the evidence: the DEX example, commit history, and the README quoted in full</summary>
+        <p>The playground's DEX is a single pair, no replicas or divergence in SECURITY.md. Sutton wrote 73 of the compiler's first 77 commits, reaching 85 by September 1, 2026.</p>
+        <p>The caution is real: "still under active development and is not yet release-ready," needing audit "before general production use." The other half: "compiler, generated Silverscript, portable artifacts…" already working. That gate moved on August 30, 2026: <a href="https://github.com/kaspanet/silverscript/releases/tag/v1-rc1">Silverscript published v1-rc1</a>, its first release candidate, marked pre-release, with v1 for mainnet use stated one week out. The notes cite review, testing and standardization, not a security audit, so the audit Argent names has not cleared. Kaspa's own <a href="https://docs.kaspa.org/toccata/argent">Argent chapter</a> is more cautious again: "a design direction and prototype, not a production-stable API."</p>
+      </details>
+      <details class="deep-dive">
+        <summary>Sources, with what each backs</summary>
+      <ul class="source-list">
+          <li><a href="https://github.com/argent-lang/argent">argent-lang/argent</a>: the compiler and every status sentence here.</li>
+          <li><a href="https://github.com/argent-lang/argent-playground">argent-playground</a> and <a href="https://github.com/argent-lang/argent-template">argent-template</a>: the DEX example and starter project.</li>
+          <li><a href="https://github.com/kaspanet/silverscript">kaspanet/silverscript</a>: the builtins.</li>
+          <li><a href="https://docs.kaspa.org/toccata/argent">Kaspa's own Argent chapter</a>: "a design direction and prototype, not a production-stable API."</li>
+          <li><a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md">KIP-20</a>: covenant IDs.</li>
+        </ul>
+      </details>
+    </section>
+
     <section id="zk-boundary-demo" class="section" aria-labelledby="zk-boundary-demo-title">
       <p class="eyebrow">Demo</p>
       <h2 id="zk-boundary-demo-title">What a proof can and can't verify</h2>
@@ -969,7 +1305,7 @@
           </tbody>
         </table>
       </div>
-      <p>A synced node and <a href="/argent-explained">Silverscript</a> compilation come first; no <code>getUtxosByCovenantId</code> RPC exists yet.</p>
+      <p>A synced node and <a href="#argent">Silverscript</a> compilation come first; no <code>getUtxosByCovenantId</code> RPC exists yet.</p>
       <div class="table-wrap">
         <table class="reality-table">
           <thead><tr><th>Needs a spend rule</th><th>What it does</th></tr></thead>
@@ -1116,12 +1452,81 @@ amount: "31112708372"</code></pre>
 <!-- related-links:start -->
     <section class="section site-related" aria-labelledby="related-links-title">
       <p class="eyebrow">Next</p>
-      <h2 id="related-links-title" class="site-next-title"><a href="/argent-explained#argent-pipeline">Argent and Silverscript, explained</a></h2>
-      <p class="site-next-reason">Watch a real line of code compile from Argent through Silverscript to the Kaspa Script that runs on-chain.</p>
+      <h2 id="related-links-title" class="site-next-title"><a href="/sources">What this site trusts, and why</a></h2>
+      <p class="site-next-reason">Every primary source behind this site, with a line on each saying what it does and does not settle.</p>
     </section>
 <!-- related-links:end -->
   </main>
 
+  <script>
+  (function () {
+    var BASELINE = 'Baseline read from GitHub on September 1, 2026.';
+    var stamp = document.getElementById('argent-stamp');
+    var repos = ['argent', 'argent-playground', 'argent-template'];
+
+    // Ask GitHub what quota is left BEFORE spending any. api.github.com/rate_limit
+    // is exempt from the limit it reports and answers 200 with remaining: 0 when a
+    // shared IP is exhausted, so this one call is the difference between a clean
+    // console and six "Failed to load resource: 403" lines on every visit from a
+    // rate-limited network. The browser logs those from the network stack, where no
+    // page script can catch them, so the only way to avoid them is not to ask.
+    fetch('https://api.github.com/rate_limit', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (limits) {
+        // Not being able to ask what the quota is, and asking and being told
+        // it is gone, are different facts. Collapsing them into `: 0` made
+        // the page name a cause it had not observed: driven deliberately into
+        // an HTTP 500, an HTTP 403, and an empty 200 body, it reported
+        // "GitHub's public quota for this network is used up" in all three.
+        // Only the abort case, which throws and lands in .catch, said the
+        // read failed. The quota sentence now needs a quota reading.
+        var core = limits && limits.resources && limits.resources.core;
+        if (!core || typeof core.remaining !== 'number') {
+          stamp.textContent = 'The live read from GitHub failed. ' + BASELINE;
+          return null;
+        }
+        var left = core.remaining;
+        if (left < repos.length * 2 + 1) {
+          stamp.textContent = "GitHub's public quota for this network is used up. " + BASELINE;
+          return null;
+        }
+        return Promise.all(repos.map(function (name) {
+          return Promise.all([
+            fetch('https://api.github.com/repos/argent-lang/' + name, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }),
+            fetch('https://api.github.com/repos/argent-lang/' + name + '/releases?per_page=1', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; })
+          ]).then(function (p) { return { name: name, repo: p[0], rels: p[1] }; });
+        }));
+      })
+      .then(function (rows) {
+        if (!rows) { return; }
+        if (rows.some(function (r) { return !r.repo; })) {
+          stamp.textContent = 'The live read from GitHub failed. ' + BASELINE;
+          return;
+        }
+        var released = 0;
+        document.getElementById('argent-body').innerHTML = rows.map(function (r) {
+          var rel = (Array.isArray(r.rels) && r.rels.length) ? r.rels[0].tag_name : 'None';
+          if (rel !== 'None') { released += 1; }
+          return '<tr><td data-label="Repository">' + r.name +
+            '</td><td data-label="Created">' + r.repo.created_at.slice(0, 10) +
+            '</td><td data-label="Last push">' + r.repo.pushed_at.slice(0, 10) +
+            '</td><td data-label="Stars">' + r.repo.stargazers_count +
+            '</td><td data-label="Releases">' + rel + '</td></tr>';
+        }).join('');
+        // The heading counts repos and releases. Both come from these same rows, so a
+        // first release tag cannot leave the heading saying zero while the table shows one.
+        var words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'];
+        var n = words[rows.length] || String(rows.length);
+        document.getElementById('argent-repo-heading').textContent = released === 0
+          ? n + ' active repos, zero releases'
+          : n + ' active repos, ' + released + ' with a release';
+        stamp.textContent = 'Read live from GitHub just now.';
+      })
+      .catch(function () {
+        stamp.textContent = 'The live read from GitHub failed. ' + BASELINE;
+      });
+  })();
+  </script>
   <footer class="footer">
     <div class="footer-grid">
       <div class="footer-legal">
@@ -1131,10 +1536,10 @@ amount: "31112708372"</code></pre>
       <nav class="footer-nav-groups" aria-label="Footer">
         <div class="footer-link-group" aria-label="Learn">
           <span>Learn</span>
-          <a href="/start-here">Start here</a>
           <a href="/crypto-from-scratch">Crypto from scratch</a>
           <a href="/what-is-kaspa">What is Kaspa</a>
           <a href="/why-kaspa-matters">How it compares</a>
+          <a href="/kaspa-origin-story">Origin story</a>
           <a href="/moose">Moose's books</a>
         </div>
         <div class="footer-link-group" aria-label="Verify">
@@ -1146,7 +1551,6 @@ amount: "31112708372"</code></pre>
         <div class="footer-link-group" aria-label="Build">
           <span>Build</span>
           <a href="/build-on-kaspa">Build on Kaspa</a>
-          <a href="/argent-explained">Argent and Silverscript</a>
           <a href="/kaspa-mining">Mining Kaspa</a>
           <a href="/kips">KIPs and KCCs</a>
         </div>

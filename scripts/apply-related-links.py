@@ -31,10 +31,6 @@ END = "<!-- related-links:end -->"
 # immediately. index.html is exempt (see check-site.sh); every other page in
 # PAGES needs an entry here or apply-related-links.py raises on it.
 NEXT_STEP = {
-    "start-here.html": (
-        "/crypto-from-scratch",
-        "Crypto from scratch: what it's actually for, what it's bad at, and why a coin has a price at all.",
-    ),
     "crypto-from-scratch.html": (
         "/what-is-kaspa#collision-sim",
         "Turn up how fast blocks are found, and watch a single chain throw away what a blockDAG keeps.",
@@ -52,10 +48,6 @@ NEXT_STEP = {
         "Set how much mining power an attacker holds, then read how long Bitcoin, Litecoin, and Kaspa each need before a payment is safe.",
     ),
     "why-kaspa-matters.html": (
-        "/utxo-vs-accounts",
-        "Spend from a coin model and a balance model side by side, and watch one queue while the other hands back change.",
-    ),
-    "utxo-vs-accounts.html": (
         "/status",
         "Every feature and repeated claim, labeled live, testnet, roadmap, research, or wrong, with the source behind each label.",
     ),
@@ -72,15 +64,8 @@ NEXT_STEP = {
         "Try to break a Toccata covenant vault yourself, and see exactly which attack gets stopped and why.",
     ),
     "build-on-kaspa.html": (
-        "/argent-explained#argent-pipeline",
-        "Watch a real line of code compile from Argent through Silverscript to the Kaspa Script that runs on-chain.",
-    ),
-    # Rerouted 2026-09-02: this pointed at /chain-comparer, deleted on 1 September.
-    # The page itself had been hand-corrected, so the dead link survived only in
-    # this map, where the next regeneration would have put it back on a live page.
-    "argent-explained.html": (
-        "/kips",
-        "Read the KIPs and KCCs the compiler targets, and see which are merged, which are drafts, and which are neither.",
+        "/sources",
+        "Every primary source behind this site, with a line on each saying what it does and does not settle.",
     ),
     # Added 2026-08-29 with the page itself, rerouted 2026-08-30 through the
     # full table rather than straight back to the tool: a reader who just
@@ -101,8 +86,8 @@ NEXT_STEP = {
         "See what's live on the network today, and come back here whenever a claim needs a fresh check.",
     ),
     "search.html": (
-        "/start-here",
-        "Start at the beginning: no assumed vocabulary, nothing skipped.",
+        "/crypto-from-scratch",
+        "Start at the beginning: what crypto is actually for, what it's bad at, and why a coin has a price at all.",
     ),
     "404.html": (
         "/search",

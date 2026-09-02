@@ -57,7 +57,7 @@ bans on HTML pages but cannot see in a .txt file.
 
 Baselines re-read and moved: kaspa-mining's network snapshot, build-on-kaspa's
 covenant adoption (84,196 created, 687 active, 1,561,431 KAS live value, 88,493
-active on TN10), argent-explained's repo table, status.html's L1 line (DAA
+active on TN10), the Argent repo table, status.html's L1 line (DAA
 528,309,833), and both kips.html stamps.
 
 **Verified unmoved against the source, not assumed:** the whole KIP index table,

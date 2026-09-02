@@ -81,7 +81,7 @@ Audience paths should be distinct. The site should serve the whole spectrum:
 - journalists/analysts/source-checkers who need shipped-vs-roadmap status and primary references;
 - LLMs/search systems retrieving accurate context.
 
-A newcomer should have a slow path from `start-here.html` and `crypto-from-scratch.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
+A newcomer should have a slow path from `index.html` and `crypto-from-scratch.html` into the Kaspa-specific pages. Intermediate readers should have compact overview, value, and comparison paths. Advanced readers should be able to skip directly into the relevant deep page, whether that is PoW/Kaspa thesis, app architecture, adoption metrics, shipped-vs-roadmap status, source guides, `CLAIMS.yml`, or LLM/source context. Cross-link the paths clearly, but do not force every page to be equally beginner-friendly and expert-dense at the same time.
 
 At the start of any substantive repo session, current-check status-sensitive Kaspa facts on the web before editing or publishing. Recheck Toccata activation, DAGKnight, vProgs, native DeFi, RTD-derived attestations/oracles, TangVM, Proof of Useful Work, and date windows against primary or near-primary sources. Keep that discipline internal and in the source trail. Do not add visible public verification boxes unless the task asks for them.
 
@@ -102,14 +102,14 @@ deeper rather than competing in the primary nav.
 
 Reader paths worth keeping visible:
 
-- Knows nothing about crypto: `start-here.html`, then `crypto-from-scratch.html`.
+- Knows nothing about crypto: `index.html`, then `crypto-from-scratch.html`.
 - Asks what Kaspa is: `what-is-kaspa.html`.
 - Wants the design case in plain terms: `why-kaspa-matters.html`.
-- Wants to know why parallel spends do not collide: `utxo-vs-accounts.html`.
+- Wants to know why parallel spends do not collide: `what-is-kaspa.html#utxo`.
 - Checking a public claim, or asking whether something is live: `status.html`.
 - Origin and fair-launch context: `kaspa-origin-story.html`.
 - Comparing Kaspa against other layer ones on the same fields: `chain-comparer.html`.
-- The Argent and Silverscript language model with a worked covenant example: `argent-explained.html`.
+- The Argent and Silverscript language model with a worked covenant example: `build-on-kaspa.html#argent`.
 - Mining mechanics, ASIC economics, and the price to hash-rate relationship: `kaspa-mining.html`.
 - KIP and KCC status: `kips.html`.
 - A builder path for an app idea: `build-on-kaspa.html`.
@@ -294,7 +294,7 @@ TPS and speed claims need measurement labels. Do not freeze one public TPS numbe
 
 `crypto-from-scratch.html` is the general-audience bridge for people who do not live inside crypto, and it is also where the market and context layer now lives: why a coin has a price, market cap versus company value, initial-ownership/launch design, and a three-part test for when crypto makes sense at all. It should make the rest of the site more credible by stating plainly that crypto is not useful for everything, and it should explain valuation, token necessity, launch design, actors, incentives, and design constraints without becoming investment advice or price prediction.
 
-`start-here.html` and `crypto-from-scratch.html` are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
+`index.html` and `crypto-from-scratch.html` are the true zero-start path. They should not assume the reader knows decentralization, blocks, mining, tokens, market cap, keys, privacy tradeoffs, UTXO, or consensus. Teach the problem first, the mechanism second, the tradeoff third, and Kaspa fourth.
 
 `status.html` and `skeptical-case.html` are the closest live analogs: they help readers test claims and pitches against current-status labels, evidence, and failure modes rather than against hype.
 
