@@ -35,7 +35,7 @@ fn decode(v:&Value)->(Transaction,Vec<UtxoEntry>){
  let inputs=v["inputs"].as_array().unwrap().iter().map(|i|TransactionInput::new_with_compute_budget(TransactionOutpoint{transaction_id:TransactionId::from_bytes(bytes(string(&i["transactionId"])).try_into().unwrap()),index:i["index"].as_u64().unwrap() as u32},bytes(string(&i["signatureScript"])),unsigned(&i["sequence"]),i["computeBudget"].as_u64().unwrap() as u16)).collect();
  let outputs=v["outputs"].as_array().unwrap().iter().map(|o|TransactionOutput{value:unsigned(&o["value"]),script_public_key:ScriptPublicKey::new(0,bytes(string(&o["scriptPublicKey"])).into()),covenant:(!o["covenant"].is_null()).then(||CovenantBinding{authorizing_input:o["covenant"]["authorizingInput"].as_u64().unwrap() as u16,covenant_id:hash(string(&o["covenant"]["covenantId"]))})}).collect();
  let entries=v["inputs"].as_array().unwrap().iter().map(|i|UtxoEntry::new(unsigned(&i["amount"]),ScriptPublicKey::new(0,bytes(string(&i["scriptPublicKey"])).into()),0,false,(!i["covenantId"].is_null()).then(||hash(string(&i["covenantId"]))))).collect();
- {let tx=Transaction::new(v["version"].as_u64().unwrap() as u16,inputs,outputs,unsigned(&v["lockTime"]),Default::default(),0,vec![]);tx.set_storage_mass(unsigned(&v["storageMass"]));(tx,entries)}
+ {let tx=Transaction::new(v["version"].as_u64().unwrap() as u16,inputs,outputs,unsigned(&v["lockTime"]),Default::default(),0,bytes(v["payload"].as_str().unwrap_or("")));tx.set_storage_mass(unsigned(&v["storageMass"]));(tx,entries)}
 }
 fn execute(tx:&Transaction,entries:Vec<UtxoEntry>)->Result<Vec<u64>,TxScriptError>{
  let populated=PopulatedTransaction::new(tx,entries);

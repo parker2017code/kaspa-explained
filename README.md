@@ -1,19 +1,25 @@
 # Kaspa Explained
 
 An independent guide to Kaspa with interactive explanations and experimental
-Testnet-10 applications. [The V2 site is live](https://kaspaexplained.com), including public Testnet-10
-applications. Source revision `4695529` was deployed September 6, 2026; the
-standalone educational V1 build remains available from the same source.
+Testnet-10 applications. [Open the site](https://kaspaexplained.com), including public Testnet-10
+applications. The standalone educational V1 build remains available from the same source.
 
-V2 packages sixteen canonical pages and 87 compatibility routes. Its browser
+The public build packages sixteen canonical pages and 87 compatibility routes. Its browser
 application generates disposable test accounts, encrypts recovery in the browser,
 and connects directly to Testnet-10. Visitors can try native payments, escrow,
 threshold treasury, prediction payouts, a fixed proof, capped tokens and fully
 backed native receipts. Application transactions need no public signing server or compiler endpoint.
 The new guided source flow adds automatic disposable-session recovery and an
 optional fixed-amount external testnet faucet; see [faucet operations](docs/faucet.md).
-The faucet is deployed, but its first public claim and the guided website
-redeployment have not yet been verified in this record.
+Guided release `85414b4` is deployed; all 138 expected live files matched.
+The first online faucet claim delivered exactly 10 tKAS, and the dedicated
+faucet reserve has received 9,000 tKAS in total. All six guided scenarios completed online: 13 application transactions were
+accepted and independently checked against public history. See
+[the guided verification report](design/GUIDED-APPS-REVIEW.md).
+V3 adds detailed SVG diagrams, phone rendering improvements and public names
+recorded in token creation transactions. Names use application-specific metadata;
+they do not assert KCC standard compliance. See [V3 verification](docs/release-v3.md).
+
 These examples are unaudited and are not intended for mainnet.
 
 ## Preview the education site

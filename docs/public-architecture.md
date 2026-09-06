@@ -4,9 +4,13 @@ The earlier public V2 app was deployed at https://kaspaexplained.com from revisi
 `4695529` (September 6, 2026). The live artifact matched all 138 expected files;
 96 live Chromium/WebKit recovery and layout states passed. Detailed release
 and verification evidence is in [the V2 notes](release-v2.md). The guided
-automatic-session changes described below are source changes awaiting their
-separate website deployment confirmation. The dedicated faucet is deployed;
-its first online claim remains unverified in [the faucet notes](faucet.md).
+automatic-session changes described below are deployed as revision `85414b4`
+(successful deployment run `34048299229`); all 138 expected live files matched.
+The first online faucet claim delivered exactly 10 tKAS, and the reserve has
+received 9,000 tKAS in total; see [the faucet notes](faucet.md). Verification of
+all six guided scenarios on the live website is complete: 13 transactions
+accepted automatically and independently checked against public history. See
+[the guided verification report](../design/GUIDED-APPS-REVIEW.md).
 
 The deployed app needs static artifacts and the pinned browser SDK. It does not
 need the workshop signer, its files, or a public native compiler endpoint.

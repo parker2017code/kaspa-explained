@@ -1,6 +1,6 @@
 // Encrypted-journal payload helpers only. No private keys, storage, signing or RPC.
 import {buildPublicPayment,validatePublicAssetPlan,acceptKaspirePublicAssetSignature} from './public-asset-signing.mjs';
-import {instantiatePublicToken,buildTokenGenesis,buildTokenMove} from './public-token.mjs';
+import {instantiatePublicToken,buildTokenGenesis,buildTokenMove,readTokenNamePayload} from './public-token.mjs';
 import {instantiatePublicReceipt,buildBackedGenesis,buildBackedMove} from './public-receipt.mjs';
 const NETWORK='testnet-10';
 const clone=value=>JSON.parse(JSON.stringify(value));
@@ -45,7 +45,7 @@ export function derivePublicAssetRecoveryPlan(sdk,{templates,journal,keysPublic}
  }else if(journal.operation===null){
   if(covInputs.length||journal.states.length||covOutputs.length!==1||!journal.genesis)throw new Error('Invalid asset genesis recovery.');
   const asset=instantiate(journal.genesis),fundingUtxos=original.inputs.map(i=>i.utxo);
-  if(journal.kind==='token')plan=buildTokenGenesis(sdk,{fundingUtxos,token:asset,cellAmount:original.outputs[0].value,fee,changeAddress:address(sdk,original.outputs[1]??{scriptPublicKey:original.inputs[0].utxo.entry.scriptPublicKey}),computeBudget:original.inputs[0].computeBudget,feeRate});
+  if(journal.kind==='token')plan=buildTokenGenesis(sdk,{fundingUtxos,token:asset,tokenName:readTokenNamePayload(original.payload),cellAmount:original.outputs[0].value,fee,changeAddress:address(sdk,original.outputs[1]??{scriptPublicKey:original.inputs[0].utxo.entry.scriptPublicKey}),computeBudget:original.inputs[0].computeBudget,feeRate});
   else plan=buildBackedGenesis(sdk,{fundingUtxos,receipt:asset,fee,sponsorPublicKey:publicKey(original.inputs[0].utxo.entry.scriptPublicKey.script),nativeBudget:original.inputs[0].computeBudget,feeRate});
  }else{
   if(!covInputs.length||covOutputs.length!==journal.states.length||journal.genesis)throw new Error('Invalid asset transition recovery.');

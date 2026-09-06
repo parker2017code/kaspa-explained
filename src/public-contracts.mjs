@@ -217,13 +217,13 @@ export function acceptKaspirePublicSignature(sdk, plan, signer, result) {
 
 // Pinned native-v1 post-Toccata mass rules, checked against Rust by fixture suites.
 export function publicTransactionMass(transaction,{feeRate=100}={}){
- if(transaction.version!==1||transaction.payload!==''||transaction.subnetworkId!=='00'.repeat(20)||transaction.gas!==0n)throw new Error('Mass helper supports only native v1 empty-payload token transactions.');
+ if(transaction.version!==1||typeof transaction.payload!=='string'||transaction.payload.length>512||!/^(?:[0-9a-f]{2})*$/i.test(transaction.payload)||transaction.subnetworkId!=='00'.repeat(20)||transaction.gas!==0n)throw new Error('Mass helper supports only native v1 transactions with at most 256 payload bytes.');
  if(!Number.isFinite(feeRate)||feeRate<100||feeRate>100000)throw new Error('Invalid relay fee rate.');
  const inputs=transaction.inputs,outputs=transaction.outputs;if(!inputs.length||!outputs.length)throw new Error('Inputs and outputs required.');
  const inputCells=inputs.map(i=>{const entry=i.utxo?.entry;if(!entry)throw new Error('Complete UTXO references required.');return {value:amount(i.utxo.amount),plurality:BigInt(Math.ceil((63+entry.scriptPublicKey.script.length/2+(entry.covenantId?32:0))/100))};});
  const outputCells=outputs.map(o=>({value:amount(o.value),plurality:BigInt(Math.ceil((63+o.scriptPublicKey.script.length/2+(o.covenant?32:0))/100))}));
  if([...inputCells,...outputCells].some(c=>c.value===0n))throw new Error('Zero-value output or input.');
- const size=94+inputs.reduce((s,i)=>s+54+(i.signatureScript?.length??0)/2,0)+outputs.reduce((s,o)=>s+18+o.scriptPublicKey.script.length/2+(o.covenant?34:0),0);
+ const size=94+transaction.payload.length/2+inputs.reduce((s,i)=>s+54+(i.signatureScript?.length??0)/2,0)+outputs.reduce((s,o)=>s+18+o.scriptPublicKey.script.length/2+(o.covenant?34:0),0);
  const computeMass=size+outputs.reduce((s,o)=>s+(2+o.scriptPublicKey.script.length/2)*10,0)+inputs.reduce((s,i)=>s+integer(i.computeBudget,0,65535)*100,0);
  const transientMass=size*4,normalizedTransientMass=size*2;
  const C=1000000000000n,pOut=outputCells.reduce((s,c)=>s+c.plurality,0n),pIn=inputCells.reduce((s,c)=>s+c.plurality,0n);

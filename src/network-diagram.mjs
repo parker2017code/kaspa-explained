@@ -1,4 +1,4 @@
-// The same calculated snapshot renders on the server and in the browser.
+// Both responsive drawings use the same calculated snapshot and reference graph.
 export function networkDiagram(s,{interactive=false,selected=null,id='network'}={}){
   const visible=[true,s.foundB,s.foundC,s.time>=1200];
   const heading=!s.foundB?'Both miners know the earlier block':!s.foundC?'One miner finds a new block':s.parallel?'Two miners. Two independent blocks.':'The next miner builds on that block.';
@@ -8,9 +8,32 @@ export function networkDiagram(s,{interactive=false,selected=null,id='network'}=
   const relations=['Known to both','References A',`References ${s.parent}`,s.parallel?'To B + C':'References C'];
   const paths=s.parallel?[[1,0],[2,0],[3,1],[3,2]]:[[1,0],[2,1],[3,2]];
   const svg=compact=>{
-    const points=compact?(s.parallel?[[55,210],[180,95],[180,325],[305,210]]:[[55,60],[135,160],[215,260],[305,360]]):(s.parallel?[[80,150],[285,70],[285,230],[590,150]]:[[75,150],[265,150],[455,150],[645,150]]);
-    const half=compact?48:70,marker=`${id}-${compact?'small':'wide'}`;
-    return `<svg class="network-drawing ${compact?'drawing-small':'drawing-wide'}" viewBox="0 0 ${compact?'360 450':'720 310'}" role="group" aria-label="${s.parallel?'Parallel block references':'Sequential block references'}"><defs><marker id="${marker}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10" fill="none" stroke="currentColor" stroke-width="1.5"/></marker></defs>${paths.filter(([from,to])=>visible[from]&&visible[to]).map(([from,to])=>`<path class="block-reference" d="M${points[from][0]-half-2} ${points[from][1]} L${points[to][0]+half+5} ${points[to][1]}" marker-end="url(#${marker})"/>`).join('')}${points.map(([x,y],i)=>visible[i]?`<g class="diagram-block" data-block="${names[i]}" ${interactive?`role="button" tabindex="0" aria-pressed="${selected===names[i]}"`: 'role="img"'} aria-label="Block ${names[i]}. ${labels[i]}. ${relations[i]}" transform="translate(${x} ${y})"><rect class="block-depth" x="${-half+6}" y="-23" width="${half*2}" height="58" rx="12"/><path class="block-top" d="M${-half+10} -31 L${-half+16} -39 H${half-4} Q${half+6} -39 ${half+6} -29 L${half} -21 Z"/><rect class="block-face" x="${-half}" y="-31" width="${half*2}" height="58" rx="13"/><text class="block-name" y="-5" text-anchor="middle">Block ${names[i]}</text><text class="block-relation" y="13" text-anchor="middle">${compact?(["Both miners","To A",`To ${s.parent}`,s.parallel?"To B + C":"To C"][i]):relations[i]}</text><text class="block-owner" y="53" text-anchor="middle">${compact?['<tspan x="0">Earlier</tspan><tspan x="0" dy="20">block</tspan>','<tspan x="0">Miner 1</tspan><tspan x="0" dy="20">100 ms</tspan>','<tspan x="0">Miner 2</tspan><tspan x="0" dy="20">400 ms</tspan>','<tspan x="0">Possible</tspan><tspan x="0" dy="20">later block</tspan>'][i]:i===3?'<tspan x="0">Possible later</tspan><tspan x="0" dy="20">block</tspan>':labels[i]}</text></g>`:'').join('')}</svg>`;
+    const points=compact?[[75,65],[285,65],[75,245],[285,245]]:(s.parallel?[[80,175],[350,75],[350,265],[635,175]]:[[80,160],[265,160],[450,160],[635,160]]);
+    const marker=`${id}-${compact?'small':'wide'}`;
+    // Intersect the reference ray with each ledger's perimeter, keeping arrows
+    // outside the header and transaction rows, including diagonal mobile edges.
+    const anchor=(from,to,padding)=>{
+      const dx=to[0]-from[0],dy=to[1]-from[1];
+      const scale=Math.min((56+padding)/Math.abs(dx),(49+padding)/Math.abs(dy));
+      return [from[0]+dx*scale,from[1]+dy*scale];
+    };
+    const edges=paths.filter(([from,to])=>visible[from]&&visible[to]).map(([from,to])=>{
+      const start=anchor(points[from],points[to],5),end=anchor(points[to],points[from],10);
+      const route=compact&&((from===2&&to===0)||(from===3&&to===1))?`M${points[from][0]+(from===2?-61:61)} ${points[from][1]} H${from===2?7:353} V${points[to][1]} H${points[to][0]+(from===2?-66:66)}`:`M${start.join(' ')} L${end.join(' ')}`;
+      return `<path class="ledger-reference" data-from="${names[from]}" data-to="${names[to]}" d="${route}" marker-end="url(#${marker})"/><circle class="ledger-port" cx="${compact&&((from===2&&to===0)||(from===3&&to===1))?points[from][0]+(from===2?-61:61):start[0]}" cy="${compact&&((from===2&&to===0)||(from===3&&to===1))?points[from][1]:start[1]}" r="2.5"/>`;
+    }).join('');
+    const blocks=points.map(([x,y],i)=>visible[i]?`<g class="diagram-block ledger-block" data-block="${names[i]}" ${interactive?`role="button" tabindex="0" aria-pressed="${selected===names[i]}"`:'role="img"'} aria-label="Block ${names[i]}. ${labels[i]}. ${relations[i]}" transform="translate(${x} ${y})">
+      <path class="ledger-stack" d="M-53 -42 H60 V51 H-53 Z M-50 -39 H63 V54 H-50"/>
+      <rect class="ledger-sheet" x="-56" y="-49" width="112" height="96" rx="1"/>
+      <path class="ledger-header" d="M-56 -49 H56 V-10 H-56 Z"/>
+      <text class="ledger-id" x="-44" y="-23">${names[i]}</text>
+      <text class="ledger-type" x="-18" y="-30">BLOCK</text>
+      <text class="ledger-parent" x="-18" y="-17">${['earlier', 'ref A',`ref ${s.parent}`,s.parallel?'ref B+C':'ref C'][i]}</text>
+      <text class="ledger-row-label" x="-44" y="5">TRANSACTIONS</text>
+      <g class="ledger-transactions" aria-hidden="true">${[15,26,37].map((row,j)=>`<rect x="-44" y="${row-4}" width="5" height="5"/><path d="M-33 ${row-1.5} H${j===1?20:38}"/><path class="ledger-row-end" d="M42 ${row-4} V${row+1}"/>`).join('')}</g>
+      <text class="ledger-owner" y="77" text-anchor="middle">${compact?['<tspan x="0">Earlier block</tspan>','<tspan x="0">Miner 1</tspan><tspan x="0" dy="17">100 ms</tspan>','<tspan x="0">Miner 2</tspan><tspan x="0" dy="17">400 ms</tspan>','<tspan x="0">Possible later</tspan><tspan x="0" dy="17">block</tspan>'][i]:labels[i]}</text>
+    </g>`:'').join('');
+    return `<svg class="network-drawing ledger-drawing ${compact?'drawing-small':'drawing-wide'}" viewBox="0 0 ${compact?'360 350':'720 380'}" role="group" aria-label="${s.parallel?'Parallel block references':'Sequential block references'}"><defs><marker id="${marker}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1 L8 5 L1 9" fill="none" stroke="currentColor" stroke-width="1.4"/></marker></defs>${edges}${blocks}</svg>`;
   };
   return `<div class="diagram-caption"><strong>${heading}</strong><p>${explanation}</p><small>Arrows reference earlier blocks.${s.time>=1200?' D shows how a later block can connect the history.':''}</small></div>${svg(false)}${svg(true)}`;
 }

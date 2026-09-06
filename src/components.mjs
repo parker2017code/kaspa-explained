@@ -1,3 +1,5 @@
+import {transactionFlow,ledgerGlyph} from './flow-diagrams.mjs';
+import {transactionState} from './models.mjs';
 import {networkDiagram} from './network-diagram.mjs';
 import { networkState, spendState, miningState, vaultState } from './models.mjs';
 
@@ -12,11 +14,11 @@ export function payment() {
   return `<figure class="experiment payment" data-lab="payment" data-stage="2">
     <div class="experiment-label"><span>A payment through the network</span><span>Illustrated sequence</span></div>
     <div class="payment-scene">
-      <div class="wallet-object"><span class="object-label">Sender</span><div class="document-object"><span class="signature-mark" aria-hidden="true">✓</span><strong>Signed payment</strong><small>Permission to spend an output</small></div></div>
+      <div class="wallet-object"><span class="object-label">Sender</span><div class="document-object">${ledgerGlyph('signature')}<strong>Signed payment</strong><small>Permission to spend an output</small></div></div>
       <div class="flow-connector" aria-hidden="true">→</div>
-      <div class="block-object"><span class="object-label">Network</span><div class="block-stack"><div class="back-block" aria-hidden="true"></div><div class="front-block"><span>Block</span><div class="transaction-line is-selected">Your payment</div><div class="transaction-line">Other transactions</div></div></div></div>
+      <div class="block-object"><span class="object-label">Network</span><div class="block-stack"><div class="back-block" aria-hidden="true"></div><div class="front-block">${ledgerGlyph('block')}<span>Block</span><div class="transaction-line is-selected">Your payment</div><div class="transaction-line">Other transactions</div></div></div></div>
       <div class="flow-connector" aria-hidden="true">→</div>
-      <div class="receiver-object"><span class="object-label">Recipient</span><div class="receipt-object"><span data-payment-badge>Accepted</span><strong data-payment-headline>A spendable output</strong><small data-payment-small>In the currently accepted history</small></div></div>
+      <div class="receiver-object"><span class="object-label">Recipient</span><div class="receipt-object">${ledgerGlyph('output')}<span data-payment-badge>Accepted</span><strong data-payment-headline>A spendable output</strong><small data-payment-small>In the currently accepted history</small></div></div>
     </div>
     <div class="step-control" role="group" aria-label="Payment stages">${['Sent', 'Included', 'Accepted', 'Later work'].map((label, i) => `<button data-stage="${i}" aria-pressed="${i === 2}"><span class="step-number">${i + 1}</span>${label}</button>`).join('')}</div>
     <figcaption class="experiment-answer" data-payment-answer aria-live="polite">The payment is accepted in the current history. The recipient may still wait before treating it as settled.</figcaption>
@@ -75,6 +77,7 @@ export function vault() {
 export function transaction() {
   return `<figure class="experiment transaction" data-lab="transaction"><div class="experiment-label"><span>Where the amount goes</span><span>Constructed example</span></div>
     <div class="transaction-equation"><div><span>Input</span><strong>12.5 KAS</strong></div><i aria-hidden="true">=</i><div class="transaction-outputs"><div><span>Payment</span><strong data-tx-payment>7 KAS</strong></div><div><span>Change</span><strong data-tx-change>5.499 KAS</strong></div><div><span>Fee</span><strong>0.001 KAS</strong></div></div></div>
+    <div data-value-flow>${transactionFlow(transactionState(7))}</div><p class="flow-scale-note">Ribbon widths compare payment and change. The fee line is enlarged to remain visible.</p>
     <label class="range-control"><span>Payment amount <strong data-tx-amount>7 KAS</strong></span><input data-payment-amount type="range" min="0.1" max="12.5" step="0.1" value="7"></label>
     <figcaption class="experiment-answer" data-tx-answer aria-live="polite">Payment, change, and fee use the entire input. Change creates another spendable output for the sender.</figcaption>
     ${note('Amounts are calculated in whole sompi: 100,000,000 sompi = 1 KAS. This is not a signed transaction or a fee recommendation. Payment and change labels are authored for this example.')}</figure>`;

@@ -3,16 +3,26 @@
 The faucet is a separate Cloudflare Worker and Durable Object at
 [the service endpoint](https://kaspa-demo-faucet.parker2017.workers.dev).
 Worker version `e517f367-69f3-42cb-ba2a-4fef481b492d` was deployed and enabled
-on September 6, 2026. The status check reported a connected Testnet-10 node,
-zero observed claims and capacity for four claims from its initial 50 tKAS.
-The first public claim had **not** yet been verified when this note was written.
-Deployment of the guided website is a separate release step; this service
-version does not establish that the new website is published.
+on September 6, 2026. Guided website revision `85414b4` is also deployed
+(successful deployment run `34048299229`); all 138 expected live files matched.
 
-The initial reserve transfer is
+The first online claim delivered exactly **10 tKAS** to a fresh browser session,
+and the browser automatically observed the recipient output:
+[8b6b70dd079091068953253edbda832a7c134474aa15ecb361ebe7d7f8640842](https://tn10.kaspa.stream/transactions/8b6b70dd079091068953253edbda832a7c134474aa15ecb361ebe7d7f8640842).
+Repeating the same request returned the same accepted transaction. The live
+status then reported one observed claim and zero pending claims.
+
+The initial 50 tKAS reserve transfer is
 [f584df46058a978290d0647161d6e627517bdd39906ae0c614a43d78ca203010](https://tn10.kaspa.stream/transactions/f584df46058a978290d0647161d6e627517bdd39906ae0c614a43d78ca203010).
-An additional 8,950 tKAS refill is planned only after the first online claim is
-verified. It is not recorded here as sent. The operator's master wallet remains
+After the first online claim passed, the approved **8,950 tKAS** refill was
+submitted as
+[980f69efe7bf37208e81a799faae194ba1f75cb1677941d4ad85da0a908a9b70](https://tn10.kaspa.stream/transactions/980f69efe7bf37208e81a799faae194ba1f75cb1677941d4ad85da0a908a9b70),
+with a 0.002648 tKAS fee. Total reserve funding is **9,000 tKAS**. The subsequent
+live status reported capacity for 898 further claims, one observed claim and
+zero pending claims. These are point-in-time observations, not a guarantee of
+future availability.
+
+The operator's master wallet remains
 local. Only a dedicated **Testnet-10-only** faucet key was installed as a
 Cloudflare secret with explicit authorization. The worker cannot sign for the
 visitor's three browser accounts or the operator's separate master wallet.
@@ -88,7 +98,11 @@ idempotency, exact-byte retry limits and observed-claim caps. The worker tests
 use actual SDK transactions with mocked RPC/storage, not live faucet payouts.
 Separately, 13 newly guided application transactions were observed using a
 locally funded browser session supplied with 10 tKAS; their fees totaled about
-0.230499 tKAS. That run did not exercise the public faucet claim endpoint.
+0.230499 tKAS. That local run did not exercise the public faucet claim endpoint. The separate
+online faucet check above has now passed. All six guided
+scenarios then completed on the live website with a fresh wallet, the public
+faucet and 13 independently observed application transactions; see
+[the guided verification report](../design/GUIDED-APPS-REVIEW.md).
 
 Local keys, development secrets and Wrangler state remain under ignored
 `.local/`, `.dev.vars`, `.env` and `.wrangler/` paths. Never commit their

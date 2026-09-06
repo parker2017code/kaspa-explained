@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
-import {instantiatePublicToken,buildTokenGenesis,buildTokenMove,buildTokenExchange} from '../src/public-token.mjs';
+import {instantiatePublicToken,buildTokenGenesis,buildTokenMove,buildTokenExchange,normalizeTokenName,tokenNamePayload,readTokenNamePayload} from '../src/public-token.mjs';
 import {instantiatePublicReceipt,buildBackedGenesis,buildBackedMove} from '../src/public-receipt.mjs';
 import {signPublicAssetPlan,buildPublicPayment,validatePublicAssetPlan} from '../src/public-asset-signing.mjs';
 import {publicAssetJournal,derivePublicAssetRecoveryPlan} from '../src/public-asset-recovery.mjs';
@@ -58,4 +58,20 @@ test('native split rejects duplicate recipients, total cap, invalid amounts and 
  for(const recipients of [pair(0n,1n),pair(-1n,1n),pair(50000001n,50000000n),[{recipient:keysPublic[1],amount:1n},{recipient:keysPublic[1].toUpperCase(),amount:1n}]])assert.throws(()=>buildPublicPayment(sdk,{...options,recipients}));
  assert.throws(()=>buildPublicPayment(sdk,{...options,recipients:pair(20000000n,30000000n),feeRate:100000}),/fee limit/);
  assert.throws(()=>buildPublicPayment(sdk,{...options,recipients:pair(20000000n,30000000n),recipient:keysPublic[1],amount:1n}));
+});
+
+
+test('named genesis binds canonical public metadata and includes every payload byte in mass',async()=>{
+ const options={fundingUtxos:[funding(94)],token:token(0,1000,true),cellAmount:50000000n,changeAddress:addresses[0]};
+ const unnamed=buildTokenGenesis(sdk,options),named=buildTokenGenesis(sdk,{...options,tokenName:'  Cafe\u0301  garden  '});
+ assert.equal(named.tokenName,'Café garden');assert.equal(readTokenNamePayload(named.transaction.payload),'Café garden');
+ const bytes=named.transaction.payload.length/2;assert.equal(named.mass.estimatedBytes-unnamed.mass.estimatedBytes,bytes);assert.equal(named.mass.computeMass-unnamed.mass.computeMass,bytes);assert.equal(named.mass.transientMass-unnamed.mass.transientMass,bytes*4);assert.equal(named.mass.storageMass,unnamed.mass.storageMass);assert.equal(BigInt(named.fee)-BigInt(unnamed.fee),BigInt(bytes*100));
+ await checked(named);const recovered=derivePublicAssetRecoveryPlan(sdk,{templates,journal:publicAssetJournal(named),keysPublic});assert.equal(recovered.tokenName,'Café garden');
+ const before=named.transaction.inputs[0].signatureScript;const other=buildTokenGenesis(sdk,{...options,tokenName:'Other garden'});await checked(other);assert.notEqual(other.transaction.inputs[0].signatureScript,before);
+ named.transaction.payload=tokenNamePayload('Different');assert.throws(()=>validatePublicAssetPlan(named),/changed/);
+});
+test('token name codec bounds Unicode, rejects control/noncanonical payloads, and preserves literal markup',()=>{
+ assert.equal(normalizeTokenName('  Test   coins  '),'Test coins');assert.equal(readTokenNamePayload(tokenNamePayload('<img src=x onerror=alert(1)>')),'<img src=x onerror=alert(1)>');assert.equal(readTokenNamePayload(''),undefined);
+ for(const name of ['', ' ', 'a'.repeat(41), '😀'.repeat(31), 'a\nname', 'a\u202ename', '\ud800'])assert.throws(()=>tokenNamePayload(name));
+ for(const payload of ['ff','00','abc','aa'.repeat(257),Buffer.from(JSON.stringify({protocol:'other',version:1,name:'Test'})).toString('hex'),Buffer.from(JSON.stringify({protocol:'kaspa-explained-token',version:1,name:' Test '})).toString('hex'),Buffer.from(JSON.stringify({protocol:'kaspa-explained-token',version:1,name:'Test',extra:true})).toString('hex')])assert.throws(()=>readTokenNamePayload(payload));
 });

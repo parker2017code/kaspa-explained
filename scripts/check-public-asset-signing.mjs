@@ -33,7 +33,7 @@ async function walletRoundtrip(plan){
 }
 await walletRoundtrip(pay());
 const initial=instantiatePublicToken(sdk,templates.token,{issuer:owners[0],cap:1000,state:{owner:owners[0],quantity:1000,isMinter:true}}),minter=instantiatePublicToken(sdk,templates.token,{issuer:owners[0],cap:1000,state:{owner:owners[0],quantity:900,isMinter:true}}),holder=instantiatePublicToken(sdk,templates.token,{issuer:owners[0],cap:1000,state:{owner:owners[1],quantity:100,isMinter:false}}),buyer=instantiatePublicToken(sdk,templates.token,{issuer:owners[0],cap:1000,state:{owner:owners[2],quantity:100,isMinter:false}});
-const genesis=buildTokenGenesis(sdk,{fundingUtxos:[native(65)],token:initial,cellAmount:50000000n,fee:1000000n,changeAddress:addresses[0]});await walletRoundtrip(genesis);
+const genesis=buildTokenGenesis(sdk,{fundingUtxos:[native(65)],token:initial,tokenName:'Signature fixture',cellAmount:50000000n,fee:1000000n,changeAddress:addresses[0]});await walletRoundtrip(genesis);
 const mint=buildTokenMove(sdk,{tokenInputs:[{utxo:from(genesis),token:initial}],successors:[{token:minter,amount:24500000n},{token:holder,amount:24500000n}],operation:1,fee:1000000n});await walletRoundtrip(mint);
 const exchange=buildTokenExchange(sdk,{sellerToken:{utxo:from(mint,1),token:holder},buyerFundingUtxos:[native(66,1000000000n,2)],buyerToken:buyer,price:8000000n,sellerAddress:addresses[1],buyerChangeAddress:addresses[2],fee:1000000n});await walletRoundtrip(exchange);
 const r=instantiatePublicReceipt(sdk,templates.receipt,{series:'bb'.repeat(32),state:{owner:owners[0],quantity:50000000}}),r2=instantiatePublicReceipt(sdk,templates.receipt,{series:'bb'.repeat(32),state:{owner:owners[1],quantity:50000000}});

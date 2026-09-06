@@ -18,3 +18,15 @@ test('static fallback does not offer inert keyboard buttons',()=>{
   assert.doesNotMatch(html,/tabindex|role="button"/);
   assert.match(html,/Two miners\. Two independent blocks\./);
 });
+
+test('each drawn arrow points from a visible block to its calculated earlier reference',()=>{
+  for(const delay of [0,300,301,800])for(const time of [0,100,400,1200]){
+    const state=networkState(delay,time),html=networkDiagram(state);
+    const edges=[...html.matchAll(/data-from="([A-D])" data-to="([A-D])"/g)].map(match=>`${match[1]}→${match[2]}`);
+    const expected=[];
+    if(state.foundB)expected.push('B→A');
+    if(state.foundC)expected.push(`C→${state.parent}`);
+    if(time>=1200)expected.push(...(state.parallel?['D→B','D→C']:['D→C']));
+    assert.deepEqual(edges,[...expected,...expected]);
+  }
+});

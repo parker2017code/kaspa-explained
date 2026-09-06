@@ -2,6 +2,26 @@
 import {instantiatePublicContract,pushPublicData,publicTransactionMass} from './public-contracts.mjs';
 import {assetSignatureScript,publicAssetPlanMass,preparePublicAssetPlan,signPublicAssetPlan,validatePublicAssetPlan,kaspirePublicAssetSigningRequest,acceptKaspirePublicAssetSignature} from './public-asset-signing.mjs';
 export const TOKEN_NETWORK='testnet-10';
+// This application metadata is public in genesis; it does not declare a token standard.
+export function normalizeTokenName(value){
+ if(typeof value!=='string'||/[\p{Cc}\p{Cf}\p{Cs}]/u.test(value))throw new Error('Use a token name without control characters.');
+ const name=value.normalize('NFC').trim().replace(/\s+/gu,' ');
+ if(!name||Array.from(name).length>40||new TextEncoder().encode(name).length>120)throw new Error('Use a token name of 1–40 characters and at most 120 UTF-8 bytes.');
+ return name;
+}
+export function tokenNamePayload(value){
+ const bytes=new TextEncoder().encode(JSON.stringify({protocol:'kaspa-explained-token',version:1,name:normalizeTokenName(value)}));
+ if(bytes.length>256)throw new Error('Token name metadata is too long.');
+ return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+}
+export function readTokenNamePayload(payload){
+ if(payload==='')return undefined;
+ if(typeof payload!=='string'||payload.length>512||! /^(?:[0-9a-f]{2})+$/.test(payload))throw new Error('Invalid token name payload.');
+ let value;try{value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(payload.match(/../g),b=>Number.parseInt(b,16))));}catch{throw new Error('Invalid token name payload.');}
+ if(!value||value.protocol!=='kaspa-explained-token'||value.version!==1||typeof value.name!=='string'||tokenNamePayload(value.name)!==payload)throw new Error('Unsupported or noncanonical token name payload.');
+ return value.name;
+}
+
 export const pushTokenData=pushPublicData;
 export function instantiatePublicToken(sdk,template,{issuer,cap,state}){const full={issuer,cap,owner:state.owner,quantity:state.quantity,isMinter:state.isMinter};return {...instantiatePublicContract(sdk,template,full),issuer,cap};}
 export const tokenSignatureScript=(token,states,operation,signature,leader=true)=>assetSignatureScript(token,states,operation,null,signature,leader);
@@ -14,7 +34,7 @@ const utxoSpk=utxo=>utxo.entry?.scriptPublicKey??utxo.scriptPublicKey;
 const outpoint=utxo=>utxo.outpoint;
 function input(utxo,computeBudget){if(!utxo||!outpoint(utxo))throw new Error('UTXO reference required.');return {previousOutpoint:outpoint(utxo),signatureScript:'',sequence:0n,sigOpCount:0,computeBudget,utxo};}
 function plainOutput(sdk,address,value){const spk=sdk.payToAddressScript(new sdk.Address(address));if(!address.startsWith('kaspatest:'))throw new Error('Testnet destination required.');return {value:amount(value),scriptPublicKey:spk};}
-function tx(sdk,inputs,outputs){return new sdk.Transaction({version:1,inputs,outputs,lockTime:0n,subnetworkId:'00'.repeat(20),gas:0n,payload:''});}
+function tx(sdk,inputs,outputs,payload=''){return new sdk.Transaction({version:1,inputs,outputs,lockTime:0n,subnetworkId:'00'.repeat(20),gas:0n,payload});}
 function checkValue(inputs,outputs,fee){const total=inputs.reduce((s,u)=>s+amount(u.amount),0n),paid=outputs.reduce((s,o)=>s+amount(o.value),0n);if(total!==paid+fee)throw new Error('Inputs must equal outputs plus the reviewed fee.');}
 function identity(t){return `${t.issuer}:${t.cap}`;}
 function policy(before,after,operation){
@@ -27,14 +47,14 @@ function policy(before,after,operation){
  else if(operation===2){if(b.length!==2||!b[0].isMinter||b[1].isMinter||a.length!==1||!a[0].isMinter||a[0].quantity!==b[0].quantity)throw new Error('Invalid joint burn.');}
  else throw new Error('Unknown operation.');
 }
-function rawbuildTokenGenesis(sdk,{fundingUtxos,token,cellAmount,fee,changeAddress,computeBudget=16}){
+function rawbuildTokenGenesis(sdk,{fundingUtxos,token,cellAmount,fee,changeAddress,computeBudget=16,tokenName}){
  if(!token.state.isMinter||token.state.owner!==token.issuer||token.state.quantity!==token.cap)throw new Error('Genesis must contain one issuer-owned minter at the cap.');
  if(!fundingUtxos.length||fundingUtxos.some(covenantId))throw new Error('Genesis needs plain funding UTXOs.');
  fee=amount(fee);cellAmount=amount(cellAmount);const total=fundingUtxos.reduce((s,u)=>s+amount(u.amount),0n),change=total-cellAmount-fee;if(cellAmount===0n||change<0n)throw new Error('Insufficient genesis funds.');
  const outputs=[{value:cellAmount,scriptPublicKey:sdk.payToScriptHashScript(token.script)}];if(change>0n)outputs.push(plainOutput(sdk,changeAddress,change));
- const transaction=tx(sdk,fundingUtxos.map(u=>input(u,computeBudget)),outputs);transaction.populateGenesisCovenants([{authorizingInput:0,outputs:[0]}]);
+ const payload=tokenName===undefined?'':tokenNamePayload(tokenName),transaction=tx(sdk,fundingUtxos.map(u=>input(u,computeBudget)),outputs,payload);transaction.populateGenesisCovenants([{authorizingInput:0,outputs:[0]}]);
  const id=sdk.covenantId(transaction.inputs[0].previousOutpoint,[{index:0,output:transaction.outputs[0]}]).toString();if(transaction.outputs[0].covenant.covenantId.toString()!==id)throw new Error('Genesis covenant mismatch.');
- const result=plan(sdk,transaction,fee,id,[],[],null,fundingUtxos.map((_,index)=>({index,kind:'native'})));result.genesis={issuer:token.issuer,cap:token.cap,state:token.state};return result;
+ const result=plan(sdk,transaction,fee,id,[],[],null,fundingUtxos.map((_,index)=>({index,kind:'native'})));result.genesis={issuer:token.issuer,cap:token.cap,state:token.state};if(payload)result.tokenName=readTokenNamePayload(payload);return result;
 }
 function rawbuildTokenMove(sdk,{tokenInputs,successors,operation,fundingUtxos=[],payments=[],fee,computeBudget=16}){
  policy(tokenInputs.map(i=>i.token),successors.map(i=>i.token),operation);

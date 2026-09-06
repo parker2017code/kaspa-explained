@@ -1,3 +1,4 @@
+import {transactionFlow} from './flow-diagrams.mjs';
 import {networkDiagram} from './network-diagram.mjs';
 import {mountCoordination} from './coordination.mjs';
 document.querySelectorAll('[data-coordination]').forEach(mountCoordination);
@@ -6,6 +7,7 @@ import {networkState, spendState, miningState, vaultState, transactionState, for
 const all = (selector, root=document) => [...root.querySelectorAll(selector)];
 const one = (selector, root=document) => root.querySelector(selector);
 const set = (root, selector, text) => { const element=one(selector,root); if(element&&element.textContent!==String(text)) element.textContent=text; };
+const htmlIfChanged=(element,html)=>{if(element.dataset.rendered!==html){element.innerHTML=html;element.dataset.rendered=html;}};
 const escaped = value => String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const pressed = (buttons, chosen) => buttons.forEach(button=>button.setAttribute('aria-pressed',String(button===chosen)));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -39,7 +41,7 @@ for(const lab of all('[data-lab]')) {
       text('[data-network-clock]',`${Math.round(time)} ms`);text('[data-network-delay]',`${delay} ms`);text('[data-network-time]',`${Math.round(time)} ms`);
       q('[data-delay]').value=delay;q('[data-delay-number]').value=delay;q('[data-time]').value=time;
       for(const button of all('[data-delay-preset]',lab))button.setAttribute('aria-pressed',String(Number(button.dataset.delayPreset)===delay));
-      for(const [selector,blocks] of [['[data-miner-one]',s.firstKnows],['[data-miner-two]',s.secondKnows]]) q(selector).innerHTML=blocks.map(b=>`<span>${b}</span>`).join('');
+      for(const [selector,blocks] of [['[data-miner-one]',s.firstKnows],['[data-miner-two]',s.secondKnows]]) htmlIfChanged(q(selector),blocks.map(b=>`<span>${b}</span>`).join(''));
       text('[data-miner-one-note]',!s.foundB?'Working from A.':time>=s.receivedC?'Now knows B and C.':'Found B at 100 ms.');
       text('[data-miner-two-note]',!s.foundC?(time>=s.receivedB?'B has arrived. Working from B.':'Working from A.'):(s.parallel?'Found C without knowing B.':'Found C after receiving B.'));
       text('[data-network-decision]',s.foundC?`C references ${s.parent}.`:'C has not been found yet.');
@@ -51,7 +53,7 @@ for(const lab of all('[data-lab]')) {
       inspect();
       for(const [selector,progress,visible] of [['[data-message-b]',s.progressB,s.foundB],['[data-message-c]',1-s.progressC,s.foundC]]) {q(selector).style.setProperty('--position',progress);q(selector).style.visibility=visible?'visible':'hidden';}
       q('[data-network-messages]').setAttribute('aria-label',`B ${time>=s.receivedB?'received by miner 2':s.foundB?'in transit':'not found'}. C ${time>=s.receivedC?'received by miner 1':s.foundC?'in transit':'not found'}.`);
-      q('[data-network-events]').innerHTML=s.events.map(e=>`<tr${e.time>time?' class="future-event"':''}><td>${e.time} ms</td><td>${e.event}</td></tr>`).join('');
+      htmlIfChanged(q('[data-network-events]'),s.events.map(e=>`<tr${e.time>time?' class="future-event"':''}><td>${e.time} ms</td><td>${e.event}</td></tr>`).join(''));
     };
     q('[data-dag-result]').addEventListener('click',event=>{const block=event.target.closest('[data-block]');if(!block)return;interacted=true;stop();selected=block.dataset.block;inspect();for(const other of all('[data-block]',lab))other.setAttribute('aria-pressed',String(other.dataset.block===selected));});
     q('[data-dag-result]').addEventListener('keydown',event=>{const block=event.target.closest('[data-block]');if(block&&['Enter',' '].includes(event.key)){event.preventDefault();block.dispatchEvent(new MouseEvent('click',{bubbles:true}));}});
@@ -65,12 +67,12 @@ for(const lab of all('[data-lab]')) {
     q('[data-network-replay]').addEventListener('click',()=>{
       if(frame){stop();return;}
       if(reduced.matches){time=1200;render();return;}
-      time=0;const start=performance.now();text('[data-network-replay]','Pause');
-      const tick=now=>{time=Math.min(1200,(now-start)/5);render();if(time<1200)frame=requestAnimationFrame(tick);else stop();};
+      time=0;const start=performance.now();let last=0;text('[data-network-replay]','Pause');
+      const tick=now=>{time=Math.min(1200,(now-start)/5);if(now-last>=60||time===1200){render();last=now;}if(time<1200)frame=requestAnimationFrame(tick);else stop();};
       frame=requestAnimationFrame(tick);
     });
     const playAutomatically=()=>{
-      if(frame||reduced.matches||interacted||document.hidden)return;
+      if(frame||reduced.matches||interacted||document.hidden||matchMedia('(pointer:coarse)').matches||navigator.connection?.saveData)return;
       const start=performance.now();text('[data-network-replay]','Pause');let last=0;
       const tick=now=>{if(now-last>60){last=now;time=Math.min(1200,(now-start)/5);render();}if(time<1200)frame=requestAnimationFrame(tick);else{interacted=true;stop();}};frame=requestAnimationFrame(tick);
     };
@@ -105,7 +107,7 @@ for(const lab of all('[data-lab]')) {
   if(lab.dataset.lab==='transaction') q('[data-payment-amount]').addEventListener('input',event=>{
     const s=transactionState(event.target.value);text('[data-tx-amount]',formatKas(s.paid));text('[data-tx-payment]',formatKas(s.paid));text('[data-tx-change]',s.valid?formatKas(s.change):'Insufficient input');
     text('[data-tx-answer]',s.valid?'Payment, change, and fee use the entire input. Change creates another spendable output for the sender.':'The requested payment leaves nothing for the fee. This transaction cannot be constructed from this input.');
-    lab.dataset.valid=String(s.valid);
+    lab.dataset.valid=String(s.valid);q('[data-value-flow]').innerHTML=transactionFlow(s);
   });
 }
 

@@ -4,7 +4,7 @@ import {mkdir,readFile,writeFile,copyFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {resolve} from 'node:path';
 import assert from 'node:assert/strict';
-import {instantiatePublicToken,buildTokenGenesis,buildTokenMove,buildTokenExchange,signTokenPlan as protectedSignTokenPlan,tokenSignatureScript,tokenConsensusMass,TOKEN_NETWORK} from '../src/public-token.mjs';
+import {instantiatePublicToken,buildTokenGenesis,buildTokenMove,buildTokenExchange,signTokenPlan as protectedSignTokenPlan,tokenSignatureScript,tokenConsensusMass,tokenNamePayload,TOKEN_NETWORK} from '../src/public-token.mjs';
 import {pushPublicData} from '../src/public-contracts.mjs';
 const require=createRequire(import.meta.url),sdk=require('../.cache/upstream/kaspa-wasm32-sdk/nodejs/kaspa');
 const publicTemplate=JSON.parse(await readFile(new URL('../.cache/public-templates/templates.json',import.meta.url),'utf8')).templates.token;
@@ -21,7 +21,7 @@ const funding=(tag,value,owner=0)=>utxo(tag.toString(16).padStart(2,'0').repeat(
 const from=(p,index)=>{const o=p.transaction.outputs[index];return utxo(p.transaction.id,index,o.value,o.scriptPublicKey,o.covenant?.covenantId.toString());};
 const fixtures=[];
 function exportTransaction(transaction){
- return {version:transaction.version,lockTime:String(transaction.lockTime),storageMass:String(transaction.storageMass),
+ return {version:transaction.version,payload:transaction.payload,lockTime:String(transaction.lockTime),storageMass:String(transaction.storageMass),
  inputs:transaction.inputs.map(i=>({transactionId:i.previousOutpoint.transactionId,index:i.previousOutpoint.index,sequence:String(i.sequence),computeBudget:i.computeBudget,signatureScript:i.signatureScript,amount:String(i.utxo.amount),scriptPublicKey:i.utxo.entry.scriptPublicKey.script,covenantId:i.utxo.entry.covenantId?.toString()??null})),
  outputs:transaction.outputs.map(o=>({value:String(o.value),scriptPublicKey:o.scriptPublicKey.script,covenant:o.covenant?{authorizingInput:o.covenant.authorizingInput,covenantId:o.covenant.covenantId.toString()}:null}))};
 }
@@ -43,6 +43,9 @@ async function signed(name,p,{valid=true,wrongIndex=-1,mutateAfter=null}={}){
 await mkdir(resolve(root,'.cache/public-token-fixtures'),{recursive:true});
 const initial=await token(0,1000,true),minter=await token(0,900,true),holder=await token(1,100),recipient=await token(2,100),splitA=await token(1,40),splitB=await token(2,60);
 const genesis=await signed('genesis',buildTokenGenesis(sdk,{fundingUtxos:[funding(10,100000000n)],token:initial,cellAmount:30000000n,changeAddress:addresses[0]}));
+const namedGenesisFactory=()=>buildTokenGenesis(sdk,{fundingUtxos:[funding(14,100000000n)],token:initial,tokenName:'Café garden',cellAmount:30000000n,changeAddress:addresses[0]});
+await signed('named-genesis',namedGenesisFactory());
+await signed('reject-signed-genesis-name-change',namedGenesisFactory(),{valid:false,mutateAfter:t=>{t.payload=tokenNamePayload('Other garden');}});
 const mintFactory=()=>buildTokenMove(sdk,{tokenInputs:[{utxo:from(genesis,0),token:initial}],successors:[{token:minter,amount:15000000n},{token:holder,amount:15000000n}],operation:1});
 const minted=await signed('mint',mintFactory());
 const transferFactory=()=>buildTokenMove(sdk,{tokenInputs:[{utxo:from(minted,1),token:holder}],successors:[{token:recipient,amount:from(minted,1).amount}],operation:0});

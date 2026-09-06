@@ -43,3 +43,47 @@ The funded run exposed stale “Checking…” messages after completed balance/
 Final current-build, read-only responsive checks are recorded in `.cache/visual-review/guided-final/report.json`. Production-origin faucet funding and the complete online user journey require a separate post-deployment run; local node success does not establish them.
 
 The final read-only pass covered **60 states**: all six completed scenarios at 320, 390, 768, 1024 and 1440 pixels in both themes. It restored the actual encrypted QA session, rechecked accepted-chain history, and made no faucet request or transaction. No exception, download or horizontal overflow occurred. Visual review found that older token observation flags had not been rechecked after restoring a session whose latest transaction was a receipt. Asset history refresh now rechecks those saved records; the completed-token guide survived restoration in the repeated 60-state pass. Narrow token, phone escrow and tablet receipt views were visually inspected. Source is frozen for deployment and the separate online journey.
+
+## Deployed public run — completed
+
+The deployed `85414b4` site at https://kaspaexplained.com/applications completed all six scenarios with a fresh visitor wallet and the actual **Get 10 test coins** faucet button. The faucet request `1cf5223b-061a-4e49-b0aa-3a2b5a3f04ae` returned transaction `8b6b70dd079091068953253edbda832a7c134474aa15ecb361ebe7d7f8640842` to `kaspatest:qr3gdawdegmt2krqnyx9sjdzsqlhchlxgl03vxkyypx0xzvdfyueus57h7zgz`. The browser automatically verified exact output 0 for 10 tKAS before any application spend.
+
+All **13 application transactions** were found in accepted-chain history, independently rechecked at 2026-09-06T17:46:36.613Z. Automatic polling advanced each scenario without a manual Check or Refresh click. There were no observed browser runtime errors or download events. All six forbidden-action examples were blocked locally before signing; no invalid node broadcast is claimed.
+
+A session interruption occurred after receipt creation. With explicit user approval, the same disposable test wallet was restored from its private encrypted QA recovery. Restoration automatically rechecked history; no faucet request or receipt creation was repeated. The receipt's claim-reduction challenge and full redemption then completed, and returning to Token still showed “Token scenario complete”.
+
+Fees were **0.230499 tKAS**. Final balances: Main **9.083607**, Second **0.19719**, Third **0**; token contracts retain **0.488704 tKAS**. These plus fees reconcile exactly to 10 tKAS. Receipt backing was fully redeemed. This is a current node observation, not a finality guarantee or security audit.
+
+| Scenario / action | Transaction ID | Fee (tKAS) | Accepting block |
+| --- | --- | ---: | --- |
+| escrow / fund | `a565693c4095539060a38982529323f875f87d0058e19fa4b99083203e651071` | 0.002659 | `3450f7ece0f7aafc0948e1d2e13505ac04e68067d2b991bec809add0b4ea1625` |
+| escrow / release | `5af91adbf6e3e00d2ece7aac1f2ae359c87a30913b1cfb7594c7ff4538f9bdf0` | 0.002810 | `c7c20827068b1ef11b4fa1d6d0d7a316eef3af61dc937b7a38b1882b3978e973` |
+| treasury / fund | `2ac5adc2418dfc3092e29bbd8ffcd3dea79f6b72def090fc6660ccb9d5abdbc0` | 0.002659 | `8e906cccf3385b92a3229234102fdec23a32e6e63353276e23f6d706f8d061d8` |
+| treasury / spend | `c28827e674ee905a40b157c2dfa5911df6ffde9b4e4ca033b3f96a6c269b03d4` | 0.003462 | `92eb8c4d1977bde8bd223a9a95c0917bd8879cf11c143a270e9c21fd0a829958` |
+| prediction / fund | `21db56a19344a00e54e47c37495fed580f8a67f51d43963dc5c6ed136d1c209f` | 0.004379 | `d126765fdd9c4da965c358db1fbf45103c1eddfb8296a6d69b913f2f9c49cc03` |
+| prediction / settle | `bdf085cd645af3e0ec0fe2b1008e8e454ee9a870350440f920ce1bb112c1a294` | 0.003527 | `4106f25ae9eb1ad149edb4b7152baf8b01df097021aa1b5e06eaf070e2fec16c` |
+| proof / fund | `c381b1c84034efb487542de489a2c9eea5decb7e70f9ccf0f1894759a56b617f` | 0.004379 | `b4300caaebc81aaea5405b5a8af587037e13a66b8a68e5847dee61dc29855f08` |
+| proof / verify | `bfd6be03d6a054558a70ca688b7ff019109072d9e238116d8a8c65b2ebb8241d` | 0.181539 | `e3e67077289f12242779ff0dc87e6488c88df61dc34a8c9d40866b7585bb337d` |
+| token / create | `4cf27d570baeca986db1a9ca2931f9e4694a8776e19ab2841c15101e3fcd9c25` | 0.004413 | `1d891718f6a8d3fcd1d9045745a704b450296709ee1ae968365f2cf2ba88891e` |
+| token / mint | `4087ae0c1635b308116b45e5b857a4cf13d2234099d7b1f75f9e4d65fcedab4d` | 0.005816 | `d9169c230ec36a6e1e67e290d5341a49f379c669c38499ec71e0f10c0b005548` |
+| token / move | `861e265aa43c7aeff30d9e42cb1765ab2e49bb012a3069b8dddce787829fb9c7` | 0.005480 | `73c8cfcc19c73b5573061d51e9632369fb12e573c9880ebf0a86e004c6418598` |
+| receipt / create | `b8c818fdc6ea9a2572d0d420e4f402f6c26a8fdf827af081e1d5c02b5f24bf55` | 0.002693 | `90382a93d504503e59dd575a329824ce4719334c7dc15432ab1493eb097233cb` |
+| receipt / redeem-full | `913ab06861d53563b477f27b35661ae87695e7b6c08b97c17e299ba5bbba2578` | 0.006683 | `a6808356a8e8e7ba79e73c478fbe3c2d843bdf470503df9167be3507bf20a272` |
+
+Public evidence: `.cache/online-guided-transaction-evidence.json`, `.cache/online-guided-acceptance-evidence.json`; screenshots `.cache/online-guided-token-rule.png`, `.cache/online-guided-receipt-rule.png`, `.cache/online-guided-token-complete.png`, and `.cache/online-guided-receipt-complete.png`. Private encrypted recovery artifacts are not published.
+
+## V3 named token — actual Testnet-10 predeployment verification
+
+The local V3 browser created **Garden test token**, issued 100 units, rejected the extra-unit construction locally, and transferred those 100 units. All three transactions were accepted automatically. No additional faucet claim was made: this used the existing approved disposable test wallet, with freshly queried spendable outputs. Fees total **0.015784 tKAS**.
+
+A separate read-only public-node `getBlocks` request retrieved the genesis transaction from block `d1092f75b277788ef65c1de6dc17de33a07a6fb78b3a7e818a6ade1fdbdcbeda` and decoded its actual payload as `{"protocol":"kaspa-explained-token","version":1,"name":"Garden test token"}`. This verification used the network-returned transaction rather than the local journal. The accepting block and containing block differ in Kaspa's DAG; both identifiers are recorded here intentionally.
+
+The name and completed holdings survived an actual optional encrypted backup download and restoration in a fresh browser context. No browser runtime errors occurred. Imported names remain withheld until their exact genesis transaction is reobserved in accepted-chain history. Existing unnamed archives remain supported. Names are application metadata, not a claim of KCC standard compatibility; the covenant ABI is unchanged.
+
+| Action | Transaction ID | Fee (tKAS) | Accepting block |
+| --- | --- | ---: | --- |
+| create | `e9c2c81ed312a2d9c53febdf73905cba70eb74e20cdf5191943782e2236b0e7e` | 0.004488 | `c9035d7c5e7a250297be7d42bf0c73314bda1e5717cde26687f37c507ec546a4` |
+| mint | `a59a7bb44b90330c558514725e719831b4731fe161f6a92ad19696a9dfad98ec` | 0.005816 | `a07b68c8fc0c16200bd8d62ff31c81babb1437428691211f256b3168b8c59e31` |
+| move | `b39592105e8bbb00ec3b2b022966ddfa42b6af30571adc74abf0841efa64874e` | 0.005480 | `8805355d4d7d7f7d5a891995d6ffa4308f48ac729526c6b956e09119627c66c7` |
+
+Evidence: `.cache/named-token-transaction-evidence.json`, `.cache/named-token-acceptance-evidence.json`, `.cache/named-token-public-payload.json`, `.cache/named-token-browser-evidence.json`, and `.cache/named-token-restored-phone.png`. This subsection verifies the predeployment build against the real network; a separate deployed V3 run will follow.
