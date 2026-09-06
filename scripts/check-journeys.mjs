@@ -46,6 +46,14 @@ try{
   }}finally{await browser.close();}
  }
  const browser=await chromium.launch(),page=await browser.newPage({viewport:{width:1280,height:900}});
- try{await page.goto(base+'/');await page.waitForFunction(()=>document.querySelector('[data-time]').value==='1200');assert.equal(await page.locator('[data-network-replay]').textContent(),'Watch it happen');await page.waitForTimeout(900);assert.equal(await page.locator('[data-time]').inputValue(),'1200');results.push({engine:'chromium',autoplay:'completed once and stopped'});}finally{await browser.close();}
+ try{await page.goto(base+'/');await page.waitForFunction(()=>document.querySelector('[data-time]').value==='1200');assert.equal(await page.locator('[data-network-replay]').textContent(),'Watch it happen');await page.waitForTimeout(900);assert.equal(await page.locator('[data-time]').inputValue(),'1200');results.push({engine:'chromium',autoplay:'completed once and stopped'});
+  // Reproduce the fractional boundary exactly: range inputs round to their step.
+  const boundary=await browser.newPage({viewport:{width:1280,height:900}});
+  await boundary.addInitScript(()=>{let id=0;const frames=new Map();Object.defineProperty(performance,'now',{value:()=>0});window.requestAnimationFrame=callback=>{frames.set(++id,callback);return id;};window.cancelAnimationFrame=key=>frames.delete(key);window.runTestFrame=now=>{const pending=[...frames.values()];frames.clear();for(const callback of pending)callback(now);};});
+  await boundary.goto(base+'/');await boundary.waitForFunction(()=>document.querySelector('[data-network-replay]')?.textContent==='Pause',null,{polling:20});
+  await boundary.evaluate(()=>window.runTestFrame(5997.5));assert.equal(await boundary.locator('[data-time]').inputValue(),'1199');assert.equal(await boundary.locator('[data-network-replay]').textContent(),'Pause');
+  await boundary.evaluate(()=>window.runTestFrame(6060));assert.equal(await boundary.locator('[data-time]').inputValue(),'1200');assert.equal(await boundary.locator('[data-network-replay]').textContent(),'Watch it happen');
+  results.push({engine:'chromium',autoplay:'fractional end boundary stays in progress until completion'});
+ }finally{await browser.close();}
 }finally{await new Promise(r=>server.close(r));await mkdir('.cache/visual-review',{recursive:true});await writeFile('.cache/visual-review/journeys.json',JSON.stringify({checked:new Date().toISOString(),results},null,2));}
 console.log(JSON.stringify(results,null,2));if(results.some(r=>r.unavailable))process.exitCode=1;

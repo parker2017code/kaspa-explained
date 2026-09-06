@@ -68,13 +68,13 @@ for(const lab of all('[data-lab]')) {
       if(frame){stop();return;}
       if(reduced.matches){time=1200;render();return;}
       time=0;const start=performance.now();let last=0;text('[data-network-replay]','Pause');
-      const tick=now=>{time=Math.min(1200,(now-start)/5);if(now-last>=60||time===1200){render();last=now;}if(time<1200)frame=requestAnimationFrame(tick);else stop();};
+      const tick=now=>{time=Math.min(1200,Math.floor((now-start)/5));if(now-last>=60||time===1200){render();last=now;}if(time<1200)frame=requestAnimationFrame(tick);else stop();};
       frame=requestAnimationFrame(tick);
     });
     const playAutomatically=()=>{
       if(frame||reduced.matches||interacted||document.hidden||matchMedia('(pointer:coarse)').matches||navigator.connection?.saveData)return;
       const start=performance.now();text('[data-network-replay]','Pause');let last=0;
-      const tick=now=>{if(now-last>60){last=now;time=Math.min(1200,(now-start)/5);render();}if(time<1200)frame=requestAnimationFrame(tick);else{interacted=true;stop();}};frame=requestAnimationFrame(tick);
+      const tick=now=>{if(now-last>60){last=now;time=Math.min(1200,Math.floor((now-start)/5));render();}if(time<1200)frame=requestAnimationFrame(tick);else{interacted=true;stop();}};frame=requestAnimationFrame(tick);
     };
     new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();else playAutomatically();},{threshold:.15}).observe(lab);
     document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});

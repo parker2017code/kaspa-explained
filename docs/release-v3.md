@@ -39,6 +39,9 @@ Full transaction and recovery evidence is recorded in
 
 The sticky header is opaque, touch devices do not start automatic network
 replay, explicit replay is throttled, and unchanged timeline rows are reused.
+Playback advances in whole milliseconds so its range control cannot round to
+the final value before playback actually stops. The publication gate exposed
+that fractional-time race; an exact boundary regression test now covers it.
 Chromium with 6× CPU slowdown measured guided handlers at 2.3–16.8 ms; WebKit
 phone emulation measured 1–5 ms. No repeated idle rendering was observed.
 One 70 ms initial home load task occurred in the throttled Chromium run.
