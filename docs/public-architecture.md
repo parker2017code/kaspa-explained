@@ -1,9 +1,12 @@
 # Public Testnet-10 applications
 
-The public V2 app is deployed at https://kaspaexplained.com from revision
+The earlier public V2 app was deployed at https://kaspaexplained.com from revision
 `4695529` (September 6, 2026). The live artifact matched all 138 expected files;
 96 live Chromium/WebKit recovery and layout states passed. Detailed release
-and verification evidence is in [the V2 notes](release-v2.md).
+and verification evidence is in [the V2 notes](release-v2.md). The guided
+automatic-session changes described below are source changes awaiting their
+separate website deployment confirmation. The dedicated faucet is deployed;
+its first online claim remains unverified in [the faucet notes](faucet.md).
 
 The deployed app needs static artifacts and the pinned browser SDK. It does not
 need the workshop signer, its files, or a public native compiler endpoint.
@@ -223,21 +226,41 @@ The build also emits 87 compatibility redirects; these are not canonical pages.
 
 ## Recovery and observation boundaries
 
-The public UI generates three disposable Testnet-10 keys. It encrypts all
-three keys and session state with AES-256-GCM, a fresh salt and IV, and
-PBKDF2-SHA256 with 250,000 iterations. A recovery password must contain at
-least 12 characters. Only the encrypted envelope enters local storage or the
-downloaded recovery file. Browser code still holds unlocked keys in memory;
-this is not a hardware-wallet security boundary. Lost password and recovery
-material cannot be reconstructed by the site operator.
+The public UI generates three disposable Testnet-10 keys. It encrypts the keys
+and session with AES-256-GCM, a fresh salt and IV, and PBKDF2-SHA256 with
+250,000 iterations. A fresh session automatically stores its random recovery
+secret and encrypted envelope in the tab's sessionStorage. Reload can restore
+that tab; closing or clearing it can lose access. Both materials are available
+to same-origin scripts, so this is not protection against XSS or compromised
+page code. Unlocked signing keys also remain in memory.
 
-A signed transaction and its checkpoint are persisted before submission.
-The user saves the signed recovery download before submitting. Failed local
-persistence blocks submission. An uncertain transaction blocks new actions;
-recovery rebuilds and resubmits the identical transaction rather than creating
-a replacement spend. Restore validates each holding against an exact signed
-journal output and clears saved acceptance flags. The node must be checked
-again; an old backup cannot establish current acceptance or current holdings.
+An optional file export uses a user-selected password of at least 12
+characters. Export is not a prerequisite for the guided flow. Existing manual
+recovery imports remain supported; the operator cannot reconstruct a lost
+visitor password or recovery file.
+
+Each guided action displays its purpose, principal and fee cap. By default,
+that action builds, validates, signs, persists and submits one transaction.
+Optional manual review exposes the exact transaction before submission. The
+signed transaction and checkpoint are saved before any broadcast; failed
+persistence blocks submission. Uncertain transactions block conflicting new
+actions. Recovery reproduces the identical signed bytes, not a replacement
+spend. Restored holdings are checked against exact signed journal outputs,
+and saved acceptance must be observed again at the node.
+
+The six guided scenarios cover escrow, a shared treasury, prediction, proof
+payout, a capped token and a fully backed receipt. Invalid examples are
+identified as local checks before signing; they do not claim a node rejected a
+transaction that was never sent. Token and receipt examples use the actual
+builder's conservation checks. Busy navigation queues the selected scenario
+until the running action finishes, preserving the transaction's original
+scenario and journal. Advanced payment and asset actions remain available.
+
+The optional funding step calls a separate service with only the public
+recipient address and request ID. It requests a fixed 10 tKAS payout; it does
+not send the visitor's keys or an arbitrary transaction to a signer. The
+faucet's dedicated key, spending bounds, retry behavior and deployment evidence
+are described in [faucet.md](faucet.md).
 
 A returned transaction ID proves only the node's submission response. The UI
 separately checks exact unspent outputs and accepted-chain history. History
@@ -256,7 +279,9 @@ The public entry point `src/public-apps.mjs` connects directly to
 `wss://muon-10.kaspa.blue/kaspa/testnet-10/wrpc/borsh`. This avoids SDK resolver
 cross-origin probe errors observed in WebKit. Page hide disconnects the active
 RPC client; failed connection remains visible and users can retry the create or
-restore action. There is no CORS proxy, local API or hidden offline fallback.
+restore action. Application transactions use direct RPC without a local API
+or hidden offline fallback. The separate faucet is an explicit external funding
+service, not a proxy for application signing.
 `scripts/check-public-browser.mjs` accepts `chromium`, `firefox`, or `webkit`
 (default Chromium); each engine saves its own evidence under
 `.cache/visual-review/public-browser/`. Its disposable recovery envelope is

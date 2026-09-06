@@ -6,10 +6,14 @@ applications. Source revision `4695529` was deployed September 6, 2026; the
 standalone educational V1 build remains available from the same source.
 
 V2 packages sixteen canonical pages and 87 compatibility routes. Its browser
-application generates disposable test accounts, encrypts recovery locally,
+application generates disposable test accounts, encrypts recovery in the browser,
 and connects directly to Testnet-10. Visitors can try native payments, escrow,
 threshold treasury, prediction payouts, a fixed proof, capped tokens and fully
-backed native receipts. No public signing server or compiler endpoint is needed.
+backed native receipts. Application transactions need no public signing server or compiler endpoint.
+The new guided source flow adds automatic disposable-session recovery and an
+optional fixed-amount external testnet faucet; see [faucet operations](docs/faucet.md).
+The faucet is deployed, but its first public claim and the guided website
+redeployment have not yet been verified in this record.
 These examples are unaudited and are not intended for mainnet.
 
 ## Preview the education site

@@ -1,5 +1,5 @@
 export const moneyPage={file:'money.html',title:'How programmable money works',description:'Explore redemption, collateral, and conditional payouts. See what code enforces and where people still matter.',body:`
-<div class="page-intro money-intro"><p class="eyebrow">Money mechanics</p><h1>Backing, borrowing, and payouts</h1><p class="lead">See what backs a token and who gets paid.</p></div>
+<div class="page-intro money-intro"><p class="eyebrow">Money mechanics</p><h1>Follow the money.</h1><p class="lead">Redeem a token for dollars, borrow against coins or pay the winning side of a prediction. Walk through each promise to see where the money comes from and what can stop a payout.</p></div>
 <p class="model-note money-boundary">Educational models with imaginary balances. No funds are involved.</p>
 <section class="workshop money-workspace" data-money>
 <div class="workshop-toolbar"><div class="scene-tabs" role="group" aria-label="Money mechanism"><button data-money-view="reserves" aria-pressed="true">Redeem a token</button><button data-money-view="collateral" aria-pressed="false">Borrow against coins</button><button data-money-view="outcome" aria-pressed="false">Settle a prediction</button></div></div>

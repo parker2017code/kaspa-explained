@@ -36,9 +36,10 @@ jobs:
           node scripts/build-public-templates.mjs
           npm run check
           npm run check:public
+          npm run check:faucet
 
       - name: Verify standalone V1 artifact
-        run: npm run check:v1
+        run: npm run check:v1 && npm run check:guided
 
       - name: Check responsive rendered pages
         run: npm run check:render
