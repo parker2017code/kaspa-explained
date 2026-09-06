@@ -1,21 +1,4 @@
 #!/usr/bin/env bash
-# Reproduce CI before a push leaves the machine.
-#
-# This runs scripts/check-clean-clone.sh: a real `git clone` of HEAD into an
-# isolated temp directory, with the full publish gate run there. It belongs
-# at push time, not on every commit, because it is slow (a full clone plus
-# the entire gate, including Node audits and a Playwright-backed render
-# check when available) and because push happens far less often than
-# commit. The pre-commit hook (.githooks/pre-commit) already checks each
-# commit's staged tree cheaply and catches the staged-vs-working-tree
-# desync class of bug on its own; this hook is the belt-and-suspenders
-# check against whatever is actually reachable from HEAD right before it
-# becomes visible to CI.
-#
-# Skip with: git push --no-verify   (for a genuine emergency only)
 set -euo pipefail
-
-repo_root="$(git rev-parse --show-toplevel)"
-cd "$repo_root"
-
-bash scripts/check-clean-clone.sh
+cd "$(git rev-parse --show-toplevel)"
+bash scripts/check-git-tree.sh head
