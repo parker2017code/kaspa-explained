@@ -9,18 +9,18 @@ const intro = (eyebrow, title, lead) => `<div class="page-intro intro-${eyebrow.
 export const pages = [
   {
     file:'index.html', title:'Kaspa Explained', description:'Explore how Kaspa payments, parallel blocks, and spending rules work through interactive explanations.',
-    body: `<div class="home-introduction"><p class="eyebrow">Kaspa Explained</p><h1>Money moves.<br>Who agrees?</h1><p>You send a payment. An open network has to agree.<br>Kaspa lets miners contribute work in parallel.</p><a href="#first-look">See how it works <span aria-hidden="true">↓</span></a></div>
+    body: `<div class="home-introduction"><p class="eyebrow">Kaspa Explained</p><h1>Send money.<br>Let the network verify it.</h1><p>Kaspa is a payment network secured by proof of work.<br>Miners can contribute blocks in parallel.</p><a href="#first-look">See how it works <span aria-hidden="true">↓</span></a></div>
       <div id="first-look" class="home-demonstration">${network({introductory:true})}</div>
       <div class="under-experiment">${link('Follow the blocks and the information between them', '/what-is-kaspa')}</div>
-      ${section('explore','What would you like to understand?',routes([
+      ${section('explore','Explore Kaspa',routes([
         ['How the network agrees','Change what miners know. See why parallel blocks happen.','/what-is-kaspa'],
         ['Using KAS','Wallets, sending, receiving, and reading a transaction.','/why-kaspa-matters'],
         ['The tradeoffs','Security assumptions, mining concentration, and what speed does not solve.','/skeptical-case'],
         ['Building on Kaspa','Follow a spending rule and find the tools that implement it.','/build-on-kaspa'],
       ]))}
-      <section class="home-payment"><div class="home-feature-heading"><p class="eyebrow">Sending KAS</p><h2>Where does your<br>payment go?</h2><p>Follow it from your wallet to the recipient. See why being in a block is only part of the story.</p></div>${payment()}<a class="home-feature-link" href="/why-kaspa-matters">Wallets, fees, and checking a payment <span aria-hidden="true">↗</span></a></section>
-      <section class="playground-invitation"><div><p class="eyebrow">The playground</p><h2>What happens if…?</h2></div><div><p>Slow the network. Spend the same money twice. Change a miner’s share. See which rules still hold.</p><a class="primary-button" href="/playground">Try it yourself <span aria-hidden="true">↗</span></a></div></section>
-      ${section('references','Keep exploring.',routes([
+      <section class="home-payment"><div class="home-feature-heading"><p class="eyebrow">Sending KAS</p><h2>From wallet<br>to recipient</h2><p>Track submission, inclusion, and acceptance. Each describes a different stage of a payment.</p></div>${payment()}<a class="home-feature-link" href="/why-kaspa-matters">Wallets, fees, and checking a payment <span aria-hidden="true">↗</span></a></section>
+      <section class="playground-invitation"><div><p class="eyebrow">The playground</p><h2>Test the network’s rules</h2></div><div><p>Slow the network. Spend the same money twice. Change a miner’s share. See which rules still hold.</p><a class="primary-button" href="/playground">Try it yourself <span aria-hidden="true">↗</span></a></div></section>
+      ${section('references','Status and history',routes([
         ['What is live today?','A dated view of the network, proposals, and tools.','/status'],
         ['Where Kaspa came from','The research, launch, and implementation changes.','/kaspa-origin-story'],
       ]))}`,
@@ -34,13 +34,13 @@ export const pages = [
         ['News arrives too late','<p>Miner 2 finds C without knowing B. Both blocks reference A. They are parallel, even though both miners followed the rules.</p>'],
         ['A later block connects them','<p>Once a miner receives both branches, a later block can reference both. A chain selects a branch; Kaspa represents parallel work in a blockDAG.</p>'],
       ]) + detail('Inspect GHOSTDAG’s selection and ordering', `<p>GHOSTDAG chooses the parent with the greatest accumulated blue work, with hash tie-breaks. It classifies newly joined blocks using the parameter k: the blue set permits a bounded number of mutually unrelated blocks.</p><p>Blue and red are graph classifications, not labels for honest and dishonest miners. The implementation orders each merge set from its selected parent, then merges the other blocks by blue work and hash. Arrival order is not the ordering rule.</p><p>${source('paper')} · ${link('Parent selection and classification','https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/ghostdag/protocol.rs')} · ${link('Merge-set ordering','https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/model/stores/ghostdag.rs')}</p>`))}
-      ${section('work','The work commits to a choice.',rows([
+      ${section('work','Proof of work commits to block contents',rows([
         ['Choose transactions','<p>A miner prepares a candidate block. Its contents are committed through the block header used in the work calculation.</p>'],
         ['Search for valid work','<p>The miner tries work calculations until it finds a result that satisfies the target. Changing the committed contents requires searching against a different header.</p>'],
         ['Let other nodes check','<p>Nodes verify the work and the consensus rules. Frequent discoveries let work accumulate over short intervals. They sample hashpower, not a count of independent people.</p>'],
       ]) + `<p>Parallel blocks let the network represent contributions that arrive before miners have heard from one another. They do not remove communication delay or make each discovery a complete round of agreement. ${source('paper')}</p>`)}
       ${section('conflicts','Both blocks can stay.<br>The same money cannot be spent twice.',spend(), 'Once blocks are ordered, nodes still check each transaction against the ledger.')}
-      ${section('confirmation','Included is not the same as settled.',payment()+rows([
+      ${section('confirmation','Inclusion, acceptance, and confidence',payment()+rows([
         ['Inclusion','<p>A transaction appears inside a block. This alone does not establish that it was accepted.</p>'],
         ['Acceptance','<p>The transaction is accepted in the current agreed history. Applications must still handle changes near the tips.</p>'],
         ['Confidence','<p>Additional honest work makes replacing history more demanding under the security assumptions. The recipient chooses a policy appropriate to the payment.</p>'],
@@ -52,12 +52,12 @@ export const pages = [
     file:'why-kaspa-matters.html', title:'Using KAS', description:'Understand wallets, payment outputs, fees, change, and what a transaction explorer can establish.',
     body:`${intro('Use KAS','Follow your payment.','A wallet manages the keys that authorize spending. The network records spendable outputs and checks the transactions that use them.')}
       ${section('amounts','Where your payment, change, and fee go.',transaction(), 'A transaction consumes earlier outputs and creates new ones. Payment, change, and fees account for the input value.')}
-      ${section('wallets','Start with who controls the keys.',rows([
+      ${section('wallets','Who controls the keys?',rows([
         ['Your own wallet','<p>You control the keys and their backup. Losing them can mean losing access. Never share a recovery phrase with a person, website, or explorer.</p>'],
         ['An exchange account','<p>The provider controls the keys. Your account balance is a claim on that provider, with its own withdrawal rules and risks.</p>'],
       ]) + `<p>${source('wallet')} · ${link('Wallet integration documentation','https://docs.kaspa.org/integrate/wallet')}</p>`)}
       ${section('using-kas','Receive. Send. Verify.',walletLesson(), 'Try the three actions that make up a payment.')}
-      ${section('inspect','Read a transaction without guessing.',inspector(), 'A public explorer reports its provider’s view. Check amounts and acceptance, and notice which information is missing.')}
+      ${section('inspect','Read a transaction',inspector(), 'A public explorer reports its provider’s view. Check amounts and acceptance, and notice which information is missing.')}
       ${detail('What these fields establish', '<p>Inputs refer to earlier outputs. Outputs specify amounts and spending destinations. An accepting-block identifier is different from the list of blocks containing the transaction.</p><p>An address does not establish a person’s identity. Output fields alone do not identify which output is a payment and which is change. A block timestamp does not establish when the sender pressed Send.</p><p>Fees are calculated only when all referenced input values and output values are available. Missing data is shown as unavailable, never zero.</p>')}
       ${section('problems','If something looks wrong',rows([
         ['Not found','<p>Check the transaction ID and network. The provider may be delayed, unavailable, or missing the record.</p>'],
@@ -68,14 +68,14 @@ export const pages = [
   {
     file:'skeptical-case.html', title:'Kaspa’s tradeoffs and risks', description:'Inspect Kaspa’s security assumptions, operating costs, and unresolved questions without price predictions.',
     body:`${intro('Evaluate','What does the design cost?' ,'Parallel blocks address one problem: useful work arriving concurrently. They do not remove the other requirements of a payment network.')}
-      ${section('tradeoffs','Every design makes a trade.',tradeoffComparison())}
+      ${section('tradeoffs','Security and operating costs',tradeoffComparison())}
       ${section('security','What must keep working',rows([
         ['Consensus assumptions','<p>The security argument depends on honest work and network conditions. A diagram that converges is not proof that all adversarial cases converge safely.</p>'],
         ['Operational reliability','<p>Software bugs, outages, connectivity failures, and concentrated infrastructure remain possible. Examine incidents and recovery, not just a target block rate.</p>'],
         ['Miner funding','<p>New issuance falls on a fixed schedule. Fees, KAS’s exchange value, equipment efficiency, and power costs affect the resources miners can sustain.</p>'],
         ['Actual use','<p>Capacity is not demand. A released feature does not establish dependable applications, repeat users, or fee revenue.</p>'],
       ]) + `<p class="source-line">${source('paper')} · ${source('node')} · ${source('reward')}</p>`)}
-      ${section('alternatives','Compare the question you actually have.', '<p class="table-hint" id="comparison-scroll-hint">Scroll sideways to compare all three networks <span aria-hidden="true">↔</span></p><div class="table-scroll" role="region" aria-label="Design comparison" aria-describedby="comparison-scroll-hint" tabindex="0"><table><thead><tr><th>Question</th><th>Kaspa</th><th>Bitcoin</th><th>Ethereum</th></tr></thead><tbody><tr><th>Consensus participation</th><td>Proof-of-work miners</td><td>Proof-of-work miners</td><td>Proof-of-stake validators</td></tr><tr><th>Ledger and execution</th><td>UTXOs with covenant rules</td><td>UTXOs with Script</td><td>Accounts and EVM execution</td></tr><tr><th>History</th><td>BlockDAG with GHOSTDAG ordering</td><td>Chain selected by accumulated work</td><td>Chain with checkpoints and economic finality</td></tr><tr><th>What to examine</th><td>Node costs, ordering assumptions, tooling maturity</td><td>Inclusion demand, fee conditions, settlement policy</td><td>Validator assumptions, contract risk, execution costs</td></tr></tbody></table></div><p>This is a base-layer comparison, not a ranking. Custodians, bridges, and secondary layers introduce additional assumptions.</p><p class="source-line">'+source('paper')+' · '+link('Bitcoin paper','https://bitcoin.org/bitcoin.pdf')+' · '+link('Ethereum proof of stake','https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/')+'</p>')}
+      ${section('alternatives','Compare base-layer designs', '<p class="table-hint" id="comparison-scroll-hint">Scroll sideways to compare all three networks <span aria-hidden="true">↔</span></p><div class="table-scroll" role="region" aria-label="Design comparison" aria-describedby="comparison-scroll-hint" tabindex="0"><table><thead><tr><th>Question</th><th>Kaspa</th><th>Bitcoin</th><th>Ethereum</th></tr></thead><tbody><tr><th>Consensus participation</th><td>Proof-of-work miners</td><td>Proof-of-work miners</td><td>Proof-of-stake validators</td></tr><tr><th>Ledger and execution</th><td>UTXOs with covenant rules</td><td>UTXOs with Script</td><td>Accounts and EVM execution</td></tr><tr><th>History</th><td>BlockDAG with GHOSTDAG ordering</td><td>Chain selected by accumulated work</td><td>Chain with checkpoints and economic finality</td></tr><tr><th>What to examine</th><td>Node costs, ordering assumptions, tooling maturity</td><td>Inclusion demand, fee conditions, settlement policy</td><td>Validator assumptions, contract risk, execution costs</td></tr></tbody></table></div><p>This is a base-layer comparison, not a ranking. Custodians, bridges, and secondary layers introduce additional assumptions.</p><p class="source-line">'+source('paper')+' · '+link('Bitcoin paper','https://bitcoin.org/bitcoin.pdf')+' · '+link('Ethereum proof of stake','https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/')+'</p>')}
       ${routes([['See mining participation','Separate a fast network from a miner’s personal outcome.','/kaspa-mining'],['Check current evidence','Protocol state and tool readiness, separately.','/status']])}`,
   },
   {
@@ -87,7 +87,7 @@ export const pages = [
         ['Declining issuance',`<p>The monthly subsidy schedule decreases by roughly 5.6% per step and about half across twelve steps. The checked September 6 reward is ${snapshot.reward} KAS per block at 10 BPS.</p>`],
         ['A bounded supply','<p>The maximum is approximately 28.704 billion KAS. Schedule arithmetic uses whole sompi; issuance is not a smooth continuously calculated exponential.</p>'],
       ]) + `<p class="source-line">${source('reward')} · ${link('Dated network snapshot','/status')}</p>`)}
-      ${section('costs','Rewards are revenue.<br>They are not profit.',rows([
+      ${section('costs','Mining costs and profitability',rows([
         ['Electricity and hardware','<p>Compare power consumption, equipment cost, delivery, cooling, reliability, and usable life. A future exchange value cannot be assumed.</p>'],
         ['Pools and variance','<p>A pool can smooth payouts in exchange for fees and dependence on its accounting and operation. It does not create additional network rewards.</p>'],
         ['Future competition','<p>Your share changes as other miners enter, leave, or upgrade. A current revenue estimate is not a payout promise.</p>'],
@@ -96,16 +96,16 @@ export const pages = [
   },
   {
     file:'build-on-kaspa.html', title:'Build on Kaspa', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
-    body:`${intro('Build','Put a rule to work.','Start with a payment you can follow from request to receipt. Then explore spending rules and the tools that express them.')}
+    body:`${intro('Build','Payments and spending rules','Covenants constrain how an output can be spent. Explore a withdrawal rule, application requirements, and the available tools.')}
       <div class="action-row">${process.env.KASPA_RELEASE==='v1'?'':'<a class="primary-button" href="/testnet">Open the Testnet Workshop ↗</a><a href="/contracts">Explore a refundable transfer ↗</a>'}<a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
-      ${section('spending-rules','When a signature is not enough.',vault(),'A covenant can constrain how an output is spent. Try a withdrawal against three conditions.')}
-      ${section('start','Start with the task.',rows([
+      ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant can constrain how an output is spent. Try a withdrawal against three conditions.')}
+      ${section('start','Integration tasks',rows([
         ['Read the network',`<p>Use node or public-service interfaces for blocks, transactions, and accepted history. Know which service you trust and how it handles missing or changed data.</p><p>${link('Integration guide','https://docs.kaspa.org/integrate/getting-started')}</p>`],
         ['Receive payments',`<p>Track the accepting history, persist a checkpoint, and reverse application state when the accepted chain changes. Choose a policy for your use case.</p><p>${source('acceptance')}</p>`],
         ['Constrain spending',`<p>Specify which outputs are allowed, how state moves, and who can authorize each path. Test rejected transactions as carefully as successful ones.</p><p>${source('programmable')}</p>`],
       ]))}
-      ${section('tools','Choose tools by what is ready.', `<div class="status-list">${snapshot.items.filter(i=>['Toccata','Silverscript','Argent','vProgs'].includes(i[0])).map(([name,state,text,url])=>`<article><div><span class="status-tag">${state}</span><h3>${name}</h3></div><div><p>${text}</p>${link('Documentation',url)}</div></article>`).join('')}</div>`)}
-      ${section('application-boundaries','A payment rule is a starting point.',rows([
+      ${section('tools','Tools and implementation status', `<div class="status-list">${snapshot.items.filter(i=>['Toccata','Silverscript','Argent','vProgs'].includes(i[0])).map(([name,state,text,url])=>`<article><div><span class="status-tag">${state}</span><h3>${name}</h3></div><div><p>${text}</p>${link('Documentation',url)}</div></article>`).join('')}</div>`)}
+      ${section('application-boundaries','Covenants, shared execution, and proofs',rows([
         ['One agreement', '<p>A buyer can authorize payment to a seller, with a refund path after a deadline. The spending conditions travel with the output. Each permitted exit has to satisfy the contract.</p>'],
         ['An application many people update', '<p>A lending market also needs to coordinate deposits, loans, prices, and competing requests. Individual spending rules do not by themselves supply that shared execution system.</p>'],
         ['A computation checked by proof', '<p>A proof can establish a calculation over its specified inputs. If a user’s request was omitted from those inputs, a correct calculation can still leave that user out. The application needs to establish which requests belong in the calculation and their order.</p>'],
@@ -116,18 +116,18 @@ export const pages = [
   },
   {
     file:'status.html', title:'Kaspa network and tooling status', description:'Dated primary-source evidence for Kaspa activation, releases, prototypes, and network readings.',
-    body:`${intro('Current evidence','The network, today.','A protocol feature, a release, and a dependable application are different milestones.')}
+    body:`${intro('Current evidence','Network and tooling status','A protocol feature, a release, and a dependable application are different milestones.')}
       <p class="checked-date">Checked ${snapshot.checked}. This is a saved observation, not a live feed.</p>
       <div class="snapshot"><div><span>DAA score</span><strong>${snapshot.daa}</strong></div><div><span>Block subsidy</span><strong>${snapshot.reward} KAS</strong></div><div><span>Circulating supply</span><strong>${snapshot.supply} KAS</strong></div><div><span>Reporting node</span><strong>v${snapshot.version} · synced</strong></div></div>
       <p class="source-line">${link('Public BlockDAG reading','https://api.kaspa.org/info/blockdag')} · ${link('Subsidy','https://api.kaspa.org/info/halving')} · ${link('Supply','https://api.kaspa.org/info/coinsupply')}</p>
-      ${section('readiness','Readiness, item by item.',`<div class="status-list">${snapshot.items.map(([name,state,text,url])=>`<article><div><span class="status-tag">${state}</span><h3>${name}</h3></div><div><p>${text}</p>${link('Inspect the source',url)}</div></article>`).join('')}</div>`)}
+      ${section('readiness','Protocol and tool status',`<div class="status-list">${snapshot.items.map(([name,state,text,url])=>`<article><div><span class="status-tag">${state}</span><h3>${name}</h3></div><div><p>${text}</p>${link('Inspect the source',url)}</div></article>`).join('')}</div>`)}
       ${detail('How activation was checked', `<p>The v2.0.0 release set Toccata activation at DAA score 474,165,565. The September 6 public reading is above that threshold. KIP-16, KIP-17, KIP-20, and KIP-21 are marked Active in the checked repository.</p><p>This supports protocol activation, not universal wallet support, application adoption, or the absence of operational problems.</p><p>${link('Activation release','https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0')} · ${source('kips')}</p>`)}
       ${routes([['Inspect protocol specifications','KIPs, KCCs, and how their status differs.','/kips'],['Understand the evidence','What this site checks and what it cannot establish.','/sources']])}`,
   },
   {
     file:'kaspa-origin-story.html', title:'Kaspa’s origins', description:'A concise research and launch history with primary references.',
     body:`${intro('Origins','A research problem<br>became a network.','Kaspa grew from work on proof-of-work blocks arriving in parallel. The public network launched in November 2021.')}
-      <ol class="history"><li><span>Research</span><div><h2>Allow concurrent blocks.</h2><p>The PHANTOM and GHOSTDAG work examined how a graph of proof-of-work blocks could support an ordered history.</p>${source('paper')}</div></li><li><span>Before launch</span><div><h2>Several approaches did not become the network.</h2><p>DAGLabs explored development and launch paths before Kaspa’s public mainnet. The eventual mining-based launch was not a token presale carried through unchanged.</p>${link('Project prehistory','https://wiki.kaspa.org/prehistory')}</div></li><li><span>7 November 2021</span><div><h2>Mainnet starts.</h2><p>Kaspa launched without an official premine or coin allocation. Coins entered circulation through mining. That does not imply equal knowledge, hardware, or access among early participants.</p>${source('node')}</div></li><li><span>Implementation</span><div><h2>The software changes.</h2><p>Rusty Kaspa replaced the earlier Go implementation. Crescendo increased the block rate; Toccata added consensus capabilities. Each change has its own release and activation evidence.</p>${link('Node releases','https://github.com/kaspanet/rusty-kaspa/releases')}</div></li></ol>
+      <ol class="history"><li><span>Research</span><div><h2>Allow concurrent blocks.</h2><p>The PHANTOM and GHOSTDAG work examined how a graph of proof-of-work blocks could support an ordered history.</p>${source('paper')}</div></li><li><span>Before launch</span><div><h2>DAGLabs and early development</h2><p>DAGLabs explored development and launch paths before Kaspa’s public mainnet. The eventual mining-based launch was not a token presale carried through unchanged.</p>${link('Project prehistory','https://wiki.kaspa.org/prehistory')}</div></li><li><span>7 November 2021</span><div><h2>Mainnet starts.</h2><p>Kaspa launched without an official premine or coin allocation. Coins entered circulation through mining. That does not imply equal knowledge, hardware, or access among early participants.</p>${source('node')}</div></li><li><span>Implementation</span><div><h2>Rust, Crescendo, and Toccata</h2><p>Rusty Kaspa replaced the earlier Go implementation. Crescendo increased the block rate; Toccata added consensus capabilities. Each change has its own release and activation evidence.</p>${link('Node releases','https://github.com/kaspanet/rusty-kaspa/releases')}</div></li></ol>
       ${routes([['What the network does now','See the mechanism behind the research.','/what-is-kaspa']])}`,
   },
   {
@@ -140,7 +140,7 @@ export const pages = [
         ['KIP-20 · Covenant identifiers',`<p>Persistent identity for related covenant outputs.</p><p>${link('Read KIP-20','https://github.com/kaspanet/kips/blob/master/kip-0020.md')}</p>`],
         ['KIP-21 · Sequencing commitments',`<p>Commitments that support later verification of ordered activity.</p><p>${link('Read KIP-21','https://github.com/kaspanet/kips/blob/master/kip-0021.md')}</p>`],
       ]))}
-      ${section('conventions','A merged document is not an activated protocol.', `<p>In the September 6 check, KCC-0000 is Last Call. KCC-0001, KCC-0002, and KCC-0020 are Draft. A document’s status does not establish implementation or adoption.</p><p>KCC-0020 describes token accounting across covenant outputs. Its open design questions must not be presented as a ratified token standard.</p><p>${source('kccs')} · ${link('KCC-0020 discussion','https://github.com/kaspanet/kccs/issues/14')}</p>`)}
+      ${section('conventions','Application conventions and their status', `<p>In the September 6 check, KCC-0000 is Last Call. KCC-0001, KCC-0002, and KCC-0020 are Draft. A document’s status does not establish implementation or adoption.</p><p>KCC-0020 describes token accounting across covenant outputs. Its open design questions must not be presented as a ratified token standard.</p><p>${source('kccs')} · ${link('KCC-0020 discussion','https://github.com/kaspanet/kccs/issues/14')}</p>`)}
       ${section('research','DAGKnight remains a research direction.', `<p>KIP-2 is Proposed. Research development is visible, including a September 4 branch commit. That is not a mainnet activation. The checked mainnet release still uses GHOSTDAG.</p><p>${link('KIP-2','https://github.com/kaspanet/kips/blob/master/kip-0002.md')} · ${link('Research commit','https://github.com/kaspanet/rusty-kaspa/commit/90e406f8a7c692b171294d8d26b0f83eff530a60')}</p>`)} `,
   },
   {
@@ -151,8 +151,8 @@ export const pages = [
   },
   {
     file:'sources.html', title:'Sources and method', description:'Inspect the sources, model boundaries, and independence of Kaspa Explained.',
-    body:`${intro('Sources','Follow the evidence.','Kaspa Explained is an independent educational project. It is not the Kaspa core team, a wallet, an exchange, or an investment service.')}
-      ${section('sources','Start with the underlying work.',`<div class="source-list">${Object.values(sources).map(([name,url])=>link(name,url)).join('')}</div>`)}
+    body:`${intro('Sources','Sources and verification','Kaspa Explained is an independent educational project. It is not the Kaspa core team, a wallet, an exchange, or an investment service.')}
+      ${section('sources','Primary references',`<div class="source-list">${Object.values(sources).map(([name,url])=>link(name,url)).join('')}</div>`)}
       ${section('method','What a claim needs',evidenceSteps()+rows([
         ['Protocol behavior','<p>Specification and implementation, plus activation evidence when the rule is described as live.</p>'],
         ['Tool readiness','<p>Current documentation and releases. A repository or compelling demo does not establish production readiness.</p>'],
@@ -163,7 +163,7 @@ export const pages = [
   },
   {
     file:'playground.html', title:'Kaspa Playground', description:'Explore block propagation, double spending, transaction arithmetic, mining variance, and covenant rules.',
-    body:`${intro('Playground','Change one thing.','Change one condition at a time. Every model starts with a useful example; none moves real money.')}
+    body:`${intro('Playground','Interactive network models','Adjust network delay, competing spends, mining share, or spending conditions. These models run in this page and move no real money.')}
       <div class="playground" data-playground><nav class="playground-nav" aria-label="Playground models">${[['network','Network delay'],['spend','Competing spends'],['transaction','Transaction amounts'],['mining','Mining share'],['vault','Spending rules']].map(([id,title],i)=>`<button data-workspace="${id}" aria-pressed="${i===0}" aria-controls="workspace-${id}">${title}</button>`).join('')}</nav><div class="playground-main">${[['network',network],['spend',spend],['transaction',transaction],['mining',mining],['vault',vault]].map(([id,render])=>`<section id="workspace-${id}" data-workspace-panel="${id}"${id!=='network'?' hidden':''}>${render()}</section>`).join('')}</div></div>`,
   },
   {

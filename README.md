@@ -1,122 +1,89 @@
 # Kaspa Explained
 
-[kaspaexplained.com](https://kaspaexplained.com) is a plain-English guide to
-Kaspa built around demos you can push on. Move a slider and watch a
-blockDAG keep the blocks a single chain throws away. Price a 51% attack at
-today's hash rate. Watch a covenant refuse a spend that breaks its own rule.
+An independent guide to Kaspa, built around mechanisms you can inspect and change.
+The educational site and experimental Testnet-10 workshop share this repository.
+Neither is an official Kaspa product or investment advice.
 
-This is not an official Kaspa website and it is not investment advice.
+## Run locally
 
-## Why it looks like this
-
-The first version was built to be read by language models. That was the wrong
-call. Nobody used it, including the person who built it. The site is now built
-for people, and the demos are the point: the "Try it" section in the nav is the
-front door, and every topic page carries the demo that backs its claim.
-
-The writing still matters, but it is there to support the thing you just did,
-not the other way round.
-
-## Contributing
-
-Corrections are the most useful contribution, especially on status claims.
-Kaspa moves, and a page that was right in June can be wrong in August. See
-`CONTRIBUTING.md`.
-
-Content is CC BY 4.0. Code, CSS, scripts, and workflows are MIT. See
-`LICENSE.md`. The site belongs to the community more than to any one
-maintainer; fork it, lift a demo, argue with a number.
-
-## What is where
-
-`site-manifest.json`, `sitemap.xml`, and `llms.txt` are the checked inventory.
-Every other `.html` file in the root or under `/demos/` is a `noindex` redirect
-stub pointing at one of the listed pages, usually to a specific anchor.
-
-- `index.html` opens with a six-word vocabulary check that routes a reader to
-  `crypto-from-scratch.html` or straight to Kaspa, and carries the collision demo
-  inline.
-- `what-is-kaspa.html` is the core mechanism explainer: proof of work, UTXO
-  ownership, blockDAG, GHOSTDAG, covenants. Carries five demos, including the
-  parallel-spends demo at `#utxo`: five payments at once against a coin ledger
-  and a balance ledger, and what the missing shared slot costs Kaspa apps.
-- `why-kaspa-matters.html` covers neutral money, self-custody, and the
-  confirmation-risk curve.
-- `kips.html` tracks KIPs and KCCs live from GitHub, and carries the DAGKnight
-  demo comparing a fixed consensus margin against one that tracks real latency.
-- `status.html` separates live mainnet from testnet, targeted, roadmap, and
-  research, and fact-checks 16 claims.
-- `skeptical-case.html` is the case against, in seven risks.
-- `kaspa-mining.html` covers price and hash-rate cycles plus solo mining, with
-  four demos including attack cost and node cost.
-- `build-on-kaspa.html` takes a builder from an idea to a build path, and at
-  `#argent` covers the actor-based language compiling to Silverscript covenants,
-  with a repository table read live from GitHub.
-- `kaspa-origin-story.html` is the sourced fair-launch history.
-- `sources.html` ranks what settles a claim.
-- `demos/index.html` maps every demo to the page it lives on.
-
-## Source discipline
-
-First-party sources first for anything status-sensitive: kaspanet GitHub
-repositories, releases, KIPs, docs.kaspa.org, public API and node readings, and
-research papers. Core technical posts explain rationale; they do not replace a
-release tag, a merged KIP, or activation evidence.
-
-The kaspa.org marketing pages are not used as a source. Twice, months apart,
-they still described Toccata as pending on testnet long after it activated on
-mainnet. `wiki.kaspa.org` and `docs.kaspa.org` are fine.
-
-`CLAIMS.yml` is the checked registry: every status-sensitive claim, its source,
-and the date it must be rechecked. `scripts/check-status-freshness.py` fails the
-build when a recheck date passes, so claims cannot quietly rot.
-
-## Checks
+Requires Node.js 22 or later.
 
 ```sh
-bash scripts/check-site.sh
+npm ci
+npm run build:v1
+node scripts/static-preview.mjs
 ```
 
-That is the publish gate, and `Site checks passed.` is the only line that
-counts. It runs sixteen checks: HTML validity, claim consistency,
-source bans, status freshness, nav synchronization, redirect stubs, reading
-grade, prose rules, American English, rendered layout at three widths in both
-themes, broken links and missing anchors, visible-word ceilings, page height,
-and per-demo surface budgets.
+Open http://127.0.0.1:8899/. This serves standalone education from `dist-v1/`
+on loopback. Old root HTML is not the new source.
 
-Several of those exist because a specific defect shipped once. The demo-surface
-check exists because a demo grew four blocks of specialist prose on its
-opening screen and no gate could see it. The page-height check counts only
-things a reader can look at or touch, because an earlier version counted
-headings as landmarks and passed every page on a day when every page was too
-long.
+For the separate V2 preview, complete the dependency setup below, run
+`node scripts/build-public-templates.mjs`, then `npm run build` and
+`npm run serve`. The local workshop uses http://127.0.0.1:8898/.
 
-Local preview, with clean URLs so `/status` resolves:
+## Structure
+
+- `src/`: pages, shared interface, deterministic educational models.
+- `src/page-registry.mjs`: pages used by build, search, and sitemap.
+- `server/`: local transaction lookup and capped testnet workshop.
+- `contracts/`: experimental Silverscript contracts.
+- `tests/`: offline model, encoding, receipt-history, and API tests.
+- `scripts/build.mjs`: generate the website and compatibility routes.
+- `content/`: social posts, maintained separately from the site.
+
+## Verification
+
+For the standalone educational artifact:
 
 ```sh
-python3 scripts/serve-local.py --port 4187
+npm run check:v1
 ```
 
-External links are audited separately and weekly, so a third-party outage does
-not block a content fix:
+For the V2 build and offline application tests, complete the SDK/compiler and
+public-template setup described above before running `npm run check`.
+Neither check certifies
+visual quality, real network acceptance, or production readiness. Browser
+journeys and opt-in testnet integration tests are separate release requirements.
+The previous root-site render checks do not certify this rebuilt application.
+
+## Testnet workshop
+
+**Testnet-10 only. Experimental, unaudited, never intended for mainnet.**
+
+The local workshop owns disposable test identities. It is not a self-custody
+wallet for visitors. Each spend requires review and approval. Amounts, fees,
+and cumulative spending are capped. Uncertain submissions block further spends
+until reconciled. Private state lives under ignored `.local/` and must never be
+published. The server is not safe to expose as a public signing service.
+
+Install the pinned official SDK and compiler on macOS or Linux (arm64/x64):
 
 ```sh
-bash scripts/check-links.sh
+npm run setup:testnet
+npm run check:contracts
+npm run check:contracts:vm
 ```
 
-## For contributors and agents
+Setup verifies SHA-256 checksums before extracting SDK v2.0.1 and SilverScript
+v1-rc1 into `.cache/upstream/`. It does not create a wallet or send funds.
+It requires `unzip` and `tar`. Windows setup and public V2 packaging remain
+unfinished. Compilation alone does not prove a contract. See `THIRD_PARTY.md`.
+The VM tests additionally require Rust and native build tools. They load the exact
+repository contracts into the pinned SilverScript v1-rc1 execution harness, using
+unfunded fixtures and explicit execution budgets. They do not contact a node or
+spend coins.
 
-`AGENTS.md` is the durable instruction file: voice, verification contract,
-source rules, and the failure modes this repo has already hit.
-`WORKING-STATE.md` carries what is true today. `design/STANDARD.md` and
-`design/THE-BAR.md` carry the design and credibility bars, including the test
-every demo has to pass: someone with a high school diploma and a rough idea of
-what crypto is should know what the demo shows and what to touch, immediately,
-with no help.
+## Releases
 
-## Hosting
+V1 is the standalone educational site. V2 adds verified testnet applications.
+Both require usable interfaces, accurate labels, tested failure paths, and
+release-specific evidence. The local rebuild has not yet been published.
+Existing GitHub Pages hosting still serves the older repository-root site;
+the new generated output must be configured before release.
 
-GitHub Pages from `main`, root folder, custom domain `kaspaexplained.com`. The
-`CNAME` file must contain exactly that. Apex A records point at GitHub's four
-Pages addresses; `www` is a CNAME to `parker2017code.github.io`, never to the
-repository name.
+## Reuse and corrections
+
+Code is MIT and educational content is CC BY 4.0, subject to exceptions and
+attributions in `LICENSE.md`. Preserve upstream notices when reusing examples.
+Moose’s books and author links remain available. Corrections should identify
+the exact claim, implementation behavior, and primary source.
