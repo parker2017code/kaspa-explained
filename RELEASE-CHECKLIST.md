@@ -1,6 +1,7 @@
 # Release checklist
 
-The rebuilt site is local. Nothing in this checklist means it has shipped.
+V1 is published at https://kaspaexplained.com. V2 remains a release candidate
+until its source publication, deployment and live-domain checks are recorded.
 
 ## V1: standalone education
 
@@ -14,8 +15,8 @@ The rebuilt site is local. Nothing in this checklist means it has shipped.
 - [x] Validate generated page/asset destinations, all 78 compatibility targets, and supported historical-fragment behavior.
 - [x] Separate public V1 from local-service-dependent V2 interfaces; fresh-artifact and route tests pass.
 - [x] Complete the visual reference comparison and apply the findings across V1; see `design/BROWSER-REVIEW.md`.
-- [ ] Configure and verify the generated-output deployment.
-- [ ] Publish the cleaned source and V1 release notes (`docs/release-v1.md` prepared).
+- [x] Configure and verify the generated-output deployment.
+- [x] Publish the cleaned V1 source; post-publication evidence is in `docs/release-v1.md`.
 
 ### V1 evidence and remaining publication steps
 
@@ -29,12 +30,10 @@ external-link audit returned HTTP success for 39 of 41 URLs; the coordinating
 reviewer directly checked the two Kaspa Explorer URLs that returned automated
 HTTP 403. This is browser evidence, not a claim that the automated audit passed.
 
-Authenticated Pages inspection by the coordinator confirmed legacy publishing
-from `main` at `/`, with custom domain `kaspaexplained.com`. Switch Pages to
-Actions before pushing root-page deletions. The prepared workflow uploads
-`dist-v1`; configuration, remote execution, and live route/asset/domain/PDF
-verification remain publication requirements. V2 completion is not required
-for the isolated V1 artifact.
+V1 Pages run `34041857828` succeeded for revision `6ef9f73`. Independent
+live checks covered home at mobile/desktop widths in both appearances,
+keyboard coordination, navigation, search, a legacy fragment and both PDFs.
+See `docs/release-v1.md` and `design/live-v1/` for the bounded live review.
 
 ## V2: testnet applications
 
@@ -48,19 +47,28 @@ for the isolated V1 artifact.
 - [x] Payment-split source compiles with the pinned compiler.
 - [x] Payment split executes and verifies both recipients on Testnet-10.
 - [x] Exact repository contracts pass pinned VM execution tests with explicit script-unit limits: signature roles, refund timing, split destinations, rounding, counts, fees, and invalid allocations.
-- [ ] Escrow and additional native-use-case investigation and implementation.
-- [ ] Token lifecycle and atomic exchange tests.
-  - The new capped-token source compiles and passes local VM fixtures for mint,
-    holder split, issuer-and-holder burn, exhausted issuance allowance, and
-    selected invalid transitions. This is not funded genesis, relay acceptance,
-    a public token app, or atomic exchange. Its explicit fixture script budget
-    still needs reconciliation with version-1 transaction compute limits.
-- [ ] Proof-verification feasibility and honest privacy boundaries.
-- [ ] Durable wallet recovery, concurrency, and uncertainty test suite.
-- [ ] Reproducible dependency setup with checksums and upstream licenses.
-- [ ] Public-use architecture without exposing the local custodial signer.
-- [ ] Browser review of every V2 action and error state.
-- [ ] Publish source, transaction evidence, limitations, and V2 release notes.
+- [x] Public escrow, treasury, prediction and fixed-proof browser transactions accepted on Testnet-10.
+- [x] Public capped-token genesis, mint, move, split, merge, atomic exchange and burn accepted; exact IDs and accepting blocks are recorded.
+- [x] Fully backed receipt creation, split, merge, move, partial redemption and full redemption accepted.
+- [x] Proof verification executes with an explicit 0.2 tKAS fee cap and an honest fixed-fixture/privacy boundary.
+- [x] Durable encrypted recovery, exact signed retries, concurrency/uncertainty guards and reorganization tests.
+- [x] Reproducible dependency setup with checksums, pinned VM execution and upstream licenses.
+- [x] Public static architecture: sixteen canonical pages, 87 compatibility routes, six templates; no public local signer.
+- [x] Current `check:public`: 19 tests plus public signing checks pass.
+- [x] Unfunded browser SDK/recovery gate: 48 states each in Chromium, Firefox and WebKit, using real RPC. Missing-file/wrong-password rejection, all three account identities, both themes and four widths pass.
+- [ ] Record acceptance of the additional two-recipient native payment introduced after the original 23-transaction sequence.
+- [ ] Finish the final funded-holdings visual review after the latest interface changes.
+- [ ] Run final combined release checks on the final source revision.
+- [ ] Publish V2 source, transaction evidence, limitations and release notes.
+- [ ] Deploy V2 and verify the custom domain, static SDK/WASM/templates and public routes.
+
+The original public-browser sequence contains 23 accepted transactions, with
+0.312202 tKAS in fees. See `design/PUBLIC-APPS-REVIEW.md` for every action,
+transaction ID, accepting block and reconciliation of the 1.2 tKAS allocation.
+That evidence does not imply live coverage of every alternative signature pair,
+oracle result or refund branch; the unfunded VM suites provide separate route
+and rejection coverage. The older workshop transactions below are historical
+evidence and are distinct from the public application sequence.
 
 All applications are experimental, unaudited, Testnet-10 only, and never
 intended for mainnet. Simulations are not counted as native implementations.
@@ -91,3 +99,9 @@ browser QA address. Fee: 264,800 sompi. Cumulative local-wallet test allocation
 is now 641,310,100 sompi (6.413101 tKAS) against the 10 tKAS cap. Browser tests
 spend from this allocated amount; this funding observation is not evidence
 that an application contract has executed.
+
+
+Additional split review status: a 0.01 + 0.01 tKAS proposal failed the real
+storage-mass limit before signing (2,045,832 versus 500,000). No 24th transaction
+was submitted. The UI reports the mass-limit reason; a feasible two-recipient
+case and the final 80-state funded/read-only visual review remain pending.

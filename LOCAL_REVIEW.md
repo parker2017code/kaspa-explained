@@ -29,3 +29,8 @@ The new final combined matrix completed at 2026-09-06T15:05:20.693Z:
 150 states, zero automated findings. Coordination layouts were manually
 inspected at 320/1440 pixels in both themes. The narrow checkbox-label
 activation-target correction is recorded in `design/BROWSER-REVIEW.md`.
+
+Latest publication candidate: final wording-pass artifact (15:11:09 UTC)
+passed the 150-state matrix at 2026-09-06T15:13:58.938Z. The new opening
+was visually inspected at 320px light and 1440px dark, with no actionable
+findings.

@@ -171,6 +171,8 @@ node scripts/build-public-templates.mjs --check-vm
 node scripts/public-token-fixtures.mjs --check-vm
 node scripts/public-receipt-fixtures.mjs --check-vm
 npm run check:public
+npx playwright install chromium firefox webkit
+npm run check:public:browser
 ```
 
 Setup verifies downloaded SDK/compiler checksums. The VM harness pins
@@ -201,6 +203,7 @@ Testnet-10 WebSocket RPC endpoint. No local signing server is required.
 | `src/public-token.mjs`, `src/public-receipt.mjs` | Covenant state and transaction construction for tokens and backed receipts. |
 | `src/public-asset-signing.mjs` | Shared asset/payment signing, Kaspire response validation and debit limits. |
 | `src/public-recovery.mjs`, `src/public-asset-recovery.mjs` | Reconstruct the exact signed transaction from its journal; reject altered inputs, outputs, fees and metadata. |
+| `src/public-transaction.mjs` | Shared public transaction construction and validation. |
 | `src/public-acceptance.mjs` | Bounded accepted-chain scans, pagination and reorganization revocation. |
 | `contracts/public/*.sil` | Six public contract sources. |
 | `scripts/build-public-templates.mjs`, `scripts/public-*-fixtures.mjs`, `tests/public*_vm.rs` | Compiler/state equivalence and consensus VM fixtures. |
@@ -208,7 +211,7 @@ Testnet-10 WebSocket RPC endpoint. No local signing server is required.
 The sixteen documents are index, what-is-kaspa, why-kaspa-matters,
 skeptical-case, kaspa-mining, build-on-kaspa, status, kaspa-origin-story,
 kips, moose, sources, playground, 404, money, applications, and search.
-Compatibility redirects are additional files, not additional canonical pages.
+The build also emits 87 compatibility redirects; these are not canonical pages.
 
 ## Recovery and observation boundaries
 
@@ -239,3 +242,14 @@ and covenant identity before constructing the next operation.
 Use [the V2 release checklist](release-v2.md) and
 [public browser evidence](../design/PUBLIC-APPS-REVIEW.md) for live coverage.
 Adapter tests for an external signer do not establish installed-wallet support.
+
+
+The public entry point `src/public-apps.mjs` connects directly to
+`wss://muon-10.kaspa.blue/kaspa/testnet-10/wrpc/borsh`. This avoids SDK resolver
+cross-origin probe errors observed in WebKit. Page hide disconnects the active
+RPC client; failed connection remains visible and users can retry the create or
+restore action. There is no CORS proxy, local API or hidden offline fallback.
+`scripts/check-public-browser.mjs` accepts `chromium`, `firefox`, or `webkit`
+(default Chromium); each engine saves its own evidence under
+`.cache/visual-review/public-browser/`. Its disposable recovery envelope is
+kept in memory, and closing each context discards keys and encrypted storage.

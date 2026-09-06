@@ -1,23 +1,25 @@
 // Unfunded browser acceptance against the actual static build and a real Testnet-10 node.
 // No faucet, signing or submission controls are used; recovery remains in memory.
-import {chromium} from 'playwright';
+import {chromium,firefox,webkit} from 'playwright';
 import assert from 'node:assert/strict';
 import {readFile,access,mkdir,writeFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {staticPreview} from './static-preview.mjs';
 
+const engine=process.argv[2]||'chromium',browserType={chromium,firefox,webkit}[engine];
+assert(browserType,'Choose chromium, firefox, or webkit');
 const canonical=['index','what-is-kaspa','why-kaspa-matters','skeptical-case','kaspa-mining','build-on-kaspa','status','kaspa-origin-story','kips','moose','sources','playground','404','money','applications','search'];
 for(const name of canonical)await access(`dist/${name}.html`);
 const sitemap=await readFile('dist/sitemap.xml','utf8');
 assert.equal((sitemap.match(/<loc>/g)||[]).length,15,'V2 must contain sixteen canonical documents including 404');
 const templates=JSON.parse(await readFile('dist/assets/public-templates.json','utf8'));
 assert.deepEqual(Object.keys(templates.templates).sort(),['escrow','prediction','proof','receipt','token','treasury']);
-const output='.cache/visual-review/public-browser';await mkdir(output,{recursive:true});
+const output=`.cache/visual-review/public-browser/${engine}`;await mkdir(output,{recursive:true});
 const results=[],server=staticPreview('dist');let browser,failure;
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`;
 try{
- browser=await chromium.launch();
+ browser=await browserType.launch();
  for(const theme of ['light','dark']){
   const context=await browser.newContext({acceptDownloads:true,reducedMotion:'reduce',viewport:{width:390,height:900}});
   try{
@@ -89,7 +91,7 @@ try{
 }catch(error){failure=error;}
 finally{
  if(browser)await browser.close();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));
- await writeFile(`${output}/report.json`,JSON.stringify({passed:!failure,states:results.length,results,error:failure?.message},null,2));
+ await writeFile(`${output}/report.json`,JSON.stringify({engine,passed:!failure,states:results.length,results,error:failure?.message},null,2));
 }
 if(failure)throw failure;
-console.log(`Public browser: ${results.length} states passed; real Testnet-10 RPC, no funding or submission. Evidence: ${output}/report.json`);
+console.log(`Public browser ${engine}: ${results.length} states passed; real Testnet-10 RPC, no funding or submission. Evidence: ${output}/report.json`);

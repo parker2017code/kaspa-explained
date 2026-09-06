@@ -54,16 +54,20 @@ export function acceptKaspirePublicAssetSignature(sdk,plan,index,result){
  const script=returned.inputs[index].signatureScript,p=pushes(script),raw=plan.signers[index].kind==='native'?p[0]:p.at(-3);
  if(scriptFor(plan,index,raw)!==script)throw new Error('Wallet changed covenant arguments.');plan.transaction.inputs[index].signatureScript=script;reviews.get(plan).completed.add(index);reviews.get(plan).scripts[index]=script;plan.transaction.finalize();return {...validatePublicAssetPlan(plan),transaction:plan.transaction};
 }
-export function buildPublicPayment(sdk,{fundingUtxos,owner,recipient,amount,feeRate=100}){
- const value=BigInt(amount);if(value<=0n||value>100000000n)throw new Error('Payment must be positive and at most 1 tKAS.');
+export function buildPublicPayment(sdk,{fundingUtxos,owner,recipient,amount,recipients,feeRate=100}){
+ if(recipients!==undefined&&(recipient!==undefined||amount!==undefined||!Array.isArray(recipients)||recipients.length!==2))throw new Error('Choose exactly two split recipients, or one ordinary recipient.');
+ const key=value=>{if(typeof value!=='string'||!/^([0-9a-f]{64})$/i.test(value))throw new Error('Payment recipient must be an x-only public key.');return value.toLowerCase();};
+ owner=key(owner);const destinations=(recipients??[{recipient,amount}]).map(r=>{if(!r||typeof r!=='object'||Object.keys(r).some(k=>!['recipient','amount'].includes(k)))throw new Error('Invalid payment recipient.');const value=BigInt(r.amount);if(value<=0n||value>100000000n)throw new Error('Payment must be positive and at most 1 tKAS.');return {recipient:key(r.recipient),amount:String(value)};});
+ if(new Set(destinations.map(r=>r.recipient)).size!==destinations.length)throw new Error('Split recipients must be distinct.');
+ const value=destinations.reduce((sum,r)=>sum+BigInt(r.amount),0n);if(value<=0n||value>100000000n)throw new Error('Payment must be positive and at most 1 tKAS.');
  const script=key=>sdk.payToAddressScript(new sdk.PublicKey('02'+key).toAddress('testnet-10'));
  const owned=script(owner);if(!fundingUtxos.length||fundingUtxos.some(u=>u.entry?.covenantId||u.entry?.scriptPublicKey.script!==owned.script))throw new Error('Payment funding must belong to the selected account.');
  const total=fundingUtxos.reduce((s,u)=>s+u.amount,0n);let fee=1000n;
  for(let attempt=0;attempt<3;attempt++){
   const change=total-value-fee;if(change<0n||fee>1000000n)throw new Error('Insufficient payment funds or fee limit.');
-  const outputs=[{value,scriptPublicKey:script(recipient)}];if(change)outputs.push({value:change,scriptPublicKey:owned});
+  const outputs=destinations.map(r=>({value:BigInt(r.amount),scriptPublicKey:script(r.recipient)}));if(change)outputs.push({value:change,scriptPublicKey:owned});
   const transaction=new sdk.Transaction({version:1,inputs:fundingUtxos.map(u=>({previousOutpoint:u.outpoint,utxo:u,signatureScript:pushPublicData(dummy),sequence:0n,sigOpCount:0,computeBudget:16})),outputs,lockTime:0n,subnetworkId:'00'.repeat(20),gas:0n,payload:''});
   const mass=publicTransactionMass(transaction,{feeRate});if(fee<BigInt(mass.minimumFee)){fee=BigInt(mass.minimumFee);continue;}
-  const plan={network:'testnet-10',transaction,tokens:[],states:[],operation:null,fee:String(fee),signers:fundingUtxos.map((_,index)=>({index,kind:'native',owner})),payment:{owner,recipient,amount:String(value)}};Object.defineProperty(plan,'sdk',{value:sdk});return preparePublicAssetPlan(plan,{feeRate});
+  const plan={network:'testnet-10',transaction,tokens:[],states:[],operation:null,fee:String(fee),signers:fundingUtxos.map((_,index)=>({index,kind:'native',owner})),payment:recipients?{owner,recipients:destinations,amount:String(value)}:{owner,recipient:destinations[0].recipient,amount:String(value)}};Object.defineProperty(plan,'sdk',{value:sdk});return preparePublicAssetPlan(plan,{feeRate});
  }throw new Error('Payment fee did not converge.');
 }

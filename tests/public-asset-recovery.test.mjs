@@ -43,3 +43,19 @@ test('payment recovery supports owned large change and rejects manipulated ident
  const tx=sdk.Transaction.deserializeFromSafeJSON(saved.transaction);tx.inputs[0].signatureScript=tx.inputs[0].signatureScript.slice(0,-2)+'02';tx.finalize();assert.throws(()=>derivePublicAssetRecoveryPlan(sdk,{templates,journal:{...saved,id:tx.id,transaction:tx.serializeToSafeJSON()},keysPublic}),/SIGHASH_ALL/);
  const unsigned=buildPublicPayment(sdk,{fundingUtxos:[funding()],owner:keysPublic[0],recipient:keysPublic[1],amount:30000000n});assert.throws(()=>publicAssetJournal(unsigned),/Every signature/);
 });
+
+test('native split signs one exact two-recipient transaction and reconstructs its journal',async()=>{
+ const recipients=[{recipient:keysPublic[1],amount:20000000n},{recipient:keysPublic[2],amount:30000000n}];
+ const plan=await checked(buildPublicPayment(sdk,{fundingUtxos:[funding(90)],owner:keysPublic[0],recipients}));
+ assert.equal(plan.transaction.outputs.length,3);assert.equal(plan.transaction.outputs[0].value,20000000n);assert.equal(plan.transaction.outputs[1].value,30000000n);assert(BigInt(plan.fee)<=1000000n);
+ assert.equal(plan.transaction.outputs[2].scriptPublicKey.script,sdk.payToAddressScript(new sdk.Address(addresses[0])).script);
+ const journal=publicAssetJournal(plan);assert.equal(journal.payment.recipients.length,2);
+ for(const mutate of [j=>j.payment.recipients.reverse(),j=>j.payment.recipients[0].amount='19999999',j=>j.payment.recipients[0].recipient=keysPublic[3],j=>j.payment.amount='1',j=>delete j.payment]){const changed=structuredClone(journal);mutate(changed);assert.throws(()=>derivePublicAssetRecoveryPlan(sdk,{templates,journal:changed,keysPublic}));}
+ plan.transaction.outputs[0].value-=1n;plan.transaction.outputs[1].value+=1n;assert.throws(()=>validatePublicAssetPlan(plan),/changed/);
+});
+test('native split rejects duplicate recipients, total cap, invalid amounts and excess fee',()=>{
+ const options={fundingUtxos:[funding(91)],owner:keysPublic[0]},pair=(a,b)=>[{recipient:keysPublic[1],amount:a},{recipient:keysPublic[2],amount:b}];
+ for(const recipients of [pair(0n,1n),pair(-1n,1n),pair(50000001n,50000000n),[{recipient:keysPublic[1],amount:1n},{recipient:keysPublic[1].toUpperCase(),amount:1n}]])assert.throws(()=>buildPublicPayment(sdk,{...options,recipients}));
+ assert.throws(()=>buildPublicPayment(sdk,{...options,recipients:pair(20000000n,30000000n),feeRate:100000}),/fee limit/);
+ assert.throws(()=>buildPublicPayment(sdk,{...options,recipients:pair(20000000n,30000000n),recipient:keysPublic[1],amount:1n}));
+});

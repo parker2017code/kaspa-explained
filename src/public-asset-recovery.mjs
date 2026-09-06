@@ -14,11 +14,12 @@ export function publicAssetJournal(plan){
  const checked=validatePublicAssetPlan(plan);if(!checked.complete)throw new Error('Every signature must be collected before exporting a signed asset journal.');
  const kind=plan.payment?'payment':plan.receipts?'receipt':'token';
  const value={version:1,network:NETWORK,kind,id:plan.transaction.id,transaction:plan.transaction.serializeToSafeJSON(),feeRate:plan.mass.feeRate,operation:plan.operation,inputAssets:(plan.receipts??plan.tokens??[]).map(kind==='receipt'?receiptRecord:tokenRecord),states:plan.states??[]};
+ if(plan.payment?.recipients)value.payment=clone(plan.payment);
  if(plan.operation===null&&kind!=='payment'){if(!plan.genesis)throw new Error('Genesis state is required for recovery.');value.genesis=plan.genesis;}
  return clone(value);
 }
 export function derivePublicAssetRecoveryPlan(sdk,{templates,journal,keysPublic}){
- fields(journal,['version','network','kind','id','transaction','feeRate','operation','inputAssets','states','genesis']);
+ fields(journal,['version','network','kind','id','transaction','feeRate','operation','inputAssets','states','genesis','payment']);
  if(journal.version!==1||journal.network!==NETWORK||!['token','receipt','payment'].includes(journal.kind)||!/^([0-9a-f]{64})$/.test(journal.id)||typeof journal.transaction!=='string'||journal.transaction.length>750000||!Array.isArray(journal.inputAssets)||journal.inputAssets.length>2||!Array.isArray(journal.states)||journal.states.length>2)throw new Error('Invalid asset recovery journal.');
  if(!Array.isArray(keysPublic)||keysPublic.length<1||keysPublic.length>8||keysPublic.some(k=>typeof k!=='string'||!/^[0-9a-f]{64}$/i.test(k)))throw new Error('Invalid asset recovery owners.');
  const original=sdk.Transaction.deserializeFromSafeJSON(journal.transaction);original.finalize();
@@ -27,6 +28,7 @@ export function derivePublicAssetRecoveryPlan(sdk,{templates,journal,keysPublic}
  const covInputs=original.inputs.filter(i=>i.utxo.entry.covenantId),covOutputs=original.outputs.filter(o=>o.covenant);
  if(original.inputs.some((i,n)=>Boolean(i.utxo.entry.covenantId)!==(n<covInputs.length))||original.outputs.some((o,n)=>Boolean(o.covenant)!==(n<covOutputs.length)))throw new Error('Covenant recovery layout mismatch.');
  if(covInputs.length!==journal.inputAssets.length)throw new Error('Missing recovered asset inputs.');
+ if(journal.kind!=='payment'&&journal.payment!==undefined)throw new Error('Unexpected payment recovery fields.');
  const feeRate=journal.feeRate;let plan;
  const instantiate=record=>{
   fields(record,journal.kind==='token'?['issuer','cap','state']:['series','maxFee','state']);
@@ -36,7 +38,10 @@ export function derivePublicAssetRecoveryPlan(sdk,{templates,journal,keysPublic}
  };
  if(journal.kind==='payment'){
   if(covInputs.length||covOutputs.length||journal.inputAssets.length||journal.states.length||journal.operation!==null||journal.genesis)throw new Error('Invalid payment recovery shape.');
-  plan=buildPublicPayment(sdk,{fundingUtxos:original.inputs.map(i=>i.utxo),owner:publicKey(original.inputs[0].utxo.entry.scriptPublicKey.script),recipient:publicKey(original.outputs[0].scriptPublicKey.script),amount:original.outputs[0].value,feeRate});
+  const owner=publicKey(original.inputs[0].utxo.entry.scriptPublicKey.script);let destinations={recipient:publicKey(original.outputs[0].scriptPublicKey.script),amount:original.outputs[0].value};
+  if(journal.payment!==undefined){fields(journal.payment,['owner','recipients','amount']);if(journal.payment.owner!==owner||!Array.isArray(journal.payment.recipients)||journal.payment.recipients.length!==2)throw new Error('Invalid recovered split payment.');destinations={recipients:journal.payment.recipients};}
+  plan=buildPublicPayment(sdk,{fundingUtxos:original.inputs.map(i=>i.utxo),owner,...destinations,feeRate});
+  if(journal.payment!==undefined&&JSON.stringify(journal.payment)!==JSON.stringify(plan.payment))throw new Error('Recovered payment destinations or amounts disagree.');
  }else if(journal.operation===null){
   if(covInputs.length||journal.states.length||covOutputs.length!==1||!journal.genesis)throw new Error('Invalid asset genesis recovery.');
   const asset=instantiate(journal.genesis),fundingUtxos=original.inputs.map(i=>i.utxo);

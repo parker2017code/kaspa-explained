@@ -1,57 +1,10 @@
 #!/usr/bin/env python3
-"""Generate the social preview card.
-
-The card shows the thing the site teaches rather than describing it. A real
-GHOSTDAG shape, one block marked red, and the fact that surprises people: a red
-block is not discarded. It keeps its place, its parents and its transactions,
-which is the whole difference from a single chain where the loser's work is
-thrown away. That claim is stated on what-is-kaspa.html and is the reason this
-card says what it says.
-
-The wording is exact on purpose. In GHOSTDAG "red" means a block fell outside
-the k cap, not that it lost a race, so the card says "marked red" rather than
-"lost". what-is-kaspa.html states the rest verbatim: red blocks "keep their
-place, their parents, and their transactions."
-
-Colors come from the dark palette in the APPLE DESIGN LAYER of styles.css,
-which is the site's default theme. They are duplicated here because an SVG
-cannot read CSS custom properties. There is no checker for that drift: this
-comment used to claim check-og-card.py enforced it, and no such script exists.
-
-There is no text on the card, and that is the finding rather than a shortcut.
-Four competent references were fetched and looked at on 29 Aug 2026:
-ciechanow.ski and distill.pub carry no text at all, just the artifact full
-bleed; ourworldindata.org carries two lines, topic and publisher; linear.app
-carries a logo. None of them carries a headline plus a subtitle plus a URL.
-
-The reason is mechanical. An unfurl already renders og:title and og:description
-as real text beside the image, so a sentence baked into the image is shown
-twice, and the baked copy is the one that cannot be selected, translated, or
-read aloud by a screen reader. index.html's og:description already says
-"Watch a blockDAG keep the blocks a single chain throws away", which is exactly
-what this diagram shows. The words are the description's job. The picture is
-this file's job.
-
-Keeping the card wordless also removes the legibility floor: at the 320px an
-unfurl can shrink to, there is no small print left to lose.
-
-Writes the SVG and rasterizes it to PNG at exactly 1200x630 with headless
-Chrome, which is the same renderer a browser uses, so what ships is what was
-reviewed. There is no SVG rasterizer library on this machine and qlmanage pads
-to a square, so Chrome is the path.
-
-Run: python3 scripts/build-og-card.py
-"""
+"""Build the wordless 1200 x 630 blockDAG social card and its PNG copy."""
 import os
 import shutil
 import subprocess
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-# One card, one file. The dated variants (og-kaspa-explained-20260514.png and
-# og-kaspa-explained-20260829.png) were deleted on 2026-08-29: three copies of one
-# social card is the same defect as two copies of one demo, and the two dated files
-# were byte-identical to each other while every page pointed at the older art.
-# Pages cache-bust with ?v=<date> on this stable name instead.
 PNG_NAME = "og-kaspa-explained.png"
 
 
@@ -70,21 +23,18 @@ def rasterize(root, svg_path):
     print("wrote", out)
     return out
 
-BG      = "#100e0c"   # --bg
-TEXT    = "#f8f5ef"   # --text
-MUTED   = "#b6b0a7"   # --muted
-FAINT   = "#9d988c"   # --faint
-GREEN   = "#66d1c1"   # --green, the blue set
-RED     = "#ff6961"   # --red on what-is-kaspa.html, dark theme
-LINE    = "#4a453d"   # --line
+BG = "#0a0b0b"
+ACCENT = "#6fc7ba"
+DANGER = "#ef8f84"
+LINE = "#3b403d"
 
-# One honest small DAG. gen -> list of (id, is_spine, is_red).
+# Each tuple is (block id, red classification).
 GENS = [
-    [("a", True,  False)],
-    [("b", True,  False), ("c", False, False)],
-    [("d", True,  False), ("e", False, False), ("f", False, False)],
-    [("g", True,  False), ("h", False, True)],
-    [("i", True,  False)],
+    [("a", False)],
+    [("b", False), ("c", False)],
+    [("d", False), ("e", False), ("f", False)],
+    [("g", False), ("h", True)],
+    [("i", False)],
 ]
 # child -> parents it references
 EDGES = {
@@ -95,9 +45,9 @@ EDGES = {
 }
 
 W, H = 1200, 630
-BW, BH, R = 104, 74, 18         # block width, height, corner radius
-X0, XSTEP = 132, 234            # first column, column pitch
-YMID, YSTEP = 328, 158          # vertical center of the DAG, row pitch
+BW, BH, R = 104, 74, 18
+X0, XSTEP = 132, 234
+YMID, YSTEP = 328, 158
 
 
 def positions():
@@ -105,9 +55,9 @@ def positions():
     for gi, gen in enumerate(GENS):
         x = X0 + gi * XSTEP
         n = len(gen)
-        for bi, (bid, spine, red) in enumerate(gen):
+        for bi, (bid, red) in enumerate(gen):
             y = YMID + (bi - (n - 1) / 2) * YSTEP
-            pos[bid] = (x, y, spine, red)
+            pos[bid] = (x, y, red)
     return pos
 
 
@@ -122,20 +72,17 @@ def build():
     )
     out.append(f'<rect width="{W}" height="{H}" fill="{BG}"/>')
 
-    # Edges first so blocks sit on top of them. The red block's own edges are
-    # drawn in red and thicker: the claim is that it keeps its parents, and the
-    # parents ARE the edges, so they have to be the most legible thing on the
-    # card rather than the faintest.
+    # Draw edges before blocks so each parent relationship stays legible.
     def edge_path(child, parent):
-        cx, cy, _, _ = pos[child]
-        px, py, _, _ = pos[parent]
+        cx, cy, _ = pos[child]
+        px, py, _ = pos[parent]
         x1, y1 = px + BW / 2, py
         x2, y2 = cx - BW / 2, cy
         mid = (x1 + x2) / 2
         return (f'M{x1:.0f} {y1:.0f} C{mid:.0f} {y1:.0f} '
                 f'{mid:.0f} {y2:.0f} {x2:.0f} {y2:.0f}')
 
-    red_ids = {b for g in GENS for b, _, r in g if r}
+    red_ids = {block_id for generation in GENS for block_id, is_red in generation if is_red}
     out.append(f'<g stroke="{LINE}" stroke-width="5" fill="none">')
     for child, parents in EDGES.items():
         for p in parents:
@@ -143,19 +90,17 @@ def build():
                 continue
             out.append(f'<path d="{edge_path(child, p)}"/>')
     out.append('</g>')
-    out.append(f'<g stroke="{RED}" stroke-width="9" fill="none">')
+    out.append(f'<g stroke="{DANGER}" stroke-width="9" fill="none">')
     for child, parents in EDGES.items():
         for p in parents:
             if child in red_ids or p in red_ids:
                 out.append(f'<path d="{edge_path(child, p)}"/>')
     out.append('</g>')
 
-    # Blocks. One fill for the blue set, one for the red block. No opacity
-    # variation: it encoded nothing and read as a third color.
-    for bid, (x, y, spine, red) in pos.items():
+    for x, y, red in pos.values():
         out.append(
             f'<rect x="{x - BW/2:.0f}" y="{y - BH/2:.0f}" width="{BW}" '
-            f'height="{BH}" rx="{R}" fill="{RED if red else GREEN}"/>'
+            f'height="{BH}" rx="{R}" fill="{DANGER if red else ACCENT}"/>'
         )
 
     out.append('</svg>')

@@ -1,11 +1,11 @@
 # V2 release candidate
 
-Prepared September 6, 2026. Public deployment and the full live acceptance
-sequence remain pending. This document describes the source and static release
+Prepared September 6, 2026. Public deployment remains pending. The original 23-transaction live
+application sequence is accepted; an added two-recipient payment is pending. This document describes the source and static release
 candidate; it does not certify production readiness.
 
 V2 contains sixteen canonical pages: the fifteen educational documents from V1
-and `/applications`. The public application lets visitors create a disposable
+and `/applications`, plus 87 compatibility routes. The public application lets visitors create a disposable
 Testnet-10 wallet, send test coins, use escrow and threshold treasury rules,
 resolve a prediction payout, verify a fixed proof, and operate capped tokens
 and fully backed native receipts. It runs from static files with a browser SDK
@@ -33,11 +33,14 @@ node scripts/build-public-templates.mjs --check-vm
 node scripts/public-token-fixtures.mjs --check-vm
 node scripts/public-receipt-fixtures.mjs --check-vm
 npm run check:public
+npx playwright install chromium firefox webkit
+npm run check:public:browser
 ```
 
 These commands generate templates, execute unfunded consensus fixtures,
-validate recovery/signing, and build `dist/`. They do not establish live node
-acceptance. For the complete educational checks also run `npm run check`,
+validate recovery/signing, and build `dist/`. The browser gate requires a real
+Testnet-10 connection and fails if it cannot create and restore an unfunded
+wallet; it does not broadcast or establish funded transaction acceptance. For the complete educational checks also run `npm run check`,
 `npm run check:copy`, `npm run check:posts`, and the documented browser review.
 
 ## Release checks
@@ -47,12 +50,15 @@ acceptance. For the complete educational checks also run `npm run check`,
 - [x] Restore rejects forged holding lineage and clears saved acceptance claims.
 - [x] Accepted-history tests cover exact transaction IDs, spent outputs,
   pagination, reorganizations, missing checkpoints and node failures.
-- [x] Twelve focused acceptance/recovery/restored-state tests pass in the current review.
+- [x] Nineteen public release/transaction/acceptance/recovery tests and signing checks pass.
 - [x] A bounded scan of the 136-file static artifact found no suspicious secret
   filenames or embedded private-key/token literals. This is not exhaustive
   secret detection or a security audit.
-- [ ] Finish and record the full live application sequence, including token
-  operations and receipt merge, move, and partial/full redemption.
+- [x] Record all 23 original public-browser transactions in accepted-chain history,
+  including the full token and backed-receipt sequences.
+- [x] Complete 144 unfunded browser states across Chromium, Firefox and WebKit,
+  four widths and both themes, with actual RPC and encrypted recovery.
+- [ ] Record the added two-recipient native payment acceptance.
 - [ ] Complete final responsive, keyboard, error and recovery browser review
   against the final generated artifact.
 - [ ] Run final combined release checks after the last code change.
@@ -60,17 +66,34 @@ acceptance. For the complete educational checks also run `npm run check`,
 - [ ] Verify the custom domain, application SDK/WASM/templates, historical
   routes and public education pages after deployment.
 
-## Live evidence in progress
+## Live evidence
 
-The browser reviewer has reported accepted-chain observations for treasury
-funding and its A/B exit, prediction funding and a Yes payout, proof funding
-and its proof exit, a 0.1 tKAS payment, and receipt genesis and split. The proof
-exit fee was 0.181539 tKAS, below its distinct 0.2 tKAS cap. Earlier escrow
-coverage and exact transaction identifiers belong in
-[the public browser review](../design/PUBLIC-APPS-REVIEW.md), which is the
-maintained evidence ledger. Receipt remaining operations, the full token
-sequence, and final responsive review were still running when these notes
-were prepared. Do not infer those outcomes from the unfunded VM fixtures.
+All 23 original public-browser transactions were found in accepted-chain history
+in the September 6 scan completed at 15:43:28 UTC. This includes escrow funding
+and refund, treasury funding and A/B spend, prediction funding and Yes settlement,
+proof funding and verification, native payments, every backed-receipt lifecycle
+operation, and token genesis through mint, move, split, merge, exchange and burn.
+The proof exit fee was 0.181539 tKAS, below its distinct 0.2 tKAS cap.
+
+[The public browser review](../design/PUBLIC-APPS-REVIEW.md) records full IDs,
+fees and accepting blocks. The original sequence used 0.312202 tKAS in fees;
+native balances and the remaining issuer cell reconcile with fees to the
+1.2 tKAS allocation. Receipts were fully redeemed, and token circulating supply
+was zero with 900 units still unissued. These balances describe that observation,
+prior to the added two-recipient payment. Its acceptance remains a separate check.
+
+The reproducible unfunded browser gate passed 48 states per engine in Chromium,
+Firefox and WebKit. It verifies SDK/WASM loading, three distinct zero-balance
+accounts, missing-file and wrong-password errors, encrypted file and browser
+recovery, keyboard interaction and no horizontal overflow at 320/390/768/1440
+pixels in both themes. Safari initially exposed SDK resolver cross-origin errors;
+the public entry point now connects directly to the verified Testnet-10 endpoint
+and disconnects on page hide. Fresh runs passed all 144 states without hiding
+errors. Node unavailability remains a visible failure rather than an offline pass.
+
+Final funded-holdings screenshots and post-deployment verification remain
+separate release requirements. No installed external-wallet or physical-device
+claim follows from the automated engine checks.
 
 ## Trust and limits
 
@@ -89,3 +112,9 @@ USD or off-chain reserve promise. The fixed proof demonstrates verification,
 not complete privacy. Node observation is current evidence, not finality.
 External-wallet callback tests do not establish installed-provider behavior.
 Physical-device testing and an independent security audit remain unverified.
+
+
+Additional split review status: a 0.01 + 0.01 tKAS proposal failed the real
+storage-mass limit before signing (2,045,832 versus 500,000). No 24th transaction
+was submitted. The UI reports the mass-limit reason; a feasible two-recipient
+case and the final 80-state funded/read-only visual review remain pending.

@@ -93,3 +93,14 @@ themes, including actual viewport captures after label activation. Controls,
 participant conditions, group feedback, and the educational-model boundary
 remain readable. This extends prior page-type review rather than asserting
 manual inspection of every final full-page PNG.
+
+## Publication candidate after final wording pass
+
+The final combined matrix completed at **2026-09-06T15:13:58.938Z** against
+the artifact built at 15:11:09 UTC: **150 states, zero automated findings**.
+This is the latest matrix, superseding the 15:05 run after the final wording
+pass. The reviewer also inspected the new opening at 320px light and 1440px
+dark: its headline, proof-of-work explanation, and first network illustration
+fit without clipping or overlap. Images are
+`.cache/visual-review/final-opening-320-light.png` and
+`.cache/visual-review/final-opening-1440-dark.png`.
