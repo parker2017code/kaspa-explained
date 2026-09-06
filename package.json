@@ -1,9 +1,20 @@
 {
+  "private": true,
   "scripts": {
-    "lint:copy": "node scripts/lint-copy.mjs",
-    "audit:copy": "node scripts/audit-facing-copy.mjs",
-    "audit:terms": "node scripts/audit-domain-terms.mjs",
-    "audit:visual": "node scripts/audit-visual-guardrails.mjs",
-    "audit:layout": "node scripts/audit-rendered-layout.mjs"
+    "build": "node scripts/build.mjs",
+    "setup:testnet": "node scripts/setup-testnet.mjs",
+    "check:contracts": "node scripts/compile-contract.mjs",
+    "check:contracts:vm": "node scripts/check-contract-vm.mjs",
+    "build:v1": "KASPA_RELEASE=v1 node scripts/build.mjs",
+    "check:v1": "npm run build:v1 && KASPA_RELEASE=v1 node --test tests/routes.test.mjs && node --test tests/release-build.test.mjs tests/legacy-links.test.mjs",
+    "check": "npm run build && node --test tests/models.test.mjs tests/network-diagram.test.mjs tests/contract-signature.test.mjs tests/local-server.test.mjs tests/acceptance.test.mjs tests/money-models.test.mjs tests/routes.test.mjs tests/split-fee.test.mjs tests/wallet-load.test.mjs tests/submission-journal.test.mjs tests/setup-integrity.test.mjs tests/native-payment.test.mjs tests/public-recovery.test.mjs tests/public-asset-recovery.test.mjs tests/public-assets-state.test.mjs tests/coordination.test.mjs",
+    "check:copy": "node scripts/lint-copy.mjs",
+    "check:posts": "node scripts/check-x-posts.mjs",
+    "check:render": "node scripts/check-render.mjs",
+    "serve": "node server/index.mjs",
+    "check:journeys": "node scripts/check-journeys.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
   }
 }

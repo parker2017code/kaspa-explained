@@ -1,0 +1,36 @@
+import {mkdir,writeFile,readFile,copyFile,mkdtemp,rename} from 'node:fs/promises';
+import {documents,standalone} from '../src/page-registry.mjs';
+import {site} from '../src/site.mjs';
+import {escape} from '../src/components.mjs';
+import {withContents} from '../src/page-contents.mjs';
+import {legacyDestination} from './legacy-target.mjs';
+
+if(process.env.KASPA_RELEASE && !['v1','v2'].includes(process.env.KASPA_RELEASE))throw new Error('Choose release v1 or v2.');
+await mkdir('.cache',{recursive:true});
+const output=await mkdtemp('.cache/site-build-');
+const destination=standalone?'dist-v1':'dist';
+await mkdir(`${output}/assets`,{recursive:true});
+export const shell=page=>`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(page.title)}${page.title===site.title?'':' · '+site.title}</title><meta name="description" content="${escape(page.description)}"><link rel="canonical" href="${site.domain}/${page.file==='index.html'?'':page.file.replace('.html','')}"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta property="og:title" content="${escape(page.title)}"><meta property="og:description" content="${escape(page.description)}"><meta property="og:image" content="${site.domain}/og-kaspa-explained.png"><link rel="stylesheet" href="/assets/app.css"><script>try{const t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('kaspa-theme');if(t==='dark')document.documentElement.dataset.theme='dark';}catch{}</script><script type="module" src="/assets/app.mjs"></script></head><body><a class="skip" href="#main">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" href="/"><img src="/favicon.svg" width="28" height="28" alt="">Kaspa Explained</a><nav class="main-nav" id="main-nav" aria-label="Main navigation">${site.navigation.map(([title,href])=>`<a href="${href}"${page.file===href.slice(1)+'.html'?' aria-current="page"':''}>${title}</a>`).join('')}<a href="/playground">Playground</a></nav><div class="header-tools"><a href="/search" aria-label="Search explanations">Search</a><button class="theme-button" data-theme-toggle aria-label="Dark appearance" aria-pressed="false">◐</button><button class="menu-button" data-menu aria-expanded="false" aria-controls="main-nav">Menu</button></div></div></header><main class="main" id="main">${withContents(page)}</main><footer class="site-footer"><p>Independent education about Kaspa.<br>Models explain. Sources let you check.</p><nav aria-label="Footer"><a href="/sources">Sources</a><a href="/status">Current status</a><a href="/search">Search</a></nav></footer></body></html>`;
+for(const page of documents)await writeFile(`${output}/${page.file}`,shell(page));
+for(const name of ['app.mjs','network-diagram.mjs','models.mjs','app.css','money-app.mjs','money-models.mjs','coordination.mjs','coordination.css',...(standalone?[]:['testnet-app.mjs','contracts-app.mjs','recovery-app.mjs'])])await copyFile(`src/${name}`,`${output}/assets/${name}`);
+if(!standalone)await copyFile('contracts/refundable-transfer.sil',`${output}/assets/refundable-transfer.sil`);
+if(!standalone)await copyFile('contracts/payment-split.sil',`${output}/assets/payment-split.sil`);
+if(!standalone){
+  for(const name of ['public-apps.mjs','public-apps.css','public-contracts.mjs','public-recovery.mjs','public-assets-ui.mjs','public-token.mjs','public-receipt.mjs','public-asset-signing.mjs','public-asset-recovery.mjs','public-acceptance.mjs'])await copyFile(`src/${name}`,`${output}/assets/${name}`);
+  await mkdir(`${output}/assets/kaspa`,{recursive:true});
+  for(const name of ['kaspa.js','kaspa_bg.wasm','LICENSE'])await copyFile(`.cache/upstream/kaspa-wasm32-sdk/web/kaspa/${name}`,`${output}/assets/kaspa/${name}`);
+  await copyFile('.cache/public-templates/templates.json',`${output}/assets/public-templates.json`);
+}
+for(const name of ['favicon.svg','favicon.ico','favicon.png','og-kaspa-explained.png','carnot-local-brownian-global.pdf','the-instrument.pdf','LICENSE.md','THIRD_PARTY.md'])await copyFile(name,`${output}/${name}`);
+const aliases=JSON.parse(await readFile('src/legacy-routes.json','utf8'));
+const resolveAlias=(url,visited=new Set())=>{const key=url.split('#')[0].replace(/^\//,'').replace(/\.html$/,'');if(visited.has(key))return '/search';visited.add(key);return aliases[key]?resolveAlias(aliases[key],visited):url;};
+for(const [name,target] of Object.entries(aliases)){const url=resolveAlias(target);const targetFile=url.split('#')[0].slice(1)||'index';const targetPage=documents.find(page=>page.file===targetFile+'.html');const ids=targetPage?[...targetPage.body.matchAll(/(?:id|data-workspace)="([^"]+)"/g)].map(match=>match[1]):[];await mkdir(`${output}/${name.split('/').slice(0,-1).join('/')}`,{recursive:true});await writeFile(`${output}/${name}.html`,`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page moved · Kaspa Explained</title><script>location.replace((${legacyDestination.toString()})(${JSON.stringify(url)},location.hash,${JSON.stringify(ids)}));</script><noscript><meta http-equiv="refresh" content="0;url=${escape(url)}"></noscript></head><body><a href="${escape(url)}">Continue to the explanation</a></body></html>`);}
+await writeFile(`${output}/sitemap.xml`,`<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${documents.filter(p=>p.file!=='404.html').map(p=>`<url><loc>${site.domain}/${p.file==='index.html'?'':p.file.replace('.html','')}</loc></url>`).join('')}</urlset>`);
+await writeFile(`${output}/robots.txt`,'User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: https://kaspaexplained.com/sitemap.xml\n');
+await writeFile(`${output}/CNAME`,'kaspaexplained.com\n');
+await writeFile(`${output}/.nojekyll`,'');
+// Preserve the previous generated tree until the replacement has been installed.
+const previous=output+'-previous';let moved=false;
+try{await rename(destination,previous);moved=true;}catch(error){if(error.code!=='ENOENT')throw error;}
+try{await rename(output,destination);}catch(error){if(moved)await rename(previous,destination);throw error;}
+console.log(`Built ${documents.length} pages and ${Object.keys(aliases).length} compatibility routes in ${destination}/.`);
