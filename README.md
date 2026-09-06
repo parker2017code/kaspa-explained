@@ -11,14 +11,17 @@ threshold treasury, prediction payouts, a fixed proof, capped tokens and fully
 backed native receipts. Application transactions need no public signing server or compiler endpoint.
 The new guided source flow adds automatic disposable-session recovery and an
 optional fixed-amount external testnet faucet; see [faucet operations](docs/faucet.md).
-Guided release `85414b4` is deployed; all 138 expected live files matched.
+The earlier guided release `85414b4` matched all 138 expected live files.
 The first online faucet claim delivered exactly 10 tKAS, and the dedicated
 faucet reserve has received 9,000 tKAS in total. All six guided scenarios completed online: 13 application transactions were
 accepted and independently checked against public history. See
 [the guided verification report](design/GUIDED-APPS-REVIEW.md).
-V3 adds detailed SVG diagrams, phone rendering improvements and public names
+V3 revision `d1d69ec` is deployed; all 143 public files match the verified build.
+It adds detailed SVG diagrams, phone rendering improvements and public names
 recorded in token creation transactions. Names use application-specific metadata;
-they do not assert KCC standard compliance. See [V3 verification](docs/release-v3.md).
+they do not assert KCC standard compliance. A fresh public visitor completed all
+six V3 scenarios with 13 accepted transactions; 432 live education states passed
+across three browser engines. See [V3 verification](docs/release-v3.md).
 
 These examples are unaudited and are not intended for mainnet.
 

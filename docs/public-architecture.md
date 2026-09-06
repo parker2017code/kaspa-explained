@@ -1,5 +1,9 @@
 # Public Testnet-10 applications
 
+V3 revision `d1d69ec` is deployed, including on-chain token names and the updated
+diagrams. All 143 public files matched the verified build. See
+[the V3 release record](release-v3.md) for current validation.
+
 The earlier public V2 app was deployed at https://kaspaexplained.com from revision
 `4695529` (September 6, 2026). The live artifact matched all 138 expected files;
 96 live Chromium/WebKit recovery and layout states passed. Detailed release

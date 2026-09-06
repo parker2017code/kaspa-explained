@@ -1,5 +1,13 @@
 # V3 verification
 
+Deployed September 6, 2026 from revision `d1d69ec2ddab0eafffa427acdbb7df500f232041`
+by [publication run 34052188335](https://github.com/parker2017code/kaspa-explained/actions/runs/34052188335).
+All 143 public files matched local SHA-256 hashes. One historical-page HTTP
+request timed out on the first pass and matched on its individual retry.
+The earlier `50f6187` publication attempt stopped at the animation gate and
+did not publish; the timing fix and deterministic regression test are included
+in the deployed revision.
+
 V3 replaces the illustrative block cards with detailed SVG ledger diagrams and
 adds state-driven money and group-move drawings. Phone layouts use separate,
 readable geometry. Payment, change and fee retain the original whole-sompi model;
@@ -55,6 +63,9 @@ See [visual and performance evidence](../design/V3-VISUAL-REVIEW.md) and
 
 The publication workflow checks the pinned consensus VM, both release builds,
 public applications, faucet policy, all three browser engines, copy, guided
-journeys and rendered layouts before publishing. After deployment, public file
-hashes and a new complete six-scenario live application run are checked
-separately. Testnet acceptance is not a security audit or a finality guarantee.
+journeys and rendered layouts before publishing. After deployment, all 143 public file hashes matched. A fresh visitor used the
+public faucet and completed all six application scenarios, with 13 transactions
+accepted automatically. The live education suite passed 432 states across three
+browser engines. See [the live application record](release-v3-live.md),
+[the public visual review](../design/V3-LIVE-VISUAL-REVIEW.md) and
+[the real mainnet inspector check](../design/V3-INSPECTOR-REVIEW.md). Testnet acceptance is not a security audit or a finality guarantee.
