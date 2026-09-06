@@ -23,6 +23,15 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run setup:testnet
+      - name: Check out pinned contract VM source
+        uses: actions/checkout@v6
+        with:
+          repository: kaspanet/silverscript
+          ref: c7d17a15ac88610d013ec9ffffa9520aeb69929b
+          path: .cache/upstream/silverscript
+          persist-credentials: false
+      - name: Install verified Rust toolchain
+        run: rustup toolchain install 1.97.0 --profile minimal && rustup default 1.97.0
       - run: node scripts/build-public-templates.mjs --check-vm
       - run: node scripts/public-token-fixtures.mjs --check-vm
       - run: node scripts/public-receipt-fixtures.mjs --check-vm
