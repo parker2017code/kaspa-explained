@@ -4,7 +4,7 @@ This repository uses a split license.
 
 ## Content
 
-The written content, HTML page text, `CONTENT_BRIEF.md`, `CLAIMS.yml`, and other editorial/reference material are
+The written content, HTML page text, `NORTH_STAR.md`, `COPY_STYLE.md`, `CLAIMS.yml`, and other editorial/reference material are
 licensed under the Creative Commons Attribution 4.0 International License
 (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
 

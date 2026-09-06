@@ -97,7 +97,7 @@ export const pages = [
   {
     file:'build-on-kaspa.html', title:'Build on Kaspa', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
     body:`${intro('Build','Payments and spending rules','Covenants constrain how an output can be spent. Explore a withdrawal rule, application requirements, and the available tools.')}
-      <div class="action-row">${process.env.KASPA_RELEASE==='v1'?'':'<a class="primary-button" href="/testnet">Open the Testnet Workshop ↗</a><a href="/contracts">Explore a refundable transfer ↗</a>'}<a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
+      <div class="action-row">${process.env.KASPA_RELEASE==='v1'?'':'<a class="primary-button" href="/applications">Try the Testnet-10 applications ↗</a>'}<a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
       ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant can constrain how an output is spent. Try a withdrawal against three conditions.')}
       ${section('start','Integration tasks',rows([
         ['Read the network',`<p>Use node or public-service interfaces for blocks, transactions, and accepted history. Know which service you trust and how it handles missing or changed data.</p><p>${link('Integration guide','https://docs.kaspa.org/integrate/getting-started')}</p>`],
