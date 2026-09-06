@@ -1,5 +1,10 @@
 # Public Testnet-10 applications
 
+The public V2 app is deployed at https://kaspaexplained.com from revision
+`4695529` (September 6, 2026). The live artifact matched all 138 expected files;
+96 live Chromium/WebKit recovery and layout states passed. Detailed release
+and verification evidence is in [the V2 notes](release-v2.md).
+
 The deployed app needs static artifacts and the pinned browser SDK. It does not
 need the workshop signer, its files, or a public native compiler endpoint.
 
@@ -167,6 +172,7 @@ From the repository root:
 ```sh
 npm ci
 npm run setup:testnet
+npm run check:contracts:vm
 node scripts/build-public-templates.mjs --check-vm
 node scripts/public-token-fixtures.mjs --check-vm
 node scripts/public-receipt-fixtures.mjs --check-vm
@@ -175,7 +181,9 @@ npx playwright install chromium firefox webkit
 npm run check:public:browser
 ```
 
-Setup verifies downloaded SDK/compiler checksums. The VM harness pins
+Setup verifies downloaded SDK/compiler checksums. It installs binaries only;
+`check:contracts:vm` first clones and verifies the pinned SilverScript source
+required by the public VM commands. The VM harness pins
 SilverScript revision `c7d17a15ac88610d013ec9ffffa9520aeb69929b` and uses
 Cargo's locked dependency resolution. The public-template command creates
 all six templates and checks the original four applications. The following

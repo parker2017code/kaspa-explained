@@ -1,8 +1,9 @@
-# V2 release candidate
+# V2 release notes
 
-Prepared September 6, 2026. Public deployment remains pending. The original 23-transaction live
-application sequence is accepted; an added two-recipient payment is pending. This document describes the source and static release
-candidate; it does not certify production readiness.
+Published September 6, 2026 at https://kaspaexplained.com from revision
+`4695529`. Pages run `34044565585` succeeded at 16:21 UTC. All 24 application
+transactions have dated accepted-chain evidence, including the two-recipient
+payment. Publication does not certify production security.
 
 V2 contains sixteen canonical pages: the fifteen educational documents from V1
 and `/applications`, plus 87 compatibility routes. The public application lets visitors create a disposable
@@ -29,6 +30,7 @@ the UI is one disposable-wallet demonstration of those APIs.
 ```sh
 npm ci
 npm run setup:testnet
+npm run check:contracts:vm
 node scripts/build-public-templates.mjs --check-vm
 node scripts/public-token-fixtures.mjs --check-vm
 node scripts/public-receipt-fixtures.mjs --check-vm
@@ -36,6 +38,10 @@ npm run check:public
 npx playwright install chromium firefox webkit
 npm run check:public:browser
 ```
+
+`setup:testnet` installs binaries; `check:contracts:vm` also clones and verifies
+the pinned SilverScript Rust source required by public `--check-vm` commands.
+Rust and native build tools must already be installed.
 
 These commands generate templates, execute unfunded consensus fixtures,
 validate recovery/signing, and build `dist/`. The browser gate requires a real
@@ -51,19 +57,19 @@ wallet; it does not broadcast or establish funded transaction acceptance. For th
 - [x] Accepted-history tests cover exact transaction IDs, spent outputs,
   pagination, reorganizations, missing checkpoints and node failures.
 - [x] Nineteen public release/transaction/acceptance/recovery tests and signing checks pass.
-- [x] A bounded scan of the 136-file static artifact found no suspicious secret
+- [x] A bounded scan of the 138-file static artifact found no suspicious secret
   filenames or embedded private-key/token literals. This is not exhaustive
   secret detection or a security audit.
-- [x] Record all 23 original public-browser transactions in accepted-chain history,
+- [x] Record all 24 public-browser transactions in accepted-chain history,
   including the full token and backed-receipt sequences.
 - [x] Complete 144 unfunded browser states across Chromium, Firefox and WebKit,
   four widths and both themes, with actual RPC and encrypted recovery.
-- [ ] Record the added two-recipient native payment acceptance.
-- [ ] Complete final responsive, keyboard, error and recovery browser review
-  against the final generated artifact.
-- [ ] Run final combined release checks after the last code change.
-- [ ] Publish the reviewed source revision and static artifact.
-- [ ] Verify the custom domain, application SDK/WASM/templates, historical
+- [x] Record the added two-recipient native payment acceptance and exact outputs.
+- [x] Complete final funded-state Chromium review: 80 states across five widths
+  and both themes, plus keyboard/error/account-switch checks and visual corrections.
+- [x] Run final combined release checks after the last code change.
+- [x] Publish the reviewed source revision and static artifact.
+- [x] Verify the custom domain, application SDK/WASM/templates, historical
   routes and public education pages after deployment.
 
 ## Live evidence
@@ -76,11 +82,11 @@ operation, and token genesis through mint, move, split, merge, exchange and burn
 The proof exit fee was 0.181539 tKAS, below its distinct 0.2 tKAS cap.
 
 [The public browser review](../design/PUBLIC-APPS-REVIEW.md) records full IDs,
-fees and accepting blocks. The original sequence used 0.312202 tKAS in fees;
+fees and accepting blocks. The complete sequence used 0.315262 tKAS in fees;
 native balances and the remaining issuer cell reconcile with fees to the
 1.2 tKAS allocation. Receipts were fully redeemed, and token circulating supply
-was zero with 900 units still unissued. These balances describe that observation,
-prior to the added two-recipient payment. Its acceptance remains a separate check.
+was zero with 900 units still unissued. After the accepted split, native balances are Main 0, Second 0.1340785 and
+Third 0.0901665 tKAS; the issuer cell retains 0.660493 tKAS.
 
 The reproducible unfunded browser gate passed 48 states per engine in Chromium,
 Firefox and WebKit. It verifies SDK/WASM loading, three distinct zero-balance
@@ -91,9 +97,30 @@ the public entry point now connects directly to the verified Testnet-10 endpoint
 and disconnects on page hide. Fresh runs passed all 144 states without hiding
 errors. Node unavailability remains a visible failure rather than an offline pass.
 
-Final funded-holdings screenshots and post-deployment verification remain
-separate release requirements. No installed external-wallet or physical-device
+The final 80 funded-state screenshots and interaction checks passed.
+Post-deployment verification passed as recorded below. No installed external-wallet or physical-device
 claim follows from the automated engine checks.
+
+The two-recipient payment `c9b0b794c4c0cf99417d5a0460db2f33170291dd342bb667358d2f1898dc93a2`
+was accepted in block `d7bc055e63148471510fe9f10d7b08208e59689159191c0ca6f05a73dedde331`.
+Its two 0.0401665 tKAS outputs and 0.00306 tKAS fee were independently checked.
+The earlier 0.01 + 0.01 proposal was rejected before signing by storage mass;
+that earlier rejection is not the outcome of the successfully submitted split.
+
+Pages run `34044565585`, job `101517207218`, successfully deployed revision
+`4695529` at 16:21 UTC on September 6. Its corrected dependency sequence passed
+all three public VM suites, 52 general tests, 19 public tests plus signing
+checks, 144 unfunded browser states, nine browser journeys, and 160 render
+states with zero findings.
+
+The live artifact matched all 138 expected files by HTTP response and SHA-256
+(`.cache/live-v2-verification.json`). Independent live Chromium and WebKit checks
+passed 48 states each: SDK loading, account creation, encrypted file/local
+restore, missing-file/wrong-password errors, four widths and both themes.
+There were no page exceptions or private API calls, and those checks sent no
+funds. Evidence is under `.cache/visual-review/public-live/`. The live application
+screenshot was visually inspected; the mainnet lookup labels its provider data
+accurately. These checks do not extend to physical devices or a security audit.
 
 ## Trust and limits
 
@@ -112,9 +139,3 @@ USD or off-chain reserve promise. The fixed proof demonstrates verification,
 not complete privacy. Node observation is current evidence, not finality.
 External-wallet callback tests do not establish installed-provider behavior.
 Physical-device testing and an independent security audit remain unverified.
-
-
-Additional split review status: a 0.01 + 0.01 tKAS proposal failed the real
-storage-mass limit before signing (2,045,832 versus 500,000). No 24th transaction
-was submitted. The UI reports the mass-limit reason; a feasible two-recipient
-case and the final 80-state funded/read-only visual review remain pending.

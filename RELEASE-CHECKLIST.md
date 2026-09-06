@@ -1,7 +1,7 @@
 # Release checklist
 
-V1 is published at https://kaspaexplained.com. V2 remains a release candidate
-until its source publication, deployment and live-domain checks are recorded.
+V2 is published at https://kaspaexplained.com from revision `4695529`.
+The standalone V1 build remains available; release evidence is recorded below.
 
 ## V1: standalone education
 
@@ -56,19 +56,40 @@ See `docs/release-v1.md` and `design/live-v1/` for the bounded live review.
 - [x] Public static architecture: sixteen canonical pages, 87 compatibility routes, six templates; no public local signer.
 - [x] Current `check:public`: 19 tests plus public signing checks pass.
 - [x] Unfunded browser SDK/recovery gate: 48 states each in Chromium, Firefox and WebKit, using real RPC. Missing-file/wrong-password rejection, all three account identities, both themes and four widths pass.
-- [ ] Record acceptance of the additional two-recipient native payment introduced after the original 23-transaction sequence.
-- [ ] Finish the final funded-holdings visual review after the latest interface changes.
-- [ ] Run final combined release checks on the final source revision.
-- [ ] Publish V2 source, transaction evidence, limitations and release notes.
-- [ ] Deploy V2 and verify the custom domain, static SDK/WASM/templates and public routes.
+- [x] Record the two-recipient native payment acceptance and both exact outputs.
+- [x] Final funded-state Chromium review: 80 states, no page errors, overflow or private API calls; corrected controls visually rechecked.
+- [x] Run final combined release checks on the final source revision.
+- [x] Publish V2 source, transaction evidence, limitations and release notes.
+- [x] Deploy V2 and verify the custom domain, static SDK/WASM/templates and public routes.
 
-The original public-browser sequence contains 23 accepted transactions, with
-0.312202 tKAS in fees. See `design/PUBLIC-APPS-REVIEW.md` for every action,
+The public-browser sequence contains 24 accepted transactions, with
+0.315262 tKAS in fees. See `design/PUBLIC-APPS-REVIEW.md` for every action,
 transaction ID, accepting block and reconciliation of the 1.2 tKAS allocation.
 That evidence does not imply live coverage of every alternative signature pair,
 oracle result or refund branch; the unfunded VM suites provide separate route
 and rejection coverage. The older workshop transactions below are historical
 evidence and are distinct from the public application sequence.
+
+The two-recipient payment `c9b0b794c4c0cf99417d5a0460db2f33170291dd342bb667358d2f1898dc93a2`
+was accepted in block `d7bc055e63148471510fe9f10d7b08208e59689159191c0ca6f05a73dedde331`.
+Its two 0.0401665 tKAS outputs and 0.00306 tKAS fee were independently checked.
+The earlier 0.01 + 0.01 proposal was rejected before signing by storage mass;
+that earlier rejection is not the outcome of the successfully submitted split.
+
+Pages run `34044565585`, job `101517207218`, successfully deployed revision
+`4695529` at 16:21 UTC on September 6. Its corrected dependency sequence passed
+all three public VM suites, 52 general tests, 19 public tests plus signing
+checks, 144 unfunded browser states, nine browser journeys, and 160 render
+states with zero findings.
+
+The live artifact matched all 138 expected files by HTTP response and SHA-256
+(`.cache/live-v2-verification.json`). Independent live Chromium and WebKit checks
+passed 48 states each: SDK loading, account creation, encrypted file/local
+restore, missing-file/wrong-password errors, four widths and both themes.
+There were no page exceptions or private API calls, and those checks sent no
+funds. Evidence is under `.cache/visual-review/public-live/`. The live application
+screenshot was visually inspected; the mainnet lookup labels its provider data
+accurately. These checks do not extend to physical devices or a security audit.
 
 All applications are experimental, unaudited, Testnet-10 only, and never
 intended for mainnet. Simulations are not counted as native implementations.
@@ -99,9 +120,3 @@ browser QA address. Fee: 264,800 sompi. Cumulative local-wallet test allocation
 is now 641,310,100 sompi (6.413101 tKAS) against the 10 tKAS cap. Browser tests
 spend from this allocated amount; this funding observation is not evidence
 that an application contract has executed.
-
-
-Additional split review status: a 0.01 + 0.01 tKAS proposal failed the real
-storage-mass limit before signing (2,045,832 versus 500,000). No 24th transaction
-was submitted. The UI reports the mass-limit reason; a feasible two-recipient
-case and the final 80-state funded/read-only visual review remain pending.
