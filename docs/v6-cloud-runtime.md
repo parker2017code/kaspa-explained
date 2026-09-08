@@ -70,19 +70,41 @@ transaction after an uncertain submission.
 
 ## Lease and shutdown
 
-`V6_LEASE_DEADLINE_MS` may be supplied by the Durable Object as an absolute
+`V6_LEASE_DEADLINE_MS` is supplied by the Durable Object as an absolute
 epoch-millisecond deadline. It must be no more than 30 minutes after process
 start. The runtime stops accepting new work 30 seconds before that deadline,
 drains the serial queue for at most 30 seconds, closes event streams, and
 disconnects RPC by the deadline. For local tests, `V6_MAX_RUNTIME_MS` can set a
 shorter limit; its default is 30 minutes. `SIGTERM` and `SIGINT` use the same
-bounded drain path. There is no automatic restart or state reset.
+bounded drain path. A stopped process does not restart under its old lease.
 
 The API queue is FIFO and serial with a maximum depth of 20 occupied slots.
-Requests beyond that limit receive `429`. The Worker should enforce its own
-monthly container lease budget and pass the absolute deadline into each
-container invocation; the process limit bounds one lease, while the Worker
-budget bounds total monthly runtime.
+Requests beyond that limit receive `429`. One `standard-1` instance is allowed
+to run at a time (0.5 vCPU, 4 GiB memory, 8 GB disk), and it sleeps after 60
+seconds without activity.
+
+The Worker reserves at most 40 half-hour starts in a rolling 30-day window,
+equivalent to at most 20 reserved container-hours. Every start counts even if
+the process is idle, fails, or stops early; there are no refunds. The expiry
+callback destroys a process that is still running. A first visit can reserve a
+lease through `POST /api/v6/start`. After sleep or expiry, `status` or `action`
+can reserve a new lease only when the supplied browser session ID and capability
+hash match a saved `v6:session` record. Invalid credentials and anonymous event
+streams cannot reserve a lease. A restored `status` remains read-only: the host
+may reconcile observed chain state with `allowBroadcast: false`, but does not
+retry or submit a transaction.
+
+The Worker also caps requests at 180 per IP per minute, 600 globally per minute,
+6,000 globally per day, and 1,000 per saved session per day. The recorded
+658.6-second browser run used 73 requests (24 actions, 46 status polls, and three
+event streams), so the session allowance leaves room for a slower complete tour
+and reload recovery. Budget storage or client-IP failures close the API rather
+than bypassing the limits. Cloudflare Worker observability is disabled in the
+deployment configuration.
+
+These controls bound this application's use. They are not a Cloudflare account
+billing cap, spending limit, or guarantee that other Workers and Containers on
+the account cannot incur charges.
 
 ## Required runtime configuration
 

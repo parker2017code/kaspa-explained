@@ -1,0 +1,33 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "kaspa-explained",
+  "main": "entry.mjs",
+  "compatibility_date": "2026-09-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "V6_STATE_BRIDGE_URL": "https://kaspa-explained.parker2017.workers.dev/internal/v6/state",
+    "V6_PUBLIC_ORIGIN": "https://kaspa-explained.parker2017.workers.dev"
+  },
+  "assets": {
+    "directory": "../dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/v6/*", "/internal/v6/*"]
+  },
+  "containers": [
+    {
+      "class_name": "V6Container",
+      "image": "../Dockerfile.v6",
+      "max_instances": 1,
+      "instance_type": "standard-1"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {"name": "V6_CONTAINER", "class_name": "V6Container"}
+    ]
+  },
+  "migrations": [
+    {"tag": "v1", "new_sqlite_classes": ["V6Container"]}
+  ],
+  "observability": {"enabled": false}
+}
