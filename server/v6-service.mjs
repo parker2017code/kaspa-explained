@@ -44,6 +44,8 @@ const ACTIONS = new Set([
 const SESSION_CAP = 800000000n;
 const GLOBAL_CAP = 10000000000n;
 const MAX_RECEIPTS = 80;
+const MAX_ASSISTANCE_PROOFS = 12;
+const assistanceLocks = new WeakMap();
 
 const STAGE_CHAPTER = Object.freeze({
   'purchase-ready': 0, 'purchase-complete': 0,
@@ -1443,12 +1445,75 @@ export class V6Service {
     return session;
   }
 
+  async withAssistanceLock(id, task) {
+    if (!this.storage) fail('The session store is unavailable.', 503);
+    let locks = assistanceLocks.get(this.storage);
+    if (!locks) { locks = new Map(); assistanceLocks.set(this.storage, locks); }
+    const previous = locks.get(id) || Promise.resolve();
+    const next = previous.catch(() => {}).then(task);
+    locks.set(id, next);
+    try { return await next; }
+    finally { if (locks.get(id) === next) locks.delete(id); }
+  }
+
+  assistanceSnapshot(session) {
+    return {id: session.id, mode: 'browser-assistance', proofCalls: session.proofCalls, maxProofCalls: MAX_ASSISTANCE_PROOFS};
+  }
+
+  async startAssistance(body) {
+    only(body, ['id', 'capability', 'mode']);
+    if (typeof body.id !== 'string' || !UUID.test(body.id) || typeof body.capability !== 'string' || !HASH.test(body.capability)) fail('A browser-generated V6 id and 32-byte capability are required.', 400);
+    return this.withAssistanceLock(body.id, async () => {
+      const existing = await this.load(body.id), capHash = sha256(body.capability);
+      if (existing) {
+        if (!timingEqualHex(existing.capHash, capHash)) fail('This V6 id is already paired with another capability.', 401);
+        if (existing.mode !== 'browser-assistance') fail('This saved session uses the legacy transaction flow.', 409);
+        return json({session: this.assistanceSnapshot(existing)});
+      }
+      const session = {id: body.id, capHash, mode: 'browser-assistance', createdAt: this.now(), proofCalls: 0, proofs: {}};
+      await this.save(session);
+      return json({session: this.assistanceSnapshot(session)});
+    });
+  }
+
+  async assistanceProof(body) {
+    only(body, ['id', 'capability', 'owner', 'taskNonce', 'allocation', 'rate']);
+    // Reject coercions and noncanonical field encodings before loading the prover.
+    if (typeof body.owner !== 'string' || !HASH.test(body.owner) || typeof body.taskNonce !== 'string' || !/^(?:[a-f0-9]{32}|[a-f0-9]{32}0{32})$/i.test(body.taskNonce)
+      || !Number.isInteger(body.allocation) || !Number.isInteger(body.rate)
+      || body.allocation < 1 || body.allocation > 15 || body.rate < 1 || body.rate > 15
+      || body.allocation * body.rate !== 42 || body.allocation + body.rate !== 13) fail('Invalid proof recipient, nonce or task settings.', 400);
+    return this.withAssistanceLock(body.id, async () => {
+      const session = await this.authenticate(body.id, body.capability);
+      if (session.mode !== 'browser-assistance') fail('Proof assistance requires a browser-wallet session.', 409);
+      const input = {owner: body.owner.toLowerCase(), taskNonce: body.taskNonce.toLowerCase().padEnd(64, '0'), allocation: body.allocation, rate: body.rate};
+      const fingerprint = sha256(JSON.stringify(input));
+      if (session.proofs?.[fingerprint]) return json({proof: session.proofs[fingerprint], cached: true});
+      if (!Number.isSafeInteger(session.proofCalls) || session.proofCalls < 0 || session.proofCalls >= MAX_ASSISTANCE_PROOFS) fail('This session has reached its proof generation limit.', 429);
+      const module = await this.proofModule();
+      if (typeof module?.generateProof !== 'function') fail('The proof helper is temporarily unavailable.', 503);
+      // Charge before invoking the bounded native prover. Failed attempts are
+      // retained across restarts so retries cannot bypass the generation cap.
+      session.proofCalls += 1;
+      await this.save(session);
+      let proof;
+      try { proof = await module.generateProof(input); }
+      catch { fail('The proof helper could not generate this proof. Please try again shortly.', 503); }
+      session.proofs ||= {};
+      session.proofs[fingerprint] = proof;
+      await this.save(session);
+      return json({proof, cached: false});
+    });
+  }
+
   async start(body) {
+    if (body?.mode === 'browser-assistance') return this.startAssistance(body);
     only(body, ['id', 'capability']);
     if (typeof body.id !== 'string' || !UUID.test(body.id) || typeof body.capability !== 'string' || !/^[a-f0-9]{64}$/i.test(body.capability)) fail('A browser-generated V6 id and 32-byte capability are required.', 400);
     const capHash = sha256(body.capability), existing = await this.load(body.id);
     if (existing) {
       if (!timingEqualHex(existing.capHash, capHash)) fail('This V6 id is already paired with another capability.', 401);
+      if (existing.mode === 'browser-assistance') fail('This saved session uses browser-wallet assistance.', 409);
       await this.reconcile(existing, {allowBroadcast: false});
       const startAction = existing.actions?.__start;
       if (!existing.pending && startAction && ['preparing', 'failed'].includes(startAction.status) && startAction.retryable !== false) {
@@ -1503,6 +1568,7 @@ export class V6Service {
     only(body, ['id', 'capability', 'requestId', 'action', 'payload']);
     if (typeof body.requestId !== 'string' || !body.requestId || body.requestId.length > 128 || typeof body.action !== 'string' || !ACTIONS.has(body.action)) fail('Invalid V6 action request.', 400);
     const session = await this.authenticate(body.id, body.capability);
+    if (session.mode === 'browser-assistance') fail('Browser-wallet sessions sign transactions in the browser.', 409);
     const action = body.action === 'connect' ? 'resume' : body.action;
     if (action === 'resume') this.validateIntentResume(session, body.requestId, body.payload);
     if (session.pending && action !== 'resume') {
@@ -1555,9 +1621,11 @@ export class V6Service {
       if (!request || request.method !== 'POST') fail('V6 actions require POST.', 405);
       const path = new URL(request.url).pathname, body = await request.json();
       if (path === '/api/v6/start') return await this.start(body);
+      if (path === '/api/v6/proof') return await this.assistanceProof(body);
       if (path === '/api/v6/status') {
         only(body, ['id', 'capability']);
         const session = await this.authenticate(body.id, body.capability);
+        if (session.mode === 'browser-assistance') return json({session: this.assistanceSnapshot(session)});
         await this.reconcile(session, {allowBroadcast: false});
         return json({session: this.publicSnapshot(session)}, session.pending ? 202 : 200);
       }

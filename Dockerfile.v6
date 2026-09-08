@@ -32,7 +32,7 @@ RUN node scripts/setup-v6-vm.mjs \
  && node scripts/build-public-templates.mjs
 
 FROM native AS verify
-RUN node --test tests/v6-proof.test.mjs tests/v6-service.test.mjs tests/v6-network.test.mjs \
+RUN node --test tests/v6-proof.test.mjs tests/v6-service.test.mjs tests/v6-network.test.mjs tests/v6-assistance.test.mjs tests/v6-cloud.test.mjs \
  && node scripts/build-public-templates.mjs --check-vm \
  && node scripts/check-v6-protocol-journey.mjs
 
@@ -47,7 +47,7 @@ RUN apt-get update \
  && useradd --system --uid 10001 --create-home v6
 COPY --from=native --chown=v6:v6 /app/server/v6-cloud.mjs /app/server/v6-cloud-storage.mjs /app/server/v6-network.mjs /app/server/v6-service.mjs /app/server/v6-vm.mjs ./server/
 COPY --from=native --chown=v6:v6 /app/faucet/policy.mjs /app/faucet/v5-advanced-service.mjs /app/faucet/v5-market-service.mjs /app/faucet/v5-service.mjs ./faucet/
-COPY --from=native --chown=v6:v6 /app/src/public-acceptance.mjs /app/src/public-asset-signing.mjs /app/src/public-contracts.mjs /app/src/public-v4-protocol.mjs /app/src/v5-argent-protocol.mjs /app/src/v5-delivery-protocol.mjs /app/src/v5-economy.mjs /app/src/v5-market.mjs /app/src/v5-ring-protocol.mjs /app/src/v6-proof-protocol.mjs /app/src/v5-argent-templates.json /app/src/v5-advanced-templates.json /app/src/v6-proof-templates.json ./src/
+COPY --from=native --chown=v6:v6 /app/src/public-acceptance.mjs /app/src/public-asset-signing.mjs /app/src/public-contracts.mjs /app/src/public-v4-protocol.mjs /app/src/v5-argent-protocol.mjs /app/src/v5-delivery-protocol.mjs /app/src/v5-economy.mjs /app/src/v5-market.mjs /app/src/v5-ring-protocol.mjs /app/src/v6-proof-protocol.mjs /app/src/v6-proof-core.mjs /app/src/v5-argent-templates.json /app/src/v5-advanced-templates.json /app/src/v6-proof-templates.json ./src/
 COPY --from=native --chown=v6:v6 /app/.cache/public-templates ./.cache/public-templates
 COPY --from=native --chown=v6:v6 /app/.cache/upstream/kaspa-wasm32-sdk/nodejs/kaspa ./.cache/upstream/kaspa-wasm32-sdk/nodejs/kaspa
 COPY --from=native --chown=v6:v6 /app/.cache/upstream/silverscript/target/debug/ke-v6-vm ./.cache/upstream/silverscript/target/debug/ke-v6-vm

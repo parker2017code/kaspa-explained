@@ -184,3 +184,21 @@ test('a state CAS failure reaches the API as a fail-closed error before broadcas
   assert.equal(broadcasts, 0);
   assert.equal(storage.isPoisoned, true);
 });
+
+test('browser assistance registers and restores without treasury initialization, RPC or shared transaction work', async () => {
+  const {runtime, storage, rpc} = runtimeFixture();
+  runtime.initialize = () => {throw Error('Assistance must not initialize treasury or artifacts');};
+  runtime.makeService = () => {throw Error('Assistance must not create a treasury host');};
+  storage.records.state = {pending: {purpose: 'v6', sessionId: 'legacy-pending'}};
+  const auth = {id: '20000000-0000-4000-8000-000000000006', capability: 'ab'.repeat(32)};
+  const started = await request(runtime, '/api/v6/start', {body: {...auth, mode: 'browser-assistance'}});
+  assert.equal(started.status, 200);
+  assert.equal((await started.json()).session.mode, 'browser-assistance');
+  assert.equal((await request(runtime, '/api/v6/status', {body: auth})).status, 200);
+  assert.equal((await request(runtime, '/api/v6/proof', {body: {...auth, owner: 'bad'}})).status, 400);
+  assert.equal((await request(runtime, '/api/v6/action', {body: {...auth, requestId: 'action', action: 'purchase'}})).status, 409);
+  assert.equal((await request(runtime, '/api/v6/start', {body: auth})).status, 409);
+  assert.equal(rpc.calls, 0);
+  assert.deepEqual(storage.records.state, {pending: {purpose: 'v6', sessionId: 'legacy-pending'}});
+  assert.equal(Object.keys(storage.records).length, 2);
+});

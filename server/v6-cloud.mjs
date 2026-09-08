@@ -454,6 +454,14 @@ export class V6CloudRuntime {
 
   async processApi(path, body) {
     if (this.stopping || this.leaseExpired) fail('The V6 container lease has ended. Try again shortly.', 503, 'lease_expired');
+    await this.storage.hydrate();
+    const savedSession = typeof body.id === 'string' && UUID.test(body.id) ? await this.storage.get(`v6:session:${body.id}`) : null;
+    const assistance = path === '/api/v6/proof' || (path === '/api/v6/start' && body.mode === 'browser-assistance') || savedSession?.mode === 'browser-assistance';
+    if (assistance) {
+      const service = new V6Service({storage: this.storage, now: this.now});
+      return service.handle(new Request(`http://v6-cloud.internal${path}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}));
+    }
+    await this.initialize();
     await this.ensureRpc();
     const service = await this.makeService(body, path);
     if (!service || typeof service.handle !== 'function') fail('The V6 service is unavailable.', 503, 'service_unavailable');
@@ -495,12 +503,11 @@ export class V6CloudRuntime {
 
   async handleApiRequest(req) {
     const pathname = new URL(req.url || '/', 'http://v6-cloud.internal').pathname;
-    if (!['/api/v6/start', '/api/v6/status', '/api/v6/action'].includes(pathname)) fail('Not found.', 404, 'not_found');
+    if (!['/api/v6/start', '/api/v6/status', '/api/v6/action', '/api/v6/proof'].includes(pathname)) fail('Not found.', 404, 'not_found');
     if (req.method !== 'POST') fail('V6 API actions require POST.', 405, 'method_not_allowed');
     const corsOrigin = this.authorize(req);
     if (req.headers['content-type']?.split(';')[0].toLowerCase() !== 'application/json') fail('The request body must use JSON.', 415, 'content_type_required');
     const body = await readRequestBody(req);
-    await this.initialize();
     const response = await this.queue.enqueue(() => this.processApi(pathname, body));
     return {response, corsOrigin};
   }

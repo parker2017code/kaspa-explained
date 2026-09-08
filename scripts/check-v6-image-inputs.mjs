@@ -45,7 +45,7 @@ const required = [
   'scripts/v6-proof-prover/Cargo.toml', 'scripts/v6-proof-prover/Cargo.lock',
   'scripts/v6-proof-prover/src/lib.rs', 'scripts/v6-proof-prover/src/main.rs',
   'scripts/check-v6-protocol-journey.mjs', 'tests/v6-proof.test.mjs',
-  'tests/v6-service.test.mjs', 'tests/v6-network.test.mjs',
+  'tests/v6-service.test.mjs', 'tests/v6-network.test.mjs', 'tests/v6-assistance.test.mjs', 'tests/v6-cloud.test.mjs', 'src/v6-proof-core.mjs',
   'src/v6-proof-templates.json', 'src/v5-argent-templates.json', 'src/v5-advanced-templates.json',
   'server/v6-service.mjs', 'server/v6-vm.mjs',
 ];

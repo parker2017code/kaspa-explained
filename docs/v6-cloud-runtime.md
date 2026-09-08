@@ -2,13 +2,13 @@
 
 The V6 Testnet-10 transaction service runs in one short-lived Cloudflare
 Container. The public Worker is the only public entry point. It forwards the
-three V6 JSON routes to the container with the internal token and exposes the
+four V6 JSON routes to the container with the internal token and exposes the
 durable state bridge through its Durable Object.
 
 The container listens on `0.0.0.0` and `PORT` (8080 by default). It serves:
 
 - `GET /health`, which reports process and queue state without opening RPC.
-- `POST /api/v6/start`, `/api/v6/status`, and `/api/v6/action`, each with a
+- `POST /api/v6/start`, `/api/v6/status`, `/api/v6/action`, and `/api/v6/proof`, each with a
   JSON body no larger than 64 KiB.
 - `GET /api/v6/events`, an authenticated Testnet-10 block stream limited to
   ten clients. Each stream closes after 60 seconds and can reconnect.
@@ -129,3 +129,10 @@ V6_MAX_RUNTIME_MS     optional shorter test limit
 ```
 
 No secret is logged, returned in a response, or persisted in the state bridge.
+
+
+## Browser wallet proof assistance
+
+The new browser guide signs and submits directly from its three browser-held demo keys. It uses this host only for bounded proof generation. `POST /api/v6/start` with `mode: "browser-assistance"`, a browser-generated `id`, and a 32-byte `capability` stores authenticated session metadata without creating a treasury host or connecting RPC. Existing hosted transaction sessions retain their original recovery path and cannot be converted between modes.
+
+`POST /api/v6/proof` accepts that session authentication plus an exact recipient key, canonical 128-bit task nonce, and integer settings from 1 to 15 that add to 13 and multiply to 42. The existing native prover has a 30-second timeout and 1 MB output cap. A session receives at most 12 durably charged attempts; identical successful requests use the cached result. This helper sees the settings and provides no privacy guarantee. The browser validates the returned task binding and signs its own payout transaction; the network verifies the proof. Assistance requests preserve the Worker’s existing request and runtime limits.
