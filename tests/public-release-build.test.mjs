@@ -16,11 +16,24 @@ test('public V2 includes education and browser applications without local signer
  }
  const search=await readFile('dist/search.html','utf8');assert.match(search,/href="\/applications"/);assert.doesNotMatch(search,/data-search-item[^>]*href="\/(?:testnet|contracts|split)"|href="\/(?:testnet|contracts|split)"[^>]*data-search-item/);
  const sitemap=await readFile('dist/sitemap.xml','utf8');assert.match(sitemap,/<loc>https:\/\/kaspaexplained.com\/applications<\/loc>/);assert.doesNotMatch(sitemap,/<loc>[^<]*\/(?:testnet|contracts|split)<\/loc>/);
+ for(const version of ['v5','v6']){
+  const html=await readFile(`dist/covenants-${version}.html`,'utf8');assert.match(html,/<meta name="robots" content="noindex, nofollow">/);
+  assert.doesNotMatch(search,new RegExp(`href="/covenants/${version}"`));
+  assert.doesNotMatch(sitemap,new RegExp(`<loc>[^<]*/covenants/${version}</loc>`));
+ }
  for(const file of await readdir('dist/assets')){
   if(!file.endsWith('.mjs'))continue;
   const js=await readFile('dist/assets/'+file,'utf8');
   if(file==='wrap-local-client.mjs'){
    assert.deepEqual([...js.matchAll(/['"`](\/api\/[^'"`]+)['"`]/g)].map(m=>m[1]).sort(),['/api/wrap-poc/action','/api/wrap-poc/status']);
+  }else if(file==='v5-wallet.mjs'){
+   assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/faucet','/api/v5/']);
+   assert.deepEqual([...new Set([...js.matchAll(/\brequest\((['"])([^'"]+)\1/g)].map(m=>m[2]))].sort(),['action','payment','start','status']);
+  }else if(file==='v6-app.mjs'){
+   assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/v6/','/api/v6/events']);
+   const requestPaths=[...js.matchAll(/\brequest\((['"])([^'"]+)\1/g)].map(m=>m[2]);
+   const operationPaths=[...js.matchAll(/\bpath:\s*(['"])([^'"]+)\1/g)].map(m=>m[2]);
+   assert.deepEqual([...new Set([...requestPaths,...operationPaths])].sort(),['action','start','status']);
   }else assert.doesNotMatch(js,/['"`]\/api\//,file);
  }
  for(const file of ['public-apps.mjs','wrap-local-client.mjs','public-assets-ui.mjs','public-token.mjs','public-receipt.mjs','public-asset-signing.mjs','public-asset-recovery.mjs','public-contracts.mjs','public-templates.json','kaspa/kaspa.js','kaspa/kaspa_bg.wasm'])await access('dist/assets/'+file);
