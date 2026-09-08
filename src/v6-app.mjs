@@ -8,7 +8,7 @@ import {mountV6Dag} from './v6-dag.mjs';
 export async function mountBrowserHarbor(root, options = {}) {
   document.body.classList.add('v6-page');
   let ui, world, dag, disposed = false, poll = null, feedRpc = null, feedOn = true, feedPaint = null;
-  let network = {status:'paused', blocks:[], lastEventAt:0}, presentation = null, legacy = null;
+  let network = {status:'idle', blocks:[], lastEventAt:0}, presentation = null, legacy = null;
   const wallet = options.wallet || new V6BrowserWallet({onChange:() => render()});
   const engine = options.engine || new V6BrowserEngine(wallet);
   engine.onChange = () => render();
@@ -35,6 +35,8 @@ export async function mountBrowserHarbor(root, options = {}) {
   function render() {
     if (!ui || disposed) return;
     ui.render();
+    const feedControl = ui.find('[data-action="feed"]');
+    if (feedControl) feedControl.textContent = !wallet.rpc ? 'Connect live blocks' : feedOn ? 'Pause live blocks' : 'Resume live blocks';
     if (engine.templates) {try {world?.update(scene());} catch (error) {engine.error = error.message;}}
     const selectedRecords = engine.records.filter(record => record.chapter === Number(wallet.data.selected));
     dag?.update(network,engine.pending || selectedRecords.at(-1) || null,presentation);
@@ -55,7 +57,7 @@ export async function mountBrowserHarbor(root, options = {}) {
     catch {network.status = 'disconnected';render();}
   }
   async function stopFeed() {
-    network.status = 'paused';
+    network.status = 'paused';render();
     const rpc = feedRpc;feedRpc = null;
     rpc?.removeEventListener?.('block-added',observeBlock);try {await rpc?.unsubscribeBlockAdded?.();} catch {}
     render();
@@ -74,7 +76,7 @@ export async function mountBrowserHarbor(root, options = {}) {
     if (name === 'next') {await selectChapter(Math.min(5,Number(wallet.data.selected) + 1));return;}
     if (name === 'cancel') {engine.cancelReview();return;}
     if (name === 'import') {ui.find('[data-import-file]').click();return;}
-    if (name === 'feed') {feedOn = !feedOn;ui.find('[data-action="feed"]').textContent = feedOn ? 'Pause live blocks' : 'Resume live blocks';if (feedOn) {await engine.run(() => wallet.connect());await startFeed();} else await stopFeed();return;}
+    if (name === 'feed') {feedOn = !wallet.rpc || !feedOn;ui.find('[data-action="feed"]').textContent = feedOn ? 'Pause live blocks' : 'Resume live blocks';if (feedOn) {await engine.run(() => wallet.connect());await startFeed();} else await stopFeed();return;}
     await engine.run(async () => {
       if (name === 'create') {await wallet.create();await engine.load();engine.message = 'Wallet created. No coins requested and no transaction sent.';}
       else if (name === 'faucet') {await wallet.requestCoins();engine.message = wallet.data.faucet?.acceptingBlock ? 'The 10 free test coins were accepted into your wallet.' : 'The faucet transaction is saved and being checked.';}

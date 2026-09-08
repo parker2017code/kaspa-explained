@@ -99,9 +99,9 @@ export const pages = [
   {
     file:'build-on-kaspa.html', title:'What spending rules can enforce', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
     body:`${lessonContext('build-on-kaspa.html')}${intro('Build','What spending rules can enforce','Try taking money from a pot with three rules: wait long enough, stay within the amount limit, and pay the right destination. Which withdrawals should pass?')}
-      <div class="action-row"><a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
       ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant attaches these conditions to a spendable amount, called an output.')}
       <link rel="stylesheet" href="/assets/coordination.css"><div id="coordination">${coordinationMarkup()}</div>
+      <div class="action-row"><a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
       <section id="start" class="chapter">${detail('Integration tasks: read the network, receive payments, constrain spending',rows([
         ['Read the network',`<p>Use node or public-service interfaces for blocks, transactions, and accepted history. Know which service you trust and how it handles missing or changed data.</p><p>${link('Integration guide','https://docs.kaspa.org/integrate/getting-started')}</p>`],
         ['Receive payments',`<p>Track the accepting history, persist a checkpoint, and reverse application state when the accepted chain changes. Choose a policy for your use case.</p><p>${source('acceptance')}</p>`],
