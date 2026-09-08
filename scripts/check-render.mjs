@@ -20,7 +20,10 @@ try{
       const response=await page.goto(`${base}/${document.file}?theme=${theme}`,{waitUntil:'networkidle'});
       const measurements=await page.evaluate(()=>{
         const visible=el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden';
-        const overflow=[...document.querySelectorAll('main *')].filter(el=>visible(el)&&!el.closest('.table-scroll,pre,svg')).filter(el=>{const r=el.getBoundingClientRect();return r.left< -1||r.right>innerWidth+1;}).map(el=>el.tagName+'.'+el.className).slice(0,8);
+        // Ignore content only when a viewport-contained ancestor demonstrably
+        // scrolls or clips it. Offscreen descendants cannot create page overflow.
+        const containedOverflow=el=>{const r=el.getBoundingClientRect();for(let parent=el.parentElement;parent&&parent!==document.body;parent=parent.parentElement){const style=getComputedStyle(parent);if(!['auto','scroll','hidden','clip'].includes(style.overflowX))continue;const bounds=parent.getBoundingClientRect();if(bounds.left>=-1&&bounds.right<=innerWidth+1&&(r.left<bounds.left-1||r.right>bounds.right+1))return true;}return false;};
+        const overflow=[...document.querySelectorAll('main *')].filter(el=>visible(el)&&!el.closest('.table-scroll,pre,svg')&&!containedOverflow(el)).filter(el=>{const r=el.getBoundingClientRect();return r.left< -1||r.right>innerWidth+1;}).map(el=>el.tagName+'.'+el.className).slice(0,8);
         const targets=[...document.querySelectorAll('button,input,select,summary')].filter(visible).filter(el=>{
           // A containing label is an actual activation target for a checkbox/radio,
           // not merely nearby text. Keep measuring other controls themselves.
