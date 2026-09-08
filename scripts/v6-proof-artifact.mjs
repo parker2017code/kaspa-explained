@@ -6,6 +6,7 @@ import {createRequire} from 'node:module';
 import {execFileSync} from 'node:child_process';
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
+import {tmpdir} from 'node:os';
 import {generateProof} from '../src/v6-proof-protocol.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -34,8 +35,8 @@ const args = [
   integer(13000000),
   integer(20000000),
 ];
-const argsPath = resolve('/private/tmp', 'v6-proof-constructor-args.json');
-const artifactPath = resolve('/private/tmp', 'v6-proof-artifact.json');
+const argsPath = resolve(tmpdir(), 'v6-proof-constructor-args.json');
+const artifactPath = resolve(tmpdir(), 'v6-proof-artifact.json');
 await writeFile(argsPath, JSON.stringify(args));
 execFileSync(silverc, [resolve(root, 'contracts/public/v6-proof/V6Proof.sil'), '--constructor-args', argsPath, '-o', artifactPath], {stdio: 'inherit'});
 const artifact = JSON.parse(await readFile(artifactPath, 'utf8'));
