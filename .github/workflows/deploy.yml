@@ -1,19 +1,14 @@
-name: Publish education
+name: Verify education artifact
 on:
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -28,10 +23,9 @@ jobs:
       - run: npm run check:copy
       - run: npm run check:journeys
       - run: npm run check:render
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      # Public hosting is Cloudflare. Keep this verified build as an artifact.
+      - uses: actions/upload-artifact@v4
         with:
+          name: deploy-verified
           path: dist-v1
-      - name: Deploy verified static artifact
-        id: deployment
-        uses: actions/deploy-pages@v4
+          retention-days: 7

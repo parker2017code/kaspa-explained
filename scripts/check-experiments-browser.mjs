@@ -1,0 +1,21 @@
+import {chromium,firefox,webkit} from 'playwright';
+import {mkdir,writeFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const origin=process.env.EXPERIMENT_QA_URL||'http://127.0.0.1:8915/experiments';
+assert(['127.0.0.1','localhost'].includes(new URL(origin).hostname));
+const out='.cache/experiments-qa/reviewed';await mkdir(out,{recursive:true});const report={scope:'Real browser interaction with local design models. No contract execution or chain requests.',engines:{}};
+for(const [name,engine] of Object.entries({chromium,firefox,webkit})){
+ const browser=await engine.launch({headless:true});const context=await browser.newContext({viewport:{width:1440,height:1000}}),p=await context.newPage();const errors=[],api=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(r.url().includes('/api/'))api.push(r.url());});
+ const action=a=>p.locator(`[data-action="${a}"]`).click(),field=(key,value)=>p.locator(`[data-field="${key}"]`).fill(String(value)),choose=(key,value)=>p.locator(`[data-field="${key}"]`).selectOption(value),result=async expected=>assert.equal(await p.locator('.experiment-result').getAttribute('data-ok'),String(expected));
+ await p.goto(origin);await field('cap',31);await action('delegate');await result(false);await field('cap',20);await action('delegate');await result(true);await choose('spendService','storage');await action('spend');await result(false);await choose('spendService','compute');await action('spend');await action('revoke');await action('delegate');await result(true);
+ await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:`${out}/${name}-delegation.png`,fullPage:true});
+ await p.locator('[data-select=completion]').click();await field('minimum',9);await action('edit');await action('solve');await result(false);await field('minimum',8);await action('edit');await action('solve');await result(true);assert.equal(await p.locator('.experiment-proposal li').count(),3);await action('settle');await result(true);
+ await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:`${out}/${name}-settled-cycle.png`,fullPage:true});
+ await p.locator('[data-select=execution]').click();await p.locator('[data-provider=North]').click();await result(false);await field('b',7);await p.locator('[data-provider=South]').click();await result(true);await p.locator('[data-provider=North]').click();await result(false);
+ await p.locator('[data-select=correction]').click();await action('claim');await result(false);await field('witness',1);await action('claim');await result(true);await action('claim');await result(false);
+ await p.locator('[data-select=arena]').click();await choose('recipient','attacker');await action('submit');await result(false);await choose('recipient','supplier');await field('amount',6);await action('submit');await result(false);await field('amount',5);await choose('signer','none');await action('submit');await result(false);await choose('signer','agent');await action('submit');await result(true);await action('revoke');await action('submit');await result(false);
+ await p.setViewportSize({width:390,height:844});await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:`${out}/${name}-phone-arena.png`,fullPage:true});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await p.locator('[data-select=delegation]').focus();await p.keyboard.press('Enter');assert.equal(await p.locator('[data-select=delegation]').getAttribute('aria-pressed'),'true');await p.emulateMedia({reducedMotion:'reduce'});await action('reset');await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:`${out}/${name}-phone-delegation.png`,fullPage:true});
+ assert.deepEqual(errors,[]);assert.deepEqual(api,[]);report.engines[name]={checks:['editable descendant cap/service checks and regrant','solver reacts to changed minimum; three transfers settle','invalid result rejected; single reward winner','bounded witness accepted once','explicit recipient/signer/amount checks','390px no overflow','keyboard selection','reduced-motion rendering'],errors,api};await browser.close();
+}
+await writeFile(out+'/report.json',JSON.stringify(report,null,2));console.log('Three engines: all five editable model journeys passed.');

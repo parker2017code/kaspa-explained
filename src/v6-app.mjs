@@ -7,7 +7,7 @@ const root=document.querySelector('[data-v6-app]');
 if(root){
   document.body.classList.add('v6-page');
   const KEY='kaspa-v6-local-session-v1', reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  let credentials=null,session=null,network={status:'connecting',blocks:[]},busy=false,refreshing=false,intentPaused=false,error=null,disposed=false,world=null,dag=null,ui=null,events=null,pollTimer=null,intentTimer=null,eventRetryTimer=null,idleTimer=null,inspectChapter=null,consequenceUntil=0,renderTimer=null,worldError=null,lastActivity=Date.now(),eventRetryMs=2000;
+  let credentials=null,session=null,network={status:'connecting',blocks:[]},busy=false,refreshing=false,intentPaused=false,error=null,disposed=false,world=null,dag=null,ui=null,events=null,pollTimer=null,intentTimer=null,eventRetryTimer=null,idleTimer=null,inspectChapter=null,consequenceUntil=0,renderTimer=null,arrivalTimer=null,acceptancePresentation=null,worldError=null,lastActivity=Date.now(),eventRetryMs=2000;
   const TRANSPORT_IDLE_MS=5*60*1000;
   try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&/^[a-f0-9-]{36}$/i.test(saved.id)&&/^[a-f0-9]{64}$/.test(saved.capability)){credentials=saved;if(saved.snapshot?.id===saved.id)session=saved.snapshot;}}catch{error='This browser could not read the saved local session.';}
   function save(){localStorage.setItem(KEY,JSON.stringify(credentials));}
@@ -22,8 +22,8 @@ if(root){
     if(typeof EventSource==='undefined'||events||eventRetryTimer||!transportActive())return;
     events=new EventSource('/api/v6/events');
     events.onopen=()=>{eventRetryMs=2000;};
-    events.onmessage=event=>{try{const next=JSON.parse(event.data);if(next.network!=='testnet-10'||!Array.isArray(next.blocks))return;network=next;dag?.update(network,session?.operation);const status=root.querySelector('[data-v6-network-status]');if(status)status.textContent=next.status==='live'?'Testnet-10 · live blocks':'Testnet-10 · '+next.status;}catch{}};
-    events.onerror=()=>{network={...network,status:'disconnected'};dag?.update(network,session?.operation);stopEvents();if(!transportActive())return;const delay=eventRetryMs;eventRetryMs=Math.min(60000,eventRetryMs*2);eventRetryTimer=setTimeout(()=>{eventRetryTimer=null;connectEvents();},delay);};
+    events.onmessage=event=>{try{const next=JSON.parse(event.data);if(next.network!=='testnet-10'||!Array.isArray(next.blocks))return;network=next;dag?.update(network,session?.operation,acceptancePresentation);const status=root.querySelector('[data-v6-network-status]');if(status)status.textContent=next.status==='live'?'Testnet-10 · live blocks':'Testnet-10 · '+next.status;}catch{}};
+    events.onerror=()=>{network={...network,status:'disconnected'};dag?.update(network,session?.operation,acceptancePresentation);stopEvents();if(!transportActive())return;const delay=eventRetryMs;eventRetryMs=Math.min(60000,eventRetryMs*2);eventRetryTimer=setTimeout(()=>{eventRetryTimer=null;connectEvents();},delay);};
   }
   function resumeBackground(){if(!transportActive()){stopBackground();return;}connectEvents();schedulePoll();scheduleIdle();}
   function userActivity(){lastActivity=Date.now();eventRetryMs=2000;resumeBackground();}
@@ -31,7 +31,8 @@ if(root){
     if(disposed||!ui)return;
     const pausing=Date.now()<consequenceUntil,view=v6PublicView(session,{busy:busy||pausing,error:error||worldError,network,inspectChapter});
     if(pausing&&!busy)view.actionLabel='Watch what changed…';
-    ui.render(view);world?.update({...view.scene,paused:document.hidden});dag?.update(network,view.operation);
+    const holding=acceptancePresentation&&Date.now()<acceptancePresentation.arrivesAt&&!document.hidden&&!reduced.matches;
+    ui.render(view);world?.update({... (holding?acceptancePresentation.beforeScene:view.scene),paused:document.hidden});dag?.update(network,view.operation,acceptancePresentation);
   }
   async function request(path,body){
     const response=await fetch('/api/v6/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(90000)});
@@ -43,8 +44,11 @@ if(root){
   function receive(next){
     if(session&&Number.isSafeInteger(next.revision)&&Number.isSafeInteger(session.revision)&&next.revision<session.revision)return;
     const oldId=session?.operation?.transactionId,oldAccepted=session?.operation?.acceptingBlock;
-    if(next.operation?.phase==='accepted'&&next.operation.acceptingBlock&&(next.operation.transactionId!==oldId||!oldAccepted)&&session&&!reduced.matches){
-      consequenceUntil=Date.now()+2800;clearTimeout(renderTimer);renderTimer=setTimeout(render,2850);
+    if(next.operation?.phase==='accepted'&&next.operation.acceptingBlock&&(next.operation.transactionId!==oldId||!oldAccepted)&&session&&!reduced.matches&&!document.hidden){
+      const startedAt=Date.now();
+      acceptancePresentation={freshAcceptance:true,transactionId:next.operation.transactionId,acceptingBlock:next.operation.acceptingBlock,startedAt,arrivesAt:startedAt+1200,beforeScene:v6PublicView(session,{network}).scene};
+      // Leave time for DAG arrival (1.2s), then the longest world transfer (3s).
+      consequenceUntil=startedAt+4400;clearTimeout(arrivalTimer);arrivalTimer=setTimeout(render,1250);clearTimeout(renderTimer);renderTimer=setTimeout(render,4450);
     }
     session=next;
     if(credentials){credentials.snapshot=next;try{save();}catch{error='The current result is visible, but this browser could not save its local recovery view.';}}
@@ -99,13 +103,13 @@ if(root){
     finally{refreshing=false;resumeBackground();scheduleIntent();}
   }
   function schedulePoll(){clearTimeout(pollTimer);pollTimer=null;if(!transportActive())return;pollTimer=setTimeout(refresh,session?.pending||session?.stage==='courier-wait'?1500:6000);}
-  ui=mountV6UI(root,{onAction:act,onChapter:chapter=>{userActivity();inspectChapter=chapter===session?.chapter?null:chapter;render();world?.select(chapter);},onDagReady:node=>{dag=mountV6Dag(node);dag.update(network,session?.operation);},onSceneReady:node=>{
+  ui=mountV6UI(root,{onAction:act,onChapter:chapter=>{userActivity();inspectChapter=chapter===session?.chapter?null:chapter;render();world?.select(chapter);},onDagReady:node=>{dag=mountV6Dag(node);dag.update(network,session?.operation,acceptancePresentation);},onSceneReady:node=>{
     node.querySelector('[data-v6-scene-placeholder]')?.remove();
     void mountV6World(node,{onSelect:district=>{userActivity();const map={market:0,agent:1,terrarium:3,coordination:4,computation:5};const chapter=map[district];if(chapter!==undefined){inspectChapter=chapter===session?.chapter?null:chapter;render();}},onInspect:()=>{}}).then(value=>{if(disposed){value.destroy();return;}world=value;render();}).catch(()=>{worldError='The 3D harbor could not load. The guide and transaction receipts remain available.';render();});
   }});
   render();
   if(credentials&&incomplete()){resumeBackground();void refresh();}
-  const onVisible=()=>{render();if(document.hidden){stopBackground();return;}if(incomplete()){userActivity();void refresh();}};
+  const onVisible=()=>{if(document.hidden){acceptancePresentation=null;consequenceUntil=0;clearTimeout(arrivalTimer);clearTimeout(renderTimer);render();stopBackground();return;}render();if(incomplete()){userActivity();void refresh();}};
   document.addEventListener('visibilitychange',onVisible);
-  window.addEventListener('pagehide',()=>{disposed=true;stopBackground();clearTimeout(intentTimer);clearTimeout(renderTimer);world?.destroy();dag?.destroy();ui?.destroy();document.removeEventListener('visibilitychange',onVisible);},{once:true});
+  window.addEventListener('pagehide',()=>{disposed=true;stopBackground();clearTimeout(intentTimer);clearTimeout(arrivalTimer);clearTimeout(renderTimer);world?.destroy();dag?.destroy();ui?.destroy();document.removeEventListener('visibilitychange',onVisible);},{once:true});
 }

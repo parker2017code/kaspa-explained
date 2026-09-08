@@ -1,19 +1,14 @@
-name: Publish testnet applications
+name: Verify testnet application artifact
 on:
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
@@ -99,10 +94,9 @@ jobs:
           }finally{await new Promise(resolve=>server.close(resolve));}
           console.log(`World welcome, disclosure and ${visited.size} shipped modules checked; no wallet created.`);
           JS
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      # Public hosting is Cloudflare. Keep this verified build as an artifact.
+      - uses: actions/upload-artifact@v4
         with:
+          name: deploy-v2-verified
           path: dist
-      - name: Deploy verified static artifact
-        id: deployment
-        uses: actions/deploy-pages@v4
+          retention-days: 7

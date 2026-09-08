@@ -2,7 +2,7 @@ import {escape} from './components.mjs';
 import {site} from './site.mjs';
 import {withContents} from './page-contents.mjs';
 
-const applicationPages=new Set(['applications.html','covenants.html','covenants-v4.html','covenants-v5.html','covenants-v6.html','wrap.html']);
+const applicationPages=new Set(['applications.html','covenants.html','covenants-v4.html','covenants-v5.html','covenants-v6.html','experiments.html','testnet-workspace.html','wrap.html']);
 const learnPages=new Set(['what-is-kaspa.html','why-kaspa-matters.html','skeptical-case.html','kaspa-mining.html','kaspa-origin-story.html','moose.html']);
 function isCurrent(file,href){return file===href.slice(1)+'.html'||href==='/what-is-kaspa'&&learnPages.has(file);}
 

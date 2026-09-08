@@ -1,3 +1,4 @@
+import {createTestnetWorkspaceUI} from './testnet-workspace.mjs';
 import {createPublicArgentUI,validatePublicArgentState} from './public-argent-ui.mjs';
 import {createPublicV4UI,validatePublicV4State} from './public-v4-ui.mjs';
 import {createPublicAssetsUI,validatePublicAssetsState} from './public-assets-ui.mjs';
@@ -15,7 +16,8 @@ const kinds={
 };
 let argentUI=null,argentTemplates=null;
 let sdk,rpc,templates,keys=[],password='',session=null,contract=null,kind='escrow',plan=null,busy=false,exported=false,activeAccount=0,accountBalances=[0n,0n,0n],pendingMode=null,autoSession=false,operationLabel='',faucetClaim=null,observeTimer=null;
-const STORE='kaspa-public-encrypted-recovery-v1',AUTO_STORE='kaspa-disposable-session-v1',AUTO_SECRET='kaspa-disposable-secret-v1',FAUCET_STORE='kaspa-disposable-faucet-v1';
+const storageSuffix=root.hasAttribute('data-testnet-workspace')?'-contract-lab':'';
+const STORE='kaspa-public-encrypted-recovery-v1'+storageSuffix,AUTO_STORE='kaspa-disposable-session-v1'+storageSuffix,AUTO_SECRET='kaspa-disposable-secret-v1'+storageSuffix,FAUCET_STORE='kaspa-disposable-faucet-v1'+storageSuffix;
 const scenarioNames={escrow:'Escrow',treasury:'Shared treasury',prediction:'Prediction',proof:'Proof payout',token:'Token',receipt:'Backed receipt'},scenarioOrder=Object.keys(scenarioNames);
 const kas=value=>`${(Number(value)/1e8).toLocaleString('en-US',{maximumFractionDigits:8})} tKAS`;
 const message=(value,error=false)=>{set('message',value);q('message').dataset.error=String(error);wrapUI?.render();};
@@ -164,7 +166,7 @@ const assetsUI=createPublicAssetsUI(q('assets'),{
  encrypted:persist,download,hasRecovery:()=>exported&&password.length>=12,pending:()=>hasPendingOriginal()||v4UI.pending()||argentUI?.pending(),
  sign:(tx,index,{owner:publicKey})=>{const key=keys.find(key=>key.toPublicKey().toXOnlyPublicKey().toString()===publicKey);if(!key)fail('Required signing account is missing.');return sdk.createInputSignature(tx,index,key);}
 });
-const v4UI=createPublicV4UI(v4Panel,{
+const v4UI=(root.hasAttribute('data-testnet-workspace')?createTestnetWorkspaceUI:createPublicV4UI)(v4Panel,{
  getActivityRecords:()=>{const legacy=[...Object.values(session?.scenarios||{}),...(session?.journal?[{contract:session.contract,journal:session.journal}]:[])].filter(r=>r.journal).map(r=>({...r.journal,journal:r.journal,kind:r.contract?.kind,origin:'legacy'}));return [...legacy,...(session?.assets?.activity||[]).map(r=>({...r,origin:'asset'})),...(session?.argent?.activity||[]).map(r=>({...r,origin:'argent',kind:'argent'}))];},
  checkActivity:async()=>{if(!keys.length)return;await observeSavedScenarios();if(session?.assets?.activity?.length)await assetsUI.check();if(session?.argent?.activity?.length)await argentUI.check();},
  context:()=>({sdk,templates:templates?.templates,rpc,busy,owners:keys.map(key=>key.toPublicKey().toXOnlyPublicKey().toString()),addresses:keys.map(key=>key.toAddress(PUBLIC_NETWORK).toString()),account:activeAccount,balances:accountBalances,call:timeout}),

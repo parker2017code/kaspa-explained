@@ -106,6 +106,15 @@ These controls bound this application's use. They are not a Cloudflare account
 billing cap, spending limit, or guarantee that other Workers and Containers on
 the account cannot incur charges.
 
+The browser opens no API or block stream on the welcome screen or when restoring
+a completed tour. Hidden tabs pause status polling and block streams. Visible
+tabs also pause after five minutes without a guide action, including when a
+transaction remains pending. Returning to an incomplete tour or using its saved
+transaction control resumes reconciliation. The saved request and transaction
+journal remain intact; an already-authorized finite setup queue can finish.
+Stream errors close the connection before a controlled retry, with delays from
+two seconds up to one minute inside the same activity window.
+
 ## Required runtime configuration
 
 ```text

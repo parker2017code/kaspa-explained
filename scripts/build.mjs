@@ -14,6 +14,7 @@ export const shell=renderSiteShell;
 for(const page of documents){await writeFile(`${output}/${page.file}`,shell(page));if(page.publicPath){await mkdir(`${output}/${page.publicPath.slice(1).split('/').slice(0,-1).join('/')}`,{recursive:true});await writeFile(`${output}${page.publicPath}.html`,shell(page));}}
 for(const name of ['app.mjs','learning-ui.mjs','site-design.css','use-case-demo.mjs','use-case-demo.css','network-diagram.mjs','models.mjs','app.css','money-app.mjs','money-models.mjs','coordination.mjs','coordination.css','network-diagram.css','mechanism-diagrams.mjs','mechanism-diagrams.css','flow-diagrams.mjs','flow-diagrams.css'])await copyFile(`src/${name}`,`${output}/assets/${name}`);
 if(!standalone){
+  for(const name of ['experiments.mjs','experiment-models.mjs','experiments.css','testnet-workspace.mjs','testnet-workspace.css'])await copyFile(`src/${name}`,`${output}/assets/${name}`);
   for(const name of ['v6-app.mjs','v6-progress.mjs','v6-ui.mjs','v6-lessons.mjs','v6-world.mjs','v6-world-assets.mjs','v6-dag.mjs','v6.css'])await copyFile(`src/${name}`,`${output}/assets/${name}`);
   await cp('src/assets/v6',`${output}/assets/v6`,{recursive:true});
   for(const name of ['v5-presentation.mjs','v5-experience-scenarios.mjs','v5-experience-scene.mjs','v5-experience.css','v5-advanced-story.mjs','v5-advanced-ui.mjs','v5-app.mjs','v5-town.mjs','v5-town-model.mjs','v5-economy.mjs','v5-market-wallet.mjs','v5-wallet.mjs','v5-ui.mjs','v5.css','v5-argent-protocol.mjs','v5-argent-templates.json'])await copyFile(`src/${name}`,`${output}/assets/${name}`);

@@ -23,6 +23,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'If you pay first, the seller can keep the coins and never hand over the promised tool.',
     rule: 'The payment and the Business covenant’s tool quantity change together in one transaction, or neither changes.',
     objective: 'Compare the unsafe proposal with the atomic exchange, then inspect what the accepted transaction delivered.',
+    flow: {
+      sender: 'Buyer + seller', value: 'Payment ↔ tool quantity', recipient: 'Seller + buyer ledger',
+      enforced: 'Kaspa accepts both agreed ledger changes in one transaction, or neither.',
+      remaining: 'The host controls the demo accounts. The covenant does not prove that a physical tool exists or is authentic.',
+    },
     technology: [
       tech('Argent', 'coordinates the buyer and seller approvals'),
       tech('SilverScript', 'compiles the exchange conditions'),
@@ -47,6 +52,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'A helper should complete a specific resource trade without gaining general spending authority.',
     rule: 'Pip may spend at most 2 crops and receive at least 1 resource. This barter proposes 1 timber; native spending is disabled.',
     objective: 'Let Pip make the allowed crop-for-wood trade, test a separate request outside the policy, then revoke permission.',
+    flow: {
+      sender: 'Pip’s demo role', value: 'At most two crops', recipient: 'Resource recipient in the proposal',
+      enforced: 'Kaspa checks at most two crops spent, at least one resource received, and disabled native spending.',
+      remaining: 'The host operates Pip and chooses the proposal. The policy does not require timber or restrict its recipient.',
+    },
     technology: [
       tech('Argent', 'separates Pip’s spending role from your other approvals'),
       tech('SilverScript', 'checks the Business resource policy and allowance'),
@@ -70,6 +80,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'If one business hands over its goods first, the next business can keep them and stop the ring.',
     rule: 'The fixed ring consumes all three conditional transitions together. Each participant gives and receives in the same accepted transaction.',
     objective: 'Preview the exposure in separate transfers, then settle the three recognizable goods in one ring.',
+    flow: {
+      sender: 'Three demo businesses', value: 'Grain · tool · ore', recipient: 'The next business in the ring',
+      enforced: 'Kaspa consumes all three conditional handoffs in one accepted transaction.',
+      remaining: 'The host operates every business. No physical shipment or independent counterparty is verified.',
+    },
     technology: [
       tech('Argent', 'coordinates the three roles in the ring'),
       tech('SilverScript', 'binds each give/receive condition to the same settlement'),
@@ -93,6 +108,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'A pledge made without all three ready participants could leave one neighbor committing to a project that cannot launch.',
     rule: 'V4Launch requires 3 distinct ready pledges to settle together; a participant can withdraw before the launch.',
     objective: 'See a withdrawal before the group is ready, then settle the 3 distinct ready pledges and watch the greenhouse open.',
+    flow: {
+      sender: 'Three distinct neighbors', value: 'Three ready pledges', recipient: 'Greenhouse beneficiary',
+      enforced: 'Kaspa permits launch only from the complete three-pledge set; an incomplete pledge can withdraw.',
+      remaining: 'The host operates the neighbors and depicts construction. The chain does not verify a physical greenhouse.',
+    },
     technology: [
       tech('SilverScript', 'compiles V4Launch’s 3-distinct-ready-pledge condition'),
       tech('Kaspa', 'consumes the ready pledges in the observed settlement'),
@@ -115,6 +135,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'The customer’s payment and the courier’s bond need different conditions; treating them as one amount hides who is protected.',
     rule: 'A recipient signature pays the payment plus bond to the courier. After the required chain age, the customer can claim both instead, including the courier’s forfeited bond.',
     objective: 'Keep the customer payment and courier bond separate, then follow either the signed release or the eligible refund path.',
+    flow: {
+      sender: 'Customer + courier', value: '0.2 tKAS payment + 0.1 tKAS bond', recipient: 'Courier, or customer after chain age',
+      enforced: 'Kaspa checks the recipient signature for release, or the chain-age condition for refund.',
+      remaining: 'The host operates the witness accounts. Kaspa cannot observe the parcel or determine whether delivery occurred.',
+    },
     technology: [
       tech('Argent', 'coordinates customer, courier and recipient roles'),
       tech('SilverScript', 'checks signatures, release conditions and chain age'),
@@ -138,6 +163,11 @@ export const V6_CHAPTERS = Object.freeze([
     risk: 'A plausible answer is not enough: the verifier must reject an invalid proof and release the reward only for the defined result.',
     rule: 'The verifier checks the submitted result against the task’s circuit and proof conditions before the reward and machine state can change.',
     objective: 'Inspect the exact task, test an adversarial invalid proof, then observe the verified result release the reward.',
+    flow: {
+      sender: 'Task sponsor', value: '0.13 tKAS reward', recipient: 'Bound worker key',
+      enforced: 'Kaspa verifies the proof, task inputs, recipient key, nonce, and worker signature before release.',
+      remaining: 'The host runs a development prover. The setup is not a production ceremony and makes no privacy claim.',
+    },
     technology: [
       tech('R1CS', 'constrains allocation and rate to 1–15, their sum to 13 and product to public score 42'),
       tech('Kaspa', 'accepts the verified state transition on Testnet-10'),
@@ -208,6 +238,7 @@ export function normalizeV6View(view = {}) {
     risk: source.risk || lesson.risk,
     rule: source.rule || lesson.rule,
     objective: source.objective || lesson.objective,
+    flow: source.flow && typeof source.flow === 'object' ? source.flow : lesson.flow,
     actionLabel: source.actionLabel || copy.actionLabel,
     actionDisabled: Boolean(source.actionDisabled),
     busy: Boolean(source.busy),

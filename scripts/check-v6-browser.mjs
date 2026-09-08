@@ -131,7 +131,7 @@ for (const name of requested) {
     await browser.close();
     browser = await engine.launch({headless:true,...(name === 'chromium' ? {args:['--enable-unsafe-swiftshader']} : {})});
     const context = await browser.newContext({viewport: {width: 1440, height: 900}, hasTouch: true});
-    const servedFiles = ['v6-app.mjs', 'v6-ui.mjs', 'v6-world.mjs', 'v6-progress.mjs'];
+    const servedFiles = ['v6-app.mjs', 'v6-ui.mjs', 'v6-world.mjs', 'v6-world-assets.mjs', 'v6.css', 'v6-progress.mjs'];
     const servedFingerprints = async () => Object.fromEntries(await Promise.all(servedFiles.map(async file => {const response = await context.request.get(new URL('/assets/' + file, origin).href);return [file, createHash('sha256').update(await response.body()).digest('hex')];})));
     result.servedFingerprints = await servedFingerprints();
     const server = fixture();
@@ -144,7 +144,7 @@ for (const name of requested) {
     const page = await context.newPage();
     let navigating = false;
     page.on('pageerror', error => result.pageErrors.push(error.message));
-    page.on('requestfailed', request => result.failedRequests.push({path: new URL(request.url()).pathname, reason: request.failure()?.errorText, intentionalApiFailure: server.expectedFailures.has(request), navigationCancellation: navigating && /ABORT|CANCEL/i.test(request.failure()?.errorText || '')}));
+    page.on('requestfailed', request => result.failedRequests.push({at:Date.now(), startedAt:request.timing().startTime, pageURL:page.url(), path: new URL(request.url()).pathname, reason: request.failure()?.errorText, intentionalApiFailure: server.expectedFailures.has(request), navigationCancellation: navigating && /ABORT|CANCEL/i.test(request.failure()?.errorText || '')}));
     page.setDefaultTimeout(15000);
     await page.goto(origin.href);
     await page.waitForFunction(() => window.__v6QaWorld || document.body.textContent.includes('The 3D harbor could not load'), null, {timeout: 30000});
@@ -211,6 +211,11 @@ for (const name of requested) {
     server.acceptPurchase();
     await triggerStatus();
     await page.locator('[data-v6-receipt-phase="accepted"]').waitFor();
+    if (await world()) check(!(await world()).toolInCart && !(await world()).activeMotion, 'Real world waits for DAG arrival before starting the accepted handoff');
+    check(await primary().isDisabled(), 'Continue stays disabled during acceptance presentation');
+    await page.waitForTimeout(1600);
+    if (await world()) check((await world()).activeMotion && !(await world()).toolInCart, 'Real 3D handoff starts after DAG arrival');
+    check(await primary().isDisabled(), 'Continue stays disabled while the real 3D handoff runs');
     await page.waitForTimeout(3000);
     await idle();
     check((await page.locator('.v6-receipt-facts').textContent()).includes(hash('accepting-block').slice(0, 10)), 'Observed accepting block is visible in the receipt');
@@ -225,9 +230,9 @@ for (const name of requested) {
     await primary().click(); await idle();
     await page.getByRole('button', {name: 'Give Pip this one job', exact: true}).waitFor();
     check((await page.locator('[data-v6-info]').textContent()).includes('at most two crops'), 'Pip presentation describes the actual resource allowance');
-    await primary().click(); await page.waitForTimeout(3000); await idle();
+    await primary().click(); await page.waitForTimeout(4600); await idle();
     await page.getByRole('button', {name: 'Let Pip complete the barter', exact: true}).waitFor();
-    await primary().click(); await page.waitForTimeout(3000); await idle();
+    await primary().click(); await page.waitForTimeout(4600); await idle();
     const beforeInspection = server.calls.filter(call => call.path === 'action').length;
     const building = result.renderer === 'Three.js active' ? page.locator('[data-v6-scene]').getByRole('button', {name: 'Greenhouse', exact: true}) : page.locator('button[data-v6-chapter="3"]');
     await building.focus(); await page.keyboard.press('Enter');
@@ -257,7 +262,10 @@ for (const name of requested) {
       await splitter.focus();
       await page.keyboard.press((await splitter.getAttribute('aria-orientation')) === 'vertical' ? 'ArrowLeft' : 'ArrowUp');
       check(Number(await splitter.getAttribute('aria-valuenow')) !== old, `${width}x${height}: keyboard splitter changes its saved size`);
-      if (width === 390) await shot('synthetic-phone');
+      if (width === 390) {
+        check((await primary().boundingBox()).height < 100, 'Phone action button does not inherit a vertical 170px flex basis');
+        await shot('synthetic-phone');
+      }
     }
     await page.setViewportSize({width: 390, height: 844});
     await page.evaluate(() => document.documentElement.style.fontSize = '200%');
