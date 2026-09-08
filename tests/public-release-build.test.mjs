@@ -30,13 +30,15 @@ test('public V2 includes education and browser applications without local signer
    assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/faucet','/api/v5/']);
    assert.deepEqual([...new Set([...js.matchAll(/\brequest\((['"])([^'"]+)\1/g)].map(m=>m[2]))].sort(),['action','payment','start','status']);
   }else if(file==='v6-app.mjs'){
-   assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/v6/','/api/v6/events']);
-   const requestPaths=[...js.matchAll(/\brequest\((['"])([^'"]+)\1/g)].map(m=>m[2]);
-   const operationPaths=[...js.matchAll(/\bpath:\s*(['"])([^'"]+)\1/g)].map(m=>m[2]);
-   assert.deepEqual([...new Set([...requestPaths,...operationPaths])].sort(),['action','start','status']);
+   // The browser UI may only inspect an explicitly selected legacy session.
+   assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/v6/status']);
+  }else if(file==='v6-browser-engine.mjs'){
+   // New wallets submit to the node; the host supplies only bounded proofs.
+   assert.deepEqual([...new Set([...js.matchAll(/['"`](\/api\/[^'"`]*)['"`]/g)].map(m=>m[1]))].sort(),['/api/v6/']);
+   assert.deepEqual([...new Set([...js.matchAll(/\bcall\((['"])([^'"]+)\1/g)].map(m=>m[2]))].sort(),['proof','start']);
   }else assert.doesNotMatch(js,/['"`]\/api\//,file);
  }
- for(const file of ['public-apps.mjs','wrap-local-client.mjs','public-assets-ui.mjs','public-token.mjs','public-receipt.mjs','public-asset-signing.mjs','public-asset-recovery.mjs','public-contracts.mjs','public-templates.json','kaspa/kaspa.js','kaspa/kaspa_bg.wasm'])await access('dist/assets/'+file);
+ for(const file of ['v6-browser-wallet.mjs','v6-browser-engine.mjs','v6-browser-ui.mjs','v6-browser-lessons.mjs','v6-browser.css','v6-proof-core.mjs','v6-proof-templates.json','public-apps.mjs','wrap-local-client.mjs','public-assets-ui.mjs','public-token.mjs','public-receipt.mjs','public-asset-signing.mjs','public-asset-recovery.mjs','public-contracts.mjs','public-templates.json','kaspa/kaspa.js','kaspa/kaspa_bg.wasm'])await access('dist/assets/'+file);
 });
 
 // Exercise the narrowly allowed local client, rather than trusting its caller's UI guard.

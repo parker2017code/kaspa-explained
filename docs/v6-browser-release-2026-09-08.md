@@ -18,3 +18,13 @@ The release-tree checks passed 58 source tests, V1 compatibility checks, copy ch
 The image provides bounded proof assistance without holding browser keys. It retains the existing service for legacy saved sessions. Normal new-guide transactions go directly to the public node. Request/start limits remain enforced. The earlier transient budget failure has not been assigned a verified root cause; the new guide removes routine dependence on that service, and diagnostic error codes distinguish budget exhaustion, identity, storage and runtime failures.
 
 This record establishes the reviewed candidate and verified image, not production acceptance. The combined deployment must still be followed by static-file comparisons and a fresh hosted browser journey, including the real hosted proof endpoint.
+
+## Production acceptance, 18:38 UTC
+
+The combined deployment completed as Worker version `aee7a6e7-d2a9-4bce-82cf-fa0be9321612`, serving application commit `5b4dd9815ac2bb1ace3ab4beb393ce2082509b2f` and the image above. After propagation, all 236 generated public files matched their local SHA-256 values. The live homepage changed a payment to 3 KAS and showed 9.499 KAS change; question search returned three relevant destinations for “what is a block.”
+
+A fresh production browser wallet requested ten coins once, completed all 22 transactions, generated its proof through the real Cloudflare helper, redeemed the reward on Testnet-10, and retained all six completions after reload. No browser errors were recorded. The host received only its assistance start/proof calls; ordinary lesson transactions used direct public RPC. Public transaction IDs, accepting blocks, fees, timestamps and balances are retained in `v6-browser-hosted-verification.json`; private tab recovery material remains outside Git. The auto-mount response was instrumented only to expose QA state, as described in that report.
+
+The enlarged-root-text check found and corrected narrow-header overflow before publication. Chromium, Firefox and WebKit passed at 390 and 1440 pixels with 200% root text; this supplements normal viewport testing and does not claim physical-device coverage.
+
+The first GitHub Site checks run still expected V6’s retired server-action/event routes. The release test now requires the UI’s read-only legacy status endpoint, the browser engine’s bounded start/proof calls, and its shipped wallet/proof modules. Local public checks passed 25 tests plus signing checks; V5 passed 129 tests, and the guided education checks passed all walkthroughs and 120 layout states. This test/evidence correction changes no deployed application files.
