@@ -4,9 +4,15 @@ const root=document.querySelector('[data-money]'),q=selector=>root.querySelector
 mountMoneyDiagrams(root);
 const dollars=cents=>`$${(cents/100).toFixed(2)}`;
 const fragments={reserves:'redemption',collateral:'collateral',outcome:'prediction'};
+const viewQuestions={reserves:['Can every token be redeemed immediately?','Change the redemption request and compare available cash with tokens waiting.'],collateral:['What happens when collateral loses value?','Change the price of the pledged coins and inspect when the loan permits liquidation.'],outcome:['Who receives the prediction payout?','Choose the reported outcome and follow the single pool of collateral.']};
 function showView(view){
   for(const button of root.querySelectorAll('[data-money-view]'))button.setAttribute('aria-pressed',String(button.dataset.moneyView===view));
   for(const panel of root.querySelectorAll('[data-money-panel]'))panel.hidden=panel.dataset.moneyPanel!==view;
+  const heading=q('[data-money-guide-title]');
+  if(heading){
+    heading.textContent=viewQuestions[view][0];set('[data-money-guide-explanation]',viewQuestions[view][1]);
+    set('[data-money-progress]','Explore this model');
+  }
 }
 function restoreView(){showView(Object.keys(fragments).find(view=>fragments[view]===location.hash.slice(1))||'reserves');}
 for(const button of root.querySelectorAll('[data-money-view]'))button.addEventListener('click',()=>{
@@ -25,6 +31,7 @@ q('[data-redemption]').addEventListener('input',renderRedemption);q('[data-colla
 const walkthrough=document.createElement('div');walkthrough.className='model-walkthrough';
 walkthrough.innerHTML='<div><p class="eyebrow" data-money-progress>Try this example</p><h3 data-money-guide-title>Can every token be redeemed immediately?</h3><p data-money-guide-explanation aria-live="polite">Follow the money through three different promises. Each step changes the model below.</p></div><div class="walkthrough-actions"><button class="primary-button" data-money-continue>Start the example</button><button class="quiet-button" data-money-restart hidden>Start again</button></div>';
 root.prepend(walkthrough);
+restoreView();
 const tour=[['reserves','[data-redemption]',20,'Redeem the available cash','The issuer has $20 cash. A request for 20 tokens can be paid immediately.'],['reserves','[data-redemption]',40,'Ask for more than the cash available','The remaining assets still have value in this model, but they are not cash available for immediate redemption.'],['collateral','[data-collateral-price]',1000,'Borrow against valuable collateral','The collateral supports the loan at this example price.'],['collateral','[data-collateral-price]',500,'Let the price fall','The debt does not fall with the collateral price. Crossing the threshold makes liquidation eligible; someone must still execute it.'],['outcome','[data-outcome]','pending','Wait for the reported result','One pool backs both possible outcomes. Pending claims do not each receive half.'],['outcome','[data-outcome]','yes','Report Yes','The Yes side receives the pool. The example’s authority supplies that answer; the blockchain does not discover it.']];
 let tourIndex=-1;const next=walkthrough.querySelector('[data-money-continue]'),again=walkthrough.querySelector('[data-money-restart]');
 function advanceTour(){tourIndex++;const [view,selector,value,title,explanation]=tour[tourIndex];root.querySelector(`[data-money-view="${view}"]`).click();const input=root.querySelector(selector);input.value=String(value);input.dispatchEvent(new Event(input.tagName==='SELECT'?'change':'input',{bubbles:true}));walkthrough.querySelector('[data-money-progress]').textContent=`Step ${tourIndex+1} of ${tour.length}`;walkthrough.querySelector('[data-money-guide-title]').textContent=title;walkthrough.querySelector('[data-money-guide-explanation]').textContent=explanation;next.disabled=tourIndex===tour.length-1;next.textContent=next.disabled?'Example complete':'Continue';again.hidden=false;walkthrough.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}

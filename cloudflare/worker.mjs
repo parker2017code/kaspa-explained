@@ -1,7 +1,7 @@
 const NETWORK = 'testnet-10';
 const CONTAINER_NAME = 'v6-shared';
 const BRIDGE_PATH = '/internal/v6/state';
-const V6_PATH = /^\/api\/v6\/(start|status|action)$/;
+const V6_PATH = /^\/api\/v6\/(start|status|action|proof)$/;
 const EVENTS_PATH = '/api/v6/events';
 const MAX_REQUEST_BYTES = 64 * 1024;
 const MAX_STATE_BYTES = 16 * 1024 * 1024;
@@ -339,7 +339,7 @@ return class V6Container extends Container {
 
   async ensureLease(request, path, now = Date.now()) {
     const isStart = path === '/api/v6/start';
-    const mayRestore = path === '/api/v6/status' || path === '/api/v6/action';
+    const mayRestore = path === '/api/v6/status' || path === '/api/v6/action' || path === '/api/v6/proof';
     const authorization = (isStart || mayRestore) ? await this.savedSessionAuthorization(request) : {valid: false, exists: false};
     const mayCreate = isStart && authorization.eligible && (!authorization.exists || authorization.valid);
     const mayRestart = authorization.valid || mayCreate;
@@ -545,10 +545,18 @@ async function api(request, environment) {
   const container = environment.V6_CONTAINER.getByName(CONTAINER_NAME);
   let budget;
   try { budget = await container.consumeBudgets({ip, sessionId}); }
-  catch { budget = {ok: false, code: 'budget_unavailable'}; }
+  catch { budget = {ok: false, code: 'budget_runtime_unavailable'}; }
   if (!budget?.ok) return budget?.code === 'request_budget_exhausted'
-    ? json({error: 'The V6 request budget is exhausted. Try again later.'}, 429, {...corsHeaders(origin), 'Retry-After': '60'})
-    : json({error: 'The V6 request budget is temporarily unavailable.'}, 503, corsHeaders(origin));
+    ? json({error: 'The V6 request budget is exhausted. Try again later.', code: 'request_budget_exhausted'}, 429, {...corsHeaders(origin), 'Retry-After': '60'})
+    : json({
+      error: budget?.code === 'budget_identity_unavailable'
+        ? 'The V6 request could not be verified. Reload the page and try again.'
+        : budget?.code === 'budget_runtime_unavailable'
+          ? 'The V6 service could not check the request limit. Please try again shortly.'
+          : 'The V6 request limit could not be checked. Please try again shortly.',
+      // Only expose fixed codes: runtime exception messages can contain internals.
+      code: ['budget_identity_unavailable', 'budget_runtime_unavailable'].includes(budget?.code) ? budget.code : 'budget_unavailable',
+    }, 503, {...corsHeaders(origin), 'Retry-After': '60'});
   try {
     const result = await container.fetch(request);
     const headers = new Headers(result.headers);

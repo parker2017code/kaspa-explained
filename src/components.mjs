@@ -74,13 +74,14 @@ export function vault() {
     ${note('No wallet or real funds. Each attempt starts from the same 10,000 KAS. “Steps” are illustrative; this is not a deployable contract or a specified locktime encoding.')}</figure>`;
 }
 
-export function transaction() {
-  return `<figure class="experiment transaction" data-lab="transaction"><div class="experiment-label"><span>Follow a KAS payment</span><span>Constructed example</span></div>
-    <div class="transaction-equation"><div><span>Input</span><strong>12.5 KAS</strong></div><i aria-hidden="true">=</i><div class="transaction-outputs"><div><span>Payment</span><strong data-tx-payment>7 KAS</strong></div><div><span>Change</span><strong data-tx-change>5.499 KAS</strong></div><div><span>Fee</span><strong>0.001 KAS</strong></div></div></div>
+export function transaction({direct=false}={}) {
+  const control='<label class="range-control"><span>Payment amount <strong data-tx-amount>7 KAS</strong></span><input data-payment-amount type="range" min="0.1" max="12.5" step="0.1" value="7"></label>';
+  const explanation=note('Amounts are calculated in whole sompi: 100,000,000 sompi = 1 KAS. This is not a signed transaction or a fee recommendation. Payment and change labels are authored for this example.');
+  return `<figure class="experiment transaction" data-lab="transaction"${direct?' data-direct="true"':''}><div class="experiment-label"><span>Follow a KAS payment</span><span>Interactive model · no real coins</span></div>
+    ${direct?control:''}<div class="transaction-equation"><div><span>Input</span><strong>12.5 KAS</strong></div><i aria-hidden="true">=</i><div class="transaction-outputs"><div><span>Payment</span><strong data-tx-payment>7 KAS</strong></div><div><span>Change</span><strong data-tx-change>5.499 KAS</strong></div><div><span>Fee</span><strong>0.001 KAS</strong></div></div></div>
     <div data-value-flow>${transactionFlow(transactionState(7))}</div><p class="flow-scale-note">Ribbon widths compare payment and change. The fee line is enlarged to remain visible.</p>
-    <label class="range-control"><span>Payment amount <strong data-tx-amount>7 KAS</strong></span><input data-payment-amount type="range" min="0.1" max="12.5" step="0.1" value="7"></label>
-    <figcaption class="experiment-answer" data-tx-answer aria-live="polite">The payment, change, and fee account for the entire input. Change creates another spendable output for the sender.</figcaption>
-    ${note('Amounts are calculated in whole sompi: 100,000,000 sompi = 1 KAS. This is not a signed transaction or a fee recommendation. Payment and change labels are authored for this example.')}</figure>`;
+    ${direct?'':control}<figcaption class="experiment-answer" data-tx-answer aria-live="polite">The payment, change, and fee account for the entire input. Change creates another spendable output for the sender.</figcaption>
+    ${direct?`<details class="direct-model-details"><summary>How this example works</summary>${explanation}</details>`:explanation}</figure>`;
 }
 
 export function inspector() {

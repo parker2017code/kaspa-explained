@@ -21,3 +21,13 @@ test('current pages and compatibility destinations resolve in generated output',
   for(const [name,url] of Object.entries(aliases))await inspect(url,name);
   assert.deepEqual(failures,[]);
 });
+
+test('homepage directory includes every public page and keeps unlisted routes out',()=>{
+  const home=documents.find(page=>page.file==='index.html');
+  const directory=home.body.match(/<nav class="topic-list" aria-label="All public pages">([\s\S]*?)<\/nav>/)?.[1];
+  assert.ok(directory,'The homepage exposes the public directory');
+  const hrefs=[...directory.matchAll(/href="([^"]+)"/g)].map(match=>match[1]);
+  const expected=documents.filter(page=>page.file!=='404.html'&&!page.unlisted).map(page=>page.publicPath||('/'+(page.file==='index.html'?'':page.file.replace(/\.html$/,''))));
+  assert.deepEqual(hrefs,expected);
+  assert.equal(new Set(hrefs).size,hrefs.length);
+});

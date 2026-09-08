@@ -29,31 +29,31 @@ export const pages = [
   },
   {
     file:'what-is-kaspa.html', title:'How Kaspa orders parallel blocks', description:'See why honest miners find parallel blocks and how ordering resolves conflicting payments.',
-    body: `${lessonContext('what-is-kaspa.html')}${intro('Understand','How Kaspa orders parallel blocks','Kaspa is a proof-of-work payment network, and KAS is its native coin. Change the message delay to see why parallel blocks can remain while one ledger output can be consumed only once.')}
+    body: `${lessonContext('what-is-kaspa.html')}${intro('Understand','How Kaspa orders parallel blocks','A block is a bundle of proposed payments. Miners use computing work to create blocks and share them. Slow their messages below: two miners can create blocks before hearing from each other.')}
       ${network()}
       ${section('parallel-blocks','When miners hear different news',rows([
         ['News arrives in time','<p>Miner 1 finds B. If miner 2 hears about B before finding C, C can reference B.</p>'],
         ['News arrives too late','<p>Miner 2 finds C without knowing B. Both blocks reference A. They are parallel, even though both miners followed the rules.</p>'],
         ['A later block connects them','<p>Once a miner receives both branches, a later block can reference both. A chain selects a branch; Kaspa represents parallel work in a blockDAG.</p>'],
       ]) + detail('Inspect GHOSTDAG’s selection and ordering', `<p>GHOSTDAG chooses the parent with the greatest accumulated blue work, with hash tie-breaks. It classifies newly joined blocks using the parameter k: the blue set permits a bounded number of mutually unrelated blocks.</p><p>Blue and red are graph classifications, not labels for honest and dishonest miners. The implementation orders each merge set from its selected parent, then merges the other blocks by blue work and hash. Arrival order is not the ordering rule.</p><p>${source('paper')} · ${link('Parent selection and classification','https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/ghostdag/protocol.rs')} · ${link('Merge-set ordering','https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/model/stores/ghostdag.rs')}</p>`))}
-      ${section('work','Proof of work commits to block contents',rows([
-        ['Choose transactions','<p>A miner prepares a candidate block. Its contents are committed through the block header used in the work calculation.</p>'],
-        ['Search for valid work','<p>The miner tries work calculations until it finds a result that satisfies the target. Changing the committed contents requires searching against a different header.</p>'],
-        ['Let other nodes check','<p>Nodes verify the work and the consensus rules. Frequent discoveries let work accumulate over short intervals. They sample hashpower, not a count of independent people.</p>'],
-      ]) + `<p>Parallel blocks let the network represent contributions that arrive before miners have heard from one another. They do not remove communication delay or make each discovery a complete round of agreement. ${source('paper')}</p>`)}
       ${section('conflicts','Both blocks can stay.<br>The same money cannot be spent twice.',spend(), 'Once blocks are ordered, nodes still check each transaction against the ledger.')}
       ${section('confirmation','Inclusion, acceptance, and confidence',payment()+rows([
         ['Inclusion','<p>A transaction appears inside a block. This alone does not establish that it was accepted.</p>'],
-        ['Acceptance','<p>The transaction is accepted in the current agreed history. Applications must still handle changes near the tips.</p>'],
+        ['Acceptance','<p>The transaction is accepted in the current agreed history. Applications must still handle changes in the newest part of that history.</p>'],
         ['Confidence','<p>Additional honest work makes replacing history more demanding under the security assumptions. The recipient chooses a policy appropriate to the payment.</p>'],
       ]) + `<p class="source-line">${source('acceptance')} · ${source('paper')}</p>`)}
+      <section id="work" class="chapter">${detail('How proof of work commits to block contents',rows([
+        ['Choose transactions','<p>A miner prepares a candidate block. Its contents are committed through the block header used in the work calculation.</p>'],
+        ['Search for valid work','<p>The miner tries work calculations until it finds a result that satisfies the target. Changing the committed contents requires searching against a different header.</p>'],
+        ['Let other nodes check','<p>Nodes verify the work and the consensus rules. Frequent discoveries let work accumulate over short intervals. They sample hashpower, not a count of independent people.</p>'],
+      ]) + `<p>Parallel blocks let the network represent contributions that arrive before miners have heard from one another. They do not remove communication delay or make each discovery a complete round of agreement. ${source('paper')}</p>`)}</section>
       ${detail('Block rate, throughput, and the limits', '<p>Mainnet targets ten blocks per second. A 100-millisecond interval is neither guaranteed transaction inclusion nor a finality promise. Transaction mass, validation cost, bandwidth, and demand limit what the network can process.</p><p>Parallel blocks do not provide free throughput. Nodes still have to receive, validate, store, and order the work.</p>')}
       ${routes([['Explore the tradeoffs','What the design assumes and what can still fail.','/skeptical-case'],['Use the playground','Inspect individual times and compare conditions.','/playground#network']])}`,
   },
   {
     file:'why-kaspa-matters.html', title:'Follow a KAS payment', description:'Understand wallets, payment outputs, fees, change, and what a transaction explorer can establish.',
-    body:`${lessonContext('why-kaspa-matters.html')}${intro('Use KAS','Follow a KAS payment','A KAS payment consumes an earlier output and creates recipient and change outputs. The difference pays the fee; follow those amounts through the wallet steps and inspect what acceptance can establish.')}
-      ${section('amounts','Where your payment, change, and fee go.',transaction(), 'A transaction consumes earlier outputs and creates new ones. Payment, change, and fees account for the input value.')}
+    body:`${lessonContext('why-kaspa-matters.html')}${intro('Use KAS','Follow a KAS payment','You have 12.5 KAS to spend. Choose how much to send, then see what reaches the recipient, returns to you as change, and pays the fee.')}
+      ${section('amounts','Where your payment, change, and fee go.',transaction(), 'An output is an amount available to spend. Spending it creates new amounts for the recipient and your change.')}
       ${section('wallets','Who controls the keys?',rows([
         ['Your own wallet','<p>You control the keys and their backup. Losing them can mean losing access. Never share a recovery phrase with a person, website, or explorer.</p>'],
         ['An exchange account','<p>The provider controls the keys. Your account balance is a claim on that provider, with its own withdrawal rules and risks.</p>'],
@@ -98,14 +98,15 @@ export const pages = [
   },
   {
     file:'build-on-kaspa.html', title:'What spending rules can enforce', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
-    body:`${lessonContext('build-on-kaspa.html')}${intro('Build','What spending rules can enforce','A covenant is a spending rule attached to an output. Test a wait, amount limit, and destination, then compare the rule with the application and tools around it.')}
+    body:`${lessonContext('build-on-kaspa.html')}${intro('Build','What spending rules can enforce','Try taking money from a pot with three rules: wait long enough, stay within the amount limit, and pay the right destination. Which withdrawals should pass?')}
       <div class="action-row"><a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
-      ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant can constrain how an output is spent. Try a withdrawal against three conditions.')}
-      ${section('start','Integration tasks',rows([
+      ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant attaches these conditions to a spendable amount, called an output.')}
+      <link rel="stylesheet" href="/assets/coordination.css"><div id="coordination">${coordinationMarkup()}</div>
+      <section id="start" class="chapter">${detail('Integration tasks: read the network, receive payments, constrain spending',rows([
         ['Read the network',`<p>Use node or public-service interfaces for blocks, transactions, and accepted history. Know which service you trust and how it handles missing or changed data.</p><p>${link('Integration guide','https://docs.kaspa.org/integrate/getting-started')}</p>`],
         ['Receive payments',`<p>Track the accepting history, persist a checkpoint, and reverse application state when the accepted chain changes. Choose a policy for your use case.</p><p>${source('acceptance')}</p>`],
         ['Constrain spending',`<p>Specify which outputs are allowed, how state moves, and who can authorize each path. Test rejected transactions as carefully as successful ones.</p><p>${source('programmable')}</p>`],
-      ]))}
+      ]))}</section>
       ${section('tools','Tools and implementation status', `<div class="status-list">${snapshot.items.filter(i=>['Toccata','Silverscript','Argent','vProgs'].includes(i[0])).map(([name,state,text,url])=>`<article><div><span class="status-tag">${state}</span><h3>${name}</h3></div><div><p>${text}</p>${link('Documentation',url)}</div></article>`).join('')}</div>`)}
       ${section('application-boundaries','Covenants, shared execution, and proofs',rows([
         ['One agreement', '<p>A buyer can authorize payment to a seller, with a refund path after a deadline. The spending conditions travel with the output. Each permitted exit has to satisfy the contract.</p>'],
@@ -113,7 +114,6 @@ export const pages = [
         ['A computation checked by proof', '<p>A proof can establish a calculation over its specified inputs. If a user’s request was omitted from those inputs, a correct calculation can still leave that user out. The application needs to establish which requests belong in the calculation and their order.</p>'],
       ]) + `<p>The programmability documentation separates covenant rules, Based Apps, and the future direction of Full vProgs. Check the guarantees and readiness of each part before choosing an architecture. ${source('programmable')}</p>`)}
       ${detail('What a proof leaves to the application', `<p>Verification establishes the statement encoded in the proof under its assumptions. It does not automatically establish where inputs came from, whether required data remains available, or whether surrounding software is secure.</p><p>A claim about complete transaction processing therefore needs evidence about both computation and the sequence it processes.</p>`)}
-      <link rel="stylesheet" href="/assets/coordination.css"><div id="coordination">${coordinationMarkup()}</div>
       ${detail('Before putting funds at risk','<p>Review the exact compiler and node versions, transaction encoding, rejected paths, recovery paths, fee behavior, and independent security review. The educational vault above is not a deployable contract.</p>')}`,
   },
   {

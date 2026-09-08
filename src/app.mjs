@@ -135,7 +135,18 @@ menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded'
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menu?.getAttribute('aria-expanded')==='true'){closeMenu();menu.focus();}});
 
 const search=one('[data-search]');
-search?.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let count=0;for(const item of all('[data-search-item]')){item.hidden=!`${item.textContent} ${item.dataset.terms}`.toLowerCase().includes(query);if(!item.hidden)count++;}set(document,'[data-search-status]',`${count} ${count===1?'place':'places'} to explore`);one('[data-search-empty]').hidden=count!==0;});
+// Match topic words, not an entire sentence, while retaining all meaningful terms.
+const searchStopwords=new Set('a an the is are was were what how why when where who can could do does did i my me we you your to of for in on with about please kaspa kas'.split(' '));
+const searchSynonyms={blocks:'block',miners:'mining',miner:'mining',mine:'mining',payments:'payment',pay:'payment',send:'payment',sending:'payment',sent:'payment',wallets:'wallet',transactions:'transaction',fees:'fee',coins:'coin',kas:'coin',covenants:'covenant'};
+const searchTerms=text=>(text.toLowerCase().match(/[a-z0-9]+/g)||[]).filter(term=>!searchStopwords.has(term)).map(term=>searchSynonyms[term]||term);
+search?.addEventListener('input',()=>{
+  const query=searchTerms(search.value);let count=0;
+  for(const item of all('[data-search-item]')){
+    const terms=new Set(searchTerms(`${item.textContent} ${item.dataset.terms}`));
+    item.hidden=!query.every(term=>terms.has(term));if(!item.hidden)count++;
+  }
+  set(document,'[data-search-status]',`${count} ${count===1?'place':'places'} to explore`);one('[data-search-empty]').hidden=count!==0;
+});
 
 for(const inspector of all('[data-inspector]')) one('form',inspector).addEventListener('submit',async event=>{
   event.preventDefault();const button=one('button',inspector),input=one('input',inspector),id=input.value.trim().toLowerCase();
@@ -169,7 +180,7 @@ const lessonSteps={
 };
 function setInput(root,selector,value){const input=root.querySelector(selector);input.value=String(value);input.dispatchEvent(new Event(input.tagName==='SELECT'?'change':'input',{bubbles:true}));}
 for(const root of document.querySelectorAll('[data-lab]')){
- const steps=lessonSteps[root.dataset.lab];if(!steps)continue;
+ const steps=lessonSteps[root.dataset.lab];if(!steps||root.dataset.direct==='true')continue;
  const guide=document.createElement('div');guide.className='model-walkthrough';
  guide.innerHTML='<div><p class="eyebrow" data-walkthrough-progress>Try this example</p><h3 data-walkthrough-title></h3><p data-walkthrough-explanation aria-live="polite"></p></div><div class="walkthrough-actions"><button class="primary-button" data-walkthrough-next>Start the example</button><button class="quiet-button" data-walkthrough-restart hidden>Start again</button></div>';
  const beginnings={network:['Why can two valid blocks appear together?','Start with two miners who know the same block. Then change how quickly news travels between them.'],spend:['Can the same coins pay two people?','Choose which payment comes first and watch what happens to the competing spend.'],transaction:['Why does a payment leave change?','Use one input to pay a recipient and the fee. Then try spending more than fits.'],mining:['Do frequent blocks mean steady rewards?','Keep the network the same and change one miner’s share. Compare expected discoveries with a sample.'],vault:['What can a spending rule prevent?','Try a withdrawal that is too early, too large or sent to the wrong place. Then satisfy the whole rule.'],payment:['When has a payment actually arrived?','Follow sending, block inclusion, acceptance and later work. Each establishes something different.']};

@@ -33,10 +33,11 @@ export async function mountV6World(container,{onSelect=()=>{},onInspect=()=>{}}=
   }else if(id==='agent'){
    const roof=box(g,0,2.45,-.5,4,.18,3.15,0x356c70);g.userData.roof=roof;roof.rotation.z=.08;g.userData.roofExtra=box(g,-1.2,2.8,-1.2,.5,1.2,.5,0xb0795b);for(const x1 of [-1.7,1.7])box(g,x1,1.4,-1.72,.12,1.8,.12,0x315e50);box(g,0,2.12,-1.72,3.45,.12,.12,0x315e50);box(g,.8,1.55,-1.72,1.1,.65,.08,0xe3ddc0);for(let k=0;k<3;k++)prop('tool',g,.5+k*.3,1.22,-1.62,.42);box(g,.2,.82,-.1,2,.15,.9,0x906b45);prop('machine',g,-.8,.5,-.9);actors.pip=prop('pip',g,1,.45,.5);stocks.allowance=prop('grain',g,.1,.95,-.1,.6);stocks.pipTool=prop('timber',g,.7,1,-.1,.6);stocks.pipTool.visible=false;stocks.pipGate=new T.Group();g.add(stocks.pipGate);for(let k=0;k<4;k++)box(stocks.pipGate,.55+k*.3,1,1.25,.055,1.15,.07,0x395f57);box(stocks.pipGate,1,1.5,1.25,1.1,.08,.08,0xbd9b54);
   }else if(id==='terrarium'){
+   const structure = new T.Group();g.add(structure);stocks.greenhouseStructure=structure;
    const glass=new T.MeshStandardMaterial({color:0xc4ece0,transparent:true,opacity:.22,roughness:.15,depthWrite:false});
-   const shell=new T.Mesh(new T.BoxGeometry(3.5,1.9,2.7),glass);shell.position.set(0,1.45,-.5);g.add(shell);stocks.glass=shell;
-   for(const x1 of [-1.7,0,1.7]){box(g,x1,1.5,-1.8,.065,2,.065,0xeff0d2);box(g,x1,1.5,.8,.065,2,.065,0xeff0d2);box(g,x1,2.5,-.5,.065,.065,2.7,0xeff0d2)}
-   for(const x1 of [-.9,.9]){box(g,x1,.58,-.5,.65,.24,1.7,0x805a39);for(let j=0;j<4;j++){const plant=prop('grain',g,x1,.7,-1+j*.35,.45);if(j===3)stocks[x1<0?'decorPlant':'harvestPlant']=plant;}}
+   const shell=new T.Mesh(new T.BoxGeometry(3.5,1.9,2.7),glass);shell.position.set(0,1.45,-.5);structure.add(shell);stocks.glass=shell;
+   for(const x1 of [-1.7,0,1.7]){box(structure,x1,1.5,-1.8,.065,2,.065,0xeff0d2);box(structure,x1,1.5,.8,.065,2,.065,0xeff0d2);box(structure,x1,2.5,-.5,.065,.065,2.7,0xeff0d2)}
+   for(const x1 of [-.9,.9]){box(structure,x1,.58,-.5,.65,.24,1.7,0x805a39);for(let j=0;j<4;j++){const plant=prop('grain',structure,x1,.7,-1+j*.35,.45);if(j===3)stocks[x1<0?'decorPlant':'harvestPlant']=plant;}}
    actors.sprout=prop('sprout',g,.4,.45,1.5);stocks.pledges=new T.Group();g.add(stocks.pledges);
   }else if(id==='coordination'){
    g.userData.roof=box(g,0,2.3,-.55,4,.16,3,0x975c47);box(g,0,.75,-1.3,2.7,.45,.65,0x926c49);box(g,-1.6,1.5,-1.72,.12,1.6,.12,0x315e50);box(g,1.6,1.5,-1.72,.12,1.6,.12,0x315e50);box(g,0,2.1,-1.72,3.3,.12,.12,0x315e50);box(g,0,1.55,-1.72,1.2,.6,.06,0x8dbbb0);cylinder(g,-1,.4,1.4,.65,.12,0x7cb2b4);actors.courier=prop('courier',g,.9,.45,1);stocks.parcel=prop('parcel',g,-.7,.55,0);stocks.receivedParcel=prop('parcel',g,-.7,.98,-1.3,.8);stocks.receivedParcel.visible=false;stocks.payment=prop('coin',g,.2,.55,.3);stocks.bond=prop('coin',g,.8,.55,.3);
@@ -49,127 +50,10 @@ export async function mountV6World(container,{onSelect=()=>{},onInspect=()=>{}}=
  }
 
 
- // Garden care illustrates background life. These objects never enter a ledger.
- const garden = groups.get('terrarium');
- const gardenCart = prop('cart', garden, 1.5, .4, 1.7, .6);
- const gardenBundle = prop('grain', gardenCart, 0, .45, 0, .55);
- gardenBundle.visible = false;
- const carriedHarvest = prop('grain', actors.sprout, .27, .5, -.22, .4);
- carriedHarvest.visible = false;
- const wateringCan = new T.Group();
- wateringCan.position.set(.1, .65, -.3);
- actors.sprout.add(wateringCan);
- cylinder(wateringCan, 0, 0, 0, .11, .2, 0x559d99, 24);
- const handle = new T.Mesh(new T.TorusGeometry(.12, .018, 8, 24), mat(0xd5bb71));
- handle.position.set(.09, .035, 0);
- wateringCan.add(handle);
- const spout = cylinder(wateringCan, 0, .03, -.15, .024, .26, 0x559d99, 16);
- spout.rotation.x = -.85;
- wateringCan.visible = false;
- const droplets = Array.from({length: 4}, () => {
-   const drop = new T.Mesh(new T.SphereGeometry(.028, 10, 8), mat(0x93d7ea));
-   drop.visible = false;
-   garden.add(drop);
-   return drop;
- });
- const gardenNote = document.createElement('span');
- gardenNote.textContent = 'Garden care · decorative harvest';
- gardenNote.style.cssText = 'position:absolute;right:12px;top:12px;padding:5px 8px;border-radius:8px;background:#f5fffae8;color:#28574c;font:12px system-ui';
- ui.append(gardenNote);
- const ambient = {elapsed: 0, phase: 'rest', paused: false};
- const restPosition = new T.Vector3(.4, .45, 1.5);
- const leftPlanter = new T.Vector3(-.3, .45, .15);
- const rightPlanter = new T.Vector3(.35, .45, .15);
- const cartPosition = new T.Vector3(.9, .45, 1.5);
- function gardenPose(armAngle = 0, stride = 0) {
-   actors.sprout.traverse(part => {
-     if (part.name.includes('arm')) part.rotation.x = armAngle;
-     if (part.name.includes('leg')) part.rotation.x = part.name.includes('left') ? stride : -stride;
-   });
- }
- function gardenWalk(from, to, progress) {
-   const u = Math.max(0, Math.min(1, progress));
-   const smooth = u * u * (3 - 2 * u);
-   actors.sprout.position.lerpVectors(from, to, smooth);
-   actors.sprout.rotation.y = Math.atan2(from.x - to.x, from.z - to.z);
-   const step = (Math.floor(u * 10) % 2 ? 1 : -1) * .22;
-   gardenPose(0, u > 0 && u < 1 ? step : 0);
- }
- function restGarden() {
-   actors.sprout.position.copy(restPosition);
-   actors.sprout.rotation.y = 0;
-   wateringCan.visible = false;
-   carriedHarvest.visible = false;
-   droplets.forEach(drop => { drop.visible = false; });
-   gardenPose();
- }
- function renderGarden(elapsed) {
-   gardenNote.hidden = !(interior && selected === 'terrarium');
-   const busy = transfers.some(transfer => transfer.district === 'terrarium') || motion?.actor === actors.sprout;
-   ambient.paused = busy || !!state.paused || document.hidden || reduced.matches;
-   if (reduced.matches) {
-     ambient.phase = 'rest';
-     ambient.elapsed = 0;
-     restGarden();
-     stocks.decorPlant.scale.setScalar(.45);
-     stocks.harvestPlant.visible = true;
-     return;
-   }
-   if (ambient.paused) return;
-   ambient.elapsed = (ambient.elapsed + elapsed) % 25000;
-   const seconds = ambient.elapsed / 1000;
-   wateringCan.visible = false;
-   carriedHarvest.visible = false;
-   droplets.forEach(drop => { drop.visible = false; });
-   if (seconds < 2) {
-     ambient.phase = 'walk to planter';
-     gardenBundle.visible = false;
-     stocks.harvestPlant.visible = true;
-     stocks.decorPlant.scale.setScalar(.33);
-     gardenWalk(restPosition, leftPlanter, seconds / 2);
-   } else if (seconds < 4) {
-     ambient.phase = 'water';
-     actors.sprout.position.copy(leftPlanter);
-     actors.sprout.rotation.y = Math.PI / 2;
-     gardenPose(-.65);
-     wateringCan.visible = true;
-     wateringCan.rotation.z = -.25;
-     droplets.forEach((drop, index) => {
-       const u = (seconds - 2.15 - index * .25) / .65;
-       drop.visible = u >= 0 && u <= 1;
-       drop.position.set(-.85 - .05 * Math.max(0, u), 1.24 - .49 * Math.max(0, u), .05);
-     });
-     stocks.decorPlant.scale.setScalar(.33 + Math.min(1, (seconds - 2) / 2) * .12);
-   } else if (seconds < 5) {
-     ambient.phase = 'walk to harvest';
-     gardenWalk(leftPlanter, rightPlanter, seconds - 4);
-   } else if (seconds < 6.5) {
-     ambient.phase = 'harvest';
-     actors.sprout.position.copy(rightPlanter);
-     actors.sprout.rotation.y = -Math.PI / 2;
-     gardenPose(-.65);
-     stocks.harvestPlant.visible = seconds < 5.5;
-     carriedHarvest.visible = seconds >= 5.5;
-   } else if (seconds < 8) {
-     ambient.phase = 'carry to cart';
-     gardenWalk(rightPlanter, cartPosition, (seconds - 6.5) / 1.5);
-     gardenPose(-.55, (Math.floor((seconds - 6.5) * 6) % 2 ? 1 : -1) * .2);
-     carriedHarvest.visible = true;
-   } else if (seconds < 9) {
-     ambient.phase = 'stock cart';
-     actors.sprout.position.copy(cartPosition);
-     actors.sprout.rotation.y = -Math.PI / 2;
-     gardenPose(-.55);
-     carriedHarvest.visible = seconds < 8.5;
-     gardenBundle.visible = seconds >= 8.5;
-   } else if (seconds < 10) {
-     ambient.phase = 'return to rest';
-     gardenWalk(cartPosition, restPosition, seconds - 9);
-   } else {
-     ambient.phase = 'rest';
-     restGarden();
-   }
- }
+ // Contract consequences are the only work animations. No repeating chores.
+ const gardenBundle = {visible:false};
+ const ambient = {elapsed:0,phase:'rest',paused:true};
+ function renderGarden() {}
  const rejectionIds = new Set();
  let rejection = null;
  const stopBadge = document.createElement('div');
@@ -232,8 +116,8 @@ export async function mountV6World(container,{onSelect=()=>{},onInspect=()=>{}}=
  let yaw=.55,pitch=.82,distance=25,target=new T.Vector3(0,0,0),desiredTarget=target.clone(),interior=false;
  control('Harbor',()=>{interior=false;groups.forEach(g=>{if(g.userData.roof)g.userData.roof.visible=true;g.userData.awning?.forEach(o=>o.visible=true);if(g.userData.roofExtra)g.userData.roofExtra.visible=true});desiredTarget.set(0,0,0);distance=25});control('Look inside',()=>{interior=true;groups.forEach((g,id)=>{if(g.userData.roof)g.userData.roof.visible=id!==selected;g.userData.awning?.forEach(o=>o.visible=id!==selected);if(g.userData.roofExtra)g.userData.roofExtra.visible=id!==selected});pitch=.58;desiredTarget.copy(groups.get(selected).position).add(new T.Vector3(0,1,0));distance=9;onInspect(selected)});control('−',()=>distance=Math.min(38,distance+2));control('+',()=>distance=Math.max(6,distance-2));
  function select(id){if(typeof id==='number')id=chapters[id];if(!groups.has(id))return;selected=id;labels.forEach(l=>l.b.setAttribute('aria-pressed',String(l.g===groups.get(id))));if(interior){groups.forEach((g,key)=>{if(g.userData.roof)g.userData.roof.visible=key!==id;g.userData.awning?.forEach(o=>o.visible=key!==id);if(g.userData.roofExtra)g.userData.roofExtra.visible=key!==id});desiredTarget.copy(groups.get(id).position).add(new T.Vector3(0,1,0));}}
- function applyPersistent(s){const next=s.result||{};persistentResult={...persistentResult,...next,pip:{...persistentResult.pip,...next.pip},greenhouse:{...persistentResult.greenhouse,...next.greenhouse},courier:{...persistentResult.courier,...next.courier},proof:{...persistentResult.proof,...next.proof}};s={...s,result:persistentResult};const inv=s.inventory?.buyer;consequence.hidden=!((s.chapter===5&&s.result?.proof?.machineOn)||(s.chapter===0&&s.result?.toolReceived)||inv?.tools!==undefined);consequence.textContent=s.chapter===5&&s.result?.proof?.machineOn?'Verified settings 6 + 7 = 13 · output 42':s.chapter===0&&s.result?.toolReceived?'Your cart: metal tool received':inv?.tools!==undefined?`Your tools: ${inv.tools}`:'';renderStocks(s.inventory);for(const a of accountLabels){if(a.name==='budget'){const p=s.result?.pip;a.label.textContent=p?.revoked?'Pip access revoked':p?.allowanceCrops!==undefined?`Pip: ${p.allowanceCrops} crops left · native spending disabled`:'Pip awaits permission';continue;}if(a.name==='proof'){a.label.textContent=s.result?.proof?.machineOn?'Verified · 6 × 7 = 42':'Settings 6 + 7 = 13 · output 42';continue;}const value=a.name==='Customer payment'?s.result?.courier?.paymentSompi:s.result?.courier?.bondSompi;a.label.textContent=a.name+(value!==undefined?`: ${Number(value)/1e8} tKAS`:'')+(s.result?.courier?.refund?(a.name==='Customer payment'?' · refunded to customer':' · forfeited to customer'):s.result?.courier?.receiptPresent?' · paid to courier':'');}stocks.tool.visible=(!!s.result?.toolReceived||!!s.progress?.completed?.includes(0))&&motion?.op!=='purchase';stocks.pipTool.visible=Number(s.result?.pip?.receivedWood)>0&&motion?.op!=='pip-allow';stocks.receivedParcel.visible=!!s.result?.courier?.delivered&&motion?.op!=='delivery-release';stocks.glass.visible=(!!s.result?.greenhouse?.built||!!s.progress?.completed?.includes(3))&&!transfers.some(t=>t.district==='terrarium');stocks.pledges.visible=!s.result?.greenhouse?.built;stocks.allowance.visible=Number(s.result?.pip?.allowanceCrops)>0&&!s.result?.pip?.revoked;stocks.pipGate.visible=!stocks.allowance.visible;stocks.parcel.visible=!s.result?.courier?.receiptPresent;stocks.payment.visible=Number(s.result?.courier?.paymentSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.bond.visible=Number(s.result?.courier?.bondSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.machine.scale.setScalar(s.result?.proof?.machineOn?1.4:1.25);stocks.proofReward.visible=!!s.result?.proof?.machineOn;if(s.operation==='ring'&&s.accepted)stocks.ring.children.forEach(o=>o.visible=false);if(s.result?.greenhouse?.pledges){stocks.pledges.clear();s.result.greenhouse.pledges.filter(p=>p.state==='locked'||p.state==='accepted').slice(0,6).forEach((p,i)=>prop('timber',stocks.pledges,-1+i*.4,.45,1.8,.7));}}
- function update(s){const previous=initialized;state=s||{};select(state.district||chapters[state.chapter]||selected);observeRejection(state.rejected,!previous);if(state.accepted)applyPersistent(state);if(!previous){if(state.phase==='intro'){interior=true;distance=9;pitch=.58;select(selected);}applyPersistent(state);if(state.eventId)events.add(state.eventId);initialized=true;return}if(!state.accepted||!state.eventId||events.has(state.eventId))return;events.add(state.eventId);if(events.size>128)events.delete(events.values().next().value);if(motion){motion.actor.position.copy(motion.origin);motion.actor.traverse(n=>{if(n.name.includes('arm')||n.name.includes('leg'))n.rotation.x=0});if(motion.carried)motion.actor.remove(motion.carried);if(motion.op==='purchase')stocks.tool.visible=!!persistentResult.toolReceived;if(motion.op==='pip-allow')stocks.pipTool.visible=Number(persistentResult.pip?.receivedWood)>0;if(motion.op==='delivery-release')stocks.receivedParcel.visible=!!persistentResult.courier?.delivered;motion=null;}const op=state.operation;if(op==='ring'){startTransfer({asset:'grain',count:3,from:[-2,1.5],to:[0,2.65]});startTransfer({asset:'tool',count:1,from:[0,2.65],to:[2,1.5]});startTransfer({asset:'ore',count:2,from:[2,1.5],to:[-2,1.5]});}if(op==='greenhouse-settle'){stocks.glass.visible=false;startTransfer({asset:'timber',count:3,from:[-1,1.8],to:[-1,-.5],district:'terrarium'});}if(op==='pledge')startTransfer({asset:'timber',count:1,from:[1.8,1.8],to:[0,1.8],district:'terrarium'});if(op==='proof-verified'){stocks.proofReward.visible=false;startTransfer({asset:'coin',count:1,from:[.4,.6],to:[1.4,1.4],district:'computation'});}if(op==='withdraw')startTransfer({asset:'coin',count:1,from:[0,1.8],to:[1.8,1.8],district:'terrarium'});if(op==='delivery-refund'){startTransfer({asset:'coin',count:1,from:[.2,.3],to:[-1.4,1.6],district:'coordination'});startTransfer({asset:'coin',count:1,from:[.8,.3],to:[-1.1,1.6],district:'coordination'});}if(!['purchase','pip-allow','delivery-release'].includes(op))return;const actor=op?.startsWith('pip')?actors.pip:op?.startsWith('delivery')?actors.courier:op?.includes('greenhouse')?actors.sprout:actors.seller;const origin=actor.position.clone();let carried=null;if(op==='purchase'){carried=prop('tool',actor,.27,.5,-.25,.7);stocks.tool.visible=false;}else if(op==='delivery-release'){carried=prop('parcel',actor,0,.52,-.3,.8);stocks.receivedParcel.visible=false;}else if(op==='pip-allow'){carried=prop('timber',actor,.27,.5,-.25,.7);stocks.pipTool.visible=false;}motion={actor,origin,carried,start:performance.now(),duration:2600,op};}
+ function applyPersistent(s){const next=s.result||{};persistentResult={...persistentResult,...next,pip:{...persistentResult.pip,...next.pip},greenhouse:{...persistentResult.greenhouse,...next.greenhouse},courier:{...persistentResult.courier,...next.courier},proof:{...persistentResult.proof,...next.proof}};s={...s,result:persistentResult};const inv=s.inventory?.buyer;consequence.hidden=!((s.chapter===5&&s.result?.proof?.machineOn)||(s.chapter===0&&s.result?.toolReceived)||inv?.tools!==undefined);consequence.textContent=s.chapter===5&&s.result?.proof?.machineOn?'Verified settings 6 + 7 = 13 · output 42':s.chapter===0&&s.result?.toolReceived?'Your cart: metal tool received':inv?.tools!==undefined?`Your tools: ${inv.tools}`:'';renderStocks(s.inventory);for(const a of accountLabels){if(a.name==='budget'){const p=s.result?.pip;a.label.textContent=p?.revoked?'Pip access revoked':p?.allowanceSompi!==undefined?`Pip: up to ${Number(p.allowanceSompi)/1e8} test coins left`:p?.allowanceCrops!==undefined?`Pip: ${p.allowanceCrops} crops left · native spending disabled`:'Pip awaits permission';continue;}if(a.name==='proof'){a.label.textContent=s.result?.proof?.machineOn?'Verified · 6 × 7 = 42':'Settings 6 + 7 = 13 · output 42';continue;}const value=a.name==='Customer payment'?s.result?.courier?.paymentSompi:s.result?.courier?.bondSompi;a.label.textContent=a.name+(value!==undefined?`: ${Number(value)/1e8} tKAS`:'')+(s.result?.courier?.refund?(a.name==='Customer payment'?' · refunded to customer':' · forfeited to customer'):s.result?.courier?.receiptPresent?' · paid to courier':'');}stocks.tool.visible=(!!s.result?.toolReceived||!!s.progress?.completed?.includes(0))&&motion?.op!=='purchase';stocks.pipTool.visible=Number(s.result?.pip?.receivedWood)>0&&motion?.op!=='pip-allow';stocks.receivedParcel.visible=!!s.result?.courier?.delivered&&motion?.op!=='delivery-release';stocks.greenhouseStructure.visible=(!!s.result?.greenhouse?.built)&&!transfers.some(t=>t.district==='terrarium');stocks.glass.visible=(!!s.result?.greenhouse?.built||!!s.progress?.completed?.includes(3))&&!transfers.some(t=>t.district==='terrarium');stocks.pledges.visible=!s.result?.greenhouse?.built;stocks.allowance.visible=Number(s.result?.pip?.allowanceSompi??s.result?.pip?.allowanceCrops)>0&&!s.result?.pip?.revoked;stocks.pipGate.visible=!stocks.allowance.visible;stocks.parcel.visible=!s.result?.courier?.receiptPresent;stocks.payment.visible=Number(s.result?.courier?.paymentSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.bond.visible=Number(s.result?.courier?.bondSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.machine.scale.setScalar(s.result?.proof?.machineOn?1.4:1.25);stocks.proofReward.visible=!!s.result?.proof?.machineOn;if(s.operation==='ring'&&s.accepted)stocks.ring.children.forEach(o=>o.visible=false);if(s.result?.greenhouse?.pledges){stocks.pledges.clear();s.result.greenhouse.pledges.filter(p=>p.state==='locked'||p.state==='accepted').slice(0,6).forEach((p,i)=>prop('coin',stocks.pledges,-1+i*.4,.45,1.8,.7));}}
+ function update(s){const previous=initialized;state=s||{};select(state.district||chapters[state.chapter]||selected);observeRejection(state.rejected,!previous);if(state.accepted)applyPersistent(state);if(!previous){if(state.phase==='intro'){interior=true;distance=9;pitch=.58;select(selected);}applyPersistent(state);if(state.eventId)events.add(state.eventId);initialized=true;return}if(!state.accepted||!state.eventId||events.has(state.eventId))return;events.add(state.eventId);if(events.size>128)events.delete(events.values().next().value);if(motion){motion.actor.position.copy(motion.origin);motion.actor.traverse(n=>{if(n.name.includes('arm')||n.name.includes('leg'))n.rotation.x=0});if(motion.carried)motion.actor.remove(motion.carried);if(motion.op==='purchase')stocks.tool.visible=!!persistentResult.toolReceived;if(motion.op==='pip-allow')stocks.pipTool.visible=Number(persistentResult.pip?.receivedWood)>0;if(motion.op==='delivery-release')stocks.receivedParcel.visible=!!persistentResult.courier?.delivered;motion=null;}const op=state.operation;if(op==='ring'){startTransfer({asset:'grain',count:3,from:[-2,1.5],to:[0,2.65]});startTransfer({asset:'tool',count:1,from:[0,2.65],to:[2,1.5]});startTransfer({asset:'ore',count:2,from:[2,1.5],to:[-2,1.5]});}if(op==='greenhouse-settle'){stocks.glass.visible=false;startTransfer({asset:'timber',count:3,from:[-1,1.8],to:[-1,-.5],district:'terrarium'});}if(op==='pledge')startTransfer({asset:'coin',count:1,from:[1.8,1.8],to:[0,1.8],district:'terrarium'});if(op==='proof-verified'){stocks.proofReward.visible=false;startTransfer({asset:'coin',count:1,from:[.4,.6],to:[1.4,1.4],district:'computation'});}if(op==='withdraw')startTransfer({asset:'coin',count:1,from:[0,1.8],to:[1.8,1.8],district:'terrarium'});if(op==='delivery-refund'){startTransfer({asset:'coin',count:1,from:[.2,.3],to:[-1.4,1.6],district:'coordination'});startTransfer({asset:'coin',count:1,from:[.8,.3],to:[-1.1,1.6],district:'coordination'});}if(!['purchase','pip-allow','delivery-release'].includes(op))return;const actor=op?.startsWith('pip')?actors.pip:op?.startsWith('delivery')?actors.courier:op?.includes('greenhouse')?actors.sprout:actors.seller;const origin=actor.position.clone();let carried=null;if(op==='purchase'){carried=prop('tool',actor,.27,.5,-.25,.7);stocks.tool.visible=false;}else if(op==='delivery-release'){carried=prop('parcel',actor,0,.52,-.3,.8);stocks.receivedParcel.visible=false;}else if(op==='pip-allow'){carried=prop('timber',actor,.27,.5,-.25,.7);stocks.pipTool.visible=false;}motion={actor,origin,carried,start:performance.now(),duration:2600,op};}
  const pointers=new Map();let lastPinch=0;
  const down=e=>{pointers.set(e.pointerId,[e.clientX,e.clientY]);renderer.domElement.setPointerCapture(e.pointerId)};
  const move=e=>{const old=pointers.get(e.pointerId);if(!old)return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()];const d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(lastPinch)distance=Math.max(6,Math.min(38,distance+(lastPinch-d)*.05));lastPinch=d}else if(e.shiftKey){desiredTarget.x-=(e.clientX-old[0])*.02;desiredTarget.z-=(e.clientY-old[1])*.02}else{yaw-=(e.clientX-old[0])*.006;pitch=Math.max(.25,Math.min(1.35,pitch+(e.clientY-old[1])*.005))}};
@@ -251,7 +135,7 @@ export async function mountV6World(container,{onSelect=()=>{},onInspect=()=>{}}=
  document.addEventListener('visibilitychange',visibilityChanged);
  function render(now){if(disposed)return;if(document.hidden){lastFrameTime=now;frame=requestAnimationFrame(render);return;}const elapsed=now-lastFrameTime;lastFrameTime=now;if(state.paused){if(motion)motion.start+=elapsed;transfers.forEach(t=>t.start+=elapsed);if(rejection)rejection.start+=elapsed;}renderGarden(elapsed);renderRejection(now);target.lerp(desiredTarget,reduced.matches?1:.25);const fitDistance=distance*(interior?Math.max(1,1.05/camera.aspect):Math.max(1,1.25/camera.aspect));camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*fitDistance,target.y+Math.sin(pitch)*fitDistance,target.z+Math.cos(yaw)*Math.cos(pitch)*fitDistance);camera.lookAt(target);
  if(motion){let t=Math.max(0,Math.min(1,(now-motion.start)/motion.duration));const {actor,origin}=motion;const step=t<.25?t*4:t<.65?1:(1-t)/.35;actor.position.copy(origin);actor.position.z+=step*(motion.op==='purchase'?2:.75);if(motion.op==='purchase')actor.position.x+=step<.5?step*3.8:(1-step)*3.8;actor.traverse(n=>{if(n.name.includes('arm'))n.rotation.x=t>.22&&t<.68?-.7:0;if(n.name.includes('leg'))n.rotation.x=reduced.matches?0:((Math.floor(t*12)%2?1:-1)*.22*(t<.25||t>.65?1:0))});if(t===1||reduced.matches){actor.position.copy(origin);if(motion.carried){actor.remove(motion.carried);if(motion.op==='purchase')stocks.tool.visible=true;else if(motion.op==='pip-allow')stocks.pipTool.visible=true;else stocks.receivedParcel.visible=true;}actor.traverse(n=>{if(n.name.includes('arm')||n.name.includes('leg'))n.rotation.x=0});motion=null}}
- for(let i=transfers.length-1;i>=0;i--){const tr=transfers[i],t=reduced.matches?1:Math.max(0,Math.min(1,(now-tr.start)/tr.duration));const smooth=t*t*(3-2*t);tr.item.position.lerpVectors(tr.from,tr.to,smooth);tr.worker.traverse(n=>{if(n.name.includes('leg'))n.rotation.x=reduced.matches?0:(Math.floor(t*16)%2?1:-1)*.2;});tr.item.traverse(n=>{if(n.name.includes('wheel'))n.rotation.x=t*8;});if(t===1){tr.item.removeFromParent();transfers.splice(i,1);if(!transfers.some(t=>t.district==='market'))Object.values(businessStores).forEach(g=>g.visible=true);if(tr.district==='terrarium'&&persistentResult.greenhouse?.built)stocks.glass.visible=true;if(tr.district==='computation'&&persistentResult.proof?.machineOn)stocks.proofReward.visible=true;}}for(const {g,label}of [...quantityLabels,...accountLabels]){label.style.display=interior&&g.parent===groups.get(selected)?'':'none';g.getWorldPosition(v);v.y+=1;v.project(camera);label.style.left=`${Math.max(label.offsetWidth/2+4,Math.min(container.clientWidth-label.offsetWidth/2-4,(v.x*.5+.5)*container.clientWidth))}px`;label.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;}for(const {g,b}of labels){v.copy(g.position).add(new T.Vector3(0,3.8,0)).project(camera);b.style.left=`${(v.x*.5+.5)*container.clientWidth}px`;b.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;b.style.display=v.z>1?'none':''}
+ for(let i=transfers.length-1;i>=0;i--){const tr=transfers[i],t=reduced.matches?1:Math.max(0,Math.min(1,(now-tr.start)/tr.duration));const smooth=t*t*(3-2*t);tr.item.position.lerpVectors(tr.from,tr.to,smooth);tr.worker.traverse(n=>{if(n.name.includes('leg'))n.rotation.x=reduced.matches?0:(Math.floor(t*16)%2?1:-1)*.2;});tr.item.traverse(n=>{if(n.name.includes('wheel'))n.rotation.x=t*8;});if(t===1){tr.item.removeFromParent();transfers.splice(i,1);if(!transfers.some(t=>t.district==='market'))Object.values(businessStores).forEach(g=>g.visible=true);if(tr.district==='terrarium'&&persistentResult.greenhouse?.built)stocks.glass.visible=true;stocks.greenhouseStructure.visible=!!persistentResult.greenhouse?.built;if(tr.district==='computation'&&persistentResult.proof?.machineOn)stocks.proofReward.visible=true;}}for(const {g,label}of [...quantityLabels,...accountLabels]){label.style.display=interior&&g.parent===groups.get(selected)?'':'none';g.getWorldPosition(v);v.y+=1;v.project(camera);label.style.left=`${Math.max(label.offsetWidth/2+4,Math.min(container.clientWidth-label.offsetWidth/2-4,(v.x*.5+.5)*container.clientWidth))}px`;label.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;}for(const {g,b}of labels){v.copy(g.position).add(new T.Vector3(0,3.8,0)).project(camera);b.style.left=`${(v.x*.5+.5)*container.clientWidth}px`;b.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;b.style.display=v.z>1?'none':''}
  if(persistentResult.proof?.machineOn&&!reduced.matches&&!state.paused)stocks.gears.forEach((g,i)=>g.rotation.z+=(i?-1:1)*.008);renderer.render(scene,camera);frame=requestAnimationFrame(render)}frame=requestAnimationFrame(render);select('market');
  return {update,select,inspect(){return {selected,activeMotion:!!motion,activeTransfers:transfers.length,toolInCart:stocks.tool.visible,greenhouseBuilt:stocks.glass.visible,machinePowered:!!persistentResult.proof?.machineOn,stores:JSON.parse(JSON.stringify(stockState)),seenEvents:events.size,ambient:{phase:ambient.phase,elapsed:Math.round(ambient.elapsed),paused:ambient.paused,decorativeCart:gardenBundle.visible},rejection:rejection?{id:rejection.id,rule:rejection.rule}:null,seenRejections:rejectionIds.size}},destroy(){disposed=true;cancelAnimationFrame(frame);resize.disconnect();document.removeEventListener('visibilitychange',visibilityChanged);scene.traverse(o=>{o.geometry?.dispose();if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose()});renderer.dispose();renderer.domElement.remove();ui.remove()}};
 }

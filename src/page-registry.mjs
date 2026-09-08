@@ -12,3 +12,6 @@ import {experimentsPage} from './experiments-page.mjs';
 export const standalone=process.env.KASPA_RELEASE==='v1';
 const contentPages=[...pages.map(page=>page.file==='index.html'?homePage({standalone}):page),moneyPage,...(standalone?[]:[publicAppsPage,v4Page,{...v5Page,unlisted:true,publicPath:'/covenants/v5',file:'covenants-v5.html',title:'Sprout Harbor V5 · A KAS economy'},{...v6Page,unlisted:true,publicPath:'/covenants/v6'},experimentsPage,testnetWorkspacePage,wrapPage])];
 export const documents=[...contentPages,searchPage(contentPages)];
+
+// Use the same published inventory as routing, including Search and excluding unlisted workspaces.
+documents[documents.findIndex(page=>page.file==='index.html')]=homePage({standalone,directory:documents});

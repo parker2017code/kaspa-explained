@@ -167,3 +167,50 @@ test('public routing protects API and bridge while V4 remains indexable', async 
   assert.equal((await worker.fetch(new Request('https://public.example/covenants'), env)).headers.get('X-Robots-Tag'), null);
   assert.equal((await worker.fetch(new Request('https://public.example/covenants/v6'), env)).headers.get('X-Robots-Tag'), 'noindex, nofollow');
 });
+
+test('public budget failures distinguish exhausted, missing identity, storage and RPC errors without leaking details', async () => {
+  let forwarded = 0;
+  const cases = [
+    {result: {ok: false, code: 'request_budget_exhausted'}, status: 429, code: 'request_budget_exhausted'},
+    {result: {ok: false, code: 'budget_identity_unavailable'}, status: 503, code: 'budget_identity_unavailable'},
+    {result: {ok: false, code: 'budget_unavailable'}, status: 503, code: 'budget_unavailable'},
+    {result: {ok: false, code: 'private storage detail'}, status: 503, code: 'budget_unavailable'},
+    {throws: true, status: 503, code: 'budget_runtime_unavailable'},
+  ];
+  for (const scenario of cases) {
+    const stub = {
+      async consumeBudgets() {
+        if (scenario.throws) throw new Error('private runtime detail');
+        return scenario.result;
+      },
+      async fetch() { forwarded++; return Response.json({ok: true}); },
+    };
+    const env = {V6_CONTAINER: {getByName: () => stub}, V6_PUBLIC_ORIGIN: 'https://public.example'};
+    const response = await worker.fetch(apiRequest('status', {id: ID, capability: CAP}), env);
+    assert.equal(response.status, scenario.status);
+    assert.equal(response.headers.get('Retry-After'), '60');
+    assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://public.example');
+    const body = await response.json();
+    assert.equal(body.code, scenario.code);
+    assert.equal(JSON.stringify(body).includes('private'), false);
+  }
+  assert.equal(forwarded, 0);
+});
+
+test('authenticated proof assistance restores a lease and public proof routing retains request budgets', async () => {
+  const {instance, sql} = fixture();
+  instance.stateCompareAndSwap({revision: 0, records: {[`v6:session:${ID}`]: {id: ID, mode: 'browser-assistance', capHash: await sha256(CAP)}}});
+  assert.equal((await instance.fetch(apiRequest('proof', {id: ID, capability: 'cd'.repeat(32)}))).status, 401);
+  assert.equal(sql.logs.length, 0);
+  assert.equal((await instance.fetch(apiRequest('proof', {id: ID, capability: CAP}))).status, 200);
+  assert.equal(sql.logs.length, 1);
+  assert.equal(instance.forwarded.at(-1).url.endsWith('/api/v6/proof'), true);
+  let budgets = 0, forwarded = 0;
+  const env = {V6_PUBLIC_ORIGIN: 'https://public.example', V6_CONTAINER: {getByName: () => ({
+    async consumeBudgets() {budgets++; return {ok: false, code: 'request_budget_exhausted'};},
+    async fetch() {forwarded++; return Response.json({});},
+  })}};
+  assert.equal((await worker.fetch(apiRequest('proof', {id: ID, capability: CAP}), env)).status, 429);
+  assert.equal(budgets, 1);
+  assert.equal(forwarded, 0);
+});
