@@ -61,7 +61,15 @@ function configuredOrigins(environment) {
 
 function allowedOrigin(request, environment) {
   const origin = request.headers.get('Origin');
-  return origin && configuredOrigins(environment).has(origin) ? origin : null;
+  const origins = configuredOrigins(environment);
+  if (origin) return origins.has(origin) ? origin : null;
+  const url = new URL(request.url);
+  // Browsers omit Origin on same-origin EventSource GETs. Fetch Metadata and
+  // the exact destination origin admit that request without allowing a
+  // cross-site stream or weakening POST origin checks.
+  return request.method === 'GET' && url.pathname === EVENTS_PATH
+    && request.headers.get('Sec-Fetch-Site') === 'same-origin'
+    && origins.has(url.origin) ? url.origin : null;
 }
 
 function corsHeaders(origin) {
@@ -516,6 +524,11 @@ async function api(request, environment) {
   if ((request.method !== 'POST' && url.pathname !== EVENTS_PATH) || (request.method === 'POST' && !V6_PATH.test(url.pathname))) return json({error: 'Not found.'}, 404);
   const origin = allowedOrigin(request, environment);
   if (!origin) return json({error: 'The request origin is not allowed.'}, 403);
+  if (!request.headers.has('Origin')) {
+    const headers = new Headers(request.headers);
+    headers.set('Origin', origin);
+    request = new Request(request, {headers});
+  }
   if (url.pathname !== EVENTS_PATH && request.headers.get('Content-Type')?.split(';')[0].toLowerCase() !== 'application/json') return json({error: 'JSON required.'}, 415, corsHeaders(origin));
   let sessionId = null;
   if (url.pathname !== EVENTS_PATH) {

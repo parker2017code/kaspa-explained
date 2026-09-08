@@ -153,6 +153,12 @@ test('public routing protects API and bridge while V4 remains indexable', async 
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://public.example');
   assert.equal(forwarded.length, 1);
+  const streamHeaders = {'Sec-Fetch-Site': 'same-origin', 'CF-Connecting-IP': '192.0.2.1'};
+  assert.equal((await worker.fetch(new Request('https://public.example/api/v6/events', {headers: streamHeaders}), env)).status, 200);
+  assert.equal(forwarded.at(-1).headers.get('Origin'), 'https://public.example');
+  assert.equal((await worker.fetch(new Request('https://public.example/api/v6/events', {headers: {...streamHeaders, 'Sec-Fetch-Site': 'cross-site'}}), env)).status, 403);
+  assert.equal((await worker.fetch(new Request('https://other.example/api/v6/events', {headers: streamHeaders}), env)).status, 403);
+  assert.equal((await worker.fetch(new Request('https://public.example/api/v6/start', {method: 'POST', headers: {...streamHeaders, 'Content-Type': 'application/json'}, body: '{}'}), env)).status, 403);
   assert.equal((await worker.fetch(new Request('https://public.example/api/v6/start', {method: 'POST', headers: {'Origin': 'https://evil.example', 'CF-Connecting-IP': '192.0.2.1', 'Content-Type': 'application/json'}, body: '{}'}), env)).status, 403);
   assert.equal((await worker.fetch(new Request('https://public.example/internal/v6/state'), env)).status, 404);
   const bridgeRead = await worker.fetch(new Request('https://public.example/internal/v6/state', {headers: {Authorization: 'Bearer bridge'}}), env);
