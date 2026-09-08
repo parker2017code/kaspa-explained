@@ -18,6 +18,9 @@ test('V1 is a fresh static artifact without local-wallet interfaces or stale fil
     assert.doesNotMatch(html,/data-(?:testnet|contract-kind|lookup-form|public-apps)|href="\/(?:testnet|contracts|split|applications)(?:["#?])/ ,file);
   }
   const home=await readFile('dist-v1/index.html','utf8');
-  assert.match(home,/Block C\. Miner 2 · 400 ms\. References A/);
-  assert.match(home,/data-network-announcement aria-live="polite"/);
+  assert.match(home,/id="learning-route"/);
+  assert.match(home,/href="\/what-is-kaspa"/);
+  const networkLesson=await readFile('dist-v1/what-is-kaspa.html','utf8');
+  assert.match(networkLesson,/Block C\. Miner 2 · 400 ms\. References A/);
+  assert.match(networkLesson,/data-network-announcement aria-live="polite"/);
 });

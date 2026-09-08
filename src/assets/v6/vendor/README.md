@@ -1,0 +1,1 @@
+Three.js 0.180.0 (MIT), exact existing repo renderer plus official GLTFLoader and BufferGeometryUtils from the matching npm package. Relative imports only; no remote dependency. Duplicated runtime paths keep the V6 assets self-contained under /assets/v6/ without changing shared V4/V5 files.

@@ -1,6 +1,10 @@
 import {transactionFlow} from './flow-diagrams.mjs';
 import {networkDiagram} from './network-diagram.mjs';
 import {mountCoordination} from './coordination.mjs';
+if(document.querySelector('[data-use-case-exhibit]'))void import('./use-case-demo.mjs');
+if(document.body.classList.contains('editorial-page'))void import('./learning-ui.mjs');
+if(document.querySelector('[data-v5-app]'))void import('./v5-app.mjs');
+if(document.querySelector('[data-v6-app]'))void import('./v6-app.mjs');
 document.querySelectorAll('[data-coordination]').forEach(mountCoordination);
 import {networkState, spendState, miningState, vaultState, transactionState, formatKas} from './models.mjs';
 
@@ -192,4 +196,4 @@ function installExplore(root,guide){
  button.addEventListener('click',()=>{const expanded=root.dataset.guided==='true';root.dataset.guided=String(!expanded);button.setAttribute('aria-expanded',String(expanded));button.textContent=expanded?'Hide controls':'Explore controls';});
 }
 
-function revealStep(guide){if(matchMedia('(max-width:700px)').matches)guide.scrollIntoView({block:'start',behavior:reduced.matches?'instant':'smooth'});}
+function revealStep(guide){guide.scrollIntoView({block:'start',behavior:reduced.matches?'instant':'smooth'});}

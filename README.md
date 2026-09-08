@@ -1,6 +1,6 @@
 # Kaspa Explained
 
-[Kaspa Explained](https://kaspaexplained.com) is an independent guide to Kaspa with interactive explanations and experimental Testnet-10 applications. The public build includes 18 canonical pages and 87 compatibility routes.
+[Kaspa Explained](https://kaspaexplained.com) is an independent guide to Kaspa with interactive explanations and experimental Testnet-10 applications. Canonical pages and compatibility routes are generated from the page registry.
 
 ## Sprout Harbor: a small KAS economy
 
@@ -11,6 +11,14 @@ Pip earns **0.1 tKAS** and spends **0.03 tKAS from that exact wage output** on t
 Signatures, spending limits, voucher ownership, payments, pledge conditions, the schedule check and movement rules are enforced on Testnet-10. Parts, greenhouse production, cargo and food delivery are game interpretations. The browser controls all demonstration accounts. These are unaudited experiments with free test coins, not mainnet applications.
 
 A complete economic order and its reload were verified on Testnet-10 on 7 September 2026. Inspect the [accepted transaction record](docs/economy-live-verification.json), [browser checks](docs/economy-browser-verification.json), and [economic route and evidence boundaries](docs/economy-release.md). These are dated observations, not a security audit or unconditional finality.
+
+## V5 and V6 Cloudflare migration
+
+The site is being moved to Cloudflare. V5 and V6 will be unlisted at `/covenants/v5` and `/covenants/v6`, excluded from navigation, search, and the sitemap. A preview deployment is not evidence that its transaction backend is ready.
+
+V6 covers atomic purchase, Pip's resource policy, a three-business ring, conditional greenhouse pledges, bonded delivery, and proof-checked work. The local browser journey reached all six outcomes with 26 accepted Testnet-10 transactions and five native VM rejections. See [local acceptance](docs/v6-local-acceptance.md) and [the recorded receipts](docs/v6-local-verification.json). The 12–15 minute duration is a design target, not a measured first-time-user result.
+
+The hosted runtime uses a separate dedicated Testnet-10 signer, durable state, bounded execution, and authenticated internal endpoints. Preserve `.local/v5-final` and never upload the existing local wallet. See [cloud runtime boundaries](docs/v6-cloud-runtime.md) and [container build checks](docs/v6-container-build.md). Hosted browser acceptance and domain cutover remain separate release gates.
 
 ## External assets and native receipts
 

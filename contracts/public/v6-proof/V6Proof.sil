@@ -1,0 +1,90 @@
+pragma silverscript ^0.1.0;
+
+// Testnet-10 only: a bounded Groth16 proof pays a fixed reward to the worker
+// that owns this instance. The proof is a small arithmetic lesson, not a
+// general private-computation or secrecy claim.
+contract V6ProofPayout(
+    pubkey initialOwner,
+    pubkey initialFeeSponsor,
+    byte[] initialVerifyingKey,
+    byte[32] initialTaskScore,
+    byte[32] initialRewardUnits,
+    byte[32] initialRecipientLo,
+    byte[32] initialRecipientHi,
+    byte[32] initialTaskNonce,
+    int initialPrincipal,
+    int initialMaxFee,
+) {
+    pubkey owner = initialOwner;
+    pubkey feeSponsor = initialFeeSponsor;
+    // These fields are part of the funded covenant state so a new task binds
+    // a fresh worker key and nonce without recompiling the verifier artifact.
+    // The proof public inputs use these exact canonical Fr encodings.
+    byte[32] recipientLo = initialRecipientLo;
+    byte[32] recipientHi = initialRecipientHi;
+    byte[32] taskNonce = initialTaskNonce;
+    int principal = initialPrincipal;
+    int maxFee = initialMaxFee;
+
+    entry verify(sig authorization, byte[] proof) {
+        require(checkSig(authorization, owner));
+
+        // This chapter pays exactly 13 * 0.01 tKAS = 0.13 tKAS.
+        require(principal == 13000000);
+        require(maxFee >= 0 && maxFee <= 20000000);
+
+        // The five public field elements are canonical little-endian Fr
+        // encodings. Score and reward are fixed by this lesson; recipient and
+        // nonce are 128-bit values represented with a zero high half.
+        require(unsigned(initialTaskScore[0]) == 42);
+        require(unsigned(initialRewardUnits[0]) == 13);
+        for (scoreByte, 1, 32, 31) {
+            require(unsigned(initialTaskScore[scoreByte]) == 0);
+            require(unsigned(initialRewardUnits[scoreByte]) == 0);
+        }
+        for (identityHighByte, 16, 32, 16) {
+            require(unsigned(recipientLo[identityHighByte]) == 0);
+            require(unsigned(recipientHi[identityHighByte]) == 0);
+            require(unsigned(taskNonce[identityHighByte]) == 0);
+        }
+
+        // Preserve the full x-only owner key. A key may be larger than the
+        // BN254 scalar field, so the circuit receives two exact 128-bit halves.
+        byte[32] ownerBytes = byte[32](owner);
+        (byte[] ownerLo, byte[] ownerHi) = ownerBytes.split(16);
+        (byte[] recipientLoLow, byte[] recipientLoHigh) = recipientLo.split(16);
+        (byte[] recipientHiLow, byte[] recipientHiHigh) = recipientHi.split(16);
+        require(recipientLoLow == ownerLo && recipientHiLow == ownerHi);
+        for (halfByte, 0, 16, 16) {
+            require(unsigned(recipientLoHigh[halfByte]) == 0);
+            require(unsigned(recipientHiHigh[halfByte]) == 0);
+        }
+
+        // The covenant input is consumed into one exact worker payment. Any
+        // optional second output is only treasury change, so another output
+        // cannot siphon the proof deposit.
+        require(tx.inputs.length >= 1 && tx.inputs.length <= 9);
+        require(tx.outputs.length >= 1 && tx.outputs.length <= 2);
+        require(tx.inputs[0].value == principal);
+        require(tx.outputs[0].value == principal);
+        byte[36] workerDestination = new ScriptPubKeyP2PK(owner);
+        require(tx.outputs[0].scriptPubKey == byte[](workerDestination));
+        int totalInput = tx.inputs[0].value;
+        for (inputIndex, 1, 9, 8) {
+            if (inputIndex < tx.inputs.length) {
+                totalInput = totalInput + tx.inputs[inputIndex].value;
+            }
+        }
+        int totalOutput = tx.outputs[0].value;
+        if (tx.outputs.length == 2) {
+            require(tx.outputs[1].value > 0);
+            byte[36] changeDestination = new ScriptPubKeyP2PK(feeSponsor);
+            require(tx.outputs[1].scriptPubKey == byte[](changeDestination));
+            totalOutput = totalOutput + tx.outputs[1].value;
+        }
+        int fee = totalInput - totalOutput;
+        require(fee >= 0 && fee <= maxFee);
+
+        g16.verify(initialVerifyingKey, proof, initialTaskScore, initialRewardUnits, recipientLo, recipientHi, taskNonce);
+    }
+}

@@ -1,0 +1,12 @@
+import "./capsule.ag";
+state ObserverState { actor_type<BusinessState> business_type; pubkey owner; int audits; }
+actor Observer owns ObserverState {
+entry verify(cov_id business_id, sig owner_sig) observes remote by business_id { inputs { business: self.business_type, } outputs { business: self.business_type, } } emits next: Observer {
+require(checkSig(owner_sig,owner));BusinessState previous = state(remote.inputs.business); require(previous.owner == owner);
+BusinessState updated = { owner: previous.owner, issuer: previous.issuer, world: previous.world, sequence: previous.sequence + 1, last_coin: previous.last_coin, crops: previous.crops, wood: previous.wood, ore: previous.ore, tools: previous.tools, bread: previous.bread, operator: previous.operator, allow_crops: previous.allow_crops, allow_wood: previous.allow_wood, allow_ore: previous.allow_ore, allow_tools: previous.allow_tools, allow_bread: previous.allow_bread, allow_coin: previous.allow_coin, min_receive: previous.min_receive, };
+require remote.outputs become { business <- self.business_type(updated), };
+ObserverState after = { business_type: business_type, owner: owner, audits: audits + 1, };
+require(next.value == self.value);become next <- Observer(after);
+}
+}
+app ObserverApp { actor Observer; }

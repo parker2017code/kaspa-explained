@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 import * as sdk from '../.cache/upstream/kaspa-wasm32-sdk/web/kaspa/kaspa.js';
 import wasm from '../.cache/upstream/kaspa-wasm32-sdk/web/kaspa/kaspa_bg.wasm';
 import {NETWORK,CLAIM_AMOUNT,validateClaim,buildFaucetPayment,validateFaucetPayment} from './policy.mjs';
+import {V5Service} from './v5-service.mjs';
+import argentTemplates from '../src/v5-argent-templates.json';
+import advancedTemplates from '../src/v5-advanced-templates.json';
 
 let loaded;
 async function loadSDK(){return loaded??=sdk.default({module_or_path:wasm});}
@@ -46,7 +49,18 @@ export class FaucetWallet{
    const info=await bounded(rpc.getServerInfo());
    if(info.networkId!==NETWORK||!info.isSynced||!info.hasUtxoIndex)throw new Error('Wrong or unsynchronized network');
    let {entries}=await bounded(rpc.getUtxosByAddresses([address]));
-   if(state.pending){
+   const v5=new V5Service({storage,env:this.env,sdk,rpc,key,address,entries,call:bounded,argentTemplates,advancedTemplates});
+   if(state.pending?.purpose==='v5-reward'){
+    state=await v5.reconcileTreasury(state);
+    if(!state.pending){({entries}=await bounded(rpc.getUtxosByAddresses([address])));v5.entries=entries;}
+   }
+   if(state.pending?.purpose==='v5-advanced'){
+    const player=await storage.get('v5:player:'+state.pending.playerId);
+    if(player)await v5.advanced.reconcile(player);
+    state=await storage.get('state');
+    if(!state.pending){({entries}=await bounded(rpc.getUtxosByAddresses([address])));v5.entries=entries;}
+   }
+   if(state.pending&&!['v5-reward','v5-advanced'].includes(state.pending.purpose)){
     const pending=state.pending;
     if(entries.some(e=>e.outpoint.transactionId===pending.transactionId&&e.outpoint.index===1&&String(e.amount)===pending.change&&e.entry.scriptPublicKey.version===0&&e.entry.scriptPublicKey.script===pending.changeScript&&!e.entry.covenantId)){
      const claim={...pending,status:'accepted',observedAt:Date.now()};delete claim.transaction;delete claim.changeScript;
@@ -54,6 +68,7 @@ export class FaucetWallet{
      await storage.put({'state':state,[`address:${claim.address}`]:claim,[`id:${claim.requestId}`]:claim});
     }
    }
+   if(url.pathname.startsWith('/api/v5/'))return await v5.handle(request);
    const balance=entries.reduce((sum,e)=>sum+BigInt(e.amount),0n),limit=Math.min(1000,Number(this.env.MAX_CLAIMS)||1000);
    const status={network:NETWORK,enabled:this.env.ENABLED==='true',connected:true,claims:state.claims,pending:state.pending?1:0,remainingClaims:Math.max(0,Math.min(limit-state.claims-(state.pending?1:0),Number(balance/(CLAIM_AMOUNT+1000000n)))),amount:String(CLAIM_AMOUNT)};
    if(url.pathname==='/api/status'){this.cachedStatus={at:Date.now(),body:status};return json(status);}
@@ -109,14 +124,15 @@ export class FaucetWallet{
 export default{
  async fetch(request,env){
   const url=new URL(request.url),origin=request.headers.get('Origin');
-  const allowed=origin==='https://answered-tear-homepage-spencer.trycloudflare.com'||origin==='https://kaspaexplained.com'||origin==='https://www.kaspaexplained.com'||/^http:\/\/(127\.0\.0\.1|localhost):(8898|8901|8904|8912)$/.test(origin||'');
+  const allowed=origin==='https://kaspa-explained.parker2017.workers.dev'||origin==='https://kaspa-explained.pages.dev'||origin==='https://answered-tear-homepage-spencer.trycloudflare.com'||origin==='https://kaspaexplained.com'||origin==='https://www.kaspaexplained.com'||/^http:\/\/(127\.0\.0\.1|localhost):(8898|8901|8904|8912)$/.test(origin||'');
   const headers={'Cache-Control':'no-store','Vary':'Origin',...(allowed?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}:{})};
   if(request.method==='OPTIONS')return new Response(null,{status:allowed?204:403,headers});
-  if(url.pathname==='/api/faucet'&&request.method==='POST'){
+  const v5=/^\/api\/v5\/(start|state|action|payment|status)$/.test(url.pathname);
+  if((url.pathname==='/api/faucet'||v5)&&request.method==='POST'){
    if(!allowed)return json({error:'Open the applications page to get test coins.'},403);
    if(request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return json({error:'JSON required'},415);
    const reader=request.body?.getReader();if(!reader)return json({error:'Request body required'},400);
-   let length=0,parts=[];for(;;){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>2048){await reader.cancel();return json({error:'Request too large'},413);}parts.push(value);}
+   let length=0,parts=[];for(;;){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>(v5?65536:2048)){await reader.cancel();return json({error:'Request too large'},413);}parts.push(value);}
    request=new Request(request,{body:new Blob(parts),headers:{'Content-Type':'application/json','X-Faucet-Client':request.headers.get('CF-Connecting-IP')||'local'}});
   }else if(url.pathname!=='/api/status'||request.method!=='GET')return json({error:'Not found'},404);
   const result=await env.FAUCET.get(env.FAUCET.idFromName('testnet-10-v1')).fetch(request);

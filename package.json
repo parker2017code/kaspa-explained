@@ -25,9 +25,20 @@
     "serve:wrap": "npm run build && node server/wrap-poc.mjs",
     "check:wrap": "node --test tests/wrap-evm.test.mjs tests/wrap-evm-adapter.test.mjs tests/wrap-poc.test.mjs && node scripts/check-wrap-kaspa-adapter.mjs && node scripts/check-wrap-assets-api.mjs",
     "check:economy": "node --test tests/v4-economy-model.test.mjs tests/v4-economy-protocol.test.mjs && node scripts/check-v4-economy-vm.mjs",
-    "check:v4:recovery": "node scripts/check-v4-recovery-browser.mjs"
+    "check:v4:recovery": "node scripts/check-v4-recovery-browser.mjs",
+    "check:v5": "npm run build && node --test tests/v5-economy.test.mjs tests/v5-market.test.mjs tests/v5-service.test.mjs tests/v5-wallet.test.mjs tests/v5-market-wallet.test.mjs tests/v5-market-use.test.mjs tests/v5-town-model.test.mjs tests/v5-ring-protocol.test.mjs tests/v5-delivery-protocol.test.mjs tests/v5-advanced-service.test.mjs tests/v5-presentation.test.mjs tests/v5-experience-scenarios.test.mjs tests/v5-guide-supply.test.mjs",
+    "check:v5:vm": "node scripts/v5-argent-fixtures.mjs --check-vm && node scripts/v5-ring-fixtures.mjs --check-vm && node scripts/v5-delivery-fixtures.mjs --check-vm",
+    "serve:v5": "node server/v5-local.mjs",
+    "build:v5:advanced": "node scripts/build-v5-advanced.mjs",
+    "check:v5:advanced": "node scripts/build-v5-advanced.mjs --check",
+    "setup:v6": "node scripts/setup-v6-vm.mjs && node scripts/setup-v6-proof.mjs",
+    "check:v6": "npm run build && node --test tests/v6-*.test.mjs",
+    "check:v6:protocol": "node scripts/check-v6-protocol-journey.mjs",
+    "check:v6:browser": "node scripts/check-v6-browser.mjs",
+    "serve:v6": "V5_STATE_DIRECTORY=.local/v5-final V5_PORT=8915 node server/v5-local.mjs"
   },
   "devDependencies": {
+    "@cloudflare/containers": "^0.3.7",
     "playwright": "1.62.1",
     "wrangler": "^4.129.0"
   }

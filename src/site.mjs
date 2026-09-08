@@ -3,8 +3,8 @@ export const site = {
   domain: 'https://kaspaexplained.com',
   checked: '2026-09-06',
   navigation: [
-    ['Understand', '/what-is-kaspa'], ['Use KAS', '/why-kaspa-matters'],
-    ['Evaluate', '/skeptical-case'], ['Build', '/build-on-kaspa'],
+    ['Learn', '/what-is-kaspa'], ['Try', '/playground'],
+    ['Build', '/build-on-kaspa'], ['Status', '/status'],
   ],
 };
 

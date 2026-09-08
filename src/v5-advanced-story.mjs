@@ -1,0 +1,20 @@
+// One prescribed action per chapter; all progress comes from the host's saved receipts.
+export function getV5AdvancedStep(advanced){
+ if(!advanced)return null;
+ if(advanced.stage==='complete')return {id:'advanced-complete',title:'The harbor’s rules, working together',detail:'You have seen the guided economy. Free play lets you choose new orders, trades and improvements.',why:'Accepted transactions demonstrate the contract rules. Production and delivery evidence still come from this game.',action:{type:'open_freeplay',label:'Play freely'}};
+ const stages={
+  'ring-complete':['All three trades settled together','The grower has ore, the toolmaker has crops, and the miner has a tool.','The contracts enforced all three transfers in one accepted transaction; the game controls these demonstration keys and supplies.'],
+  'delivery-complete':['Receipt accepted. Courier paid.','The courier receives the payment and gets its bond back.','Kaspa verified the recipient signature and payout. The game recipient supplied the delivery claim.'],
+  'refund-complete':['Refund accepted. Customer paid.','The customer receives its payment back and claims the courier’s bond.','The node enforced the refund age and paid the contract’s fixed amount to the customer.'],
+  'ring-intro':['Three businesses need a circular trade','Three businesses need each other’s supplies. Open their contract stores.','Argent describes each store and the peer transitions it must observe. SilverScript compiles those rules. Kaspa tracks each store as a spendable contract output.'],
+  'ring-ready':['Close the whole exchange together','Exchange all three supplies together, or none at all.','Each contract checks both peers in the same transaction. Kaspa accepts the complete set of valid input spends and outputs together; an incomplete circle cannot settle.'],
+  'delivery-intro':['A courier’s bond backs the delivery','Lock the demo customer’s payment and the courier’s bond in one agreement.','The contract replaces an unrestricted payment with two explicit spending paths: a recipient-signed receipt, or a refund after the agreed relative age.'],
+  'delivery-ready':['A signed receipt releases the payment','A recipient-signed receipt unlocks the payment and returns the courier’s bond.','The contract verifies the receipt signature and the exact payout. The recipient is a game-operated witness: the blockchain verifies its signature, not physical delivery.'],
+  'refund-intro':['Now try the agreement without a receipt','Open a second agreement to show its refund after the required age.','The contract fixes the customer’s refund amount, including the bond, once its relative-age condition is met.'],
+  'refund-ready':['The customer claims the refund','Return the payment and forfeited bond to the customer.','Kaspa checks the input’s relative age and the required recipient. Age enables this refund; it does not disable the signed-receipt path until one transaction spends the output.'],
+ };
+ if(advanced.pending)return {id:'advanced-pending',title:'Watch the agreement settle',detail:'The submitted transaction is still being checked. Funds and scene outcomes remain pending until an accepting block is observed.',why:'A submission is not acceptance. The same saved transaction is checked again, so Continue cannot create a second agreement.',action:{type:'check_market_payment',label:'Continue'}};
+ if(advanced.stage==='refund-wait')return {id:'advanced-refund-wait',title:'The agreement is reaching its refund age',detail:'No delivery receipt was issued. The refund becomes spendable after the contract’s required age; the town checks that age for you.',why:'The node enforces the relative-age condition. A wall-clock countdown alone cannot authorize this spend.',action:{type:'advanced_continue',stage:advanced.stage,label:'Continue'}};
+ const entry=stages[advanced.stage];if(!entry)return null;
+ return {id:'advanced-'+advanced.stage,title:entry[0],detail:entry[1],why:entry[2],action:{type:'advanced_continue',stage:advanced.stage,label:'Continue'}};
+}

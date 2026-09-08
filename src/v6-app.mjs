@@ -1,0 +1,98 @@
+import {mountV6UI} from './v6-ui.mjs';
+import {mountV6World} from './v6-world.mjs';
+import {mountV6Dag} from './v6-dag.mjs';
+import {v6PublicView,v6StageAction} from './v6-progress.mjs';
+
+const root=document.querySelector('[data-v6-app]');
+if(root){
+  document.body.classList.add('v6-page');
+  const KEY='kaspa-v6-local-session-v1', reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let credentials=null,session=null,network={status:'connecting',blocks:[]},busy=false,refreshing=false,intentPaused=false,error=null,disposed=false,world=null,dag=null,ui=null,events=null,pollTimer=null,intentTimer=null,inspectChapter=null,consequenceUntil=0,renderTimer=null,worldError=null;
+  try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved&&/^[a-f0-9-]{36}$/i.test(saved.id)&&/^[a-f0-9]{64}$/.test(saved.capability)){credentials=saved;if(saved.snapshot?.id===saved.id)session=saved.snapshot;}}catch{error='This browser could not read the saved local session.';}
+  function save(){localStorage.setItem(KEY,JSON.stringify(credentials));}
+  function newCredentials(){const bytes=crypto.getRandomValues(new Uint8Array(32));credentials={id:crypto.randomUUID(),capability:[...bytes].map(b=>b.toString(16).padStart(2,'0')).join(''),inflight:null};save();}
+  function render(){
+    if(disposed||!ui)return;
+    const pausing=Date.now()<consequenceUntil,view=v6PublicView(session,{busy:busy||pausing,error:error||worldError,network,inspectChapter});
+    if(pausing&&!busy)view.actionLabel='Watch what changed…';
+    ui.render(view);world?.update({...view.scene,paused:document.hidden});dag?.update(network,view.operation);
+  }
+  async function request(path,body){
+    const response=await fetch('/api/v6/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(90000)});
+    let data;try{data=await response.json();}catch{throw Error('The workshop service did not return a session. Retry in a moment.');}
+    if(!response.ok){const failure=Error(data.error||'The workshop operation could not complete.');failure.status=response.status;throw failure;}
+    if(!data.session)throw Error('The workshop service returned no saved session.');
+    return data.session;
+  }
+  function receive(next){
+    if(session&&Number.isSafeInteger(next.revision)&&Number.isSafeInteger(session.revision)&&next.revision<session.revision)return;
+    const oldId=session?.operation?.transactionId,oldAccepted=session?.operation?.acceptingBlock;
+    if(next.operation?.phase==='accepted'&&next.operation.acceptingBlock&&(next.operation.transactionId!==oldId||!oldAccepted)&&session&&!reduced.matches){
+      consequenceUntil=Date.now()+2800;clearTimeout(renderTimer);renderTimer=setTimeout(render,2850);
+    }
+    session=next;
+    if(credentials){credentials.snapshot=next;try{save();}catch{error='The current result is visible, but this browser could not save its local recovery view.';}}
+    render();
+  }
+  async function act(type,payload={}){
+    if(busy||Date.now()<consequenceUntil)return;
+    if(type!=='resume_intent')intentPaused=false;
+    if(type==='freeplay'){inspectChapter=session?.chapter??5;render();return;}
+    if(type==='replay'){inspectChapter=Number(payload.chapter??session?.chapter??0);render();return;}
+    if(inspectChapter!==null&&type==='primary'){inspectChapter=null;render();return;}
+    if(type==='refresh'||(type==='primary'&&session?.pending)){await refresh();return;}
+    busy=true;error=null;render();
+    try{
+      if(!credentials)newCredentials();
+      let operation=credentials.inflight;
+      if(!operation){
+        const action=type==='retry_submission'?'resume':type==='try_attack'?payload.action:type==='continue'?'continue':v6StageAction(session).action;
+        if(action==='refresh'){busy=false;await refresh();return;}
+        const intent=session?.intent;
+        const savedQueue=intent?.id&&!session?.pending;
+        const retry=type==='retry_submission'&&session?.pending?.retryable;
+        operation=session?{path:'action',body:{id:credentials.id,capability:credentials.capability,
+          requestId:savedQueue?`resume:${intent.id}:${intent.index}`:retry?`retry:${session.pending.transactionId}:${session.pending.attempts}`:crypto.randomUUID(),
+          action:savedQueue||retry?'resume':action,
+          ...(savedQueue?{payload:{intentId:intent.id,intentIndex:intent.index}}:{})}}:{path:'start',body:{id:credentials.id,capability:credentials.capability}};
+        credentials.inflight=operation;save();
+      }
+      const next=await request(operation.path,operation.body);
+      credentials.inflight=null;save();receive(next);
+    }catch(failure){
+      // Preserve the identical request across uncertain responses. Never turn a
+      // retry into a second authorization with a new request ID.
+      error=failure.name==='TimeoutError'?'The response timed out. The saved transaction may still be pending. Retry resumes the same request.':failure.message;
+      intentPaused=true;
+      if(failure.status&&failure.status<500){credentials.inflight=null;save();}
+    }finally{busy=false;render();schedulePoll();scheduleIntent();}
+  }
+  function scheduleIntent(){
+    clearTimeout(intentTimer);
+    if(disposed||busy||intentPaused||!session?.intent?.id||session.pending)return;
+    // Start/Continue saved this finite setup queue on the host. Resume only
+    // its identified next step; never advance a lesson action automatically.
+    intentTimer=setTimeout(()=>void act('resume_intent'),Math.max(50,consequenceUntil-Date.now()+50));
+  }
+  async function refresh(){
+    if(!credentials||busy||refreshing||disposed)return;
+    refreshing=true;
+    try{const next=await request('status',{id:credentials.id,capability:credentials.capability});if(!intentPaused)error=null;receive(next);}catch(failure){if(failure.status!==404)error=failure.message;render();}
+    finally{refreshing=false;schedulePoll();scheduleIntent();}
+  }
+  function schedulePoll(){clearTimeout(pollTimer);if(disposed)return;pollTimer=setTimeout(refresh,document.hidden?10000:session?.pending||session?.stage==='courier-wait'?1500:6000);}
+  ui=mountV6UI(root,{onAction:act,onChapter:chapter=>{inspectChapter=chapter===session?.chapter?null:chapter;render();world?.select(chapter);},onDagReady:node=>{dag=mountV6Dag(node);dag.update(network,session?.operation);},onSceneReady:node=>{
+    node.querySelector('[data-v6-scene-placeholder]')?.remove();
+    void mountV6World(node,{onSelect:district=>{const map={market:0,agent:1,terrarium:3,coordination:4,computation:5};const chapter=map[district];if(chapter!==undefined){inspectChapter=chapter===session?.chapter?null:chapter;render();}},onInspect:()=>{}}).then(value=>{if(disposed){value.destroy();return;}world=value;render();}).catch(()=>{worldError='The 3D harbor could not load. The guide and transaction receipts remain available.';render();});
+  }});
+  render();
+  if(typeof EventSource!=='undefined'){
+    events=new EventSource('/api/v6/events');
+    events.onmessage=event=>{try{const next=JSON.parse(event.data);if(next.network!=='testnet-10'||!Array.isArray(next.blocks))return;network=next;dag?.update(network,session?.operation);const status=root.querySelector('[data-v6-network-status]');if(status)status.textContent=next.status==='live'?'Testnet-10 · live blocks':'Testnet-10 · '+next.status;}catch{}};
+    events.onerror=()=>{network={...network,status:'disconnected'};dag?.update(network,session?.operation);};
+  }
+  if(credentials)void refresh();
+  const onVisible=()=>{render();if(!document.hidden)void refresh();};
+  document.addEventListener('visibilitychange',onVisible);
+  window.addEventListener('pagehide',()=>{disposed=true;clearTimeout(pollTimer);clearTimeout(intentTimer);clearTimeout(renderTimer);events?.close();world?.destroy();dag?.destroy();ui?.destroy();document.removeEventListener('visibilitychange',onVisible);},{once:true});
+}

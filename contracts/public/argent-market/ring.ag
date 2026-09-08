@@ -1,0 +1,49 @@
+// Fixed digital resource ring. Physical production/delivery is not attested.
+state RingState {
+    pubkey owner;
+    pubkey issuer;
+    byte[32] world;
+    int role;
+    int sequence;
+    int crops;
+    int tools;
+    int ore;
+}
+
+fn after_ring(RingState previous) -> RingState {
+    require(previous.role >= 0 && previous.role <= 2);
+    require(previous.sequence >= 0 && previous.sequence < 1000000);
+    int dc = 0;
+    int dt = 0;
+    int dm = 0;
+    if(previous.role == 0) { dc = -3; dm = 2; }
+    if(previous.role == 1) { dc = 3; dt = -1; }
+    if(previous.role == 2) { dt = 1; dm = -2; }
+    require(previous.crops + dc >= 0 && previous.crops + dc <= 1000000);
+    require(previous.tools + dt >= 0 && previous.tools + dt <= 1000000);
+    require(previous.ore + dm >= 0 && previous.ore + dm <= 1000000);
+    return RingState { owner: previous.owner, issuer: previous.issuer, world: previous.world, role: previous.role, sequence: previous.sequence + 1, crops: previous.crops + dc, tools: previous.tools + dt, ore: previous.ore + dm, };
+}
+
+actor Ring owns RingState {
+    entry swap(cov_id left_id, cov_id right_id, datasig certificate, datasig left_certificate, datasig right_certificate, sig owner_sig)
+    observes left by left_id { inputs { first: Ring, } outputs { first: Ring, } }
+    observes right by right_id { inputs { second: Ring, } outputs { second: Ring, } }
+    emits next: Ring {
+        RingState current = { owner: owner, issuer: issuer, world: world, role: role, sequence: sequence, crops: crops, tools: tools, ore: ore, };
+        RingState a = state(left.inputs.first);
+        RingState b = state(right.inputs.second);
+        require(left_id != self.cov_id && right_id != self.cov_id && left_id != right_id);
+        require(a.world == world && b.world == world && a.issuer == issuer && b.issuer == issuer);
+        require(a.role != role && b.role != role && a.role != b.role);
+        require(checkSig(owner_sig, owner));
+        require(checkMsgSig(certificate, sha256(byte[]("kaspa-explained-ring-v1") + world + self.cov_id + byte[32](owner)), issuer));
+        require(checkMsgSig(left_certificate, sha256(byte[]("kaspa-explained-ring-v1") + world + left_id + byte[32](a.owner)), issuer));
+        require(checkMsgSig(right_certificate, sha256(byte[]("kaspa-explained-ring-v1") + world + right_id + byte[32](b.owner)), issuer));
+        require(next.value == self.value);
+        require left.outputs become { first <- Ring(after_ring(a)), };
+        require right.outputs become { second <- Ring(after_ring(b)), };
+        become next <- Ring(after_ring(current));
+    }
+}
+app FixedRing { actor Ring; }

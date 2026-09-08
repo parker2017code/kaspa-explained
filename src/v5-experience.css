@@ -1,0 +1,710 @@
+/* Bounded story insert for the V5 town. It inherits the existing green/cream
+   variables when available and remains legible inside the V4 story panel. */
+.v5-experience-scene {
+  --v5-experience-ink: var(--v5-ink, var(--text, #183f38));
+  --v5-experience-muted: var(--v5-muted, #527168);
+  --v5-experience-paper: var(--v5-paper, var(--paper, #fbf8ec));
+  --v5-experience-card: var(--v5-card, var(--paper, #fffdf5));
+  --v5-experience-soft: var(--v5-soft, #eaf0df);
+  --v5-experience-line: var(--v5-line, #c6d4c0);
+  --v5-experience-green: var(--v5-green, #236b4f);
+  --v5-experience-gold: var(--v5-gold, #be7834);
+  --v5-experience-blue: #2d7190;
+  width: 100%;
+  max-width: 100%;
+  margin: 13px 0 12px;
+  color: var(--v5-experience-ink);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.v5-experience-scene * {
+  box-sizing: border-box;
+}
+
+.v5-experience-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 25px;
+  margin-bottom: 7px;
+}
+
+.v5-experience-kicker {
+  color: var(--v5-experience-muted);
+  font-size: .62rem;
+  font-weight: 760;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.v5-experience-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.v5-experience-action {
+  flex: none;
+  max-width: 48%;
+  padding: 5px 8px;
+  border: 1px solid var(--v5-experience-line);
+  border-radius: 999px;
+  background: var(--v5-experience-soft);
+  color: var(--v5-experience-ink);
+  font-size: .64rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.v5-experience-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 38px;
+  margin: 6px 0 8px;
+  padding: 4px 6px;
+  overflow-x: auto;
+  border: 1px solid var(--v5-experience-line);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--v5-experience-card) 92%, var(--v5-experience-soft));
+  scrollbar-width: thin;
+}
+
+.v5-experience-ribbon-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: max-content;
+  color: var(--v5-experience-muted);
+  font-size: .61rem;
+  white-space: nowrap;
+}
+
+.v5-experience-ribbon-step i {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border: 1px solid var(--v5-experience-line);
+  border-radius: 50%;
+  background: var(--v5-experience-paper);
+  color: var(--v5-experience-muted);
+  font-size: .61rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.v5-experience-ribbon-step.is-active {
+  color: var(--v5-experience-gold);
+}
+
+.v5-experience-ribbon-step.is-active i {
+  border-color: var(--v5-experience-gold);
+  background: #fff4d8;
+  color: #704715;
+}
+
+.v5-experience-ribbon-step.is-complete {
+  color: var(--v5-experience-green);
+}
+
+.v5-experience-ribbon-step.is-complete i {
+  border-color: var(--v5-experience-green);
+  background: #e0f2e4;
+  color: var(--v5-experience-green);
+}
+
+.v5-experience-ribbon-arrow {
+  flex: none;
+  color: var(--v5-experience-line);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.v5-experience-figure {
+  position: relative;
+  margin: 0;
+  padding: 5px;
+  overflow: hidden;
+  border: 1px solid var(--v5-experience-line);
+  border-radius: 18px;
+  background: var(--v5-experience-paper);
+}
+
+.v5-experience-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: clamp(180px, 30dvh, 220px);
+  object-fit: fill;
+  overflow: hidden;
+}
+
+.v5-experience-board {
+  fill: color-mix(in srgb, var(--v5-experience-card) 94%, var(--v5-experience-soft));
+  stroke: var(--v5-experience-line);
+  stroke-width: 1.5;
+}
+
+.v5-experience-board-label {
+  fill: var(--v5-experience-muted);
+  font: 700 13px Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .03em;
+}
+
+.v5-experience-actor-card {
+  fill: var(--v5-experience-card);
+  stroke: var(--v5-experience-line);
+  stroke-width: 1.5;
+}
+
+.v5-experience-actor[data-actor-state=sender] .v5-experience-actor-card,
+.v5-experience-actor[data-actor-state=sender-recipient] .v5-experience-actor-card {
+  stroke: #adbd8f;
+}
+
+.v5-experience-actor[data-actor-state=recipient] .v5-experience-actor-card {
+  stroke: #9fbdb5;
+}
+
+.v5-experience-person {
+  fill: #d7ead2;
+  stroke: var(--v5-experience-green);
+  stroke-width: 1.5;
+}
+
+.v5-experience-person-body {
+  fill: none;
+  stroke: var(--v5-experience-green);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.v5-experience-actor-name,
+.v5-experience-flow-label-title,
+.v5-experience-flow-label-detail,
+.v5-experience-flow-label-money,
+.v5-experience-stage-label,
+.v5-experience-stage-detail {
+  fill: var(--v5-experience-ink);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.v5-experience-actor-name {
+  font-size: 16px;
+  font-weight: 760;
+}
+
+.v5-experience-glyph-fill {
+  fill: #d9b14d;
+}
+
+.v5-experience-glyph-stroke {
+  fill: none;
+  stroke: #5a7557;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.v5-experience-glyph-stroke--light {
+  stroke: #e8f6f0;
+}
+
+.v5-experience-glyph--crops .v5-experience-glyph-fill,
+.v5-experience-glyph--crop .v5-experience-glyph-fill,
+.v5-experience-glyph--wheat .v5-experience-glyph-fill,
+.v5-experience-glyph--grain .v5-experience-glyph-fill {
+  fill: #e0bb55;
+}
+
+.v5-experience-glyph--tools .v5-experience-glyph-fill,
+.v5-experience-glyph--tool .v5-experience-glyph-fill,
+.v5-experience-glyph--hammer .v5-experience-glyph-fill,
+.v5-experience-glyph--pick .v5-experience-glyph-fill {
+  fill: #a8b6b2;
+}
+
+.v5-experience-glyph--ore .v5-experience-glyph-fill,
+.v5-experience-glyph--rock .v5-experience-glyph-fill,
+.v5-experience-glyph--stone .v5-experience-glyph-fill {
+  fill: #9aa8a2;
+}
+
+.v5-experience-glyph--coin .v5-experience-glyph-fill,
+.v5-experience-glyph--coins .v5-experience-glyph-fill,
+.v5-experience-glyph--kas .v5-experience-glyph-fill,
+.v5-experience-glyph--money .v5-experience-glyph-fill {
+  fill: #e0b84f;
+}
+
+.v5-experience-glyph--water .v5-experience-glyph-fill,
+.v5-experience-glyph--waters .v5-experience-glyph-fill,
+.v5-experience-glyph--droplet .v5-experience-glyph-fill {
+  fill: #72b5ba;
+}
+
+.v5-experience-route {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .8;
+  vector-effect: non-scaling-stroke;
+}
+
+.v5-experience-route--held {
+  stroke: #8da59a;
+  stroke-dasharray: 2 8;
+  opacity: .52;
+}
+
+.v5-experience-route--pending {
+  stroke: var(--v5-experience-gold);
+  stroke-dasharray: 8 7;
+}
+
+.v5-experience-route--moving {
+  stroke: var(--v5-experience-green);
+  stroke-dasharray: 9 6;
+}
+
+.v5-experience-route--returning {
+  stroke: var(--v5-experience-blue);
+  stroke-dasharray: 9 6;
+}
+
+.v5-experience-route--delivered {
+  stroke: var(--v5-experience-green);
+  opacity: .9;
+}
+
+.v5-experience-route-progress {
+  fill: none;
+  stroke: var(--v5-experience-green);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--v5-experience-progress, 0));
+  opacity: .24;
+  pointer-events: none;
+}
+
+.v5-experience-flow-label rect {
+  fill: color-mix(in srgb, var(--v5-experience-card) 94%, var(--v5-experience-soft));
+  stroke: var(--v5-experience-line);
+  stroke-width: 1;
+}
+
+.v5-experience-flow--pending .v5-experience-flow-label rect {
+  fill: #fff5df;
+  stroke: #d3a15d;
+}
+
+.v5-experience-flow--returning .v5-experience-flow-label rect {
+  fill: #e7f2f4;
+  stroke: #8ab1bd;
+}
+
+.v5-experience-flow--moving .v5-experience-flow-label rect {
+  fill: #e3f2e5;
+  stroke: #87b497;
+}
+
+.v5-experience-flow--delivered .v5-experience-flow-label rect {
+  fill: #e3f2e5;
+  stroke: #87b497;
+}
+
+.v5-experience-flow-label-title {
+  fill: var(--v5-experience-muted);
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.v5-experience-flow-label-detail,
+.v5-experience-flow-label-money {
+  fill: var(--v5-experience-muted);
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.v5-experience-token,
+.v5-experience-token-static {
+  pointer-events: none;
+}
+
+.v5-experience-token {
+  opacity: 0;
+}
+
+.v5-experience-token-shell {
+  fill: var(--v5-experience-paper);
+  stroke: var(--v5-experience-gold);
+  stroke-width: 2;
+}
+
+.v5-experience-flow--pending .v5-experience-token-shell {
+  fill: #fff2cf;
+}
+
+.v5-experience-flow--returning .v5-experience-token-shell {
+  fill: #e0f0f2;
+  stroke: var(--v5-experience-blue);
+}
+
+.v5-experience-flow--moving .v5-experience-token-shell {
+  fill: #e0f2e2;
+  stroke: var(--v5-experience-green);
+}
+
+.v5-experience-flow--delivered .v5-experience-token-shell {
+  fill: #e0f2e2;
+  stroke: var(--v5-experience-green);
+}
+
+.v5-experience-token-static {
+  opacity: 0;
+}
+
+[data-flow-state=held] .v5-experience-token-static--held,
+[data-flow-state=pending] .v5-experience-token-static--held {
+  opacity: .65;
+}
+
+[data-flow-state=returning] .v5-experience-token-static--delivered,
+[data-flow-state=delivered] .v5-experience-token-static--delivered {
+  opacity: .95;
+}
+
+[data-phase=submitting] .v5-experience-flow--pending .v5-experience-token--forward,
+[data-phase=network] .v5-experience-flow--pending .v5-experience-token--forward,
+[data-phase=acting] .v5-experience-flow--moving .v5-experience-token--forward,
+[data-phase=submitting] .v5-experience-flow--moving .v5-experience-token--forward {
+  opacity: .96;
+}
+
+[data-phase=returning] .v5-experience-flow--returning .v5-experience-token--return {
+  opacity: .96;
+}
+
+[data-phase=returning] .v5-experience-flow--moving .v5-experience-token--forward {
+  opacity: .96;
+}
+
+.v5-experience-caption {
+  min-height: 31px;
+  margin: 5px 5px 2px;
+  color: var(--v5-experience-ink);
+  font-size: .72rem;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
+.v5-experience-transaction-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.v5-experience-transaction-status,
+.v5-experience-money {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px 9px;
+  border: 1px solid var(--v5-experience-line);
+  border-radius: 11px;
+  background: var(--v5-experience-soft);
+  font-size: .66rem;
+}
+
+.v5-experience-transaction-status strong,
+.v5-experience-transaction-status span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v5-experience-transaction-status span:last-child {
+  color: var(--v5-experience-muted);
+  white-space: nowrap;
+}
+
+.v5-experience-status-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9aaa9e;
+}
+
+[data-network-state=awaiting] .v5-experience-status-dot {
+  background: var(--v5-experience-gold);
+  box-shadow: 0 0 0 3px #be783424;
+}
+
+[data-network-state=accepted] .v5-experience-status-dot,
+[data-transaction-state=local] .v5-experience-status-dot {
+  background: var(--v5-experience-green);
+  box-shadow: 0 0 0 3px #236b4f24;
+}
+
+.v5-experience-money-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+}
+
+.v5-experience-money-icon svg,
+.v5-experience-money-icon .v5-experience-glyph {
+  width: 22px;
+  height: 22px;
+}
+
+.v5-experience-money b,
+.v5-experience-money small {
+  display: block;
+}
+
+.v5-experience-money b {
+  overflow: hidden;
+  font-size: .67rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v5-experience-money small {
+  margin-top: 2px;
+  color: var(--v5-experience-muted);
+  font-size: .59rem;
+  line-height: 1.25;
+}
+
+.v5-experience-result-ack {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 9px 10px;
+  border: 1px solid #d3a15d;
+  border-radius: 12px;
+  background: #fff5df;
+}
+
+.v5-experience-result-ack[data-ack-state=returning] {
+  border-color: #8ab1bd;
+  background: #e7f2f4;
+}
+
+.v5-experience-result-ack[data-ack-state=accepted] {
+  border-color: #87b497;
+  background: #e3f2e5;
+}
+
+.v5-experience-result-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--v5-experience-gold);
+  font-weight: 800;
+}
+
+[data-ack-state=returning] .v5-experience-result-icon {
+  color: var(--v5-experience-blue);
+}
+
+[data-ack-state=accepted] .v5-experience-result-icon {
+  color: var(--v5-experience-green);
+}
+
+.v5-experience-result-ack strong,
+.v5-experience-result-ack small {
+  display: block;
+}
+
+.v5-experience-result-ack strong {
+  font-size: .69rem;
+}
+
+.v5-experience-result-ack small {
+  margin-top: 2px;
+  color: var(--v5-experience-muted);
+  font-size: .62rem;
+  line-height: 1.35;
+}
+
+.v5-experience-receipt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  padding: 7px 9px;
+  border-top: 1px solid var(--v5-experience-line);
+  color: var(--v5-experience-muted);
+  font-size: .61rem;
+}
+
+.v5-experience-receipt b,
+.v5-experience-receipt small {
+  display: block;
+}
+
+.v5-experience-receipt b {
+  color: var(--v5-experience-ink);
+  font-size: .64rem;
+}
+
+.v5-experience-receipt small {
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+  font: .59rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.v5-experience-receipt a {
+  flex: none;
+  min-height: 32px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  color: var(--v5-experience-green);
+  font-size: .62rem;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.v5-experience-depth {
+  margin-top: 8px;
+  border-top: 1px solid var(--v5-experience-line);
+  color: var(--v5-experience-muted);
+  font-size: .66rem;
+}
+
+.v5-experience-depth > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--v5-experience-ink);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.v5-experience-depth-section {
+  padding: 7px 0 5px;
+  border-top: 1px solid color-mix(in srgb, var(--v5-experience-line) 70%, transparent);
+}
+
+.v5-experience-depth-section h4 {
+  margin: 0 0 3px;
+  color: var(--v5-experience-ink);
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.v5-experience-depth-section p {
+  margin: 0 0 4px;
+  line-height: 1.45;
+}
+
+.v5-experience-depth-section p:last-child {
+  margin-bottom: 0;
+}
+
+.v5-experience-accepting-block {
+  margin: 7px 0 0;
+  padding-top: 7px;
+  border-top: 1px solid var(--v5-experience-line);
+  overflow-wrap: anywhere;
+  font: .6rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.v5-experience-scene :is(a, summary):focus-visible {
+  outline: 3px solid #126ca0;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--v5-experience-paper);
+}
+
+/* The world remains visible beside the scene. The story gets room for the
+   visual only while keeping its own guide content scrollable. */
+@media (min-width: 901px) {
+  .covenant-world-page .v4-story:has(.v5-experience-scene) {
+    width: min(420px, calc(100vw - 48px));
+    max-width: 420px;
+    max-height: calc(100dvh - 100px);
+    overflow: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .v5-experience-scene {
+    margin-top: 10px;
+  }
+
+  .v5-experience-svg {
+    max-height: clamp(175px, 27dvh, 210px);
+  }
+
+}
+
+@media (max-width: 430px) {
+  .v5-experience-header {
+    align-items: flex-start;
+  }
+
+  .v5-experience-action {
+    max-width: 52%;
+    font-size: .59rem;
+  }
+
+  .v5-experience-transaction-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .v5-experience-transaction-status span:last-child {
+    white-space: normal;
+  }
+
+  .v5-experience-receipt {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v5-experience-scene *,
+  .v5-experience-scene *::before,
+  .v5-experience-scene *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .001ms !important;
+  }
+
+  .v5-experience-token--forward,
+  .v5-experience-token--return {
+    display: none;
+  }
+
+  .v5-experience-route-progress {
+    stroke-dashoffset: calc(1 - var(--v5-experience-progress, 0));
+  }
+}

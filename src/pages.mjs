@@ -1,6 +1,7 @@
 import { payment, network, spend, mining, vault, transaction, inspector, section, rows, detail, link, note, walletLesson, tradeoffComparison, evidenceSteps } from './components.mjs';
 import { sources, snapshot } from './site.mjs';
 import {coordinationMarkup} from './coordination-view.mjs';
+import {lessonContext} from './learning-path.mjs';
 
 const source = key => link(...sources[key]);
 const routes = items => `<nav class="topic-list" aria-label="Related explanations">${items.map(([title, text, url])=>`<a href="${url}"><div><strong>${title}</strong><p>${text}</p></div><span aria-hidden="true">↗</span></a>`).join('')}</nav>`;
@@ -27,10 +28,10 @@ export const pages = [
       ]))}`,
   },
   {
-    file:'what-is-kaspa.html', title:'How Kaspa works', description:'See why honest miners find parallel blocks and how ordering resolves conflicting payments.',
-    body: `${intro('Understand','Nobody sees everything<br>at the same time.','Kaspa keeps blocks that honest miners find at the same time. Start with two miners, delay the news between them, then see why both blocks can stay while a double spend cannot.')}
+    file:'what-is-kaspa.html', title:'How Kaspa orders parallel blocks', description:'See why honest miners find parallel blocks and how ordering resolves conflicting payments.',
+    body: `${lessonContext('what-is-kaspa.html')}${intro('Understand','How Kaspa orders parallel blocks','Kaspa is a proof-of-work payment network, and KAS is its native coin. Change the message delay to see why parallel blocks can remain while one ledger output can be consumed only once.')}
       ${network()}
-      ${section('parallel-blocks','A delay can change the shape of the history.',rows([
+      ${section('parallel-blocks','When miners hear different news',rows([
         ['News arrives in time','<p>Miner 1 finds B. If miner 2 hears about B before finding C, C can reference B.</p>'],
         ['News arrives too late','<p>Miner 2 finds C without knowing B. Both blocks reference A. They are parallel, even though both miners followed the rules.</p>'],
         ['A later block connects them','<p>Once a miner receives both branches, a later block can reference both. A chain selects a branch; Kaspa represents parallel work in a blockDAG.</p>'],
@@ -50,14 +51,14 @@ export const pages = [
       ${routes([['Explore the tradeoffs','What the design assumes and what can still fail.','/skeptical-case'],['Use the playground','Inspect individual times and compare conditions.','/playground#network']])}`,
   },
   {
-    file:'why-kaspa-matters.html', title:'Using KAS', description:'Understand wallets, payment outputs, fees, change, and what a transaction explorer can establish.',
-    body:`${intro('Use KAS','Follow your payment.','Sending coins creates a payment, change and a fee. Follow those amounts first, then learn what your wallet controls and what an explorer can actually confirm.')}
+    file:'why-kaspa-matters.html', title:'Follow a KAS payment', description:'Understand wallets, payment outputs, fees, change, and what a transaction explorer can establish.',
+    body:`${lessonContext('why-kaspa-matters.html')}${intro('Use KAS','Follow a KAS payment','A KAS payment consumes an earlier output and creates recipient and change outputs. The difference pays the fee; follow those amounts through the wallet steps and inspect what acceptance can establish.')}
       ${section('amounts','Where your payment, change, and fee go.',transaction(), 'A transaction consumes earlier outputs and creates new ones. Payment, change, and fees account for the input value.')}
       ${section('wallets','Who controls the keys?',rows([
         ['Your own wallet','<p>You control the keys and their backup. Losing them can mean losing access. Never share a recovery phrase with a person, website, or explorer.</p>'],
         ['An exchange account','<p>The provider controls the keys. Your account balance is a claim on that provider, with its own withdrawal rules and risks.</p>'],
       ]) + `<p>${source('wallet')} · ${link('Wallet integration documentation','https://docs.kaspa.org/integrate/wallet')}</p>`)}
-      ${section('using-kas','Receive. Send. Verify.',walletLesson(), 'Try the three actions that make up a payment.')}
+      ${section('using-kas','Receive, send, and verify a KAS payment',walletLesson(), 'Try the three actions that make up a payment.')}
       ${section('inspect','Read a transaction',inspector(), 'A public explorer reports its provider’s view. Check amounts and acceptance, and notice which information is missing.')}
       ${detail('What these fields establish', '<p>Inputs refer to earlier outputs. Outputs specify amounts and spending destinations. An accepting-block identifier is different from the list of blocks containing the transaction.</p><p>An address does not establish a person’s identity. Output fields alone do not identify which output is a payment and which is change. A block timestamp does not establish when the sender pressed Send.</p><p>Fees are calculated only when all referenced input values and output values are available. Missing data is shown as unavailable, never zero.</p>')}
       ${section('problems','If something looks wrong',rows([
@@ -67,8 +68,8 @@ export const pages = [
       ]) + `<p>${source('explorer')} · ${source('acceptance')}</p>`)} `,
   },
   {
-    file:'skeptical-case.html', title:'Kaspa’s tradeoffs and risks', description:'Inspect Kaspa’s security assumptions, operating costs, and unresolved questions without price predictions.',
-    body:`${intro('Evaluate','What does the design cost?' ,'Keeping parallel blocks can accommodate frequent discoveries. Nodes still have to receive and check them, and mining can still concentrate. Compare these costs before judging the speed.')}
+    file:'skeptical-case.html', title:'Kaspa’s tradeoffs', description:'Inspect Kaspa’s security assumptions, operating costs, and unresolved questions without price predictions.',
+    body:`${lessonContext('skeptical-case.html')}${intro('Evaluate','Kaspa’s tradeoffs','Parallel blocks can preserve concurrent work, but nodes still receive, validate, and order it, and proof-of-work still has physical costs. Compare the model’s benefits with its network, mining, and software assumptions.')}
       ${section('tradeoffs','Security and operating costs',tradeoffComparison())}
       ${section('security','What must keep working',rows([
         ['Consensus assumptions','<p>The security argument depends on honest work and network conditions. A diagram that converges is not proof that all adversarial cases converge safely.</p>'],
@@ -80,8 +81,8 @@ export const pages = [
       ${routes([['See mining participation','Separate a fast network from a miner’s personal outcome.','/kaspa-mining'],['Check current evidence','Protocol state and tool readiness, separately.','/status']])}`,
   },
   {
-    file:'kaspa-mining.html', title:'Mining and KAS supply', description:'Explore mining share and variance, then inspect issuance, costs, and node participation.',
-    body:`${intro('Mining','Many blocks.<br>Uneven rewards.','The network may find many blocks while your miner finds only a few. Change one miner’s share and sample another minute to see why frequent blocks do not promise steady income.')}
+    file:'kaspa-mining.html', title:'Mining rewards and costs', description:'Explore mining share and variance, then inspect issuance, costs, and node participation.',
+    body:`${intro('Mining','Mining rewards and costs','Mining can find blocks frequently while one miner wins only a share of the work. Change that share, then weigh issuance, hardware, electricity, pools, and variance before drawing a conclusion about income.')}
       ${mining()}
       ${section('supply','Where new KAS comes from.',rows([
         ['Mining rewards','<p>Eligible mining work receives newly issued KAS and transaction fees under the consensus rules.</p>'],
@@ -96,9 +97,9 @@ export const pages = [
       ${detail('Running a node and constructing work', `<p>A synced node independently validates the network. A mining bridge can connect compatible hardware to the node’s work. This changes who supplies the network view, not your share of global hashrate.</p><p>${link('Node operations documentation','https://docs.kaspa.org/integrate/kaspa-node')} · ${source('node')}</p>`)} `,
   },
   {
-    file:'build-on-kaspa.html', title:'Build on Kaspa', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
-    body:`${intro('Build','Payments and spending rules','A spending rule can require a wait, limit the amount and name the recipient. Try breaking each condition, then see what building a complete application still requires.')}
-      <div class="action-row">${process.env.KASPA_RELEASE==='v1'?'':'<a class="primary-button" href="/applications">Try the Testnet-10 applications ↗</a>'}<a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
+    file:'build-on-kaspa.html', title:'What spending rules can enforce', description:'Explore covenant rules and find current integration, compiler, and application-model documentation.',
+    body:`${lessonContext('build-on-kaspa.html')}${intro('Build','What spending rules can enforce','A covenant is a spending rule attached to an output. Test a wait, amount limit, and destination, then compare the rule with the application and tools around it.')}
+      <div class="action-row"><a href="/money">Explore reserves, borrowing, and prediction payouts ↗</a></div>
       ${section('spending-rules','A withdrawal with three conditions',vault(),'A covenant can constrain how an output is spent. Try a withdrawal against three conditions.')}
       ${section('start','Integration tasks',rows([
         ['Read the network',`<p>Use node or public-service interfaces for blocks, transactions, and accepted history. Know which service you trust and how it handles missing or changed data.</p><p>${link('Integration guide','https://docs.kaspa.org/integrate/getting-started')}</p>`],
@@ -116,8 +117,8 @@ export const pages = [
       ${detail('Before putting funds at risk','<p>Review the exact compiler and node versions, transaction encoding, rejected paths, recovery paths, fee behavior, and independent security review. The educational vault above is not a deployable contract.</p>')}`,
   },
   {
-    file:'status.html', title:'Kaspa network and tooling status', description:'Dated primary-source evidence for Kaspa activation, releases, prototypes, and network readings.',
-    body:`${intro('Current evidence','Network and tooling status','Find out what is active, what is still being built and when the evidence was checked. A working protocol rule does not mean every wallet or application supports it.')}
+    file:'status.html', title:'Network and tool status', description:'Dated primary-source evidence for Kaspa activation, releases, prototypes, and network readings.',
+    body:`${intro('Current evidence','Network and tool status','This dated snapshot separates active protocol rules from releases, prototypes, and tool support. Check the timestamp and source before treating a status as current.')}
       <p class="checked-date">Checked ${snapshot.checked}. This is a saved observation, not a live feed.</p>
       <div class="snapshot"><div><span>DAA score</span><strong>${snapshot.daa}</strong></div><div><span>Block subsidy</span><strong>${snapshot.reward} KAS</strong></div><div><span>Circulating supply</span><strong>${snapshot.supply} KAS</strong></div><div><span>Reporting node</span><strong>v${snapshot.version} · synced</strong></div></div>
       <p class="source-line">${link('Public BlockDAG reading','https://api.kaspa.org/info/blockdag')} · ${link('Subsidy','https://api.kaspa.org/info/halving')} · ${link('Supply','https://api.kaspa.org/info/coinsupply')}</p>
@@ -126,14 +127,14 @@ export const pages = [
       ${routes([['Inspect protocol specifications','KIPs, KCCs, and how their status differs.','/kips'],['Understand the evidence','What this site checks and what it cannot establish.','/sources']])}`,
   },
   {
-    file:'kaspa-origin-story.html', title:'Kaspa’s origins', description:'A concise research and launch history with primary references.',
-    body:`${intro('Origins','A research problem<br>became a network.','Kaspa began with a question: can miners keep working when news of other blocks arrives late? Follow the research into the November 2021 launch and later network upgrades.')}
+    file:'kaspa-origin-story.html', title:'Kaspa’s research and launch', description:'A concise research and launch history with primary references.',
+    body:`${intro('Origins','Kaspa’s research and launch','Kaspa grew from research on ordering concurrent proof-of-work blocks into a public mainnet. Follow the research, November 2021 launch, and later implementation changes without treating a proposal or release as activation.')}
       <ol class="history"><li><span>Research</span><div><h2>Allow concurrent blocks.</h2><p>The PHANTOM and GHOSTDAG work examined how a graph of proof-of-work blocks could support an ordered history.</p>${source('paper')}</div></li><li><span>Before launch</span><div><h2>DAGLabs and early development</h2><p>DAGLabs explored development and launch paths before Kaspa’s public mainnet. The eventual mining-based launch was not a token presale carried through unchanged.</p>${link('Project prehistory','https://wiki.kaspa.org/prehistory')}</div></li><li><span>7 November 2021</span><div><h2>Mainnet starts.</h2><p>Kaspa launched without an official premine or coin allocation. Coins entered circulation through mining. That does not imply equal knowledge, hardware, or access among early participants.</p>${source('node')}</div></li><li><span>Implementation</span><div><h2>Rust, Crescendo, and Toccata</h2><p>Rusty Kaspa replaced the earlier Go implementation. Crescendo increased the block rate; Toccata added consensus capabilities. Each change has its own release and activation evidence.</p>${link('Node releases','https://github.com/kaspanet/rusty-kaspa/releases')}</div></li></ol>
       ${routes([['What the network does now','See the mechanism behind the research.','/what-is-kaspa']])}`,
   },
   {
-    file:'kips.html', title:'Kaspa protocol specifications', description:'Find protocol changes and application conventions without confusing document status with activation.',
-    body:`${intro('Specifications','From proposal to protocol.','A published proposal is not automatically a live network rule. Read the status sequence first, then check which protocol changes and application conventions have reached each stage.')}
+    file:'kips.html', title:'Protocol proposals and application conventions', description:'Find protocol changes and application conventions without confusing document status with activation.',
+    body:`${intro('Specifications','Protocol proposals and application conventions','A proposal, implementation, activation, and adoption are separate events. Use the evidence sequence below to place each protocol change or application convention.')}
       ${evidenceSteps()}
       ${section('toccata','Toccata’s active KIPs.',rows([
         ['KIP-16 · Proof verification',`<p>Supported proof-verification operations.</p><p>${link('Read KIP-16','https://github.com/kaspanet/kips/blob/master/kip-0016.md')}</p>`],
@@ -146,13 +147,13 @@ export const pages = [
   },
   {
     file:'moose.html', title:'Books by Moose', description:'Read Carnot Local, Brownian Global and The Instrument by Moose, preserved in full.',
-    body:`${intro('Independent reading','Two books<br>by Moose.','Read the mining book to examine costs and rewards, or The Instrument to explore an argument about money. Both original PDFs are preserved unchanged; they are author arguments, not network specifications.')}
+    body:`${intro('Independent reading','Books by Moose','Read two original books on mining economics and monetary systems. They preserve their author’s arguments and attribution; they are not Kaspa specifications.')}
       <div class="book-list"><article><span class="book-number">01</span><div><p class="eyebrow">Mining economics · 75 pages</p><h2>Carnot Local,<br>Brownian Global</h2><p>An examination of mining costs, rewards, and fees, moving from a qualitative account into the mathematics.</p><a class="primary-button" href="/carnot-local-brownian-global.pdf">Read the original PDF ↗</a></div></article><article><span class="book-number">02</span><div><p class="eyebrow">Monetary systems · 279 pages</p><h2>The Instrument</h2><p>An argument for examining money through physical costs, followed by a slower explanation and applications of that framework.</p><a class="primary-button" href="/the-instrument.pdf">Read the original PDF ↗</a></div></article></div>
       <p>These are the author’s arguments, not protocol specifications or conclusions independently verified by this guide.</p><p>${link('Moose on X','https://x.com/THEMOOSEISLOOS5')}</p>`,
   },
   {
-    file:'sources.html', title:'Sources and method', description:'Inspect the sources, model boundaries, and independence of Kaspa Explained.',
-    body:`${intro('Sources','Sources and verification','Check a claim against the kind of evidence it needs: a specification, running implementation, dated network observation or stated model. This independent guide links those sources so you can inspect them.')}
+    file:'sources.html', title:'Sources and verification', description:'Inspect the sources, model boundaries, and independence of Kaspa Explained.',
+    body:`${intro('Sources','Sources and verification','Match each claim with the evidence it needs: a specification, implementation, dated network observation, or stated model. Follow the source links and inspect the boundary between what is observed and what is inferred.')}
       ${section('sources','Primary references',`<div class="source-list">${Object.values(sources).map(([name,url])=>link(name,url)).join('')}</div>`)}
       ${section('method','What a claim needs',evidenceSteps()+rows([
         ['Protocol behavior','<p>Specification and implementation, plus activation evidence when the rule is described as live.</p>'],
@@ -163,8 +164,8 @@ export const pages = [
       ${detail('Independence and corrections','<p>The maintainer may hold KAS. No page is a promise of return or an instruction to buy an asset. Books by guest authors retain their attribution and are not treated as consensus evidence.</p><p>If a claim has changed, compare the linked primary source and its date. The current-status page is a saved research snapshot, not continuous monitoring.</p>')}`,
   },
   {
-    file:'playground.html', title:'Kaspa Playground', description:'Explore block propagation, double spending, transaction arithmetic, mining variance, and covenant rules.',
-    body:`${intro('Playground','Interactive network models','Start an example and press Continue to see what changes and why. Delay a message, try spending the same coins twice or test a withdrawal rule. These local models move no real money.')}
+    file:'playground.html', title:'Try a network model', description:'Explore block propagation, double spending, transaction arithmetic, mining variance, and covenant rules.',
+    body:`${intro('Playground','Try a network model','Choose a model for block propagation, competing spends, transaction amounts, mining share, or spending rules. Change one input and inspect the result; these local examples move no real money.')}
       <div class="playground" data-playground><nav class="playground-nav" aria-label="Playground models">${[['network','Network delay'],['spend','Competing spends'],['transaction','Transaction amounts'],['mining','Mining share'],['vault','Spending rules']].map(([id,title],i)=>`<button data-workspace="${id}" aria-pressed="${i===0}" aria-controls="workspace-${id}">${title}</button>`).join('')}</nav><div class="playground-main">${[['network',network],['spend',spend],['transaction',transaction],['mining',mining],['vault',vault]].map(([id,render])=>`<section id="workspace-${id}" data-workspace-panel="${id}"${id!=='network'?' hidden':''}>${render()}</section>`).join('')}</div></div>`,
   },
   {
@@ -173,26 +174,26 @@ export const pages = [
   },
 ];
 
-if(process.env.KASPA_RELEASE!=='v1'){const adventure=`<section class="playground-invitation"><div><p class="eyebrow">Sprout Harbor · Testnet-10</p><h2>What could a KAS economy look like?</h2></div><div><p>Build a greenhouse, pay Pip for work, sell the harvest and deliver it. Follow the actual test-coin payments and explore a recorded bridge to another chain.</p><a class="primary-button" href="/covenants">Play the town economy <span aria-hidden="true">↗</span></a><p>Free test coins. Production and physical delivery are game rules.</p></div></section>`;for(const file of ['build-on-kaspa.html','playground.html'])pages.find(p=>p.file===file).body+=adventure;}
+
 
 // A next step makes the reading order explicit without hiding direct routes.
 const readingNext={
- 'index.html':['Begin with what the miners see','/what-is-kaspa'],
- 'what-is-kaspa.html':['Follow a payment and its fee','/why-kaspa-matters'],
- 'why-kaspa-matters.html':['Try the payment and network examples','/playground'],
- 'skeptical-case.html':['Check the current evidence','/status'],
+ 'index.html':['Begin with the network','/what-is-kaspa'],
+ 'what-is-kaspa.html':['Follow a KAS payment','/why-kaspa-matters'],
+ 'why-kaspa-matters.html':['See what spending rules can enforce','/build-on-kaspa'],
+ 'build-on-kaspa.html':['Evaluate Kaspa’s tradeoffs','/skeptical-case'],
+ 'skeptical-case.html':['Check the network and tool status','/status'],
  'kaspa-mining.html':['Compare the network’s tradeoffs','/skeptical-case'],
- 'build-on-kaspa.html':['Explore backing, borrowing and payouts','/money'],
  'status.html':['Read the protocol changes behind the labels','/kips'],
  'kaspa-origin-story.html':['See how the network works','/what-is-kaspa'],
  'kips.html':['See what builders can use','/build-on-kaspa'],
  'moose.html':['Check the guide’s sources and method','/sources'],
  'sources.html':['Compare the dated network and tooling evidence','/status'],
- 'playground.html':process.env.KASPA_RELEASE==='v1'?['Explore what you can build','/build-on-kaspa']:['Play a KAS economy on Testnet-10','/covenants']
+ 'playground.html':['See what you can build','/build-on-kaspa']
 };
 for(const page of pages){const next=readingNext[page.file];if(next){const [label,url]=next;const target=process.env.KASPA_RELEASE==='v1'&&url==='/applications'?'/build-on-kaspa':url;page.body+=`<nav class="reading-next" aria-label="Continue learning"><p>Continue learning</p><a href="${target}">${target!==url?'Explore what you can build':label} <span aria-hidden="true">→</span></a></nav>`;}}
 
 export function searchPage(documents=pages) {
-  const searchable=[...documents.filter(p=>p.file!=='404.html'),...[["redemption","What backs a stablecoin?","Explore cash, Treasury reserves, and redemption queues."],["collateral","Borrowing against crypto","Change collateral prices and inspect the liquidation threshold."],["prediction","How prediction payouts work","Follow Yes and No claims backed by one pool of collateral."]].map(([fragment,title,description])=>({file:`money.html#${fragment}`,title,description}))];
+  const searchable=[...documents.filter(p=>p.file!=='404.html'&&!p.unlisted),...[["redemption","What backs a stablecoin?","Explore cash, Treasury reserves, and redemption queues."],["collateral","Borrowing against crypto","Change collateral prices and inspect the liquidation threshold."],["prediction","How prediction payouts work","Follow Yes and No claims backed by one pool of collateral."]].map(([fragment,title,description])=>({file:`money.html#${fragment}`,title,description}))];
   return {file:'search.html',title:'Find an explanation',description:'Search Kaspa Explained topics and playgrounds.',body:`${intro('Find a topic','Find an explanation.','Search by the question you have: sending a payment, mining, spending rules or checking a claim.')}<label class="search-box"><span class="sr-only">Search the guide</span><input type="search" placeholder="Try wallets, blocks, or mining" data-search></label><p class="small" data-search-status aria-live="polite">${searchable.length} places to explore</p><div class="topic-list">${searchable.map(p=>`<a href="/${p.file==='index.html'?'':p.file.replace('.html','')}" data-search-item data-terms="${p.description}"><div><strong>${p.title}</strong><p>${p.description}</p></div><span aria-hidden="true">↗</span></a>`).join('')}</div><p data-search-empty hidden>No matching topic. Try a shorter search.</p>`};
 }

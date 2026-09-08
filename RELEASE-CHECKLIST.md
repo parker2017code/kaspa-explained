@@ -1,8 +1,18 @@
 # Release checklist
 
-The current application is Sprout Harbor’s economic order plus the recorded external-asset bridge. Follow [the economy release gates](docs/economy-release.md), [maintenance commands](MAINTENANCE.md), and the exact checked-in publication workflow. Verify the deployed revision and public artifact after each publication; a past successful run is not the current deployment status.
+The dated public release evidence below covers Sprout Harbor’s economic order and the recorded external-asset bridge. V5 and V6 are being migrated to unlisted Cloudflare routes. Follow [the economy release gates](docs/economy-release.md), [maintenance commands](MAINTENANCE.md), and the exact checked-in publication workflow. Verify the deployed revision and public artifact after each publication; a past successful run is not the current deployment status.
 
-Current evidence: [21 accepted economy transactions and reload](docs/economy-live-verification.json), [economy browser regression](docs/economy-browser-verification.json), and [recorded source/Kaspa bridge round trip](docs/wrap-poc-roundtrip-verification.json). The browser regression uses synthetic RPC and is distinct from the live transaction record.
+Recorded public evidence: [21 accepted economy transactions and reload](docs/economy-live-verification.json), [economy browser regression](docs/economy-browser-verification.json), and [recorded source/Kaspa bridge round trip](docs/wrap-poc-roundtrip-verification.json). The browser regression uses synthetic RPC and is distinct from the live transaction record.
+
+## Current V6 acceptance
+
+Cloudflare publication is authorized. The complete local route has been inspected and exercised; the final cloud runtime and public routes still require their own full browser journeys. Keep `.local/v5-final` intact and use the dedicated protected cloud signer for hosting.
+
+Use [the six concrete journey criteria](docs/v6-local-acceptance.md) to decide whether V6 is ready for local handoff. For each accepted action, record its transaction, observed accepting block, inventory or contract change, and recovery after reload. A VM fixture, synthetic RPC test, isolated visual fixture, and actual node transaction establish different things; none substitutes for the others.
+
+The final revision needs the appropriate source and protocol checks plus the real browser sequence. Check keyboard and touch interactions, narrow layouts and 200% text, reduced motion, reconnecting/stale evidence, and uncertain-submission recovery. Record each browser engine actually exercised and distinguish emulation from physical devices. A valid proof must use the actual bounded circuit/prover/verifier path; the task’s public inputs and lack of a privacy guarantee must remain visible.
+
+Local acceptance, CI, and live verification are separate records. Verify the exact deployed revision, artifacts, and full public journeys. A passing local or CI run cannot mark the hosted checks complete.
 
 ## Historical release checklist
 

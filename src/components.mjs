@@ -12,7 +12,7 @@ export const rows = items => `<div class="reading-rows">${items.map(([title, bod
 
 export function payment() {
   return `<figure class="experiment payment" data-lab="payment" data-stage="2">
-    <div class="experiment-label"><span>A payment through the network</span><span>Illustrated sequence</span></div>
+    <div class="experiment-label"><span>Follow a KAS payment</span><span>Illustrated sequence</span></div>
     <div class="payment-scene">
       <div class="wallet-object"><span class="object-label">Sender</span><div class="document-object">${ledgerGlyph('signature')}<strong>Signed payment</strong><small>Permission to spend an output</small></div></div>
       <div class="flow-connector" aria-hidden="true">→</div>
@@ -45,21 +45,21 @@ export function network({introductory=false}={}) {
 
 export function spend() {
   const state = spendState();
-  return `<figure class="experiment spend" data-lab="spend"><div class="experiment-label"><span>One output, two spending attempts</span><span>Constructed example</span></div>
+  return `<figure class="experiment spend" data-lab="spend"><div class="experiment-label"><span>One output, two payment attempts</span><span>Constructed example</span></div>
     <div class="spend-scene"><div class="unspent-object"><span class="object-label">Available output</span><strong>10 KAS</strong><span>Both attempts refer to this same output.</span></div><div class="split-connector" aria-hidden="true">↗<br>↘</div><div class="attempts">${['alice','bob'].map(name => `<div class="spend-attempt" data-attempt="${name}" data-valid="${state.accepted === name}"><span>Pay ${name === 'alice' ? 'Alice' : 'Bob'}</span><strong>10 KAS</strong><span class="outcome" data-spend-outcome="${name}">${state.accepted === name ? 'Accepted' : 'Already spent'}</span></div>`).join('')}</div></div>
     <div class="step-control" role="group" aria-label="Illustrative agreed order"><button data-first="alice" aria-pressed="true">Alice’s payment first</button><button data-first="bob" aria-pressed="false">Bob’s payment first</button></div>
-    <figcaption class="experiment-answer" data-spend-answer aria-live="polite">Alice’s payment consumes the output. Bob’s attempt cannot spend it again. Keeping both blocks does not make both payments valid.</figcaption>
+    <figcaption class="experiment-answer" data-spend-answer aria-live="polite">Alice’s payment consumes the output. Bob’s attempt cannot spend it again. Both blocks can remain while only one payment is accepted.</figcaption>
     ${note('The ordering is chosen here to expose the consequence. It is not a GHOSTDAG calculation. Fees are omitted from this conservation example.')}</figure>`;
 }
 
 export function mining() {
   const state = miningState();
-  return `<figure class="experiment mining" data-lab="mining"><div class="experiment-label"><span>One minute of network-wide discoveries</span><span>Seeded illustration</span></div>
+  return `<figure class="experiment mining" data-lab="mining"><div class="experiment-label"><span>Mining rewards and costs</span><span>Seeded illustration</span></div>
     <div class="mining-body"><div class="mining-field"><div class="mining-grid" role="img" aria-label="600 blocks, with this miner’s discoveries highlighted" data-mining-grid>${state.blocks.map(b=>`<i data-yours="${b.yours}"></i>`).join('')}</div>
     <div class="plot-key"><span><i></i>Other miners</span><span><i class="accent"></i>Your miner</span></div>
     </div><div class="mining-settings"><div class="number-pair"><div><span>Expected discoveries</span><strong data-mining-expected>${state.expected}</strong></div><div><span>In this sample</span><strong data-mining-found>${state.found}</strong></div></div>
     <div class="experiment-controls"><label class="range-control"><span>Your share of network work <strong data-mining-share>1%</strong></span><input type="range" min="0.1" max="10" step="0.1" value="1" data-share></label><button class="quiet-button" data-mining-sample>Another sample</button><button class="quiet-button" data-mining-reset>Reset</button></div>
-    </div></div><figcaption class="experiment-answer" data-mining-answer aria-live="polite">The network can find blocks frequently while one miner wins only occasionally.</figcaption>
+    </div></div><figcaption class="experiment-answer" data-mining-answer aria-live="polite">A miner’s share changes expected discoveries; it does not promise steady income.</figcaption>
     ${note('600 prescribed opportunities at 10 per second. Each is an independent draw using your work share; discovery times, stale work, fees, and pool payouts are not modeled. This does not predict income.')}
     ${detail('Inspect the calculation', '<p>Expected discoveries = 600 × work share. Each sample uses a reproducible pseudorandom seed, beginning at 42. Changing the share keeps the same random draws; “Another sample” changes the seed.</p><p>Real block discovery times are random. This display fixes the number of opportunities to isolate differences in mining share.</p>')}
   </figure>`;
@@ -67,25 +67,25 @@ export function mining() {
 
 export function vault() {
   const s=vaultState();
-  return `<figure class="experiment vault" data-lab="vault"><div class="experiment-label"><span>A withdrawal with three conditions</span><span>Constructed example</span></div>
+  return `<figure class="experiment vault" data-lab="vault"><div class="experiment-label"><span>What spending rules can enforce</span><span>Constructed example</span></div>
     <div class="vault-scene"><div class="vault-balance"><span class="object-label">Locked output</span><strong data-vault-balance>10,000 KAS</strong><p>The remainder keeps the spending rule.</p></div><div class="vault-rules">${['Wait at least 60 example steps','Withdraw no more than 2,000 KAS','Use the authorized destination'].map((r,i)=>`<div data-check="${i}" data-pass="${s.checks[i]}"><span data-check-mark>${s.checks[i]?'✓':'×'}</span>${r}</div>`).join('')}</div></div>
     <label class="select-control"><span>Attempt a withdrawal</span><select data-vault-action><option value="early">Too early: step 30</option><option value="large">Too much: 3,000 KAS</option><option value="wrong">Wrong destination</option><option value="valid">All conditions satisfied</option></select></label>
-    <figcaption class="experiment-answer" data-vault-answer aria-live="polite">Rejected. The signature alone cannot bypass the waiting rule.</figcaption>
+    <figcaption class="experiment-answer" data-vault-answer aria-live="polite">Rejected. A valid signature cannot bypass the covenant’s waiting, amount, or destination conditions.</figcaption>
     ${note('No wallet or real funds. Each attempt starts from the same 10,000 KAS. “Steps” are illustrative; this is not a deployable contract or a specified locktime encoding.')}</figure>`;
 }
 
 export function transaction() {
-  return `<figure class="experiment transaction" data-lab="transaction"><div class="experiment-label"><span>Where the amount goes</span><span>Constructed example</span></div>
+  return `<figure class="experiment transaction" data-lab="transaction"><div class="experiment-label"><span>Follow a KAS payment</span><span>Constructed example</span></div>
     <div class="transaction-equation"><div><span>Input</span><strong>12.5 KAS</strong></div><i aria-hidden="true">=</i><div class="transaction-outputs"><div><span>Payment</span><strong data-tx-payment>7 KAS</strong></div><div><span>Change</span><strong data-tx-change>5.499 KAS</strong></div><div><span>Fee</span><strong>0.001 KAS</strong></div></div></div>
     <div data-value-flow>${transactionFlow(transactionState(7))}</div><p class="flow-scale-note">Ribbon widths compare payment and change. The fee line is enlarged to remain visible.</p>
     <label class="range-control"><span>Payment amount <strong data-tx-amount>7 KAS</strong></span><input data-payment-amount type="range" min="0.1" max="12.5" step="0.1" value="7"></label>
-    <figcaption class="experiment-answer" data-tx-answer aria-live="polite">Payment, change, and fee use the entire input. Change creates another spendable output for the sender.</figcaption>
+    <figcaption class="experiment-answer" data-tx-answer aria-live="polite">The payment, change, and fee account for the entire input. Change creates another spendable output for the sender.</figcaption>
     ${note('Amounts are calculated in whole sompi: 100,000,000 sompi = 1 KAS. This is not a signed transaction or a fee recommendation. Payment and change labels are authored for this example.')}</figure>`;
 }
 
 export function inspector() {
-  if(process.env.KASPA_RELEASE==='v1')return `<div class="reading-rows"><article><h3>Open an explorer</h3><div><p>Paste a transaction ID into a public explorer. Check its acceptance status, inputs, and outputs. An address does not establish someone’s identity, and an output’s position does not tell you whether it is payment or change.</p><p><a href="https://explorer.kaspa.org/">Open the Kaspa explorer ↗</a></p></div></article></div>`;
-  return `<section class="inspector" data-inspector><form data-lookup-form><label for="transaction-id">Inspect a mainnet transaction</label><div class="lookup-line"><input id="transaction-id" name="transaction" type="text" maxlength="64" pattern="[a-fA-F0-9]{64}" spellcheck="false" autocomplete="off" placeholder="Paste a transaction ID" required><button class="primary-button" type="submit">Look up</button></div><p class="small">Looking up sends the ID directly to api.kaspa.org. No wallet connection. Never enter a recovery phrase.</p></form><p data-lookup-message role="status"></p><div data-lookup-result></div></section>`;
+  if(process.env.KASPA_RELEASE==='v1')return `<div class="reading-rows"><article><h3>Inspect a KAS transaction</h3><div><p>Paste a transaction ID into a public explorer. Check its acceptance status, inputs, and outputs. An address does not establish someone’s identity, and an output’s position does not tell you whether it is payment or change.</p><p><a href="https://explorer.kaspa.org/">Open the Kaspa explorer ↗</a></p></div></article></div>`;
+  return `<section class="inspector" data-inspector><form data-lookup-form><label for="transaction-id">Inspect a KAS transaction</label><div class="lookup-line"><input id="transaction-id" name="transaction" type="text" maxlength="64" pattern="[a-fA-F0-9]{64}" spellcheck="false" autocomplete="off" placeholder="Paste a transaction ID" required><button class="primary-button" type="submit">Look up</button></div><p class="small">Looking up sends the ID directly to api.kaspa.org. No wallet connection. Never enter a recovery phrase.</p></form><p data-lookup-message role="status"></p><div data-lookup-result></div></section>`;
 }
 
 // A short explanation advances through actions on the same visible object.
@@ -95,17 +95,17 @@ export function walletLesson(){
     ['Send','Review before you sign.', 'Check the destination, network, amount, and fee in your wallet. Try a small payment when using a new destination.', '<div class="lesson-wallet"><span class="object-label">Illustrative review</span><div class="address-symbol" aria-hidden="true">↗</div><h3>2 KAS</h3><p class="example-address">To your intended recipient</p><div class="receipt-line"><span>Network</span><strong>Check it</strong></div><div class="receipt-line"><span>Destination</span><strong>Compare it</strong></div><div class="receipt-line"><span>Fee</span><strong>Review it</strong></div></div>'],
     ['Verify','Follow the transaction ID.', 'Check the outputs and acceptance state in an explorer. A screenshot from the sender is not independent evidence. The recipient decides when to treat an accepted payment as settled.', '<div class="lesson-wallet"><span class="object-label">Illustrative explorer</span><div class="address-symbol" aria-hidden="true">✓</div><h3>Check the record</h3><p class="example-address">Transaction ID → network record</p><div class="receipt-line"><span>Outputs</span><strong>Amount + destination</strong></div><div class="receipt-line"><span>Acceptance</span><strong>Provider observation</strong></div><div class="receipt-line"><span>Settlement</span><strong>Your policy</strong></div></div>']
   ];
-  return `<div class="lesson" data-lesson><nav class="lesson-steps" aria-label="Using a wallet">${steps.map(([name],i)=>`<button data-lesson-step="${i}" aria-pressed="${i===0}"><span>${i+1}</span>${name}</button>`).join('')}</nav>${steps.map(([name,title,body,object],i)=>`<div class="lesson-panel" data-lesson-panel="${i}"${i?' hidden':''}><div class="lesson-copy"><p class="eyebrow">${i+1} / 3 · ${name}</p><h3>${title}</h3><p>${body}</p><button class="primary-button" data-lesson-next="${(i+1)%3}">${i===2?'Start again':'Continue'} <span aria-hidden="true">→</span></button></div>${object}</div>`).join('')}<p class="lesson-note">A guided illustration. No wallet connection, keys, or real funds.</p></div>`;
+  return `<div class="lesson" data-lesson><nav class="lesson-steps" aria-label="KAS payment steps">${steps.map(([name],i)=>`<button data-lesson-step="${i}" aria-pressed="${i===0}"><span>${i+1}</span>${name}</button>`).join('')}</nav>${steps.map(([name,title,body,object],i)=>`<div class="lesson-panel" data-lesson-panel="${i}"${i?' hidden':''}><div class="lesson-copy"><p class="eyebrow">${i+1} / 3 · ${name}</p><h3>${title}</h3><p>${body}</p><button class="primary-button" data-lesson-next="${(i+1)%3}">${i===2?'Start again':'Continue'} <span aria-hidden="true">→</span></button></div>${object}</div>`).join('')}<p class="lesson-note">A guided illustration. No wallet connection, keys, or real funds.</p></div>`;
 }
 
 export function tradeoffComparison(){
   const items=[
-    ['Parallel blocks','Concurrent work can stay in the history.','More graph structure to receive, validate, and order.','<div class="comparison-blocks" aria-hidden="true"><i>A</i><span>↗ &nbsp; ↖</span><div><i>B</i><i>C</i></div></div>'],
-    ['Frequent blocks','More opportunities to include a payment.','Propagation, transaction mass, fees, and miner behavior still affect inclusion.','<div class="comparison-pulses" aria-hidden="true">'+Array.from({length:10},()=>'<i></i>').join('')+'</div>'],
+    ['Parallel blocks','Blocks found before miners hear from one another can stay in the graph.','Nodes receive, validate, and order more graph data.','<div class="comparison-blocks" aria-hidden="true"><i>A</i><span>↗ &nbsp; ↖</span><div><i>B</i><i>C</i></div></div>'],
+    ['Frequent blocks','More chances for a payment to enter a block.','Propagation, transaction mass, fees, and miner behavior still affect inclusion.','<div class="comparison-pulses" aria-hidden="true">'+Array.from({length:10},()=>'<i></i>').join('')+'</div>'],
     ['Verification','A node can check the rules independently.','Hardware, storage, connectivity, and maintained software are still needed.','<div class="comparison-node" aria-hidden="true"><span>Blocks</span><strong>Node ✓</strong><span>Checked history</span></div>'],
     ['Proof of work','Participation is tied to computing work and physical costs.','Specialized hardware and pools can concentrate control.','<div class="comparison-work" aria-hidden="true"><i>Work</i><span>→</span><i>Blocks</i></div>']
   ];
   return `<div class="comparison" data-lesson><nav class="lesson-steps" aria-label="Compare design tradeoffs">${items.map(([name],i)=>`<button data-lesson-step="${i}" aria-pressed="${i===0}">${name}</button>`).join('')}</nav>${items.map(([name,benefit,cost,visual],i)=>`<div class="comparison-panel" data-lesson-panel="${i}"${i?' hidden':''}><div class="comparison-object">${visual}<span>${name}</span></div><div><p class="eyebrow">What this enables</p><h3>${benefit}</h3></div><div><p class="eyebrow">What it requires</p><p>${cost}</p>${i<items.length-1?`<button class="primary-button" data-lesson-next="${i+1}">Continue</button>`:'<p>You have compared all four tradeoffs. Use the tabs to revisit one.</p>'}</div></div>`).join('')}</div>`;
 }
 
-export function evidenceSteps(){return `<div class="evidence-steps"><article><span>01</span><h3>Read the document</h3><p>What rule is proposed or specified?</p></article><article><span>02</span><h3>Check implementation</h3><p>Which software enforces that rule?</p></article><article><span>03</span><h3>Verify activation</h3><p>Is the rule active on the network?</p></article></div><p class="source-line">A document, software release, and network activation are separate evidence.</p>`;}
+export function evidenceSteps(){return `<div class="evidence-steps"><article><span>01</span><h3>Read the proposal</h3><p>What rule is proposed or specified?</p></article><article><span>02</span><h3>Check the software</h3><p>Which implementation enforces that rule?</p></article><article><span>03</span><h3>Check activation</h3><p>Is the rule active on the network?</p></article></div><p class="source-line">A proposal, software release, and network activation are separate evidence.</p>`;}

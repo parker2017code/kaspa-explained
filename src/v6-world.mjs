@@ -1,0 +1,257 @@
+import { loadV6Assets } from './v6-world-assets.mjs';
+const districts = [
+ ['market','Exchange',7,-1,0xe8e0bd],['agent','Workshop',1,-6,0x64b9b0],
+ ['terrarium','Greenhouse',-6,-4,0x8fb668],['coordination','Habitat',4,6,0xe2af87],
+ ['computation','Observatory',-5,5,0x819ebc],
+];
+const chapters = ['market','agent','market','terrarium','coordination','computation'];
+export async function mountV6World(container,{onSelect=()=>{},onInspect=()=>{}}={}) {
+ const {THREE:T,clone} = await loadV6Assets();
+ const scene=new T.Scene();scene.background=new T.Color(0xb8dedc);scene.fog=new T.Fog(0xb8dedc,38,80);
+ const camera=new T.PerspectiveCamera(42,1,.1,100);const renderer=new T.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+ renderer.domElement.style.cssText='display:block;width:100%;height:100%;touch-action:none';renderer.domElement.tabIndex=0;renderer.domElement.setAttribute('aria-label','Sprout Harbor. Drag to orbit, wheel to zoom. Arrow keys orbit; plus and minus zoom. Choose a district below.');container.append(renderer.domElement);
+ const ui=document.createElement('div');ui.style.cssText='position:absolute;inset:0;pointer-events:none;overflow:hidden';container.append(ui);if(getComputedStyle(container).position==='static')container.style.position='relative';
+ const light=new T.DirectionalLight(0xffedcb,2);light.position.set(8,18,10);light.castShadow=true;light.shadow.mapSize.set(2048,2048);light.shadow.bias=-.0003;light.shadow.normalBias=.03;Object.assign(light.shadow.camera,{left:-20,right:20,top:20,bottom:-20});scene.add(light,new T.HemisphereLight(0xe2ffff,0x65866e,1.6));
+ const materials=new Map();const mat=color=>{if(!materials.has(color))materials.set(color,new T.MeshStandardMaterial({color,roughness:.82}));return materials.get(color)};
+ function box(parent,x,y,z,w,h,d,color){const o=new T.Mesh(new T.BoxGeometry(w,h,d),mat(color));o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+ function cylinder(parent,x,y,z,r,h,color,vertices=12){const o=new T.Mesh(new T.CylinderGeometry(r,r*1.09,h,vertices),mat(color));o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+ function prop(name,parent,x,y,z,scale=1){const o=clone(name);o.position.set(x,y,z);o.scale.setScalar(scale);o.traverse(n=>{if(n.isMesh){n.castShadow=true;n.receiveShadow=true}});parent.add(o);return o}
+ const water=new T.Mesh(new T.PlaneGeometry(160,160),new T.MeshStandardMaterial({color:0x73b8bf,roughness:.38,metalness:.13}));water.rotation.x=-Math.PI/2;water.position.y=-.38;scene.add(water);
+ const groups=new Map(), labels=[], actors={}, stocks={}, events=new Set();let selected='market',state={},initialized=false,motion=null,disposed=false,frame=0;
+ for(const [id,name,x,z,color] of districts){
+  const g=new T.Group();g.position.set(x,0,z);scene.add(g);groups.set(id,g);
+  cylinder(g,0,-.05,0,3.3,.55,0xb79a74,48);cylinder(g,0,.25,0,3.22,.18,0xa7c892,48);
+  for(let i=0;i<6;i++)box(g,-1.6+i*.62,.38,1.5,.5,.08,.62,0xd9c9a5);
+  box(g,0,.44,-.55,3.6,.2,2.7,0xc6ac87);
+  // Open front cutaways keep inhabitants and consequences visible from outside.
+  box(g,0,1.35,-1.85,3.6,1.7,.16,color);box(g,-1.74,1.35,-.55,.14,1.7,2.6,color);
+  if(id==='market'){
+   g.userData.roof=box(g,0,2.45,-.55,3.95,.14,3,0x794f36);
+   g.userData.awning=[];for(let i=0;i<8;i++)g.userData.awning.push(box(g,-1.7+i*.48,2.2,1,.47,.12,1.1,i%2?0xf4e5b7:0x387f75));
+   for(const x1 of [-1.75,1.75])box(g,x1,1.2,1.4,.10,1.8,.1,0x795235);
+   for(const x1 of [-1.7,1.7])box(g,x1,1.4,-1.72,.12,1.8,.12,0x315e50);box(g,0,2.12,-1.72,3.45,.12,.12,0x315e50);box(g,0,1.5,-1.74,1.1,.65,.07,0x6daea6);for(const x1 of [-.57,0,.57])box(g,x1,1.5,-1.65,.06,.74,.08,0xece2bf);for(const y1 of [1.15,1.86])box(g,0,y1,-1.65,1.2,.06,.08,0xece2bf);box(g,-1.2,1.4,-1.65,.65,.09,.12,0x896542);prop('tool',g,-1.2,.95,-1.55,.45);box(g,0,.8,0,2.6,.6,.6,0x956b42);prop('tool',g,-.8,1.12,0,.62);prop('grain',g,.4,1.12,0,.65);prop('ore',g,1,1.12,0,.65);actors.seller=prop('courier',g,.2,.5,-.7);stocks.cart=prop('cart',g,.6,.4,2.1);stocks.tool=prop('tool',stocks.cart,0,.45,0,.62);stocks.tool.visible=false;stocks.ring=new T.Group();g.add(stocks.ring);
+  }else if(id==='agent'){
+   const roof=box(g,0,2.45,-.5,4,.18,3.15,0x356c70);g.userData.roof=roof;roof.rotation.z=.08;g.userData.roofExtra=box(g,-1.2,2.8,-1.2,.5,1.2,.5,0xb0795b);for(const x1 of [-1.7,1.7])box(g,x1,1.4,-1.72,.12,1.8,.12,0x315e50);box(g,0,2.12,-1.72,3.45,.12,.12,0x315e50);box(g,.8,1.55,-1.72,1.1,.65,.08,0xe3ddc0);for(let k=0;k<3;k++)prop('tool',g,.5+k*.3,1.22,-1.62,.42);box(g,.2,.82,-.1,2,.15,.9,0x906b45);prop('machine',g,-.8,.5,-.9);actors.pip=prop('pip',g,1,.45,.5);stocks.allowance=prop('grain',g,.1,.95,-.1,.6);stocks.pipTool=prop('timber',g,.7,1,-.1,.6);stocks.pipTool.visible=false;stocks.pipGate=new T.Group();g.add(stocks.pipGate);for(let k=0;k<4;k++)box(stocks.pipGate,.55+k*.3,1,1.25,.055,1.15,.07,0x395f57);box(stocks.pipGate,1,1.5,1.25,1.1,.08,.08,0xbd9b54);
+  }else if(id==='terrarium'){
+   const glass=new T.MeshStandardMaterial({color:0xc4ece0,transparent:true,opacity:.22,roughness:.15,depthWrite:false});
+   const shell=new T.Mesh(new T.BoxGeometry(3.5,1.9,2.7),glass);shell.position.set(0,1.45,-.5);g.add(shell);stocks.glass=shell;
+   for(const x1 of [-1.7,0,1.7]){box(g,x1,1.5,-1.8,.065,2,.065,0xeff0d2);box(g,x1,1.5,.8,.065,2,.065,0xeff0d2);box(g,x1,2.5,-.5,.065,.065,2.7,0xeff0d2)}
+   for(const x1 of [-.9,.9]){box(g,x1,.58,-.5,.65,.24,1.7,0x805a39);for(let j=0;j<4;j++){const plant=prop('grain',g,x1,.7,-1+j*.35,.45);if(j===3)stocks[x1<0?'decorPlant':'harvestPlant']=plant;}}
+   actors.sprout=prop('sprout',g,.4,.45,1.5);stocks.pledges=new T.Group();g.add(stocks.pledges);
+  }else if(id==='coordination'){
+   g.userData.roof=box(g,0,2.3,-.55,4,.16,3,0x975c47);box(g,0,.75,-1.3,2.7,.45,.65,0x926c49);box(g,-1.6,1.5,-1.72,.12,1.6,.12,0x315e50);box(g,1.6,1.5,-1.72,.12,1.6,.12,0x315e50);box(g,0,2.1,-1.72,3.3,.12,.12,0x315e50);box(g,0,1.55,-1.72,1.2,.6,.06,0x8dbbb0);cylinder(g,-1,.4,1.4,.65,.12,0x7cb2b4);actors.courier=prop('courier',g,.9,.45,1);stocks.parcel=prop('parcel',g,-.7,.55,0);stocks.receivedParcel=prop('parcel',g,-.7,.98,-1.3,.8);stocks.receivedParcel.visible=false;stocks.payment=prop('coin',g,.2,.55,.3);stocks.bond=prop('coin',g,.8,.55,.3);
+  }else{
+   const dome=new T.Mesh(new T.SphereGeometry(1.85,24,12,0,Math.PI*2,0,Math.PI/2),mat(0x678b9c));dome.position.set(0,2.1,-.55);g.add(dome);g.userData.roof=dome;cylinder(g,.2,1.3,.1,.09,1.65,0x446b69,20);const telescope=cylinder(g,.2,2.7,.1,.2,1.65,0xd0b471);telescope.rotation.z=-.65;stocks.proofReward=prop('coin',g,1.4,.48,1.4,.8);stocks.proofReward.visible=false;stocks.machine=prop('machine',g,.4,.5,.45,1.25);stocks.gears=[];for(const x1 of [-.55,.35]){const gear=new T.Group();gear.position.set(x1,1.45,.72);g.add(gear);const disk=cylinder(gear,0,0,0,.30,.10,0xc99a49,32);disk.rotation.x=Math.PI/2;for(let k=0;k<12;k++){const angle=k*Math.PI/6;const tooth=box(gear,Math.cos(angle)*.33,Math.sin(angle)*.33,0,.13,.13,.13,0xc99a49);tooth.rotation.z=angle;}const hub=cylinder(gear,0,0,.09,.08,.12,0x365e5d,20);hub.rotation.x=Math.PI/2;stocks.gears.push(gear)}
+  }
+  // A small orchard frames each inhabited island without concealing its work area.
+  for(const [tx,tz] of [[-2.45,-1.5],[2.3,-1.4]]){cylinder(g,tx,.8,tz,.12,.9,0x835d3a);for(const [dx,dy,dz,r,c]of [[0,0,0,.55,0x487c50],[-.3,-.15,.1,.38,0x659356],[.3,-.12,.1,.43,0x568650],[0,.28,0,.35,0x729d60]]){const crown=new T.Mesh(new T.SphereGeometry(r,20,14),mat(c));crown.position.set(tx+dx,1.55+dy,tz+dz);crown.castShadow=true;g.add(crown)}}
+  const b=document.createElement('button');b.textContent=name;b.style.cssText='position:absolute;pointer-events:auto;transform:translate(-50%,-50%);border:1px solid #ffffff99;border-radius:18px;padding:6px 10px;background:#173e41d9;color:white;font:600 12px system-ui;cursor:pointer;white-space:nowrap';b.onclick=()=>{select(id);onSelect(id)};ui.append(b);labels.push({g,b});
+ }
+
+
+ // Garden care illustrates background life. These objects never enter a ledger.
+ const garden = groups.get('terrarium');
+ const gardenCart = prop('cart', garden, 1.5, .4, 1.7, .6);
+ const gardenBundle = prop('grain', gardenCart, 0, .45, 0, .55);
+ gardenBundle.visible = false;
+ const carriedHarvest = prop('grain', actors.sprout, .27, .5, -.22, .4);
+ carriedHarvest.visible = false;
+ const wateringCan = new T.Group();
+ wateringCan.position.set(.1, .65, -.3);
+ actors.sprout.add(wateringCan);
+ cylinder(wateringCan, 0, 0, 0, .11, .2, 0x559d99, 24);
+ const handle = new T.Mesh(new T.TorusGeometry(.12, .018, 8, 24), mat(0xd5bb71));
+ handle.position.set(.09, .035, 0);
+ wateringCan.add(handle);
+ const spout = cylinder(wateringCan, 0, .03, -.15, .024, .26, 0x559d99, 16);
+ spout.rotation.x = -.85;
+ wateringCan.visible = false;
+ const droplets = Array.from({length: 4}, () => {
+   const drop = new T.Mesh(new T.SphereGeometry(.028, 10, 8), mat(0x93d7ea));
+   drop.visible = false;
+   garden.add(drop);
+   return drop;
+ });
+ const gardenNote = document.createElement('span');
+ gardenNote.textContent = 'Garden care · decorative harvest';
+ gardenNote.style.cssText = 'position:absolute;right:12px;top:12px;padding:5px 8px;border-radius:8px;background:#f5fffae8;color:#28574c;font:12px system-ui';
+ ui.append(gardenNote);
+ const ambient = {elapsed: 0, phase: 'rest', paused: false};
+ const restPosition = new T.Vector3(.4, .45, 1.5);
+ const leftPlanter = new T.Vector3(-.3, .45, .15);
+ const rightPlanter = new T.Vector3(.35, .45, .15);
+ const cartPosition = new T.Vector3(.9, .45, 1.5);
+ function gardenPose(armAngle = 0, stride = 0) {
+   actors.sprout.traverse(part => {
+     if (part.name.includes('arm')) part.rotation.x = armAngle;
+     if (part.name.includes('leg')) part.rotation.x = part.name.includes('left') ? stride : -stride;
+   });
+ }
+ function gardenWalk(from, to, progress) {
+   const u = Math.max(0, Math.min(1, progress));
+   const smooth = u * u * (3 - 2 * u);
+   actors.sprout.position.lerpVectors(from, to, smooth);
+   actors.sprout.rotation.y = Math.atan2(from.x - to.x, from.z - to.z);
+   const step = (Math.floor(u * 10) % 2 ? 1 : -1) * .22;
+   gardenPose(0, u > 0 && u < 1 ? step : 0);
+ }
+ function restGarden() {
+   actors.sprout.position.copy(restPosition);
+   actors.sprout.rotation.y = 0;
+   wateringCan.visible = false;
+   carriedHarvest.visible = false;
+   droplets.forEach(drop => { drop.visible = false; });
+   gardenPose();
+ }
+ function renderGarden(elapsed) {
+   gardenNote.hidden = !(interior && selected === 'terrarium');
+   const busy = transfers.some(transfer => transfer.district === 'terrarium') || motion?.actor === actors.sprout;
+   ambient.paused = busy || !!state.paused || document.hidden || reduced.matches;
+   if (reduced.matches) {
+     ambient.phase = 'rest';
+     ambient.elapsed = 0;
+     restGarden();
+     stocks.decorPlant.scale.setScalar(.45);
+     stocks.harvestPlant.visible = true;
+     return;
+   }
+   if (ambient.paused) return;
+   ambient.elapsed = (ambient.elapsed + elapsed) % 25000;
+   const seconds = ambient.elapsed / 1000;
+   wateringCan.visible = false;
+   carriedHarvest.visible = false;
+   droplets.forEach(drop => { drop.visible = false; });
+   if (seconds < 2) {
+     ambient.phase = 'walk to planter';
+     gardenBundle.visible = false;
+     stocks.harvestPlant.visible = true;
+     stocks.decorPlant.scale.setScalar(.33);
+     gardenWalk(restPosition, leftPlanter, seconds / 2);
+   } else if (seconds < 4) {
+     ambient.phase = 'water';
+     actors.sprout.position.copy(leftPlanter);
+     actors.sprout.rotation.y = Math.PI / 2;
+     gardenPose(-.65);
+     wateringCan.visible = true;
+     wateringCan.rotation.z = -.25;
+     droplets.forEach((drop, index) => {
+       const u = (seconds - 2.15 - index * .25) / .65;
+       drop.visible = u >= 0 && u <= 1;
+       drop.position.set(-.85 - .05 * Math.max(0, u), 1.24 - .49 * Math.max(0, u), .05);
+     });
+     stocks.decorPlant.scale.setScalar(.33 + Math.min(1, (seconds - 2) / 2) * .12);
+   } else if (seconds < 5) {
+     ambient.phase = 'walk to harvest';
+     gardenWalk(leftPlanter, rightPlanter, seconds - 4);
+   } else if (seconds < 6.5) {
+     ambient.phase = 'harvest';
+     actors.sprout.position.copy(rightPlanter);
+     actors.sprout.rotation.y = -Math.PI / 2;
+     gardenPose(-.65);
+     stocks.harvestPlant.visible = seconds < 5.5;
+     carriedHarvest.visible = seconds >= 5.5;
+   } else if (seconds < 8) {
+     ambient.phase = 'carry to cart';
+     gardenWalk(rightPlanter, cartPosition, (seconds - 6.5) / 1.5);
+     gardenPose(-.55, (Math.floor((seconds - 6.5) * 6) % 2 ? 1 : -1) * .2);
+     carriedHarvest.visible = true;
+   } else if (seconds < 9) {
+     ambient.phase = 'stock cart';
+     actors.sprout.position.copy(cartPosition);
+     actors.sprout.rotation.y = -Math.PI / 2;
+     gardenPose(-.55);
+     carriedHarvest.visible = seconds < 8.5;
+     gardenBundle.visible = seconds >= 8.5;
+   } else if (seconds < 10) {
+     ambient.phase = 'return to rest';
+     gardenWalk(cartPosition, restPosition, seconds - 9);
+   } else {
+     ambient.phase = 'rest';
+     restGarden();
+   }
+ }
+ const rejectionIds = new Set();
+ let rejection = null;
+ const stopBadge = document.createElement('div');
+ stopBadge.setAttribute('role', 'status');
+ stopBadge.setAttribute('aria-live', 'polite');
+ stopBadge.style.cssText = 'position:absolute;left:50%;top:12px;transform:translateX(-50%);max-width:85%;padding:9px 12px;border:1px solid #ba4941;border-radius:10px;background:#fff0eaf5;color:#8d3029;font:600 13px system-ui';
+ stopBadge.hidden = true;
+ ui.append(stopBadge);
+ const gateGlow = stocks.pipGate.clone(true);
+ const glowMaterial = new T.MeshStandardMaterial({color: 0xdc594d, emissive: 0xad2923, emissiveIntensity: .5, transparent: true, opacity: .8});
+ gateGlow.traverse(part => { if (part.isMesh) part.material = glowMaterial; });
+ gateGlow.scale.setScalar(1.018);
+ gateGlow.visible = false;
+ groups.get('agent').add(gateGlow);
+ function observeRejection(rejected, restoring) {
+   if (rejected?.checked !== true || !rejected.id || rejectionIds.has(String(rejected.id))) return;
+   rejectionIds.add(String(rejected.id));
+   if (rejectionIds.size > 128) rejectionIds.delete(rejectionIds.values().next().value);
+   if (restoring) return;
+   rejection = {id: String(rejected.id), rule: String(rejected.rule || 'The requested transition failed its check.'), district: selected, start: performance.now()};
+   stopBadge.textContent = `Stopped: ${rejection.rule}`;
+   stopBadge.hidden = false;
+ }
+ function renderRejection(now) {
+   if (!rejection) return;
+   const elapsed = now - rejection.start;
+   gateGlow.visible = rejection.district === 'agent' && elapsed < 2800;
+   glowMaterial.opacity = reduced.matches ? .8 : Math.max(0, .8 * (1 - elapsed / 2800));
+   if (elapsed >= 2800) {
+     rejection = null;
+     gateGlow.visible = false;
+     stopBadge.hidden = true;
+   }
+ }
+ const businessStores={},businessActors={},quantityLabels=[];
+ for(const [name,x,z]of [['grower',-2,1.5],['toolmaker',0,2.65],['miner',2,1.5]]){
+  const g=new T.Group();g.position.set(x,.45,z);groups.get('market').add(g);businessStores[name]=g;businessActors[name]=prop(name==='grower'?'sprout':name==='toolmaker'?'pip':'courier',groups.get('market'),x,.45,z-.45,.62);
+  const label=document.createElement('span');label.style.cssText='position:absolute;transform:translate(-50%,-50%);padding:4px 6px;background:#f8f4dfed;color:#24483d;border-radius:7px;font:11px system-ui;white-space:nowrap';ui.append(label);quantityLabels.push({g,label,name});
+ }
+ const resourceAssets={crops:'grain',tools:'tool',ore:'ore',wood:'timber',timber:'timber',coins:'coin'};
+ let stockState={},persistentResult={};const transfers=[];const accountLabels=[];for(const [name,x]of [['Customer payment',.2],['Courier bond',.8]]){const anchor=new T.Group();anchor.position.set(x,1,.3);groups.get('coordination').add(anchor);const label=document.createElement('span');label.style.cssText='position:absolute;transform:translate(-50%,-50%);padding:3px 5px;background:#fff4dfe8;color:#24483d;border-radius:5px;font:10px system-ui;white-space:nowrap';ui.append(label);accountLabels.push({g:anchor,label,name});}const budgetAnchor=new T.Group();budgetAnchor.position.set(.2,1.8,.4);groups.get('agent').add(budgetAnchor);const budgetLabel=document.createElement('span');budgetLabel.style.cssText='position:absolute;transform:translate(-50%,-50%);padding:5px 7px;background:#fff4dfe8;color:#24483d;border-radius:5px;font:11px system-ui;white-space:nowrap';ui.append(budgetLabel);accountLabels.push({g:budgetAnchor,label:budgetLabel,name:'budget'});const proofAnchor=new T.Group();proofAnchor.position.set(0,2.3,.4);groups.get('computation').add(proofAnchor);const proofLabel=document.createElement('span');proofLabel.style.cssText='position:absolute;transform:translate(-50%,-50%);padding:5px 7px;background:#fff4dfe8;color:#24483d;border-radius:5px;font:11px system-ui;white-space:nowrap';proofLabel.textContent='Settings 6 + 7 = 13 · output 42';ui.append(proofLabel);accountLabels.push({g:proofAnchor,label:proofLabel,name:'proof'});
+ function renderStocks(inventory){
+  for(const name of ['grower','toolmaker','miner']){
+   if(inventory?.[name])stockState[name]={...inventory[name]};const values=stockState[name]||{};const store=businessStores[name];store.clear();let unit=0;
+   for(const [resource,asset]of Object.entries(resourceAssets)){const quantity=Number(values[resource]||0);for(let i=0;i<Math.min(6,quantity);i++){prop(asset,store,(unit%3-.8)*.24,0,Math.floor(unit/3)*.24,.4);unit++}}
+   const badge=quantityLabels.find(b=>b.name===name);badge.label.textContent=name+': '+Object.entries(values).filter(([k,v])=>resourceAssets[k]&&Number(v)>0).map(([k,v])=>`${v} ${k}`).join(' · ');badge.label.hidden=!Object.keys(values).length;
+  }
+ }
+ function startTransfer({asset,count,from,to,district='market',duration=3000}){
+  const g=groups.get(district),vehicle=new T.Group();g.add(vehicle);prop('cart',vehicle,0,0,0,.5);const worker=prop('courier',vehicle,0,0,-.7,.55);worker.traverse(n=>{if(n.name.includes('arm'))n.rotation.x=-.5});
+  for(let i=0;i<Math.min(6,count);i++)prop(asset,vehicle,(i%3-1)*.12,.3,Math.floor(i/3)*.15,.38);
+  vehicle.rotation.y=Math.atan2(to[0]-from[0],to[1]-from[1]);transfers.push({item:vehicle,from:new T.Vector3(from[0],.45,from[1]),to:new T.Vector3(to[0],.45,to[1]),start:performance.now(),duration,worker,district});
+  if(district==='market')Object.values(businessStores).forEach(g=>g.visible=false);
+ }
+ // Walkable bridges connect the district network.
+ for(const [a,b] of [['market','agent'],['agent','terrarium'],['terrarium','computation'],['computation','coordination'],['coordination','market']]){const p=groups.get(a).position,q=groups.get(b).position;const mid=p.clone().add(q).multiplyScalar(.5),len=p.distanceTo(q)-5.5;const bridge=box(scene,mid.x,.32,mid.z,.85,.15,len,0xb9915f);bridge.rotation.y=Math.atan2(q.x-p.x,q.z-p.z)}
+ const consequence=document.createElement('div');consequence.style.cssText='position:absolute;right:12px;bottom:12px;max-width:46%;padding:8px 11px;border-radius:9px;background:#f5fffae8;color:#174b4b;font:12px system-ui';consequence.setAttribute('aria-live','polite');ui.append(consequence);
+ const controls=document.createElement('div');controls.style.cssText='position:absolute;left:12px;bottom:12px;display:flex;gap:5px;pointer-events:auto';ui.append(controls);
+ function control(label,fn){const b=document.createElement('button');b.textContent=label;b.style.cssText='border:1px solid #cce4df;border-radius:9px;background:#f5fffae8;color:#174b4b;padding:7px 10px;font:600 12px system-ui;min-width:44px;min-height:44px';b.onclick=fn;controls.append(b)}
+ let yaw=.55,pitch=.82,distance=25,target=new T.Vector3(0,0,0),desiredTarget=target.clone(),interior=false;
+ control('Harbor',()=>{interior=false;groups.forEach(g=>{if(g.userData.roof)g.userData.roof.visible=true;g.userData.awning?.forEach(o=>o.visible=true);if(g.userData.roofExtra)g.userData.roofExtra.visible=true});desiredTarget.set(0,0,0);distance=25});control('Look inside',()=>{interior=true;groups.forEach((g,id)=>{if(g.userData.roof)g.userData.roof.visible=id!==selected;g.userData.awning?.forEach(o=>o.visible=id!==selected);if(g.userData.roofExtra)g.userData.roofExtra.visible=id!==selected});pitch=.58;desiredTarget.copy(groups.get(selected).position).add(new T.Vector3(0,1,0));distance=9;onInspect(selected)});control('−',()=>distance=Math.min(38,distance+2));control('+',()=>distance=Math.max(6,distance-2));
+ function select(id){if(typeof id==='number')id=chapters[id];if(!groups.has(id))return;selected=id;labels.forEach(l=>l.b.setAttribute('aria-pressed',String(l.g===groups.get(id))));if(interior){groups.forEach((g,key)=>{if(g.userData.roof)g.userData.roof.visible=key!==id;g.userData.awning?.forEach(o=>o.visible=key!==id);if(g.userData.roofExtra)g.userData.roofExtra.visible=key!==id});desiredTarget.copy(groups.get(id).position).add(new T.Vector3(0,1,0));}}
+ function applyPersistent(s){const next=s.result||{};persistentResult={...persistentResult,...next,pip:{...persistentResult.pip,...next.pip},greenhouse:{...persistentResult.greenhouse,...next.greenhouse},courier:{...persistentResult.courier,...next.courier},proof:{...persistentResult.proof,...next.proof}};s={...s,result:persistentResult};const inv=s.inventory?.buyer;consequence.hidden=!((s.chapter===5&&s.result?.proof?.machineOn)||(s.chapter===0&&s.result?.toolReceived)||inv?.tools!==undefined);consequence.textContent=s.chapter===5&&s.result?.proof?.machineOn?'Verified settings 6 + 7 = 13 · output 42':s.chapter===0&&s.result?.toolReceived?'Your cart: metal tool received':inv?.tools!==undefined?`Your tools: ${inv.tools}`:'';renderStocks(s.inventory);for(const a of accountLabels){if(a.name==='budget'){const p=s.result?.pip;a.label.textContent=p?.revoked?'Pip access revoked':p?.allowanceCrops!==undefined?`Pip: ${p.allowanceCrops} crops left · native spending disabled`:'Pip awaits permission';continue;}if(a.name==='proof'){a.label.textContent=s.result?.proof?.machineOn?'Verified · 6 × 7 = 42':'Settings 6 + 7 = 13 · output 42';continue;}const value=a.name==='Customer payment'?s.result?.courier?.paymentSompi:s.result?.courier?.bondSompi;a.label.textContent=a.name+(value!==undefined?`: ${Number(value)/1e8} tKAS`:'')+(s.result?.courier?.refund?(a.name==='Customer payment'?' · refunded to customer':' · forfeited to customer'):s.result?.courier?.receiptPresent?' · paid to courier':'');}stocks.tool.visible=(!!s.result?.toolReceived||!!s.progress?.completed?.includes(0))&&motion?.op!=='purchase';stocks.pipTool.visible=Number(s.result?.pip?.receivedWood)>0&&motion?.op!=='pip-allow';stocks.receivedParcel.visible=!!s.result?.courier?.delivered&&motion?.op!=='delivery-release';stocks.glass.visible=(!!s.result?.greenhouse?.built||!!s.progress?.completed?.includes(3))&&!transfers.some(t=>t.district==='terrarium');stocks.pledges.visible=!s.result?.greenhouse?.built;stocks.allowance.visible=Number(s.result?.pip?.allowanceCrops)>0&&!s.result?.pip?.revoked;stocks.pipGate.visible=!stocks.allowance.visible;stocks.parcel.visible=!s.result?.courier?.receiptPresent;stocks.payment.visible=Number(s.result?.courier?.paymentSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.bond.visible=Number(s.result?.courier?.bondSompi)>0&&!s.result?.courier?.refund&&!s.result?.courier?.receiptPresent;stocks.machine.scale.setScalar(s.result?.proof?.machineOn?1.4:1.25);stocks.proofReward.visible=!!s.result?.proof?.machineOn;if(s.operation==='ring'&&s.accepted)stocks.ring.children.forEach(o=>o.visible=false);if(s.result?.greenhouse?.pledges){stocks.pledges.clear();s.result.greenhouse.pledges.filter(p=>p.state==='locked'||p.state==='accepted').slice(0,6).forEach((p,i)=>prop('timber',stocks.pledges,-1+i*.4,.45,1.8,.7));}}
+ function update(s){const previous=initialized;state=s||{};select(state.district||chapters[state.chapter]||selected);observeRejection(state.rejected,!previous);if(state.accepted)applyPersistent(state);if(!previous){if(state.phase==='intro'){interior=true;distance=9;pitch=.58;select(selected);}applyPersistent(state);if(state.eventId)events.add(state.eventId);initialized=true;return}if(!state.accepted||!state.eventId||events.has(state.eventId))return;events.add(state.eventId);if(events.size>128)events.delete(events.values().next().value);if(motion){motion.actor.position.copy(motion.origin);motion.actor.traverse(n=>{if(n.name.includes('arm')||n.name.includes('leg'))n.rotation.x=0});if(motion.carried)motion.actor.remove(motion.carried);if(motion.op==='purchase')stocks.tool.visible=!!persistentResult.toolReceived;if(motion.op==='pip-allow')stocks.pipTool.visible=Number(persistentResult.pip?.receivedWood)>0;if(motion.op==='delivery-release')stocks.receivedParcel.visible=!!persistentResult.courier?.delivered;motion=null;}const op=state.operation;if(op==='ring'){startTransfer({asset:'grain',count:3,from:[-2,1.5],to:[0,2.65]});startTransfer({asset:'tool',count:1,from:[0,2.65],to:[2,1.5]});startTransfer({asset:'ore',count:2,from:[2,1.5],to:[-2,1.5]});}if(op==='greenhouse-settle'){stocks.glass.visible=false;startTransfer({asset:'timber',count:3,from:[-1,1.8],to:[-1,-.5],district:'terrarium'});}if(op==='pledge')startTransfer({asset:'timber',count:1,from:[1.8,1.8],to:[0,1.8],district:'terrarium'});if(op==='proof-verified'){stocks.proofReward.visible=false;startTransfer({asset:'coin',count:1,from:[.4,.6],to:[1.4,1.4],district:'computation'});}if(op==='withdraw')startTransfer({asset:'coin',count:1,from:[0,1.8],to:[1.8,1.8],district:'terrarium'});if(op==='delivery-refund'){startTransfer({asset:'coin',count:1,from:[.2,.3],to:[-1.4,1.6],district:'coordination'});startTransfer({asset:'coin',count:1,from:[.8,.3],to:[-1.1,1.6],district:'coordination'});}if(!['purchase','pip-allow','delivery-release'].includes(op))return;const actor=op?.startsWith('pip')?actors.pip:op?.startsWith('delivery')?actors.courier:op?.includes('greenhouse')?actors.sprout:actors.seller;const origin=actor.position.clone();let carried=null;if(op==='purchase'){carried=prop('tool',actor,.27,.5,-.25,.7);stocks.tool.visible=false;}else if(op==='delivery-release'){carried=prop('parcel',actor,0,.52,-.3,.8);stocks.receivedParcel.visible=false;}else if(op==='pip-allow'){carried=prop('timber',actor,.27,.5,-.25,.7);stocks.pipTool.visible=false;}motion={actor,origin,carried,start:performance.now(),duration:2600,op};}
+ const pointers=new Map();let lastPinch=0;
+ const down=e=>{pointers.set(e.pointerId,[e.clientX,e.clientY]);renderer.domElement.setPointerCapture(e.pointerId)};
+ const move=e=>{const old=pointers.get(e.pointerId);if(!old)return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()];const d=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);if(lastPinch)distance=Math.max(6,Math.min(38,distance+(lastPinch-d)*.05));lastPinch=d}else if(e.shiftKey){desiredTarget.x-=(e.clientX-old[0])*.02;desiredTarget.z-=(e.clientY-old[1])*.02}else{yaw-=(e.clientX-old[0])*.006;pitch=Math.max(.25,Math.min(1.35,pitch+(e.clientY-old[1])*.005))}};
+ const up=e=>{pointers.delete(e.pointerId);lastPinch=0};const wheel=e=>{e.preventDefault();distance=Math.max(6,Math.min(38,distance+e.deltaY*.018))};const key=e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','='].includes(e.key))e.preventDefault();if(e.key==='ArrowLeft')yaw+=.1;if(e.key==='ArrowRight')yaw-=.1;if(e.key==='ArrowUp')pitch=Math.min(1.35,pitch+.08);if(e.key==='ArrowDown')pitch=Math.max(.25,pitch-.08);if(e.key==='+'||e.key==='=')distance=Math.max(6,distance-1);if(e.key==='-')distance=Math.min(38,distance+1)};
+ renderer.domElement.addEventListener('pointerdown',down);renderer.domElement.addEventListener('pointermove',move);renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);renderer.domElement.addEventListener('wheel',wheel,{passive:false});renderer.domElement.addEventListener('keydown',key);
+ const resize=new ResizeObserver(()=>{const w=container.clientWidth,h=container.clientHeight||500;renderer.setSize(w,h,false);camera.aspect=w/h;consequence.style.bottom=w<600?'53px':'12px';consequence.style.maxWidth=w<600?'80%':'46%';camera.updateProjectionMatrix()});resize.observe(container);
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');const v=new T.Vector3();
+ let lastFrameTime=performance.now(), hiddenAt=document.hidden?performance.now():null;
+ function visibilityChanged(){
+   const now=performance.now();
+   if(document.hidden){hiddenAt=now;return;}
+   if(hiddenAt!==null){const resume=item=>{item.start+=Math.max(0,now-Math.max(hiddenAt,item.start));};if(motion)resume(motion);transfers.forEach(resume);if(rejection)resume(rejection);}
+   hiddenAt=null;lastFrameTime=now;
+ }
+ document.addEventListener('visibilitychange',visibilityChanged);
+ function render(now){if(disposed)return;if(document.hidden){lastFrameTime=now;frame=requestAnimationFrame(render);return;}const elapsed=now-lastFrameTime;lastFrameTime=now;if(state.paused){if(motion)motion.start+=elapsed;transfers.forEach(t=>t.start+=elapsed);if(rejection)rejection.start+=elapsed;}renderGarden(elapsed);renderRejection(now);target.lerp(desiredTarget,reduced.matches?1:.25);const fitDistance=distance*(interior?Math.max(1,1.05/camera.aspect):Math.max(1,1.25/camera.aspect));camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*fitDistance,target.y+Math.sin(pitch)*fitDistance,target.z+Math.cos(yaw)*Math.cos(pitch)*fitDistance);camera.lookAt(target);
+ if(motion){let t=Math.max(0,Math.min(1,(now-motion.start)/motion.duration));const {actor,origin}=motion;const step=t<.25?t*4:t<.65?1:(1-t)/.35;actor.position.copy(origin);actor.position.z+=step*(motion.op==='purchase'?2:.75);if(motion.op==='purchase')actor.position.x+=step<.5?step*3.8:(1-step)*3.8;actor.traverse(n=>{if(n.name.includes('arm'))n.rotation.x=t>.22&&t<.68?-.7:0;if(n.name.includes('leg'))n.rotation.x=reduced.matches?0:((Math.floor(t*12)%2?1:-1)*.22*(t<.25||t>.65?1:0))});if(t===1||reduced.matches){actor.position.copy(origin);if(motion.carried){actor.remove(motion.carried);if(motion.op==='purchase')stocks.tool.visible=true;else if(motion.op==='pip-allow')stocks.pipTool.visible=true;else stocks.receivedParcel.visible=true;}actor.traverse(n=>{if(n.name.includes('arm')||n.name.includes('leg'))n.rotation.x=0});motion=null}}
+ for(let i=transfers.length-1;i>=0;i--){const tr=transfers[i],t=reduced.matches?1:Math.max(0,Math.min(1,(now-tr.start)/tr.duration));const smooth=t*t*(3-2*t);tr.item.position.lerpVectors(tr.from,tr.to,smooth);tr.worker.traverse(n=>{if(n.name.includes('leg'))n.rotation.x=reduced.matches?0:(Math.floor(t*16)%2?1:-1)*.2;});tr.item.traverse(n=>{if(n.name.includes('wheel'))n.rotation.x=t*8;});if(t===1){tr.item.removeFromParent();transfers.splice(i,1);if(!transfers.some(t=>t.district==='market'))Object.values(businessStores).forEach(g=>g.visible=true);if(tr.district==='terrarium'&&persistentResult.greenhouse?.built)stocks.glass.visible=true;if(tr.district==='computation'&&persistentResult.proof?.machineOn)stocks.proofReward.visible=true;}}for(const {g,label}of [...quantityLabels,...accountLabels]){label.style.display=interior&&g.parent===groups.get(selected)?'':'none';g.getWorldPosition(v);v.y+=1;v.project(camera);label.style.left=`${Math.max(label.offsetWidth/2+4,Math.min(container.clientWidth-label.offsetWidth/2-4,(v.x*.5+.5)*container.clientWidth))}px`;label.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;}for(const {g,b}of labels){v.copy(g.position).add(new T.Vector3(0,3.8,0)).project(camera);b.style.left=`${(v.x*.5+.5)*container.clientWidth}px`;b.style.top=`${(-v.y*.5+.5)*container.clientHeight}px`;b.style.display=v.z>1?'none':''}
+ if(persistentResult.proof?.machineOn&&!reduced.matches&&!state.paused)stocks.gears.forEach((g,i)=>g.rotation.z+=(i?-1:1)*.008);renderer.render(scene,camera);frame=requestAnimationFrame(render)}frame=requestAnimationFrame(render);select('market');
+ return {update,select,inspect(){return {selected,activeMotion:!!motion,activeTransfers:transfers.length,toolInCart:stocks.tool.visible,greenhouseBuilt:stocks.glass.visible,machinePowered:!!persistentResult.proof?.machineOn,stores:JSON.parse(JSON.stringify(stockState)),seenEvents:events.size,ambient:{phase:ambient.phase,elapsed:Math.round(ambient.elapsed),paused:ambient.paused,decorativeCart:gardenBundle.visible},rejection:rejection?{id:rejection.id,rule:rejection.rule}:null,seenRejections:rejectionIds.size}},destroy(){disposed=true;cancelAnimationFrame(frame);resize.disconnect();document.removeEventListener('visibilitychange',visibilityChanged);scene.traverse(o=>{o.geometry?.dispose();if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose()});renderer.dispose();renderer.domElement.remove();ui.remove()}};
+}

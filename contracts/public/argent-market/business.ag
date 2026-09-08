@@ -1,0 +1,79 @@
+import "./capsule.ag";
+actor Business owns BusinessState {
+entry fund(int amount, datasig certificate, sig owner_sig) emits next: Business {
+byte[96] message = world + self.cov_id + byte[32](owner); byte[32] digest = sha256(byte[](message)); require(checkMsgSig(certificate, digest, issuer));
+require(checkSig(owner_sig, owner)); require(amount > 0 && amount <= 1000000000000);
+BusinessState updated = { owner: owner, issuer: issuer, world: world, sequence: sequence + 1, last_coin: last_coin, crops: crops, wood: wood, ore: ore, tools: tools, bread: bread, operator: operator, allow_crops: allow_crops, allow_wood: allow_wood, allow_ore: allow_ore, allow_tools: allow_tools, allow_bread: allow_bread, allow_coin: allow_coin, min_receive: min_receive, };
+require(next.value == self.value + amount); become next <- Business(updated);
+}
+entry configure(pubkey next_operator, int next_allow_crops, int next_allow_wood, int next_allow_ore, int next_allow_tools, int next_allow_bread, int next_allow_coin, int next_min_receive, datasig certificate, sig owner_sig) emits next: Business {
+byte[96] message = world + self.cov_id + byte[32](owner); byte[32] digest = sha256(byte[](message)); require(checkMsgSig(certificate, digest, issuer));
+require(checkSig(owner_sig, owner));
+require(next_allow_crops >= 0 && next_allow_crops <= 1000000);
+require(next_allow_wood >= 0 && next_allow_wood <= 1000000);
+require(next_allow_ore >= 0 && next_allow_ore <= 1000000);
+require(next_allow_tools >= 0 && next_allow_tools <= 1000000);
+require(next_allow_bread >= 0 && next_allow_bread <= 1000000);
+require(next_allow_coin >= 0 && next_allow_coin <= 1000000000000);
+require(next_min_receive >= 0 && next_min_receive <= 1000000);
+BusinessState updated = BusinessState { owner: owner, issuer: issuer, world: world, sequence: sequence + 1, last_coin: last_coin, crops: crops, wood: wood, ore: ore, tools: tools, bread: bread, operator: next_operator, allow_crops: next_allow_crops, allow_wood: next_allow_wood, allow_ore: next_allow_ore, allow_tools: next_allow_tools, allow_bread: next_allow_bread, allow_coin: next_allow_coin, min_receive: next_min_receive, };
+require(next.value == self.value); become next <- Business(updated);
+}
+entry restock(int add_crops, int add_wood, int add_ore, int add_tools, int add_bread, datasig certificate, sig owner_sig, sig issuer_sig) emits next: Business {
+byte[96] message = world + self.cov_id + byte[32](owner); byte[32] digest = sha256(byte[](message)); require(checkMsgSig(certificate, digest, issuer));
+require(checkSig(owner_sig, owner));require(checkSig(issuer_sig, issuer));
+require(add_crops >= 0 && crops + add_crops <= 1000000);
+require(add_wood >= 0 && wood + add_wood <= 1000000);
+require(add_ore >= 0 && ore + add_ore <= 1000000);
+require(add_tools >= 0 && tools + add_tools <= 1000000);
+require(add_bread >= 0 && bread + add_bread <= 1000000);
+BusinessState updated = BusinessState { owner: owner, issuer: issuer, world: world, sequence: sequence + 1, last_coin: last_coin, crops: crops + add_crops, wood: wood + add_wood, ore: ore + add_ore, tools: tools + add_tools, bread: bread + add_bread, operator: operator, allow_crops: allow_crops, allow_wood: allow_wood, allow_ore: allow_ore, allow_tools: allow_tools, allow_bread: allow_bread, allow_coin: allow_coin, min_receive: min_receive, };
+require(next.value == self.value); become next <- Business(updated);
+}
+entry trade(cov_id peer_id, int delta_crops, int delta_wood, int delta_ore, int delta_tools, int delta_bread, int delta_coin, int delegated, int peer_delegated, datasig certificate, datasig peer_certificate, sig authorization) observes remote by peer_id { inputs { peer: Business, } outputs { peer: Business, } } emits next: Business {
+byte[96] message = world + self.cov_id + byte[32](owner); byte[32] digest = sha256(byte[](message)); require(checkMsgSig(certificate, digest, issuer));
+BusinessState previous = state(remote.inputs.peer);
+require(delta_coin >= -1000000000000 && delta_coin <= 1000000000000);
+require(peer_id != self.cov_id); require(previous.world == world && previous.issuer == issuer);
+byte[96] peer_message = world + peer_id + byte[32](previous.owner); byte[32] peer_digest = sha256(byte[](peer_message)); require(checkMsgSig(peer_certificate, peer_digest, issuer));
+require(delegated == 0 || delegated == 1);require(peer_delegated == 0 || peer_delegated == 1);
+require((delegated == 0 && checkSig(authorization, owner)) || (delegated == 1 && checkSig(authorization, operator)));
+int spent_crops = 0; if(delta_crops < 0) { spent_crops = 0 - delta_crops; }
+int peer_spent_crops = 0; if(delta_crops > 0) { peer_spent_crops = delta_crops; }
+int spent_wood = 0; if(delta_wood < 0) { spent_wood = 0 - delta_wood; }
+int peer_spent_wood = 0; if(delta_wood > 0) { peer_spent_wood = delta_wood; }
+int spent_ore = 0; if(delta_ore < 0) { spent_ore = 0 - delta_ore; }
+int peer_spent_ore = 0; if(delta_ore > 0) { peer_spent_ore = delta_ore; }
+int spent_tools = 0; if(delta_tools < 0) { spent_tools = 0 - delta_tools; }
+int peer_spent_tools = 0; if(delta_tools > 0) { peer_spent_tools = delta_tools; }
+int spent_bread = 0; if(delta_bread < 0) { spent_bread = 0 - delta_bread; }
+int peer_spent_bread = 0; if(delta_bread > 0) { peer_spent_bread = delta_bread; }
+int spent_coin = 0; if(delta_coin < 0) { spent_coin = 0 - delta_coin; }
+int peer_spent_coin = 0; if(delta_coin > 0) { peer_spent_coin = delta_coin; }
+int received = 0;
+if(delta_crops > 0) { received = received + delta_crops; }
+if(delta_wood > 0) { received = received + delta_wood; }
+if(delta_ore > 0) { received = received + delta_ore; }
+if(delta_tools > 0) { received = received + delta_tools; }
+if(delta_bread > 0) { received = received + delta_bread; }
+if(delegated == 1) { require(received >= min_receive);
+require(spent_crops <= allow_crops);
+require(spent_wood <= allow_wood);
+require(spent_ore <= allow_ore);
+require(spent_tools <= allow_tools);
+require(spent_bread <= allow_bread);
+require(spent_coin <= allow_coin);
+}
+require(crops + delta_crops >= 0 && crops + delta_crops <= 1000000); require(previous.crops - delta_crops >= 0 && previous.crops - delta_crops <= 1000000);
+require(wood + delta_wood >= 0 && wood + delta_wood <= 1000000); require(previous.wood - delta_wood >= 0 && previous.wood - delta_wood <= 1000000);
+require(ore + delta_ore >= 0 && ore + delta_ore <= 1000000); require(previous.ore - delta_ore >= 0 && previous.ore - delta_ore <= 1000000);
+require(tools + delta_tools >= 0 && tools + delta_tools <= 1000000); require(previous.tools - delta_tools >= 0 && previous.tools - delta_tools <= 1000000);
+require(bread + delta_bread >= 0 && bread + delta_bread <= 1000000); require(previous.bread - delta_bread >= 0 && previous.bread - delta_bread <= 1000000);
+BusinessState updated = BusinessState { owner: owner, issuer: issuer, world: world, sequence: sequence + 1, last_coin: 1000000000000 + delta_coin, crops: crops + delta_crops, wood: wood + delta_wood, ore: ore + delta_ore, tools: tools + delta_tools, bread: bread + delta_bread, operator: operator, allow_crops: allow_crops - delegated * spent_crops, allow_wood: allow_wood - delegated * spent_wood, allow_ore: allow_ore - delegated * spent_ore, allow_tools: allow_tools - delegated * spent_tools, allow_bread: allow_bread - delegated * spent_bread, allow_coin: allow_coin - delegated * spent_coin, min_receive: min_receive, };
+BusinessState peer_updated = BusinessState { owner: previous.owner, issuer: previous.issuer, world: previous.world, sequence: previous.sequence + 1, last_coin: 1000000000000 - delta_coin, crops: previous.crops - delta_crops, wood: previous.wood - delta_wood, ore: previous.ore - delta_ore, tools: previous.tools - delta_tools, bread: previous.bread - delta_bread, operator: previous.operator, allow_crops: previous.allow_crops - peer_delegated * peer_spent_crops, allow_wood: previous.allow_wood - peer_delegated * peer_spent_wood, allow_ore: previous.allow_ore - peer_delegated * peer_spent_ore, allow_tools: previous.allow_tools - peer_delegated * peer_spent_tools, allow_bread: previous.allow_bread - peer_delegated * peer_spent_bread, allow_coin: previous.allow_coin - peer_delegated * peer_spent_coin, min_receive: previous.min_receive, };
+require(next.value == self.value + delta_coin);
+require remote.outputs become { peer <- Business(peer_updated), };
+become next <- Business(updated);
+}
+}
+app BusinessApp { actor Business; }
