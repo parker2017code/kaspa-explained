@@ -126,6 +126,7 @@ export default{
   const url=new URL(request.url),origin=request.headers.get('Origin');
   const allowed=origin==='https://kaspa-explained.parker2017.workers.dev'||origin==='https://kaspa-explained.pages.dev'||origin==='https://answered-tear-homepage-spencer.trycloudflare.com'||origin==='https://kaspaexplained.com'||origin==='https://www.kaspaexplained.com'||/^http:\/\/(127\.0\.0\.1|localhost):(8898|8901|8904|8912)$/.test(origin||'');
   const headers={'Cache-Control':'no-store','Vary':'Origin',...(allowed?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}:{})};
+  if(/^\/api\/v5(?:\/|$)/.test(url.pathname))return new Response(JSON.stringify({error:'This version has been withdrawn.'}),{status:410,headers:{...headers,'Content-Type':'application/json'}});
   if(request.method==='OPTIONS')return new Response(null,{status:allowed?204:403,headers});
   const v5=/^\/api\/v5\/(start|state|action|payment|status)$/.test(url.pathname);
   if((url.pathname==='/api/faucet'||v5)&&request.method==='POST'){
