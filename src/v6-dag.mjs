@@ -22,7 +22,7 @@ export function mountV6Dag(root){
       else if(presenting){const u=Math.min(1,(Date.now()-presentation.startedAt)/1200),x=150+(end.x-150)*u,y=132+(end.y-132)*u;packet=`<g class="v6-dag-transaction"><path d="M34 132 L150 132 L${end.x} ${end.y}" style="stroke-width:2.5"/><circle cx="${x}" cy="${y}" r="7"/><text x="24" y="155" style="font:600 14px system-ui">Sender → submitted</text><text x="175" y="137" style="font:600 13px system-ui">Observed block → recipient consequence</text></g>`;}
     }
     svg.innerHTML=`<g class="v6-dag-links">${links}</g><g class="v6-dag-blocks">${nodes}</g>${packet}`;
-    const stale=network.status!=='live'||Date.now()-(network.lastEventAt||0)>10000;status.textContent=stale?(network.status==='disconnected'?'Reconnecting':network.status==='stale'?'Waiting for fresh blocks':'Connecting'):'Live';status.dataset.live=String(!stale);
+    const stale=network.status!=='live'||Date.now()-(network.lastEventAt||0)>10000;status.textContent=network.status==='paused'?'Live updates paused':stale?(network.status==='disconnected'?'Reconnecting':network.status==='stale'?'Waiting for fresh blocks':'Connecting'):'Live';status.dataset.live=String(!stale);
     note.innerHTML=accepted?`Accepted by block <code>${esc(transaction.acceptingBlock.slice(0,12))}…</code> · <a href="https://tn10.kaspa.stream/transactions/${esc(id)}" target="_blank" rel="noopener">Inspect this transaction ↗</a>`:'Real hashes and observed parent links. Positions illustrate arrival order; animation does not create blocks.';
     if(!document.hidden&&!reduced.matches&&((!stale&&Date.now()-base<2000)||presenting))schedule();
   }

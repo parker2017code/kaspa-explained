@@ -29,10 +29,11 @@ if(root){
   function userActivity(){lastActivity=Date.now();eventRetryMs=2000;resumeBackground();}
   function render(){
     if(disposed||!ui)return;
-    const pausing=Date.now()<consequenceUntil,view=v6PublicView(session,{busy:busy||pausing,error:error||worldError,network,inspectChapter});
+    const displayNetwork=transportActive()?network:{...network,status:'paused'};
+    const pausing=Date.now()<consequenceUntil,view=v6PublicView(session,{busy:busy||pausing,error:error||worldError,network:displayNetwork,inspectChapter});
     if(pausing&&!busy)view.actionLabel='Watch what changed…';
     const holding=acceptancePresentation&&Date.now()<acceptancePresentation.arrivesAt&&!document.hidden&&!reduced.matches;
-    ui.render(view);world?.update({... (holding?acceptancePresentation.beforeScene:view.scene),paused:document.hidden});dag?.update(network,view.operation,acceptancePresentation);
+    ui.render(view);world?.update({... (holding?acceptancePresentation.beforeScene:view.scene),paused:document.hidden});dag?.update(displayNetwork,view.operation,acceptancePresentation);
   }
   async function request(path,body){
     const response=await fetch('/api/v6/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(90000)});

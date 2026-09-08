@@ -18,6 +18,14 @@ The release adds two unlisted pages and updates Sprout Harbor V6. The public edu
 
 The contract lab shares the existing wallet and encrypted journal host through a gated controller. It has a separate browser storage namespace. Every new transaction requires a review, a fresh fee and exact-input check, and saving signed bytes before submission. Checking status never signs or resubmits. An unresolved transaction prevents new spending; its exact bytes can only be retried explicitly. Accepted balances require an observed accepting block.
 
+## Review and hosted recovery
+
+The coordinator reviewed the changed source and the rendered artifacts above and accepts this release within the stated scope. The separate external review is incomplete: its earlier model findings were addressed, but it did not independently approve the final V6 and contract-lab delta.
+
+The earlier canonical V5 full journey recorded 29 accepted transactions and completed its journey/reload/mobile assertions, but the harness reported one canceled status request. That original report remains a failed report. A subsequent read-only recovery check loaded the saved completed journey twice with no failed requests and no action or payment requests; only existing-wallet authentication and status requests occurred. This follow-up does not establish the cause of the historical cancellation.
+
 ## Hosting
 
 Cloudflare is the public host. The three former GitHub Pages workflows retain verification and downloadable build artifacts but no longer have Pages deployment steps or permissions. The reviewed V6 container image remains pinned by digest; this release changes static client assets rather than replacing the signer runtime.
+
+The September 8 Cloudflare publication was checked against all 227 generated public files with matching SHA-256 content. The saved canonical V6 tour still showed all six chapters complete and its accepted receipt, without an API request. GitHub Pages was retired through the repository API (204; subsequent configuration lookup 404). Final presentation corrections label intentionally stopped live updates as paused and provide 44px chapter, dock, and disclosure targets.

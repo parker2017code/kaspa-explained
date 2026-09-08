@@ -417,7 +417,7 @@ export function mountV6UI(root, {onAction = () => {}, onChapter = () => {}, onSc
     updateSceneEvidence();
     shell.querySelector('[data-v6-scene-place]').textContent = current.scene?.place || lesson.place;
     shell.querySelector('[data-v6-scene-hint]').textContent = current.scene?.status || 'Scene motion follows the saved result';
-    networkStatus.textContent = current.network?.status || 'Testnet-10 · waiting';
+    networkStatus.textContent = current.network?.status === 'paused' ? 'Live updates paused' : current.network?.status || 'Testnet-10 · waiting';
     walletDisplay.textContent = !current.wallet?.connected ? 'Demo accounts' : current._balanceKnown ? `${current.wallet?.label || 'Demo funds'} · ${formatSompi(current.wallet.balanceSompi)}` : 'Managed test funds';
     timeStatus.textContent = current.step === 'complete' ? 'Tour complete' : `About ${v6RemainingMinutes(current.progress)} min remaining`;
     const dockButton = shell.querySelector('[data-v6-dock]');
