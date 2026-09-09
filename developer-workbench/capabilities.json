@@ -1,0 +1,132 @@
+{
+  "checkedAt": "2026-09-09",
+  "layers": [
+    {
+      "id": "toccata",
+      "name": "Toccata consensus",
+      "role": "Validates transaction introspection, covenant identity and authorization, ZK verification, and sequencing surfaces.",
+      "status": "active",
+      "source": "https://github.com/kaspanet/kips"
+    },
+    {
+      "id": "silverscript",
+      "name": "SilverScript",
+      "role": "Compiles typed covenant rules and state-transition checks to Kaspa Script.",
+      "status": "release-candidate",
+      "source": "https://github.com/kaspanet/silverscript/releases/tag/v1-rc1"
+    },
+    {
+      "id": "argent",
+      "name": "Argent",
+      "role": "Compiles actor, route, and inter-contract application descriptions to SilverScript and portable artifacts.",
+      "status": "development",
+      "source": "https://github.com/argent-lang/argent"
+    },
+    {
+      "id": "application",
+      "name": "Application and wallet",
+      "role": "Builds, reviews, signs, submits, and observes transactions while presenting their practical result.",
+      "status": "application-specific",
+      "source": "https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "stateful-lineage",
+      "title": "State with a stable identity",
+      "explanation": "A covenant ID can follow one application lineage while each successor UTXO commits to its new state. Consensus controls lineage entry; the script controls the transition.",
+      "source": "https://github.com/kaspanet/kips/blob/master/kip-0020.md",
+      "status": "active",
+      "exampleId": "business"
+    },
+    {
+      "id": "authorized-successors",
+      "title": "Constrain the exact next outputs",
+      "explanation": "A covenant can inspect and restrict the outputs it authorizes, including amounts, scripts, state, and covenant bindings.",
+      "source": "https://github.com/kaspanet/docs/blob/main/content/docs/toccata/covenant-state.mdx",
+      "status": "active",
+      "exampleId": "delivery"
+    },
+    {
+      "id": "parallel-state",
+      "title": "Let independent state progress in parallel",
+      "explanation": "Applications can split state across several UTXOs so unrelated transitions do not spend one global state cell.",
+      "source": "https://github.com/kaspanet/docs/blob/main/content/docs/toccata/covenant-state.mdx",
+      "status": "active-design-pattern",
+      "exampleId": "business"
+    },
+    {
+      "id": "atomic-multi-actor",
+      "title": "Change several actors atomically",
+      "explanation": "Each participating covenant validates its obligation in one transaction, so the combined state change succeeds or fails together.",
+      "source": "https://github.com/argent-lang/argent/blob/master/docs/icc-semantics.md",
+      "status": "pre-release-tooling",
+      "exampleId": "ring"
+    },
+    {
+      "id": "cross-app-observation",
+      "title": "Validate another application's transition",
+      "explanation": "Argent can bind imported actor templates and observe another covenant's authenticated input and required successor.",
+      "source": "https://github.com/argent-lang/argent",
+      "status": "pre-release-tooling",
+      "exampleId": "habitat"
+    },
+    {
+      "id": "bounded-delegation",
+      "title": "Delegate a narrow authority",
+      "explanation": "A controlling covenant can require a delegated action to obey recipient, amount, continuation, and budget rules rather than granting the delegate the whole wallet.",
+      "source": "https://github.com/argent-lang/argent/tree/master/examples",
+      "status": "pattern-requires-application-review",
+      "exampleId": "business"
+    },
+    {
+      "id": "timelock-bond",
+      "title": "Bond an action to time and outcome",
+      "explanation": "Scripts can combine signatures, transaction constraints, and DAA or time conditions for release and refund paths.",
+      "source": "https://github.com/kaspanet/silverscript/blob/master/docs/TUTORIAL.md",
+      "status": "release-candidate-tooling",
+      "exampleId": "delivery"
+    },
+    {
+      "id": "zk-verification",
+      "title": "Verify a supported zero-knowledge proof",
+      "explanation": "Toccata exposes a ZK verification opcode. It verifies the supplied proof relation; it does not independently establish an external-world fact.",
+      "source": "https://github.com/kaspanet/kips/blob/master/kip-0016.md",
+      "status": "active",
+      "exampleId": null
+    },
+    {
+      "id": "portable-artifact",
+      "title": "Export an inspectable application artifact",
+      "explanation": "Argent emits generated SilverScript and portable artifact metadata describing actors, entries, routes, witnesses, and interfaces.",
+      "source": "https://github.com/argent-lang/argent",
+      "status": "pre-release-tooling",
+      "exampleId": "ring"
+    },
+    {
+      "id": "evidence-ladder",
+      "title": "Separate build, VM, node, and observed evidence",
+      "explanation": "A reproducible workbench can show which stage actually passed and retain missing or failed stages rather than presenting one undifferentiated success state.",
+      "source": "https://www.anchor-lang.com/docs/references/cli",
+      "status": "recommended-product-pattern",
+      "exampleId": "ring"
+    }
+  ],
+  "references": {
+    "kaspaStandards": [
+      {"name": "Kaspa Improvement Proposals", "kind": "protocol", "status": "mixed-by-document", "url": "https://github.com/kaspanet/kips"},
+      {"name": "Kaspa Calls for Conventions", "kind": "ecosystem-conventions", "status": "drafts", "url": "https://github.com/kaspanet/kccs"},
+      {"name": "KAP", "kind": "unverified-kaspa-label", "status": "do-not-use-without-primary-source", "url": "https://github.com/kaspanet/kips"}
+    ],
+    "competitiveProducts": [
+      {"name": "Remix", "strength": "Browser compile, run, debug, analysis, and contextual AI", "url": "https://github.com/remix-project-org/remix-project"},
+      {"name": "Scaffold-ETH 2", "strength": "Contract-to-frontend loop plus agent-readable project guidance", "url": "https://docs.scaffoldeth.io/"},
+      {"name": "SpeedRunEthereum", "strength": "Product-shaped challenge progression", "url": "https://speedrunethereum.com/"},
+      {"name": "Solana Playground", "strength": "Curated browser build, deploy, and test environment", "url": "https://github.com/solana-playground/solana-playground"},
+      {"name": "Anchor", "strength": "Generated IDL and distinct build, test, debug, fuzz, and verify stages", "url": "https://www.anchor-lang.com/docs/basics/idl"},
+      {"name": "Sui Move learning", "strength": "State ownership and capability patterns taught through runnable exercises", "url": "https://github.com/sui-foundation/sui-move-intro-course"}
+    ]
+  },
+  "recommendedFlow": ["explain", "inspect", "build", "verify"],
+  "evidenceStatuses": ["verified", "failed", "not-run", "unavailable"]
+}

@@ -1,0 +1,103 @@
+name: Build Studio container
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [studio-beta]
+    paths:
+      - developer-workbench/runtime/**
+      - developer-workbench/engine.mjs
+      - developer-workbench/ecosystem-tools.mjs
+      - developer-workbench/server.mjs
+      - developer-workbench/tests/*.test.mjs
+      - .github/workflows/build-studio-container.yml
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: studio-container-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/parker2017code/kaspa-explained-studio
+  DOCKER_BUILD_RECORD_UPLOAD: "false"
+
+jobs:
+  image:
+    if: github.repository == 'parker2017code/kaspa-explained'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the exact dispatched commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Linux builder
+        uses: docker/setup-buildx-action@v3
+
+      - name: Verify native VM, proof, and service fixtures
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: developer-workbench/runtime/Dockerfile
+          target: verify
+          platforms: linux/amd64
+          push: false
+          cache-from: type=gha,scope=studio-linux-amd64
+          cache-to: type=gha,scope=studio-linux-amd64,mode=max
+
+      - name: Load the verified runtime for its memory gate
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: developer-workbench/runtime/Dockerfile
+          target: runtime
+          platforms: linux/amd64
+          load: true
+          tags: studio-memory-check:local
+          cache-from: type=gha,scope=studio-linux-amd64
+
+      - name: Verify complete workload within 1 GiB without network or swap
+        run: docker run --rm --network=none --memory=1g --memory-swap=1g --cpus=1 studio-memory-check:local node developer-workbench/runtime/check-memory.mjs
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish the checked runtime image
+        id: image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: developer-workbench/runtime/Dockerfile
+          target: runtime
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.IMAGE }}:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=studio-linux-amd64
+          cache-to: type=gha,scope=studio-linux-amd64,mode=max
+
+      - name: Record the immutable image reference
+        env:
+          DIGEST: ${{ steps.image.outputs.digest }}
+          REVISION: ${{ github.sha }}
+        run: |
+          test -n "$DIGEST"
+          printf '### Studio image built and verified\n\nCommit: `%s`\n\nTag: `%s:%s`\n\nDeploy by digest: `%s@%s`\n\nNo hosting deployment was performed.\n' "$REVISION" "$IMAGE" "$REVISION" "$IMAGE" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
