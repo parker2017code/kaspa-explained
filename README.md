@@ -1,77 +1,123 @@
 # Kaspa Explained
 
-[Kaspa Explained](https://kaspaexplained.com) is an independent guide to Kaspa with interactive explanations and experimental Testnet-10 applications. Canonical pages and compatibility routes are generated from the page registry.
+[kaspaexplained.com](https://kaspaexplained.com) is a plain-English guide to
+Kaspa built around demos you can push on. Move a slider and watch a
+blockDAG keep the blocks a single chain throws away. Price a 51% attack at
+today's hash rate. Watch a covenant refuse a spend that breaks its own rule.
 
-## Sprout Harbor: a small KAS economy
+This is not an official Kaspa website and it is not investment advice.
 
-[Enter the town](https://kaspaexplained.com/covenants). Buy greenhouse parts, pool three backers’ investment, pay Pip for a checked work schedule, sell the harvest, and carry the purchased food to the store.
+## Why it looks like this
 
-Pip earns **0.1 tKAS** and spends **0.03 tKAS from that exact wage output** on three crop vouchers. The rest returns to Pip after the network fee. Sprout’s three accepted moves complete the delivery. The first order uses 21 Testnet transactions and one local rejected request; an additional order earns a fresh wage without rebuilding the greenhouse.
+The first version was built to be read by language models. That was the wrong
+call. Nobody used it, including the person who built it. The site is now built
+for people, and the demos are the point: the "Try it" section in the nav is the
+front door, and every topic page carries the demo that backs its claim.
 
-Signatures, spending limits, voucher ownership, payments, pledge conditions, the schedule check and movement rules are enforced on Testnet-10. Parts, greenhouse production, cargo and food delivery are game interpretations. The browser controls all demonstration accounts. These are unaudited experiments with free test coins, not mainnet applications.
+The writing still matters, but it is there to support the thing you just did,
+not the other way round.
 
-A complete economic order and its reload were verified on Testnet-10 on 7 September 2026. Inspect the [accepted transaction record](docs/economy-live-verification.json), [browser checks](docs/economy-browser-verification.json), and [economic route and evidence boundaries](docs/economy-release.md). These are dated observations, not a security audit or unconditional finality.
+## Contributing
 
-## V5 and V6 Cloudflare migration
+Corrections are the most useful contribution, especially on status claims.
+Kaspa moves, and a page that was right in June can be wrong in August. See
+`CONTRIBUTING.md`.
 
-The site is being moved to Cloudflare. V5 and V6 will be unlisted at `/covenants/v5` and `/covenants/v6`, excluded from navigation, search, and the sitemap. A preview deployment is not evidence that its transaction backend is ready.
+Content is CC BY 4.0. Code, CSS, scripts, and workflows are MIT. See
+`LICENSE.md`. The site belongs to the community more than to any one
+maintainer; fork it, lift a demo, argue with a number.
 
-V6 covers atomic purchase, Pip's resource policy, a three-business ring, conditional greenhouse pledges, bonded delivery, and proof-checked work. The local browser journey reached all six outcomes with 26 accepted Testnet-10 transactions and five native VM rejections. See [local acceptance](docs/v6-local-acceptance.md) and [the recorded receipts](docs/v6-local-verification.json). The 12–15 minute duration is a design target, not a measured first-time-user result.
+## What is where
 
-The hosted runtime uses a separate dedicated Testnet-10 signer, durable state, bounded execution, and authenticated internal endpoints. Preserve `.local/v5-final` and never upload the existing local wallet. See [cloud runtime boundaries](docs/v6-cloud-runtime.md) and [container build checks](docs/v6-container-build.md). Hosted browser acceptance and domain cutover remain separate release gates.
+`site-manifest.json`, `sitemap.xml`, and `llms.txt` are the checked inventory.
+Every other `.html` file in the root or under `/demos/` is a `noindex` redirect
+stub pointing at one of the listed pages, usually to a specific anchor.
 
-## External assets and native receipts
+- `index.html` opens with a six-word vocabulary check that routes a reader to
+  `crypto-from-scratch.html` or straight to Kaspa, and carries the collision demo
+  inline.
+- `what-is-kaspa.html` is the core mechanism explainer: proof of work, UTXO
+  ownership, blockDAG, GHOSTDAG, covenants. Carries five demos, including the
+  parallel-spends demo at `#utxo`: five payments at once against a coin ledger
+  and a balance ledger, and what the missing shared slot costs Kaspa apps.
+- `why-kaspa-matters.html` covers neutral money, self-custody, and the
+  confirmation-risk curve.
+- `kips.html` tracks KIPs and KCCs live from GitHub, and carries the DAGKnight
+  demo comparing a fixed consensus margin against one that tracks real latency.
+- `status.html` separates live mainnet from testnet, targeted, roadmap, and
+  research, and fact-checks 16 claims.
+- `skeptical-case.html` is the case against, in seven risks.
+- `kaspa-mining.html` covers price and hash-rate cycles plus solo mining, with
+  four demos including attack cost and node cost.
+- `build-on-kaspa.html` takes a builder from an idea to a build path, and at
+  `#argent` covers the actor-based language compiling to Silverscript covenants,
+  with a repository table read live from GitHub.
+- `kaspa-origin-story.html` is the sourced fair-launch history.
+- `sources.html` ranks what settles a claim.
+- `demos/index.html` maps every demo to the page it lives on.
 
-[The bridge example](https://kaspaexplained.com/wrap?experiment=bridge) shows a recorded round trip: lock 100 pUSD on Ethereum Sepolia, issue its representation on Kaspa, transfer the claim to Pip, then burn it and release the source tokens to Pip. The [verification record](docs/wrap-poc-roundtrip-verification.json) includes the source receipts and four accepted Kaspa transactions, including initialization.
+## Source discipline
 
-The public page displays dated demonstration balances and explorer links. It cannot sign or send bridge transactions. A trusted test oracle authorizes issuance and release; Kaspa does not independently verify Ethereum consensus here. **wTestUSD cannot buy the town’s crops.** See [bridge architecture](docs/wrap-poc.md).
+First-party sources first for anything status-sensitive: kaspanet GitHub
+repositories, releases, KIPs, docs.kaspa.org, public API and node readings, and
+research papers. Core technical posts explain rationale; they do not replace a
+release tag, a merged KIP, or activation evidence.
 
-[Wrap lab](https://kaspaexplained.com/wrap) also supports native test-KAS receipts: lock backing, transfer its claim and redeem it. Other experiments include payments, escrow, threshold treasury, prediction payouts, fixed-proof checks and capped tokens.
+The kaspa.org marketing pages are not used as a source. Twice, months apart,
+they still described Toccata as pending on testnet long after it activated on
+mainnet. `wiki.kaspa.org` and `docs.kaspa.org` are fine.
 
-## Run locally
+`CLAIMS.yml` is the checked registry: every status-sensitive claim, its source,
+and the date it must be rechecked. `scripts/check-status-freshness.py` fails the
+build when a recheck date passes, so claims cannot quietly rot.
 
-Use Node.js 22 or later:
+## Checks
 
 ```sh
-npm ci
-npm run setup:testnet
-npm run build
-node scripts/static-preview.mjs dist
+bash scripts/check-site.sh
 ```
 
-Open [the local preview](http://127.0.0.1:8899/). SDK/compiler setup verifies pinned checksums. Contract VM checks additionally require Rust/native build tools, Git, `unzip` and `tar`; macOS and Linux arm64/x64 are supported by the setup workflow. Windows setup is unverified.
+That is the publish gate, and `Site checks passed.` is the only line that
+counts. It runs sixteen checks: HTML validity, claim consistency,
+source bans, status freshness, nav synchronization, redirect stubs, reading
+grade, prose rules, American English, rendered layout at three widths in both
+themes, broken links and missing anchors, visible-word ceilings, page height,
+and per-demo surface budgets.
 
-The public application is static. It creates disposable accounts, encrypts browser recovery and connects directly to Testnet-10. It needs no public signing server or compiler endpoint. The optional fixed-amount faucet is described in [faucet operations](docs/faucet.md).
+Several of those exist because a specific defect shipped once. The demo-surface
+check exists because a demo grew four blocks of specialist prose on its
+opening screen and no gate could see it. The page-height check counts only
+things a reader can look at or touch, because an earlier version counted
+headings as landmarks and passed every page on a day when every page was too
+long.
 
-For the standalone education build, use `npm run build:v1` and preview `dist-v1`. Maintained source is in `src/`; generated output belongs in `dist/` or `dist-v1/`.
-
-## Verify changes
+Local preview, with clean URLs so `/status` resolves:
 
 ```sh
-npm run check
-npm run check:v4
-npm run check:contracts:vm
-npm run check:v4:vm
-npm run check:economy
-npx playwright install chromium firefox webkit
-npm run check:v4:flows
-node scripts/check-wrap-recorded-browser.mjs
-npm run check:copy
-npm run check:posts
+python3 scripts/serve-local.py --port 4187
 ```
 
-The economy browser regression uses the real SDK with synthetic RPC; it is separate from the recorded live Testnet run. `npm run check:public:browser` checks public wallet loading and recovery across three browser engines using real RPC without funding accounts or submitting transactions. Node unavailability fails that gate. Run `bash scripts/check-site.sh` before publishing, following the [release checklist](RELEASE-CHECKLIST.md).
+External links are audited separately and weekly, so a third-party outage does
+not block a content fix:
 
-Contract sources are in `contracts/public/`; tests and verification tools in `tests/` and `scripts/`; social posts in `content/`. [Public architecture](docs/public-architecture.md) describes transaction construction, signing and recovery. Historical release reports remain in `docs/` and `design/` as dated evidence.
+```sh
+bash scripts/check-links.sh
+```
 
-## Local services
+## For contributors and agents
 
-`npm run serve` starts the separate local workshop at [127.0.0.1:8898](http://127.0.0.1:8898/). `npm run setup:wrap` and `npm run serve:wrap` prepare and run the local bridge experiment; see its [setup instructions](docs/wrap-poc.md). These services control local demonstration identities and are excluded from the public static build. Private state under ignored `.local/` must never be published. Uncertain submissions must be reconciled before another spend.
+`AGENTS.md` is the durable instruction file: voice, verification contract,
+source rules, and the failure modes this repo has already hit.
+`WORKING-STATE.md` carries what is true today. `design/STANDARD.md` and
+`design/THE-BAR.md` carry the design and credibility bars, including the test
+every demo has to pass: someone with a high school diploma and a rough idea of
+what crypto is should know what the demo shows and what to touch, immediately,
+with no help.
 
-## Reuse
+## Hosting
 
-New project-controlled code is offered under **PolyForm Noncommercial 1.0.0**, and educational content under **CC BY-NC 4.0**. Commercial reuse is not granted under these new terms; see their permitted purposes and scope in [LICENSE.md](LICENSE.md).
-
-Earlier MIT and CC BY 4.0 grants remain valid for previously released material. Third-party code, independent contributions and Moose’s books retain their own terms. Preserve the notices in [THIRD_PARTY.md](THIRD_PARTY.md).
-
-Corrections should identify the exact claim or behavior and a supporting primary source.
+Cloudflare Workers serves the generated `dist/` asset tree at the custom
+domain `kaspaexplained.com`. Run `python3 scripts/build-static-dist.py` from
+the repository root, then `npx wrangler deploy --config cloudflare/wrangler.jsonc`.
+The `CNAME` file remains `kaspaexplained.com` for the repository's canonical
+domain record.

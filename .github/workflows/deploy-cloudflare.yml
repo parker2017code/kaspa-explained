@@ -1,0 +1,37 @@
+name: Deploy static site to Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'parker2017code/kaspa-explained'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build the public static asset tree
+        run: python3 scripts/build-static-dist.py
+
+      - name: Deploy the static site
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: '12418158839e0c1880a7f3fa8678bcfd'
+          workingDirectory: cloudflare
+          command: deploy
