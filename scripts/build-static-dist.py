@@ -18,6 +18,7 @@ SKIP_DIRS = {
     "exports",
     "node_modules",
     "visual-audit",
+    ".wrangler",
 }
 PUBLIC_EXTENSIONS = {
     ".css",
