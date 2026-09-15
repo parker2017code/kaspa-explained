@@ -5479,12 +5479,10 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
    ========================================================================== */
 
 /* --- 1. Info affordance ---------------------------------------------------
-   A small round (i) trigger next to a control or line of text. Tap or click
-   toggles it (JS adds/removes .is-open on the wrapper); hovering or
-   focusing it on a device with a real pointer opens it too, so a mouse user
-   never has to click for a one-line aside. No JS: it still opens on hover
-   and on keyboard focus, just not on tap. See design/house-style.md for the
-   markup shape and the toggle script. */
+   A small round (i) trigger next to a control or line of text. Tap, click,
+   Enter, or Space toggles it through the shared nav.js disclosure handler.
+   The panel follows aria-expanded so its visible and announced state cannot
+   drift apart. See design/house-style.md for the markup shape. */
 .info-affordance {
   /* !important on the layout-critical properties is deliberate: dozens of
      card/grid components across styles.css carry a generic `.foo-grid span
@@ -5572,9 +5570,7 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   box-shadow: 0 10px 28px rgba(30, 27, 20, .14);
 }
 
-.info-affordance:hover .info-affordance__panel,
-.info-affordance:focus-within .info-affordance__panel,
-.info-affordance.is-open .info-affordance__panel {
+.info-affordance:has(.info-affordance__trigger[aria-expanded="true"]) .info-affordance__panel {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
@@ -5588,7 +5584,7 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
 
 /* --- 2. Term-level definition reveal ---------------------------------------
    One jargon word inside a sentence, underlined with dots, that reveals its
-   plain-language meaning on tap, click, hover, or focus without leaving the
+   plain-language meaning on tap, click, Enter, or Space without leaving the
    sentence. The visible text stays inline and untouched; the tap target
    extends beyond the glyph box via an invisible absolutely-positioned
    pseudo-element so short words still clear 44x44, without adding padding
@@ -5646,9 +5642,7 @@ a:focus-visible :is(h1, h2, h3, h4, h5, h6) {
   box-shadow: 0 10px 28px rgba(30, 27, 20, .14);
 }
 
-.term-def:hover .term-def__panel,
-.term-def:focus .term-def__panel,
-.term-def.is-open .term-def__panel {
+.term-def[aria-expanded="true"] .term-def__panel {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
@@ -5886,15 +5880,16 @@ p.live-footnote:not(:last-child) {
    the sheen), and additionally promote the SPECIFIC child that
    currently contains an open panel, using :has() (already used
    elsewhere in this file, e.g. .grid-cards:has(), .section:has()) to
-   detect open/hovered/focused term-def and info-affordance instances.
+   detect open term-def and info-affordance instances from their synchronized
+   expanded state.
    That child jumps above z-index: 1, which is enough to clear every
    sibling still sitting at the base promotion. */
-.hero-copy > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
-.hero-visual > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
-.section:not(.prose-section) > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
-.orientation-grid a > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
-.hero-signal-grid a > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open),
-.route-grid .route-card-link > *:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open) {
+.hero-copy > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]),
+.hero-visual > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]),
+.section:not(.prose-section) > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]),
+.orientation-grid a > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]),
+.hero-signal-grid a > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]),
+.route-grid .route-card-link > *:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]) {
   z-index: 30;
 }
 
@@ -6078,7 +6073,7 @@ p.live-footnote:not(:last-child) {
    needs the escape; an open one always does, at any width. This is the
    same :has()-scoped-to-the-open-state technique already used above for
    the sibling z-index promotion. */
-.table-wrap:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open) {
+.table-wrap:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]) {
   overflow: visible;
 }
 
@@ -6188,12 +6183,8 @@ p.live-footnote:not(:last-child) {
    one showing a panel: that clears the trap regardless of which
    ancestor happens to sit in between, including shapes the ancestor
    list doesn't name. */
-.term-def:hover,
-.term-def:focus-within,
-.term-def.is-open,
-.info-affordance:hover,
-.info-affordance:focus-within,
-.info-affordance.is-open {
+.term-def[aria-expanded="true"],
+.info-affordance:has(.info-affordance__trigger[aria-expanded="true"]) {
   z-index: 30;
 }
 
@@ -6257,7 +6248,7 @@ p.live-footnote:not(:last-child) {
   overflow: visible;
 }
 
-*:has(.term-def:hover, .term-def:focus-within, .term-def.is-open, .info-affordance:hover, .info-affordance:focus-within, .info-affordance.is-open) {
+*:has(.term-def[aria-expanded="true"], .info-affordance__trigger[aria-expanded="true"]) {
   z-index: 30;
 }
 
