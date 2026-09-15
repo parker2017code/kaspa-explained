@@ -39,14 +39,14 @@
   <meta name="twitter:title" content="Build on Kaspa: Toccata App Ideas and Builder Paths">
   <meta name="twitter:description" content="Three ways to build on Kaspa, and how to work out which one your idea needs.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
-  <meta name="dateModified" content="2026-09-14">
+  <meta name="dateModified" content="2026-09-15">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Build on Kaspa: Toccata App Ideas and Builder Paths",
     "url": "https://kaspaexplained.com/build-on-kaspa",
-    "dateModified": "2026-09-14",
+    "dateModified": "2026-09-15",
     "description": "A guide for Kaspa builders: live payment paths, Toccata app ideas, infrastructure readiness, and where to start.",
     "about": ["Kaspa", "Proof of Work", "blockDAG", "GHOSTDAG", "Toccata"]
   }
@@ -69,8 +69,8 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260912-causal-graph">
-  <script defer src="nav.js?v=20260831c-000000"></script>
+  <link rel="stylesheet" href="styles.css?v=20260915-apple27">
+  <script defer src="nav.js?v=20260915-apple27"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -121,7 +121,7 @@
               <tr><td data-label="What the app needs">One app keeps its own richer state from accepted Kaspa transactions</td><td data-label="Route">Based app or replay path</td><td data-label="Why that one">The app proves or replays its own state without needing cross-app atomicity.</td></tr>
               <tr><td data-label="What the app needs">Each action needs its own proof, privacy check, or custom validity rule</td><td data-label="Route"><a href="#zk-boundary-demo">Inline ZK</a></td><td data-label="Why that one">It fits, and costs more proof and ops work than covenants or based apps do.</td></tr>
               <tr><td data-label="What the app needs">The claim depends on another chain, an oracle, a price, or a real-world event</td><td data-label="Route"><a href="#zk-boundary-demo">Inline ZK, plus an anchor</a></td><td data-label="Why that one">A proof checks its own inputs, never the world. Name the anchor first: source root, finality certificate, oracle, or challenge process.</td></tr>
-              <tr><td data-label="What the app needs">Many users mutate the same app state at once</td><td data-label="Route"><a href="/status#status-snapshot">Future full vProgs</a></td><td data-label="Why that one">Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon" role="tooltip">Separately compiled covenant apps joined into one all-or-nothing transaction.</span></span> already runs separate covenant apps as one, in unaudited offline demos.</td></tr>
+              <tr><td data-label="What the app needs">Many users mutate the same app state at once</td><td data-label="Route"><a href="/status#status-snapshot">Future full vProgs</a></td><td data-label="Why that one">Build the narrow app first. Argent's <span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-buildon">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-buildon">Separately compiled covenant apps joined into one all-or-nothing transaction.</span></span> already runs separate covenant apps as one, in unaudited offline demos.</td></tr>
             </tbody>
           </table>
         </div>
@@ -968,7 +968,7 @@
       <p class="eyebrow">The gap it fills</p>
       <h2>A covenant is opcodes. An application is several agreeing.</h2>
       <p>A covenant is <a href="/what-is-kaspa#covenants">a rule attached to a coin</a>, raw opcodes: readable alone, hard to audit once several agree. Argent, Sutton's unofficial compiler, takes an actor description and writes the script.</p>
-      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" role="tooltip" style="text-transform:none;letter-spacing:normal;">Separately compiled apps joined into one all-or-nothing transaction.</span></span> lets one app's actor authorize another's, so both state transitions land together or neither does. It is the second of the <a href="/what-is-kaspa#covenants">three rungs on the What is Kaspa page</a>. Argent demonstrates it offline and is not release-ready.</p>
+      <p><span class="term-def" tabindex="0" role="button" aria-describedby="icc-def-argent">Inter-Covenant Communication<span class="term-def__panel" id="icc-def-argent" style="text-transform:none;letter-spacing:normal;">Separately compiled apps joined into one all-or-nothing transaction.</span></span> lets one app's actor authorize another's, so both state transitions land together or neither does. It is the second of the <a href="/what-is-kaspa#covenants">three rungs on the What is Kaspa page</a>. Argent demonstrates it offline and is not release-ready.</p>
       <details class="deep-dive" data-audience="specialist">
         <summary>Open the language model and a worked example</summary>
       <p>No contract address to call, only outputs. A <strong>state</strong> is a typed record, an <strong>actor</strong> owns one, an <strong>entry</strong> spends it, and <code>become</code> names the successor.</p>
@@ -1024,7 +1024,7 @@ app Tickets {
         <table class="reality-table">
           <thead><tr><th>Shape of the state</th><th>What Argent has for it</th></tr></thead>
           <tbody>
-            <tr><td data-label="Shape of the state">One coin per thing</td><td data-label="What Argent has for it">Every published example: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent" role="tooltip">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position.</td></tr>
+            <tr><td data-label="Shape of the state">One coin per thing</td><td data-label="What Argent has for it">Every published example: one <span class="term-def" tabindex="0" role="button" aria-describedby="utxo-def-argent">UTXO<span class="term-def__panel" id="utxo-def-argent">Unspent transaction output. Value sits in separate coins, spent whole and replaced by new ones, instead of living in one account balance that gets edited.</span></span> per ticket, per game, per position.</td></tr>
             <tr><td data-label="Shape of the state">One state, many writers</td><td data-label="What Argent has for it">Nothing public. That shape is most of what people mean by DeFi.</td></tr>
           </tbody>
         </table>
@@ -1562,22 +1562,5 @@ amount: "31112708372"</code></pre>
       </nav>
     </div>
   </footer>
-  <script>
-  document.querySelectorAll('.info-affordance').forEach(function (el) {
-    var trigger = el.querySelector('.info-affordance__trigger');
-    trigger.addEventListener('click', function () {
-      var open = el.classList.toggle('is-open');
-      trigger.setAttribute('aria-expanded', String(open));
-    });
-  });
-  document.addEventListener('click', function (e) {
-    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
-      if (!el.contains(e.target)) {
-        el.classList.remove('is-open');
-        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
-      }
-    });
-  });
-  </script>
 </body>
 </html>

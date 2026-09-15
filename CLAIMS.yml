@@ -162,7 +162,8 @@ claims:
       - A wallet or frontend feature is protocol activation evidence
   toccata:
     status: daa_gated
-    recheck_after: 2026-09-14
+    checked_on: 2026-09-15
+    recheck_after: 2026-09-22
     summary: >
       Rusty Kaspa v2.0.1 was published on June 15, 2026 as the current Toccata release. Rusty Kaspa v2.0.0
       was published on June 5, 2026 as the Mainnet Toccata Release; it set Toccata mainnet activation for
@@ -198,7 +199,10 @@ claims:
       still the newest tagged release; #1101 has not shipped in a tagged release either. Rechecked
       September 1, 2026 against the rusty-kaspa releases feed and the master commit feed: v2.0.1 is
       still the newest tagged release, and #1101 (August 24) is still the newest commit on master, so
-      no eighth cleanup PR has landed.
+      no eighth cleanup PR has landed. Rechecked September 15, 2026 against the official releases Atom
+      feed and master commit Atom feed: v2.0.1 remains the newest Rusty Kaspa release, and the newest
+      master activity remains the August 24, 2026 Toccata cleanup series. No newer Toccata release or
+      activation record appeared.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0
     supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1
     forbidden_copy:
@@ -233,17 +237,21 @@ claims:
       - Ordinary users must run a node before the activation score
   tn10_toccata_activation_test:
     status: testnet_only
-    recheck_after: 2026-09-14
+    checked_on: 2026-09-15
+    recheck_after: 2026-09-22
     summary: >
       Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on
       Testnet-10 for May 18, 2026 at 16:00 UTC, DAA score 467,579,632. The tn10-toc3 pre-release scheduled
       final Toccata ZK hardening on Testnet-10 for May 28, 2026 around 16:00 UTC, DAA score 476,232,000. A
       July 25, 2026 check of the Testnet-10 REST API showed virtual DAA 526,066,399, well above the
       scheduled scores. Rechecked August 24, 2026: both tn10-toc2 and tn10-toc3 release tags still exist
-      unchanged on rusty-kaspa; this is a fixed historical activation record, not a moving figure. This is
+      unchanged on rusty-kaspa; this is a fixed historical activation record, not a moving figure. Rechecked
+      September 15, 2026 against the official Rusty Kaspa tag refs: tn10-toc2 and tn10-toc3 still resolve
+      to their original release commits. This is
       testnet evidence for the activation path and node behavior. Mainnet activation needs separate mainnet
       evidence.
     source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc3
+    supporting_source: https://github.com/kaspanet/rusty-kaspa/releases/tag/tn10-toc2
     forbidden_copy:
       - TN10 activation proves mainnet activation
       - Testnet-10 Toccata means mainnet Toccata is live
@@ -275,7 +283,8 @@ claims:
       - TN12 txids are mainnet txids
   vprogs:
     status: roadmap
-    recheck_after: 2026-09-14
+    checked_on: 2026-09-15
+    recheck_after: 2026-09-22
     summary: >
       vProgs are roadmap architecture for apps that prove richer logic while sharing Kaspa ordering,
       including later cross-app atomic composition. They are not a mature live app ecosystem. The public
@@ -293,8 +302,12 @@ claims:
       testnet-10 fork node," which is a custom fork node rather than the public Testnet-10, and settlement
       against the real OP_ZK_PRECOMPILE needs GPU proving rather than the dev stub receipts the default
       path emits. Its README says based computation while the GitHub description field says provable
-      computation.
+      computation. Rechecked September 15, 2026 against the repository README, master commit Atom feed,
+      releases page, and tag refs: the README still labels the work early development/prototype, master
+      still points to f9b84a863a7c7c20586a9cf947550475e894f72e from July 28, 2026, and the repository
+      has no releases or tags.
     source: https://github.com/kaspanet/vprogs
+    supporting_source: https://github.com/kaspanet/vprogs/releases
     forbidden_copy:
       - vProgs are live
   argent:
@@ -549,7 +562,8 @@ claims:
       - the dagknight branch has not moved since August 14
   one_hundred_bps_partition_resilience:
     status: research
-    recheck_after: 2026-09-14
+    checked_on: 2026-09-15
+    recheck_after: 2026-09-22
     summary: >
       Unverified. The 10 millisecond block / 100 BPS / netsplit-resilient figure traces only to
       kaspa.org's marketing pages, which this repo does not use as a source (see AGENTS.md). No
@@ -560,7 +574,9 @@ claims:
       release, or core-contributor source states it directly. Rechecked August 24, 2026 directly against
       kip-0002.md: still no mention of 100 BPS, netsplit, or partition-resilience anywhere in the document.
       Rechecked September 1, 2026 against the same raw file: still zero matches for "100 BPS", "netsplit"
-      or "partition" anywhere in it, and KIP-2's header still reads Status: Proposed.
+      or "partition" anywhere in it, and KIP-2's header still reads Status: Proposed. Rechecked September
+      15, 2026 against the same primary source: the header remains Status: Proposed and those three terms
+      remain absent.
     source: https://raw.githubusercontent.com/kaspanet/kips/master/kip-0002.md
     forbidden_copy:
       - Kaspa is 100 BPS today
@@ -663,7 +679,8 @@ claims:
 
   tn10_rest_submit_drops_compute_budget:
     status: builder_guardrail
-    recheck_after: 2026-09-14
+    checked_on: 2026-09-15
+    recheck_after: 2026-09-22
     summary: >
       Rechecked August 24, 2026 directly against the live schema at api-tn10.kaspa.org/openapi.json:
       SubmitTxModel still carries only version, inputs, outputs, lockTime, and subnetworkId, and
@@ -684,7 +701,10 @@ claims:
       against the live schema: SubmitTxModel still carries only inputs, lockTime, outputs, subnetworkId
       and version, SubmitTxInput still carries only previousOutpoint, sequence, sigOpCount and
       signatureScript, and compute budget still appears only in the read-side schemas
-      (BlockTxInputModel, BlockTxVerboseDataModel, TxInput, TxMass).
+      (BlockTxInputModel, BlockTxVerboseDataModel, TxInput, TxMass). Rechecked September 15, 2026
+      against the live schema: SubmitTxModel still exposes inputs, lockTime, outputs, subnetworkId, and
+      version only, while SubmitTxInput still exposes previousOutpoint, sequence, sigOpCount, and
+      signatureScript only. Neither submit model exposes compute_budget.
     source: https://api-tn10.kaspa.org/openapi.json
     forbidden_copy:
       - the testnet-10 REST API forwards compute_budget correctly

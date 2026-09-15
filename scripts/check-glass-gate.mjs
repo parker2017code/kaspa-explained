@@ -28,6 +28,10 @@
  *   - an inset box-shadow (the "fake lit edge" bevel)
  *   - a non-none backdrop-filter blur on an in-page element
  *
+ * The fixed `.site-header` is the one deliberate functional-material
+ * exception. It may use a restrained blur, translucent tint, and inset edge;
+ * every reading surface and content component remains covered by the gate.
+ *
  * display:none (or hidden via an ancestor) is excluded: dead CSS that
  * still resolves through the cascade on a box nobody renders is not the
  * glossy thing the owner is looking at, and flagging it just trains
@@ -181,6 +185,7 @@ function probe() {
       continue;
     }
     const selectorLabel = describe(el);
+    const isHeaderMaterial = el.classList?.contains('site-header');
     for (const pseudo of [null, '::before', '::after']) {
       let cs;
       try {
@@ -199,23 +204,23 @@ function probe() {
       }
 
       const backdrop = cs.backdropFilter || cs.webkitBackdropFilter || 'none';
-      if (backdrop && backdrop !== 'none' && /blur\(\s*[1-9]/.test(backdrop)) {
+      if (!isHeaderMaterial && backdrop && backdrop !== 'none' && /blur\(\s*[1-9]/.test(backdrop)) {
         out.push({ selector: selectorLabel, pseudo: pseudo || '', kind: 'backdrop-blur', detail: backdrop });
       }
 
       const boxShadow = cs.boxShadow || 'none';
-      if (boxShadow !== 'none' && /\binset\b/.test(boxShadow)) {
+      if (!isHeaderMaterial && boxShadow !== 'none' && /\binset\b/.test(boxShadow)) {
         out.push({ selector: selectorLabel, pseudo: pseudo || '', kind: 'inset-highlight', detail: boxShadow.slice(0, 160) });
       }
 
       const bgColor = parseColor(cs.backgroundColor);
-      if (bgColor && bgColor.a > 0 && bgColor.a < 1 && isGrayscale(bgColor.r, bgColor.g, bgColor.b)) {
+      if (!isHeaderMaterial && bgColor && bgColor.a > 0 && bgColor.a < 1 && isGrayscale(bgColor.r, bgColor.g, bgColor.b)) {
         out.push({ selector: selectorLabel, pseudo: pseudo || '', kind: 'translucent-grayscale-fill', detail: cs.backgroundColor });
       }
 
       const borderColor = parseColor(cs.borderTopColor);
       const borderWidth = Number.parseFloat(cs.borderTopWidth) || 0;
-      if (borderWidth > 0 && cs.borderTopStyle !== 'none' && borderColor && borderColor.a > 0 && borderColor.a < 1 && isGrayscale(borderColor.r, borderColor.g, borderColor.b)) {
+      if (!isHeaderMaterial && borderWidth > 0 && cs.borderTopStyle !== 'none' && borderColor && borderColor.a > 0 && borderColor.a < 1 && isGrayscale(borderColor.r, borderColor.g, borderColor.b)) {
         out.push({ selector: selectorLabel, pseudo: pseudo || '', kind: 'translucent-grayscale-border', detail: cs.borderTopColor });
       }
     }

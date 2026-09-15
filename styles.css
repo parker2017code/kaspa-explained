@@ -6866,3 +6866,470 @@ code:has(+ .tuck) {
 .section.site-related {
   padding-block: 24px;
 }
+
+/* ============================================================
+   Apple 27 polish, 15 September 2026
+   Functional material stays in the fixed header. Reading surfaces remain
+   opaque, while a small radius scale clarifies nested structure.
+   ============================================================ */
+
+:root {
+  --radius-surface: 24px;
+  --radius-card: 16px;
+  --radius-disclosure: 14px;
+  --radius-control: 12px;
+}
+
+.site-header,
+:root[data-theme="light"] .site-header {
+  background: var(--bg);
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 12%, var(--bg));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--text) 6%, transparent),
+    0 10px 28px rgba(0, 0, 0, .12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header,
+  :root[data-theme="light"] .site-header {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(115%);
+    -webkit-backdrop-filter: blur(14px) saturate(115%);
+  }
+}
+
+.section:not(.prose-section),
+.hero-visual {
+  border-radius: var(--radius-surface);
+}
+
+.hero-signal-grid a,
+.orientation-grid a,
+.hero-status a,
+.status-lane-grid a,
+.route-grid .route-card-link,
+.source-card,
+.search-card,
+.compare-cards article,
+.api-command-card,
+.ai-prompt-card,
+.pitch-input-card,
+.pitch-output-card,
+.quick-grid article,
+.timeline article,
+.status-grid article,
+.insight-grid article,
+.claim-grid article,
+.workbench-grid article,
+.transaction-rail article,
+.verification-steps article,
+.summary-grid article,
+.reference-grid article,
+.build-path-grid article,
+.category-list article,
+.article-path-grid article,
+.site-related-grid a,
+.fit-grid article.section,
+.demo-workspace,
+.demo-control-panel,
+.demo-status-card,
+.demo-explainer,
+.demo-metrics div {
+  border-radius: var(--radius-card);
+}
+
+.table-wrap,
+.source-more,
+.deep-dive,
+.guide-detail,
+.cell-detail,
+.fit-note,
+.verified-note,
+.info-affordance__panel,
+.term-def__panel {
+  border-radius: var(--radius-disclosure);
+}
+
+.nav-links a,
+.theme-toggle,
+.nav-menu-button,
+.button,
+a.btn,
+summary,
+.search-filters button {
+  border-radius: var(--radius-control);
+}
+
+.view-switch__tabs {
+  border-radius: var(--radius-disclosure);
+}
+
+.view-switch__tab {
+  border-radius: 10px;
+}
+
+.brand,
+.nav-links a,
+.theme-toggle,
+.nav-menu-button,
+.button,
+a.btn,
+summary {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.brand,
+.theme-toggle,
+.nav-menu-button {
+  min-width: 44px;
+}
+
+.brand {
+  padding-inline: 8px;
+  border-radius: var(--radius-control);
+}
+
+.nav-links a,
+:root[data-theme="light"] .nav-links a {
+  position: relative;
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: var(--radius-control);
+  background: transparent;
+  transition: background-color 100ms ease-out, color 100ms ease-out, transform 100ms ease-out;
+}
+
+.brand:hover,
+.nav-links a:not([aria-current="page"]):hover,
+:root[data-theme="light"] .nav-links a:not([aria-current="page"]):hover {
+  background: color-mix(in srgb, var(--text) 7%, var(--bg));
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-links a[aria-current="page"],
+:root[data-theme="light"] .nav-links a[aria-current="page"] {
+  background: color-mix(in srgb, var(--green) 11%, var(--control-bg));
+  color: var(--text);
+  font-weight: 600;
+}
+
+.nav-links a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--green);
+}
+
+.theme-toggle,
+.nav-menu-button {
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--text) 10%, var(--control-bg));
+  border-radius: var(--radius-control);
+  background: var(--control-bg);
+  transition: background-color 100ms ease-out, border-color 100ms ease-out, color 100ms ease-out, transform 100ms ease-out;
+}
+
+.theme-toggle:hover,
+.nav-menu-button:hover {
+  border-color: color-mix(in srgb, var(--text) 18%, var(--control-bg));
+  background: var(--control-hover);
+}
+
+.button,
+a.btn,
+summary,
+.view-switch__tab,
+.info-affordance__trigger,
+.term-def[role="button"] {
+  transition-duration: 100ms;
+  transition-timing-function: ease-out;
+}
+
+summary:hover {
+  background: color-mix(in srgb, var(--text) 6%, var(--card-bg));
+  box-shadow: none;
+}
+
+summary:active {
+  background: color-mix(in srgb, var(--text) 11%, var(--card-bg));
+  box-shadow: none;
+}
+
+button:not(:disabled):active,
+.button:active,
+a.btn:active,
+[role="button"]:not([aria-disabled="true"]):active,
+summary:active,
+.nav-links a:active,
+.brand:active,
+.view-switch__tab:active {
+  transform: scale(.985);
+  opacity: 1;
+  transition-duration: 100ms;
+}
+
+.view-switch:has(.view-switch__input:nth-of-type(1):focus-visible) .view-switch__tab:nth-child(1),
+.view-switch:has(.view-switch__input:nth-of-type(2):focus-visible) .view-switch__tab:nth-child(2),
+.view-switch:has(.view-switch__input:nth-of-type(3):focus-visible) .view-switch__tab:nth-child(3),
+.view-switch:has(.view-switch__input:nth-of-type(4):focus-visible) .view-switch__tab:nth-child(4) {
+  outline: 3px solid color-mix(in srgb, var(--cyan) 48%, var(--text));
+  outline-offset: 3px;
+}
+
+.image-viewer-close {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* The compact header is one row through tablet widths. Its navigation opens
+   in a contained opaque panel, with the same CSS and JavaScript boundary. */
+@media (max-width: 900px) {
+  .site-header,
+  :root[data-theme="light"] .site-header {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .nav {
+    position: relative;
+    width: calc(100% - 28px);
+    max-width: calc(100% - 28px);
+    min-height: 60px;
+    margin: 0 auto;
+    padding: 8px 0;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    row-gap: 0;
+    overflow: visible;
+  }
+
+  .brand {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .theme-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .nav-menu-button {
+    display: inline-flex;
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .nav.nav-enhanced .nav-links {
+    display: none;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    position: absolute;
+    z-index: 60;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px;
+    overflow: visible;
+    border: 1px solid color-mix(in srgb, var(--text) 13%, var(--bg));
+    border-radius: var(--radius-disclosure);
+    background: var(--bg);
+    background-color: var(--bg);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    pointer-events: auto;
+  }
+
+  .nav.nav-enhanced[data-open="true"] .nav-links a {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .nav-links a[aria-current="page"]::after {
+    top: 10px;
+    bottom: 10px;
+    left: 4px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+}
+
+@media (min-width: 901px) {
+  .nav {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    row-gap: 0;
+    padding: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    grid-column: auto;
+    order: initial;
+    justify-content: center;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .nav-menu-button {
+    display: none;
+  }
+}
+
+@media (min-width: 521px) and (max-width: 700px) {
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* KIP and KCC proposal tables use their labeled card rows through tablet
+   widths; other pages retain the shared 700px table boundary. */
+@media (max-width: 900px) {
+  .kips-page .table-wrap {
+    overflow: visible;
+  }
+
+  .kips-page .reality-table {
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+  }
+
+  .kips-page .reality-table thead {
+    display: none;
+  }
+
+  .kips-page .reality-table,
+  .kips-page .reality-table tbody,
+  .kips-page .reality-table tr:not([hidden]),
+  .kips-page .reality-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .kips-page .reality-table tr[hidden] {
+    display: none;
+  }
+
+  .kips-page .reality-table tr {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-disclosure);
+    padding: 10px 12px;
+    background: var(--card-bg);
+  }
+
+  .kips-page .reality-table td {
+    position: static;
+    min-width: 0;
+    padding: 10px 4px;
+    border: 0;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .kips-page .reality-table td::before {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--faint);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    line-height: 1.25;
+    text-transform: uppercase;
+    content: attr(data-label);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  button:not(:disabled):active,
+  .button:active,
+  a.btn:active,
+  [role="button"]:not([aria-disabled="true"]):active,
+  summary:active,
+  .nav-links a:active,
+  .brand:active,
+  .view-switch__tab:active {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header,
+  :root[data-theme="light"] .site-header,
+  .nav.nav-enhanced[data-open="true"] .nav-links {
+    background: var(--bg);
+    background-color: var(--bg);
+    background-image: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .site-header,
+  .nav.nav-enhanced[data-open="true"] .nav-links,
+  .nav-links a,
+  .theme-toggle,
+  .nav-menu-button,
+  .button,
+  a.btn,
+  summary,
+  .view-switch__tabs {
+    border-color: var(--text);
+  }
+
+  .nav-links a[aria-current="page"] {
+    outline: 2px solid var(--text);
+    outline-offset: -2px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  summary:focus-visible,
+  .term-def:focus-visible,
+  .info-affordance__trigger:focus-visible {
+    outline-width: 3px;
+    outline-color: var(--text);
+    outline-offset: 3px;
+  }
+}

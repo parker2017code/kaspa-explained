@@ -39,7 +39,7 @@
   <meta name="twitter:title" content="Kaspa Explained: Play With the blockDAG">
   <meta name="twitter:description" content="Demos you can push on. Watch a blockDAG keep the blocks a single chain throws away, price a 51% attack, and see what is live on Kaspa today.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
-  <meta name="dateModified" content="2026-09-14">
+  <meta name="dateModified" content="2026-09-15">
   <!-- Toccata activation publish nudge: 2026-06-30 -->
   <script type="application/ld+json">
   {
@@ -66,8 +66,8 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260912-causal-graph">
-  <script defer src="nav.js?v=20260831c-000000"></script>
+  <link rel="stylesheet" href="styles.css?v=20260915-apple27">
+  <script defer src="nav.js?v=20260915-apple27"></script>
 </head>
 <body>
   <a class="skip-link" href="#top">Skip to content</a>
@@ -94,7 +94,7 @@
       <div class="hero-copy">
         <p class="eyebrow">Independent explainer</p>
         <h1>Kaspa, explained.</h1>
-        <p class="lead">Kaspa is <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home" role="tooltip">Miners spend real computing work to make blocks.</span></span>, the same mechanism as Bitcoin, but its miners don't race for one slot. Every miner who finds a valid block keeps it, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home" role="tooltip">Kaspa's live rule for ordering blocks that arrive at once, so none get thrown away.</span></span> orders every honest block into one history the whole network agrees on.</p>
+        <p class="lead">Kaspa is <span class="term-def" tabindex="0" role="button" aria-describedby="pow-def-home">proof-of-work<span class="term-def__panel" id="pow-def-home">Miners spend real computing work to make blocks.</span></span>, the same mechanism as Bitcoin, but its miners don't race for one slot. Every miner who finds a valid block keeps it, and <span class="term-def" tabindex="0" role="button" aria-describedby="ghostdag-def-home">GHOSTDAG<span class="term-def__panel" id="ghostdag-def-home">Kaspa's live rule for ordering blocks that arrive at once, so none get thrown away.</span></span> orders every honest block into one history the whole network agrees on.</p>
       <style>
         .vocab-chips {
           display: flex;
@@ -463,7 +463,7 @@
                 <i class="info-affordance__glyph" aria-hidden="true">i</i>
                 <span class="sr-only">Why the range stops at 32</span>
               </button>
-              <span class="info-affordance__panel" id="home-cs-rate-panel" role="tooltip">32 a second is the top of this slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
+              <span class="info-affordance__panel" id="home-cs-rate-panel">32 a second is the top of this slider because it's the fastest rate GHOSTDAG has a configured margin for: rusty-kaspa's own k table stops at 32 and panics above it.</span>
             </span></label>
           <input type="range" id="home-cs-rate" value="882" min="0" max="1000" step="1" aria-label="How fast blocks are found">
           <div class="marks"><span>Bitcoin, 1 every 10 min</span><span>Kaspa mainnet, 10/s</span></div>
@@ -480,7 +480,7 @@
               <i class="info-affordance__glyph" aria-hidden="true">i</i>
               <span class="sr-only">What this number assumes</span>
             </button>
-            <span class="info-affordance__panel" id="home-cs-assumption-panel" role="tooltip">Modeled with network delay fixed at 250 ms, inside a live-data bracket, not a direct Kaspa measurement of propagation. Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, 24 August 2026) found a single-chain-equivalent delay between roughly 204 ms and 666 ms; 250 ms sits inside that bracket. The full demo's slider tops out at 5 s, rusty-kaspa's own one-way <code>NETWORK_DELAY_BOUND</code> worst case, a protocol constant, not a typical delay. The share is a running sample that drifts toward the modeled figure as more blocks accumulate, not a fixed reading.</span>
+            <span class="info-affordance__panel" id="home-cs-assumption-panel">Modeled with network delay fixed at 250 ms, inside a live-data bracket, not a direct Kaspa measurement of propagation. Walking 1,399 consecutive selected-parent chain blocks through api.kaspa.org (10,719 blocks, 24 August 2026) found a single-chain-equivalent delay between roughly 204 ms and 666 ms; 250 ms sits inside that bracket. The full demo's slider tops out at 5 s, rusty-kaspa's own one-way <code>NETWORK_DELAY_BOUND</code> worst case, a protocol constant, not a typical delay. The share is a running sample that drifts toward the modeled figure as more blocks accumulate, not a fixed reading.</span>
           </span></p>
 
         <p class="result-line">Each thrown-away block cost a miner real electricity and bought nothing.</p>
@@ -545,22 +545,5 @@
       </nav>
     </div>
   </footer>
-  <script>
-  document.querySelectorAll('.info-affordance').forEach(function (el) {
-    var trigger = el.querySelector('.info-affordance__trigger');
-    trigger.addEventListener('click', function () {
-      var open = el.classList.toggle('is-open');
-      trigger.setAttribute('aria-expanded', String(open));
-    });
-  });
-  document.addEventListener('click', function (e) {
-    document.querySelectorAll('.info-affordance.is-open').forEach(function (el) {
-      if (!el.contains(e.target)) {
-        el.classList.remove('is-open');
-        el.querySelector('.info-affordance__trigger').setAttribute('aria-expanded', 'false');
-      }
-    });
-  });
-  </script>
 </body>
 </html>

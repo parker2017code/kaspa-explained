@@ -222,15 +222,15 @@
     else window.addEventListener("load", snapToHash, { once: true });
   }
 
-  // Mobile nav focus trap. The panel only exists below 700px: that is the
-  // breakpoint (styles.css, the max-width: 700px block that first sets
+  // Compact nav focus trap. The panel exists through 900px: that is the
+  // breakpoint (styles.css, the max-width: 900px Apple 27 block that sets
   // .nav-menu-button { display: inline-flex } and hides .nav-links behind
   // data-open) where the button becomes visible and nav-links stops being a
   // plain visible row and starts being a toggled panel. Above that width the
   // button is display: none and never receives a click, so nothing below
   // needs to special-case desktop; it is gated on the same query anyway so a
   // mid-session resize cannot leave a trap active in the wrong mode.
-  const mobilePanelQuery = window.matchMedia("(max-width: 700px)");
+  const mobilePanelQuery = window.matchMedia("(max-width: 900px)");
   if (!links.hasAttribute("tabindex")) links.setAttribute("tabindex", "-1");
 
   const supportsInert = "inert" in HTMLElement.prototype;
@@ -396,6 +396,8 @@
       viewerImage.src = image.currentSrc || image.src;
       viewerImage.alt = image.alt || "";
       viewerCaption.textContent = captionText || "";
+      const accessibleName = (image.alt || captionText || "Expanded image").trim();
+      viewer.setAttribute("aria-label", accessibleName);
       viewer.setAttribute("aria-hidden", "false");
       document.body.classList.add("image-viewer-open");
       setViewerInert(true);
@@ -423,12 +425,13 @@
       expand.className = "image-expand-button";
       expand.type = "button";
       expand.textContent = "Expand";
-      expand.setAttribute("aria-label", "Expand image");
+      const accessibleName = (image.alt || captionText || "image").trim();
+      expand.setAttribute("aria-label", `Expand image: ${accessibleName}`);
       expand.addEventListener("click", () => openViewer(image, captionText));
       image.addEventListener("click", () => openViewer(image, captionText));
       image.tabIndex = 0;
       image.setAttribute("role", "button");
-      image.setAttribute("aria-label", "Expand image");
+      image.setAttribute("aria-label", `Expand image: ${accessibleName}`);
       image.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -581,4 +584,140 @@
   window.addEventListener("load", schedule);
   if (document.readyState === "complete" || document.readyState === "interactive") schedule();
   else document.addEventListener("DOMContentLoaded", schedule);
+})();
+
+/* Shared disclosure behavior for inline definitions and information panels.
+   Page-local copies caused a single gesture to toggle twice, and most pages
+   never initialized the expanded relationship at all. */
+(function () {
+  const initializedInfo = new WeakSet();
+  const initializedTerms = new WeakSet();
+  let generatedPanelId = 0;
+
+  const panelId = (panel, prefix) => {
+    if (!panel.id) {
+      generatedPanelId += 1;
+      panel.id = `${prefix}-panel-${generatedPanelId}`;
+    }
+    return panel.id;
+  };
+
+  const textWithoutPanel = (host, selector) => {
+    const copy = host.cloneNode(true);
+    copy.querySelector(selector)?.remove();
+    return copy.textContent.replace(/\s+/g, " ").trim();
+  };
+
+  const preparePanel = (panel, label) => {
+    const hasInteractiveContent = Boolean(
+      panel.querySelector('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+    );
+    panel.setAttribute("role", hasInteractiveContent ? "dialog" : "region");
+    if (hasInteractiveContent) panel.setAttribute("aria-modal", "false");
+    else panel.removeAttribute("aria-modal");
+    panel.setAttribute("aria-label", label);
+  };
+
+  const closeInfo = (item, returnFocus) => {
+    const trigger = item.querySelector(".info-affordance__trigger");
+    item.classList.remove("is-open");
+    trigger?.setAttribute("aria-expanded", "false");
+    if (returnFocus && trigger && item.contains(document.activeElement)) {
+      trigger.focus({ preventScroll: true });
+    }
+  };
+
+  const closeTerm = (item, returnFocus) => {
+    item.classList.remove("is-open");
+    item.setAttribute("aria-expanded", "false");
+    if (returnFocus && item.contains(document.activeElement)) {
+      item.focus({ preventScroll: true });
+    }
+  };
+
+  const closeAll = (except) => {
+    document.querySelectorAll(".info-affordance").forEach((item) => {
+      if (item !== except) closeInfo(item, false);
+    });
+    document.querySelectorAll('.term-def[role="button"]').forEach((item) => {
+      if (item !== except) closeTerm(item, false);
+    });
+  };
+
+  const initializeInfo = (item) => {
+    if (initializedInfo.has(item)) return;
+    const trigger = item.querySelector(".info-affordance__trigger");
+    const panel = item.querySelector(".info-affordance__panel");
+    if (!trigger || !panel) return;
+    initializedInfo.add(item);
+    const id = panelId(panel, "info");
+    const triggerLabel = (
+      trigger.querySelector(".sr-only")?.textContent ||
+      trigger.getAttribute("aria-label") ||
+      "this item"
+    ).replace(/\s+/g, " ").trim();
+    trigger.setAttribute("aria-controls", id);
+    trigger.setAttribute("aria-expanded", "false");
+    preparePanel(panel, `More information about ${triggerLabel}`);
+    trigger.addEventListener("click", () => {
+      const willOpen = !item.classList.contains("is-open");
+      closeAll(item);
+      item.classList.toggle("is-open", willOpen);
+      trigger.setAttribute("aria-expanded", String(willOpen));
+    });
+  };
+
+  const initializeTerm = (item) => {
+    if (initializedTerms.has(item)) return;
+    const panel = item.querySelector(".term-def__panel");
+    if (!panel) return;
+    initializedTerms.add(item);
+    const term = textWithoutPanel(item, ".term-def__panel") || "term";
+    const id = panelId(panel, "term");
+    item.setAttribute("aria-controls", id);
+    item.setAttribute("aria-expanded", "false");
+    preparePanel(panel, `Definition of ${term}`);
+    const toggle = () => {
+      const willOpen = !item.classList.contains("is-open");
+      closeAll(item);
+      item.classList.toggle("is-open", willOpen);
+      item.setAttribute("aria-expanded", String(willOpen));
+    };
+    item.addEventListener("click", toggle);
+    item.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      toggle();
+    });
+  };
+
+  const initialize = (root) => {
+    if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
+    if (root.matches?.(".info-affordance")) initializeInfo(root);
+    if (root.matches?.('.term-def[role="button"]')) initializeTerm(root);
+    root.querySelectorAll?.(".info-affordance").forEach(initializeInfo);
+    root.querySelectorAll?.('.term-def[role="button"]').forEach(initializeTerm);
+  };
+
+  initialize(document);
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach(initialize);
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".info-affordance, .term-def")) closeAll(null);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    document.querySelectorAll(".info-affordance").forEach((item) => {
+      if (item.classList.contains("is-open")) closeInfo(item, true);
+    });
+    document.querySelectorAll('.term-def[role="button"]').forEach((item) => {
+      if (item.classList.contains("is-open")) closeTerm(item, true);
+    });
+  });
 })();
