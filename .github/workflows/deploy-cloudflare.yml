@@ -1,9 +1,13 @@
 name: Deploy static site to Cloudflare
 
+# NOTE: push-to-main auto-deploy is disabled because the
+# CLOUDFLARE_API_TOKEN repo secret does not exist (see audit 2026-09-20).
+# To re-enable: create a Cloudflare API token with Workers deploy permissions,
+# add it as the CLOUDFLARE_API_TOKEN secret, then restore the push trigger below.
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 permissions:
