@@ -1,6 +1,6 @@
-last_checked: 2026-09-14
+last_checked: 2026-09-20
 # Targeted tool/protocol review; historical measurement dates below are retained.
-recheck_after: 2026-09-17
+recheck_after: 2026-09-27
 claims:
   proof_of_work:
     status: live
@@ -56,11 +56,11 @@ claims:
       - the current emission rate is 24.49971474 KAS per second
       - emission steps are anchored to calendar dates rather than DAA score
   tps_and_speed_context:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
     review_note: >
-      Rechecked September 10, 2026 against current raw params.rs: 10 BPS, compute mass 500000, byte mass 1 and script-public-key-byte mass 10 remain unchanged. The TPS range remains a transaction-shape estimate, not observed traffic.
+      Rechecked September 20, 2026: params.rs moved to consensus/core/src/config/params.rs; 10 BPS (TenBps = Bps<10>), block_mass_limits.compute still 500,000, mass_per_tx_byte still 1, mass_per_script_pub_key_byte still 10. The 2.5k-3.4k TPS range inputs are unchanged; the range remains a transaction-shape estimate, not observed traffic.
     status: measurement_sensitive
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: >
       TPS, throughput, and speed claims need measurement context. Current simple-payment capacity can be
       described as a rough 2.5k-3.4k TPS range at 10 BPS under transaction-shape assumptions. Covenant apps,
@@ -124,11 +124,11 @@ claims:
       - Generic merchant payments are Kaspa's killer app
       - Fast payments alone prove adoption
   coordination_markets:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
     review_note: >
-      Rechecked September 10, 2026 against hashd.ag/raw: Project Staghunt remains a research proposal. This source is architecture evidence, not deployment evidence.
+      Rechecked September 20, 2026 against hashd.ag/raw: Staghunt still framed as "merely" mechanisms to communicate and bind shared actions; "aims to build". Still a research proposal. This source is architecture evidence, not deployment evidence.
     status: research_direction
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: >
       Coordination markets are a highlighted Kaspa product direction in current narrative context, but
       production systems still need concrete commitment, oracle, settlement, privacy, liquidity, and
@@ -215,8 +215,11 @@ claims:
       - tn10-toc2 is a mainnet release
       - merged TN10 KIPs prove mainnet activation
   toccata_operator_readiness:
+    checked_on: 2026-09-20
+    review_note: >
+      Rechecked September 20, 2026 against the raw toccata-guide.md: still 12,264 bytes, still the one-way database upgrade warning, the v2.0.1-or-newer SDK line, and the 100 sompi times max(compute grams, 2 * transaction bytes) fee floor. Note: kaspa.org/lore now reports Toccata mainnet activation on June 30, 2026 at DAA score 474,165,565; the guide text itself is unchanged.
     status: daa_gated
-    recheck_after: 2026-09-16
+    recheck_after: 2026-10-01
     summary: >
       The Rusty Kaspa Toccata node setup guide says node operators should run v2.0.1 or newer; the node
       database upgrade is one-way without resync; direct RPC transaction submission uses the standard-fee
@@ -388,9 +391,11 @@ claims:
       - Argent's compiler is incomplete
 
   cross_app_composition:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
+    review_note: >
+      Rechecked September 20, 2026: argent-lang/argent still has zero releases and zero tags; the README still presents Inter-Covenant Communication as the cross-app composition model. Still unaudited offline-demo stage per prior reads.
     status: roadmap
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: >
       Atomic composition means several app states succeed or fail as one operation. Composing separately
       compiled covenant apps atomically inside a single transaction is possible on Toccata itself:
@@ -406,9 +411,11 @@ claims:
       - cross-app atomic composition requires vProgs
       - Argent ICC demos are deployed on mainnet
   based_apps:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
+    review_note: >
+      Rechecked September 20, 2026: Sutton's based-apps gist still reads as R&D roadmap architecture (research framing throughout); no mainnet based-app evidence found.
     status: targeted
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: >
       Based apps are the richer-state app lane around Kaspa L1 sequencing, commitments, proofs, settlement,
       or exits. They can start as deterministic replay over accepted transactions and add based-zk proof
@@ -422,9 +429,11 @@ claims:
       - Every based app is a ZK app
       - A rollup PoC means vProgs are live
   zk_external_anchors:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
+    review_note: >
+      Rechecked September 20, 2026: docs.kaspa.org/programmability loads with a Toccata Programmability section (Covenants, Based Apps, Inline ZK). The guardrail is conceptual and does not depend on page wording: ZK proves statements about chosen public inputs, not external-chain facts.
     status: builder_guardrail
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. Bridge and oracle-style apps still need an agreed anchor such as a source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, or challenge process.
     source: https://docs.kaspa.org/programmability
     forbidden_copy:
@@ -441,12 +450,15 @@ claims:
     summary: Solana-like means a cohesive, Rust-friendly developer and user experience; it does not mean importing Solana execution or making L1 execute every app.
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   native_defi:
+    checked_on: 2026-09-20
+    review_note: >
+      Re-measured September 20, 2026 via kascov.io/data/mainnet-live.json: 187,845 covenants ever created, 890 active, 186,955 burned, live value 124,747,653,881,727 sompi (about 1,247,477 KAS). Creation and burning roughly doubled again since September 1 while locked value fell about 20 percent: the churn reading strengthens, still not mature DeFi. markets_total could not be re-verified from the current JSON (no markets field present).
     status: roadmap
-    recheck_after: 2026-09-15
+    recheck_after: 2026-10-04
     summary: >
       Mature native Kaspa L1 DeFi still depends on future programmability foundations and app tooling, but
       the "nothing is deployed" version of this claim expired between July 25 and August 8, 2026.
-      Re-measured September 1, 2026 via the same indexer, and the counts moved hard: 84,196 covenants ever
+      Re-measured September 20, 2026 via the same indexer: 187,845 covenants ever created against 84,196 on September 1, 890 active against 687, and 186,955 burned against 83,509. Created and burned roughly doubled again in nineteen days. Live covenant value did not follow: 124,747,653,881,727 sompi, about 1,247,477 KAS, against about 1,561,431 KAS on September 1, a 20 percent fall. Heavy churn in short-lived covenants remains the reading that fits, and it is not evidence of mature DeFi; the status stays roadmap. Earlier reading, for the trend: re-measured September 1, 2026 via the same indexer, and the counts moved hard: 84,196 covenants ever
       created against 28,125 on August 24, 687 active against 519, and 83,509 burned against 27,606. Created
       and burned both roughly tripled in eight days. Live covenant value did not follow: 156,143,128,185,016
       sompi, about 1,561,431 KAS, against about 1,530,721 KAS, a 2 percent move. markets_total is 94, up one
@@ -584,13 +596,15 @@ claims:
       - DAGKnight lets transactions confirm during a netsplit today
   official_roadmap_framing_lag:
     status: roadmap_framing
-    checked_on: 2026-09-10
-    recheck_after: 2026-09-17
+    checked_on: 2026-09-20
+    review_note: >
+      Rechecked September 20, 2026: Kaspa.org Lore no longer calls Toccata the next hardfork; it now reports Toccata activated on mainnet on June 30, 2026, at DAA score 474,165,565. Kaspa.org Build shows no TN12-before-mainnet wording. The framing lag this claim tracked has closed on Lore.
+    recheck_after: 2026-09-27
     summary: >
-      Checked September 10, 2026: Kaspa.org Lore still calls Toccata the next hardfork.
+      Checked September 20, 2026: Kaspa.org Lore now reports Toccata activated on mainnet on June 30, 2026, at DAA score 474,165,565; it no longer calls Toccata the next hardfork.
       Kaspa.org Build has been revised into developer documentation and no longer carries the
-      prior TN12-before-mainnet wording. The earlier claim that both pages remain unchanged is
-      superseded. Lore's roadmap prose is not activation evidence: use release tags and DAA scores.
+      prior TN12-before-mainnet wording. The earlier claim that Lore still uses pre-activation framing is
+      superseded. The standing guidance remains: roadmap prose is not activation evidence, use release tags and DAA scores.
     # kaspa-org-callout: citing the remaining stale Lore wording and corrected Build page
     source: https://kaspa.org/lore
     # kaspa-org-callout: checked to correct the earlier claim that Build still uses stale TN12 wording
@@ -612,11 +626,11 @@ claims:
     summary: Kaspa's consensus tracks UTXO state; spent transaction history may be pruned or absent from explorers, and that does not make Kaspa a privacy chain.
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   rtd_derived_systems:
-    checked_on: 2026-09-10
+    checked_on: 2026-09-20
     review_note: >
-      Rechecked September 10, 2026 against hashd.ag/raw: downstream RTD and coordination-market descriptions remain research framing, not a record of deployed products.
+      Rechecked September 20, 2026 against hashd.ag/raw: Staghunt/RTD language still "aims to build" and "merely" mechanisms; downstream RTD, TangVM, miner-attestation, and coordination-market flows remain research framing, not a record of deployed products.
     status: research
-    recheck_after: 2026-09-17
+    recheck_after: 2026-09-27
     summary: RTD-derived oracle, TangVM, miner attestation, and coordination-market flows are downstream research or architecture ideas.
     source: https://hashd.ag/raw
     forbidden_copy:
