@@ -13,6 +13,10 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    if (path === '/carnot-local-brownian-global.pdf') {
+      return Response.redirect(new URL('/satoshis-engine.pdf', url), 301);
+    }
+
     if (path.endsWith('.html') && path !== '/index.html') {
       const cleanPath = path.slice(0, -'.html'.length) || '/';
       return Response.redirect(new URL(cleanPath, url), 307);
