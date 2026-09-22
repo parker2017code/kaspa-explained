@@ -28,7 +28,7 @@ if(!standalone){
   for(const name of ['kaspa.js','kaspa_bg.wasm','LICENSE'])await copyFile(`.cache/upstream/kaspa-wasm32-sdk/web/kaspa/${name}`,`${output}/assets/kaspa/${name}`);
   await copyFile('.cache/public-templates/templates.json',`${output}/assets/public-templates.json`);
 }
-for(const name of ['favicon.svg','favicon.ico','favicon.png','og-kaspa-explained.png','satoshis-engine.pdf','satoshis-motor-svenska.pdf','the-instrument.pdf','LICENSE.md','THIRD_PARTY.md'])await copyFile(name,`${output}/${name}`);
+for(const name of ['favicon.svg','favicon.ico','favicon.png','og-kaspa-explained.png','satoshis-engine.pdf','satoshis-motor-svenska.pdf','satoshis-engine-companion.pdf','the-instrument.pdf','LICENSE.md','THIRD_PARTY.md'])await copyFile(name,`${output}/${name}`);
 await cp('licenses',`${output}/licenses`,{recursive:true});
 const aliases=JSON.parse(await readFile('src/legacy-routes.json','utf8'));
 if(!standalone)for(const name of ['testnet','contracts','split','experiment/index','experiment/board','experiment/discover','experiment/polls','experiment/tipjar','experiment/vault'])aliases[name]='/applications';
