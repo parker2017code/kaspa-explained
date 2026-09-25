@@ -5,7 +5,21 @@ function assetRequest(request, pathname) {
 }
 
 async function fetchAsset(request, env, pathname) {
-  return env.ASSETS.fetch(assetRequest(request, pathname));
+  const response = await env.ASSETS.fetch(assetRequest(request, pathname));
+  // Preserve the production asset set when releasing this link separately.
+  // A later full build already includes the link, so leave that HTML alone.
+  if (pathname !== '/moose.html' || request.method !== 'GET' || response.status !== 200) return response;
+  const html = await response.clone().text();
+  if (html.includes('https://youtu.be/3FTKZxLEfTo')) return response;
+  const companion = '<a class="button" href="/satoshis-engine-companion.pdf" hreflang="en">Read the companion (PDF)</a>';
+  if (!html.includes(companion)) return response;
+  const updated = html.replace(companion, companion + '\n        <a class="button" href="https://youtu.be/3FTKZxLEfTo">Listen to the audiobook (YouTube)</a>')
+    .replace(/(<meta name="dateModified" content=")[^"]+(">)/, '$12026-09-25$2');
+  const headers = new Headers(response.headers);
+  headers.delete('content-length');
+  headers.delete('etag');
+  headers.delete('last-modified');
+  return new Response(updated, { status: response.status, headers });
 }
 
 export default {

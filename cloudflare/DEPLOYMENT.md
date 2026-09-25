@@ -2,6 +2,28 @@
 
 Verified September 21, 2026 while publishing Moose's updated book.
 
+## Production divergence found September 25, 2026
+
+Do not deploy a full asset rebuild from this checkout until production assets
+have been reconciled. GitHub `main` was `78d6ba9`, but Cloudflare had two later
+API deployments, most recently `4e152e65-c506-461d-bd22-97e9a4e2034b`.
+The live `/the-instrument` contains a self-contained interactive page; the
+tracked `the-instrument.html` is an older redirect. Of 175 built files checked,
+174 matched production bytes and this one differed. That comparison does not
+enumerate additional production-only paths.
+
+The September 25 audiobook release therefore updates Worker code with
+Cloudflare's `keep_assets: true`, preserving the complete existing asset set
+and secret bindings. The Worker adds the reviewed audiobook link only to the
+older Moose HTML and leaves HTML that already contains the link unchanged.
+`moose.html` also contains the link for a future reconciled full build.
+
+The full gate currently stops at the unrelated stale
+`l1_status_snapshot.recheck_after: 2026-09-21`. This scoped release uses the
+passing HTML, copy, generated-index, sitemap, Worker behavior, and rendered
+Moose-page checks; it does not claim that the full gate passed or refresh
+unrelated protocol claims.
+
 ## Working release path
 
 1. Work from current `origin/main` in a clean checkout and run the applicable checks.
