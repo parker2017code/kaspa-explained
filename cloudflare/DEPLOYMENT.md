@@ -26,6 +26,14 @@ unrelated protocol claims.
 
 ## Working release path
 
+September 27 EPUB addition: continue using `keep_assets: true`. Upload
+`cloudflare/entry.mjs` as the main JavaScript module and `satoshis-engine.epub`
+as an `application/octet-stream` module. The relative import resolves from
+`cloudflare/entry.mjs` to that root module. The Worker serves the supplied
+bytes at `/satoshis-engine.epub` with the EPUB media type and download filename.
+The static build also includes `.epub` files for a future reconciled release.
+Do not omit the binary module when updating Worker code.
+
 1. Work from current `origin/main` in a clean checkout and run the applicable checks.
 2. Commit and push the reviewed change to GitHub `main`. A push is not proof of deployment.
 3. Run `python3 scripts/build-static-dist.py` from the repository root.

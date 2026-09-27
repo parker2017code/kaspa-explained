@@ -1,3 +1,5 @@
+import satoshisEngineEpub from '../satoshis-engine.epub';
+
 function assetRequest(request, pathname) {
   const url = new URL(request.url);
   url.pathname = pathname;
@@ -6,15 +8,21 @@ function assetRequest(request, pathname) {
 
 async function fetchAsset(request, env, pathname) {
   const response = await env.ASSETS.fetch(assetRequest(request, pathname));
-  // Preserve the production asset set when releasing this link separately.
-  // A later full build already includes the link, so leave that HTML alone.
+  // Preserve production-only pages while adding the requested book formats.
+  // A later reconciled full build already includes these links.
   if (pathname !== '/moose.html' || request.method !== 'GET' || response.status !== 200) return response;
   const html = await response.clone().text();
-  if (html.includes('https://youtu.be/3FTKZxLEfTo')) return response;
+  let updated = html;
   const companion = '<a class="button" href="/satoshis-engine-companion.pdf" hreflang="en">Read the companion (PDF)</a>';
-  if (!html.includes(companion)) return response;
-  const updated = html.replace(companion, companion + '\n        <a class="button" href="https://youtu.be/3FTKZxLEfTo">Listen to the audiobook (YouTube)</a>')
-    .replace(/(<meta name="dateModified" content=")[^"]+(">)/, '$12026-09-25$2');
+  if (!updated.includes('https://youtu.be/3FTKZxLEfTo')) {
+    updated = updated.replace(companion, companion + '\n        <a class="button" href="https://youtu.be/3FTKZxLEfTo">Listen to the audiobook (YouTube)</a>');
+  }
+  const englishPdf = '<a class="button primary" href="/satoshis-engine.pdf" hreflang="en">Read in English (PDF)</a>';
+  if (!updated.includes('href="/satoshis-engine.epub"')) {
+    updated = updated.replace(englishPdf, englishPdf + '\n        <a class="button" href="/satoshis-engine.epub" type="application/epub+zip" hreflang="en" download="Satoshis_Engine.epub">Download EPUB</a>');
+  }
+  if (updated === html) return response;
+  updated = updated.replace(/(<meta name="dateModified" content=")[^"]+(">)/, (_, before, after) => before + '2026-09-27' + after);
   const headers = new Headers(response.headers);
   headers.delete('content-length');
   headers.delete('etag');
@@ -26,6 +34,20 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
+
+    if (path === '/satoshis-engine.epub') {
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
+      }
+      return new Response(request.method === 'HEAD' ? null : satoshisEngineEpub, {
+        headers: {
+          'Content-Type': 'application/epub+zip',
+          'Content-Disposition': 'attachment; filename="Satoshis_Engine.epub"',
+          'Content-Length': String(satoshisEngineEpub.byteLength),
+          'Cache-Control': 'public, max-age=3600',
+        },
+      });
+    }
 
     if (path === '/carnot-local-brownian-global.pdf') {
       return Response.redirect(new URL('/satoshis-engine.pdf', url), 301);

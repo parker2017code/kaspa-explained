@@ -21,6 +21,7 @@ SKIP_DIRS = {
     ".wrangler",
 }
 PUBLIC_EXTENSIONS = {
+    ".epub",
     ".css",
     ".gif",
     ".html",
