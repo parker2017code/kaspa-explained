@@ -1,44 +1,65 @@
 # Kaspa Explained deployment
 
-Verified September 21, 2026 while publishing Moose's updated book.
+Prepared September 28, 2026 for a source-driven release that preserves unknown
+production assets.
 
-## Production divergence found September 25, 2026
+## Current release path
 
-Do not deploy a full asset rebuild from this checkout until production assets
-have been reconciled. GitHub `main` was `78d6ba9`, but Cloudflare had two later
-API deployments, most recently `4e152e65-c506-461d-bd22-97e9a4e2034b`.
-The live `/the-instrument` contains a self-contained interactive page; the
-tracked `the-instrument.html` is an older redirect. Of 175 built files checked,
-174 matched production bytes and this one differed. That comparison does not
-enumerate additional production-only paths.
+Production contains assets from later API releases whose complete asset path
+list is unavailable. A normal `wrangler deploy` from `dist/` would replace that
+asset set. Use the preserved-assets release helper until the full production
+asset inventory is known and recovered. The helper uploads every tracked text
+asset, the EPUB whose current endpoint comes from a Worker module, and binary
+assets whose bytes differ from production. A text file may look unchanged on
+the public site while its bytes actually come from the outgoing Worker, so it
+must be included again. Cloudflare's `keep_assets: true` retains all current
+assets, including unlinked paths we cannot enumerate. It also keeps existing
+secret bindings. The Worker uses those staged modules for exact path overrides
+and falls through to the retained asset binding for every other path.
 
-The September 25 audiobook release therefore updates Worker code with
-Cloudflare's `keep_assets: true`, preserving the complete existing asset set
-and secret bindings. The Worker adds the reviewed audiobook link only to the
-older Moose HTML and leaves HTML that already contains the link unchanged.
-`moose.html` also contains the link for a future reconciled full build.
+The live interactive `/the-instrument` is now tracked as the exact 49,830-byte
+guest-authored page served on September 28. Its SHA-256 is
+`b5959f92e6d3486b43f3ed984e0578c066e410a23903e84e1017d202602df10c`.
+Do not rewrite its text. `scripts/build-static-dist.py` includes five explicitly
+advertised source resources: `agent-index.json`, `site-manifest.json`,
+`CONTENT_BRIEF.md`, `README.md`, and `CLAIMS.yml`. As observed before this
+release on September 28, these returned 404 despite their sitemap or
+`llms.txt` listings. The build does not publish internal files such as
+`AGENTS.md` or `.github/`.
 
-The full gate currently stops at the unrelated stale
-`l1_status_snapshot.recheck_after: 2026-09-21`. This scoped release uses the
-passing HTML, copy, generated-index, sitemap, Worker behavior, and rendered
-Moose-page checks; it does not claim that the full gate passed or refresh
-unrelated protocol claims.
+After source changes are reviewed and the applicable site checks pass:
 
-## Working release path
+1. Identify the currently deployed Cloudflare version ID. Pass it explicitly
+   to the prepare command. The command stops if production has changed.
+2. Run `python3 scripts/preserved-assets-release.py prepare --expected-version VERSION --output /private/tmp/kaspa-reviewed-release`. This rebuilds `dist/`, checks the public file contract, compares every built path with the live custom domain, and writes a staged Worker bundle plus `report.json`.
+3. Inspect `report.json` and the exact changed source files. Run
+   `node scripts/check-preserved-release.mjs /private/tmp/kaspa-reviewed-release`.
+   The check covers staged bytes, response types, HEAD and EPUB download
+   headers, the old PDF redirect, and fallback to retained assets. Run
+   `python3 scripts/preserved-assets-release.py verify --stage /private/tmp/kaspa-reviewed-release`
+   to check that source, staged bytes, and production version still match.
+4. Commit and push the reviewed source. The push alone does not publish the
+   site. If any source changed since preparation, prepare again.
+5. Run `python3 scripts/preserved-assets-release.py deploy --stage /private/tmp/kaspa-reviewed-release` only for the approved release. It checks the
+   expected production version and every staged/source hash again before the
+   API upload. It does not replace the existing asset set.
+6. Verify the changed custom-domain pages, downloadable bytes, response
+   headers, and the unchanged Instrument and other representative retained
+   routes after deployment.
 
-September 27 EPUB addition: continue using `keep_assets: true`. Upload
-`cloudflare/entry.mjs` as the main JavaScript module and `satoshis-engine.epub`
-as an `application/octet-stream` module. The relative import resolves from
-`cloudflare/entry.mjs` to that root module. The Worker serves the supplied
-bytes at `/satoshis-engine.epub` with the EPUB media type and download filename.
-The static build also includes `.epub` files for a future reconciled release.
-Do not omit the binary module when updating Worker code.
+The release helper uses the existing authorized Wrangler OAuth login without
+printing its token. Do not put the token in commands or review files. The
+staged bundle is generated output, not source to commit. A partial release is
+the safe path while the production asset inventory is incomplete.
 
-1. Work from current `origin/main` in a clean checkout and run the applicable checks.
-2. Commit and push the reviewed change to GitHub `main`. A push is not proof of deployment.
-3. Run `python3 scripts/build-static-dist.py` from the repository root.
-4. Run `npx --yes wrangler@4.131.2 deploy --config cloudflare/wrangler.jsonc` using the existing authorized Cloudflare login.
-5. Verify the custom-domain HTML and downloads, not only Wrangler's success output.
+## Earlier release history
+
+The September 25 audiobook and September 27 EPUB releases used Worker code
+injection plus `keep_assets: true` to avoid replacing the production-only
+Instrument. The source Moose page now has both links, so the release helper
+serves that reviewed HTML directly. The EPUB remains a forced module override
+to preserve its media type and attachment filename until a full static-asset
+deployment is independently verified.
 
 Cloudflare Worker `kaspa-explained` serves `dist/` at `kaspaexplained.com` and `www.kaspaexplained.com`. This is the current production host, superseding older GitHub Pages instructions elsewhere in the repository.
 
@@ -46,8 +67,8 @@ Cloudflare Worker `kaspa-explained` serves `dist/` at `kaspaexplained.com` and `
 
 Commit `2f46054` disabled the push trigger in `.github/workflows/deploy-cloudflare.yml`. The workflow currently supports manual dispatch only; its comment records a missing `CLOUDFLARE_API_TOKEN` repository secret. The secret was not independently enumerated during this release. A separate Cloudflare GitHub build connection was not verified: the browser dashboard required sign-in. Do not assume a GitHub push alone publishes the site or assert that no separate connection exists.
 
-The September 21 release used the authenticated local Wrangler path successfully, with source commit `c29ba1f` and Cloudflare version `a7db107d-92b5-48d3-8111-93d6925fa52c`. The live page, supplied PDF bytes, unchanged Instrument PDF, and old-book redirect were verified.
+The September 21 release used the authenticated local Wrangler path successfully, with source commit `c29ba1f` and Cloudflare version `a7db107d-92b5-48d3-8111-93d6925fa52c`. The live page, supplied PDF bytes, unchanged Instrument PDF, and old-book redirect were verified. Full Wrangler asset replacement is suspended until the later production-only asset set is recovered.
 
 ## Release check boundary
 
-The unmodified full gate failed on the pre-existing Argent `recheck_after: 2026-09-20`. The book-only release explicitly excepted that unrelated freshness failure without changing claim dates or repository checks. Remaining gates passed, including 60 rendered broken-link/blank-content checks. This does not mean the unmodified full gate passed.
+The September 21 unmodified full gate failed on the pre-existing Argent `recheck_after: 2026-09-20`. That book-only release explicitly excepted the unrelated freshness failure without changing claim dates or repository checks. Re-run the current gate for each new release and report its actual result.

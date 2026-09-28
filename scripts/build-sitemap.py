@@ -86,7 +86,7 @@ def build_sitemap():
         old = existing.get(loc, {})
         entries.append({
             "loc": loc,
-            "lastmod": EXTRA_LASTMOD.get(path, old.get("lastmod", page_date_modified(path) if path.endswith(".html") else "2026-05-11")),
+            "lastmod": EXTRA_LASTMOD.get(path) or old.get("lastmod") or (page_date_modified(path) if path.endswith(".html") else "2026-05-11"),
             "changefreq": old.get("changefreq", "weekly"),
             "priority": old.get("priority", "0.5")
         })

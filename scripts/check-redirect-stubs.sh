@@ -31,7 +31,7 @@ live_paths = {page_to_path(page) for page in live_pages}
 live_paths |= {
     "/demos/" if f == "demos/index.html" else "/" + f[:-len(".html")]
     for f in manifest.get("sitemapExtraFiles", [])
-    if f.startswith("demos/")
+    if f.endswith(".html")
 }
 
 sitemap_text = Path("sitemap.xml").read_text(encoding="utf-8")

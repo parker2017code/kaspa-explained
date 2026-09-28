@@ -39,7 +39,7 @@
   <meta name="twitter:title" content="Kaspa Risks and Open Questions | Kaspa Explained">
   <meta name="twitter:description" content="The strongest case against Kaspa, argued properly: what could go wrong and what would show it going wrong.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
-  <meta name="dateModified" content="2026-09-15">
+  <meta name="dateModified" content="2026-09-28">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,7 +53,7 @@
       {
         "@type": "Question",
         "name": "Who pays Kaspa's miners?",
-        "acceptedAnswer": {"@type": "Answer", "text": "New coins pay almost all of it. On 22 August 2026 the block subsidy was worth about $58,358 a day and transaction fees came to about $5.17, so fees covered 0.0089% of miner pay. The subsidy halves every twelve months on a schedule fixed in the protocol."}
+        "acceptedAnswer": {"@type": "Answer", "text": "At the 22 August 2026 snapshot price, new coins were worth about $58,358 a day. If every transaction paid that snapshot's median fee, fees would total about $5.17 a day, or 0.0089% of modeled miner pay. That is an estimate, not measured fee revenue. The subsidy halves every twelve months on a schedule fixed in the protocol."}
       },
       {
         "@type": "Question",
@@ -294,8 +294,8 @@
         <tr>
           <td>Security budget</td>
           <td>
-            <p>New coins pay miners, shrinking on a schedule fees aren't replacing: as income falls, so does attack cost.</p>
-            <p class="risk-settle"><b>Settled by</b> fee demand replacing new coins. <a href="#security-budget-demo">Price the gap below.</a></p>
+            <p>New coins pay miners on a shrinking schedule. An August 2026 median-fee model leaves a large gap, but actual fee income and demand need watching.</p>
+            <p class="risk-settle"><b>Settled by</b> durable fee income replacing new coins. <a href="#security-budget-demo">Explore the dated model below.</a></p>
           </td>
         </tr>
         <tr>
@@ -340,14 +340,14 @@
     <section class="section" aria-labelledby="sb-title">
       <p class="eyebrow">Try it</p>
       <h2 id="sb-title">Who pays Kaspa's miners</h2>
-      <p>Miners sell hash power to whoever pays; total pay falls, hash rate follows, so does attack cost.</p>
+      <p>Explore how fees might replace new coins using an August 22, 2026 snapshot. The fee total below is modeled, not measured miner income.</p>
 
       <div class="sb-demo" id="security-budget-demo">
         <div class="sb-grid">
           <div class="sb-panel">
             <div class="sb-control">
-              <label for="sbTime">How far ahead</label>
-              <output id="sbTimeOut" for="sbTime">today</output>
+              <label for="sbTime">Months after snapshot</label>
+              <output id="sbTimeOut" for="sbTime">At snapshot</output>
               <input type="range" id="sbTime" min="0" max="144" step="1" value="0">
             </div>
             <div class="sb-control">
@@ -357,17 +357,17 @@
             </div>
             <p class="sb-presets-label" id="sbPresetLabel">Jump to</p>
             <div class="sb-presets" role="group" aria-labelledby="sbPresetLabel">
-              <button type="button" data-preset="today">Today</button>
+              <button type="button" data-preset="snapshot">At snapshot</button>
               <button type="button" data-preset="peak">Kaspa's busiest hour, forever</button>
               <button type="button" data-preset="solana">Solana's traffic</button>
               <button type="button" data-preset="even">Fees match new coins</button>
             </div>
-            <button type="button" class="sb-reset" id="sbReset">Reset</button>
+            <button type="button" class="sb-reset" id="sbReset">Back to snapshot</button>
           </div>
 
           <div class="sb-panel sb-readout" aria-live="polite">
             <p class="sb-big"><span id="sbShare">0.0089%</span></p>
-            <p class="sb-big-label">of miner pay comes from fees</p>
+            <p class="sb-big-label">of modeled miner pay comes from estimated fees</p>
             <div class="sb-scale">
               <div class="sb-track"><span class="sb-marker" id="sbMarker" style="left:18.9%"></span></div>
               <div class="sb-ticks">
@@ -375,14 +375,14 @@
               </div>
             </div>
             <dl class="sb-figs">
-              <div><dt>New coins</dt><dd id="sbSubsidy">$58,358 a day</dd></div>
-              <div><dt>Fees</dt><dd id="sbFees">$5.17 a day</dd></div>
-              <div><dt>Gap</dt><dd id="sbGap">fees are 11,293x too small</dd></div>
+              <div><dt>New coins at snapshot price</dt><dd id="sbSubsidy">$58,358 a day</dd></div>
+              <div><dt>Estimated fees</dt><dd id="sbFees">$5.17 a day</dd></div>
+              <div><dt>Modeled gap</dt><dd id="sbGap">fees are 11,293x too small</dd></div>
             </dl>
           </div>
         </div>
 
-        <p class="sb-note">New coins at $0.0292121 (22 Aug 2026 CoinGecko), held flat; schedule steps down 5.61%/month, halving every 12. Fees at measured median $0.000063.</p>
+        <p class="sb-note">August 22, 2026 snapshot. New coins are valued at $0.0292121 per KAS, held flat as issuance halves every 12 months. Estimated fees assume every transaction pays the snapshot median of $0.000063; actual total fee revenue was not measured here.</p>
         <p class="sb-source">Source: this site's twenty-chain dataset, Kaspa row, 22 Aug 2026; rusty-kaspa's <code>coinbase.rs</code><span class="tuck">;</span> <a href="/kaspa-mining#emission-schedule">emission demo</a>.</p>
       </div>
 
@@ -454,11 +454,11 @@
       peakTps: 2229.2,              // tps_peak_observed
       solanaTxPerDay: 175634352     // Solana's daily_transactions, same file
     };
-    // The demand slider is logarithmic. A linear slider from today's traffic
+    // The demand slider is logarithmic. A linear slider from snapshot traffic
     // to a billion payments a day would spend almost all its travel above
     // anything a reader can picture, and the whole question here is one of
     // orders of magnitude. The maximum leaves headroom above the point where
-    // fees would match today's subsidy (about 926 million a day) so the
+    // fees would match the snapshot subsidy (about 926 million a day) so the
     // "Fees match new coins" preset never has to clamp.
     var TX_MIN = SB.txPerDay, TX_MAX = 1.5e9, STEPS = 1000;
     var SPAN = Math.log(TX_MAX / TX_MIN);
@@ -496,11 +496,11 @@
     var subsidy = function () { return SB.subsidyUsdPerDay * Math.pow(2, -months() / 12); };
 
     var timeWords = function (m) {
-      if (m === 0) return 'today';
+      if (m === 0) return 'At snapshot';
       var y = Math.floor(m / 12), r = m % 12, parts = [];
       if (y) parts.push(y + (y === 1 ? ' year' : ' years'));
       if (r) parts.push(r + (r === 1 ? ' month' : ' months'));
-      return parts.join(' ') + ' from now';
+      return parts.join(' ') + ' after snapshot';
     };
 
     var pct = function (p) {
@@ -548,7 +548,7 @@
     document.querySelectorAll('.sb-presets button').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var p = btn.dataset.preset;
-        if (p === 'today') setTx(SB.txPerDay);
+        if (p === 'snapshot') setTx(SB.txPerDay);
         else if (p === 'peak') setTx(SB.peakTps * 86400);
         else if (p === 'solana') setTx(SB.solanaTxPerDay);
         else if (p === 'even') setTx(subsidy() / SB.medianFeeUsd);

@@ -1,3 +1,29 @@
+## September 28, 2026: current Kaspa refresh
+
+This entry supersedes older current-status notes below. Source baseline was
+`c14837c` on origin/main. Production baseline was
+`5529bc2f-38a8-46e5-9bd3-40735bf5f0d5`; inspect current production before the next release.
+
+The homepage now links to `/status#latest`, covering Rusty Kaspa v2.1.0,
+Python SDK v2.1.0, KCC-0 Final and KCC-20 Draft, active development proposals,
+and dated covenant activity. Supporting builder, KIP, mining, overview, source,
+and machine-readable pages match the September 28 primary-source checks.
+The security-budget calculator explicitly labels its August 22 model snapshot.
+
+The live-only Instrument was recovered byte for byte into source. Moose now
+links to that interactive companion and retains the audiobook, EPUB, and PDFs.
+Do not edit the guest text. A complete inventory of unknown deployed assets is
+still unavailable. Use `scripts/preserved-assets-release.py`, documented in
+`cloudflare/DEPLOYMENT.md`, to retain them. A new stage is required whenever
+source changes; never reuse a prior test stage. The helper verifies source and
+bundle hashes and the expected production version before uploading.
+
+Validation before release: complete site gate passed; 70 additional Chromium
+and WebKit route/theme/viewport checks passed. Firefox could not launch in this
+environment. New source links returned HTTP 200. Research, reviewed screenshots,
+and reconciliation evidence are under
+`/Users/parkerschmidt/Documents/reviews/kaspa-refresh-20260928/`.
+
 ## Targeted facts refresh, 10 September 2026
 
 The restored doors design is preserved. `status.html` and `build-on-kaspa.html` now identify

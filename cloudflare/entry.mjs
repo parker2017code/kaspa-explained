@@ -1,4 +1,4 @@
-import satoshisEngineEpub from '../satoshis-engine.epub';
+import { overrides } from './release-overrides.mjs';
 
 function assetRequest(request, pathname) {
   const url = new URL(request.url);
@@ -7,47 +7,26 @@ function assetRequest(request, pathname) {
 }
 
 async function fetchAsset(request, env, pathname) {
-  const response = await env.ASSETS.fetch(assetRequest(request, pathname));
-  // Preserve production-only pages while adding the requested book formats.
-  // A later reconciled full build already includes these links.
-  if (pathname !== '/moose.html' || request.method !== 'GET' || response.status !== 200) return response;
-  const html = await response.clone().text();
-  let updated = html;
-  const companion = '<a class="button" href="/satoshis-engine-companion.pdf" hreflang="en">Read the companion (PDF)</a>';
-  if (!updated.includes('https://youtu.be/3FTKZxLEfTo')) {
-    updated = updated.replace(companion, companion + '\n        <a class="button" href="https://youtu.be/3FTKZxLEfTo">Listen to the audiobook (YouTube)</a>');
+  const override = overrides[pathname];
+  if (override) {
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
+    }
+    const headers = new Headers({
+      'Content-Type': override.contentType,
+      'Content-Length': String(override.body.byteLength),
+    });
+    if (override.contentDisposition) headers.set('Content-Disposition', override.contentDisposition);
+    if (override.cacheControl) headers.set('Cache-Control', override.cacheControl);
+    return new Response(request.method === 'HEAD' ? null : override.body, { headers });
   }
-  const englishPdf = '<a class="button primary" href="/satoshis-engine.pdf" hreflang="en">Read in English (PDF)</a>';
-  if (!updated.includes('href="/satoshis-engine.epub"')) {
-    updated = updated.replace(englishPdf, englishPdf + '\n        <a class="button" href="/satoshis-engine.epub" type="application/epub+zip" hreflang="en" download="Satoshis_Engine.epub">Download EPUB</a>');
-  }
-  if (updated === html) return response;
-  updated = updated.replace(/(<meta name="dateModified" content=")[^"]+(">)/, (_, before, after) => before + '2026-09-27' + after);
-  const headers = new Headers(response.headers);
-  headers.delete('content-length');
-  headers.delete('etag');
-  headers.delete('last-modified');
-  return new Response(updated, { status: response.status, headers });
+  return env.ASSETS.fetch(assetRequest(request, pathname));
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
-
-    if (path === '/satoshis-engine.epub') {
-      if (request.method !== 'GET' && request.method !== 'HEAD') {
-        return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
-      }
-      return new Response(request.method === 'HEAD' ? null : satoshisEngineEpub, {
-        headers: {
-          'Content-Type': 'application/epub+zip',
-          'Content-Disposition': 'attachment; filename="Satoshis_Engine.epub"',
-          'Content-Length': String(satoshisEngineEpub.byteLength),
-          'Cache-Control': 'public, max-age=3600',
-        },
-      });
-    }
 
     if (path === '/carnot-local-brownian-global.pdf') {
       return Response.redirect(new URL('/satoshis-engine.pdf', url), 301);

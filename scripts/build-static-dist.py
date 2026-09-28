@@ -37,10 +37,21 @@ PUBLIC_EXTENSIONS = {
     ".webp",
 }
 PUBLIC_NAMES = {".nojekyll", "CNAME", "llms.txt", "robots.txt", "sitemap.xml"}
+PUBLIC_SOURCE_FILES = {
+    "agent-index.json",
+    "site-manifest.json",
+    "CONTENT_BRIEF.md",
+    "README.md",
+    "CLAIMS.yml",
+}
 
 
 def is_public(path: Path) -> bool:
-    return path.name in PUBLIC_NAMES or path.suffix.lower() in PUBLIC_EXTENSIONS
+    return (
+        path.name in PUBLIC_NAMES
+        or path.suffix.lower() in PUBLIC_EXTENSIONS
+        or path.relative_to(ROOT).as_posix() in PUBLIC_SOURCE_FILES
+    )
 
 
 def main() -> None:

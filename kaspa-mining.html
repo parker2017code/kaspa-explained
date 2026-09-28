@@ -39,14 +39,14 @@
   <meta name="twitter:title" content="Kaspa Mining | Kaspa Explained">
   <meta name="twitter:description" content="Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.">
   <meta name="twitter:image" content="https://kaspaexplained.com/og-kaspa-explained.png?v=20260829">
-  <meta name="dateModified" content="2026-09-15">
+  <meta name="dateModified" content="2026-09-28">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Kaspa Mining",
     "url": "https://kaspaexplained.com/kaspa-mining",
-    "dateModified": "2026-09-15",
+    "dateModified": "2026-09-28",
     "description": "Why Kaspa price and hash rate move on different clocks, and how to point your own ASIC at your own node.",
     "about": ["Kaspa", "Mining", "Proof of Work", "ASIC", "Rusty Kaspa", "Stratum Bridge", "Toccata"]
   }
@@ -79,19 +79,19 @@
       <p class="eyebrow">Proof-of-work mining</p>
       <h1>Kaspa mining</h1>
       <p class="lead">Price can fall while hash rate climbs. A coin market reprices in minutes; a machine market (ASIC orders, shipping, hosting) answers weeks or months later.</p>
-      <p class="fit-note">Toccata activated at <span class="term-def" tabindex="0" role="button" aria-describedby="daa-def-snapshot">DAA score<span class="term-def__panel" id="daa-def-snapshot">Difficulty-Adjusted Age: a running block count Kaspa consensus uses instead of wall-clock time, since many blocks land in parallel.</span></span> 474,165,565, and Rusty Kaspa v2.0.1 is the release. Nothing here is a price call.</p>
+      <p class="fit-note">Toccata activated at <span class="term-def" tabindex="0" role="button" aria-describedby="daa-def-snapshot">DAA score<span class="term-def__panel" id="daa-def-snapshot">Difficulty-Adjusted Age: a running block count Kaspa consensus uses instead of wall-clock time, since many blocks land in parallel.</span></span> 474,165,565. Rusty Kaspa v2.1.0 is the current node release. Nothing here is a price call.</p>
     </section>
 
     <section class="section mining-data-panel">
       <p class="eyebrow">Snapshot</p>
       <h2>What the network is doing</h2>
       <div class="summary-grid grid-cards">
-        <article><span>KAS price</span><p>Kaspa API: <strong id="snap-price">$0.02747032</strong> per KAS. Coinbase all-time high: <strong>$0.2075</strong>.</p></article>
-        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">311.6 PH/s</strong>, about <strong id="snap-hash-mult">623</strong>x<span class="info-affordance" id="hash-info"><button class="info-affordance__trigger" type="button" aria-describedby="hash-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this comparison</span></button><span class="info-affordance__panel" id="hash-info-panel">Compared against the 500 TH/s the Kaspa wiki records for November 29, 2022.</span></span></p></article>
-        <article><span>Supply</span><p>Kaspa API: <strong id="snap-circ">27.675B KAS</strong> mined of a <strong>28.704B KAS</strong> maximum.</p></article>
-        <article><span>Block reward</span><p>Kaspa API: <strong id="snap-reward">2.31246515 KAS</strong> per block, the emission step that began at DAA score 504,909,000.</p></article>
+        <article><span>KAS price</span><p>Kaspa API: <strong id="snap-price">$0.04751121</strong> per KAS. Coinbase all-time high: <strong>$0.2075</strong>.</p></article>
+        <article><span>Network hash rate</span><p>Kaspa API: <strong id="snap-hash">338.2 PH/s</strong>, about <strong id="snap-hash-mult">676</strong>x<span class="info-affordance" id="hash-info"><button class="info-affordance__trigger" type="button" aria-describedby="hash-info-panel"><i class="info-affordance__glyph" aria-hidden="true">i</i><span class="sr-only">More about this comparison</span></button><span class="info-affordance__panel" id="hash-info-panel">Compared against the 500 TH/s the Kaspa wiki records for November 29, 2022.</span></span></p></article>
+        <article><span>Supply</span><p>Kaspa API: <strong id="snap-circ">27.726B KAS</strong> mined of a <strong>28.704B KAS</strong> maximum.</p></article>
+        <article><span>Block reward</span><p>Kaspa API: <strong id="snap-reward">2.18267645 KAS</strong> per block. The reward changes with DAA score.</p></article>
       </div>
-      <p class="live-footnote" id="snap-stamp">Read from api.kaspa.org on September 1, 2026. These four numbers refresh from the same API when the page loads.</p>
+      <p class="live-footnote" id="snap-stamp">Read from api.kaspa.org on September 28, 2026. These four numbers refresh from the same API when the page loads.</p>
       <script>
       // One cache in front of api.kaspa.org, because three separate widgets on this page
       // want the same four endpoints and a reader should not pay for the same read twice.
@@ -107,7 +107,7 @@
       })();
       (function () {
         if (!('fetch' in window)) { return; }
-        var BASELINE = 'Read from api.kaspa.org on September 1, 2026.';
+        var BASELINE = 'Read from api.kaspa.org on September 28, 2026.';
         var stamp = document.getElementById('snap-stamp');
         function set(id, text) { var el = document.getElementById(id); if (el) { el.textContent = text; } }
         Promise.all([
@@ -377,10 +377,10 @@
   var T1_MONTHS = DEFLATIONARY_DAA / MONTH_SECONDS;               // ~5.90 months
   var CRESCENDO_MONTHS = CRESCENDO_DAA / MONTH_SECONDS;           // ~41.9 months
 
-  var FALLBACK_DAA = 526073404;           // api.kaspa.org/info/blockdag, 2026-08-29, the reading /status carries
-  var FALLBACK_CIRCULATING = 27669458984;   // KAS, api.kaspa.org/info/coinsupply, 2026-08-29, same read
-  var FALLBACK_MAX_SUPPLY = 28704035605;    // KAS, api.kaspa.org/info/coinsupply, 2026-08-29
-  var FALLBACK_ASOF = '2026-08-29';
+  var FALLBACK_DAA = 551848158;           // api.kaspa.org/info/blockdag, 2026-09-28
+  var FALLBACK_CIRCULATING = 27726383725.931034; // KAS, api.kaspa.org/info/coinsupply, 2026-09-28
+  var FALLBACK_MAX_SUPPLY = 28704035605;  // KAS, api.kaspa.org/info/coinsupply, 2026-09-28
+  var FALLBACK_ASOF = '2026-09-28';
 
   var maxSupply = FALLBACK_MAX_SUPPLY;
   var circulatingToday = FALLBACK_CIRCULATING;
@@ -2818,7 +2818,7 @@
             <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/docs/README.md">Rusty Kaspa Stratum Bridge docs</a></td><td data-label="Used for">Beta status, external-node mode, in-process mode, dashboard, ports, miner setup, and username format.</td></tr>
             <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/bridge/config.yaml">Sample bridge config</a></td><td data-label="Used for">The file to download, since the release archives do not carry one. It sets the dashboard port, the Stratum ports, and the node RPC address.</td></tr>
             <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/blob/master/docs/toccata-guide.md">Toccata node setup guide</a></td><td data-label="Used for">v2.0.1 upgrade guidance, miner and pool checks, fee policy, and post-Toccata field preservation.</td></tr>
-            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.1">Rusty Kaspa v2.0.1 release</a></td><td data-label="Used for">The Windows, macOS, and Linux archives used in this guide.</td></tr>
+            <tr><td data-label="Source"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.1.0">Rusty Kaspa v2.1.0 release</a></td><td data-label="Used for">The current node release and its Windows, macOS, and Linux archives.</td></tr>
             <tr><td data-label="Source"><a href="https://api.kaspa.org/info/blockdag">Kaspa public API: blockDAG state</a></td><td data-label="Used for">The mainnet DAA and network read behind the snapshot above.</td></tr>
             <tr><td data-label="Source"><a href="https://api.kaspa.org/info/coinsupply">Kaspa public API: coin supply</a> and <a href="https://api.kaspa.org/info/blockreward">block reward</a></td><td data-label="Used for">The supply and reward figures in the snapshot above.</td></tr>
             <tr><td data-label="Source"><a href="https://api.kaspa.org/info/hashrate">Kaspa public API: network hash rate</a></td><td data-label="Used for">The hash-rate reading in the snapshot above.</td></tr>

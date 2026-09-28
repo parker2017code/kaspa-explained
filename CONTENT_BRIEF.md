@@ -243,7 +243,7 @@ Keep these categories separate.
 - sequencing commitments
 - vProgs groundwork
 
-Status note: Toccata activated at DAA 474,165,565. Rusty Kaspa v2.0.1 is the current Toccata release; Rusty Kaspa v2.0.0 is the primary release source for the activation parameters, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 Toccata outlook remains implementation context for why the older May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. The Toccata node setup guide is operator-readiness evidence. Separate protocol activation from wallet, explorer, SDK, app, liquidity, and user evidence. Use the guide for node operation, fee-policy changes, transaction field changes, pools, miners, exchanges, wallets, explorers, indexers, and Testnet-10 checks. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 26 API check showed virtual DAA 501,408,970.
+Status note: Toccata activated at DAA 474,165,565. Rusty Kaspa v2.1.0 (September 22, 2026) is the current stable node release; Rusty Kaspa v2.0.0 is the primary release source for the activation parameters, roughly June 30, 2026 at 16:15 UTC. Michael Sutton's April 2026 Toccata outlook remains implementation context for why the older May 5 target moved so sequencing-commitment/KIP-21 architecture could be finalized before zk systems bind to it. The Toccata node setup guide is operator-readiness evidence. Separate protocol activation from wallet, explorer, SDK, app, liquidity, and user evidence. Use the guide for node operation, fee-policy changes, transaction field changes, pools, miners, exchanges, wallets, explorers, indexers, and Testnet-10 checks. Rusty Kaspa's `tn10-toc2` and `tn10-toc3` pre-releases plus Testnet-10 REST status are current testnet evidence: the releases scheduled Testnet-10 activation and final Toccata ZK hardening at DAA scores 467,579,632 and 476,232,000, and the June 26 API check showed virtual DAA 501,408,970.
 
 ### Roadmap / Architecture
 
@@ -526,3 +526,7 @@ The bar for this site is macOS and iOS. Not "modern," not "clean," Apple
 specifically. Read design/STANDARD.md before writing any markup or CSS, and
 design/handoff-checklist.md before reporting anything as done. Both govern
 every page and every demo. Correct but unusable is a failure here.
+
+## Current reader update, September 28, 2026
+
+The current summary lives at /status#latest. Rusty Kaspa v2.1.0 improves sync and security without activating DAGKnight or changing the ten-block-per-second mainnet rate. Python SDK v2.1.0 ships experimental SilverScript and ZK bindings and Testnet-10 examples. KCC-0 is Final; KCC-1/2/20 remain Draft, with KCC-20 Last Call only proposed. KCC-21 PR #6 is closed unmerged, superseded by KCC-23 PR #26. vProgs master remains unchanged while proposal branches are active. Covenant counts are indexer observations; distinguish lifetime vault churn, active IDs, live states, market rows, and actual users. Dated economic scenarios must stay labeled by their original observation date.
