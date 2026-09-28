@@ -116,8 +116,8 @@ Reader paths worth keeping visible:
 - A fair skeptical page to link in an argument: `skeptical-case.html`.
 - Source-level verification: `sources.html`, `CLAIMS.yml`, `llms.txt`.
 - Finding a concept or page: `search.html`.
-- The long-form monetary-cost argument: `the-instrument.html`, Moose's essay,
-  hosted in full. His argument, not this site's claim set.
+- The long-form monetary-cost argument: `the-instrument.pdf`, Moose's book,
+  linked from `/moose`. His argument, not this site's claim set.
 - Language-model scoring, general-purpose rather than Kaspa-specific, still part
 
 Terms are defined inline where they are used, most densely on

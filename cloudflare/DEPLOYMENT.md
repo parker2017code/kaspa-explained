@@ -17,10 +17,11 @@ assets, including unlinked paths we cannot enumerate. It also keeps existing
 secret bindings. The Worker uses those staged modules for exact path overrides
 and falls through to the retained asset binding for every other path.
 
-The live interactive `/the-instrument` is now tracked as the exact 49,830-byte
-guest-authored page served on September 28. Its SHA-256 is
-`b5959f92e6d3486b43f3ed984e0578c066e410a23903e84e1017d202602df10c`.
-Do not rewrite its text. `scripts/build-static-dist.py` includes five explicitly
+The owner withdrew the interactive Instrument explainer on September 28.
+`/the-instrument` and its HTML and directory variants redirect to `/moose`.
+The tracked HTML is a redirect stub; the original remains in Git history.
+Keep `the-instrument.pdf` available. Do not restore the interactive explainer
+without a new explicit request. `scripts/build-static-dist.py` includes five explicitly
 advertised source resources: `agent-index.json`, `site-manifest.json`,
 `CONTENT_BRIEF.md`, `README.md`, and `CLAIMS.yml`. As observed before this
 release on September 28, these returned 404 despite their sitemap or
@@ -44,7 +45,7 @@ After source changes are reviewed and the applicable site checks pass:
    expected production version and every staged/source hash again before the
    API upload. It does not replace the existing asset set.
 6. Verify the changed custom-domain pages, downloadable bytes, response
-   headers, and the unchanged Instrument and other representative retained
+   headers, and the withdrawn Instrument redirect plus representative retained
    routes after deployment.
 
 The release helper uses the existing authorized Wrangler OAuth login without

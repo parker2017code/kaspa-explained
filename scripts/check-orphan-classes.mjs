@@ -167,13 +167,6 @@ function checkFile(relPath, globalDefined) {
   }
 
   const defined = new Set([...globalDefined, ...scoped]);
-  // Recovered guest page: debtPreset is a JS hook styled by .preset;
-  // disc-toggle is a marker on #disc, styled by the page's button rules.
-  // Keep its published bytes intact and exempt only these inspected markers.
-  if (relPath === 'the-instrument.html') {
-    defined.add('debtPreset');
-    defined.add('disc-toggle');
-  }
 
   const markupOnly = stripBlocks(stripBlocks(html, "script"), "style");
   const used = new Set();

@@ -10,8 +10,7 @@ const stage = resolve(process.argv[2] || '');
 if (!process.argv[2]) throw new Error('Pass the prepared stage directory');
 const report = JSON.parse(await readFile(resolve(stage, 'report.json'), 'utf8'));
 const instrument = report.changed.find((item) => item.path === 'the-instrument.html');
-assert(instrument, 'The live-equal guest page must remain an override across releases');
-assert.equal(instrument.live_equal, true, 'The guest page should match live bytes before release');
+assert(instrument, 'The withdrawn explainer must be overwritten with its redirect stub');
 assert(report.retained_sample.length > 0, 'At least one unchanged asset should remain in ASSETS');
 register(new URL('./preserved-binary-loader.mjs', import.meta.url), import.meta.url);
 const worker = (await import(pathToFileURL(resolve(stage, 'entry.mjs')).href)).default;
@@ -34,6 +33,7 @@ const env = {
 };
 
 for (const [number, item] of report.changed.entries()) {
+  if (item.path === 'the-instrument.html') continue;
   const route = '/' + item.path.replace(/\.html$/, '');
   const response = await worker.fetch(new Request('https://kaspaexplained.com' + route), env);
   assert.equal(response.status, 200, item.path);
@@ -52,6 +52,12 @@ for (const [number, item] of report.changed.entries()) {
     const post = await worker.fetch(new Request('https://kaspaexplained.com' + route, { method: 'POST' }), env);
     assert.equal(post.status, 405);
   }
+}
+
+for (const path of ['/the-instrument', '/the-instrument/', '/the-instrument.html', '/the-instrument/index.html']) {
+  const response = await worker.fetch(new Request('https://kaspaexplained.com' + path), env);
+  assert.equal(response.status, 302);
+  assert.equal(response.headers.get('location'), 'https://kaspaexplained.com/moose');
 }
 
 const retained = await worker.fetch(new Request('https://kaspaexplained.com/__release_probe'), env);

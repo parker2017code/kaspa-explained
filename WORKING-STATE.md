@@ -1,3 +1,12 @@
+## September 28 correction: interactive Instrument withdrawn
+
+The owner requested removal of the interactive Instrument explainer. Adding
+its link during the broader news refresh exceeded the intended scope. Moose
+keeps the PDF, audiobook, and EPUB; the explainer routes redirect to `/moose`.
+The HTML is a redirect stub, removed from the sitemap and standalone page list.
+Do not restore it without an explicit request. This supersedes earlier notes
+about preserving the live interactive page. The book PDF remains unchanged.
+
 ## September 28, 2026: current Kaspa refresh
 
 This entry supersedes older current-status notes below. Source baseline was

@@ -28,6 +28,11 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // The owner withdrew the interactive explainer; keep the book PDF available.
+    if (['/the-instrument', '/the-instrument/', '/the-instrument.html', '/the-instrument/index.html'].includes(path)) {
+      return Response.redirect(new URL('/moose', url), 302);
+    }
+
     if (path === '/carnot-local-brownian-global.pdf') {
       return Response.redirect(new URL('/satoshis-engine.pdf', url), 301);
     }

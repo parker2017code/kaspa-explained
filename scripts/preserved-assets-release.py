@@ -114,9 +114,9 @@ def check_public_contract():
     for path in DIST.rglob("*"):
         if path.is_file() and path.relative_to(DIST).as_posix() not in tracked:
             raise RuntimeError(f"Untracked public file entered dist: {path.relative_to(DIST)}")
-    instrument = (DIST / "the-instrument.html").read_bytes()
-    if digest(instrument) != "b5959f92e6d3486b43f3ed984e0578c066e410a23903e84e1017d202602df10c":
-        raise RuntimeError("Guest Instrument differs from the recovered production bytes")
+    instrument = (DIST / "the-instrument.html").read_text()
+    if 'content="0;url=/moose"' not in instrument or "<script" in instrument:
+        raise RuntimeError("Withdrawn Instrument explainer must remain a redirect to Moose")
 
 
 def live_bytes(relative, nonce):
