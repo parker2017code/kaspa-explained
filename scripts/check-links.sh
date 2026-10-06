@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Exclusions below, each proven not to be a page link on 2026-10-06:
+#  - api.github.com/repos/argent-lang/ and api.kaspa.org/blocks/ are URL prefixes
+#    that build-on-kaspa.html and what-is-kaspa.html extend in script (repo name,
+#    block hash); the full endpoints return 200.
+#  - status.kaspa.example is a reserved .example placeholder in design/patterns.html.
 tmp_urls="$(mktemp)"
 trap 'rm -f "$tmp_urls"' EXIT
 
@@ -23,6 +28,9 @@ grep -RhoE 'https?://[^"'"'"')<[:space:]]+' \
   | grep -Ev '^https?://(127\.0\.0\.1|localhost)(:|/|$)' \
   | grep -Ev '^https://api\.kas\.fyi/v1/transactions/acceptance$' \
   | grep -Ev '^https://api\.kas\.fyi/v1/addresses/?$' \
+  | grep -Ev '^https://api\.github\.com/repos/argent-lang/$' \
+  | grep -Ev '^https://api\.kaspa\.org/blocks/$' \
+  | grep -Ev '^https://status\.kaspa\.example/?$' \
   | sort -u > "$tmp_urls"
 
 failures=0
@@ -64,6 +72,7 @@ while IFS= read -r url; do
 
   code="$(
     curl -L -sS \
+      --retry 3 --retry-all-errors --retry-delay 2 \
       --connect-timeout 12 \
       --max-time 25 \
       -o /dev/null \
