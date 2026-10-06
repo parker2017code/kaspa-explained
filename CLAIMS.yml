@@ -1,6 +1,7 @@
-last_checked: 2026-09-28
+last_checked: 2026-10-06
 # Targeted tool/protocol review; historical measurement dates below are retained.
-recheck_after: 2026-10-05
+# 2026-10-06: re-read kccs, kips, vprogs, argent-lang, silverscript, rusty-kaspa releases, api.kaspa.org, kascov, hashd.ag, docs.kaspa.org, TN10 OpenAPI; rusty-kaspa and kips unchanged since the prior check.
+recheck_after: 2026-10-13
 claims:
   proof_of_work:
     status: live
@@ -23,12 +24,12 @@ claims:
       - Kaspa mainnet payments are instantly final
   l1_status_snapshot:
     status: measurement_sensitive
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
-      Dated public REST observation on kaspa-mainnet near 2026-09-28 14:18:57 UTC: virtual DAA
-      551,848,158; circulating supply 2,772,638,372,593,103,352 sompi (27,726,383,725.93103352 KAS);
-      maximum supply 28,704,035,605 KAS; reward 2.18267645 KAS/block. Endpoints were fetched independently
+      Dated public REST observation on kaspa-mainnet near 2026-10-06 07:28 UTC: virtual DAA
+      558,513,385; circulating supply 2,774,080,814,925,884,114 sompi (27,740,808,149.25884114 KAS);
+      maximum supply 28,704,035,605 KAS; reward 2.06017223 KAS/block. Endpoints were fetched independently
       over seconds, not as an atomic snapshot. These are dated observations, not a live feed. Pruned
       blockCount and headerCount are not network-wide totals.
     source: https://api.kaspa.org/info/blockdag
@@ -41,14 +42,15 @@ claims:
       - A public REST API reading is stronger than node or release evidence
 
   emission_schedule_may_2026:
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     status: live_design
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     summary: >
       Kaspa emission steps down every 2,629,800 seconds by a factor of 2^(-1/12), with activation governed
-      by DAA score rather than calendar date. The September 28 API reward is 2.18267645 KAS/block in the
-      step beginning at DAA 531,207,000. The next scheduled threshold is 557,505,000. At ten blocks per
-      second the table rate is about 21.82676446 KAS/s; rounding to per-block sompi is separate from
+      by DAA score rather than calendar date. The October 6 API reward is 2.06017223 KAS/block in the
+      step beginning at DAA 557,505,000 (crossed; table entry 2,060,172,230 sompi/s per coinbase.rs). The
+      next scheduled threshold is 583,803,000 (19.44543648 KAS/s). At ten blocks per
+      second the table rate is about 20.60172230 KAS/s; rounding to per-block sompi is separate from
       observed transaction throughput.
     source: https://github.com/kaspanet/rusty-kaspa/blob/master/consensus/src/processes/coinbase.rs
     forbidden_copy:
@@ -58,13 +60,13 @@ claims:
       - the current emission rate is 24.49971474 KAS per second
       - emission steps are anchored to calendar dates rather than DAA score
   tps_and_speed_context:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       Read current mainnet params.rs and mass/mod.rs September 28: TenBps, 500,000 compute mass per block,
       mass_per_tx_byte 1, and mass_per_script_pub_key_byte 10 are unchanged. These support the conditional
       simple-payment estimate, not a fresh measurement of throughput.
     status: measurement_sensitive
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       TPS, throughput, and speed claims need measurement context. Current simple-payment capacity can be
       described as a rough 2.5k-3.4k TPS range at 10 BPS under transaction-shape assumptions. Covenant apps,
@@ -128,12 +130,12 @@ claims:
       - Generic merchant payments are Kaspa's killer app
       - Fast payments alone prove adoption
   coordination_markets:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       Re-read hashd.ag/raw and the named research sources September 28; no claim of running a market
       product was verified.
     status: research_direction
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Staghunt and coordination markets remain research directions in Sompolinsky's author archive. The
       essay describes mechanisms it aims to build. No deployment receipt was found in the checked author
@@ -145,8 +147,8 @@ claims:
       - Staghunt is production-ready on Kaspa
   app_project_claims:
     status: builder_guardrail
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     review_note: >
       September 28: re-read the transaction-payload guide and project sources. Payload activity and named
       indexer tags do not establish a released based-app runtime. Kaskad identifies Igra EVM L2 as its
@@ -167,10 +169,10 @@ claims:
   toccata:
     review_note: >
       Rechecked release notes, current mainnet parameters, KIP index, and the public mainnet DAA snapshot
-      on September 28.
+      on October 6 (API DAA 558,513,385; v2.1.0 still latest).
     status: daa_gated
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       Toccata activated on Kaspa mainnet at DAA score 474,165,565, around June 30, 2026. Rusty Kaspa
       v2.0.0 set the parameters; v2.0.1 was published June 15, before activation. The latest stable node
@@ -190,14 +192,14 @@ claims:
       - tn10-toc2 is a mainnet release
       - merged TN10 KIPs prove mainnet activation
   toccata_operator_readiness:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       September 28: toccata-guide.md still states the v2.0.1-or-newer minimum, one-way database migration,
       fee-floor formula, and changed transaction fields. The v2.1.0 release now urges node, mining, and
       infrastructure operators to upgrade for sync and security fixes. A guide minimum is not the current
       recommended release.
     status: daa_gated
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       The Rusty Kaspa Toccata node setup guide says node operators should run v2.0.1 or newer; the node
       database upgrade is one-way without resync; direct RPC transaction submission uses the standard-fee
@@ -221,7 +223,7 @@ claims:
       September 28: both historical tn10-toc2 and tn10-toc3 release URLs remain available as prereleases.
       The recorded testnet thresholds are historical; this is not a fresh TN10 transaction test.
     status: testnet_only
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     recheck_after: 2026-10-28
     summary: >
       Rusty Kaspa's tn10-toc2 pre-release scheduled the first Toccata hard-fork activation point on
@@ -244,7 +246,7 @@ claims:
       - TN10 passed the activation score, so Toccata is live on mainnet
   tn12_covenant_evidence:
     status: testnet_only
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     recheck_after: 2026-10-28
     review_note: >
       Read the current repository README and its evidence index on September 28; transactions were not
@@ -261,13 +263,13 @@ claims:
       - TN12 txids are mainnet txids
   vprogs:
     status: roadmap
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       vProgs remains an early-development/prototype Rust framework. The public master branch still ends at
       f9b84a863a7c7c20586a9cf947550475e894f72e from July 28, with no releases or tags. Open PR branches
-      were active through September 28 on indexes, settlement and bridge liveness, reorganization
-      handling, and ZK validation. An unchanged master branch does not mean no development. The tn10-flow
+      were active through October 5 on indexes, settlement and bridge liveness, reorganization
+      handling, prover recovery, and ZK validation. An unchanged master branch does not mean no development. The tn10-flow
       example uses a remote private Testnet-10 fork; its default development receipts are not a public
       mainnet deployment. Production use and shared-state app maturity remain unverified.
     source: https://github.com/kaspanet/vprogs
@@ -275,13 +277,16 @@ claims:
     forbidden_copy:
       - vProgs are live
   argent:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     status: research
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Argent provides an actor-based compiler, generated SilverScript, portable artifacts, transaction
-      construction, inter-covenant communication, and virtual-slot features. On September 28 the argent,
-      argent-playground, and argent-template repos still have no GitHub releases or tags. The compiler
+      construction, inter-covenant communication, and virtual-slot features. On October 6 the argent,
+      argent-playground, and argent-template repos still have no GitHub releases or tags (pushes
+      2026-10-05, 2026-10-05, 2026-10-04). Commit 03d6702 (October 4) added layered covenant genesis proof
+      APIs and CLI tooling. A fourth org repo, kcc20-reference (created 2026-09-10), holds only a one-line
+      work-in-progress README. The compiler
       README still calls the project not release-ready and requires its own audit and hardening. Local
       examples and a released underlying SilverScript compiler do not certify Argent applications.
     source: https://github.com/argent-lang/argent
@@ -294,13 +299,13 @@ claims:
       - Argent's compiler is incomplete
 
   cross_app_composition:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       September 28: the Argent README still describes inter-covenant communication and transaction
       construction; no releases or tags exist. This supports the capability description, not independent
       evidence of production app deployment.
     status: roadmap
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Atomic composition means several app states succeed or fail as one operation. Composing separately
       compiled covenant apps atomically inside a single transaction is possible on Toccata itself:
@@ -317,16 +322,16 @@ claims:
       - Argent ICC demos are deployed on mainnet
   based_apps:
     supporting_source: https://kascov.io/data/mainnet/lanes.json
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       Read the current architecture source, vProgs README, and kascov lanes.json on September 28. Narrowed
       the former blanket absence claim to the runtime/deployment evidence actually checked.
     status: targeted
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Based-app architecture uses Kaspa sequencing, commitments, proofs, settlement, or exits. Tagged
-      mainnet activity is observable: the September 28 kascov lane index reports a kron tag with 8,082
-      events across 145 covenant IDs. That is tagged traffic, not independent proof of a complete stateful
+      mainnet activity is observable: the October 6 kascov lane index reports a kron tag with 8,429
+      events across 160 covenant IDs. That is tagged traffic, not independent proof of a complete stateful
       based-app runtime or production vProgs. Sutton's architecture and the vProgs prototype remain
       relevant design sources. Direct L1 covenant examples can exist without L2 execution.
     source: https://gist.github.com/michaelsutton/5bd9ab358f692ee4f54ce2842a0815d1
@@ -336,13 +341,13 @@ claims:
       - Every based app is a ZK app
       - A rollup PoC means vProgs are live
   zk_external_anchors:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       September 28: re-read programmability docs and the new node/Python ZK SDK release notes. The new
       tools build scripts for proofs; they do not authenticate external facts or replace a bridge/oracle
       trust anchor.
     status: builder_guardrail
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: ZK verification proves a statement about chosen public inputs; it does not by itself prove external-chain canonicality, prices, oracle events, or real-world facts. Bridge and oracle-style apps still need an agreed anchor such as a source-chain light client, finality certificate, accumulated-work view, oracle, reporter set, or challenge process.
     source: https://docs.kaspa.org/programmability
     forbidden_copy:
@@ -350,8 +355,8 @@ claims:
       - OP_ZK_PRECOMPILE makes any external bridge trustless automatically
   vprogs_solana_like_experience:
     status: roadmap_framing
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     review_note: >
       Replaced the unrefreshed interview-derived framing with the current prototype README. No claim is
       made to have reverified the older interview.
@@ -363,21 +368,21 @@ claims:
   native_defi:
     supporting_source_2: https://kascov.io/data/mainnet/markets?limit=200
     supporting_source: https://kascov.io/data/mainnet/templates.json
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       Re-read live JSON, template breakdown, market rows, activity digest, and Kaskad's own network
       description on September 28. No wallet action or independent node re-index was performed; active IDs
       and live states are different units.
     status: roadmap
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
-      Dated kascov mainnet snapshot generated September 28 at 14:29:10 UTC: 188,074 covenants ever
-      created, 187,107 burned, 967 active, and 126,922,107,314,585 sompi of live value (about 1,269,221
-      KAS). The separate 14:12:37 template table labels 185,001 lifetime entries as four KasWare vault
-      types with zero live states, about 98.4 percent of lifetime creations. These are indexer categories,
-      not distinct users or enduring apps. A 14:20:17 market listing has 114 rows: 83 bonding, 7
-      graduated, 7 duplicate LP shares, 15 unknown, and 2 no-market rows. Thus 114 is not a unique-market
-      count. Its 24-hour digest reports 20 births, 389 moves, and 7 burns. Small L1 markets and
+      Dated kascov mainnet snapshot generated October 6 at 07:30 UTC: 188,265 covenants ever
+      created, 187,187 burned, 1,078 active, and 132,981,584,038,783 sompi of live value (about 1,329,816
+      KAS). The separate 07:29 template table labels 185,001 lifetime entries as four KasWare vault
+      types with zero live states, about 98.3 percent of lifetime creations. These are indexer categories,
+      not distinct users or enduring apps. A 07:30 market listing has 127 rows: 90 bonding, 7
+      graduated, 7 duplicate LP shares, 21 unknown, and 2 no-market rows. Thus 127 is not a unique-market
+      count. The 24-hour digest was not re-read on October 6. Small L1 markets and
       transactions are observable; broad repeat use, liquidity depth, and mature L1 lending were not
       independently verified. Kaskad describes its lending on Igra EVM L2, which is separate ecosystem
       activity.
@@ -395,10 +400,10 @@ claims:
       - Almost nobody is using them in production yet
   dagknight:
     review_note: >
-      Rechecked KIP-2, branch commit feed, mainnet parameters, and latest release September 28.
+      Rechecked KIP index, dagknight branch commit feed (last commit September 8), params.rs (TenBps), and latest release October 6.
     status: research
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       DAGKnight is a proposed consensus upgrade. KIP-2 remains Proposed; mainnet remains GHOSTDAG at ten
       blocks per second. The separate dagknight branch still points to September 8 commit
@@ -416,8 +421,8 @@ claims:
       - the dagknight branch has not moved since August 14
   one_hundred_bps_partition_resilience:
     status: research
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       No checked mainnet release or accepted specification establishes a 100 BPS upgrade or confirmation
       progress during network splits. KIP-2 remains Proposed and does not establish that paired target;
@@ -431,12 +436,12 @@ claims:
       - DAGKnight lets transactions confirm during a netsplit today
   official_roadmap_framing_lag:
     status: roadmap_framing
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       September 28: the Lore page still reports Toccata activation at June 30 and DAA 474,165,565; the
       Build page no longer contains TN12-before-mainnet text. This checks the website wording only.
       Release tags and network evidence, not this marketing site, establish activation.
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Checked September 20, 2026: Kaspa.org Lore now reports Toccata activated on mainnet on June 30, 2026, at DAA score 474,165,565; it no longer calls Toccata the next hardfork.
       Kaspa.org Build has been revised into developer documentation and no longer carries the
@@ -451,8 +456,8 @@ claims:
       - kaspa.org/lore and kaspa.org/build describe Toccata as mainnet-live
   dagknight_latency_policy:
     status: research
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     review_note: >
       The narrower claim was verified in KIP-2 on September 28. The former interview-specific advice was
       not independently reverified and is not presented as a freshly checked quotation.
@@ -466,12 +471,12 @@ claims:
     summary: Kaspa's consensus tracks UTXO state; spent transaction history may be pruned or absent from explorers, and that does not make Kaspa a privacy chain.
     source: https://www.youtube.com/live/GaJmYV8OHfQ
   rtd_derived_systems:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     review_note: >
       September 28: read hashd.ag/raw, relevant research papers, and public project sources. This is a
       bounded source review, not proof that every possible deployment was searched.
     status: research
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       RTD-derived oracle, TangVM, miner-attestation, and coordination-market designs remain research in
       the checked author archive. The TangVM passage describes an application construct under research,
@@ -482,17 +487,17 @@ claims:
       - TangVM is live
       - Kaspa oracle flows are live
   kcc_conventions:
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     status: research_direction
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       KCCs specify ecosystem conventions, separate from consensus KIPs. KCC-0 became Final when PR #25
-      merged September 21; the README index still says Draft. KCC-1, KCC-2, and KCC-20 document headers
-      remain Draft. KCC-1 PR #27 merged September 28 and KCC-2 PR #30 merged September 27 without
-      finalizing those conventions. KCC-20 PR #31 proposes Last Call but remains open. Metadata KCC-21 PR
+      merged September 21; the README index now agrees. KCC-1 (PR #32) and KCC-2 (PR #33) moved to Last
+      Call on October 1, and PR #34 corrected the KCC-0 index. KCC-20 remains Draft; PR #31 proposes Last
+      Call and remains open. Metadata KCC-21 PR
       #6 closed unmerged September 25; KCC-20 conformance PR #20 closed unmerged September 27; KCC-2 ECDSA
-      PR #23 also closed unmerged. KCC-402 PR #4 remains open. The five open PRs at this check are #4,
-      #24, #26, #29, #31. Standard KCC-20 transfers still preserve extension_commitment and cannot
+      PR #23 also closed unmerged. KCC-402 PR #4 remains open. The seven open PRs at this check are #4,
+      #24, #26, #29, #31, #35 (mobile wallet session API), #36 (Covenant v2 draft). Standard KCC-20 transfers still preserve extension_commitment and cannot
       consolidate unlike fungibility classes. Issue #14 remains open. Project implementation claims do not
       establish final status or conformance.
     source: https://github.com/kaspanet/kccs
@@ -519,8 +524,8 @@ claims:
 
   covenant_tooling_and_support:
     status: builder_guardrail
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       Python SDK v2.1.0, published September 24, is the latest stable release and is on PyPI. It includes
       experimental SilverScript compiler/artifact/debug bindings pinned to SilverScript v1.0.0,
@@ -540,8 +545,8 @@ claims:
       Directly inspected api-tn10.kaspa.org/openapi.json on September 28. Retained the documented direct-
       node submission workaround with its source boundary.
     status: builder_guardrail
-    checked_on: 2026-09-28
-    recheck_after: 2026-10-05
+    checked_on: 2026-10-06
+    recheck_after: 2026-10-13
     summary: >
       September 28 live Testnet-10 OpenAPI inspection: SubmitTxModel exposes inputs, lockTime, outputs,
       subnetworkId, and version; SubmitTxInput exposes previousOutpoint, sequence, sigOpCount, and
@@ -557,9 +562,9 @@ claims:
 
   covenant_introspection_scope:
     supporting_source: https://github.com/kaspanet/kips/blob/master/kip-0020.md
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     status: research_direction
-    recheck_after: 2026-10-05
+    recheck_after: 2026-10-13
     summary: >
       Current KIP-17 introspection reads fields of the spending transaction and its spent input UTXOs;
       KIP-20 adds covenant-ID and authorized-output context for that same transaction. Neither specifies a
@@ -577,7 +582,7 @@ claims:
       September 28: re-read the dated dataset and recomputed scenario arithmetic. No new cross-chain fee
       or price dataset was collected. Kept the August 22 observation date and corrected the measured-
       versus-modeled boundary.
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     status: measurement_sensitive
     recheck_after: 2026-10-28
     summary: >
@@ -585,7 +590,7 @@ claims:
       transactions/day, and median fee $0.000063. Multiplying the median by transaction count gives a
       modeled $5.17/day in fees and about 0.0089% of modeled miner income. That assumes every transaction
       pays the median; it is not measured total fee revenue. Price, traffic, fees, and subsidy are held to
-      the dated scenario. The current September 28 block reward is separately 2.18267645 KAS/block, so the
+      the dated scenario. The current October 6 block reward is separately 2.06017223 KAS/block, so the
       historical 2.31246515 amount must not be called current. The skeptical-case controls now identify
       their snapshot baseline.
     source: https://kaspaexplained.com/skeptical-case#security-budget-demo
@@ -594,7 +599,7 @@ claims:
     review_note: >
       September 28: inspected the dated data file and current redirect/public-page scope. Removed obsolete
       ranking claims from the maintained summary rather than presenting them as current measurements.
-    checked_on: 2026-09-28
+    checked_on: 2026-10-06
     status: measurement_sensitive
     recheck_after: 2026-10-28
     summary: >
